@@ -40,7 +40,7 @@ public class ConfigBuffer {
 	public ConfigVariables cv = new ConfigVariables();
 	public MyWolfPermissions Permissions;
 	
-	public Map<String,Wolfs> mWolfs = new HashMap<String,Wolfs>();
+	public Map<String,Wolves> mWolfs = new HashMap<String,Wolves>();
 
 	public ConfigBuffer(MyWolf Plugin) {
 		this.Plugin = Plugin;

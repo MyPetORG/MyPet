@@ -103,15 +103,6 @@ public class MyWolf extends JavaPlugin{
 		cb.cv.WolfRespawnTimeFactor = cb.Config.getInt("MyWolf.respawntimefactor",5);
 		cb.cv.WolfRespawnMaxHP = cb.Config.getInt("MyWolf.max.HP",20);
 		cb.cv.WolfMaxLives = cb.Config.getInt("MyWolf.max.Lives",-1);
-		
-		for ( String item : cb.Config.getString("MyWolf.WeaponItems", "").split("\\;") )
-		{
-			String[] itemvalues = item.split("\\,");
-			if(itemvalues.length == 2 && isInt(itemvalues[0]) && isInt(itemvalues[1]))
-			{
-				cb.cv.WeaponList.put(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]));
-			}
-		}
 
     	cb.WolfsConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolfs.yml"));
 
@@ -297,7 +288,7 @@ public class MyWolf extends JavaPlugin{
 					cb.log.info("[MyWolf] World for wolf \"" + WolfName + "\" not found - skiped wolf");
 				}
 				
-				cb.mWolfs.put(ownername, new Wolfs(cb,ownername));
+				cb.mWolfs.put(ownername, new Wolves(cb,ownername));
 				
 				cb.mWolfs.get(ownername).WolfLocation = new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ);
 				
@@ -351,7 +342,7 @@ public class MyWolf extends JavaPlugin{
 		cb.WolfsConfig.removeProperty("Wolfs");
 		for ( String owner : cb.mWolfs.keySet() )
         {
-			Wolfs wolf = cb.mWolfs.get( owner );
+			Wolves wolf = cb.mWolfs.get( owner );
 			String Items = "";
         	for ( ItemStack Item : cb.mWolfs.get(owner).WolfInventory.getContents() )
         	{

@@ -78,7 +78,7 @@ public class MyWolfEntityListener extends EntityListener
 						if(((Wolf)event.getEntity()).isTamed() == true && ((Player)((Wolf)event.getEntity()).getOwner()).getName().equals(player.getName()))
 						{
 							event.setCancelled(true);
-							cb.mWolfs.put(player.getName(), new Wolfs(cb,player.getName()));
+							cb.mWolfs.put(player.getName(), new Wolves(cb,player.getName()));
 							cb.mWolfs.get(player.getName()).createWolf((Wolf)event.getEntity());
 							cb.Plugin.SaveWolfs();
 							player.sendMessage(ChatColor.GREEN + "You take your wolf on the leash, he'll be a good wolf.");
@@ -87,7 +87,7 @@ public class MyWolfEntityListener extends EntityListener
 					
 					for ( String owner : cb.mWolfs.keySet() )
 			        {
-						Wolfs wolf = cb.mWolfs.get( owner );
+						Wolves wolf = cb.mWolfs.get( owner );
 						if(wolf.getID() == event.getEntity().getEntityId())
 						{
 							if(cb.mWolfs.get(owner).getHealth() > cb.mWolfs.get(owner).HealthMax)
@@ -367,7 +367,7 @@ public class MyWolfEntityListener extends EntityListener
 	
 	private void SendDeathMessage(EntityDeathEvent event)
 	{
-		Wolfs wolf = null;
+		Wolves wolf = null;
 		for ( String owner : cb.mWolfs.keySet() )
         {
 			if(cb.mWolfs.get(owner).ID == event.getEntity().getEntityId())

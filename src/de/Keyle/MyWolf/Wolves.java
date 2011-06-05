@@ -31,7 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.util.Vector;
 
-public class Wolfs {
+public class Wolves {
 	
 	public ConfigBuffer cb;
 	
@@ -62,7 +62,7 @@ public class Wolfs {
 	public Location WolfLocation;
 
 	
-	public Wolfs(ConfigBuffer cb, String Owner) {
+	public Wolves(ConfigBuffer cb, String Owner) {
 		this.cb = cb;				
 		this.Owner = Owner;
 	}
