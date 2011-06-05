@@ -23,28 +23,28 @@ public class MyWolfCall implements CommandExecutor
         if (sender instanceof Player)
         {
     		Player player = (Player)sender;
-    		if(cb.mWolfs.containsKey(player.getName()))
+    		if(cb.mWolves.containsKey(player.getName()))
     		{
 		    	if(cb.Permissions.has(player, "mywolf.call") == false)
 				{
 					return false;
 				}
-				cb.mWolfs.get(player.getName()).WolfLocation = player.getLocation();
-				if(cb.mWolfs.get(player.getName()).isThere == true)
+				cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
+				if(cb.mWolves.get(player.getName()).isThere == true)
 				{
-					cb.mWolfs.get(player.getName()).MyWolf.teleport(player.getLocation());
-					cb.mWolfs.get(player.getName()).WolfLocation = player.getLocation();
-					player.sendMessage(ChatColor.AQUA+cb.mWolfs.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
+					cb.mWolves.get(player.getName()).MyWolf.teleport(player.getLocation());
+					cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
 				}
-				else if(cb.mWolfs.get(player.getName()).isThere == false && cb.mWolfs.get(player.getName()).RespawnTime == 0)
+				else if(cb.mWolves.get(player.getName()).isThere == false && cb.mWolves.get(player.getName()).RespawnTime == 0)
 				{
-					cb.mWolfs.get(player.getName()).WolfLocation = player.getLocation();
-					cb.mWolfs.get(player.getName()).createWolf(false);
-					player.sendMessage(ChatColor.AQUA+cb.mWolfs.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
+					cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
+					cb.mWolves.get(player.getName()).createWolf(false);
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
 				}
-				else if(cb.mWolfs.get(player.getName()).isDead == true)
+				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{
-					player.sendMessage(ChatColor.AQUA+cb.mWolfs.get(player.getName()).Name + ChatColor.WHITE + " is dead!");
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead!");
 					return false;
 				}
 	        }

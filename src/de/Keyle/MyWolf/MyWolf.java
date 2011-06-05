@@ -44,12 +44,12 @@ public class MyWolf extends JavaPlugin{
     
     public void onDisable(){
     	
-    	cb.Plugin.SaveWolfs();
-    	for ( String owner : cb.mWolfs.keySet() )
+    	cb.Plugin.SaveWolves();
+    	for ( String owner : cb.mWolves.keySet() )
         {
-    		if(cb.mWolfs.get(owner).isThere)
+    		if(cb.mWolves.get(owner).isThere)
     		{
-    			cb.mWolfs.get(owner).removeWolf();
+    			cb.mWolves.get(owner).removeWolf();
     		}
         }
         cb.log.info("[MyWolf] Disabled");
@@ -104,7 +104,7 @@ public class MyWolf extends JavaPlugin{
 		cb.cv.WolfRespawnMaxHP = cb.Config.getInt("MyWolf.max.HP",20);
 		cb.cv.WolfMaxLives = cb.Config.getInt("MyWolf.max.Lives",-1);
 
-    	cb.WolfsConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolfs.yml"));
+    	cb.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
 
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
@@ -123,7 +123,7 @@ public class MyWolf extends JavaPlugin{
         getCommand("wolfcall").setExecutor(cewc);
         getCommand("wc").setExecutor(cewc);
         MyWolfStop cews = new MyWolfStop(cb);
-        getCommand("wolfstop").setExecutor(cews);
+        getCommand("Wolvestop").setExecutor(cews);
         getCommand("ws").setExecutor(cews);
         getCommand("wolfrelease").setExecutor(new MyWolfRelease(cb));
         getCommand("wolf").setExecutor(new MyWolfInfo());
@@ -131,11 +131,11 @@ public class MyWolf extends JavaPlugin{
         PluginDescriptionFile pdfFile = this.getDescription();
         cb.log.info("["+pdfFile.getName() + "] version " + pdfFile.getVersion() + " ENABLED" );
         
-        cb.Plugin.LoadWolfs();
+        cb.Plugin.LoadWolves();
         for(Player p : this.getServer().getOnlinePlayers())
         {
-        	if(cb.mWolfs.containsKey(p.getName()) && p.isOnline() == true)
-        	cb.mWolfs.get(p.getName()).createWolf(cb.mWolfs.get(p.getName()).isSitting);
+        	if(cb.mWolves.containsKey(p.getName()) && p.isOnline() == true)
+        	cb.mWolves.get(p.getName()).createWolf(cb.mWolves.get(p.getName()).isSitting);
         }
     }
     
@@ -153,7 +153,7 @@ public class MyWolf extends JavaPlugin{
 							else
 							{
 								player.sendMessage("Your compass targets the last location of the wolf!");
-								player.setCompassTarget(cb.mWolfs.get(player.getName()).getLoc());
+								player.setCompassTarget(cb.mWolves.get(player.getName()).getLoc());
 							}
 							return true;
 						}
@@ -168,14 +168,14 @@ public class MyWolf extends JavaPlugin{
 								if(args[0].equalsIgnoreCase("deny"))
 								{
 									player.sendMessage("Your wolf will not attack!");
-									cb.mWolfs.get(player.getName()).allowAttackMonster = false;
-									cb.mWolfs.get(player.getName()).allowAttackPlayer = false;
+									cb.mWolves.get(player.getName()).allowAttackMonster = false;
+									cb.mWolves.get(player.getName()).allowAttackPlayer = false;
 								}
 								else if(args[0].equalsIgnoreCase("allow"))
 								{
 									player.sendMessage("Your wolf will now attack!");
-									cb.mWolfs.get(player.getName()).allowAttackMonster = true;
-									cb.mWolfs.get(player.getName()).allowAttackPlayer = true;
+									cb.mWolves.get(player.getName()).allowAttackMonster = true;
+									cb.mWolves.get(player.getName()).allowAttackPlayer = true;
 								}
 								else
 								{
@@ -189,18 +189,18 @@ public class MyWolf extends JavaPlugin{
 									if(args[0].equalsIgnoreCase("player"))
 									{
 										player.sendMessage("Your wolf will not attack player!");
-										cb.mWolfs.get(player.getName()).allowAttackPlayer = false;
+										cb.mWolves.get(player.getName()).allowAttackPlayer = false;
 									}
 									else if(args[0].equalsIgnoreCase("monster"))
 									{
 										player.sendMessage("Your wolf will not attack monster!");
-										cb.mWolfs.get(player.getName()).allowAttackMonster = false;
+										cb.mWolves.get(player.getName()).allowAttackMonster = false;
 									}
 									else if(args[0].equalsIgnoreCase("all"))
 									{
 										player.sendMessage("Your wolf will not attack!");
-										cb.mWolfs.get(player.getName()).allowAttackMonster = false;
-										cb.mWolfs.get(player.getName()).allowAttackPlayer = false;
+										cb.mWolves.get(player.getName()).allowAttackMonster = false;
+										cb.mWolves.get(player.getName()).allowAttackPlayer = false;
 									}
 									else
 									{
@@ -212,18 +212,18 @@ public class MyWolf extends JavaPlugin{
 									if(args[0].equalsIgnoreCase("player"))
 									{
 										player.sendMessage("Your wolf will now attack player!");
-										cb.mWolfs.get(player.getName()).allowAttackPlayer = true;
+										cb.mWolves.get(player.getName()).allowAttackPlayer = true;
 									}
 									else if(args[0].equalsIgnoreCase("monster"))
 									{
 										player.sendMessage("Your wolf will now attack monster!");
-										cb.mWolfs.get(player.getName()).allowAttackMonster = true;
+										cb.mWolves.get(player.getName()).allowAttackMonster = true;
 									}
 									else if(args[0].equalsIgnoreCase("all"))
 									{
 										player.sendMessage("Your wolf will now attack all!");
-										cb.mWolfs.get(player.getName()).allowAttackMonster = true;
-										cb.mWolfs.get(player.getName()).allowAttackPlayer = true;
+										cb.mWolves.get(player.getName()).allowAttackMonster = true;
+										cb.mWolves.get(player.getName()).allowAttackPlayer = true;
 									}
 									else
 									{
@@ -236,15 +236,15 @@ public class MyWolf extends JavaPlugin{
 								}
 							}
 							
-							cb.mWolfs.get(player.getName()).MyWolf.setTarget((LivingEntity)null);
+							cb.mWolves.get(player.getName()).MyWolf.setTarget((LivingEntity)null);
 						}
 						*/
     
 	
 	
-	public void LoadWolfs()
+	public void LoadWolves()
 	{
-		int anzahlWolfs = 0;
+		int anzahlWolves = 0;
 		int invSlot = 0;
 		double WolfX;
 		double WolfY;
@@ -255,29 +255,29 @@ public class MyWolf extends JavaPlugin{
 		int WolfLives;
 		int WolfHealthRespawnTime;
 		String WolfName;
-		boolean WolfSitting;
+		boolean Wolvesitting;
 		boolean WolfhasInventory;
 		boolean WolfhasPickup;
 		
-		cb.WolfsConfig.load();
-		List<String>WolfList = cb.WolfsConfig.getKeys("Wolfs");
+		cb.WolvesConfig.load();
+		List<String>WolfList = cb.WolvesConfig.getKeys("Wolves");
 		if(WolfList != null)
 		{
 			for (String ownername: WolfList) 
 			{
 				invSlot = 0;
-				WolfX = cb.WolfsConfig.getDouble("Wolfs."+ownername+".loc.X", 0);
-				WolfY = cb.WolfsConfig.getDouble("Wolfs."+ownername+".loc.Y", 0);
-				WolfZ = cb.WolfsConfig.getDouble("Wolfs."+ownername+".loc.Z", 0);
-				WolfWorld = cb.WolfsConfig.getString("Wolfs."+ownername+".loc.world",cb.Plugin.getServer().getWorlds().get(0).getName());
-				WolfHealthNow = cb.WolfsConfig.getInt("Wolfs."+ownername+".health.now", 6);
-				WolfHealthMax = cb.WolfsConfig.getInt("Wolfs."+ownername+".health.max", 6);
-				WolfLives = cb.WolfsConfig.getInt("Wolfs."+ownername+".health.lives", 3);
-				WolfHealthRespawnTime = cb.WolfsConfig.getInt("Wolfs."+ownername+".health.respawntime", 0);
-				WolfName = cb.WolfsConfig.getString("Wolfs."+ownername+".name", "Wolf");
-				WolfSitting = cb.WolfsConfig.getBoolean("Wolfs."+ownername+".sitting", false);
-				WolfhasInventory = cb.WolfsConfig.getBoolean("Wolfs."+ownername+".chest",false);
-				WolfhasPickup = cb.WolfsConfig.getBoolean("Wolfs."+ownername+".pickup",false);
+				WolfX = cb.WolvesConfig.getDouble("Wolves."+ownername+".loc.X", 0);
+				WolfY = cb.WolvesConfig.getDouble("Wolves."+ownername+".loc.Y", 0);
+				WolfZ = cb.WolvesConfig.getDouble("Wolves."+ownername+".loc.Z", 0);
+				WolfWorld = cb.WolvesConfig.getString("Wolves."+ownername+".loc.world",cb.Plugin.getServer().getWorlds().get(0).getName());
+				WolfHealthNow = cb.WolvesConfig.getInt("Wolves."+ownername+".health.now", 6);
+				WolfHealthMax = cb.WolvesConfig.getInt("Wolves."+ownername+".health.max", 6);
+				WolfLives = cb.WolvesConfig.getInt("Wolves."+ownername+".health.lives", 3);
+				WolfHealthRespawnTime = cb.WolvesConfig.getInt("Wolves."+ownername+".health.respawntime", 0);
+				WolfName = cb.WolvesConfig.getString("Wolves."+ownername+".name", "Wolf");
+				Wolvesitting = cb.WolvesConfig.getBoolean("Wolves."+ownername+".sitting", false);
+				WolfhasInventory = cb.WolvesConfig.getBoolean("Wolves."+ownername+".chest",false);
+				WolfhasPickup = cb.WolvesConfig.getBoolean("Wolves."+ownername+".pickup",false);
 				
 				if(WolfLives == 0)
 				{
@@ -288,9 +288,9 @@ public class MyWolf extends JavaPlugin{
 					cb.log.info("[MyWolf] World for wolf \"" + WolfName + "\" not found - skiped wolf");
 				}
 				
-				cb.mWolfs.put(ownername, new Wolves(cb,ownername));
+				cb.mWolves.put(ownername, new Wolves(cb,ownername));
 				
-				cb.mWolfs.get(ownername).WolfLocation = new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ);
+				cb.mWolves.get(ownername).WolfLocation = new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ);
 				
 				if(WolfLives > cb.cv.WolfMaxLives)
 				{
@@ -308,15 +308,15 @@ public class MyWolf extends JavaPlugin{
 				{
 					WolfHealthNow = WolfHealthMax;
 				}
-				cb.mWolfs.get(ownername).HealthMax = WolfHealthMax;
-				cb.mWolfs.get(ownername).setWolfHealth(WolfHealthNow);
-				cb.mWolfs.get(ownername).RespawnTime = WolfHealthRespawnTime;
-				cb.mWolfs.get(ownername).Name = WolfName;
-				cb.mWolfs.get(ownername).isSitting = WolfSitting;
-				cb.mWolfs.get(ownername).hasInventory = WolfhasInventory;
-				cb.mWolfs.get(ownername).hasPickup = WolfhasPickup;
+				cb.mWolves.get(ownername).HealthMax = WolfHealthMax;
+				cb.mWolves.get(ownername).setWolfHealth(WolfHealthNow);
+				cb.mWolves.get(ownername).RespawnTime = WolfHealthRespawnTime;
+				cb.mWolves.get(ownername).Name = WolfName;
+				cb.mWolves.get(ownername).isSitting = Wolvesitting;
+				cb.mWolves.get(ownername).hasInventory = WolfhasInventory;
+				cb.mWolves.get(ownername).hasPickup = WolfhasPickup;
 				
-				for ( String item : cb.WolfsConfig.getString("Wolfs."+ownername+".inventory", "").split("\\;") )
+				for ( String item : cb.WolvesConfig.getString("Wolves."+ownername+".inventory", "").split("\\;") )
 				{
 					String[] itemvalues = item.split("\\,");
 					if(itemvalues.length == 3 && isInt(itemvalues[0]) && isInt(itemvalues[1]) && isInt(itemvalues[2]))
@@ -325,26 +325,26 @@ public class MyWolf extends JavaPlugin{
 						{
 							if(Integer.parseInt(itemvalues[1])<=64)
 							{
-								cb.mWolfs.get(ownername).WolfInventory.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+								cb.mWolves.get(ownername).WolfInventory.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
 							}
 						}
 					}
 					invSlot++;
 				}
-				anzahlWolfs++;
+				anzahlWolves++;
 			}
 		}
-		cb.log.info("["+this.getDescription().getName() + "] " + anzahlWolfs + " Wolfs loaded" );
+		cb.log.info("["+this.getDescription().getName() + "] " + anzahlWolves + " Wolves loaded" );
 	}
 	
-	public void SaveWolfs()
+	public void SaveWolves()
 	{
-		cb.WolfsConfig.removeProperty("Wolfs");
-		for ( String owner : cb.mWolfs.keySet() )
+		cb.WolvesConfig.removeProperty("Wolves");
+		for ( String owner : cb.mWolves.keySet() )
         {
-			Wolves wolf = cb.mWolfs.get( owner );
+			Wolves wolf = cb.mWolves.get( owner );
 			String Items = "";
-        	for ( ItemStack Item : cb.mWolfs.get(owner).WolfInventory.getContents() )
+        	for ( ItemStack Item : cb.mWolves.get(owner).WolfInventory.getContents() )
         	{
         		if(Item != null)
         		{
@@ -357,24 +357,24 @@ public class MyWolf extends JavaPlugin{
         	}
         	Items = Items.substring(0,Items.length()-1);
 	
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".loc.X", wolf.getLoc().getX());
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".loc.Y", wolf.getLoc().getY());
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".loc.Z", wolf.getLoc().getZ());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.X", wolf.getLoc().getX());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Y", wolf.getLoc().getY());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Z", wolf.getLoc().getZ());
         	        	
         	cb.log.info(""+wolf.getLoc());
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".loc.world", wolf.getLoc().getWorld().getName());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.world", wolf.getLoc().getWorld().getName());
         	
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".health.now", wolf.getHealth());
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".health.max", wolf.HealthMax);
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".health.lives", wolf.Lives);
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".health.respawntime", wolf.RespawnTime);
-        	cb.WolfsConfig.setProperty("Wolfs."+owner+".inventory", Items);	
-			cb.WolfsConfig.setProperty("Wolfs."+owner+".name", wolf.Name);
-			cb.WolfsConfig.setProperty("Wolfs."+owner+".sitting", wolf.isSitting());
-			cb.WolfsConfig.setProperty("Wolfs."+owner+".chest", wolf.hasInventory);
-			cb.WolfsConfig.setProperty("Wolfs."+owner+".pickup", wolf.hasPickup);
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".health.now", wolf.getHealth());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".health.max", wolf.HealthMax);
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".health.lives", wolf.Lives);
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".health.respawntime", wolf.RespawnTime);
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".inventory", Items);	
+			cb.WolvesConfig.setProperty("Wolves."+owner+".name", wolf.Name);
+			cb.WolvesConfig.setProperty("Wolves."+owner+".sitting", wolf.isSitting());
+			cb.WolvesConfig.setProperty("Wolves."+owner+".chest", wolf.hasInventory);
+			cb.WolvesConfig.setProperty("Wolves."+owner+".pickup", wolf.hasPickup);
         }
-		cb.WolfsConfig.save();
+		cb.WolvesConfig.save();
 	}
 	
 	public boolean isInt(String number)

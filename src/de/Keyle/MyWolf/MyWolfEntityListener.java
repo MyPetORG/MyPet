@@ -69,7 +69,7 @@ public class MyWolfEntityListener extends EntityListener
 				if(event.isCancelled() == false)
 				{
 					
-					if(cb.mWolfs.containsKey(player.getName()) == false)
+					if(cb.mWolves.containsKey(player.getName()) == false)
 					{
 						if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.leash") == false)
 						{
@@ -78,21 +78,21 @@ public class MyWolfEntityListener extends EntityListener
 						if(((Wolf)event.getEntity()).isTamed() == true && ((Player)((Wolf)event.getEntity()).getOwner()).getName().equals(player.getName()))
 						{
 							event.setCancelled(true);
-							cb.mWolfs.put(player.getName(), new Wolves(cb,player.getName()));
-							cb.mWolfs.get(player.getName()).createWolf((Wolf)event.getEntity());
-							cb.Plugin.SaveWolfs();
+							cb.mWolves.put(player.getName(), new Wolves(cb,player.getName()));
+							cb.mWolves.get(player.getName()).createWolf((Wolf)event.getEntity());
+							cb.Plugin.SaveWolves();
 							player.sendMessage(ChatColor.GREEN + "You take your wolf on the leash, he'll be a good wolf.");
 						}
 					}
 					
-					for ( String owner : cb.mWolfs.keySet() )
+					for ( String owner : cb.mWolves.keySet() )
 			        {
-						Wolves wolf = cb.mWolfs.get( owner );
+						Wolves wolf = cb.mWolves.get( owner );
 						if(wolf.getID() == event.getEntity().getEntityId())
 						{
-							if(cb.mWolfs.get(owner).getHealth() > cb.mWolfs.get(owner).HealthMax)
+							if(cb.mWolves.get(owner).getHealth() > cb.mWolves.get(owner).HealthMax)
 							{
-								cb.mWolfs.get(owner).setWolfHealth(cb.mWolfs.get(owner).HealthMax);
+								cb.mWolves.get(owner).setWolfHealth(cb.mWolves.get(owner).HealthMax);
 							}
 	
 							if(player.getItemInHand().getType() == cb.cv.WolfLeashItem && cb.cv.WolfLeashItemSneak == player.isSneaking())
@@ -330,33 +330,33 @@ public class MyWolfEntityListener extends EntityListener
 	{
 		if (event.getEntity() instanceof Wolf)
 		{
-			for ( String owner : cb.mWolfs.keySet() )
+			for ( String owner : cb.mWolves.keySet() )
 	        {
-				if(cb.mWolfs.get(owner).ID == event.getEntity().getEntityId())
+				if(cb.mWolves.get(owner).ID == event.getEntity().getEntityId())
 				{
 					if(cb.cv.WolfMaxLives > -1)
 					{
-						cb.mWolfs.get(owner).Lives -= 1;
-						if(cb.mWolfs.get(owner).Lives <= 0)
+						cb.mWolves.get(owner).Lives -= 1;
+						if(cb.mWolves.get(owner).Lives <= 0)
 						{
-							for(ItemStack is : cb.mWolfs.get(owner).WolfInventory.getContents())
+							for(ItemStack is : cb.mWolves.get(owner).WolfInventory.getContents())
 							{
-								cb.mWolfs.get(owner).MyWolf.getWorld().dropItem(cb.mWolfs.get(owner).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
+								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 							}
-							cb.mWolfs.get(owner).getPlayer().sendMessage(ChatColor.AQUA + cb.mWolfs.get(owner).Name + ChatColor.WHITE + " is " + ChatColor.RED + "gone" + ChatColor.WHITE + " and will never come back . . .");
-							cb.mWolfs.remove(cb.mWolfs.get(owner).getPlayer().getName());
-							cb.Plugin.SaveWolfs();
+							cb.mWolves.get(owner).getPlayer().sendMessage(ChatColor.AQUA + cb.mWolves.get(owner).Name + ChatColor.WHITE + " is " + ChatColor.RED + "gone" + ChatColor.WHITE + " and will never come back . . .");
+							cb.mWolves.remove(cb.mWolves.get(owner).getPlayer().getName());
+							cb.Plugin.SaveWolves();
 						}
 						else
 						{
-							cb.mWolfs.get(owner).isDead = true;
-							cb.mWolfs.get(owner).RespawnTimer();
+							cb.mWolves.get(owner).isDead = true;
+							cb.mWolves.get(owner).RespawnTimer();
 						}
 					}
 					else
 					{
-						cb.mWolfs.get(owner).isDead = true;
-						cb.mWolfs.get(owner).RespawnTimer();
+						cb.mWolves.get(owner).isDead = true;
+						cb.mWolves.get(owner).RespawnTimer();
 					}
 					SendDeathMessage(event);
 					break;
@@ -368,11 +368,11 @@ public class MyWolfEntityListener extends EntityListener
 	private void SendDeathMessage(EntityDeathEvent event)
 	{
 		Wolves wolf = null;
-		for ( String owner : cb.mWolfs.keySet() )
+		for ( String owner : cb.mWolves.keySet() )
         {
-			if(cb.mWolfs.get(owner).ID == event.getEntity().getEntityId())
+			if(cb.mWolves.get(owner).ID == event.getEntity().getEntityId())
 			{
-				 wolf = cb.mWolfs.get(owner);
+				 wolf = cb.mWolves.get(owner);
 			}
         }
 		if(wolf != null)
@@ -443,11 +443,11 @@ public class MyWolfEntityListener extends EntityListener
 					if(w.isTamed() == true)
 					{
 						Killer = "a Wolf of " + ((Player)w.getOwner()).getName();
-						//for ( String owner : cb.mWolfs.keySet() )
+						//for ( String owner : cb.mWolves.keySet() )
 				        //{
-							//f(cb.mWolfs.get(owner).MyWolf == w)
+							//f(cb.mWolves.get(owner).MyWolf == w)
 							//{
-								//Killer = "the wolf \"" +ChatColor.AQUA+ cb.mWolfs.get(owner).Name + ChatColor.WHITE+ "\" of " + ((Player)w.getOwner()).getName();
+								//Killer = "the wolf \"" +ChatColor.AQUA+ cb.mWolves.get(owner).Name + ChatColor.WHITE+ "\" of " + ((Player)w.getOwner()).getName();
 								
 							//}
 				        //}
@@ -500,9 +500,9 @@ public class MyWolfEntityListener extends EntityListener
 		if (!event.isCancelled()) {
 			if (event.getEntity() instanceof Wolf && event.getTarget() instanceof Player)
 			{
-				for ( String owner : cb.mWolfs.keySet() )
+				for ( String owner : cb.mWolves.keySet() )
 		        {
-					if(cb.mWolfs.get(owner).ID == event.getEntity().getEntityId())
+					if(cb.mWolves.get(owner).ID == event.getEntity().getEntityId())
 					{
 						if(event.getEntity().getWorld().getPVP() == false)
 						{
@@ -519,23 +519,23 @@ public class MyWolfEntityListener extends EntityListener
 	{
 		if ((event.getEntity() instanceof Wolf))
 		{
-			for ( String owner : cb.mWolfs.keySet() )
+			for ( String owner : cb.mWolves.keySet() )
 	        {
-				if(cb.mWolfs.get(owner).MyWolf.getEntityId() == event.getEntity().getEntityId())
+				if(cb.mWolves.get(owner).MyWolf.getEntityId() == event.getEntity().getEntityId())
 				{
 					if(event.getTarget() instanceof Player)
 					{
-						if(cb.mWolfs.get(owner).allowAttackPlayer == false)
+						if(cb.mWolves.get(owner).allowAttackPlayer == false)
 						{
-							cb.mWolfs.get(owner).MyWolf.setTarget((LivingEntity)null);
+							cb.mWolves.get(owner).MyWolf.setTarget((LivingEntity)null);
 							event.setCancelled(true);
 						}
 					}
 					else
 					{
-						if(cb.mWolfs.get(owner).allowAttackMonster == false)
+						if(cb.mWolves.get(owner).allowAttackMonster == false)
 						{
-							cb.mWolfs.get(owner).MyWolf.setTarget((LivingEntity)null);
+							cb.mWolves.get(owner).MyWolf.setTarget((LivingEntity)null);
 							event.setCancelled(true);
 						}
 					}

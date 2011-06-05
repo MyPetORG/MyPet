@@ -24,13 +24,13 @@ public class MyWolfRelease implements CommandExecutor {
         if (sender instanceof Player)
         {
     		Player player = (Player) sender;
-    		if(cb.mWolfs.containsKey(player.getName()))
+    		if(cb.mWolves.containsKey(player.getName()))
     		{
 	    		if(cb.Permissions.has(player, "mywolf.release") == false)
 				{
 					return false;
 				}
-				if(cb.mWolfs.get(player.getName()).isDead == true || cb.mWolfs.get(player.getName()).isThere == false)
+				if(cb.mWolves.get(player.getName()).isDead == true || cb.mWolves.get(player.getName()).isThere == false)
 	    		{
 					player.sendMessage("You must call your wolf first.");
 					return false;
@@ -47,19 +47,19 @@ public class MyWolfRelease implements CommandExecutor {
 					name += arg + " ";
 				}
 				name = name.substring(0,name.length()-1);
-				if(cb.mWolfs.get(player.getName()).Name.equalsIgnoreCase(name))
+				if(cb.mWolves.get(player.getName()).Name.equalsIgnoreCase(name))
 				{
-					cb.mWolfs.get(player.getName()).MyWolf.setOwner(null);
-					for(ItemStack is : cb.mWolfs.get(player.getName()).WolfInventory.getContents())
+					cb.mWolves.get(player.getName()).MyWolf.setOwner(null);
+					for(ItemStack is : cb.mWolves.get(player.getName()).WolfInventory.getContents())
 					{
 						if(is != null)
 						{
-							cb.mWolfs.get(player.getName()).MyWolf.getWorld().dropItem(cb.mWolfs.get(player.getName()).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
+							cb.mWolves.get(player.getName()).MyWolf.getWorld().dropItem(cb.mWolves.get(player.getName()).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 						}
 					}
-					player.sendMessage(ChatColor.AQUA + cb.mWolfs.get(player.getName()).Name + ChatColor.WHITE + " is now " + ChatColor.GREEN + "free" + ChatColor.WHITE + " . . .");
-					cb.mWolfs.remove(player.getName());
-					cb.Plugin.SaveWolfs();
+					player.sendMessage(ChatColor.AQUA + cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is now " + ChatColor.GREEN + "free" + ChatColor.WHITE + " . . .");
+					cb.mWolves.remove(player.getName());
+					cb.Plugin.SaveWolves();
 					return true;
 				}
 				else

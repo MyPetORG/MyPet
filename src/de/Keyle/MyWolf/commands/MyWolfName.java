@@ -22,7 +22,7 @@ public class MyWolfName implements CommandExecutor {
         if (sender instanceof Player)
         {
     		Player player = (Player) sender;
-    		if(cb.mWolfs.containsKey(player.getName()))
+    		if(cb.mWolves.containsKey(player.getName()))
     		{
 	    		if(cb.Permissions.has(player, "mywolf.setname") == false)
 				{
@@ -40,7 +40,7 @@ public class MyWolfName implements CommandExecutor {
 					name += arg + " ";
 				}
 				name = name.substring(0,name.length()-1);
-				cb.mWolfs.get(player.getName()).Name = name;
+				cb.mWolves.get(player.getName()).Name = name;
 				player.sendMessage("The name of your wolf is now: " + ChatColor.AQUA + name);
 				return true;
     		}

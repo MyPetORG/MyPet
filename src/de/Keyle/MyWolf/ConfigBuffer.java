@@ -33,14 +33,14 @@ import de.Keyle.MyWolf.util.MyWolfPermissions;
 public class ConfigBuffer {
 	
 	public Logger log = Logger.getLogger("Minecraft");
-	public Configuration WolfsConfig;
+	public Configuration WolvesConfig;
 	public Configuration Config;
 	public MyWolf Plugin;
 	
 	public ConfigVariables cv = new ConfigVariables();
 	public MyWolfPermissions Permissions;
 	
-	public Map<String,Wolves> mWolfs = new HashMap<String,Wolves>();
+	public Map<String,Wolves> mWolves = new HashMap<String,Wolves>();
 
 	public ConfigBuffer(MyWolf Plugin) {
 		this.Plugin = Plugin;
