@@ -1,0 +1,19 @@
+name: MyWolf
+main: de.Keyle.MyWolf.MyWolf
+version: 0.4.2
+author: Keyle
+commands:
+  wolf:
+    description: wolf commands
+  ws:
+    description: short version for /wolfstop
+  wolfname:
+    description: set the name of the wolf
+  wolfcall:
+    description: call your wolf
+  wc:
+    description: short version for /wolfcall
+  wolfrelease:
+    description: release your wolf
+  wolfstop:
+    description: you wolf stopping attacking
