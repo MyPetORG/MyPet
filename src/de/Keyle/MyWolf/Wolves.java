@@ -54,12 +54,12 @@ public class Wolves {
 	public boolean allowAttackPlayer = true;
 	public boolean allowAttackMonster = false;
 	
-	public TileEntityVirtualChest WolfInventory = new TileEntityVirtualChest();
+	public TileEntityVirtualChest Inventory = new TileEntityVirtualChest();
 	
 	public boolean isThere = false;
 	public boolean isDead = false;
 	
-	public Location WolfLocation;
+	public Location Location;
 
 	
 	public Wolves(ConfigBuffer cb, String Owner) {
@@ -71,7 +71,7 @@ public class Wolves {
 	{
 		isSitting = MyWolf.isSitting();
 		HealthNow= MyWolf.getHealth();
-		WolfLocation = MyWolf.getLocation();
+		Location = MyWolf.getLocation();
 		isThere = false;
 		((LivingEntity) MyWolf).remove();
 		MyWolf = null;
@@ -87,39 +87,36 @@ public class Wolves {
 		{
 			if (getPlayer() != null && RespawnTime == 0)
 			{
-				MyWolf = (Wolf) cb.Plugin.getServer().getWorld(WolfLocation.getWorld().getName()).spawnCreature(WolfLocation,CreatureType.WOLF);
+				MyWolf = (Wolf) cb.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location,CreatureType.WOLF);
 				MyWolf.setOwner(getPlayer());
 				MyWolf.setSitting(sitting);
-				WolfLocation = MyWolf.getLocation();
+				Location = MyWolf.getLocation();
 				MyWolf.setHealth(HealthNow);
 		    	ID = MyWolf.getEntityId();
 		    	
 		    	isThere = true;
 		    	isDead = false;
-		    	if(cb.Permissions == null)
-		    	{
-		    		DropTimer();
-		    	}
-		    	else if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
+		    	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
 		    	{
 		    		DropTimer();
 		    	}
 		    		
 		    	return true;
 			}
-			else
+			else if(RespawnTime > 0)
 			{
 				RespawnTimer();
 				return false;
 			}
 		}
+		return false;
 	}
 	
 	public void createWolf(Wolf wolf)
 	{
 		MyWolf = wolf;
     	ID = MyWolf.getEntityId();
-    	WolfLocation = MyWolf.getLocation();
+    	Location = MyWolf.getLocation();
     	isThere = true;
     	isDead = false;
     	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
@@ -167,7 +164,7 @@ public class Wolves {
 		}
 	}
 	
-	public Location getLoc()
+	public Location getLocation()
 	{
 		if (isThere == true && isDead == false)
 		{
@@ -175,7 +172,7 @@ public class Wolves {
 		}
 		else
 		{
-			return WolfLocation;
+			return Location;
 		}
 	}
 	
@@ -231,7 +228,7 @@ public class Wolves {
 		else
 		{
 			HealthNow = HealthMax;
-			WolfLocation = getPlayer().getLocation();
+			Location = getPlayer().getLocation();
 			getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawned");
 			createWolf(false);
 			RespawnTime = 0;
@@ -263,10 +260,10 @@ public class Wolves {
 									{
 										Item item = (Item)e;
 										
-										Vector distance = getLoc().toVector().add(new Vector(0.5,0,0.5)).subtract(item.getLocation().toVector());
+										Vector distance = getLocation().toVector().add(new Vector(0.5,0,0.5)).subtract(item.getLocation().toVector());
 										if(distance.lengthSquared() < 1.0*cb.cv.WolfPickupRange*cb.cv.WolfPickupRange + 1)
 										{
-											int amountleft = WolfInventory.addItem(item);
+											int amountleft = Inventory.addItem(item);
 											if(amountleft == 0)
 											{
 												e.remove();

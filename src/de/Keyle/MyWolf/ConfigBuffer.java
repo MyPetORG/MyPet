@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-//import org.anjocaido.groupmanager.GroupManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
@@ -49,17 +48,13 @@ public class ConfigBuffer {
 	
 	public boolean isNPC(Player p)
 	{
-		if(Plugin.getServer().getPluginManager().getPlugin("Citizens") == null)
+		if(Plugin.getServer().getPluginManager().getPlugin("Citizens") != null && com.fullwall.Citizens.NPCs.NPCManager.isNPC(p) == true)
 		{
-			return false;
-		}
-		else if(com.fullwall.Citizens.NPCs.NPCDataManager.isNPC(p) == false)
-		{
-			return false;
+			return true;
 		}
 		else
 		{
-			return true;
+			return false;
 		}
 	}
 }

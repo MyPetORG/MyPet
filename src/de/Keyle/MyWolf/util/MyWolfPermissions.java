@@ -25,46 +25,30 @@ public class MyWolfPermissions
 		{
 			return true;
 		}
-		if (player == null)
+		else if (player == null)
 		{
 			return true;
 		}
-		if (Mode == 0 && Permissions instanceof PermissionHandler) {
+		else if (Mode == 0 && Permissions instanceof PermissionHandler)
+		{
 			return ((PermissionHandler) this.Permissions).has(player, node);
 		}
-		/*
-		else if(Mode == 1 && Permissions instanceof GroupManager)
-		{
-			return ((GroupManager) Permissions).getWorldsHolder().getWorldPermissions(player).has(player,node);
-		}
-		*/
 		return false;
 		
 	}
 	
-	public boolean setup() {
-		/*
-		Plugin testPresent = Plugin.getServer().getPluginManager().getPlugin("GroupManager");
+	public boolean setup()
+	{
+    	Plugin testPresent = Plugin.getServer().getPluginManager().getPlugin("Permissions");
         if (testPresent != null)
         {
-            Permissions = (GroupManager) testPresent;
-            Mode = 1;
+            Permissions = ((Permissions)testPresent).getHandler();
+            Mode = 0;
             return true;
         }
         else
         {
-        */
-        	Plugin testPresent = Plugin.getServer().getPluginManager().getPlugin("Permissions");
-            if (testPresent != null)
-            {
-                Permissions = ((Permissions)testPresent).getHandler();
-                Mode = 0;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-       // }
+            return false;
+        }
     }
 }

@@ -2,18 +2,17 @@ name: MyWolf
 main: de.Keyle.MyWolf.MyWolf
 version: 0.4.2
 author: Keyle
+website: http://forums.bukkit.org/threads/16014/
 commands:
   wolf:
     description: wolf commands
-  ws:
-    description: short version for /wolfstop
   wolfname:
     description: set the name of the wolf
   wolfcall:
+    aliases: [wc,wolfc]
     description: call your wolf
-  wc:
-    description: short version for /wolfcall
   wolfrelease:
     description: release your wolf
   wolfstop:
+    aliases: [ws,wolfs]
     description: you wolf stopping attacking

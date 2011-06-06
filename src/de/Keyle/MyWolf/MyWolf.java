@@ -81,7 +81,6 @@ public class MyWolf extends JavaPlugin{
     	cb.cv.setProperty(cb.Config,"MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
     	cb.cv.setProperty(cb.Config,"MyWolf.max.HP",20); //20 MaxHPWolfLives
     	cb.cv.setProperty(cb.Config,"MyWolf.max.Lives",-1); //no MaxLives
-    	//cb.cv.setProperty(cb.Config,"MyWolf.WeaponItems",""); //
     	
     	cb.Config.save();
 
@@ -114,7 +113,7 @@ public class MyWolf extends JavaPlugin{
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-		//getServer().getPluginManager().registerEvent(Event.Type.ENTITY_MOVE, entityListener, Event.Priority.Normal, this); //for Future
+		//getServer().getPluginManager().registerEvent(Event.Type.ENTITY_MOVE, entityListener, Event.Priority.Normal, this); //for future
 		
 		
 		
@@ -123,7 +122,7 @@ public class MyWolf extends JavaPlugin{
         getCommand("wolfcall").setExecutor(cewc);
         getCommand("wc").setExecutor(cewc);
         MyWolfStop cews = new MyWolfStop(cb);
-        getCommand("Wolvestop").setExecutor(cews);
+        getCommand("wolfstop").setExecutor(cews);
         getCommand("ws").setExecutor(cews);
         getCommand("wolfrelease").setExecutor(new MyWolfRelease(cb));
         getCommand("wolf").setExecutor(new MyWolfInfo());
@@ -137,110 +136,7 @@ public class MyWolf extends JavaPlugin{
         	if(cb.mWolves.containsKey(p.getName()) && p.isOnline() == true)
         	cb.mWolves.get(p.getName()).createWolf(cb.mWolves.get(p.getName()).isSitting);
         }
-    }
-    
-						/*
-						else if(commandname.equalsIgnoreCase("compass")){
-							if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.compass") == false)
-							{
-								return false;
-							}
-							if(args.length == 1 && args[0].equalsIgnoreCase("stop"))
-							{
-								player.sendMessage("Your compass targets the spawn point!");
-								player.setCompassTarget(player.getWorld().getSpawnLocation());
-							}
-							else
-							{
-								player.sendMessage("Your compass targets the last location of the wolf!");
-								player.setCompassTarget(cb.mWolves.get(player.getName()).getLoc());
-							}
-							return true;
-						}
-						
-						if(commandname.equalsIgnoreCase("attack")){
-							if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.attack") == false)
-							{
-								return false;
-							}
-							if(args.length == 1)
-							{
-								if(args[0].equalsIgnoreCase("deny"))
-								{
-									player.sendMessage("Your wolf will not attack!");
-									cb.mWolves.get(player.getName()).allowAttackMonster = false;
-									cb.mWolves.get(player.getName()).allowAttackPlayer = false;
-								}
-								else if(args[0].equalsIgnoreCase("allow"))
-								{
-									player.sendMessage("Your wolf will now attack!");
-									cb.mWolves.get(player.getName()).allowAttackMonster = true;
-									cb.mWolves.get(player.getName()).allowAttackPlayer = true;
-								}
-								else
-								{
-									player.sendMessage("Syntax: /wolf allow|deny [player|monster|all]");
-								}
-							}
-							if(args.length == 2)
-							{
-								if(args[0].equalsIgnoreCase("deny"))
-								{
-									if(args[0].equalsIgnoreCase("player"))
-									{
-										player.sendMessage("Your wolf will not attack player!");
-										cb.mWolves.get(player.getName()).allowAttackPlayer = false;
-									}
-									else if(args[0].equalsIgnoreCase("monster"))
-									{
-										player.sendMessage("Your wolf will not attack monster!");
-										cb.mWolves.get(player.getName()).allowAttackMonster = false;
-									}
-									else if(args[0].equalsIgnoreCase("all"))
-									{
-										player.sendMessage("Your wolf will not attack!");
-										cb.mWolves.get(player.getName()).allowAttackMonster = false;
-										cb.mWolves.get(player.getName()).allowAttackPlayer = false;
-									}
-									else
-									{
-										player.sendMessage("Syntax: /wolf allow|deny [player|monster|all]");
-									}
-								}
-								else if(args[0].equalsIgnoreCase("allow"))
-								{
-									if(args[0].equalsIgnoreCase("player"))
-									{
-										player.sendMessage("Your wolf will now attack player!");
-										cb.mWolves.get(player.getName()).allowAttackPlayer = true;
-									}
-									else if(args[0].equalsIgnoreCase("monster"))
-									{
-										player.sendMessage("Your wolf will now attack monster!");
-										cb.mWolves.get(player.getName()).allowAttackMonster = true;
-									}
-									else if(args[0].equalsIgnoreCase("all"))
-									{
-										player.sendMessage("Your wolf will now attack all!");
-										cb.mWolves.get(player.getName()).allowAttackMonster = true;
-										cb.mWolves.get(player.getName()).allowAttackPlayer = true;
-									}
-									else
-									{
-										player.sendMessage("Syntax: /wolf allow|deny [player|monster|all]");
-									}
-								}
-								else
-								{
-									player.sendMessage("Syntax: /wolf allow|deny [player|monster|all]");
-								}
-							}
-							
-							cb.mWolves.get(player.getName()).MyWolf.setTarget((LivingEntity)null);
-						}
-						*/
-    
-	
+    }						
 	
 	public void LoadWolves()
 	{
@@ -285,12 +181,13 @@ public class MyWolf extends JavaPlugin{
 				}
 				if(cb.Plugin.getServer().getWorld(WolfWorld) == null)
 				{
-					cb.log.info("[MyWolf] World for wolf \"" + WolfName + "\" not found - skiped wolf");
+					cb.log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
+					continue;
 				}
 				
 				cb.mWolves.put(ownername, new Wolves(cb,ownername));
 				
-				cb.mWolves.get(ownername).WolfLocation = new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ);
+				cb.mWolves.get(ownername).Location = new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ);
 				
 				if(WolfLives > cb.cv.WolfMaxLives)
 				{
@@ -325,7 +222,7 @@ public class MyWolf extends JavaPlugin{
 						{
 							if(Integer.parseInt(itemvalues[1])<=64)
 							{
-								cb.mWolves.get(ownername).WolfInventory.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+								cb.mWolves.get(ownername).Inventory.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
 							}
 						}
 					}
@@ -334,7 +231,7 @@ public class MyWolf extends JavaPlugin{
 				anzahlWolves++;
 			}
 		}
-		cb.log.info("["+this.getDescription().getName() + "] " + anzahlWolves + " Wolves loaded" );
+		cb.log.info("["+this.getDescription().getName() + "] " + anzahlWolves + " wolf/wolves loaded" );
 	}
 	
 	public void SaveWolves()
@@ -344,25 +241,20 @@ public class MyWolf extends JavaPlugin{
         {
 			Wolves wolf = cb.mWolves.get( owner );
 			String Items = "";
-        	for ( ItemStack Item : cb.mWolves.get(owner).WolfInventory.getContents() )
+			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
+        	for ( ItemStack Item : cb.mWolves.get(owner).Inventory.getContents() )
         	{
-        		if(Item != null)
-        		{
-        			Items += Item.id + "," + Item.count + "," + Item.damage + ";";
-        		}
-        		else
-        		{
-        			Items += ",,;";
-        		}
+        		Items += ( Item!=null ? Items += Item.id + "," + Item.count + "," + Item.damage + ";" : ",,;" );
         	}
-        	Items = Items.substring(0,Items.length()-1);
+			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
+			{
+				Items = Items.substring(0,Items.length()-1);
+			}
 	
-        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.X", wolf.getLoc().getX());
-        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Y", wolf.getLoc().getY());
-        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Z", wolf.getLoc().getZ());
-        	        	
-        	cb.log.info(""+wolf.getLoc());
-        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.world", wolf.getLoc().getWorld().getName());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.X", wolf.getLocation().getX());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Y", wolf.getLocation().getY());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.Z", wolf.getLocation().getZ());
+        	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.world", wolf.getLocation().getWorld().getName());
         	
         	cb.WolvesConfig.setProperty("Wolves."+owner+".health.now", wolf.getHealth());
         	cb.WolvesConfig.setProperty("Wolves."+owner+".health.max", wolf.HealthMax);

@@ -91,7 +91,7 @@ public class MyWolfPlayerListener extends PlayerListener{
     {
     	if (cb.mWolves.containsKey(event.getPlayer().getName()))
     	{
-    		double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
+    		double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
 			if (dist < 75) 
     		{
 				cb.mWolves.get(event.getPlayer().getName()).createWolf(cb.mWolves.get(event.getPlayer().getName()).isSitting);
@@ -107,9 +107,9 @@ public class MyWolfPlayerListener extends PlayerListener{
 	    	if(cb.mWolves.get(event.getPlayer().getName()).isThere == true && cb.mWolves.get(event.getPlayer().getName()).isDead == false)
 	    	{
 	    		cb.mWolves.get(event.getPlayer().getName()).removeWolf();
-	    		if(cb.mWolves.get(event.getPlayer().getName()).getLoc() == null)
+	    		if(cb.mWolves.get(event.getPlayer().getName()).getLocation() == null)
 	    		{
-	    			cb.mWolves.get(event.getPlayer().getName()).WolfLocation = event.getPlayer().getLocation();
+	    			cb.mWolves.get(event.getPlayer().getName()).Location = event.getPlayer().getLocation();
 	    		}
 	    	}
 	    	cb.Plugin.SaveWolves();
@@ -119,18 +119,13 @@ public class MyWolfPlayerListener extends PlayerListener{
 	@Override
     public void onPlayerMove(PlayerMoveEvent event)
     {
-		//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("0");
 		if (cb.mWolves.containsKey(event.getPlayer().getName()))
 		{
-			//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("1");
 			if(cb.mWolves.get(event.getPlayer().getName()).isThere == false && cb.mWolves.get(event.getPlayer().getName()).isDead == false)
 			{
-				
-				double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
-				//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.1 -- " + dist);
-				if (cb.mWolves.get(event.getPlayer().getName()).RespawnTime == 0 && dist < 75 && cb.mWolves.get(event.getPlayer().getName()).WolfLocation.getWorld() == event.getPlayer().getLocation().getWorld()) 
+				double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
+				if (cb.mWolves.get(event.getPlayer().getName()).RespawnTime == 0 && dist < 75 && cb.mWolves.get(event.getPlayer().getName()).Location.getWorld() == event.getPlayer().getLocation().getWorld()) 
 	    		{
-					//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.1.1");
 					if(cb.mWolves.get(event.getPlayer().getName()).isDead == false)
 					{
 						cb.mWolves.get(event.getPlayer().getName()).createWolf(true);
@@ -139,20 +134,16 @@ public class MyWolfPlayerListener extends PlayerListener{
 			}
 			else
 			{
-				//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2");
 				if(cb.mWolves.get(event.getPlayer().getName()).isDead == false && cb.mWolves.get(event.getPlayer().getName()).isSitting() == true )
 				{
 					
-					double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
-					//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2.1 -- " + dist);
-					if (dist > 75 || cb.mWolves.get(event.getPlayer().getName()).WolfLocation.getWorld() != event.getPlayer().getLocation().getWorld()) 
+					double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
+					if (dist > 75 || cb.mWolves.get(event.getPlayer().getName()).Location.getWorld() != event.getPlayer().getLocation().getWorld()) 
 	        		{
-	    				//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2.1.1");
 	        			cb.mWolves.get(event.getPlayer().getName()).removeWolf();
 	       			}
 	        		else if (cb.mWolves.get(event.getPlayer().getName()).isThere == false && cb.mWolves.get(event.getPlayer().getName()).RespawnTime == 0)
 	        		{
-	        			//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2.1.2");
 	        			if(cb.mWolves.get(event.getPlayer().getName()).isDead == false)
 						{
 	        				cb.mWolves.get(event.getPlayer().getName()).createWolf(true);
@@ -162,13 +153,11 @@ public class MyWolfPlayerListener extends PlayerListener{
 				else if(cb.mWolves.get(event.getPlayer().getName()).isDead == false)
 				{
 					
-					double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLoc().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
-					//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2.2 -- " + dist);
-					if (cb.mWolves.get(event.getPlayer().getName()).RespawnTime == 0 && dist > 75 || cb.mWolves.get(event.getPlayer().getName()).WolfLocation.getWorld() != event.getPlayer().getLocation().getWorld() && cb.mWolves.get(event.getPlayer().getName()).isDead == false) 
+					double dist = Math.sqrt(Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getX() - event.getPlayer().getLocation().getX(), 2.0D) + Math.pow(cb.mWolves.get(event.getPlayer().getName()).getLocation().getZ() - event.getPlayer().getLocation().getZ(), 2.0D));
+					if (cb.mWolves.get(event.getPlayer().getName()).RespawnTime == 0 && dist > 75 || cb.mWolves.get(event.getPlayer().getName()).Location.getWorld() != event.getPlayer().getLocation().getWorld() && cb.mWolves.get(event.getPlayer().getName()).isDead == false) 
 	        		{
-	    				//if(event.getPlayer().getName().equalsIgnoreCase("Keyle")) cb.log.info("2.2.2.1");
 	    				cb.mWolves.get(event.getPlayer().getName()).removeWolf();
-	    				cb.mWolves.get(event.getPlayer().getName()).WolfLocation = event.getPlayer().getLocation();
+	    				cb.mWolves.get(event.getPlayer().getName()).Location = event.getPlayer().getLocation();
 	    				cb.mWolves.get(event.getPlayer().getName()).createWolf(false);
 	       			}
 				}

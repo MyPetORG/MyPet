@@ -158,6 +158,7 @@ public class MyWolfEntityListener extends EntityListener
 										}
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
+										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an inventory.");
 									}
 										
 									
@@ -223,6 +224,7 @@ public class MyWolfEntityListener extends EntityListener
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
 										wolf.DropTimer();
+										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " now pickup items in a range of" + cb.cv.WolfPickupRange + ".");
 									}
 										
 									
@@ -239,7 +241,7 @@ public class MyWolfEntityListener extends EntityListener
 									if(wolf.hasInventory == true)
 									{
 										EntityPlayer eh = ((CraftPlayer)player).getHandle();
-										eh.a(wolf.WolfInventory);
+										eh.a(wolf.Inventory);
 											
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
@@ -339,9 +341,9 @@ public class MyWolfEntityListener extends EntityListener
 						cb.mWolves.get(owner).Lives -= 1;
 						if(cb.mWolves.get(owner).Lives <= 0)
 						{
-							for(ItemStack is : cb.mWolves.get(owner).WolfInventory.getContents())
+							for(ItemStack is : cb.mWolves.get(owner).Inventory.getContents())
 							{
-								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
+								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 							}
 							cb.mWolves.get(owner).getPlayer().sendMessage(ChatColor.AQUA + cb.mWolves.get(owner).Name + ChatColor.WHITE + " is " + ChatColor.RED + "gone" + ChatColor.WHITE + " and will never come back . . .");
 							cb.mWolves.remove(cb.mWolves.get(owner).getPlayer().getName());
@@ -513,38 +515,7 @@ public class MyWolfEntityListener extends EntityListener
 			}
 		}
 	}
-	/*
-	@Override
-	public void onEntityTarget(EntityTargetEvent event)
-	{
-		if ((event.getEntity() instanceof Wolf))
-		{
-			for ( String owner : cb.mWolves.keySet() )
-	        {
-				if(cb.mWolves.get(owner).MyWolf.getEntityId() == event.getEntity().getEntityId())
-				{
-					if(event.getTarget() instanceof Player)
-					{
-						if(cb.mWolves.get(owner).allowAttackPlayer == false)
-						{
-							cb.mWolves.get(owner).MyWolf.setTarget((LivingEntity)null);
-							event.setCancelled(true);
-						}
-					}
-					else
-					{
-						if(cb.mWolves.get(owner).allowAttackMonster == false)
-						{
-							cb.mWolves.get(owner).MyWolf.setTarget((LivingEntity)null);
-							event.setCancelled(true);
-						}
-					}
-					break;
-				}	        	
-	        }
-		}
-	}
-	*/
+
 	/*
 	@Override
 	public void onEntityMove(EntityMoveEvent event)

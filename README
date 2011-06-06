@@ -1,4 +1,4 @@
-Plugin Name:	MyWolf v0.4.1
+Plugin Name:	MyWolf v0.4.2
 Author: 		Keyle
 
 
@@ -28,11 +28,11 @@ Now the wolf:
 
 These commands can be used:
   /wolf						- show all MyWolf commands
-  /wolf name <newwolfname> 	- set the name of your wolf
-  /wolf release <wolfname> 	- release your wolf so he's free
-  /wolf stop 				- the wolf stop attacking his taget
-  /wolf call				- teleports your wolf to you
-  
+  /wolfname <newwolfname>	- set the name of your wolf
+  /wolfrelease <wolfname>	- release your wolf so he's free
+  /wolfstop 				- the wolf stop attacking his taget		- alias:	/ws or /wolfs
+  /wolfcall					- teleports your wolf to you			- alias:	/wc or /wolfc
+
 
 Config:
 
@@ -69,6 +69,7 @@ Permissions:
    - 'mywolf.release'
    - 'mywolf.leash'
    - 'mywolf.chest.add'
+   - 'mywolf.chest.open
    - 'mywolf.info'
    - 'mywolf.food.hp'
    - 'mywolf.food.lives'

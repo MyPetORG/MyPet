@@ -29,18 +29,18 @@ public class MyWolfCall implements CommandExecutor
 				{
 					return false;
 				}
-				cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
+				cb.mWolves.get(player.getName()).Location = player.getLocation();
 				if(cb.mWolves.get(player.getName()).isThere == true)
 				{
-					cb.mWolves.get(player.getName()).MyWolf.teleport(player.getLocation());
-					cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
+					cb.mWolves.get(player.getName()).MyWolf.teleport(player);
+					cb.mWolves.get(player.getName()).Location = player.getLocation();
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 				}
 				else if(cb.mWolves.get(player.getName()).isThere == false && cb.mWolves.get(player.getName()).RespawnTime == 0)
 				{
-					cb.mWolves.get(player.getName()).WolfLocation = player.getLocation();
+					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					cb.mWolves.get(player.getName()).createWolf(false);
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is coming to you.");
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 				}
 				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{

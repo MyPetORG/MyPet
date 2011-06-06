@@ -50,11 +50,11 @@ public class MyWolfRelease implements CommandExecutor {
 				if(cb.mWolves.get(player.getName()).Name.equalsIgnoreCase(name))
 				{
 					cb.mWolves.get(player.getName()).MyWolf.setOwner(null);
-					for(ItemStack is : cb.mWolves.get(player.getName()).WolfInventory.getContents())
+					for(ItemStack is : cb.mWolves.get(player.getName()).Inventory.getContents())
 					{
 						if(is != null)
 						{
-							cb.mWolves.get(player.getName()).MyWolf.getWorld().dropItem(cb.mWolves.get(player.getName()).getLoc(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
+							cb.mWolves.get(player.getName()).MyWolf.getWorld().dropItem(cb.mWolves.get(player.getName()).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 						}
 					}
 					player.sendMessage(ChatColor.AQUA + cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is now " + ChatColor.GREEN + "free" + ChatColor.WHITE + " . . .");
