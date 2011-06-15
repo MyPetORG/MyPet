@@ -50,7 +50,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 		 {
 			 if(cb.mWolves.get(event.getPlayer().getName()).isThere = true && cb.mWolves.get(event.getPlayer().getName()).isDead == false && cb.mWolves.get(event.getPlayer().getName()).MyWolf.isSitting() == false)
 			 {
-				if(cb.Permissions != null && cb.Permissions.has(event.getPlayer(), "mywolf.control.walk") == false)
+				if(cb.Permissions.has(event.getPlayer(), "mywolf.control.walk") == false)
 				{
 					return;
 				}
@@ -60,7 +60,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 	            	 PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
 	    			 EntityWolf wolf =((CraftWolf) cb.mWolves.get(event.getPlayer().getName()).MyWolf).getHandle();
 	    			 wolf.a(new PathEntity(loc));
-	    			 if(cb.Permissions != null && cb.Permissions.has(event.getPlayer(), "mywolf.control.attack") == false)
+	    			 if(cb.Permissions.has(event.getPlayer(), "mywolf.control.attack") == false)
 	    			 {
 	    				 return;
 	    			 }

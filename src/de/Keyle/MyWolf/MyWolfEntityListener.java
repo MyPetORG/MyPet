@@ -105,7 +105,7 @@ public class MyWolfEntityListener extends EntityListener
 	
 							if(player.getItemInHand().getType() == cb.cv.WolfLeashItem && cb.cv.WolfLeashItemSneak == player.isSneaking())
 							{
-								if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.info") == false)
+								if(cb.Permissions.has(player, "mywolf.info") == false)
 								{
 									return;
 								}
@@ -149,7 +149,11 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
 								{
-									if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.chest.add") == false)
+									if(cb.Permissions.has(player, "mywolf.chest.add.small") == false)
+									{
+										return;
+									}
+									else if(wolf.InventoryMode == InventoryType.SMALL && cb.Permissions.has(player, "mywolf.chest.add.large") == false)
 									{
 										return;
 									}
@@ -176,7 +180,7 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								if(cb.cv.WolfMaxLives > -1 && wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
 								{
-									if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.food.lives") == false)
+									if(cb.Permissions.has(player, "mywolf.food.lives") == false)
 									{
 										return;
 									}
@@ -214,7 +218,7 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
 								{
-									if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.pickup.add") == false)
+									if(cb.Permissions.has(player, "mywolf.pickup.add") == false)
 									{
 										return;
 									}
@@ -242,7 +246,7 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
 								{
-									if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.chest.open") == false)
+									if(cb.Permissions.has(player, "mywolf.chest.open") == false)
 									{
 										return;
 									}
@@ -259,7 +263,7 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
 								{
-									if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.food.hp") == false)
+									if(cb.Permissions.has(player, "mywolf.food.hp") == false)
 									{
 										return;
 									}

@@ -20,6 +20,8 @@
 package de.Keyle.MyWolf.util;
 
 import org.bukkit.entity.Player;
+
+import org.anjocaido.groupmanager.GroupManager;
 import org.bukkit.plugin.Plugin;
 
 import com.nijiko.permissions.PermissionHandler;
@@ -31,7 +33,13 @@ public class MyWolfPermissions
 {
 	MyWolf Plugin;
 	private Object Permissions;
-	private int Mode = -1;
+	private enum PermissionsType
+	{
+		NONE,
+		GroupManager,
+		Permissions;
+	}
+	private PermissionsType PermissionsMode = PermissionsType.NONE;
 	
 	public MyWolfPermissions(MyWolf Plugin)
 	{
@@ -40,17 +48,17 @@ public class MyWolfPermissions
 	
 	public boolean has(Player player, String node)
 	{
-		if (this.Permissions == null)
+		if (PermissionsMode == PermissionsType.NONE || this.Permissions == null || player == null)
 		{
 			return true;
 		}
-		else if (player == null)
-		{
-			return true;
-		}
-		else if (Mode == 0 && Permissions instanceof PermissionHandler)
+		else if (PermissionsMode == PermissionsType.Permissions && Permissions instanceof PermissionHandler)
 		{
 			return ((PermissionHandler) this.Permissions).has(player, node);
+		}
+		else if (PermissionsMode == PermissionsType.GroupManager && Permissions instanceof GroupManager)
+		{
+			 return ((GroupManager) Permissions).getWorldsHolder().getWorldPermissions(player).has(player,node);
 		}
 		return false;
 		
@@ -58,16 +66,26 @@ public class MyWolfPermissions
 	
 	public boolean setup()
 	{
-    	Plugin testPresent = Plugin.getServer().getPluginManager().getPlugin("Permissions");
-        if (testPresent != null)
+		Plugin p;
+		
+		p = Plugin.getServer().getPluginManager().getPlugin("GroupManager");	
+        if (p != null && PermissionsMode == PermissionsType.NONE)
         {
-            Permissions = ((Permissions)testPresent).getHandler();
-            Mode = 0;
+        	PermissionsMode = PermissionsType.GroupManager;
+        	Permissions = (GroupManager) p;
+        	return true;
+        }
+        
+    	p = Plugin.getServer().getPluginManager().getPlugin("Permissions");
+        if (p != null && PermissionsMode == PermissionsType.NONE)
+        {
+        	PermissionsMode = PermissionsType.Permissions;
+            Permissions = ((Permissions)p).getHandler();
             return true;
         }
-        else
-        {
-            return false;
-        }
+        
+        return false;
     }
+	
+	
 }

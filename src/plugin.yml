@@ -3,6 +3,7 @@ main: de.Keyle.MyWolf.MyWolf
 version: 0.4.4beta
 author: Keyle
 website: http://forums.bukkit.org/threads/16014/
+softdepend: [GroupManager, Permissions, BukkitContrib]
 commands:
   wolf:
     description: wolf commands
