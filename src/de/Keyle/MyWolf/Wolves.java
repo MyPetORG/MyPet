@@ -34,6 +34,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.util.Vector;
+
 import org.bukkitcontrib.BukkitContrib;
 
 public class Wolves {
@@ -89,7 +90,10 @@ public class Wolves {
 	
 	private void DisplayName()
 	{
-		BukkitContrib.getAppearanceManager().setGlobalTitle(MyWolf, ChatColor.AQUA + Name);
+		if(cb.Plugin.getServer().getPluginManager().getPlugin("BukkitContrib") != null)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(MyWolf, ChatColor.AQUA + Name);
+		}
 	}
 	
 	public void OpenInventory()
