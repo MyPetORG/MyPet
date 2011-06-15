@@ -1,4 +1,4 @@
-Plugin Name:	MyWolf v0.4.2
+Plugin Name:	MyWolf v0.4.X
 Author: 		Keyle
 
 
@@ -68,11 +68,13 @@ Permissions:
    - 'mywolf.setname'
    - 'mywolf.release'
    - 'mywolf.leash'
-   - 'mywolf.chest.add'
+   - 'mywolf.chest.add.small'
+   - 'mywolf.chest.add.large'
    - 'mywolf.chest.open
    - 'mywolf.info'
    - 'mywolf.food.hp'
    - 'mywolf.food.lives'
+   - 'mywolf.pickup.add'
    - 'mywolf.pickup.add'
    - 'mywolf.pickup.open'
    - 'mywolf.call'
