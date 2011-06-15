@@ -51,7 +51,7 @@ public class MyWolfRelease implements CommandExecutor {
 				{
 					cb.mWolves.get(player.getName()).MyWolf.setOwner(null);
 					cb.mWolves.get(player.getName()).StopDropTimer();
-					for(ItemStack is : cb.mWolves.get(player.getName()).Inventory.getContents())
+					for(ItemStack is : cb.mWolves.get(player.getName()).LargeInventory.getContents())
 					{
 						if(is != null)
 						{

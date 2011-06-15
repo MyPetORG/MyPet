@@ -40,7 +40,7 @@ public class MyWolfName implements CommandExecutor {
 					name += arg + " ";
 				}
 				name = name.substring(0,name.length()-1);
-				cb.mWolves.get(player.getName()).Name = name;
+				cb.mWolves.get(player.getName()).SetName(name);
 				player.sendMessage("The name of your wolf is now: " + ChatColor.AQUA + name);
 				return true;
     		}

@@ -19,11 +19,9 @@
 
 package de.Keyle.MyWolf;
 
-import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
 
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Ghast;
@@ -41,6 +39,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
+
+import de.Keyle.MyWolf.Wolves.InventoryType;
 
 public class MyWolfEntityListener extends EntityListener
 {
@@ -110,7 +110,7 @@ public class MyWolfEntityListener extends EntityListener
 									return;
 								}
 								{
-									String msg = ""+ChatColor.GREEN;
+									String msg = ""+ChatColor.AQUA;
 									if(wolf.Name != null)
 									{
 										msg += wolf.Name + ChatColor.WHITE + ":";
@@ -153,9 +153,9 @@ public class MyWolfEntityListener extends EntityListener
 									{
 										return;
 									}
-									if(wolf.hasInventory == false)
+									if(wolf.InventoryMode == InventoryType.NONE || wolf.InventoryMode == InventoryType.SMALL)
 									{
-										wolf.hasInventory = true;
+										wolf.InventoryMode = (wolf.InventoryMode == InventoryType.NONE?InventoryType.SMALL:InventoryType.LARGE);
 										if(player.getItemInHand().getAmount()>1)
 										{
 											player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
@@ -166,7 +166,7 @@ public class MyWolfEntityListener extends EntityListener
 										}
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
-										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an inventory.");
+										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an" + (wolf.InventoryMode == InventoryType.SMALL?"":" bigger") + " inventory.");
 									}
 										
 									
@@ -246,10 +246,9 @@ public class MyWolfEntityListener extends EntityListener
 									{
 										return;
 									}
-									if(wolf.hasInventory == true)
+									if(wolf.InventoryMode != InventoryType.NONE)
 									{
-										EntityPlayer eh = ((CraftPlayer)player).getHandle();
-										eh.a(wolf.Inventory);
+										wolf.OpenInventory();
 											
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
@@ -350,7 +349,7 @@ public class MyWolfEntityListener extends EntityListener
 						if(cb.mWolves.get(owner).Lives <= 0)
 						{
 							cb.mWolves.get(owner).StopDropTimer();
-							for(ItemStack is : cb.mWolves.get(owner).Inventory.getContents())
+							for(ItemStack is : cb.mWolves.get(owner).LargeInventory.getContents())
 							{
 								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 							}

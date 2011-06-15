@@ -48,14 +48,11 @@ public class ConfigBuffer {
 	
 	public boolean isNPC(Player p)
 	{
-		if(Plugin.getServer().getPluginManager().getPlugin("Citizens") != null && com.fullwall.Citizens.NPCs.NPCManager.isNPC(p) == true)
+		if(Plugin.getServer().getPluginManager().getPlugin("Citizens") != null)
 		{
-			return true;
+			return com.fullwall.Citizens.NPCs.NPCManager.isNPC(p);
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 }
 

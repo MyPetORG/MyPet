@@ -70,8 +70,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 	    				 {
 	    					 if(e instanceof Player)
 	    					 {
-	    						 cb.log.info(""+cb.isNPC(event.getPlayer()));
-	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && cb.isNPC(event.getPlayer()) == false)
+	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && cb.isNPC((Player) e) == false)
 	    						 {
 	    							 cb.mWolves.get(event.getPlayer().getName()).MyWolf.setTarget((LivingEntity)e);
 	    						 }
@@ -97,6 +96,10 @@ public class MyWolfPlayerListener extends PlayerListener{
     		{
 				cb.mWolves.get(event.getPlayer().getName()).createWolf(cb.mWolves.get(event.getPlayer().getName()).isSitting);
    			}
+			else
+			{
+				cb.mWolves.get(event.getPlayer().getName()).isThere = false;
+			}
     	}
     }
     

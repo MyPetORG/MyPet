@@ -30,7 +30,7 @@ public class MyWolfCall implements CommandExecutor
 					return false;
 				}
 				cb.mWolves.get(player.getName()).Location = player.getLocation();
-				if(cb.mWolves.get(player.getName()).isThere == true)
+				if(cb.mWolves.get(player.getName()).isThere == true && cb.mWolves.get(player.getName()).isDead == false)
 				{
 					cb.mWolves.get(player.getName()).MyWolf.teleport(player);
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
@@ -44,7 +44,7 @@ public class MyWolfCall implements CommandExecutor
 				}
 				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead!");
+					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead! and respawns in "+ChatColor.GOLD+cb.mWolves.get(player.getName()).RespawnTime+ChatColor.WHITE +" sec");
 					return false;
 				}
 	        }

@@ -21,8 +21,12 @@ package de.Keyle.MyWolf;
 
 import com.aranai.virtualchest.TileEntityVirtualChest;
 
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.InventoryLargeChest;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -30,6 +34,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.util.Vector;
+import org.bukkitcontrib.BukkitContrib;
 
 public class Wolves {
 	
@@ -48,13 +53,22 @@ public class Wolves {
 	public Player player;
 	public boolean isSitting = false;
 	
-	public boolean hasInventory = false;
+	public enum InventoryType
+	{
+		NONE,
+	    SMALL,
+	    LARGE;
+	}
+	public InventoryType InventoryMode = InventoryType.NONE;
 	public boolean hasPickup = false;
 	
 	public boolean allowAttackPlayer = true;
 	public boolean allowAttackMonster = false;
 	
-	public TileEntityVirtualChest Inventory = new TileEntityVirtualChest();
+	public TileEntityVirtualChest Inventory1 = new TileEntityVirtualChest();
+	public TileEntityVirtualChest Inventory2 = new TileEntityVirtualChest();
+	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory1.getName(), Inventory1, Inventory2);
+	
 	
 	public boolean isThere = false;
 	public boolean isDead = false;
@@ -65,6 +79,30 @@ public class Wolves {
 	public Wolves(ConfigBuffer cb, String Owner) {
 		this.cb = cb;				
 		this.Owner = Owner;
+	}
+	
+	public void SetName(String name)
+	{
+		Name = name;
+		DisplayName();
+	}
+	
+	private void DisplayName()
+	{
+		BukkitContrib.getAppearanceManager().setGlobalTitle(MyWolf, ChatColor.AQUA + Name);
+	}
+	
+	public void OpenInventory()
+	{
+		EntityPlayer eh = ((CraftPlayer)getPlayer()).getHandle();
+		if(InventoryMode == InventoryType.SMALL)
+		{
+			eh.a(Inventory1);
+		}
+		else if(InventoryMode == InventoryType.LARGE)
+		{
+			eh.a(LargeInventory);
+		}
 	}
 	
 	public void removeWolf()
@@ -97,6 +135,7 @@ public class Wolves {
 		    	
 		    	isThere = true;
 		    	isDead = false;
+		    	DisplayName();
 		    	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
 		    	{
 		    		DropTimer();
@@ -120,6 +159,7 @@ public class Wolves {
     	Location = MyWolf.getLocation();
     	isThere = true;
     	isDead = false;
+    	DisplayName();
     	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
     	{
     		DropTimer();
@@ -274,7 +314,7 @@ public class Wolves {
 										Vector distance = getLocation().toVector().add(new Vector(0.5,0,0.5)).subtract(item.getLocation().toVector());
 										if(distance.lengthSquared() < 1.0*cb.cv.WolfPickupRange*cb.cv.WolfPickupRange + 1)
 										{
-											int amountleft = Inventory.addItem(item);
+											int amountleft = Inventory1.addItem(item);
 											if(amountleft == 0)
 											{
 												e.remove();
@@ -285,8 +325,22 @@ public class Wolves {
 												{
 													item.getItemStack().setAmount(amountleft);
 												}
+												if(InventoryMode == InventoryType.LARGE)
+												{
+													amountleft = Inventory2.addItem(item);
+													if(amountleft == 0)
+													{
+														e.remove();
+													}
+													else
+													{
+														if(item.getItemStack().getAmount() > amountleft)
+														{
+															item.getItemStack().setAmount(amountleft);
+														}
+													}
+												}
 											}
-											
 										}
 									}
 								}

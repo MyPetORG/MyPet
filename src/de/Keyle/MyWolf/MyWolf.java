@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.Wolves.InventoryType;
 import de.Keyle.MyWolf.commands.*;
 
 
@@ -150,9 +151,9 @@ public class MyWolf extends JavaPlugin{
 		int WolfHealthMax;
 		int WolfLives;
 		int WolfHealthRespawnTime;
+		String WolfInventoryMode;
 		String WolfName;
 		boolean Wolvesitting;
-		boolean WolfhasInventory;
 		boolean WolfhasPickup;
 		
 		cb.WolvesConfig.load();
@@ -172,8 +173,13 @@ public class MyWolf extends JavaPlugin{
 				WolfHealthRespawnTime = cb.WolvesConfig.getInt("Wolves."+ownername+".health.respawntime", 0);
 				WolfName = cb.WolvesConfig.getString("Wolves."+ownername+".name", "Wolf");
 				Wolvesitting = cb.WolvesConfig.getBoolean("Wolves."+ownername+".sitting", false);
-				WolfhasInventory = cb.WolvesConfig.getBoolean("Wolves."+ownername+".chest",false);
+				WolfInventoryMode = cb.WolvesConfig.getString("Wolves."+ownername+".chest","NONE");
 				WolfhasPickup = cb.WolvesConfig.getBoolean("Wolves."+ownername+".pickup",false);
+				
+				if(WolfInventoryMode.equals("NONE") == false && WolfInventoryMode.equals("SMALL") == false && WolfInventoryMode.equals("LARGE") == false)
+				{
+					WolfInventoryMode = WolfInventoryMode.equalsIgnoreCase("true")?"SMALL":"NONE";
+				}
 				
 				if(WolfLives == 0)
 				{
@@ -210,10 +216,17 @@ public class MyWolf extends JavaPlugin{
 				cb.mWolves.get(ownername).RespawnTime = WolfHealthRespawnTime;
 				cb.mWolves.get(ownername).Name = WolfName;
 				cb.mWolves.get(ownername).isSitting = Wolvesitting;
-				cb.mWolves.get(ownername).hasInventory = WolfhasInventory;
+				cb.mWolves.get(ownername).InventoryMode = InventoryType.valueOf(WolfInventoryMode);
 				cb.mWolves.get(ownername).hasPickup = WolfhasPickup;
 				
-				for ( String item : cb.WolvesConfig.getString("Wolves."+ownername+".inventory", "").split("\\;") )
+				String inv1 = cb.WolvesConfig.getString("Wolves."+ownername+".inventory");
+
+				if(inv1.startsWith("{"))
+				{
+					inv1 = cb.WolvesConfig.getString("Wolves."+ownername+".inventory.1");
+				}
+				
+				for ( String item : inv1.split("\\;") )
 				{
 					String[] itemvalues = item.split("\\,");
 					if(itemvalues.length == 3 && isInt(itemvalues[0]) && isInt(itemvalues[1]) && isInt(itemvalues[2]))
@@ -222,11 +235,30 @@ public class MyWolf extends JavaPlugin{
 						{
 							if(Integer.parseInt(itemvalues[1])<=64)
 							{
-								cb.mWolves.get(ownername).Inventory.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+								cb.mWolves.get(ownername).Inventory1.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
 							}
 						}
 					}
 					invSlot++;
+				}
+				if(cb.mWolves.get(ownername).InventoryMode == InventoryType.LARGE)
+				{
+					invSlot = 0;
+					for ( String item : cb.WolvesConfig.getString("Wolves."+ownername+".inventory.2", "").split("\\;") )
+					{
+						String[] itemvalues = item.split("\\,");
+						if(itemvalues.length == 3 && isInt(itemvalues[0]) && isInt(itemvalues[1]) && isInt(itemvalues[2]))
+						{
+							if(Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+							{
+								if(Integer.parseInt(itemvalues[1])<=64)
+								{
+									cb.mWolves.get(ownername).Inventory2.setItem(invSlot,new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+								}
+							}
+						}
+						invSlot++;
+					}
 				}
 				anzahlWolves++;
 			}
@@ -241,21 +273,42 @@ public class MyWolf extends JavaPlugin{
         {
 			Wolves wolf = cb.mWolves.get( owner );
 			String Items = "";
-			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
-        	for ( ItemStack Item : cb.mWolves.get(owner).Inventory.getContents() )
-        	{
-        		if( Item!=null)
-        		{
-        			Items += Item.id + "," + Item.count + "," + Item.damage + ";";
-        		}
-        		else
-        		{
-        			Items += ",,;";
-        		}
-        	}
-			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
+			if(cb.mWolves.get(owner).Inventory1.getContents().length > 0)
 			{
-				Items = Items.substring(0,Items.length()-1);
+	        	for ( ItemStack Item : cb.mWolves.get(owner).Inventory1.getContents() )
+	        	{
+	        		if( Item!=null)
+	        		{
+	        			Items += Item.id + "," + Item.count + "," + Item.damage + ";";
+	        		}
+	        		else
+	        		{
+	        			Items += ",,;";
+	        		}
+	        	}
+	        	Items = Items.substring(0,Items.length()-1);
+			}
+			cb.WolvesConfig.setProperty("Wolves."+owner+".inventory.1", Items);
+
+			if(cb.mWolves.get(owner).InventoryMode == InventoryType.LARGE)
+			{
+				String Items2 = "";
+				if(cb.mWolves.get(owner).Inventory2.getContents().length > 0)
+				{
+		        	for ( ItemStack Item : cb.mWolves.get(owner).Inventory2.getContents() )
+		        	{
+		        		if( Item!=null)
+		        		{
+		        			Items2 += Item.id + "," + Item.count + "," + Item.damage + ";";
+		        		}
+		        		else
+		        		{
+		        			Items2 += ",,;";
+		        		}
+		        	}
+		        	Items2 = Items2.substring(0,Items2.length()-1);
+				}
+				cb.WolvesConfig.setProperty("Wolves."+owner+".inventory.2", Items2);
 			}
 	
         	cb.WolvesConfig.setProperty("Wolves."+owner+".loc.X", wolf.getLocation().getX());
@@ -267,10 +320,9 @@ public class MyWolf extends JavaPlugin{
         	cb.WolvesConfig.setProperty("Wolves."+owner+".health.max", wolf.HealthMax);
         	cb.WolvesConfig.setProperty("Wolves."+owner+".health.lives", wolf.Lives);
         	cb.WolvesConfig.setProperty("Wolves."+owner+".health.respawntime", wolf.RespawnTime);
-        	cb.WolvesConfig.setProperty("Wolves."+owner+".inventory", Items);	
 			cb.WolvesConfig.setProperty("Wolves."+owner+".name", wolf.Name);
 			cb.WolvesConfig.setProperty("Wolves."+owner+".sitting", wolf.isSitting());
-			cb.WolvesConfig.setProperty("Wolves."+owner+".chest", wolf.hasInventory);
+			cb.WolvesConfig.setProperty("Wolves."+owner+".chest", wolf.InventoryMode.name());
 			cb.WolvesConfig.setProperty("Wolves."+owner+".pickup", wolf.hasPickup);
         }
 		cb.WolvesConfig.save();
