@@ -44,7 +44,7 @@ public class Wolves {
 	public Wolf MyWolf;
 	public int RespawnTime = 0;
 	private int RespawnTimer;
-	private int DropTimer;
+	private int DropTimer = -1;
 	public Player player;
 	public boolean isSitting = false;
 	
@@ -69,6 +69,7 @@ public class Wolves {
 	
 	public void removeWolf()
 	{
+		StopDropTimer();
 		isSitting = MyWolf.isSitting();
 		HealthNow= MyWolf.getHealth();
 		Location = MyWolf.getLocation();
@@ -236,6 +237,16 @@ public class Wolves {
 		}
 	}
 	
+	public void StopDropTimer()
+	{
+		if(DropTimer != -1)
+		{
+			cb.Plugin.getServer().getScheduler().cancelTask(DropTimer);
+			DropTimer = -1;
+		}
+		
+	}
+	
 	public void DropTimer()
 	{
 		if(isThere == true)
@@ -246,7 +257,7 @@ public class Wolves {
 				public void run() {
 					if (isThere == false || isDead == true || getPlayer() == null)
 					{
-						cb.Plugin.getServer().getScheduler().cancelTask(DropTimer);
+						StopDropTimer();
 					}
 					else
 					{
@@ -288,7 +299,7 @@ public class Wolves {
 						}
 						else
 						{
-							cb.Plugin.getServer().getScheduler().cancelTask(DropTimer);
+							StopDropTimer();
 						}
 					}
 				}

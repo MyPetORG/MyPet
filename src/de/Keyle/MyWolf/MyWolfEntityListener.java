@@ -24,6 +24,7 @@ import net.minecraft.server.ItemStack;
 
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Giant;
@@ -71,11 +72,18 @@ public class MyWolfEntityListener extends EntityListener
 					
 					if(cb.mWolves.containsKey(player.getName()) == false)
 					{
-						if(cb.Permissions != null && cb.Permissions.has(player, "mywolf.leash") == false)
+						if(cb.Permissions.has(player, "mywolf.leash") == false  || player.getItemInHand().getType() != cb.cv.WolfLeashItem)
 						{
 							return;
 						}
-						if(((Wolf)event.getEntity()).isTamed() == true && ((Player)((Wolf)event.getEntity()).getOwner()).getName().equals(player.getName()))
+						Wolf TargetWolf = (Wolf)event.getEntity();
+						
+						String OwnerOfTheWolf = ((CraftWolf) TargetWolf).getHandle().x();
+						Player Attacker = (Player)e.getDamager();
+						
+						boolean isTarmed = TargetWolf.isTamed();
+						
+						if(isTarmed == true && OwnerOfTheWolf.equals(Attacker.getName()))
 						{
 							event.setCancelled(true);
 							cb.mWolves.put(player.getName(), new Wolves(cb,player.getName()));
@@ -341,6 +349,7 @@ public class MyWolfEntityListener extends EntityListener
 						cb.mWolves.get(owner).Lives -= 1;
 						if(cb.mWolves.get(owner).Lives <= 0)
 						{
+							cb.mWolves.get(owner).StopDropTimer();
 							for(ItemStack is : cb.mWolves.get(owner).Inventory.getContents())
 							{
 								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
@@ -351,12 +360,14 @@ public class MyWolfEntityListener extends EntityListener
 						}
 						else
 						{
+							cb.mWolves.get(owner).StopDropTimer();
 							cb.mWolves.get(owner).isDead = true;
 							cb.mWolves.get(owner).RespawnTimer();
 						}
 					}
 					else
 					{
+						cb.mWolves.get(owner).StopDropTimer();
 						cb.mWolves.get(owner).isDead = true;
 						cb.mWolves.get(owner).RespawnTimer();
 					}

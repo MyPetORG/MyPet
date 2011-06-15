@@ -244,7 +244,14 @@ public class MyWolf extends JavaPlugin{
 			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
         	for ( ItemStack Item : cb.mWolves.get(owner).Inventory.getContents() )
         	{
-        		Items += ( Item!=null ? Items += Item.id + "," + Item.count + "," + Item.damage + ";" : ",,;" );
+        		if( Item!=null)
+        		{
+        			Items += Item.id + "," + Item.count + "," + Item.damage + ";";
+        		}
+        		else
+        		{
+        			Items += ",,;";
+        		}
         	}
 			if(cb.mWolves.get(owner).Inventory.getContents().length > 0)
 			{

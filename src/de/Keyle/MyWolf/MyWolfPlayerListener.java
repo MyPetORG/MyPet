@@ -54,7 +54,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 				{
 					return;
 				}
-				 Block block = event.getPlayer().getTargetBlock(null, 300);
+				 Block block = event.getPlayer().getTargetBlock(null, 100);
 	             if (block != null) {
 	            	 
 	            	 PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
@@ -70,6 +70,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 	    				 {
 	    					 if(e instanceof Player)
 	    					 {
+	    						 cb.log.info(""+cb.isNPC(event.getPlayer()));
 	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && cb.isNPC(event.getPlayer()) == false)
 	    						 {
 	    							 cb.mWolves.get(event.getPlayer().getName()).MyWolf.setTarget((LivingEntity)e);

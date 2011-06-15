@@ -13,10 +13,10 @@ public class MyWolfInfo implements CommandExecutor {
         {
     		Player player = (Player) sender;
     		player.sendMessage("MyWolf - Help - - - - - - - - - - - - - - - - -");
-			player.sendMessage("Set wolf name:            /wolf name <newwolfname>");
-			player.sendMessage("Release your wolf:    /wolf release <wolfname>");
-			player.sendMessage("Stop wolf attacking:  /wolf stop  (alias: /ws)");
-			player.sendMessage("Call your wolf:	          /wolf call  (alias: /wc)");
+			player.sendMessage("Set wolf name:            /wolfname <newwolfname>");
+			player.sendMessage("Release your wolf:    /wolfrelease <wolfname>");
+			player.sendMessage("Stop wolf attacking:  /wolfstop  (alias: /ws)");
+			player.sendMessage("Call your wolf:	          /wolfcall  (alias: /wc)");
 			//player.sendMessage("Compass tagets wolf:	          /wolf compass [stop]");
         }
 		return true;
