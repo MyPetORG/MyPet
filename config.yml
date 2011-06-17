@@ -1,0 +1,28 @@
+MyWolf:
+    respawntimefactor: 5
+
+    control:
+        item: 287
+        sneak: false
+
+    leash:
+        item: 287
+        sneak: false
+
+    max:
+        Lives: -1
+        HP: 20
+
+    pickup:
+        range: 2
+        add: 331
+
+    food:
+        hp: 357
+        lives: 354
+
+    chest:
+        open:
+            item: 340
+            sneak: false
+        add: 54
