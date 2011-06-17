@@ -5,63 +5,16 @@ Author: 		Keyle
 This plugin allows you to take a wolf on a leash.
 
 
-Getting a MyWolf:
-  To get a wolf which is a wolf of MyWolf is easy. First tarm a wolf so he will follow you. Then left-click him with a string(leash) in your hand.
-
-
-Now the wolf:
-	will respawn when he die.
-	has an inventory that can be opened by left-clicking the wolf while holding a book in your hand(item configurable in the config).
-	can get a name by calling the command /wolfname <name>.
-	can set maxHP (up to 20(because of live limit in minecraft) and will have it also after respawn) by feeding him with cookies(with left hand).
-	can give you info about him by left-clicking the wolf while holding a string in your hand (item configurable in the config).
-	can pick items up that are 2 or less blocks away from him (range configurable in the config).
-	will despawn when you logout from server.
-	will despawn when you are more than 75 Blocks away from him while the wolf is sitting.
-	can be contolled with a string in your hand. Press and hold right click and the wolf will walk to the block where your crosshair is aiming on. The Wolf will attack everythink that is on hisway to the block.
-	don't attack player and can't be attacked by player when pvp is set to false in serverconfig.
-	display message when killed that show the reason/killer
-	can set max lives and will loose on on every respawn. Wolf get lives when feeding him with cakes (all the good things for a wolf:P)
-
-
+For all features visit the thread in the Bukkit-Forum.
+The link is in the discription of this repository.
 
 
 These commands can be used:
-  /wolf						- show all MyWolf commands
+  /wolf				- show all MyWolf commands
   /wolfname <newwolfname>	- set the name of your wolf
   /wolfrelease <wolfname>	- release your wolf so he's free
-  /wolfstop 				- the wolf stop attacking his taget		- alias:	/ws or /wolfs
-  /wolfcall					- teleports your wolf to you			- alias:	/wc or /wolfc
-
-
-Config:
-
-
-MyWolf:
-    leash:
-        item: 287
-        sneak: false
-    control:
-        item: 287
-        sneak: false
-    chest:
-        open:
-            item: 340
-            sneak: false
-        add: 54
-
-    respawntimefactor: 5
-
-    food:
-        hp: 357
-        lives: 354
-
-    pickup:
-        range: 2
-        add: 331
-    max:
-        HP: 20
-        Lives: 5
+  /wolfstop 			- the wolf stop attacking his taget	- alias:  /ws or /wolfs
+  /wolfcall			- teleports your wolf to you		- alias:  /wc or /wolfc
 
 
 Permissions:
