@@ -46,12 +46,12 @@ public class MyWolfStop implements CommandExecutor {
     		{
 	    		if(cb.Permissions.has(player, "mywolf.stop") == false)
 				{
-					return false;
+					return true;
 				}
 				if(cb.mWolves.get(player.getName()).isDead == true || cb.mWolves.get(player.getName()).isThere == false)
 	    		{
 					sender.sendMessage("You must call your wolf first.");
-					return false;
+					return true;
 				}
 				sender.sendMessage("Your wolf should now " + ChatColor.GREEN + "stop" + ChatColor.WHITE + " attacking!");
 				cb.mWolves.get(player.getName()).MyWolf.setTarget((LivingEntity)null);

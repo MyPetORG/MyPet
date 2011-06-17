@@ -46,7 +46,7 @@ public class MyWolfCall implements CommandExecutor
     		{
 		    	if(cb.Permissions.has(player, "mywolf.call") == false)
 				{
-					return false;
+					return true;
 				}
 				cb.mWolves.get(player.getName()).Location = player.getLocation();
 				if(cb.mWolves.get(player.getName()).isThere == true && cb.mWolves.get(player.getName()).isDead == false)
@@ -54,17 +54,19 @@ public class MyWolfCall implements CommandExecutor
 					cb.mWolves.get(player.getName()).MyWolf.teleport(player);
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
+					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isThere == false && cb.mWolves.get(player.getName()).RespawnTime == 0)
 				{
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					cb.mWolves.get(player.getName()).createWolf(false);
 					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
+					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{
 					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead! and respawns in "+ChatColor.GOLD+cb.mWolves.get(player.getName()).RespawnTime+ChatColor.WHITE +" sec");
-					return false;
+					return true;
 				}
 	        }
 			else

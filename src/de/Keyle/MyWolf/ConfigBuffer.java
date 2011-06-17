@@ -19,12 +19,15 @@
 
 package de.Keyle.MyWolf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -33,17 +36,20 @@ public class ConfigBuffer {
 	
 	public Logger log = Logger.getLogger("Minecraft");
 	public Configuration WolvesConfig;
-	public Configuration Config;
 	public MyWolf Plugin;
+	PluginDescriptionFile pdfFile;
+	public ConfigVariables cv;
 	
-	public ConfigVariables cv = new ConfigVariables();
 	public MyWolfPermissions Permissions;
 	
 	public Map<String,Wolves> mWolves = new HashMap<String,Wolves>();
 
+	public List<Player> WolfChestOpened = new ArrayList<Player>();
+	
 	public ConfigBuffer(MyWolf Plugin) {
 		this.Plugin = Plugin;
-		Permissions = new MyWolfPermissions(Plugin);
+		pdfFile = Plugin.getDescription();
+		Permissions = new MyWolfPermissions(this);
 	}
 	
 	public boolean isNPC(Player p)
@@ -56,9 +62,16 @@ public class ConfigBuffer {
 	}
 }
 
-
-class ConfigVariables 
+class ConfigVariables extends Property
 {
+	Configuration Config;
+	
+	public ConfigVariables(Configuration cfg)
+	{
+		super(cfg);
+		Config = cfg;
+	}
+
 	public Material WolfLeashItem;
 	public Material WolfChestOpenItem;
 	public Material WolfChestAddItem;
@@ -73,8 +86,16 @@ class ConfigVariables
 	public boolean WolfLeashItemSneak;
 	public boolean WolfControlItemSneak;
 	public boolean WolfChestOpenItemSneak;
-	
-	public void setProperty(Configuration cfg,String key,Object value)
+}
+
+class Property
+{
+	Configuration cfg;
+	public Property(Configuration cfg)
+	{
+		this.cfg = cfg;
+	}
+	public void setProperty(String key,Object value)
 	{
 		if(cfg.getProperty(key) == null)
 		{

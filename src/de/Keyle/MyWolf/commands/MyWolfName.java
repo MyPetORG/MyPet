@@ -45,12 +45,10 @@ public class MyWolfName implements CommandExecutor {
     		{
 	    		if(cb.Permissions.has(player, "mywolf.setname") == false)
 				{
-					return false;
+					return true;
 				}
 				if(args.length < 1)
 				{
-					player.sendMessage("Please enter the name of the wolf.");
-					player.sendMessage("Syntax: /wolf name "+ChatColor.AQUA+"<wolfname>");
 					return false;
 				}
 				String name = ""; 
@@ -66,8 +64,9 @@ public class MyWolfName implements CommandExecutor {
 			else
 			{
 				sender.sendMessage("You don't have a wolf!");
+				return true;
 			}
         }
-		return false;
+		return true;
     }
 }

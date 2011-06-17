@@ -28,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -39,9 +38,10 @@ import de.Keyle.MyWolf.commands.*;
 
 public class MyWolf extends JavaPlugin{
 	
-	ConfigBuffer cb = new ConfigBuffer(this);
-    private final MyWolfPlayerListener playerListener = new MyWolfPlayerListener(cb);
-    private final MyWolfEntityListener entityListener = new MyWolfEntityListener(cb);
+	ConfigBuffer cb;
+    private MyWolfPlayerListener playerListener;
+    private MyWolfEntityListener entityListener;
+    private MyWolfInventoryListener inventoryListener;
     
     public void onDisable(){
     	
@@ -53,83 +53,80 @@ public class MyWolf extends JavaPlugin{
     			cb.mWolves.get(owner).removeWolf();
     		}
         }
+    	cb.mWolves.clear();
+    	cb.WolfChestOpened.clear();
+    	cb = null;
+    	
         cb.log.info("[MyWolf] Disabled");
     }
 
     public void onEnable(){
+    	cb = new ConfigBuffer(this);
     	
-    	cb.Plugin = this;
-    	
-    	if (!cb.Permissions.setup())
-        {
-        	cb.log.info("[MyWolf] Permissions integration could not be enabled!");
-        }
-    	cb.Config = this.getConfiguration();
-
-    	cb.cv.setProperty(cb.Config,"MyWolf.leash.item", 287);//String
-    	cb.cv.setProperty(cb.Config,"MyWolf.chest.open.item", 340);//Book
-    	cb.cv.setProperty(cb.Config,"MyWolf.chest.add", 54);//Chest
-    	cb.cv.setProperty(cb.Config,"MyWolf.food.hp", 357); //Cookie
-    	cb.cv.setProperty(cb.Config,"MyWolf.food.lives", 354); //Cake
-    	cb.cv.setProperty(cb.Config,"MyWolf.control.item",287);
-    	
-    	cb.cv.setProperty(cb.Config,"MyWolf.leash.sneak", false);
-    	cb.cv.setProperty(cb.Config,"MyWolf.chest.open.sneak", false);
-    	cb.cv.setProperty(cb.Config,"MyWolf.control.sneak",false);
-			
-    	cb.cv.setProperty(cb.Config,"MyWolf.pickup.range", 2); //2 Blocks range
-    	cb.cv.setProperty(cb.Config,"MyWolf.pickup.add", 331); //Redstone Dust
-    	cb.cv.setProperty(cb.Config,"MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
-    	cb.cv.setProperty(cb.Config,"MyWolf.max.HP",20); //20 MaxHPWolfLives
-    	cb.cv.setProperty(cb.Config,"MyWolf.max.Lives",-1); //no MaxLives
-    	
-    	cb.Config.save();
-
-		cb.cv.WolfLeashItem = checkMaterial(cb.Config.getInt("MyWolf.leash.item",287),Material.STRING);
-		cb.cv.WolfLeashItemSneak = cb.Config.getBoolean("MyWolf.leash.sneak",false);
-		cb.cv.WolfControlItem = checkMaterial(cb.Config.getInt("MyWolf.control.item",287),Material.STRING);
-		cb.cv.WolfControlItemSneak = cb.Config.getBoolean("MyWolf.control.sneak",false);
-		cb.cv.WolfChestOpenItem = checkMaterial(cb.Config.getInt("MyWolf.chest.open.item",340),Material.BOOK);
-		cb.cv.WolfChestOpenItemSneak = cb.Config.getBoolean("MyWolf.chest.open.sneak",false);
-		cb.cv.WolfChestAddItem = checkMaterial(cb.Config.getInt("MyWolf.chest.add",54),Material.CHEST);
-		cb.cv.WolfFoodHPItem = checkMaterial(cb.Config.getInt("MyWolf.food.hp",357),Material.COOKIE);
-		cb.cv.WolfFoodLivesItem = checkMaterial(cb.Config.getInt("MyWolf.food.lives",354),Material.CAKE);
-		
-		
-		
-		cb.cv.WolfPickupRange = cb.Config.getInt("MyWolf.pickup.range",2);
-		cb.cv.WolfPickupItem = checkMaterial(cb.Config.getInt("MyWolf.pickup.add",331),Material.REDSTONE);
-		
-		cb.cv.WolfRespawnTimeFactor = cb.Config.getInt("MyWolf.respawntimefactor",5);
-		cb.cv.WolfRespawnMaxHP = cb.Config.getInt("MyWolf.max.HP",20);
-		cb.cv.WolfMaxLives = cb.Config.getInt("MyWolf.max.Lives",-1);
-
-    	cb.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
-
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
+    	playerListener = new MyWolfPlayerListener(cb);
+    	getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);		
+		
+    	entityListener = new MyWolfEntityListener(cb);
+    	getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-		//getServer().getPluginManager().registerEvent(Event.Type.ENTITY_MOVE, entityListener, Event.Priority.Normal, this); //for future
+		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
 		
-		
-		
-		getCommand("wolfname").setExecutor(new MyWolfName(cb));
-		MyWolfCall cewc = new MyWolfCall(cb);
-        getCommand("wolfcall").setExecutor(cewc);
-        getCommand("wc").setExecutor(cewc);
-        MyWolfStop cews = new MyWolfStop(cb);
-        getCommand("wolfstop").setExecutor(cews);
-        getCommand("ws").setExecutor(cews);
+		if(cb.Plugin.getServer().getPluginManager().getPlugin("BukkitContrib") != null)
+		{
+			inventoryListener = new MyWolfInventoryListener(cb);
+			getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, inventoryListener, Event.Priority.Normal, this);
+		}
+    	
+    	cb.Permissions.setup();
+    	
+    	getCommand("wolfname").setExecutor(new MyWolfName(cb));
+        getCommand("wolfcall").setExecutor(new MyWolfCall(cb));
+        getCommand("wolfstop").setExecutor(new MyWolfStop(cb));
         getCommand("wolfrelease").setExecutor(new MyWolfRelease(cb));
         getCommand("wolf").setExecutor(new MyWolfInfo());
 
-        PluginDescriptionFile pdfFile = this.getDescription();
-        cb.log.info("["+pdfFile.getName() + "] version " + pdfFile.getVersion() + " ENABLED" );
+    	cb.cv = new ConfigVariables(this.getConfiguration());
+
+    	cb.cv.setProperty("MyWolf.leash.item", 287);//String
+    	cb.cv.setProperty("MyWolf.chest.open.item", 340);//Book
+    	cb.cv.setProperty("MyWolf.chest.add", 54);//Chest
+    	cb.cv.setProperty("MyWolf.food.hp", 357); //Cookie
+    	cb.cv.setProperty("MyWolf.food.lives", 354); //Cake
+    	cb.cv.setProperty("MyWolf.control.item",287);
+    	
+    	cb.cv.setProperty("MyWolf.leash.sneak", false);
+    	cb.cv.setProperty("MyWolf.chest.open.sneak", false);
+    	cb.cv.setProperty("MyWolf.control.sneak",false);
+			
+    	cb.cv.setProperty("MyWolf.pickup.range", 2); //2 Blocks range
+    	cb.cv.setProperty("MyWolf.pickup.add", 331); //Redstone Dust
+    	cb.cv.setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
+    	cb.cv.setProperty("MyWolf.max.HP",20); //20 MaxHPWolfLives
+    	cb.cv.setProperty("MyWolf.max.Lives",-1); //no MaxLives
+    	
+    	cb.cv.Config.save();
+
+		cb.cv.WolfLeashItem = checkMaterial(cb.cv.Config.getInt("MyWolf.leash.item",287),Material.STRING);
+		cb.cv.WolfLeashItemSneak = cb.cv.Config.getBoolean("MyWolf.leash.sneak",false);
+		cb.cv.WolfControlItem = checkMaterial(cb.cv.Config.getInt("MyWolf.control.item",287),Material.STRING);
+		cb.cv.WolfControlItemSneak = cb.cv.Config.getBoolean("MyWolf.control.sneak",false);
+		cb.cv.WolfChestOpenItem = checkMaterial(cb.cv.Config.getInt("MyWolf.chest.open.item",340),Material.BOOK);
+		cb.cv.WolfChestOpenItemSneak = cb.cv.Config.getBoolean("MyWolf.chest.open.sneak",false);
+		cb.cv.WolfChestAddItem = checkMaterial(cb.cv.Config.getInt("MyWolf.chest.add",54),Material.CHEST);
+		cb.cv.WolfFoodHPItem = checkMaterial(cb.cv.Config.getInt("MyWolf.food.hp",357),Material.COOKIE);
+		cb.cv.WolfFoodLivesItem = checkMaterial(cb.cv.Config.getInt("MyWolf.food.lives",354),Material.CAKE);
+			
+		cb.cv.WolfPickupRange = cb.cv.Config.getInt("MyWolf.pickup.range",2);
+		cb.cv.WolfPickupItem = checkMaterial(cb.cv.Config.getInt("MyWolf.pickup.add",331),Material.REDSTONE);
+		
+		cb.cv.WolfRespawnTimeFactor = cb.cv.Config.getInt("MyWolf.respawntimefactor",5);
+		cb.cv.WolfRespawnMaxHP = cb.cv.Config.getInt("MyWolf.max.HP",20);
+		cb.cv.WolfMaxLives = cb.cv.Config.getInt("MyWolf.max.Lives",-1);
+
+    	cb.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));		
         
         cb.Plugin.LoadWolves();
         for(Player p : this.getServer().getOnlinePlayers())
@@ -137,6 +134,7 @@ public class MyWolf extends JavaPlugin{
         	if(cb.mWolves.containsKey(p.getName()) && p.isOnline() == true)
         	cb.mWolves.get(p.getName()).createWolf(cb.mWolves.get(p.getName()).isSitting);
         }
+        cb.log.info("["+cb.pdfFile.getName() + "] version " + cb.pdfFile.getVersion() + " ENABLED" );
     }						
 	
 	public void LoadWolves()

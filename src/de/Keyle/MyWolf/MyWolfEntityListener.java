@@ -22,6 +22,7 @@ package de.Keyle.MyWolf;
 import net.minecraft.server.ItemStack;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Ghast;
@@ -252,10 +253,20 @@ public class MyWolfEntityListener extends EntityListener
 									}
 									if(wolf.InventoryMode != InventoryType.NONE)
 									{
-										wolf.OpenInventory();
-											
+										if(wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
+										{
+											wolf.OpenInventory();
+											if(wolf.isSitting() == false)
+											{
+												cb.WolfChestOpened.add(player);
+											}
+											wolf.MyWolf.setSitting(true);
+										}
+										else
+										{
+											player.sendMessage("You can't open the inventory while the wolf is swimming!");
+										}
 										event.setCancelled(true);
-										wolf.MyWolf.setSitting(true);
 									}
 								}
 							}

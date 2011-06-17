@@ -9,11 +9,13 @@ commands:
     description: wolf commands
   wolfname:
     description: set the name of the wolf
+    usage: 'Syntax: /<command> <WolfName>'
   wolfcall:
     aliases: [wc,wolfc]
     description: call your wolf
   wolfrelease:
     description: release your wolf
+    usage: 'Syntax: /<command> <WolfName>'
   wolfstop:
     aliases: [ws,wolfs]
     description: you wolf stopping attacking

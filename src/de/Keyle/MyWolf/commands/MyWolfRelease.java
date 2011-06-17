@@ -47,17 +47,15 @@ public class MyWolfRelease implements CommandExecutor {
     		{
 	    		if(cb.Permissions.has(player, "mywolf.release") == false)
 				{
-					return false;
+					return true;
 				}
 				if(cb.mWolves.get(player.getName()).isDead == true || cb.mWolves.get(player.getName()).isThere == false)
 	    		{
 					player.sendMessage("You must call your wolf first.");
-					return false;
+					return true;
 				}
 				if(args.length < 1)
 				{
-					player.sendMessage("Please enter the name of the wolf.");
-					player.sendMessage("Syntax: /wolf release "+ChatColor.AQUA+"<wolfname>");
 					return false;
 				}
 				String name = "";
@@ -84,7 +82,8 @@ public class MyWolfRelease implements CommandExecutor {
 				}
 				else
 				{
-					player.sendMessage("Please enter the name of YOUR wolf.");
+					player.sendMessage("The name of your wolf is: " + ChatColor.AQUA + cb.mWolves.get(player.getName()).Name);
+					return false;
 				}
     		}
 			else

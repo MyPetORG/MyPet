@@ -20,18 +20,18 @@
 package de.Keyle.MyWolf.util;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import org.anjocaido.groupmanager.GroupManager;
-import org.bukkit.plugin.Plugin;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.ConfigBuffer;
 
 public class MyWolfPermissions
 {
-	MyWolf Plugin;
+	private ConfigBuffer cb;
 	private Object Permissions;
 	private enum PermissionsType
 	{
@@ -41,9 +41,9 @@ public class MyWolfPermissions
 	}
 	private PermissionsType PermissionsMode = PermissionsType.NONE;
 	
-	public MyWolfPermissions(MyWolf Plugin)
+	public MyWolfPermissions(ConfigBuffer configBuffer)
 	{
-		this.Plugin = Plugin;
+		this.cb = configBuffer;
 	}
 	
 	public boolean has(Player player, String node)
@@ -68,22 +68,24 @@ public class MyWolfPermissions
 	{
 		Plugin p;
 		
-		p = Plugin.getServer().getPluginManager().getPlugin("GroupManager");	
+		p = cb.Plugin.getServer().getPluginManager().getPlugin("GroupManager");	
         if (p != null && PermissionsMode == PermissionsType.NONE)
         {
         	PermissionsMode = PermissionsType.GroupManager;
         	Permissions = (GroupManager) p;
+        	cb.log.info("[MyWolf] GroupManager integration enabled!");
         	return true;
         }
         
-    	p = Plugin.getServer().getPluginManager().getPlugin("Permissions");
+    	p = cb.Plugin.getServer().getPluginManager().getPlugin("Permissions");
         if (p != null && PermissionsMode == PermissionsType.NONE)
         {
         	PermissionsMode = PermissionsType.Permissions;
             Permissions = ((Permissions)p).getHandler();
+            cb.log.info("[MyWolf] Permissions integration enabled!");
             return true;
         }
-        
+        cb.log.info("[MyWolf] Permissions/GroupManager integration could not be enabled!");
         return false;
     }
 	
