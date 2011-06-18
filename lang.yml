@@ -1,0 +1,43 @@
+MyWolf:
+    Message:
+        call: '%aqua%%wolfname%%white% comes to you.'
+        addlive: '%green%+1 life for %aqua%%wolfname%'
+        addpickup: '%aqua%%wolfname%%white% now pickup items in a range of %range%.'
+        addhp: '%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%'
+        callwhendead: '%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec'
+        addchest: '%aqua%%wolfname%%white% has now an inventory.'
+        newname: 'The name of your wolf is now: %aqua%%wolfname%'
+        respawnin: '%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec'
+        stopattack: Your wolf should now %green%stop%white% attacking!
+        inventorywhileswimming: You can't open the inventory while the wolf is swimming!
+        name: 'The name of your wolf is: %aqua%%wolfname%'
+        callfirst: You must call your wolf first.
+        hpinfo: '%aqua%%wolfname%%white% HP:%hp%'
+        onrespawn: '%aqua%%wolfname%%white% respawned'
+        addleash: '%green%You take your wolf on the leash, he''ll be a good wolf.'
+        maxlives: '%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives.'
+        maxhp: '%aqua%%wolfname%%red% has reached the maximum of %maxhp% HP.'
+        wolfisgone: '%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .'
+        release: '%aqua%%wolfname%%white% is now %green$free%white% . . .'
+        donthavewolf: You don't have a wolf!
+        addlargechest: '%aqua%%wolfname%%white% has now a larger inventory.'
+
+        deathmessage:
+            text: '%aqua%%wolfname%%white% '
+            player: was killed by %player%.
+            you: was killed by %red%YOU.
+            skeleton: was killed by a Skeleton.
+            creeper: was killed by a Creeper.
+            fire: was killed by VOID.
+            ghast: was killed by a Ghast.
+            lightning: was killed by lightning.
+            slime: was killed by a Slime.
+            zombie: was killed by a Zombie.
+            wolf: was killed by a Wolf.
+            explosion: was killed by an explosion.
+            playerwolf: was killed by %player%'s Wolf .
+            fall: ' died by falling down.'
+            unknow: was killed by an unknown source.
+            spider: was killed by a Spider.
+            drowning: drowned.
+            giant: was killed by a Giant.
