@@ -21,6 +21,8 @@ package de.Keyle.MyWolf;
 
 import com.aranai.virtualchest.TileEntityVirtualChest;
 
+import de.Keyle.MyWolf.util.MyWolfUtil;
+
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.InventoryLargeChest;
 
@@ -239,7 +241,8 @@ public class Wolves {
 		{
 			RespawnTime = HealthMax*cb.cv.WolfRespawnTimeFactor;
 		}
-		getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawn in "+ChatColor.GOLD+RespawnTime+ChatColor.WHITE +" sec");
+		getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_RespawnIn).replace("%wolfname%", Name).replace("%time%", ""+RespawnTime));
+		//getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawn in "+ChatColor.GOLD+RespawnTime+ChatColor.WHITE +" sec");
 
 		RespawnTimer = cb.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(cb.Plugin,new Runnable() 
 		{
@@ -274,7 +277,8 @@ public class Wolves {
 		{
 			HealthNow = HealthMax;
 			Location = getPlayer().getLocation();
-			getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawned");
+			getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_OnRespawn).replace("%wolfname%", Name));
+			//getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawned");
 			createWolf(false);
 			RespawnTime = 0;
 			return true;
@@ -369,7 +373,7 @@ public class Wolves {
 	{
 		for(Player p: cb.Plugin.getServer().getOnlinePlayers())
 		{
-			if(p.getName().equals(Owner) && cb.isNPC(p) == false)
+			if(p.getName().equals(Owner) && MyWolfUtil.isNPC(cb.Plugin,p) == false)
 			{
 				return p;
 			}

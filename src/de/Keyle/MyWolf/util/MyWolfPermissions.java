@@ -87,7 +87,5 @@ public class MyWolfPermissions
         }
         cb.log.info("[MyWolf] Permissions/GroupManager integration could not be enabled!");
         return false;
-    }
-	
-	
+    }	
 }

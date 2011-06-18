@@ -42,6 +42,7 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import de.Keyle.MyWolf.Wolves.InventoryType;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfEntityListener extends EntityListener
 {
@@ -90,7 +91,8 @@ public class MyWolfEntityListener extends EntityListener
 							cb.mWolves.put(player.getName(), new Wolves(cb,player.getName()));
 							cb.mWolves.get(player.getName()).createWolf((Wolf)event.getEntity());
 							cb.Plugin.SaveWolves();
-							player.sendMessage(ChatColor.GREEN + "You take your wolf on the leash, he'll be a good wolf.");
+							player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddLeash));
+							//player.sendMessage(ChatColor.GREEN + "You take your wolf on the leash, he'll be a good wolf.");
 						}
 					}
 					
@@ -111,28 +113,21 @@ public class MyWolfEntityListener extends EntityListener
 									return;
 								}
 								{
-									String msg = ""+ChatColor.AQUA;
-									if(wolf.Name != null)
-									{
-										msg += wolf.Name + ChatColor.WHITE + ":";
-									}
-									else	
-									{
-										msg +="Wolf" + ChatColor.WHITE + ":";
-									}
+									String msg = "";//+ChatColor.AQUA + wolf.Name + ChatColor.WHITE + " HP:";
 									if(wolf.getHealth() > wolf.HealthMax/3*2)
 									{
-										msg += " HP:" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
+										msg += "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
 									}
 									else if(wolf.getHealth() > wolf.HealthMax/3*1)
 									{
-										msg += " HP:" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
+										msg += "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
 									}
 									else
 									{
-										msg += " HP:" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
+										msg += ""  +ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
 									}
-									player.sendMessage(msg);
+									//player.sendMessage(msg);
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo).replace("%wolfname%", wolf.Name).replace("%hp%", msg));
 									if(wolf.MyWolf.isSitting())
 									{
 										event.setCancelled(true);
@@ -171,7 +166,8 @@ public class MyWolfEntityListener extends EntityListener
 										}
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
-										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an" + (wolf.InventoryMode == InventoryType.SMALL?"":" bigger") + " inventory.");
+										player.sendMessage(MyWolfUtil.SetColors((wolf.InventoryMode == InventoryType.SMALL?cb.lv.Msg_AddChest:cb.lv.Msg_AddChestGreater)).replace("%wolfname%", wolf.Name));
+										//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an" + (wolf.InventoryMode == InventoryType.SMALL?"":" bigger") + " inventory.");
 									}
 										
 									
@@ -197,11 +193,13 @@ public class MyWolfEntityListener extends EntityListener
 											player.getInventory().removeItem(player.getInventory().getItemInHand());
 										}
 										
-										player.sendMessage(ChatColor.GREEN + "+1 life for " + ChatColor.AQUA + wolf.Name);
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddLive).replace("%wolfname%", wolf.Name));
+										//player.sendMessage(ChatColor.GREEN + "+1 life for " + ChatColor.AQUA + wolf.Name);
 									}
 									else
 									{
-										player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfMaxLives + " lives.");
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxLives).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfMaxLives));
+										//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfMaxLives + " lives.");
 									}
 									if(wolf.MyWolf.isSitting())
 									{
@@ -237,7 +235,8 @@ public class MyWolfEntityListener extends EntityListener
 										event.setCancelled(true);
 										wolf.MyWolf.setSitting(true);
 										wolf.DropTimer();
-										player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " now pickup items in a range of" + cb.cv.WolfPickupRange + ".");
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddPickup).replace("%wolfname%", wolf.Name).replace("%range%", ""+cb.cv.WolfPickupRange));
+										//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " now pickup items in a range of" + cb.cv.WolfPickupRange + ".");
 									}
 										
 									
@@ -264,7 +263,8 @@ public class MyWolfEntityListener extends EntityListener
 										}
 										else
 										{
-											player.sendMessage("You can't open the inventory while the wolf is swimming!");
+											player.sendMessage(cb.lv.Msg_InventorySwimming);
+											//player.sendMessage("You can't open the inventory while the wolf is swimming!");
 										}
 										event.setCancelled(true);
 									}
@@ -280,7 +280,7 @@ public class MyWolfEntityListener extends EntityListener
 									}
 									if(wolf.HealthMax < cb.cv.WolfRespawnMaxHP)
 									{
-										String msg = ""+ChatColor.AQUA+wolf.Name + ChatColor.WHITE + ":";
+										String msg = "";//+ChatColor.AQUA+wolf.Name + ChatColor.WHITE + ":";
 										wolf.HealthMax += 1;
 										wolf.setWolfHealth(wolf.getHealth()+1);
 										if(player.getItemInHand().getAmount()>1)
@@ -306,12 +306,15 @@ public class MyWolfEntityListener extends EntityListener
 											msg += " HP:" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
 										}
 										
-										player.sendMessage(ChatColor.GREEN + "+1 MaxHP for " + ChatColor.AQUA + wolf.Name);
-										player.sendMessage(msg);
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddHP.replace("%wolfname%", wolf.Name)));
+										//player.sendMessage(ChatColor.GREEN + "+1 MaxHP for " + ChatColor.AQUA + wolf.Name);
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo.replace("%wolfname%", wolf.Name).replace("%hp%", msg)));
+										//player.sendMessage(msg);
 									}
 									else
 									{
-										player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfRespawnMaxHP + "HP.");
+										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxHP).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfRespawnMaxHP));
+										//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfRespawnMaxHP + "HP.");
 									}
 									if(wolf.MyWolf.isSitting())
 									{
@@ -368,7 +371,8 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								cb.mWolves.get(owner).MyWolf.getWorld().dropItem(cb.mWolves.get(owner).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 							}
-							cb.mWolves.get(owner).getPlayer().sendMessage(ChatColor.AQUA + cb.mWolves.get(owner).Name + ChatColor.WHITE + " is " + ChatColor.RED + "gone" + ChatColor.WHITE + " and will never come back . . .");
+							cb.mWolves.get(owner).getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_WolfIsGone).replace("%wolfname%", cb.mWolves.get(owner).Name));
+							//cb.mWolves.get(owner).getPlayer().sendMessage(ChatColor.AQUA + cb.mWolves.get(owner).Name + ChatColor.WHITE + " is " + ChatColor.RED + "gone" + ChatColor.WHITE + " and will never come back . . .");
 							cb.mWolves.remove(cb.mWolves.get(owner).getPlayer().getName());
 							cb.Plugin.SaveWolves();
 						}
@@ -395,6 +399,7 @@ public class MyWolfEntityListener extends EntityListener
 	private void SendDeathMessage(EntityDeathEvent event)
 	{
 		Wolves wolf = null;
+		String Killer = MyWolfUtil.SetColors(cb.lv.Unknow);//"Unknown";
 		for ( String owner : cb.mWolves.keySet() )
         {
 			if(cb.mWolves.get(owner).ID == event.getEntity().getEntityId())
@@ -404,8 +409,8 @@ public class MyWolfEntityListener extends EntityListener
         }
 		if(wolf != null)
 		{
-			String Killer = "Unknown";
-			String KillMessage = "";
+			
+			//String KillMessage = "";
 			if(event.getEntity().getLastDamageCause() instanceof EntityDamageByProjectileEvent)
 			{
 				EntityDamageByProjectileEvent e = (EntityDamageByProjectileEvent)event.getEntity().getLastDamageCause();
@@ -413,22 +418,22 @@ public class MyWolfEntityListener extends EntityListener
 				{
 					if(((Player)e.getDamager()) == wolf.getPlayer())
 					{
-						Killer = ChatColor.RED + "YOU!";
+						Killer = MyWolfUtil.SetColors(cb.lv.You);//ChatColor.RED + "YOU!";
 					}
 					else
 					{
-						Killer = ((Player)e.getDamager()).getName();
+						Killer = MyWolfUtil.SetColors(cb.lv.Player).replace("%player%", ((Player)e.getDamager()).getName());
 					}
 				}
 				else if(event.getEntity().getLastDamageCause() instanceof Skeleton)
 				{
-					Killer = "a Skeleton";
+					Killer = MyWolfUtil.SetColors(cb.lv.Skeleton);//"a Skeleton";
 				}
 				else if(event.getEntity().getLastDamageCause() instanceof Ghast)
 				{
-					Killer = "a Ghast";
+					Killer = MyWolfUtil.SetColors(cb.lv.Ghast);//"a Ghast";
 				}
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by " + Killer;
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by " + Killer;
 			}
 			else if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
 			{
@@ -437,39 +442,40 @@ public class MyWolfEntityListener extends EntityListener
 				{
 					if(((Player)e.getDamager()) == wolf.getPlayer())
 					{
-						Killer = "YOU";
+						Killer = MyWolfUtil.SetColors(cb.lv.You);//"YOU";
 					}
 					else
 					{
-						Killer = ((Player)e.getDamager()).getName();
+						Killer = MyWolfUtil.SetColors(cb.lv.Player).replace("%player%", ((Player)e.getDamager()).getName());
 					}
 				}
 				else if(e.getDamager() instanceof Zombie)
 				{
-					Killer = "a Zombie";
+					Killer = MyWolfUtil.SetColors(cb.lv.Zombie);//"a Zombie";
 				}
 				else if(e.getDamager() instanceof Creeper)
 				{
-					Killer = "a Creeper";
+					Killer = MyWolfUtil.SetColors(cb.lv.Creeper);//"a Creeper";
 				}
 				else if(e.getDamager() instanceof Spider)
 				{
-					Killer = "a Spider";
+					Killer = MyWolfUtil.SetColors(cb.lv.Spider);//"a Spider";
 				}
 				else if(e.getDamager() instanceof Slime)
 				{
-					Killer = "a Slime";
+					Killer = MyWolfUtil.SetColors(cb.lv.Slime);//"a Slime";
 				}
 				else if(e.getDamager() instanceof Giant)
 				{
-					Killer = "a Giant";
+					Killer = MyWolfUtil.SetColors(cb.lv.Giant);//"a Giant";
 				}
 				else if(e.getDamager() instanceof Wolf)
 				{
 					Wolf w = (Wolf)e.getDamager();
 					if(w.isTamed() == true)
 					{
-						Killer = "a Wolf of " + ((Player)w.getOwner()).getName();
+						Killer = MyWolfUtil.SetColors(cb.lv.Wolf).replace("%player%", ((CraftWolf) w).getHandle().x());;
+						//Killer = "a Wolf of " + ((Player)w.getOwner()).getName();
 						//for ( String owner : cb.mWolves.keySet() )
 				        //{
 							//f(cb.mWolves.get(owner).MyWolf == w)
@@ -481,44 +487,47 @@ public class MyWolfEntityListener extends EntityListener
 					}
 					else
 					{
-						Killer = "a Wolf";
+						Killer = MyWolfUtil.SetColors(cb.lv.Wolf);//"a Wolf";
 					}
 				}
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by " + Killer;
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by " + Killer;
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.BLOCK_EXPLOSION))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by an Explosion";
+				Killer = MyWolfUtil.SetColors(cb.lv.Explosion);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by an Explosion";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.DROWNING))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " drowned";
+				Killer = MyWolfUtil.SetColors(cb.lv.Drowning);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " drowned";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FALL))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " died by falling down";
+				Killer = MyWolfUtil.SetColors(cb.lv.Fall);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " died by falling down";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by fire";
+				Killer = MyWolfUtil.SetColors(cb.lv.Fire);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by fire";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LAVA))
 			{
-				KillMessage =ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by lava";
+				Killer = MyWolfUtil.SetColors(cb.lv.Lava);
+				//KillMessage =ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by lava";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LIGHTNING))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by a lightning";
+				Killer = MyWolfUtil.SetColors(cb.lv.Lightning);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by a lightning";
 			}
 			else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.VOID))
 			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by void";
+				Killer = MyWolfUtil.SetColors(cb.lv.kvoid);
+				//KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by void";
 			}
-			else
-			{
-				KillMessage = ChatColor.AQUA+ wolf.Name + ChatColor.WHITE + " was killed by an Unknown cause";
-			}
-			wolf.getPlayer().sendMessage(KillMessage);
+			wolf.getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DeathMessage).replace("%wolfname%", wolf.Name) + Killer);
 		}
 	}
 	
@@ -540,12 +549,4 @@ public class MyWolfEntityListener extends EntityListener
 			}
 		}
 	}
-
-	/*
-	@Override
-	public void onEntityMove(EntityMoveEvent event)
-	{
-		//for Future
-	}
-	*/
 }

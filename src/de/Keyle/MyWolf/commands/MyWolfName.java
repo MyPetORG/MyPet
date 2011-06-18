@@ -19,13 +19,13 @@
 
 package de.Keyle.MyWolf.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfName implements CommandExecutor {
 
@@ -58,12 +58,13 @@ public class MyWolfName implements CommandExecutor {
 				}
 				name = name.substring(0,name.length()-1);
 				cb.mWolves.get(player.getName()).SetName(name);
-				player.sendMessage("The name of your wolf is now: " + ChatColor.AQUA + name);
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_NewName).replace("%wolfname%", name));
+				//player.sendMessage("The name of your wolf is now: " + ChatColor.AQUA + name);
 				return true;
     		}
 			else
 			{
-				sender.sendMessage("You don't have a wolf!");
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DontHaveWolf));
 				return true;
 			}
         }

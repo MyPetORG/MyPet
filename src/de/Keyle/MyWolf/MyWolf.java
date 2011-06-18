@@ -34,6 +34,8 @@ import org.bukkit.util.config.Configuration;
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.Wolves.InventoryType;
 import de.Keyle.MyWolf.commands.*;
+import de.Keyle.MyWolf.util.MyWolfLanguageVariables;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 
 public class MyWolf extends JavaPlugin{
@@ -89,6 +91,7 @@ public class MyWolf extends JavaPlugin{
         getCommand("wolf").setExecutor(new MyWolfInfo());
 
     	cb.cv = new ConfigVariables(this.getConfiguration());
+		cb.lv = new MyWolfLanguageVariables(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
 
     	cb.cv.setProperty("MyWolf.leash.item", 287);//String
     	cb.cv.setProperty("MyWolf.chest.open.item", 340);//Book
@@ -96,11 +99,9 @@ public class MyWolf extends JavaPlugin{
     	cb.cv.setProperty("MyWolf.food.hp", 357); //Cookie
     	cb.cv.setProperty("MyWolf.food.lives", 354); //Cake
     	cb.cv.setProperty("MyWolf.control.item",287);
-    	
     	cb.cv.setProperty("MyWolf.leash.sneak", false);
     	cb.cv.setProperty("MyWolf.chest.open.sneak", false);
     	cb.cv.setProperty("MyWolf.control.sneak",false);
-			
     	cb.cv.setProperty("MyWolf.pickup.range", 2); //2 Blocks range
     	cb.cv.setProperty("MyWolf.pickup.add", 331); //Redstone Dust
     	cb.cv.setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
@@ -109,23 +110,105 @@ public class MyWolf extends JavaPlugin{
     	
     	cb.cv.Config.save();
 
-		cb.cv.WolfLeashItem = checkMaterial(cb.cv.Config.getInt("MyWolf.leash.item",287),Material.STRING);
+		cb.cv.WolfLeashItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.leash.item",287),Material.STRING);
 		cb.cv.WolfLeashItemSneak = cb.cv.Config.getBoolean("MyWolf.leash.sneak",false);
-		cb.cv.WolfControlItem = checkMaterial(cb.cv.Config.getInt("MyWolf.control.item",287),Material.STRING);
+		cb.cv.WolfControlItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.control.item",287),Material.STRING);
 		cb.cv.WolfControlItemSneak = cb.cv.Config.getBoolean("MyWolf.control.sneak",false);
-		cb.cv.WolfChestOpenItem = checkMaterial(cb.cv.Config.getInt("MyWolf.chest.open.item",340),Material.BOOK);
+		cb.cv.WolfChestOpenItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.chest.open.item",340),Material.BOOK);
 		cb.cv.WolfChestOpenItemSneak = cb.cv.Config.getBoolean("MyWolf.chest.open.sneak",false);
-		cb.cv.WolfChestAddItem = checkMaterial(cb.cv.Config.getInt("MyWolf.chest.add",54),Material.CHEST);
-		cb.cv.WolfFoodHPItem = checkMaterial(cb.cv.Config.getInt("MyWolf.food.hp",357),Material.COOKIE);
-		cb.cv.WolfFoodLivesItem = checkMaterial(cb.cv.Config.getInt("MyWolf.food.lives",354),Material.CAKE);
-			
+		cb.cv.WolfChestAddItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.chest.add",54),Material.CHEST);
+		cb.cv.WolfFoodHPItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.food.hp",357),Material.COOKIE);
+		cb.cv.WolfFoodLivesItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.food.lives",354),Material.CAKE);
 		cb.cv.WolfPickupRange = cb.cv.Config.getInt("MyWolf.pickup.range",2);
-		cb.cv.WolfPickupItem = checkMaterial(cb.cv.Config.getInt("MyWolf.pickup.add",331),Material.REDSTONE);
-		
+		cb.cv.WolfPickupItem = MyWolfUtil.checkMaterial(cb.cv.Config.getInt("MyWolf.pickup.add",331),Material.REDSTONE);
 		cb.cv.WolfRespawnTimeFactor = cb.cv.Config.getInt("MyWolf.respawntimefactor",5);
 		cb.cv.WolfRespawnMaxHP = cb.cv.Config.getInt("MyWolf.max.HP",20);
 		cb.cv.WolfMaxLives = cb.cv.Config.getInt("MyWolf.max.Lives",-1);
-
+		
+		cb.lv.setProperty("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
+		cb.lv.setProperty("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
+		cb.lv.setProperty("MyWolf.Message.addchest", "%aqua%%wolfname%%white% has now an inventory.");
+		cb.lv.setProperty("MyWolf.Message.addlargechest", "%aqua%%wolfname%%white% has now a larger inventory.");
+		cb.lv.setProperty("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%");
+		cb.lv.setProperty("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives.");
+		cb.lv.setProperty("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%.");
+		cb.lv.setProperty("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%");
+		cb.lv.setProperty("MyWolf.Message.maxhp", "%aqua%%wolfname%%red% has reached the maximum of %maxhp% HP.");
+		cb.lv.setProperty("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
+		cb.lv.setProperty("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
+		cb.lv.setProperty("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
+		cb.lv.setProperty("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
+		cb.lv.setProperty("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
+		cb.lv.setProperty("MyWolf.Message.callfirst", "You must call your wolf first.");
+		cb.lv.setProperty("MyWolf.Message.donthavewolf", "You don't have a wolf!");
+		cb.lv.setProperty("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
+		cb.lv.setProperty("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
+		cb.lv.setProperty("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green$free%white% . . .");
+		cb.lv.setProperty("MyWolf.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
+		cb.lv.setProperty("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.player", "was killed by %player%.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.drowning", "drowned.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.fall", " died by falling down.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.lightning", "was killed by lightning.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.fire", "was killed by VOID.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf .");
+		cb.lv.setProperty("MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");
+		
+		cb.lv.Config.save();
+		
+		cb.lv.Msg_AddLeash = cb.lv.Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
+		cb.lv.Msg_HPinfo = cb.lv.Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
+		cb.lv.Msg_AddChest = cb.lv.Config.getString("MyWolf.Message.addchest", "%aqua%%wolfname%%white% has now an inventory.");
+		cb.lv.Msg_AddChestGreater = cb.lv.Config.getString("MyWolf.Message.addlargechest", "%aqua%%wolfname%%white% has now a larger inventory.");
+		cb.lv.Msg_AddLive = cb.lv.Config.getString("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%");
+		cb.lv.Msg_MaxLives = cb.lv.Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives.");
+		cb.lv.Msg_AddPickup = cb.lv.Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%.");
+		cb.lv.Msg_AddHP = cb.lv.Config.getString("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%");
+		cb.lv.Msg_MaxHP = cb.lv.Config.getString("MyWolf.Message.maxhp", "%aqua%%wolfname%%red% has reached the maximum of %maxhp% HP.");
+		cb.lv.Msg_WolfIsGone = cb.lv.Config.getString("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
+		cb.lv.Msg_DeathMessage = cb.lv.Config.getString("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
+		cb.lv.Msg_RespawnIn = cb.lv.Config.getString("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
+		cb.lv.Msg_OnRespawn = cb.lv.Config.getString("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
+		cb.lv.Msg_CallDead = cb.lv.Config.getString("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
+		cb.lv.Msg_Call = cb.lv.Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
+		cb.lv.Msg_CallFirst = cb.lv.Config.getString("MyWolf.Message.callfirst", "You must call your wolf first.");
+		cb.lv.Msg_DontHaveWolf = cb.lv.Config.getString("MyWolf.Message.donthavewolf", "You don't have a wolf!");
+		cb.lv.Msg_NewName = cb.lv.Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
+		cb.lv.Msg_Name = cb.lv.Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
+		cb.lv.Msg_Release = cb.lv.Config.getString("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green$free%white% . . .");
+		cb.lv.Msg_StopAttack = cb.lv.Config.getString("MyWolf.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
+		cb.lv.Msg_InventorySwimming = cb.lv.Config.getString("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!");
+		
+		cb.lv.Creeper = cb.lv.Config.getString("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
+		cb.lv.Zombie = cb.lv.Config.getString("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
+		cb.lv.Unknow = cb.lv.Config.getString("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
+		cb.lv.You = cb.lv.Config.getString("MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
+		cb.lv.Spider = cb.lv.Config.getString("MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
+		cb.lv.Skeleton = cb.lv.Config.getString("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
+		cb.lv.Giant = cb.lv.Config.getString("MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
+		cb.lv.Slime = cb.lv.Config.getString("MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
+		cb.lv.Ghast = cb.lv.Config.getString("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
+		cb.lv.Wolf = cb.lv.Config.getString("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
+		cb.lv.PlayerWolf = cb.lv.Config.getString("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf .");
+		cb.lv.Player = cb.lv.Config.getString("MyWolf.Message.deathmessage.player", "was killed by %player%.");
+		cb.lv.Drowning = cb.lv.Config.getString("MyWolf.Message.deathmessage.drowning", "drowned.");
+		cb.lv.Explosion = cb.lv.Config.getString("MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");
+		cb.lv.Fall = cb.lv.Config.getString("MyWolf.Message.deathmessage.fall", " died by falling down.");
+		cb.lv.Lightning = cb.lv.Config.getString("MyWolf.Message.deathmessage.lightning", "was killed by lightning.");
+		cb.lv.kvoid = cb.lv.Config.getString("MyWolf.Message.deathmessage.fire", "was killed by VOID.");
+		
+		
     	cb.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));		
         
         cb.Plugin.LoadWolves();
@@ -227,7 +310,7 @@ public class MyWolf extends JavaPlugin{
 				for ( String item : inv1.split("\\;") )
 				{
 					String[] itemvalues = item.split("\\,");
-					if(itemvalues.length == 3 && isInt(itemvalues[0]) && isInt(itemvalues[1]) && isInt(itemvalues[2]))
+					if(itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
 					{
 						if(Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
 						{
@@ -245,7 +328,7 @@ public class MyWolf extends JavaPlugin{
 					for ( String item : cb.WolvesConfig.getString("Wolves."+ownername+".inventory.2", "").split("\\;") )
 					{
 						String[] itemvalues = item.split("\\,");
-						if(itemvalues.length == 3 && isInt(itemvalues[0]) && isInt(itemvalues[1]) && isInt(itemvalues[2]))
+						if(itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
 						{
 							if(Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
 							{
@@ -324,28 +407,5 @@ public class MyWolf extends JavaPlugin{
 			cb.WolvesConfig.setProperty("Wolves."+owner+".pickup", wolf.hasPickup);
         }
 		cb.WolvesConfig.save();
-	}
-	
-	public boolean isInt(String number)
-    {
-    	try {
-    		Integer.parseInt(number);
-    		return true;
-    	}
-    	catch(NumberFormatException nFE) {
-    		return false;
-    	}
-    }
-	
-	public Material checkMaterial(int itemid,Material defaultMaterial)
-	{
-		if(Material.getMaterial(itemid) == null)
-		{
-			return defaultMaterial;
-		}
-		else
-		{
-			return Material.getMaterial(itemid);
-		}
 	}
 }

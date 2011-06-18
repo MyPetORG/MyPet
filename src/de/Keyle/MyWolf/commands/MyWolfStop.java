@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +26,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfStop implements CommandExecutor {
 
@@ -50,16 +50,17 @@ public class MyWolfStop implements CommandExecutor {
 				}
 				if(cb.mWolves.get(player.getName()).isDead == true || cb.mWolves.get(player.getName()).isThere == false)
 	    		{
-					sender.sendMessage("You must call your wolf first.");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_CallFirst));
 					return true;
 				}
-				sender.sendMessage("Your wolf should now " + ChatColor.GREEN + "stop" + ChatColor.WHITE + " attacking!");
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_StopAttack));
+				//sender.sendMessage("Your wolf should now " + ChatColor.GREEN + "stop" + ChatColor.WHITE + " attacking!");
 				cb.mWolves.get(player.getName()).MyWolf.setTarget((LivingEntity)null);
 				return true;
     		}
     		else
     		{
-    			sender.sendMessage("You don't have a wolf!");
+    			sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DontHaveWolf));
     		}
         }
 		return true;

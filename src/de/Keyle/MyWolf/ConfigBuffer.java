@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
+import de.Keyle.MyWolf.util.MyWolfLanguageVariables;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 
 public class ConfigBuffer {
@@ -38,8 +39,9 @@ public class ConfigBuffer {
 	public Configuration WolvesConfig;
 	public MyWolf Plugin;
 	PluginDescriptionFile pdfFile;
-	public ConfigVariables cv;
 	
+	public ConfigVariables cv;
+	public MyWolfLanguageVariables lv;
 	public MyWolfPermissions Permissions;
 	
 	public Map<String,Wolves> mWolves = new HashMap<String,Wolves>();
@@ -51,16 +53,8 @@ public class ConfigBuffer {
 		pdfFile = Plugin.getDescription();
 		Permissions = new MyWolfPermissions(this);
 	}
-	
-	public boolean isNPC(Player p)
-	{
-		if(Plugin.getServer().getPluginManager().getPlugin("Citizens") != null)
-		{
-			return com.fullwall.Citizens.NPCs.NPCManager.isNPC(p);
-		}
-		return false;
-	}
 }
+
 
 class ConfigVariables extends Property
 {

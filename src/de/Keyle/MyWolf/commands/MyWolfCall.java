@@ -19,13 +19,13 @@
 
 package de.Keyle.MyWolf.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfCall implements CommandExecutor
 {
@@ -53,25 +53,28 @@ public class MyWolfCall implements CommandExecutor
 				{
 					cb.mWolves.get(player.getName()).MyWolf.teleport(player);
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Call).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
+					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isThere == false && cb.mWolves.get(player.getName()).RespawnTime == 0)
 				{
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					cb.mWolves.get(player.getName()).createWolf(false);
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Call).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
+					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{
-					player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead! and respawns in "+ChatColor.GOLD+cb.mWolves.get(player.getName()).RespawnTime+ChatColor.WHITE +" sec");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_CallDead).replace("%wolfname%", cb.mWolves.get(player.getName()).Name).replace("%time%", ""+cb.mWolves.get(player.getName()).RespawnTime));
+					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead! and respawns in "+ChatColor.GOLD+cb.mWolves.get(player.getName()).RespawnTime+ChatColor.WHITE +" sec");
 					return true;
 				}
 	        }
 			else
 			{
-				sender.sendMessage("You don't have a wolf!");
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DontHaveWolf));
 			}
         }
 		return true;

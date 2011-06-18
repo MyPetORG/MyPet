@@ -21,13 +21,13 @@ package de.Keyle.MyWolf.commands;
 
 import net.minecraft.server.ItemStack;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfRelease implements CommandExecutor {
 
@@ -51,7 +51,7 @@ public class MyWolfRelease implements CommandExecutor {
 				}
 				if(cb.mWolves.get(player.getName()).isDead == true || cb.mWolves.get(player.getName()).isThere == false)
 	    		{
-					player.sendMessage("You must call your wolf first.");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_CallFirst));
 					return true;
 				}
 				if(args.length < 1)
@@ -75,20 +75,22 @@ public class MyWolfRelease implements CommandExecutor {
 							cb.mWolves.get(player.getName()).MyWolf.getWorld().dropItem(cb.mWolves.get(player.getName()).getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short)is.damage));
 						}
 					}
-					player.sendMessage(ChatColor.AQUA + cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is now " + ChatColor.GREEN + "free" + ChatColor.WHITE + " . . .");
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Release).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
+					//player.sendMessage(ChatColor.AQUA + cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is now " + ChatColor.GREEN + "free" + ChatColor.WHITE + " . . .");
 					cb.mWolves.remove(player.getName());
 					cb.Plugin.SaveWolves();
 					return true;
 				}
 				else
 				{
-					player.sendMessage("The name of your wolf is: " + ChatColor.AQUA + cb.mWolves.get(player.getName()).Name);
+					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Name).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
+					//player.sendMessage("The name of your wolf is: " + ChatColor.AQUA + cb.mWolves.get(player.getName()).Name);
 					return false;
 				}
     		}
 			else
 			{
-				sender.sendMessage("You don't have a wolf!");
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DontHaveWolf));
 			}
         }
 		return false;

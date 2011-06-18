@@ -1,7 +1,7 @@
 package de.Keyle.MyWolf;
 
-	import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
-	import org.bukkitcontrib.event.inventory.InventoryListener;
+import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
+import org.bukkitcontrib.event.inventory.InventoryListener;
 
 	public class MyWolfInventoryListener extends InventoryListener
 	{

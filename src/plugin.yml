@@ -1,6 +1,6 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolf
-version: 0.4.4beta
+version: 0.4.4
 author: Keyle
 website: http://forums.bukkit.org/threads/16014/
 softdepend: [GroupManager, Permissions, BukkitContrib]

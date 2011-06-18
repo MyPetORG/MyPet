@@ -35,6 +35,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 
+import de.Keyle.MyWolf.util.MyWolfUtil;
+
 public class MyWolfPlayerListener extends PlayerListener{
 	
 	private ConfigBuffer cb;
@@ -70,7 +72,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 	    				 {
 	    					 if(e instanceof Player)
 	    					 {
-	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && cb.isNPC((Player) e) == false)
+	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && MyWolfUtil.isNPC(cb.Plugin,(Player) e) == false)
 	    						 {
 	    							 cb.mWolves.get(event.getPlayer().getName()).MyWolf.setTarget((LivingEntity)e);
 	    						 }
