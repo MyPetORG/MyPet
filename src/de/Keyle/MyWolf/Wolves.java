@@ -19,8 +19,7 @@
 
 package de.Keyle.MyWolf;
 
-import com.aranai.virtualchest.TileEntityVirtualChest;
-
+import de.Keyle.MyWolf.util.MyWolfInventory;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
 import net.minecraft.server.EntityPlayer;
@@ -68,9 +67,9 @@ public class Wolves {
 	public boolean allowAttackPlayer = true;
 	public boolean allowAttackMonster = false;
 	
-	public TileEntityVirtualChest Inventory1 = new TileEntityVirtualChest();
-	public TileEntityVirtualChest Inventory2 = new TileEntityVirtualChest();
-	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory1.getName(), Inventory1, Inventory2);
+	public MyWolfInventory[] Inventory = {new MyWolfInventory(),new MyWolfInventory()};
+	//public TileEntityVirtualChest Inventory2 = new TileEntityVirtualChest();
+	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
 	
 	
 	public boolean isThere = false;
@@ -103,7 +102,7 @@ public class Wolves {
 		EntityPlayer eh = ((CraftPlayer)getPlayer()).getHandle();
 		if(InventoryMode == InventoryType.SMALL)
 		{
-			eh.a(Inventory1);
+			eh.a(Inventory[0]);
 		}
 		else if(InventoryMode == InventoryType.LARGE)
 		{
@@ -322,7 +321,7 @@ public class Wolves {
 										Vector distance = getLocation().toVector().add(new Vector(0.5,0,0.5)).subtract(item.getLocation().toVector());
 										if(distance.lengthSquared() < 1.0*cb.cv.WolfPickupRange*cb.cv.WolfPickupRange + 1)
 										{
-											int amountleft = Inventory1.addItem(item);
+											int amountleft = Inventory[0].addItem(item);
 											if(amountleft == 0)
 											{
 												e.remove();
@@ -335,7 +334,7 @@ public class Wolves {
 												}
 												if(InventoryMode == InventoryType.LARGE)
 												{
-													amountleft = Inventory2.addItem(item);
+													amountleft = Inventory[1].addItem(item);
 													if(amountleft == 0)
 													{
 														e.remove();

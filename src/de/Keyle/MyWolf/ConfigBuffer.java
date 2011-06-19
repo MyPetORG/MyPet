@@ -32,6 +32,7 @@ import org.bukkit.util.config.Configuration;
 
 import de.Keyle.MyWolf.util.MyWolfLanguageVariables;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class ConfigBuffer {
 	
@@ -80,6 +81,44 @@ class ConfigVariables extends Property
 	public boolean WolfLeashItemSneak;
 	public boolean WolfControlItemSneak;
 	public boolean WolfChestOpenItemSneak;
+	
+	public void setStandart()
+	{
+		Config.setProperty("MyWolf.leash.item", 287);//String
+    	Config.setProperty("MyWolf.chest.open.item", 340);//Book
+    	Config.setProperty("MyWolf.chest.add", 54);//Chest
+    	Config.setProperty("MyWolf.food.hp", 357); //Cookie
+    	Config.setProperty("MyWolf.food.lives", 354); //Cake
+    	Config.setProperty("MyWolf.control.item",287);
+    	Config.setProperty("MyWolf.leash.sneak", false);
+    	Config.setProperty("MyWolf.chest.open.sneak", false);
+    	Config.setProperty("MyWolf.control.sneak",false);
+    	Config.setProperty("MyWolf.pickup.range", 2); //2 Blocks range
+    	Config.setProperty("MyWolf.pickup.add", 331); //Redstone Dust
+    	Config.setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
+    	Config.setProperty("MyWolf.max.HP",20); //20 MaxHPWolfLives
+    	Config.setProperty("MyWolf.max.Lives",-1); //no MaxLives
+    	
+    	Config.save();
+	}
+	
+	public void loadVariables()
+	{
+		WolfLeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item",287),Material.STRING);
+		WolfLeashItemSneak = Config.getBoolean("MyWolf.leash.sneak",false);
+		WolfControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item",287),Material.STRING);
+		WolfControlItemSneak = Config.getBoolean("MyWolf.control.sneak",false);
+		WolfChestOpenItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.chest.open.item",340),Material.BOOK);
+		WolfChestOpenItemSneak = Config.getBoolean("MyWolf.chest.open.sneak",false);
+		WolfChestAddItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.chest.add",54),Material.CHEST);
+		WolfFoodHPItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.food.hp",357),Material.COOKIE);
+		WolfFoodLivesItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.food.lives",354),Material.CAKE);
+		WolfPickupRange = Config.getInt("MyWolf.pickup.range",2);
+		WolfPickupItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.pickup.add",331),Material.REDSTONE);
+		WolfRespawnTimeFactor = Config.getInt("MyWolf.respawntimefactor",5);
+		WolfRespawnMaxHP = Config.getInt("MyWolf.max.HP",20);
+		WolfMaxLives = Config.getInt("MyWolf.max.Lives",-1);
+	}
 }
 
 class Property

@@ -72,7 +72,7 @@ public class MyWolfPlayerListener extends PlayerListener{
 	    				 {
 	    					 if(e instanceof Player)
 	    					 {
-	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && MyWolfUtil.isNPC(cb.Plugin,(Player) e) == false)
+	    						 if(((Player)e).equals(cb.mWolves.get(event.getPlayer().getName()).getPlayer()) == false && MyWolfUtil.isNPC(cb.Plugin,(Player) e) == false && e.getWorld().getPVP() == true)
 	    						 {
 	    							 cb.mWolves.get(event.getPlayer().getName()).MyWolf.setTarget((LivingEntity)e);
 	    						 }

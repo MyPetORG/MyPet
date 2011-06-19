@@ -58,7 +58,6 @@ public class MyWolfEntityListener extends EntityListener
 	{
 		if ((event.getEntity() instanceof Wolf))
 		{
-			
 			if (!(event instanceof EntityDamageByEntityEvent)) 
 			{
 			      return;
