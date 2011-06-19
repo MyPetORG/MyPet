@@ -5,6 +5,7 @@
  */
 package de.Keyle.MyWolf.util;
 
+import net.minecraft.server.EntityHuman;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.TileEntityChest;
 
@@ -13,6 +14,11 @@ public class MyWolfInventory extends TileEntityChest {
 	public MyWolfInventory()
 	{
 		super();
+	}
+	@Override
+	public boolean a_(EntityHuman entityhuman)
+	{
+		return true;
 	}
 	public int addItem(org.bukkit.entity.Item item)
 	{
