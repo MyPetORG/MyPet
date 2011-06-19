@@ -94,258 +94,264 @@ public class MyWolfEntityListener extends EntityListener
 							//player.sendMessage(ChatColor.GREEN + "You take your wolf on the leash, he'll be a good wolf.");
 						}
 					}
-					
+					String WolfOwner = null;
 					for ( String owner : cb.mWolves.keySet() )
 			        {
-						Wolves wolf = cb.mWolves.get( owner );
-						if(wolf.getID() == event.getEntity().getEntityId())
+						
+						if(cb.mWolves.get( owner ).getID() == event.getEntity().getEntityId())
 						{
-							if(cb.mWolves.get(owner).getHealth() > cb.mWolves.get(owner).HealthMax)
+							WolfOwner = owner;
+							break;
+						}
+			        }
+					if(WolfOwner != null && WolfOwner.equals(player.getName()))
+					{
+						Wolves wolf = cb.mWolves.get( WolfOwner );
+						if(cb.mWolves.get(WolfOwner).getHealth() > cb.mWolves.get(WolfOwner).HealthMax)
+						{
+							cb.mWolves.get(WolfOwner).setWolfHealth(cb.mWolves.get(WolfOwner).HealthMax);
+						}
+
+						if(player.getItemInHand().getType() == cb.cv.WolfLeashItem && cb.cv.WolfLeashItemSneak == player.isSneaking())
+						{
+							if(cb.Permissions.has(player, "mywolf.info") == false)
 							{
-								cb.mWolves.get(owner).setWolfHealth(cb.mWolves.get(owner).HealthMax);
+								return;
 							}
-	
-							if(player.getItemInHand().getType() == cb.cv.WolfLeashItem && cb.cv.WolfLeashItemSneak == player.isSneaking())
 							{
-								if(cb.Permissions.has(player, "mywolf.info") == false)
+								String msg = "";//+ChatColor.AQUA + wolf.Name + ChatColor.WHITE + " HP:";
+								if(wolf.getHealth() > wolf.HealthMax/3*2)
+								{
+									msg += "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+								}
+								else if(wolf.getHealth() > wolf.HealthMax/3*1)
+								{
+									msg += "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+								}
+								else
+								{
+									msg += ""  +ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+								}
+								//player.sendMessage(msg);
+								player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo).replace("%wolfname%", wolf.Name).replace("%hp%", msg));
+								if(wolf.MyWolf.isSitting())
+								{
+									event.setCancelled(true);
+									wolf.isSitting = true;
+									wolf.MyWolf.setSitting(true);
+								}
+								else
+								{
+									wolf.isSitting = false;
+									event.setCancelled(true);
+								}
+							}
+						}
+						if(player.getItemInHand().getType() == cb.cv.WolfChestAddItem)
+						{
+							if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+							{
+								if(cb.Permissions.has(player, "mywolf.chest.add.small") == false)
 								{
 									return;
 								}
+								else if(wolf.InventoryMode == InventoryType.SMALL && cb.Permissions.has(player, "mywolf.chest.add.large") == false)
 								{
-									String msg = "";//+ChatColor.AQUA + wolf.Name + ChatColor.WHITE + " HP:";
+									return;
+								}
+								if(wolf.InventoryMode == InventoryType.NONE || wolf.InventoryMode == InventoryType.SMALL)
+								{
+									wolf.InventoryMode = (wolf.InventoryMode == InventoryType.NONE?InventoryType.SMALL:InventoryType.LARGE);
+									if(player.getItemInHand().getAmount()>1)
+									{
+										player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
+									}
+									else
+									{
+										player.getInventory().removeItem(player.getInventory().getItemInHand());
+									}
+									event.setCancelled(true);
+									wolf.MyWolf.setSitting(true);
+									player.sendMessage(MyWolfUtil.SetColors((wolf.InventoryMode == InventoryType.SMALL?cb.lv.Msg_AddChest:cb.lv.Msg_AddChestGreater)).replace("%wolfname%", wolf.Name));
+									//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an" + (wolf.InventoryMode == InventoryType.SMALL?"":" bigger") + " inventory.");
+								}
+									
+								
+							}
+						}
+						if(player.getItemInHand().getType() == cb.cv.WolfFoodLivesItem)
+						{
+							if(cb.cv.WolfMaxLives > -1 && wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+							{
+								if(cb.Permissions.has(player, "mywolf.food.lives") == false)
+								{
+									return;
+								}
+								if(wolf.Lives < cb.cv.WolfMaxLives)
+								{
+									wolf.Lives += 1;
+									if(player.getItemInHand().getAmount()>1)
+									{
+										player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
+									}
+									else
+									{
+										player.getInventory().removeItem(player.getInventory().getItemInHand());
+									}
+									
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddLive).replace("%wolfname%", wolf.Name));
+									//player.sendMessage(ChatColor.GREEN + "+1 life for " + ChatColor.AQUA + wolf.Name);
+								}
+								else
+								{
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxLives).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfMaxLives));
+									//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfMaxLives + " lives.");
+								}
+								if(wolf.MyWolf.isSitting())
+								{
+									wolf.isSitting = true;
+									wolf.MyWolf.setSitting(true);
+								}
+								else
+								{
+									wolf.isSitting = false;
+								}
+								event.setCancelled(true);
+							}
+						}
+						if(player.getItemInHand().getType() == cb.cv.WolfPickupItem)
+						{
+							if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+							{
+								if(cb.Permissions.has(player, "mywolf.pickup.add") == false)
+								{
+									return;
+								}
+								if(wolf.hasPickup == false)
+								{
+									wolf.hasPickup = true;
+									if(player.getItemInHand().getAmount()>1)
+									{
+										player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
+									}
+									else
+									{
+										player.getInventory().removeItem(player.getInventory().getItemInHand());
+									}
+									event.setCancelled(true);
+									wolf.MyWolf.setSitting(true);
+									wolf.DropTimer();
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddPickup).replace("%wolfname%", wolf.Name).replace("%range%", ""+cb.cv.WolfPickupRange));
+									//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " now pickup items in a range of" + cb.cv.WolfPickupRange + ".");
+								}
+									
+								
+							}
+						}
+						if(player.getItemInHand().getType() == cb.cv.WolfChestOpenItem && cb.cv.WolfChestOpenItemSneak == player.isSneaking())
+						{
+							if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+							{
+								if(cb.Permissions.has(player, "mywolf.chest.open") == false)
+								{
+									return;
+								}
+								if(wolf.InventoryMode != InventoryType.NONE)
+								{
+									if(wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
+									{
+										wolf.OpenInventory();
+										if(wolf.isSitting() == false)
+										{
+											cb.WolfChestOpened.add(player);
+										}
+										wolf.MyWolf.setSitting(true);
+									}
+									else
+									{
+										player.sendMessage(cb.lv.Msg_InventorySwimming);
+										//player.sendMessage("You can't open the inventory while the wolf is swimming!");
+									}
+									event.setCancelled(true);
+								}
+							}
+						}
+						if(player.getItemInHand().getType() == cb.cv.WolfFoodHPItem)
+						{
+							if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+							{
+								if(cb.Permissions.has(player, "mywolf.food.hp") == false)
+								{
+									return;
+								}
+								if(wolf.HealthMax < cb.cv.WolfRespawnMaxHP)
+								{
+									String msg = "";//+ChatColor.AQUA+wolf.Name + ChatColor.WHITE + ":";
+									wolf.HealthMax += 1;
+									wolf.setWolfHealth(wolf.getHealth()+1);
+									if(player.getItemInHand().getAmount()>1)
+									{
+										player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
+									}
+									else
+									{
+										player.getInventory().removeItem(player.getInventory().getItemInHand());
+									}
+									
 									if(wolf.getHealth() > wolf.HealthMax/3*2)
 									{
-										msg += "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+										msg += " HP:" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
 									}
 									else if(wolf.getHealth() > wolf.HealthMax/3*1)
 									{
-										msg += "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+										msg += " HP:" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
 									}
 									else
+									
 									{
-										msg += ""  +ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax+ ChatColor.WHITE;
+										msg += " HP:" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
 									}
+									
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddHP.replace("%wolfname%", wolf.Name)));
+									//player.sendMessage(ChatColor.GREEN + "+1 MaxHP for " + ChatColor.AQUA + wolf.Name);
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo.replace("%wolfname%", wolf.Name).replace("%hp%", msg)));
 									//player.sendMessage(msg);
-									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo).replace("%wolfname%", wolf.Name).replace("%hp%", msg));
-									if(wolf.MyWolf.isSitting())
-									{
-										event.setCancelled(true);
-										wolf.isSitting = true;
-										wolf.MyWolf.setSitting(true);
-									}
-									else
-									{
-										wolf.isSitting = false;
-										event.setCancelled(true);
-									}
 								}
-							}
-							if(player.getItemInHand().getType() == cb.cv.WolfChestAddItem)
-							{
-								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+								else
 								{
-									if(cb.Permissions.has(player, "mywolf.chest.add.small") == false)
-									{
-										return;
-									}
-									else if(wolf.InventoryMode == InventoryType.SMALL && cb.Permissions.has(player, "mywolf.chest.add.large") == false)
-									{
-										return;
-									}
-									if(wolf.InventoryMode == InventoryType.NONE || wolf.InventoryMode == InventoryType.SMALL)
-									{
-										wolf.InventoryMode = (wolf.InventoryMode == InventoryType.NONE?InventoryType.SMALL:InventoryType.LARGE);
-										if(player.getItemInHand().getAmount()>1)
-										{
-											player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
-										}
-										else
-										{
-											player.getInventory().removeItem(player.getInventory().getItemInHand());
-										}
-										event.setCancelled(true);
-										wolf.MyWolf.setSitting(true);
-										player.sendMessage(MyWolfUtil.SetColors((wolf.InventoryMode == InventoryType.SMALL?cb.lv.Msg_AddChest:cb.lv.Msg_AddChestGreater)).replace("%wolfname%", wolf.Name));
-										//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " has now an" + (wolf.InventoryMode == InventoryType.SMALL?"":" bigger") + " inventory.");
-									}
-										
-									
+									player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxHP).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfRespawnMaxHP));
+									//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfRespawnMaxHP + "HP.");
 								}
-							}
-							if(player.getItemInHand().getType() == cb.cv.WolfFoodLivesItem)
-							{
-								if(cb.cv.WolfMaxLives > -1 && wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+								if(wolf.MyWolf.isSitting())
 								{
-									if(cb.Permissions.has(player, "mywolf.food.lives") == false)
-									{
-										return;
-									}
-									if(wolf.Lives < cb.cv.WolfMaxLives)
-									{
-										wolf.Lives += 1;
-										if(player.getItemInHand().getAmount()>1)
-										{
-											player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
-										}
-										else
-										{
-											player.getInventory().removeItem(player.getInventory().getItemInHand());
-										}
-										
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddLive).replace("%wolfname%", wolf.Name));
-										//player.sendMessage(ChatColor.GREEN + "+1 life for " + ChatColor.AQUA + wolf.Name);
-									}
-									else
-									{
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxLives).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfMaxLives));
-										//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfMaxLives + " lives.");
-									}
-									if(wolf.MyWolf.isSitting())
-									{
-										wolf.isSitting = true;
-										wolf.MyWolf.setSitting(true);
-									}
-									else
-									{
-										wolf.isSitting = false;
-									}
-									event.setCancelled(true);
+									wolf.isSitting = true;
+									wolf.MyWolf.setSitting(true);
 								}
-							}
-							if(player.getItemInHand().getType() == cb.cv.WolfPickupItem)
-							{
-								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
+								else
 								{
-									if(cb.Permissions.has(player, "mywolf.pickup.add") == false)
-									{
-										return;
-									}
-									if(wolf.hasPickup == false)
-									{
-										wolf.hasPickup = true;
-										if(player.getItemInHand().getAmount()>1)
-										{
-											player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
-										}
-										else
-										{
-											player.getInventory().removeItem(player.getInventory().getItemInHand());
-										}
-										event.setCancelled(true);
-										wolf.MyWolf.setSitting(true);
-										wolf.DropTimer();
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddPickup).replace("%wolfname%", wolf.Name).replace("%range%", ""+cb.cv.WolfPickupRange));
-										//player.sendMessage(ChatColor.AQUA+wolf.Name + ChatColor.WHITE + " now pickup items in a range of" + cb.cv.WolfPickupRange + ".");
-									}
-										
-									
+									wolf.isSitting = false;
 								}
-							}
-							if(player.getItemInHand().getType() == cb.cv.WolfChestOpenItem && cb.cv.WolfChestOpenItemSneak == player.isSneaking())
-							{
-								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
-								{
-									if(cb.Permissions.has(player, "mywolf.chest.open") == false)
-									{
-										return;
-									}
-									if(wolf.InventoryMode != InventoryType.NONE)
-									{
-										if(wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
-										{
-											wolf.OpenInventory();
-											if(wolf.isSitting() == false)
-											{
-												cb.WolfChestOpened.add(player);
-											}
-											wolf.MyWolf.setSitting(true);
-										}
-										else
-										{
-											player.sendMessage(cb.lv.Msg_InventorySwimming);
-											//player.sendMessage("You can't open the inventory while the wolf is swimming!");
-										}
-										event.setCancelled(true);
-									}
-								}
-							}
-							if(player.getItemInHand().getType() == cb.cv.WolfFoodHPItem)
-							{
-								if(wolf.MyWolf.getEntityId() == event.getEntity().getEntityId())
-								{
-									if(cb.Permissions.has(player, "mywolf.food.hp") == false)
-									{
-										return;
-									}
-									if(wolf.HealthMax < cb.cv.WolfRespawnMaxHP)
-									{
-										String msg = "";//+ChatColor.AQUA+wolf.Name + ChatColor.WHITE + ":";
-										wolf.HealthMax += 1;
-										wolf.setWolfHealth(wolf.getHealth()+1);
-										if(player.getItemInHand().getAmount()>1)
-										{
-											player.getItemInHand().setAmount(player.getItemInHand().getAmount()-1);
-										}
-										else
-										{
-											player.getInventory().removeItem(player.getInventory().getItemInHand());
-										}
-										
-										if(wolf.getHealth() > wolf.HealthMax/3*2)
-										{
-											msg += " HP:" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
-										}
-										else if(wolf.getHealth() > wolf.HealthMax/3*1)
-										{
-											msg += " HP:" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
-										}
-										else
-										
-										{
-											msg += " HP:" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax;
-										}
-										
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_AddHP.replace("%wolfname%", wolf.Name)));
-										//player.sendMessage(ChatColor.GREEN + "+1 MaxHP for " + ChatColor.AQUA + wolf.Name);
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_HPinfo.replace("%wolfname%", wolf.Name).replace("%hp%", msg)));
-										//player.sendMessage(msg);
-									}
-									else
-									{
-										player.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_MaxHP).replace("%wolfname%", wolf.Name).replace("%maxlives%", ""+cb.cv.WolfRespawnMaxHP));
-										//player.sendMessage(ChatColor.AQUA + wolf.Name + ChatColor.RED + " has reached the maximum of " + cb.cv.WolfRespawnMaxHP + "HP.");
-									}
-									if(wolf.MyWolf.isSitting())
-									{
-										wolf.isSitting = true;
-										wolf.MyWolf.setSitting(true);
-									}
-									else
-									{
-										wolf.isSitting = false;
-									}
-									event.setCancelled(true);
-								}	
-							}
-							
-							/* --> for Armor
-							if(event.isCancelled() == false)
-							{
-								for(ItemStack is : wolf.WolfInventory.getContents())
-								{
-									if(cb.ArmorList.containsKey(is.id))
-									{
-										event.setDamage(event.getDamage()-cb.ArmorList.get(is.id));
-									}
-								}
-							}
-							*/
-							if(event.isCancelled() == false && event.getEntity().getWorld().getPVP() == false)
-							{
 								event.setCancelled(true);
+							}	
+						}
+						
+						/* --> for Armor
+						if(event.isCancelled() == false)
+						{
+							for(ItemStack is : wolf.WolfInventory.getContents())
+							{
+								if(cb.ArmorList.containsKey(is.id))
+								{
+									event.setDamage(event.getDamage()-cb.ArmorList.get(is.id));
+								}
 							}
-						}	        	
-			        }
+						}
+						*/
+						if(event.isCancelled() == false && event.getEntity().getWorld().getPVP() == false)
+						{
+							event.setCancelled(true);
+						}
+					}      	
 				}
 			}
 		}

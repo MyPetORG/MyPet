@@ -42,7 +42,7 @@ public class MyWolfVehicleListener extends VehicleListener{
 		{
 			for ( String owner : cb.mWolves.keySet() )
 	        {
-				if(cb.mWolves.get( owner ).MyWolf == (Wolf)event.getEntered())
+				if(cb.mWolves.get( owner ).getID() == event.getEntered().getEntityId())
 				{
 					event.setCancelled(true);
 					break;

@@ -83,10 +83,13 @@ public class Wolves {
 		this.Owner = Owner;
 	}
 	
-	public void SetName(String name)
+	public void SetName(String Name)
 	{
-		Name = name;
-		DisplayName();
+		this.Name = Name;
+		if(isThere == true && isDead == false)
+		{
+			DisplayName();
+		}
 	}
 	
 	private void DisplayName()
