@@ -24,7 +24,6 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.InventoryLargeChest;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -68,7 +67,6 @@ public class Wolves {
 	public boolean allowAttackMonster = false;
 	
 	public MyWolfInventory[] Inventory = {new MyWolfInventory(),new MyWolfInventory()};
-	//public TileEntityVirtualChest Inventory2 = new TileEntityVirtualChest();
 	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
 	
 	
@@ -94,7 +92,7 @@ public class Wolves {
 	
 	private void DisplayName()
 	{
-		if(cb.Plugin.getServer().getPluginManager().getPlugin("BukkitContrib") != null)
+		if(cb.hasBukkitContrib)
 		{
 			BukkitContrib.getAppearanceManager().setGlobalTitle(MyWolf, ChatColor.AQUA + Name);
 		}
@@ -148,7 +146,6 @@ public class Wolves {
 		    	{
 		    		DropTimer();
 		    	}
-		    		
 		    	return true;
 			}
 			else if(RespawnTime > 0)

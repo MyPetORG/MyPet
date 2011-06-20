@@ -34,12 +34,14 @@ import de.Keyle.MyWolf.util.MyWolfLanguageVariables;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class ConfigBuffer {
-	
+public class ConfigBuffer
+{
+
 	public Logger log = Logger.getLogger("Minecraft");
 	public Configuration WolvesConfig;
 	public MyWolf Plugin;
-	PluginDescriptionFile pdfFile;
+	public PluginDescriptionFile pdfFile;
+	public boolean hasBukkitContrib = false;
 	
 	public ConfigVariables cv;
 	public MyWolfLanguageVariables lv;
@@ -49,7 +51,8 @@ public class ConfigBuffer {
 
 	public List<Player> WolfChestOpened = new ArrayList<Player>();
 	
-	public ConfigBuffer(MyWolf Plugin) {
+	public ConfigBuffer(MyWolf Plugin)
+	{
 		this.Plugin = Plugin;
 		pdfFile = Plugin.getDescription();
 		Permissions = new MyWolfPermissions(this);
@@ -84,20 +87,20 @@ class ConfigVariables extends Property
 	
 	public void setStandart()
 	{
-		Config.setProperty("MyWolf.leash.item", 287);//String
-    	Config.setProperty("MyWolf.chest.open.item", 340);//Book
-    	Config.setProperty("MyWolf.chest.add", 54);//Chest
-    	Config.setProperty("MyWolf.food.hp", 357); //Cookie
-    	Config.setProperty("MyWolf.food.lives", 354); //Cake
-    	Config.setProperty("MyWolf.control.item",287);
-    	Config.setProperty("MyWolf.leash.sneak", false);
-    	Config.setProperty("MyWolf.chest.open.sneak", false);
-    	Config.setProperty("MyWolf.control.sneak",false);
-    	Config.setProperty("MyWolf.pickup.range", 2); //2 Blocks range
-    	Config.setProperty("MyWolf.pickup.add", 331); //Redstone Dust
-    	Config.setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
-    	Config.setProperty("MyWolf.max.HP",20); //20 MaxHPWolfLives
-    	Config.setProperty("MyWolf.max.Lives",-1); //no MaxLives
+		setProperty("MyWolf.leash.item", 287);//String
+    	setProperty("MyWolf.chest.open.item", 340);//Book
+    	setProperty("MyWolf.chest.add", 54);//Chest
+    	setProperty("MyWolf.food.hp", 357); //Cookie
+    	setProperty("MyWolf.food.lives", 354); //Cake
+    	setProperty("MyWolf.control.item",287);
+    	setProperty("MyWolf.leash.sneak", false);
+    	setProperty("MyWolf.chest.open.sneak", false);
+    	setProperty("MyWolf.control.sneak",false);
+    	setProperty("MyWolf.pickup.range", 2); //2 Blocks range
+    	setProperty("MyWolf.pickup.add", 331); //Redstone Dust
+    	setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
+    	setProperty("MyWolf.max.HP",20); //20 MaxHPWolfLives
+    	setProperty("MyWolf.max.Lives",-1); //no MaxLives
     	
     	Config.save();
 	}

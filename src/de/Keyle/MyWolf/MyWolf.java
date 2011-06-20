@@ -89,6 +89,11 @@ public class MyWolf extends JavaPlugin{
     	
     	cb.Permissions.setup();
     	
+    	if(cb.Plugin.getServer().getPluginManager().getPlugin("BukkitContrib") != null && cb.Plugin.getServer().getPluginManager().getPlugin("BukkitContrib").getDescription().getVersion().equals("0.0.7"))
+    	{
+    		cb.hasBukkitContrib = true;
+    	}
+    	
     	getCommand("wolfname").setExecutor(new MyWolfName(cb));
         getCommand("wolfcall").setExecutor(new MyWolfCall(cb));
         getCommand("wolfstop").setExecutor(new MyWolfStop(cb));

@@ -51,24 +51,33 @@ public class MyWolfCall implements CommandExecutor
 				cb.mWolves.get(player.getName()).Location = player.getLocation();
 				if(cb.mWolves.get(player.getName()).isThere == true && cb.mWolves.get(player.getName()).isDead == false)
 				{
+					/*
+					if(cb.hasBukkitContrib)
+					{
+						BukkitContrib.getSoundManager().playCustomMusic(ContribCraftPlayer.getContribPlayer((Player)sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
+					}
+					*/
 					cb.mWolves.get(player.getName()).MyWolf.teleport(player);
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Call).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
-					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isThere == false && cb.mWolves.get(player.getName()).RespawnTime == 0)
 				{
+					/*
+					if(cb.hasBukkitContrib)
+					{
+						BukkitContrib.getSoundManager().playCustomMusic(ContribCraftPlayer.getContribPlayer((Player)sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
+					}
+					*/
 					cb.mWolves.get(player.getName()).Location = player.getLocation();
 					cb.mWolves.get(player.getName()).createWolf(false);
 					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_Call).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
-					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " comes to you.");
 					return true;
 				}
 				else if(cb.mWolves.get(player.getName()).isDead == true)
 				{
 					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_CallDead).replace("%wolfname%", cb.mWolves.get(player.getName()).Name).replace("%time%", ""+cb.mWolves.get(player.getName()).RespawnTime));
-					//player.sendMessage(ChatColor.AQUA+cb.mWolves.get(player.getName()).Name + ChatColor.WHITE + " is dead! and respawns in "+ChatColor.GOLD+cb.mWolves.get(player.getName()).RespawnTime+ChatColor.WHITE +" sec");
 					return true;
 				}
 	        }

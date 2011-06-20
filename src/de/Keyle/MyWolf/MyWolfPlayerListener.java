@@ -57,8 +57,8 @@ public class MyWolfPlayerListener extends PlayerListener{
 					return;
 				}
 				 Block block = event.getPlayer().getTargetBlock(null, 100);
-	             if (block != null) {
-	            	 
+	             if (block != null)
+	             {
 	            	 PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
 	    			 EntityWolf wolf =((CraftWolf) cb.mWolves.get(event.getPlayer().getName()).MyWolf).getHandle();
 	    			 wolf.a(new PathEntity(loc));

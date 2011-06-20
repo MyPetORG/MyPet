@@ -53,7 +53,7 @@ public class MyWolfStop implements CommandExecutor {
 					sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_CallFirst));
 					return true;
 				}
-				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_StopAttack));
+				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_StopAttack).replace("%wolfname%", cb.mWolves.get(player.getName()).Name));
 				//sender.sendMessage("Your wolf should now " + ChatColor.GREEN + "stop" + ChatColor.WHITE + " attacking!");
 				cb.mWolves.get(player.getName()).MyWolf.setTarget((LivingEntity)null);
 				return true;
