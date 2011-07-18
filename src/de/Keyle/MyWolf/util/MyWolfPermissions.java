@@ -27,65 +27,58 @@ import org.anjocaido.groupmanager.GroupManager;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolf;
 
 public class MyWolfPermissions
 {
-	private ConfigBuffer cb;
-	private Object Permissions;
+	private static Object Permissions;
+
 	private enum PermissionsType
 	{
-		NONE,
-		GroupManager,
-		Permissions;
+		NONE, GroupManager, Permissions;
 	}
-	private PermissionsType PermissionsMode = PermissionsType.NONE;
-	
-	public MyWolfPermissions(ConfigBuffer configBuffer)
+
+	private static PermissionsType PermissionsMode = PermissionsType.NONE;
+
+	public static boolean has(Player player, String node)
 	{
-		this.cb = configBuffer;
-	}
-	
-	public boolean has(Player player, String node)
-	{
-		if (PermissionsMode == PermissionsType.NONE || this.Permissions == null || player == null)
+		if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null)
 		{
 			return true;
 		}
 		else if (PermissionsMode == PermissionsType.Permissions && Permissions instanceof PermissionHandler)
 		{
-			return ((PermissionHandler) this.Permissions).has(player, node);
+			return ((PermissionHandler) Permissions).has(player, node);
 		}
 		else if (PermissionsMode == PermissionsType.GroupManager && Permissions instanceof GroupManager)
 		{
-			 return ((GroupManager) Permissions).getWorldsHolder().getWorldPermissions(player).has(player,node);
+			return ((GroupManager) Permissions).getWorldsHolder().getWorldPermissions(player).has(player, node);
 		}
 		return false;
-		
+
 	}
-	
-	public boolean setup()
+
+	public static void setup()
 	{
 		Plugin p;
-		
-		p = cb.Plugin.getServer().getPluginManager().getPlugin("GroupManager");	
-        if (p != null && PermissionsMode == PermissionsType.NONE)
-        {
-        	PermissionsMode = PermissionsType.GroupManager;
-        	Permissions = (GroupManager) p;
-        	cb.log.info("[MyWolf] GroupManager integration enabled!");
-        	return true;
-        }
-        
-    	p = cb.Plugin.getServer().getPluginManager().getPlugin("Permissions");
-        if (p != null && PermissionsMode == PermissionsType.NONE)
-        {
-        	PermissionsMode = PermissionsType.Permissions;
-            Permissions = ((Permissions)p).getHandler();
-            cb.log.info("[MyWolf] Permissions integration enabled!");
-            return true;
-        }
-        cb.log.info("[MyWolf] Permissions/GroupManager integration could not be enabled!");
-        return false;
-    }	
+
+		p = MyWolf.Plugin.getServer().getPluginManager().getPlugin("GroupManager");
+		if (p != null && PermissionsMode == PermissionsType.NONE)
+		{
+			PermissionsMode = PermissionsType.GroupManager;
+			Permissions = (GroupManager) p;
+			MyWolfUtil.Log.info("[MyWolf] GroupManager integration enabled!");
+			return;
+		}
+
+		p = MyWolf.Plugin.getServer().getPluginManager().getPlugin("Permissions");
+		if (p != null && PermissionsMode == PermissionsType.NONE)
+		{
+			PermissionsMode = PermissionsType.Permissions;
+			Permissions = ((Permissions) p).getHandler();
+			MyWolfUtil.Log.info("[MyWolf] Permissions integration enabled!");
+			return;
+		}
+		MyWolfUtil.Log.info("[MyWolf] Permissions/GroupManager integration could not be enabled!");
+	}
 }

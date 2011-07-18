@@ -20,36 +20,43 @@
 package de.Keyle.MyWolf.util;
 
 import net.minecraft.server.EntityHuman;
+import net.minecraft.server.IInventory;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.TileEntityChest;
 
-public class MyWolfInventory extends TileEntityChest {
-	
+public class MyWolfInventory extends TileEntityChest
+{
+
 	public MyWolfInventory()
 	{
 		super();
 	}
-	
+
 	@Override
 	public boolean a_(EntityHuman entityhuman)
 	{
 		return true;
 	}
-	
+
+	public IInventory getInventory()
+	{
+		return this;
+	}
+
 	public int addItem(org.bukkit.entity.Item item)
 	{
 		int itemID = item.getItemStack().getTypeId();
 		int itemAmount = item.getItemStack().getAmount();
 		int itemDurability = item.getItemStack().getDurability();
-		int itemMaxStack = item.getItemStack().getMaxStackSize();		
+		int itemMaxStack = item.getItemStack().getMaxStackSize();
 		ItemStack[] items = this.getContents();
-		for(net.minecraft.server.ItemStack i : items)
+		for (net.minecraft.server.ItemStack i : items)
 		{
-			if(i != null && i.id == itemID && i.damage == itemDurability && i.count <itemMaxStack)
+			if (i != null && i.id == itemID && i.damage == itemDurability && i.count < itemMaxStack)
 			{
-				if(itemAmount >= itemMaxStack - i.count)
+				if (itemAmount >= itemMaxStack - i.count)
 				{
-					itemAmount = itemAmount-(itemMaxStack - i.count);
+					itemAmount = itemAmount - (itemMaxStack - i.count);
 					i.count = itemMaxStack;
 				}
 				else
@@ -58,20 +65,20 @@ public class MyWolfInventory extends TileEntityChest {
 					itemAmount = 0;
 				}
 			}
-			if(itemAmount == 0)
+			if (itemAmount == 0)
 			{
 				break;
 			}
 		}
-		for(int i =0;i<items.length;i++)
+		for (int i = 0; i < items.length; i++)
 		{
-			if(itemAmount == 0)
+			if (itemAmount == 0)
 			{
 				break;
 			}
-			if(items[i] == null)
+			if (items[i] == null)
 			{
-				if(itemAmount<=itemMaxStack)
+				if (itemAmount <= itemMaxStack)
 				{
 					this.setItem(i, new net.minecraft.server.ItemStack(itemID, itemAmount, itemDurability));
 					itemAmount = 0;

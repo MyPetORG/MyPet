@@ -19,9 +19,11 @@
 
 package de.Keyle.MyWolf;
 
-import de.Keyle.MyWolf.util.MyWolfInventory;
-import de.Keyle.MyWolf.util.MyWolfUtil;
+import java.util.HashMap;
+import java.util.Map;
 
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.InventoryLargeChest;
 import org.bukkit.ChatColor;
@@ -34,121 +36,188 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.util.Vector;
-
 import org.bukkitcontrib.BukkitContrib;
 
-public class Wolves {
-	
-	public ConfigBuffer cb;
-	
+public class Wolves
+{
 	public String Name = "Wolf";
 	public String Owner;
 	public int ID;
-	public int HealthMax = 6;
-	public int HealthNow = HealthMax;
+	public double HealthMax = 6;
+	public double HealthNow = HealthMax;
 	public int Lives = 5;
-	public Wolf MyWolf;
+	public Wolf Wolf;
 	public int RespawnTime = 0;
+
 	private int RespawnTimer;
-	private int DropTimer = -1;
-	public Player player;
-	public boolean isSitting = false;
-	
-	public enum InventoryType
-	{
-		NONE,
-	    SMALL,
-	    LARGE;
-	}
-	public InventoryType InventoryMode = InventoryType.NONE;
-	public boolean hasPickup = false;
-	
+	public int DropTimer = -1;
+	private int AgressiveTimer = -1;
+
+	private boolean isSitting = false;
+
 	public boolean allowAttackPlayer = true;
 	public boolean allowAttackMonster = false;
-	
-	public MyWolfInventory[] Inventory = {new MyWolfInventory(),new MyWolfInventory()};
-	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
-	
-	
-	public boolean isThere = false;
-	public boolean isDead = false;
-	
-	public Location Location;
 
-	
-	public Wolves(ConfigBuffer cb, String Owner) {
-		this.cb = cb;				
-		this.Owner = Owner;
+	public static enum BehaviorState
+	{
+		Normal, Friendly, Agressive, Raid;
 	}
-	
+
+	public static enum WolfState
+	{
+		Dead, Despawned, Here;
+	}
+
+	public BehaviorState Behavior = BehaviorState.Normal;
+	public WolfState Status = WolfState.Despawned;
+
+	public MyWolfInventory[] Inventory = { new MyWolfInventory(), new MyWolfInventory() };
+	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
+
+	private Location Location;
+
+	public Map<String, Boolean> Abilities = new HashMap<String, Boolean>();
+	public MyWolfExperience Experience;
+
+	public Wolves(String Owner)
+	{
+		this.Owner = Owner;
+		Experience = new MyWolfExperience(MyWolfConfig.WolfExpFactor, this);
+	}
+
 	public void SetName(String Name)
 	{
 		this.Name = Name;
-		if(isThere == true && isDead == false)
+		ChatColor NameColor;
+		if (getHealth() > HealthMax / 3 * 2)
 		{
-			DisplayName();
+			NameColor = ChatColor.GREEN;
+		}
+		else if (getHealth() > HealthMax / 3 * 1)
+		{
+			NameColor = ChatColor.YELLOW;
+		}
+		else
+		{
+			NameColor = ChatColor.RED;
+		}
+		if (Status == WolfState.Here)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
 		}
 	}
-	
-	private void DisplayName()
+
+	public void SetName()
 	{
-		if(cb.hasBukkitContrib)
+		ChatColor NameColor;
+		if (getHealth() > HealthMax / 3 * 2)
 		{
-			BukkitContrib.getAppearanceManager().setGlobalTitle(MyWolf, ChatColor.AQUA + Name);
+			NameColor = ChatColor.GREEN;
+		}
+		else if (getHealth() > HealthMax / 3 * 1)
+		{
+			NameColor = ChatColor.YELLOW;
+		}
+		else
+		{
+			NameColor = ChatColor.RED;
+		}
+		if (Status == WolfState.Here)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
 		}
 	}
-	
+
 	public void OpenInventory()
 	{
-		EntityPlayer eh = ((CraftPlayer)getPlayer()).getHandle();
-		if(InventoryMode == InventoryType.SMALL)
-		{
-			eh.a(Inventory[0]);
-		}
-		else if(InventoryMode == InventoryType.LARGE)
+		EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
+		if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
 		{
 			eh.a(LargeInventory);
 		}
+		else if (MyWolfUtil.hasSkill(Abilities, "InventorySmall"))
+		{
+			eh.a(Inventory[0]);
+		}
 	}
-	
+
 	public void removeWolf()
 	{
 		StopDropTimer();
-		isSitting = MyWolf.isSitting();
-		HealthNow= MyWolf.getHealth();
-		Location = MyWolf.getLocation();
-		isThere = false;
-		((LivingEntity) MyWolf).remove();
-		MyWolf = null;
+		isSitting = Wolf.isSitting();
+		HealthNow = Wolf.getHealth();
+		Location = Wolf.getLocation();
+		Status = WolfState.Despawned;
+		((LivingEntity) Wolf).remove();
+		Wolf = null;
 	}
-	
+
+	public void AgressiveTimer()
+	{
+		if (AgressiveTimer != -1)
+		{
+			MyWolf.Plugin.getServer().getScheduler().cancelTask(AgressiveTimer);
+			AgressiveTimer = -1;
+		}
+		if (MyWolfUtil.hasSkill(Abilities, "Behavior"))
+		{
+			AgressiveTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
+			{
+				public void run()
+				{
+					if (Behavior == BehaviorState.Agressive)
+					{
+						if (Wolf.getTarget() == null)
+						{
+							for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
+							{
+								if (MyWolfUtil.getCreatureType(e) != null)
+								{
+									Wolf.setTarget((LivingEntity) e);
+								}
+							}
+						}
+					}
+					else
+					{
+						MyWolf.Plugin.getServer().getScheduler().cancelTask(AgressiveTimer);
+						AgressiveTimer = -1;
+					}
+				}
+			}, 0L, 50L);
+		}
+	}
+
 	public boolean createWolf(boolean sitting)
 	{
-		if(MyWolf != null && MyWolf.isDead() == false)
+		if (Wolf != null && Wolf.isDead() == false)
 		{
 			return false;
 		}
 		else
 		{
-			if (getPlayer() != null && RespawnTime == 0)
+			if (getOwner() != null && RespawnTime == 0)
 			{
-				MyWolf = (Wolf) cb.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location,CreatureType.WOLF);
-				MyWolf.setOwner(getPlayer());
-				MyWolf.setSitting(sitting);
-				Location = MyWolf.getLocation();
-				MyWolf.setHealth(HealthNow);
-		    	ID = MyWolf.getEntityId();
-		    	
-		    	isThere = true;
-		    	isDead = false;
-		    	DisplayName();
-		    	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
-		    	{
-		    		DropTimer();
-		    	}
-		    	return true;
+				Wolf = (Wolf) MyWolf.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location, CreatureType.WOLF);
+				Wolf.setOwner(getOwner());
+				Wolf.setSitting(sitting);
+				Location = Wolf.getLocation();
+				Wolf.setHealth((int) HealthNow);
+				ID = Wolf.getEntityId();
+
+				Status = WolfState.Here;
+				SetName();
+				if (MyWolfPermissions.has(getOwner(), "mywolf.pickup") && MyWolfUtil.hasSkill(Abilities, "Pickup") == true)
+				{
+					DropTimer();
+				}
+				if (Behavior == BehaviorState.Agressive)
+				{
+					AgressiveTimer();
+				}
+				return true;
 			}
-			else if(RespawnTime > 0)
+			else if (RespawnTime > 0)
 			{
 				RespawnTimer();
 				return false;
@@ -156,192 +225,219 @@ public class Wolves {
 		}
 		return false;
 	}
-	
+
 	public void createWolf(Wolf wolf)
 	{
-		MyWolf = wolf;
-    	ID = MyWolf.getEntityId();
-    	Location = MyWolf.getLocation();
-    	isThere = true;
-    	isDead = false;
-    	DisplayName();
-    	if(cb.Permissions.has(getPlayer(), "mywolf.pickup") && hasPickup == true)
-    	{
-    		DropTimer();
-    	}
+		Wolf = wolf;
+		ID = Wolf.getEntityId();
+		Location = Wolf.getLocation();
+		Status = WolfState.Here;
+		SetName();
+		if (MyWolfPermissions.has(getOwner(), "mywolf.pickup") && MyWolfUtil.hasSkill(Abilities, "Pickup") == true)
+		{
+			DropTimer();
+		}
+		if (Behavior == BehaviorState.Agressive)
+		{
+			AgressiveTimer();
+		}
 	}
-	
-	public void setWolfHealth(int health)
+
+	public void setWolfHealth(double d)
 	{
-		if(health > HealthMax)
+		if (d > HealthMax)
 		{
 			HealthNow = HealthMax;
 		}
 		else
 		{
-			HealthNow = health;
+			HealthNow = d;
 		}
-		if (isThere == true)
+		if (Status == WolfState.Here)
 		{
-			MyWolf.setHealth(HealthNow);
+			Wolf.setHealth((int) HealthNow);
 		}
+		SetName();
 	}
-	public int getHealth()
+
+	public double getHealth()
 	{
-		if (isThere == true && isDead == false)
+		//if (isThere == true && isDead == false)
+		if (Status == WolfState.Here)
 		{
-			return MyWolf.getHealth();
+			return Wolf.getHealth();
 		}
 		else
 		{
 			return HealthNow;
 		}
 	}
-	
+
+	public double Demage(double Demage)
+	{
+		//if (isThere == true && isDead == false)
+		if (Status == WolfState.Here)
+		{
+			HealthNow -= Demage;
+			Wolf.setHealth((int) (HealthNow + 0.5));
+		}
+		return HealthNow;
+	}
+
 	public int getID()
 	{
-		if (isThere == true && isDead == false)
+		if (Status == WolfState.Here)
 		{
-			return MyWolf.getEntityId();
+			return Wolf.getEntityId();
 		}
 		else
 		{
 			return ID;
 		}
 	}
-	
+
 	public Location getLocation()
 	{
-		if (isThere == true && isDead == false)
+		if (Status == WolfState.Here)
 		{
-			return MyWolf.getLocation();
+			return Wolf.getLocation();
 		}
 		else
 		{
 			return Location;
 		}
 	}
-	
+
+	public void setLocation(Location loc)
+	{
+		this.Location = loc;
+	}
+
 	public boolean isSitting()
 	{
-		if (isThere == true && isDead == false)
+		if (Status == WolfState.Here)
 		{
-			return MyWolf.isSitting();
+			return Wolf.isSitting();
 		}
 		else
 		{
 			return isSitting;
 		}
 	}
-	
+
 	public void RespawnTimer()
 	{
-		if(RespawnTime == 0)
+		Status = WolfState.Dead;
+		if (RespawnTime == 0)
 		{
-			RespawnTime = HealthMax*cb.cv.WolfRespawnTimeFactor;
+			RespawnTime = (int) (HealthMax * MyWolfConfig.WolfRespawnTimeFactor);
 		}
-		getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_RespawnIn).replace("%wolfname%", Name).replace("%time%", ""+RespawnTime));
-		//getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawn in "+ChatColor.GOLD+RespawnTime+ChatColor.WHITE +" sec");
-
-		RespawnTimer = cb.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(cb.Plugin,new Runnable() 
+		RespawnTime++;
+		getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn")).replace("%wolfname%", Name).replace("%time%", "" + (RespawnTime - 1)));
+		RespawnTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
 		{
-			
-			public void run() {
-				if (RespawnTime == 0)
+
+			public void run()
+			{
+				if (getOwner() != null)
 				{
-					RespawnWolf();
-					cb.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
+					RespawnTime--;
 				}
 				else
 				{
-					if(getPlayer() != null)
-					{
-						RespawnTime--;
-					}
-					else
-					{
-						cb.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
-					}
+					MyWolf.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
+				}
+				if (RespawnTime <= 0)
+				{
+					RespawnWolf();
+					MyWolf.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
 				}
 			}
-		}, 0L,20L);
+		}, 0L, 20L);
 	}
+
 	public boolean RespawnWolf()
 	{
-		if(isDead == false)
+		//if (isDead == false)
+		if (Status == WolfState.Dead)
 		{
 			return false;
 		}
 		else
 		{
 			HealthNow = HealthMax;
-			Location = getPlayer().getLocation();
-			getPlayer().sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_OnRespawn).replace("%wolfname%", Name));
-			//getPlayer().sendMessage(ChatColor.AQUA+Name + ChatColor.WHITE + " respawned");
+			Location = getOwner().getLocation();
+			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
 			createWolf(false);
 			RespawnTime = 0;
 			return true;
 		}
 	}
-	
+
 	public void StopDropTimer()
 	{
-		if(DropTimer != -1)
+		if (DropTimer != -1)
 		{
-			cb.Plugin.getServer().getScheduler().cancelTask(DropTimer);
+			MyWolf.Plugin.getServer().getScheduler().cancelTask(DropTimer);
 			DropTimer = -1;
 		}
-		
+
 	}
-	
+
 	public void DropTimer()
 	{
-		if(isThere == true)
+		//if (isThere == true)
+		if (Status == WolfState.Here)
 		{
-			DropTimer = cb.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(cb.Plugin,new Runnable() 
+			if (DropTimer != -1)
 			{
-				
-				public void run() {
-					if (isThere == false || isDead == true || getPlayer() == null)
+				StopDropTimer();
+			}
+			DropTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
+			{
+				public void run()
+				{
+					//if (isThere == false || isDead == true || getOwner() == null)
+					if (Status != WolfState.Here || getOwner() == null)
 					{
 						StopDropTimer();
 					}
 					else
 					{
-						if(getPlayer() != null)
+						if (getOwner() != null)
 						{
 							try
 							{
-								for(Entity e : MyWolf.getWorld().getEntities())
+								for (Entity e : Wolf.getWorld().getEntities())
 								{
-									if(e instanceof Item)
+									if (e instanceof Item)
 									{
-										Item item = (Item)e;
-										
-										Vector distance = getLocation().toVector().add(new Vector(0.5,0,0.5)).subtract(item.getLocation().toVector());
-										if(distance.lengthSquared() < 1.0*cb.cv.WolfPickupRange*cb.cv.WolfPickupRange + 1)
+										Item item = (Item) e;
+
+										Vector distance = getLocation().toVector().add(new Vector(0.5, 0, 0.5)).subtract(item.getLocation().toVector());
+										if (distance.lengthSquared() < 1.0 * MyWolfConfig.WolfPickupRange * MyWolfConfig.WolfPickupRange + 1)
 										{
 											int amountleft = Inventory[0].addItem(item);
-											if(amountleft == 0)
+											if (amountleft == 0)
 											{
 												e.remove();
 											}
 											else
 											{
-												if(item.getItemStack().getAmount() > amountleft)
+												if (item.getItemStack().getAmount() > amountleft)
 												{
 													item.getItemStack().setAmount(amountleft);
 												}
-												if(InventoryMode == InventoryType.LARGE)
+												if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
 												{
 													amountleft = Inventory[1].addItem(item);
-													if(amountleft == 0)
+													if (amountleft == 0)
 													{
 														e.remove();
 													}
 													else
 													{
-														if(item.getItemStack().getAmount() > amountleft)
+														if (item.getItemStack().getAmount() > amountleft)
 														{
 															item.getItemStack().setAmount(amountleft);
 														}
@@ -351,8 +447,8 @@ public class Wolves {
 										}
 									}
 								}
-							} 
-							catch(Exception e)
+							}
+							catch (Exception e)
 							{
 								System.out.println("Warning! An error occured!");
 								e.printStackTrace();
@@ -364,20 +460,27 @@ public class Wolves {
 						}
 					}
 				}
-			}, 0L,20L);
+			}, 0L, 20L);
 		}
 	}
-	
-	public Player getPlayer()
+
+	public Player getOwner()
 	{
-		for(Player p: cb.Plugin.getServer().getOnlinePlayers())
+		for (Player p : MyWolf.Plugin.getServer().getOnlinePlayers())
 		{
-			if(p.getName().equals(Owner) && MyWolfUtil.isNPC(cb.Plugin,p) == false)
+			if (p.getName().equals(Owner) && MyWolfUtil.isNPC(p) == false)
 			{
 				return p;
 			}
 		}
 		return null;
 	}
-	
+
+	public void sendMessageToOwner(String Text)
+	{
+		if (getOwner() != null)
+		{
+			getOwner().sendMessage(Text);
+		}
+	}
 }

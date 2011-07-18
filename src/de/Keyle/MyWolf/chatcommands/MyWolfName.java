@@ -17,57 +17,51 @@
 * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package de.Keyle.MyWolf.commands;
+package de.Keyle.MyWolf.chatcommands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class MyWolfName implements CommandExecutor {
-
-    private ConfigBuffer cb;
-
-	public MyWolfName(ConfigBuffer cb)
+public class MyWolfName implements CommandExecutor
+{
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
-	  this.cb = cb;
-	}
-
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
-    		Player player = (Player) sender;
-    		if(cb.mWolves.containsKey(player.getName()))
-    		{
-	    		if(cb.Permissions.has(player, "mywolf.setname") == false)
+		if (sender instanceof Player)
+		{
+			Player player = (Player) sender;
+			if (ConfigBuffer.mWolves.containsKey(player.getName()))
+			{
+				if (MyWolfPermissions.has(player, "mywolf.setname") == false)
 				{
 					return true;
 				}
-				if(args.length < 1)
+				if (args.length < 1)
 				{
 					return false;
 				}
-				String name = ""; 
-				for ( String arg : args )
+				String name = "";
+				for (String arg : args)
 				{
 					name += arg + " ";
 				}
-				name = name.substring(0,name.length()-1);
-				cb.mWolves.get(player.getName()).SetName(name);
-				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_NewName).replace("%wolfname%", name));
-				//player.sendMessage("The name of your wolf is now: " + ChatColor.AQUA + name);
-				return true;
-    		}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(cb.lv.Msg_DontHaveWolf));
+				name = name.substring(0, name.length() - 1);
+				ConfigBuffer.mWolves.get(player.getName()).SetName(name);
+				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
 				return true;
 			}
-        }
+			else
+			{
+				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+				return true;
+			}
+
+		}
 		return true;
-    }
+	}
 }

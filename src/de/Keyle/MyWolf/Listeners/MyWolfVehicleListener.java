@@ -17,7 +17,7 @@
 * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package de.Keyle.MyWolf;
+package de.Keyle.MyWolf.Listeners;
 
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -25,38 +25,37 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 
-public class MyWolfVehicleListener extends VehicleListener{
-	
-	private ConfigBuffer cb;
-	
-	public MyWolfVehicleListener(ConfigBuffer cb) {
-		this.cb = cb;
-    }
-    
+import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.Wolves.WolfState;
+
+public class MyWolfVehicleListener extends VehicleListener
+{
 	@Override
-	public void onVehicleEnter(VehicleEnterEvent event) {
-		if (event.isCancelled() || !(event.getVehicle() instanceof Minecart)) {
+	public void onVehicleEnter(VehicleEnterEvent event)
+	{
+		if (event.isCancelled() || !(event.getVehicle() instanceof Minecart))
+		{
 			return;
 		}
-		if(event.getEntered() instanceof Wolf)
+		if (event.getEntered() instanceof Wolf)
 		{
-			for ( String owner : cb.mWolves.keySet() )
-	        {
-				if(cb.mWolves.get( owner ).getID() == event.getEntered().getEntityId())
+			for (String owner : ConfigBuffer.mWolves.keySet())
+			{
+				if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntered().getEntityId())
 				{
 					event.setCancelled(true);
 					break;
 				}
-	        }
+			}
 		}
-		if(event.getEntered() instanceof Player)
+		if (event.getEntered() instanceof Player)
 		{
-			Player player = (Player)event.getEntered();
-			if(cb.mWolves.containsKey(player.getName()))
+			Player player = (Player) event.getEntered();
+			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				if(cb.mWolves.get(player.getName()).isThere == true && cb.mWolves.get(player.getName()).isDead == false && cb.mWolves.get(player.getName()).isSitting() == false)
+				if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && ConfigBuffer.mWolves.get(player.getName()).isSitting() == false)
 				{
-					cb.mWolves.get(player.getName()).MyWolf.setSitting(true);
+					ConfigBuffer.mWolves.get(player.getName()).Wolf.setSitting(true);
 				}
 			}
 		}

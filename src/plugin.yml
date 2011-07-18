@@ -1,9 +1,10 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolf
-version: 0.4.6
+version: 0.4.7
 author: Keyle
 website: http://forums.bukkit.org/threads/16014/
-softdepend: [GroupManager, Permissions, BukkitContrib]
+softdepend: [GroupManager, Permissions, WorldGuard]
+depend: [BukkitContrib]
 commands:
   wolf:
     description: wolf commands
@@ -19,3 +20,16 @@ commands:
   wolfstop:
     aliases: [ws,wolfs]
     description: you wolf stopping attacking
+  wolfpickup:
+    aliases: [wp,wolfp]
+    description: toogle pickup
+  wolfinventory:
+    aliases: [wi,wolfi]
+    description: open inventory of the wolf
+  wolfbehavior:
+    aliases: [wb,wolfb]
+    description: switch the behavior mode
+    usage: 'Syntax: /<command> [<Raid/Friendly/Agressive/Normal>]'
+  wolfexp:
+    aliases: [we,wolfe]
+    description: display wolf's EXP
