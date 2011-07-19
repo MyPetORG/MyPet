@@ -41,16 +41,16 @@ public class Live extends MyWolfSkill
 		{
 			return;
 		}
-		if (MyWolfConfig.WolfMaxLives > 0)
+		if (MyWolfConfig.MaxLives > 0)
 		{
-			if (wolf.Lives < MyWolfConfig.WolfMaxLives)
+			if (wolf.Lives < MyWolfConfig.MaxLives)
 			{
 				wolf.Lives += 1;
 				wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLive")).replace("%wolfname%", wolf.Name));
 			}
 			else
 			{
-				wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_MaxLives")).replace("%wolfname%", wolf.Name).replace("%maxlives%", "" + MyWolfConfig.WolfMaxLives));
+				wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_MaxLives")).replace("%wolfname%", wolf.Name).replace("%maxlives%", "" + MyWolfConfig.MaxLives));
 			}
 		}
 	}

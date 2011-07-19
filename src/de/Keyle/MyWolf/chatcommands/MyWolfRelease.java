@@ -67,7 +67,7 @@ public class MyWolfRelease implements CommandExecutor
 				if (Wolf.Name.equalsIgnoreCase(name))
 				{
 					Wolf.Wolf.setOwner(null);
-					Wolf.StopDropTimer();
+					Wolf.StopTimer();
 					for (ItemStack is : Wolf.LargeInventory.getContents())
 					{
 						if (is != null)

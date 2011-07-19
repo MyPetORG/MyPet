@@ -42,31 +42,22 @@ public class Pickup extends MyWolfSkill
 		}
 		if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
 		{
-			boolean Enabled;
-			if (args != null)
+			if (args != null && args instanceof Boolean)
 			{
-				Enabled = (Boolean) args;
+				wolf.isPickup = (Boolean) args;
 			}
 			else
 			{
-				if (wolf.DropTimer == -1)
+				if (wolf.isPickup)
 				{
-					Enabled = true;
+					wolf.isPickup = false;
+					wolf.sendMessageToOwner("Pickup stopped!");
 				}
 				else
 				{
-					Enabled = false;
+					wolf.isPickup = true;
+					wolf.sendMessageToOwner("Pickup activated!");
 				}
-			}
-			if (Enabled == true)
-			{
-				wolf.DropTimer();
-				wolf.sendMessageToOwner("Pickup activated!");
-			}
-			else
-			{
-				wolf.StopDropTimer();
-				wolf.sendMessageToOwner("Pickup stopped!");
 			}
 		}
 	}
@@ -81,7 +72,8 @@ public class Pickup extends MyWolfSkill
 		if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup") == false)
 		{
 			wolf.Abilities.put("Pickup", true);
-			wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", wolf.Name).replace("%range%", "" + MyWolfConfig.WolfPickupRange));
+			wolf.isPickup = true;
+			wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", wolf.Name).replace("%range%", "" + MyWolfConfig.PickupRange));
 		}
 	}
 }

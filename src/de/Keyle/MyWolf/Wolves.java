@@ -25,17 +25,19 @@ import java.util.Map;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.EntityWolf;
 import net.minecraft.server.InventoryLargeChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.util.Vector;
 import org.bukkitcontrib.BukkitContrib;
 
 public class Wolves
@@ -49,11 +51,11 @@ public class Wolves
 	public Wolf Wolf;
 	public int RespawnTime = 0;
 
-	private int RespawnTimer;
-	public int DropTimer = -1;
-	private int AgressiveTimer = -1;
+	private int Timer = -1;
 
+	private int SitTimer = 15;
 	private boolean isSitting = false;
+	public boolean isPickup = false;
 
 	public boolean allowAttackPlayer = true;
 	public boolean allowAttackMonster = false;
@@ -82,45 +84,58 @@ public class Wolves
 	public Wolves(String Owner)
 	{
 		this.Owner = Owner;
-		Experience = new MyWolfExperience(MyWolfConfig.WolfExpFactor, this);
+		Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
 	}
 
 	public void SetName(String Name)
 	{
 		this.Name = Name;
-		ChatColor NameColor;
-		if (getHealth() > HealthMax / 3 * 2)
+		String NameColor;
+		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = ChatColor.GREEN;
-		}
-		else if (getHealth() > HealthMax / 3 * 1)
-		{
-			NameColor = ChatColor.YELLOW;
+			NameColor = "§" + MyWolfConfig.NameColor;
 		}
 		else
 		{
-			NameColor = ChatColor.RED;
+			if (getHealth() > HealthMax / 3 * 2)
+			{
+				NameColor = ""+ChatColor.GREEN;
+			}
+			else if (getHealth() > HealthMax / 3 * 1)
+			{
+				NameColor = ""+ChatColor.YELLOW;
+			}
+			else
+			{
+				NameColor = ""+ChatColor.RED;
+			}
 		}
 		if (Status == WolfState.Here)
 		{
 			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
 		}
 	}
-
 	public void SetName()
 	{
-		ChatColor NameColor;
-		if (getHealth() > HealthMax / 3 * 2)
+		String NameColor;
+		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = ChatColor.GREEN;
-		}
-		else if (getHealth() > HealthMax / 3 * 1)
-		{
-			NameColor = ChatColor.YELLOW;
+			NameColor = "§" + MyWolfConfig.NameColor;
 		}
 		else
 		{
-			NameColor = ChatColor.RED;
+			if (getHealth() > HealthMax / 3 * 2)
+			{
+				NameColor = ""+ChatColor.GREEN;
+			}
+			else if (getHealth() > HealthMax / 3 * 1)
+			{
+				NameColor = ""+ChatColor.YELLOW;
+			}
+			else
+			{
+				NameColor = ""+ChatColor.RED;
+			}
 		}
 		if (Status == WolfState.Here)
 		{
@@ -143,60 +158,40 @@ public class Wolves
 
 	public void removeWolf()
 	{
-		StopDropTimer();
+		StopTimer();
 		isSitting = Wolf.isSitting();
 		HealthNow = Wolf.getHealth();
 		Location = Wolf.getLocation();
 		Status = WolfState.Despawned;
 		((LivingEntity) Wolf).remove();
-		Wolf = null;
 	}
-
-	public void AgressiveTimer()
+	
+	public boolean RespawnWolf()
 	{
-		if (AgressiveTimer != -1)
-		{
-			MyWolf.Plugin.getServer().getScheduler().cancelTask(AgressiveTimer);
-			AgressiveTimer = -1;
-		}
-		if (MyWolfUtil.hasSkill(Abilities, "Behavior"))
-		{
-			AgressiveTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
-			{
-				public void run()
-				{
-					if (Behavior == BehaviorState.Agressive)
-					{
-						if (Wolf.getTarget() == null)
-						{
-							for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
-							{
-								if (MyWolfUtil.getCreatureType(e) != null)
-								{
-									Wolf.setTarget((LivingEntity) e);
-								}
-							}
-						}
-					}
-					else
-					{
-						MyWolf.Plugin.getServer().getScheduler().cancelTask(AgressiveTimer);
-						AgressiveTimer = -1;
-					}
-				}
-			}, 0L, 50L);
-		}
-	}
-
-	public boolean createWolf(boolean sitting)
-	{
-		if (Wolf != null && Wolf.isDead() == false)
+		if (Status == WolfState.Dead)
 		{
 			return false;
 		}
 		else
 		{
-			if (getOwner() != null && RespawnTime == 0)
+			HealthNow = HealthMax;
+			Location = getOwner().getLocation();
+			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
+			createWolf(false);
+			RespawnTime = 0;
+			return true;
+		}
+	}
+	
+	public void createWolf(boolean sitting)
+	{
+		if (Status == WolfState.Here || getOwner() == null )
+		{
+			return;
+		}
+		else
+		{
+			if(RespawnTime <= 0)
 			{
 				Wolf = (Wolf) MyWolf.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location, CreatureType.WOLF);
 				Wolf.setOwner(getOwner());
@@ -207,25 +202,10 @@ public class Wolves
 
 				Status = WolfState.Here;
 				SetName();
-				if (MyWolfPermissions.has(getOwner(), "mywolf.pickup") && MyWolfUtil.hasSkill(Abilities, "Pickup") == true)
-				{
-					DropTimer();
-				}
-				if (Behavior == BehaviorState.Agressive)
-				{
-					AgressiveTimer();
-				}
-				return true;
 			}
-			else if (RespawnTime > 0)
-			{
-				RespawnTimer();
-				return false;
-			}
+			Timer();
 		}
-		return false;
 	}
-
 	public void createWolf(Wolf wolf)
 	{
 		Wolf = wolf;
@@ -233,17 +213,10 @@ public class Wolves
 		Location = Wolf.getLocation();
 		Status = WolfState.Here;
 		SetName();
-		if (MyWolfPermissions.has(getOwner(), "mywolf.pickup") && MyWolfUtil.hasSkill(Abilities, "Pickup") == true)
-		{
-			DropTimer();
-		}
-		if (Behavior == BehaviorState.Agressive)
-		{
-			AgressiveTimer();
-		}
+		Timer();
 	}
 
-	public void setWolfHealth(double d)
+	public void setHealth(double d)
 	{
 		if (d > HealthMax)
 		{
@@ -259,10 +232,8 @@ public class Wolves
 		}
 		SetName();
 	}
-
 	public double getHealth()
 	{
-		//if (isThere == true && isDead == false)
 		if (Status == WolfState.Here)
 		{
 			return Wolf.getHealth();
@@ -275,7 +246,6 @@ public class Wolves
 
 	public double Demage(double Demage)
 	{
-		//if (isThere == true && isDead == false)
 		if (Status == WolfState.Here)
 		{
 			HealthNow -= Demage;
@@ -307,10 +277,13 @@ public class Wolves
 			return Location;
 		}
 	}
-
 	public void setLocation(Location loc)
 	{
 		this.Location = loc;
+		if(Status == WolfState.Here)
+		{
+			Wolf.teleport(loc);
+		}
 	}
 
 	public boolean isSitting()
@@ -325,122 +298,82 @@ public class Wolves
 		}
 	}
 
-	public void RespawnTimer()
+	public void ResetSitTimer()
 	{
-		Status = WolfState.Dead;
-		if (RespawnTime == 0)
+		SitTimer = 15;
+	}
+	
+	public void StopTimer()
+	{
+		if (Timer != -1)
 		{
-			RespawnTime = (int) (HealthMax * MyWolfConfig.WolfRespawnTimeFactor);
+			MyWolf.Plugin.getServer().getScheduler().cancelTask(Timer);
+			Timer = -1;
 		}
-		RespawnTime++;
-		getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn")).replace("%wolfname%", Name).replace("%time%", "" + (RespawnTime - 1)));
-		RespawnTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
+	}
+	public void Timer()
+	{
+		if (Status != WolfState.Despawned)
 		{
-
-			public void run()
+			if (Timer != -1)
 			{
-				if (getOwner() != null)
-				{
-					RespawnTime--;
-				}
-				else
-				{
-					MyWolf.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
-				}
-				if (RespawnTime <= 0)
-				{
-					RespawnWolf();
-					MyWolf.Plugin.getServer().getScheduler().cancelTask(RespawnTimer);
-				}
+				StopTimer();
 			}
-		}, 0L, 20L);
-	}
-
-	public boolean RespawnWolf()
-	{
-		//if (isDead == false)
-		if (Status == WolfState.Dead)
-		{
-			return false;
-		}
-		else
-		{
-			HealthNow = HealthMax;
-			Location = getOwner().getLocation();
-			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
-			createWolf(false);
-			RespawnTime = 0;
-			return true;
-		}
-	}
-
-	public void StopDropTimer()
-	{
-		if (DropTimer != -1)
-		{
-			MyWolf.Plugin.getServer().getScheduler().cancelTask(DropTimer);
-			DropTimer = -1;
-		}
-
-	}
-
-	public void DropTimer()
-	{
-		//if (isThere == true)
-		if (Status == WolfState.Here)
-		{
-			if (DropTimer != -1)
-			{
-				StopDropTimer();
-			}
-			DropTimer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
+			Timer = MyWolf.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolf.Plugin, new Runnable()
 			{
 				public void run()
 				{
-					//if (isThere == false || isDead == true || getOwner() == null)
-					if (Status != WolfState.Here || getOwner() == null)
+					if (Status == WolfState.Despawned || getOwner() == null)
 					{
-						StopDropTimer();
+						StopTimer();
 					}
 					else
 					{
-						if (getOwner() != null)
+						if(Status == WolfState.Here)
 						{
-							try
+							EntityWolf wolf = ((CraftWolf) Wolf).getHandle();
+							Block CheckWayPoint = MyWolfUtil.getServer().getWorld(getLocation().getWorld().getUID()).getBlockAt(wolf.pathEntity.c().a, wolf.pathEntity.c().b, wolf.pathEntity.c().c);
+							MyWolfUtil.Log.info("--------------------------------------");
+							MyWolfUtil.Log.info(""+CheckWayPoint);
+							MyWolfUtil.Log.info(""+wolf.pathEntity.c().a);
+							MyWolfUtil.Log.info(""+wolf.pathEntity.c().b);
+							MyWolfUtil.Log.info(""+wolf.pathEntity.c().c);
+							SitTimer--;
+							if(SitTimer <= 0)
 							{
-								for (Entity e : Wolf.getWorld().getEntities())
+								Wolf.setSitting(true);
+							}
+							if (isPickup)
+							{
+								for (Entity e : Wolf.getNearbyEntities(MyWolfConfig.PickupRange, MyWolfConfig.PickupRange, MyWolfConfig.PickupRange))
 								{
 									if (e instanceof Item)
 									{
 										Item item = (Item) e;
 
-										Vector distance = getLocation().toVector().add(new Vector(0.5, 0, 0.5)).subtract(item.getLocation().toVector());
-										if (distance.lengthSquared() < 1.0 * MyWolfConfig.WolfPickupRange * MyWolfConfig.WolfPickupRange + 1)
+										int amountleft = Inventory[0].addItem(item);
+										if (amountleft == 0)
 										{
-											int amountleft = Inventory[0].addItem(item);
-											if (amountleft == 0)
+											e.remove();
+										}
+										else
+										{
+											if (item.getItemStack().getAmount() > amountleft)
 											{
-												e.remove();
+												item.getItemStack().setAmount(amountleft);
 											}
-											else
+											if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
 											{
-												if (item.getItemStack().getAmount() > amountleft)
+												amountleft = Inventory[1].addItem(item);
+												if (amountleft == 0)
 												{
-													item.getItemStack().setAmount(amountleft);
+													e.remove();
 												}
-												if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
+												else
 												{
-													amountleft = Inventory[1].addItem(item);
-													if (amountleft == 0)
+													if (item.getItemStack().getAmount() > amountleft)
 													{
-														e.remove();
-													}
-													else
-													{
-														if (item.getItemStack().getAmount() > amountleft)
-														{
-															item.getItemStack().setAmount(amountleft);
-														}
+														item.getItemStack().setAmount(amountleft);
 													}
 												}
 											}
@@ -448,15 +381,27 @@ public class Wolves
 									}
 								}
 							}
-							catch (Exception e)
+							if (Behavior == BehaviorState.Agressive)
 							{
-								System.out.println("Warning! An error occured!");
-								e.printStackTrace();
+								if (Wolf.getTarget() == null)
+								{
+									for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
+									{
+										if (MyWolfUtil.getCreatureType(e) != null)
+										{
+											Wolf.setTarget((LivingEntity) e);
+										}
+									}
+								}
 							}
 						}
-						else
-						{
-							StopDropTimer();
+						if(Status == WolfState.Dead)
+						{	
+							RespawnTime--;
+							if (RespawnTime <= 0)
+							{
+								RespawnWolf();
+							}
 						}
 					}
 				}

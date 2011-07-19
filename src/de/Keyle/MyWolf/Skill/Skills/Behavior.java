@@ -54,9 +54,8 @@ public class Behavior extends MyWolfSkill
 				else if (wolf.Behavior == BehaviorState.Friendly)
 				{
 					wolf.Behavior = BehaviorState.Agressive;
-					wolf.AgressiveTimer();
 				}
-				else if (wolf.Behavior == BehaviorState.Agressive)
+				else if (wolf.Behavior == BehaviorState.Agressive || wolf.Behavior == BehaviorState.Raid)
 				{
 					wolf.Behavior = BehaviorState.Normal;
 				}

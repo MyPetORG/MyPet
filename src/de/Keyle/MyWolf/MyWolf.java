@@ -22,7 +22,6 @@
     4. fix the signal to attack in the snow. I think the layer of snow above the block is messing it up. It might have trouble climbing hills too or something.
     6. fix when the dog is sitting and you can't call it.
     7. is there anyway to modify the pathfinding to keep it from bumping you and running into fire?
-    8. make the wolf sit when you havn't move for 15 seconds. Unless attacked.
 */
 
 package de.Keyle.MyWolf;
@@ -154,9 +153,8 @@ public class MyWolf extends JavaPlugin
 		new Pickup();
 		new Behavior();
 
-		ConfigBuffer.cv = new MyWolfConfig(this.getConfiguration(), cb);
-		ConfigBuffer.cv.setStandart();
-		ConfigBuffer.cv.loadVariables();
+		MyWolfConfig.setStandart();
+		MyWolfConfig.loadVariables();
 
 		ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
 		ConfigBuffer.lv.setStandart();
@@ -211,11 +209,11 @@ public class MyWolf extends JavaPlugin
 
 				ConfigBuffer.mWolves.get(ownername).setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
 
-				if (WolfLives > MyWolfConfig.WolfMaxLives)
+				if (WolfLives > MyWolfConfig.MaxLives)
 				{
-					WolfLives = MyWolfConfig.WolfMaxLives;
+					WolfLives = MyWolfConfig.MaxLives;
 				}
-				ConfigBuffer.mWolves.get(ownername).setWolfHealth(WolfHealthNow);
+				ConfigBuffer.mWolves.get(ownername).setHealth(WolfHealthNow);
 				ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfHealthRespawnTime;
 				ConfigBuffer.mWolves.get(ownername).Name = WolfName;
 				ConfigBuffer.mWolves.get(ownername).Wolf.setSitting(Wolvesitting);
@@ -296,6 +294,18 @@ public class MyWolf extends JavaPlugin
 			}
 		}
 		return false;
+	}
+	
+	public static Wolves getMyWolf(Wolf wolf)
+	{
+		for (Wolves w : ConfigBuffer.mWolves.values())
+		{
+			if (w.getID() == wolf.getEntityId())
+			{
+				return w;
+			}
+		}
+		return null;
 	}
 
 	private static void download(Logger log, URL url, File file) throws IOException

@@ -43,7 +43,7 @@ public class HP extends MyWolfSkill
 		if (wolf.HealthMax < 20)
 		{
 			wolf.HealthMax += 1;
-			wolf.setWolfHealth(wolf.HealthMax);
+			wolf.setHealth(wolf.HealthMax);
 			wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", wolf.Name)));
 		}
 	}

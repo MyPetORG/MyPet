@@ -52,12 +52,14 @@ public class MyWolfPlayerListener extends PlayerListener
 	{
 		if (event.getRightClicked() instanceof Wolf && ((Wolf) event.getRightClicked()).isTamed())
 		{
-			if (event.getPlayer().getItemInHand().getType() == MyWolfConfig.WolfControlItem)
+			if (event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem)
 			{
 				Wolf w = (Wolf) event.getRightClicked();
 				if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
 				{
-					if (ConfigBuffer.mWolves.get(event.getPlayer().getName()).getID() == w.getEntityId())
+					Wolves Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+					Wolf.ResetSitTimer();
+					if (Wolf.getID() == w.getEntityId())
 					{
 						event.setCancelled(true);
 					}
@@ -69,7 +71,7 @@ public class MyWolfPlayerListener extends PlayerListener
 	@Override
 	public void onPlayerInteract(final PlayerInteractEvent event)
 	{
-		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.WolfControlItem && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
+		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
 		{
 			Wolves Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
 			if (Wolf.Status == WolfState.Here && Wolf.isSitting() == false)
@@ -84,6 +86,7 @@ public class MyWolfPlayerListener extends PlayerListener
 					PathPoint[] loc = { new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()) };
 					EntityWolf wolf = ((CraftWolf) Wolf.Wolf).getHandle();
 					wolf.setPathEntity(new PathEntity(loc));
+					Wolf.ResetSitTimer();
 					if (MyWolfPermissions.has(event.getPlayer(), "mywolf.control.attack") == false)
 					{
 						return;
@@ -126,6 +129,7 @@ public class MyWolfPlayerListener extends PlayerListener
 
 			if (MyWolfUtil.getDistance(Wolf.getLocation(), event.getPlayer().getLocation()) < 75)
 			{
+				Wolf.ResetSitTimer();
 				Wolf.createWolf(Wolf.isSitting());
 			}
 			else
@@ -160,7 +164,8 @@ public class MyWolfPlayerListener extends PlayerListener
 		if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
 		{
 			Wolves Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
-
+			
+			Wolf.ResetSitTimer();
 			if (Wolf.Status == WolfState.Here)
 			{
 				if (Wolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())

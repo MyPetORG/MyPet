@@ -29,45 +29,42 @@ import de.Keyle.MyWolf.ConfigBuffer;
 
 public class MyWolfConfig
 {
-	Configuration Config;
-	ConfigBuffer cb;
+	private static Configuration Config;
 
-	public MyWolfConfig(Configuration cfg, ConfigBuffer cb)
+	public static Material LeashItem = Material.STRING;
+	public static Material ControlItem = Material.STRING;
+	public static int PickupRange = 2;
+	public static int RespawnTimeFactor = 5;
+	public static int MaxLives = -1;
+	public static int InterfaceMapId = 0;
+	public static int ExpFactor = 2;
+	public static int NameColor = -1;
+
+	public static void setStandart()
 	{
-		Config = cfg;
-		this.cb = cb;
-	}
-
-	public static Material WolfLeashItem = Material.STRING;
-	public static Material WolfControlItem = Material.STRING;
-	public static int WolfPickupRange = 2;
-	public static int WolfRespawnTimeFactor = 5;
-	public static int WolfMaxLives = -1;
-	public static int WolfInterfaceMapId = 0;
-	public static int WolfExpFactor = 2;
-
-	public void setStandart()
-	{
-		setProperty("MyWolf.leash.item", 287);//String
+		setProperty("MyWolf.leash.item", 287);
 		setProperty("MyWolf.control.item", 287);
-		setProperty("MyWolf.pickup.range", 2); //2 Blocks range
-		setProperty("MyWolf.respawntimefactor", 5); //5 seconds x MaxHP
-		setProperty("MyWolf.max.Lives", -1); //no MaxLives
-		//setProperty("MyWolf.mapid", 0); //no MaxLives
-		setProperty("MyWolf.expfactor", 2); //2
+		setProperty("MyWolf.pickup.range", 2);
+		setProperty("MyWolf.respawntimefactor", 5);
+		setProperty("MyWolf.max.Lives", -1);
+		setProperty("MyWolf.expfactor", 2);
+		setProperty("MyWolf.namecolor", -1);
 
 		Config.save();
 	}
 
-	public void loadVariables()
+	public static void loadVariables()
 	{
-		WolfLeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
-		WolfControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item", 287), Material.STRING);
-		WolfPickupRange = Config.getInt("MyWolf.pickup.range", 2);
-		WolfRespawnTimeFactor = Config.getInt("MyWolf.respawntimefactor", 5);
-		WolfMaxLives = Config.getInt("MyWolf.max.Lives", -1);
-		WolfInterfaceMapId = Config.getInt("MyWolf.max.Lives", -1);
-		WolfExpFactor = Config.getInt("MyWolf.expfactor", 2);
+		LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
+		ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item", 287), Material.STRING);
+		PickupRange = Config.getInt("MyWolf.pickup.range", 2);
+		RespawnTimeFactor = Config.getInt("MyWolf.respawntimefactor", 5);
+		MaxLives = Config.getInt("MyWolf.max.Lives", -1);
+		InterfaceMapId = Config.getInt("MyWolf.max.Lives", -1);
+		ExpFactor = Config.getInt("MyWolf.expfactor", 2);
+		NameColor = Config.getInt("MyWolf.namecolor", -1);
+		NameColor = NameColor<=0xf?NameColor:-1;
+		
 
 		if (Config.getKeys("MyWolf.skills") != null)
 		{
@@ -80,7 +77,7 @@ public class MyWolfConfig
 
 	}
 
-	public void setProperty(String key, Object value)
+	public static void setProperty(String key, Object value)
 	{
 		if (Config.getProperty(key) == null)
 		{

@@ -70,7 +70,7 @@ public class MyWolfEntityListener extends EntityListener
 				{
 					if (ConfigBuffer.mWolves.containsKey(player.getName()) == false)
 					{
-						if (MyWolfPermissions.has(player, "mywolf.leash") == false || player.getItemInHand().getType() != MyWolfConfig.WolfLeashItem)
+						if (MyWolfPermissions.has(player, "mywolf.leash") == false || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
 						{
 							return;
 						}
@@ -103,8 +103,9 @@ public class MyWolfEntityListener extends EntityListener
 					if (WolfOwner != null && WolfOwner.equals(player.getName()))
 					{
 						Wolves wolf = ConfigBuffer.mWolves.get(WolfOwner);
+						wolf.ResetSitTimer();
 						wolf.SetName();
-						if (player.getItemInHand().getType() == MyWolfConfig.WolfLeashItem)
+						if (player.getItemInHand().getType() == MyWolfConfig.LeashItem)
 						{
 							String msg;
 							if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
@@ -154,14 +155,15 @@ public class MyWolfEntityListener extends EntityListener
 					{
 						if (wolf.getID() == event.getEntity().getEntityId())
 						{
+							wolf.ResetSitTimer();
 							if (wolf.getHealth() > wolf.HealthMax)
 							{
-								wolf.setWolfHealth(wolf.HealthMax);
+								wolf.setHealth(wolf.HealthMax);
 							}
 
 							if (event.getDamage() < wolf.getHealth())
 							{
-								wolf.setWolfHealth(wolf.getHealth() + event.getDamage());
+								wolf.setHealth(wolf.getHealth() + event.getDamage());
 								wolf.Demage(event.getDamage());
 							}
 							if (event.isCancelled() == false && MyWolfUtil.getPVP(event.getEntity().getLocation()) == false)
@@ -184,8 +186,7 @@ public class MyWolfEntityListener extends EntityListener
 			{
 				if (wolf.getID() == event.getEntity().getEntityId())
 				{
-					wolf.StopDropTimer();
-					if (MyWolfConfig.WolfMaxLives > 0)
+					if (MyWolfConfig.MaxLives > 0)
 					{
 						wolf.Lives -= 1;
 						if (wolf.Lives <= 0)
@@ -204,8 +205,9 @@ public class MyWolfEntityListener extends EntityListener
 						}
 					}
 					wolf.Status = WolfState.Dead;
-					wolf.RespawnTimer();
+					wolf.RespawnTime  = wolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor;
 					SendDeathMessage(event);
+					//---------------------------------------------Hier noch Respawn in Msg -------------
 					break;
 				}
 			}
@@ -364,6 +366,7 @@ public class MyWolfEntityListener extends EntityListener
 				{
 					if (Wolf.getID() == event.getEntity().getEntityId())
 					{
+						Wolf.ResetSitTimer();
 						if (Wolf.Behavior == de.Keyle.MyWolf.Wolves.BehaviorState.Friendly)
 						{
 							event.setCancelled(true);

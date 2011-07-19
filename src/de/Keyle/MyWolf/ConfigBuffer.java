@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 
@@ -36,7 +35,6 @@ public class ConfigBuffer
 	public static PluginDescriptionFile pdfFile = MyWolf.Plugin.getDescription();
 
 	public static Configuration WolvesConfig;
-	public static MyWolfConfig cv;
 	public static MyWolfLanguage lv;
 
 	public static List<Player> WolfChestOpened = new ArrayList<Player>();
