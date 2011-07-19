@@ -25,13 +25,10 @@ import java.util.Map;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.EntityWolf;
 import net.minecraft.server.InventoryLargeChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -168,7 +165,7 @@ public class Wolves
 	
 	public boolean RespawnWolf()
 	{
-		if (Status == WolfState.Dead)
+		if (Status == WolfState.Here)
 		{
 			return false;
 		}
@@ -297,6 +294,18 @@ public class Wolves
 			return isSitting;
 		}
 	}
+	public void setSitting(boolean sitting)
+	{
+		if (Status == WolfState.Here)
+		{
+			Wolf.setSitting(sitting);
+			this.isSitting = sitting;
+		}
+		else
+		{
+			this.isSitting = sitting;
+		}
+	}
 
 	public void ResetSitTimer()
 	{
@@ -331,13 +340,6 @@ public class Wolves
 					{
 						if(Status == WolfState.Here)
 						{
-							EntityWolf wolf = ((CraftWolf) Wolf).getHandle();
-							Block CheckWayPoint = MyWolfUtil.getServer().getWorld(getLocation().getWorld().getUID()).getBlockAt(wolf.pathEntity.c().a, wolf.pathEntity.c().b, wolf.pathEntity.c().c);
-							MyWolfUtil.Log.info("--------------------------------------");
-							MyWolfUtil.Log.info(""+CheckWayPoint);
-							MyWolfUtil.Log.info(""+wolf.pathEntity.c().a);
-							MyWolfUtil.Log.info(""+wolf.pathEntity.c().b);
-							MyWolfUtil.Log.info(""+wolf.pathEntity.c().c);
 							SitTimer--;
 							if(SitTimer <= 0)
 							{

@@ -52,7 +52,7 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 
 public class MyWolfEntityListener extends EntityListener
 {
-	public void onEntityDamage(EntityDamageEvent event)
+	public void onEntityDamage(final EntityDamageEvent event)
 	{
 		if (event.getEntity() instanceof Wolf)
 		{
@@ -178,7 +178,7 @@ public class MyWolfEntityListener extends EntityListener
 	}
 
 	@Override
-	public void onEntityDeath(EntityDeathEvent event)
+	public void onEntityDeath(final EntityDeathEvent event)
 	{
 		if (event.getEntity() instanceof Wolf)
 		{
@@ -198,7 +198,8 @@ public class MyWolfEntityListener extends EntityListener
 									wolf.Wolf.getWorld().dropItem(wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.damage));
 								}
 							}
-							wolf.getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_WolfIsGone")).replace("%wolfname%", wolf.Name));
+							SendDeathMessage(event);
+							wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_WolfIsGone")).replace("%wolfname%", wolf.Name));
 							ConfigBuffer.mWolves.remove(wolf.getOwner().getName());
 							MyWolf.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
 							return;
@@ -207,7 +208,7 @@ public class MyWolfEntityListener extends EntityListener
 					wolf.Status = WolfState.Dead;
 					wolf.RespawnTime  = wolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor;
 					SendDeathMessage(event);
-					//---------------------------------------------Hier noch Respawn in Msg -------------
+					wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", wolf.Name).replace("%time%", ""+wolf.RespawnTime)));
 					break;
 				}
 			}
@@ -231,7 +232,7 @@ public class MyWolfEntityListener extends EntityListener
 		}
 	}
 
-	private void SendDeathMessage(EntityDeathEvent event)
+	private void SendDeathMessage(final EntityDeathEvent event)
 	{
 		Wolves wolf = null;
 		String Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Unknow"));
@@ -356,7 +357,7 @@ public class MyWolfEntityListener extends EntityListener
 	}
 
 	@Override
-	public void onEntityTarget(EntityTargetEvent event)
+	public void onEntityTarget(final EntityTargetEvent event)
 	{
 		if (!event.isCancelled())
 		{

@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftWolf;
@@ -127,7 +128,33 @@ public class MyWolfPlayerListener extends PlayerListener
 		{
 			Wolves Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
 
-			if (MyWolfUtil.getDistance(Wolf.getLocation(), event.getPlayer().getLocation()) < 75)
+			if(Wolf.Status == WolfState.Dead)
+			{
+				Wolf.Timer();
+			}
+			else if (MyWolfUtil.getDistance(Wolf.getLocation(), event.getPlayer().getLocation()) < 75)
+			{
+				Wolf.ResetSitTimer();
+				Wolf.createWolf(Wolf.isSitting());
+			}
+			else
+			{
+				Wolf.Status = WolfState.Despawned;
+			}
+		}
+	}
+	@Override
+	public void onPlayerPortal(final PlayerPortalEvent event)
+	{
+		if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+		{
+			Wolves Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+
+			if(Wolf.Status == WolfState.Dead)
+			{
+				Wolf.Timer();
+			}
+			else if (MyWolfUtil.getDistance(Wolf.getLocation(), event.getPlayer().getLocation()) < 75)
 			{
 				Wolf.ResetSitTimer();
 				Wolf.createWolf(Wolf.isSitting());
@@ -140,7 +167,7 @@ public class MyWolfPlayerListener extends PlayerListener
 	}
 
 	@Override
-	public void onPlayerQuit(PlayerQuitEvent event)
+	public void onPlayerQuit(final PlayerQuitEvent event)
 	{
 		if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
 		{
@@ -154,12 +181,13 @@ public class MyWolfPlayerListener extends PlayerListener
 					Wolf.setLocation(event.getPlayer().getLocation());
 				}
 			}
+			Wolf.StopTimer();
 			MyWolf.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
 		}
 	}
 
 	@Override
-	public void onPlayerMove(PlayerMoveEvent event)
+	public void onPlayerMove(final PlayerMoveEvent event)
 	{
 		if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
 		{

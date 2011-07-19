@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.Listeners;
 
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.event.LevelUpListener;
-
 import de.Keyle.MyWolf.ConfigBuffer;
 
 public class MyWolfLevelUpListener extends LevelUpListener

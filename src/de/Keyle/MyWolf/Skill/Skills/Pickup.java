@@ -31,6 +31,7 @@ public class Pickup extends MyWolfSkill
 	public Pickup()
 	{
 		this.Name = "Pickup";
+		registerSkill();
 	}
 
 	@Override
@@ -65,6 +66,7 @@ public class Pickup extends MyWolfSkill
 	@Override
 	public void activate(Wolves wolf, Object args)
 	{
+		
 		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
 		{
 			return;

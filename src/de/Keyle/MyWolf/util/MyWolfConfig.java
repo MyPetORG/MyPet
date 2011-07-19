@@ -29,7 +29,7 @@ import de.Keyle.MyWolf.ConfigBuffer;
 
 public class MyWolfConfig
 {
-	private static Configuration Config;
+	public static Configuration Config;
 
 	public static Material LeashItem = Material.STRING;
 	public static Material ControlItem = Material.STRING;
@@ -74,7 +74,6 @@ public class MyWolfConfig
 				ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
 			}
 		}
-
 	}
 
 	public static void setProperty(String key, Object value)

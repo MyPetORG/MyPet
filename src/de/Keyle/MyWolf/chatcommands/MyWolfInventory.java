@@ -40,10 +40,14 @@ public class MyWolfInventory implements CommandExecutor
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
 				Wolves Wolf = ConfigBuffer.mWolves.get(player.getName());
-
 				if (Wolf.Status == WolfState.Despawned)
 				{
 					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+					return true;
+				}
+				else if (Wolf.Status == WolfState.Dead)
+				{
+					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
 					return true;
 				}
 				if (MyWolfUtil.hasSkill(Wolf.Abilities, "InventorySmall") || MyWolfUtil.hasSkill(Wolf.Abilities, "InventoryLarge"))

@@ -112,6 +112,7 @@ public class MyWolf extends JavaPlugin
 		}
 
 		playerListener = new MyWolfPlayerListener();
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PORTAL, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
@@ -153,6 +154,7 @@ public class MyWolf extends JavaPlugin
 		new Pickup();
 		new Behavior();
 
+		MyWolfConfig.Config = this.getConfiguration();
 		MyWolfConfig.setStandart();
 		MyWolfConfig.loadVariables();
 
@@ -191,7 +193,7 @@ public class MyWolf extends JavaPlugin
 				String WolfWorld = Config.getString("Wolves." + ownername + ".loc.world", getServer().getWorlds().get(0).getName());
 				int WolfHealthNow = Config.getInt("Wolves." + ownername + ".health.now", 6);
 				int WolfLives = Config.getInt("Wolves." + ownername + ".health.lives", 3);
-				int WolfHealthRespawnTime = Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
+				int WolfRespawnTime = Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
 				String WolfName = Config.getString("Wolves." + ownername + ".name", "Wolf");
 				boolean Wolvesitting = Config.getBoolean("Wolves." + ownername + ".sitting", false);
 
@@ -214,9 +216,17 @@ public class MyWolf extends JavaPlugin
 					WolfLives = MyWolfConfig.MaxLives;
 				}
 				ConfigBuffer.mWolves.get(ownername).setHealth(WolfHealthNow);
-				ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfHealthRespawnTime;
+				ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfRespawnTime;
+				if(WolfRespawnTime > 0)
+				{
+					ConfigBuffer.mWolves.get(ownername).Status = WolfState.Dead;
+				}
+				else
+				{
+					ConfigBuffer.mWolves.get(ownername).Status = WolfState.Despawned;
+				}
 				ConfigBuffer.mWolves.get(ownername).Name = WolfName;
-				ConfigBuffer.mWolves.get(ownername).Wolf.setSitting(Wolvesitting);
+				ConfigBuffer.mWolves.get(ownername).setSitting(Wolvesitting);
 				ConfigBuffer.mWolves.get(ownername).Experience.setExp(WolfEXP);
 				for (int i = 0; i < 2; i++)
 				{
