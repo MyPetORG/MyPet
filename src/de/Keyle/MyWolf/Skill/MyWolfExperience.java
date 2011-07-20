@@ -46,6 +46,11 @@ public class MyWolfExperience
 		MobEXP.put(CreatureType.GHAST, 0.85);
 		MobEXP.put(CreatureType.PIG_ZOMBIE, 1.1);
 		MobEXP.put(CreatureType.GIANT, 10.75);
+		MobEXP.put(CreatureType.COW, 0.25);
+		MobEXP.put(CreatureType.PIG, 0.25);
+		MobEXP.put(CreatureType.CHICKEN, 0.1);
+		MobEXP.put(CreatureType.SQUID, 0.25);
+		MobEXP.put(CreatureType.SHEEP, 0.25);
 	}
 
 	public MyWolfExperience(double Faktor, MyWolf Wolf)
