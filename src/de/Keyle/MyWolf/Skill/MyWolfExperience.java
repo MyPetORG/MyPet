@@ -35,7 +35,7 @@ public class MyWolfExperience
 
 	private double Exp = 0;
 
-	public final static Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
+	public static Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
 	static
 	{
 		MobEXP.put(CreatureType.SKELETON, 1.1);

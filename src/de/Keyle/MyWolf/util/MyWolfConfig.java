@@ -20,12 +20,15 @@
 package de.Keyle.MyWolf.util;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.entity.CreatureType;
 import org.bukkit.util.config.Configuration;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
 
 public class MyWolfConfig
 {
@@ -42,6 +45,8 @@ public class MyWolfConfig
 
 	public static void setStandart()
 	{
+		Config.setHeader("#### The names of the Monsters have to be in capital letters!!! Delete the creaturetypes you don't want to change to avoid errors. ####");
+		
 		setProperty("MyWolf.leash.item", 287);
 		setProperty("MyWolf.control.item", 287);
 		setProperty("MyWolf.pickup.range", 2);
@@ -49,6 +54,45 @@ public class MyWolfConfig
 		setProperty("MyWolf.max.Lives", -1);
 		setProperty("MyWolf.expfactor", 2);
 		setProperty("MyWolf.namecolor", -1);
+
+		if(Config.getKeys("MyWolf").contains("exp") == false)
+		{
+			setProperty("MyWolf.exp.SKELETON", 1.1);
+			setProperty("MyWolf.exp.ZOMBIE", 1.1);
+			setProperty("MyWolf.exp.SPIDER", 1.05);
+			setProperty("MyWolf.exp.WOLF", 0.5);
+			setProperty("MyWolf.exp.CREEPER", 1.55);
+			setProperty("MyWolf.exp.GHAST", 0.85);
+			setProperty("MyWolf.exp.PIG_ZOMBIE", 1.1);
+			setProperty("MyWolf.exp.GIANT", 10.75);
+			setProperty("MyWolf.exp.COW", 0.25);
+			setProperty("MyWolf.exp.PIG", 0.25);
+			setProperty("MyWolf.exp.CHICKEN", 0.25);
+			setProperty("MyWolf.exp.SQUID", 0.25);
+			setProperty("MyWolf.exp.SHEEP", 0.25);
+		}
+
+		if(Config.getKeys("MyWolf").contains("skills") == false)
+		{
+			List<String> list = new LinkedList<String>();
+			list.add("InventorySmall");
+			setProperty("MyWolf.skills.2", list);
+			
+			list = new LinkedList<String>();
+			list.add("InventoryLarge");
+			list.add("InventoryLarge");
+			setProperty("MyWolf.skills.3", list);
+			
+			list = new LinkedList<String>();
+			list.add("Pickup");
+			setProperty("MyWolf.skills.5", list);
+			
+			list = new LinkedList<String>();
+			list.add("Behavior");
+			list.add("HP");
+			list.add("HP");
+			setProperty("MyWolf.skills.6", list);
+		}
 
 		Config.save();
 	}
@@ -65,7 +109,17 @@ public class MyWolfConfig
 		NameColor = Config.getInt("MyWolf.namecolor", -1);
 		NameColor = NameColor<=0xf?NameColor:-1;
 		
-
+		if(Config.getKeys("MyWolf.exp") != null)
+		{
+			for(String key : Config.getKeys("MyWolf.exp"))
+			{
+				double expval = Config.getDouble("MyWolf.exp." + key, -1.0);
+				if(expval > -1)
+				{
+					MyWolfExperience.MobEXP.put(CreatureType.valueOf(key), expval);
+				}
+			}
+		}
 		if (Config.getKeys("MyWolf.skills") != null)
 		{
 			for (String lvl : Config.getKeys("MyWolf.skills"))
