@@ -27,9 +27,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Wolves;
-import de.Keyle.MyWolf.Wolves.WolfState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -43,7 +43,7 @@ public class MyWolfRelease implements CommandExecutor
 			Player player = (Player) sender;
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				Wolves Wolf = ConfigBuffer.mWolves.get(player.getName());
+				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
 				if (MyWolfPermissions.has(player, "mywolf.release") == false)
 				{
@@ -77,7 +77,7 @@ public class MyWolfRelease implements CommandExecutor
 					}
 					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
 					ConfigBuffer.mWolves.remove(player.getName());
-					MyWolf.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+					MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
 					return true;
 				}
 				else

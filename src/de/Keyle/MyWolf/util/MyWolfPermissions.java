@@ -27,7 +27,7 @@ import org.anjocaido.groupmanager.GroupManager;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolfPlugin;
 
 public class MyWolfPermissions
 {
@@ -62,7 +62,7 @@ public class MyWolfPermissions
 	{
 		Plugin p;
 
-		p = MyWolf.Plugin.getServer().getPluginManager().getPlugin("GroupManager");
+		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("GroupManager");
 		if (p != null && PermissionsMode == PermissionsType.NONE)
 		{
 			PermissionsMode = PermissionsType.GroupManager;
@@ -71,7 +71,7 @@ public class MyWolfPermissions
 			return;
 		}
 
-		p = MyWolf.Plugin.getServer().getPluginManager().getPlugin("Permissions");
+		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("Permissions");
 		if (p != null && PermissionsMode == PermissionsType.NONE)
 		{
 			PermissionsMode = PermissionsType.Permissions;

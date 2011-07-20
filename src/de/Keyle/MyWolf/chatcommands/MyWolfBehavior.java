@@ -25,9 +25,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Wolves;
-import de.Keyle.MyWolf.Wolves.BehaviorState;
-import de.Keyle.MyWolf.Wolves.WolfState;
+import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolf.BehaviorState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
@@ -40,7 +40,7 @@ public class MyWolfBehavior implements CommandExecutor
 			Player player = (Player) sender;
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				Wolves Wolf = ConfigBuffer.mWolves.get(player.getName());
+				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
 				if (Wolf.Status == WolfState.Despawned)
 				{

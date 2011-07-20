@@ -27,9 +27,9 @@ import org.bukkitcontrib.BukkitContrib;
 import org.bukkitcontrib.player.ContribCraftPlayer;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Wolves;
-import de.Keyle.MyWolf.Wolves.WolfState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -43,7 +43,7 @@ public class MyWolfCall implements CommandExecutor
 			Player player = (Player) sender;
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				Wolves Wolf = ConfigBuffer.mWolves.get(player.getName());
+				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 				sender.sendMessage(Wolf.Status.toString());
 				if (MyWolfPermissions.has(player, "mywolf.call") == false)
 				{
@@ -52,7 +52,7 @@ public class MyWolfCall implements CommandExecutor
 				if (Wolf.Status == WolfState.Here)
 				{
 
-					BukkitContrib.getSoundManager().playCustomMusic(MyWolf.Plugin, ContribCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+					BukkitContrib.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, ContribCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
 					if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
 					{
 						Wolf.removeWolf();
@@ -69,7 +69,7 @@ public class MyWolfCall implements CommandExecutor
 				else if (Wolf.Status == WolfState.Despawned)
 				{
 
-					BukkitContrib.getSoundManager().playCustomMusic(MyWolf.Plugin, ContribCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+					BukkitContrib.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, ContribCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
 
 					Wolf.setLocation(player.getLocation());
 					Wolf.createWolf(false);

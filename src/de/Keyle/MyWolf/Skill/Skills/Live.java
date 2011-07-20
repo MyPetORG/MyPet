@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.Wolves;
+import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
@@ -35,7 +35,7 @@ public class Live extends MyWolfSkill
 	}
 
 	@Override
-	public void activate(Wolves wolf, Object args)
+	public void activate(MyWolf wolf, Object args)
 	{
 		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
 		{

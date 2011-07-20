@@ -25,7 +25,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
 
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Wolves;
+import de.Keyle.MyWolf.MyWolf;
 
 public class MyWolfWorldListener extends WorldListener
 {
@@ -36,7 +36,7 @@ public class MyWolfWorldListener extends WorldListener
 		{
 			if (e instanceof Wolf)
 			{
-				for (Wolves w : ConfigBuffer.mWolves.values())
+				for (MyWolf w : ConfigBuffer.mWolves.values())
 				{
 					if (w.getID() == e.getEntityId())
 					{

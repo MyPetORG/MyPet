@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.Wolves;
-import de.Keyle.MyWolf.Wolves.BehaviorState;
+import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 
@@ -33,7 +33,7 @@ public class Behavior extends MyWolfSkill
 	}
 
 	@Override
-	public void run(Wolves wolf, Object args)
+	public void run(MyWolf wolf, Object args)
 	{
 		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
 		{

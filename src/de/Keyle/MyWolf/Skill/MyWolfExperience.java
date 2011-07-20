@@ -24,14 +24,14 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.CreatureType;
-import de.Keyle.MyWolf.Wolves;
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 
 public class MyWolfExperience
 {
 	private double Faktor;
-	Wolves Wolf;
+	MyWolf Wolf;
 
 	private double Exp = 0;
 
@@ -48,7 +48,7 @@ public class MyWolfExperience
 		MobEXP.put(CreatureType.GIANT, 10.75);
 	}
 
-	public MyWolfExperience(double Faktor, Wolves Wolf)
+	public MyWolfExperience(double Faktor, MyWolf Wolf)
 	{
 		this.Wolf = Wolf;
 		this.Faktor = Faktor;
@@ -60,7 +60,7 @@ public class MyWolfExperience
 		this.Exp = Exp;
 		for (int i = tmplvl; i < getLevel(); i++)
 		{
-			MyWolf.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+			MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
 		}
 	}
 
@@ -76,7 +76,7 @@ public class MyWolfExperience
 
 		for (int i = tmplvl; i < getLevel(); i++)
 		{
-			MyWolf.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+			MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
 		}
 	}
 
@@ -89,7 +89,7 @@ public class MyWolfExperience
 			Logger.getLogger("Minecraft").info("exp: " + Exp);
 			for (int i = tmplvl; i < getLevel(); i++)
 			{
-				MyWolf.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+				MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
 			}
 		}
 	}

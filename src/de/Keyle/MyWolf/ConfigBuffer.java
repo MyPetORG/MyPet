@@ -32,14 +32,14 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 
 public class ConfigBuffer
 {
-	public static PluginDescriptionFile pdfFile = MyWolf.Plugin.getDescription();
+	public static PluginDescriptionFile pdfFile = MyWolfPlugin.Plugin.getDescription();
 
 	public static Configuration WolvesConfig;
 	public static MyWolfLanguage lv;
 
 	public static List<Player> WolfChestOpened = new ArrayList<Player>();
 
-	public static Map<String, Wolves> mWolves = new HashMap<String, Wolves>();
+	public static Map<String, MyWolf> mWolves = new HashMap<String, MyWolf>();
 	public static Map<Integer, List<String>> SkillPerLevel = new HashMap<Integer, List<String>>();
 	public static Map<String, MyWolfSkill> RegisteredSkills = new HashMap<String, MyWolfSkill>();
 

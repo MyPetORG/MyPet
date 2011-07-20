@@ -1,297 +1,436 @@
 /*
- * Copyright (C) 2011 Keyle
- *
- * This file is part of MyWolf.
- *
- * MyWolf is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MyWolf is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
-    1. make the health start at 8 and don't have that overcharge or whatever that goes above the set health like 18/10.
-    4. fix the signal to attack in the snow. I think the layer of snow above the block is messing it up. It might have trouble climbing hills too or something.
-    6. fix when the dog is sitting and you can't call it.
-    7. is there anyway to modify the pathfinding to keep it from bumping you and running into fire?
+* Copyright (C) 2011 Keyle
+*
+* This file is part of MyWolf.
+*
+* MyWolf is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* MyWolf is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
 */
 
 package de.Keyle.MyWolf;
 
-import java.io.File;
-import java.util.List;
-import net.minecraft.server.ItemStack;
+import java.util.HashMap;
+import java.util.Map;
 
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.util.*;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.InventoryLargeChest;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Event;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
+import org.bukkitcontrib.BukkitContrib;
+import org.bukkitcontrib.inventory.CustomMCInventory;
 
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Listeners.*;
-import de.Keyle.MyWolf.Skill.Skills.*;
-import de.Keyle.MyWolf.Wolves.WolfState;
-import de.Keyle.MyWolf.chatcommands.*;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
-
-public class MyWolf extends JavaPlugin
+public class MyWolf
 {
+	public String Name = "Wolf";
+	public String Owner;
+	public int ID;
+	public double HealthMax = 6;
+	public double HealthNow = HealthMax;
+	public int Lives = 5;
+	public Wolf Wolf;
+	public int RespawnTime = 0;
 
-	ConfigBuffer cb;
-	private MyWolfPlayerListener playerListener;
-	private MyWolfEntityListener entityListener;
-	private MyWolfInventoryListener inventoryListener;
-	private MyWolfVehicleListener vehicleListener;
-	private MyWolfLevelUpListener levelupListener;
-	private MyWolfWorldListener worldListener;
+	private int Timer = -1;
 
-	public static MyWolf Plugin;
+	private int SitTimer = 15;
+	private boolean isSitting = false;
+	public boolean isPickup = false;
 
-	public void onDisable()
+	public boolean allowAttackPlayer = true;
+	public boolean allowAttackMonster = false;
+
+	public static enum BehaviorState
 	{
-		SaveWolves(ConfigBuffer.WolvesConfig);
-		for (String owner : ConfigBuffer.mWolves.keySet())
-		{
-			if (ConfigBuffer.mWolves.get(owner).Status == WolfState.Here)
-			{
-				ConfigBuffer.mWolves.get(owner).removeWolf();
-			}
-		}
-		getServer().getScheduler().cancelTasks(this);
-		ConfigBuffer.mWolves.clear();
-		ConfigBuffer.WolfChestOpened.clear();
-
-		MyWolfUtil.Log.info("[MyWolf] Disabled");
-
-		cb = null;
+		Normal, Friendly, Agressive, Raid;
 	}
 
-	public void onEnable()
+	public static enum WolfState
 	{
-		Plugin = this;
-
-		playerListener = new MyWolfPlayerListener();
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PORTAL, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
-
-		vehicleListener = new MyWolfVehicleListener();
-		getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_ENTER, vehicleListener, Event.Priority.Low, this);
-
-		worldListener = new MyWolfWorldListener();
-		getServer().getPluginManager().registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Normal, this);
-
-		entityListener = new MyWolfEntityListener();
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
-
-		levelupListener = new MyWolfLevelUpListener();
-		getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, levelupListener, Event.Priority.Normal, this);
-
-		inventoryListener = new MyWolfInventoryListener();
-		getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, inventoryListener, Event.Priority.Normal, this);
-
-		MyWolfPermissions.setup();
-
-		getCommand("wolfname").setExecutor(new MyWolfName());
-		getCommand("wolfcall").setExecutor(new MyWolfCall());
-		getCommand("wolfstop").setExecutor(new MyWolfStop());
-		getCommand("wolfrelease").setExecutor(new MyWolfRelease());
-		getCommand("wolf").setExecutor(new MyWolfHelp());
-		getCommand("wolfinventory").setExecutor(new MyWolfInventory());
-		getCommand("wolfpickup").setExecutor(new MyWolfPickup());
-		getCommand("wolfbehavior").setExecutor(new MyWolfBehavior());
-		getCommand("wolfexp").setExecutor(new MyWolfEXP());
-
-		new Inventory();
-		new HP();
-		new Live();
-		new Pickup();
-		new Behavior();
-
-		MyWolfConfig.Config = this.getConfiguration();
-		MyWolfConfig.setStandart();
-		MyWolfConfig.loadVariables();
-
-		ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
-		ConfigBuffer.lv.setStandart();
-		ConfigBuffer.lv.loadVariables();
-
-		ConfigBuffer.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
-		LoadWolves(ConfigBuffer.WolvesConfig);
-
-		for (Player p : this.getServer().getOnlinePlayers())
-		{
-			if (ConfigBuffer.mWolves.containsKey(p.getName()) && p.isOnline() == true)
-			{
-				ConfigBuffer.mWolves.get(p.getName()).createWolf(ConfigBuffer.mWolves.get(p.getName()).isSitting());
-			}
-		}
-		MyWolfUtil.Log.info("[" + ConfigBuffer.pdfFile.getName() + "] version " + ConfigBuffer.pdfFile.getVersion() + " ENABLED");
+		Dead, Despawned, Here;
 	}
 
-	public void LoadWolves(Configuration Config)
+	public BehaviorState Behavior = BehaviorState.Normal;
+	public WolfState Status = WolfState.Despawned;
+
+	public MyWolfInventory[] Inventory = { new MyWolfInventory(), new MyWolfInventory() };
+	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
+
+	public CustomMCInventory inv = new CustomMCInventory(1, "MyWolfInventory");
+	
+	private Location Location;
+
+	public Map<String, Boolean> Abilities = new HashMap<String, Boolean>();
+	public MyWolfExperience Experience;
+
+	public MyWolf(String Owner)
 	{
-		int anzahlWolves = 0;
+		this.Owner = Owner;
+		Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
+	}
 
-		Config.load();
-		List<String> WolfList = Config.getKeys("Wolves");
-		if (WolfList != null)
+	public void SetName(String Name)
+	{
+		this.Name = Name;
+		String NameColor;
+		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			for (String ownername : WolfList)
+			NameColor = "§" + MyWolfConfig.NameColor;
+		}
+		else
+		{
+			if (getHealth() > HealthMax / 3 * 2)
 			{
-				int invSlot = 0;
-				double WolfX = Config.getDouble("Wolves." + ownername + ".loc.X", 0);
-				double WolfY = Config.getDouble("Wolves." + ownername + ".loc.Y", 0);
-				double WolfZ = Config.getDouble("Wolves." + ownername + ".loc.Z", 0);
-				double WolfEXP = Config.getDouble("Wolves." + ownername + ".exp", 0);
-				String WolfWorld = Config.getString("Wolves." + ownername + ".loc.world", getServer().getWorlds().get(0).getName());
-				int WolfHealthNow = Config.getInt("Wolves." + ownername + ".health.now", 6);
-				int WolfLives = Config.getInt("Wolves." + ownername + ".health.lives", 3);
-				int WolfRespawnTime = Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
-				String WolfName = Config.getString("Wolves." + ownername + ".name", "Wolf");
-				boolean Wolvesitting = Config.getBoolean("Wolves." + ownername + ".sitting", false);
+				NameColor = ""+ChatColor.GREEN;
+			}
+			else if (getHealth() > HealthMax / 3 * 1)
+			{
+				NameColor = ""+ChatColor.YELLOW;
+			}
+			else
+			{
+				NameColor = ""+ChatColor.RED;
+			}
+		}
+		if (Status == WolfState.Here)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
+		}
+	}
+	public void SetName()
+	{
+		String NameColor;
+		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
+		{
+			NameColor = "§" + MyWolfConfig.NameColor;
+		}
+		else
+		{
+			if (getHealth() > HealthMax / 3 * 2)
+			{
+				NameColor = ""+ChatColor.GREEN;
+			}
+			else if (getHealth() > HealthMax / 3 * 1)
+			{
+				NameColor = ""+ChatColor.YELLOW;
+			}
+			else
+			{
+				NameColor = ""+ChatColor.RED;
+			}
+		}
+		if (Status == WolfState.Here)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
+		}
+	}
 
-				if (WolfLives == 0)
-				{
-					continue;
-				}
-				if (getServer().getWorld(WolfWorld) == null)
-				{
-					MyWolfUtil.Log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
-					continue;
-				}
+	public void OpenInventory()
+	{
+		EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
+		if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
+		{
+			eh.a(LargeInventory);
+		}
+		else if (MyWolfUtil.hasSkill(Abilities, "InventorySmall"))
+		{
+			eh.a(Inventory[0]);
+		}
+	}
 
-				ConfigBuffer.mWolves.put(ownername, new Wolves(ownername));
+	public void removeWolf()
+	{
+		StopTimer();
+		isSitting = Wolf.isSitting();
+		HealthNow = Wolf.getHealth();
+		Location = Wolf.getLocation();
+		Status = WolfState.Despawned;
+		((LivingEntity) Wolf).remove();
+	}
+	
+	public boolean RespawnWolf()
+	{
+		if (Status == WolfState.Here)
+		{
+			return false;
+		}
+		else
+		{
+			HealthNow = HealthMax;
+			Location = getOwner().getLocation();
+			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
+			createWolf(false);
+			RespawnTime = 0;
+			return true;
+		}
+	}
+	
+	public void createWolf(boolean sitting)
+	{
+		if (Status == WolfState.Here || getOwner() == null )
+		{
+			return;
+		}
+		else
+		{
+			if(RespawnTime <= 0)
+			{
+				Wolf = (Wolf) MyWolfPlugin.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location, CreatureType.WOLF);
+				Wolf.setOwner(getOwner());
+				Wolf.setSitting(sitting);
+				Location = Wolf.getLocation();
+				Wolf.setHealth((int) HealthNow);
+				ID = Wolf.getEntityId();
 
-				ConfigBuffer.mWolves.get(ownername).setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+				Status = WolfState.Here;
+				SetName();
+			}
+			Timer();
+		}
+	}
+	public void createWolf(Wolf wolf)
+	{
+		Wolf = wolf;
+		ID = Wolf.getEntityId();
+		Location = Wolf.getLocation();
+		Status = WolfState.Here;
+		SetName();
+		Timer();
+	}
 
-				if (WolfLives > MyWolfConfig.MaxLives)
+	public void setHealth(double d)
+	{
+		if (d > HealthMax)
+		{
+			HealthNow = HealthMax;
+		}
+		else
+		{
+			HealthNow = d;
+		}
+		if (Status == WolfState.Here)
+		{
+			Wolf.setHealth((int) HealthNow);
+		}
+		SetName();
+	}
+	public double getHealth()
+	{
+		if (Status == WolfState.Here)
+		{
+			return Wolf.getHealth();
+		}
+		else
+		{
+			return HealthNow;
+		}
+	}
+
+	public double Demage(double Demage)
+	{
+		if (Status == WolfState.Here)
+		{
+			HealthNow -= Demage;
+			Wolf.setHealth((int) (HealthNow + 0.5));
+		}
+		return HealthNow;
+	}
+
+	public int getID()
+	{
+		if (Status == WolfState.Here)
+		{
+			return Wolf.getEntityId();
+		}
+		else
+		{
+			return ID;
+		}
+	}
+
+	public Location getLocation()
+	{
+		if (Status == WolfState.Here)
+		{
+			return Wolf.getLocation();
+		}
+		else
+		{
+			return Location;
+		}
+	}
+	public void setLocation(Location loc)
+	{
+		this.Location = loc;
+		if(Status == WolfState.Here)
+		{
+			Wolf.teleport(loc);
+		}
+	}
+
+	public boolean isSitting()
+	{
+		if (Status == WolfState.Here)
+		{
+			return Wolf.isSitting();
+		}
+		else
+		{
+			return isSitting;
+		}
+	}
+	public void setSitting(boolean sitting)
+	{
+		if (Status == WolfState.Here)
+		{
+			Wolf.setSitting(sitting);
+			this.isSitting = sitting;
+		}
+		else
+		{
+			this.isSitting = sitting;
+		}
+	}
+
+	public void ResetSitTimer()
+	{
+		SitTimer = 15;
+	}
+	
+	public void StopTimer()
+	{
+		if (Timer != -1)
+		{
+			MyWolfPlugin.Plugin.getServer().getScheduler().cancelTask(Timer);
+			Timer = -1;
+		}
+	}
+	public void Timer()
+	{
+		if (Status != WolfState.Despawned)
+		{
+			if (Timer != -1)
+			{
+				StopTimer();
+			}
+			Timer = MyWolfPlugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.Plugin, new Runnable()
+			{
+				public void run()
 				{
-					WolfLives = MyWolfConfig.MaxLives;
-				}
-				ConfigBuffer.mWolves.get(ownername).setHealth(WolfHealthNow);
-				ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfRespawnTime;
-				if(WolfRespawnTime > 0)
-				{
-					ConfigBuffer.mWolves.get(ownername).Status = WolfState.Dead;
-				}
-				else
-				{
-					ConfigBuffer.mWolves.get(ownername).Status = WolfState.Despawned;
-				}
-				ConfigBuffer.mWolves.get(ownername).Name = WolfName;
-				ConfigBuffer.mWolves.get(ownername).setSitting(Wolvesitting);
-				ConfigBuffer.mWolves.get(ownername).Experience.setExp(WolfEXP);
-				for (int i = 0; i < 2; i++)
-				{
-					invSlot = 0;
-					for (String item : Config.getString("Wolves." + ownername + ".inventory." + (i + 1)).split("\\;"))
+					if (Status == WolfState.Despawned || getOwner() == null)
 					{
-						String[] itemvalues = item.split("\\,");
-						if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+						StopTimer();
+					}
+					else
+					{
+						if(Status == WolfState.Here)
 						{
-							if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+							SitTimer--;
+							if(SitTimer <= 0)
 							{
-								if (Integer.parseInt(itemvalues[1]) <= 64)
+								Wolf.setSitting(true);
+							}
+							if (isPickup)
+							{
+								for (Entity e : Wolf.getNearbyEntities(MyWolfConfig.PickupRange, MyWolfConfig.PickupRange, MyWolfConfig.PickupRange))
 								{
-									ConfigBuffer.mWolves.get(ownername).Inventory[i].setItem(invSlot, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+									if (e instanceof Item)
+									{
+										Item item = (Item) e;
+
+										int amountleft = Inventory[0].addItem(item);
+										if (amountleft == 0)
+										{
+											e.remove();
+										}
+										else
+										{
+											if (item.getItemStack().getAmount() > amountleft)
+											{
+												item.getItemStack().setAmount(amountleft);
+											}
+											if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
+											{
+												amountleft = Inventory[1].addItem(item);
+												if (amountleft == 0)
+												{
+													e.remove();
+												}
+												else
+												{
+													if (item.getItemStack().getAmount() > amountleft)
+													{
+														item.getItemStack().setAmount(amountleft);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							if (Behavior == BehaviorState.Agressive)
+							{
+								if (Wolf.getTarget() == null)
+								{
+									for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
+									{
+										if (MyWolfUtil.getCreatureType(e) != null)
+										{
+											Wolf.setTarget((LivingEntity) e);
+										}
+									}
 								}
 							}
 						}
-						invSlot++;
-					}
-				}
-				anzahlWolves++;
-			}
-		}
-		MyWolfUtil.Log.info("[" + this.getDescription().getName() + "] " + anzahlWolves + " wolf/wolves loaded");
-	}
-
-	public void SaveWolves(Configuration Config)
-	{
-		Config.removeProperty("Wolves");
-		for (String owner : ConfigBuffer.mWolves.keySet())
-		{
-			Wolves wolf = ConfigBuffer.mWolves.get(owner);
-			for (int i = 0; i < 2; i++)
-			{
-				String Items = "";
-				if (ConfigBuffer.mWolves.get(owner).Inventory[i].getContents().length > 0)
-				{
-					for (ItemStack Item : ConfigBuffer.mWolves.get(owner).Inventory[i].getContents())
-					{
-						if (Item != null)
-						{
-							Items += Item.id + "," + Item.count + "," + Item.damage + ";";
-						}
-						else
-						{
-							Items += ",,;";
+						if(Status == WolfState.Dead)
+						{	
+							RespawnTime--;
+							if (RespawnTime <= 0)
+							{
+								RespawnWolf();
+							}
 						}
 					}
-					Items = Items.substring(0, Items.length() - 1);
 				}
-				Config.setProperty("Wolves." + owner + ".inventory." + (i + 1), Items);
-			}
-			Config.setProperty("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
-			Config.setProperty("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
-			Config.setProperty("Wolves." + owner + ".loc.Z", wolf.getLocation().getZ());
-			Config.setProperty("Wolves." + owner + ".loc.world", wolf.getLocation().getWorld().getName());
-
-			Config.setProperty("Wolves." + owner + ".health.now", wolf.getHealth());
-			Config.setProperty("Wolves." + owner + ".health.lives", wolf.Lives);
-			Config.setProperty("Wolves." + owner + ".health.respawntime", wolf.RespawnTime);
-			Config.setProperty("Wolves." + owner + ".name", wolf.Name);
-			Config.setProperty("Wolves." + owner + ".sitting", wolf.isSitting());
-			Config.setProperty("Wolves." + owner + ".exp", wolf.Experience.getExp());
+			}, 0L, 20L);
 		}
-		Config.save();
 	}
 
-	public static boolean isMyWolf(Wolf wolf)
+	public Player getOwner()
 	{
-		for (Wolves w : ConfigBuffer.mWolves.values())
+		for (Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
 		{
-			if (w.getID() == wolf.getEntityId())
+			if (p.getName().equals(Owner) && MyWolfUtil.isNPC(p) == false)
 			{
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static Wolves getMyWolf(Wolf wolf)
-	{
-		for (Wolves w : ConfigBuffer.mWolves.values())
-		{
-			if (w.getID() == wolf.getEntityId())
-			{
-				return w;
+				return p;
 			}
 		}
 		return null;
 	}
-	public static Wolves getMyWolf(Player player)
+
+	public void sendMessageToOwner(String Text)
 	{
-		return ConfigBuffer.mWolves.containsKey(player.getName())?ConfigBuffer.mWolves.get(player.getName()):null;
+		if (getOwner() != null)
+		{
+			getOwner().sendMessage(Text);
+		}
 	}
 }

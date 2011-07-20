@@ -41,10 +41,10 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Wolves;
-import de.Keyle.MyWolf.Wolves.BehaviorState;
-import de.Keyle.MyWolf.Wolves.WolfState;
+import de.Keyle.MyWolf.MyWolf.BehaviorState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -84,9 +84,9 @@ public class MyWolfEntityListener extends EntityListener
 						if (isTarmed == true && OwnerOfTheWolf.equals(Attacker.getName()))
 						{
 							event.setCancelled(true);
-							ConfigBuffer.mWolves.put(player.getName(), new Wolves(player.getName()));
+							ConfigBuffer.mWolves.put(player.getName(), new MyWolf(player.getName()));
 							ConfigBuffer.mWolves.get(player.getName()).createWolf((Wolf) event.getEntity());
-							MyWolf.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+							MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
 							player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
 						}
 					}
@@ -102,7 +102,7 @@ public class MyWolfEntityListener extends EntityListener
 					}
 					if (WolfOwner != null && WolfOwner.equals(player.getName()))
 					{
-						Wolves wolf = ConfigBuffer.mWolves.get(WolfOwner);
+						MyWolf wolf = ConfigBuffer.mWolves.get(WolfOwner);
 						wolf.ResetSitTimer();
 						wolf.SetName();
 						if (player.getItemInHand().getType() == MyWolfConfig.LeashItem)
@@ -151,7 +151,7 @@ public class MyWolfEntityListener extends EntityListener
 						}
 						*/
 					}
-					for (Wolves wolf : ConfigBuffer.mWolves.values())
+					for (MyWolf wolf : ConfigBuffer.mWolves.values())
 					{
 						if (wolf.getID() == event.getEntity().getEntityId())
 						{
@@ -161,15 +161,16 @@ public class MyWolfEntityListener extends EntityListener
 								wolf.setHealth(wolf.HealthMax);
 							}
 
-							if (event.getDamage() < wolf.getHealth())
-							{
-								wolf.setHealth(wolf.getHealth() + event.getDamage());
-								wolf.Demage(event.getDamage());
-							}
 							if (event.isCancelled() == false && MyWolfUtil.getPVP(event.getEntity().getLocation()) == false)
 							{
 								event.setCancelled(true);
 							}
+							if (event.isCancelled() == false && event.getDamage() < wolf.getHealth())
+							{
+								wolf.setHealth(wolf.getHealth() + event.getDamage());
+								wolf.Demage(event.getDamage());
+							}
+							
 						}
 					}
 				}
@@ -182,7 +183,7 @@ public class MyWolfEntityListener extends EntityListener
 	{
 		if (event.getEntity() instanceof Wolf)
 		{
-			for (Wolves wolf : ConfigBuffer.mWolves.values())
+			for (MyWolf wolf : ConfigBuffer.mWolves.values())
 			{
 				if (wolf.getID() == event.getEntity().getEntityId())
 				{
@@ -201,7 +202,7 @@ public class MyWolfEntityListener extends EntityListener
 							SendDeathMessage(event);
 							wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_WolfIsGone")).replace("%wolfname%", wolf.Name));
 							ConfigBuffer.mWolves.remove(wolf.getOwner().getName());
-							MyWolf.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+							MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
 							return;
 						}
 					}
@@ -218,7 +219,7 @@ public class MyWolfEntityListener extends EntityListener
 			if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
 			{
 				EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-				for (Wolves wolf : ConfigBuffer.mWolves.values())
+				for (MyWolf wolf : ConfigBuffer.mWolves.values())
 				{
 					if (wolf.getID() == e.getDamager().getEntityId())
 					{
@@ -234,9 +235,9 @@ public class MyWolfEntityListener extends EntityListener
 
 	private void SendDeathMessage(final EntityDeathEvent event)
 	{
-		Wolves wolf = null;
+		MyWolf wolf = null;
 		String Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Unknow"));
-		for (Wolves w : ConfigBuffer.mWolves.values())
+		for (MyWolf w : ConfigBuffer.mWolves.values())
 		{
 			if (w.getID() == event.getEntity().getEntityId())
 			{
@@ -363,12 +364,12 @@ public class MyWolfEntityListener extends EntityListener
 		{
 			if (event.getEntity() instanceof Wolf)
 			{
-				for (Wolves Wolf : ConfigBuffer.mWolves.values())
+				for (MyWolf Wolf : ConfigBuffer.mWolves.values())
 				{
 					if (Wolf.getID() == event.getEntity().getEntityId())
 					{
 						Wolf.ResetSitTimer();
-						if (Wolf.Behavior == de.Keyle.MyWolf.Wolves.BehaviorState.Friendly)
+						if (Wolf.Behavior == de.Keyle.MyWolf.MyWolf.BehaviorState.Friendly)
 						{
 							event.setCancelled(true);
 						}

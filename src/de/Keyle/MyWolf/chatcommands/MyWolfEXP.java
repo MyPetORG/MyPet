@@ -24,7 +24,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Wolves;
+import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
@@ -37,7 +37,7 @@ public class MyWolfEXP implements CommandExecutor
 			Player player = (Player) sender;
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				Wolves wolf = ConfigBuffer.mWolves.get(player.getName());
+				MyWolf wolf = ConfigBuffer.mWolves.get(player.getName());
 				wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname%(Lv%lvl%) (%proz%%) EXP: %exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("{0:F2}", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("{0:F2}", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("{0:F2}", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
 				return true;
 			}

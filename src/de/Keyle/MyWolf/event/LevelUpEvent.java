@@ -23,25 +23,25 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import de.Keyle.MyWolf.Wolves;
+import de.Keyle.MyWolf.MyWolf;
 
 public class LevelUpEvent extends Event implements Cancellable
 {
 	private static final long serialVersionUID = -605293022023540119L;
 
-	protected Wolves wolf;
+	protected MyWolf wolf;
 	protected boolean cancelled;
 	protected Location location = null;
 	protected int Level;
 
-	public LevelUpEvent(Wolves wolf, int Level)
+	public LevelUpEvent(MyWolf wolf, int Level)
 	{
 		super("LevelUpEvent");
 		this.wolf = wolf;
 		this.Level = Level;
 	}
 
-	public LevelUpEvent(Wolves wolf, int Level, Location location)
+	public LevelUpEvent(MyWolf wolf, int Level, Location location)
 	{
 		super("LevelUpEvent");
 		this.wolf = wolf;
@@ -54,7 +54,7 @@ public class LevelUpEvent extends Event implements Cancellable
 		return wolf.getOwner();
 	}
 
-	public Wolves getWolf()
+	public MyWolf getWolf()
 	{
 		return wolf;
 	}

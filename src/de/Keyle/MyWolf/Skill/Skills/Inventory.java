@@ -22,7 +22,7 @@ package de.Keyle.MyWolf.Skill.Skills;
 import org.bukkit.Material;
 
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Wolves;
+import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -39,7 +39,7 @@ public class Inventory extends MyWolfSkill
 	}
 
 	@Override
-	public void run(Wolves wolf, Object args)
+	public void run(MyWolf wolf, Object args)
 	{
 		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") && MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge") == false)
 		{
@@ -68,7 +68,7 @@ public class Inventory extends MyWolfSkill
 	}
 
 	@Override
-	public void activate(Wolves wolf, Object args)
+	public void activate(MyWolf wolf, Object args)
 	{
 		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") == false)
 		{

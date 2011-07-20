@@ -26,7 +26,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Wolves.WolfState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 
 public class MyWolfVehicleListener extends VehicleListener
 {
