@@ -17,13 +17,6 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-    1. make the health start at 8 and don't have that overcharge or whatever that goes above the set health like 18/10.
-    4. fix the signal to attack in the snow. I think the layer of snow above the block is messing it up. It might have trouble climbing hills too or something.
-    6. fix when the dog is sitting and you can't call it.
-    7. is there anyway to modify the pathfinding to keep it from bumping you and running into fire?
-*/
-
 package de.Keyle.MyWolf;
 
 import java.io.File;
@@ -40,6 +33,7 @@ import org.bukkit.util.config.Configuration;
 
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.Listeners.*;
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.chatcommands.*;
@@ -134,6 +128,16 @@ public class MyWolfPlugin extends JavaPlugin
 		ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
 		ConfigBuffer.lv.setStandart();
 		ConfigBuffer.lv.loadVariables();
+		
+		try
+		{
+			MyWolfExperience.JSreader = MyWolfUtil.readFileAsString(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js");
+		}
+		catch (Exception e)
+		{
+			MyWolfExperience.JSreader = null;
+			MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js). Working with factor.");
+		}
 
 		ConfigBuffer.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
 		LoadWolves(ConfigBuffer.WolvesConfig);

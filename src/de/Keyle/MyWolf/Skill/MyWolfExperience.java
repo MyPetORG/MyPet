@@ -23,17 +23,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import org.bukkit.entity.CreatureType;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfExperience
 {
-	private double Faktor;
+	private double Factor;
 	MyWolf Wolf;
 
 	private double Exp = 0;
+
+	public static String JSreader;
 
 	public static Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
 	static
@@ -53,10 +60,10 @@ public class MyWolfExperience
 		MobEXP.put(CreatureType.SHEEP, 0.25);
 	}
 
-	public MyWolfExperience(double Faktor, MyWolf Wolf)
+	public MyWolfExperience(double Factor, MyWolf Wolf)
 	{
 		this.Wolf = Wolf;
-		this.Faktor = Faktor;
+		this.Factor = Factor;
 	}
 
 	public void setExp(double Exp)
@@ -101,16 +108,58 @@ public class MyWolfExperience
 
 	public int getLevel()
 	{
-		int tmplvl = 1;
-		for (double i = Faktor * Faktor; i <= this.Exp; i = i * Faktor)
+		if (JSreader != null)
 		{
-			tmplvl++;
+			return parseJS();
 		}
-		return tmplvl;
+		else
+		{
+			int tmplvl = 1;
+			for (double i = Factor * Factor; i <= this.Exp; i = i * Factor)
+			{
+				tmplvl++;
+			}
+			return tmplvl;
+		}
 	}
 
 	public double getrequireEXP()
 	{
-		return Math.pow(Faktor, this.getLevel() + 1);
+		return Math.pow(Factor, this.getLevel() + 1);
+	}
+
+	public int parseJS()
+	{
+		if(JSreader != null)
+		{
+			ScriptEngineManager manager = new ScriptEngineManager();
+			ScriptEngine engine = manager.getEngineByName("js");
+			engine.put("lvl", 1);
+			engine.put("EXP", Exp);
+			engine.put("factor", Factor);
+			try
+			{
+				engine.eval(JSreader);
+			}
+			catch (ScriptException e)
+			{
+				MyWolfUtil.Log.info("[MyWolf] Error in EXP-Script!");
+				return 1;
+			}
+			int tmplvl = 1;
+			try
+			{
+				tmplvl = ((Double) engine.get("lvl")).intValue();
+			}
+			catch (Exception e)
+			{
+				MyWolfUtil.Log.info("[MyWolf] EXP-Script doesn't return valid value!");
+			}
+			return tmplvl;
+		}
+		else
+		{
+			return 1;
+		}
 	}
 }
