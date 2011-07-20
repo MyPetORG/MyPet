@@ -26,16 +26,8 @@
 
 package de.Keyle.MyWolf;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.List;
-import java.util.logging.Logger;
-
 import net.minecraft.server.ItemStack;
 
 import org.bukkit.Location;
@@ -69,11 +61,6 @@ public class MyWolf extends JavaPlugin
 
 	public static MyWolf Plugin;
 
-	public MyWolf()
-	{
-
-	}
-
 	public void onDisable()
 	{
 		SaveWolves(ConfigBuffer.WolvesConfig);
@@ -96,20 +83,6 @@ public class MyWolf extends JavaPlugin
 	public void onEnable()
 	{
 		Plugin = this;
-
-		if (this.getServer().getPluginManager().getPlugin("BukkitContrib") == null)
-		{
-			try
-			{
-				download(MyWolfUtil.Log, new URL("http://bit.ly/autoupdateBukkitContrib"), new File("plugins/BukkitContrib.jar"));
-				this.getServer().getPluginManager().loadPlugin(new File("plugins" + File.separator + "BukkitContrib.jar"));
-				this.getServer().getPluginManager().enablePlugin(this.getServer().getPluginManager().getPlugin("BukkitContrib"));
-			}
-			catch (final Exception ex)
-			{
-				MyWolfUtil.Log.warning("[MyWolf] Failed to install BukkitContrib, you may have to restart your server or install it manually.");
-			}
-		}
 
 		playerListener = new MyWolfPlayerListener();
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PORTAL, playerListener, Event.Priority.Normal, this);
@@ -317,31 +290,8 @@ public class MyWolf extends JavaPlugin
 		}
 		return null;
 	}
-
-	private static void download(Logger log, URL url, File file) throws IOException
+	public static Wolves getMyWolf(Player player)
 	{
-		if (!file.getParentFile().exists()) file.getParentFile().mkdir();
-		if (file.exists()) file.delete();
-		file.createNewFile();
-		final int size = url.openConnection().getContentLength();
-		log.info("[MyWolf] Downloading " + file.getName() + " (" + size / 1024 + "kb) ...");
-		final InputStream in = url.openStream();
-		final OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-		final byte[] buffer = new byte[1024];
-		int len, downloaded = 0, msgs = 0;
-		final long start = System.currentTimeMillis();
-		while ((len = in.read(buffer)) >= 0)
-		{
-			out.write(buffer, 0, len);
-			downloaded += len;
-			if ((int) ((System.currentTimeMillis() - start) / 500) > msgs)
-			{
-				log.info((int) ((double) downloaded / (double) size * 100d) + "%");
-				msgs++;
-			}
-		}
-		in.close();
-		out.close();
-		log.info("[MyWolf] Download finished");
+		return ConfigBuffer.mWolves.containsKey(player.getName())?ConfigBuffer.mWolves.get(player.getName()):null;
 	}
 }
