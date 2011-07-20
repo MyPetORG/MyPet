@@ -60,7 +60,7 @@ public class MyWolf
 
 	public static enum BehaviorState
 	{
-		Normal, Friendly, Agressive, Raid;
+		Normal, Friendly, Aggressive, Raid;
 	}
 
 	public static enum WolfState
@@ -386,7 +386,7 @@ public class MyWolf
 									}
 								}
 							}
-							if (Behavior == BehaviorState.Agressive)
+							if (Behavior == BehaviorState.Aggressive)
 							{
 								if (Wolf.getTarget() == null)
 								{

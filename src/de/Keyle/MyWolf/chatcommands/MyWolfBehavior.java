@@ -49,7 +49,7 @@ public class MyWolfBehavior implements CommandExecutor
 				}
 				else if (MyWolfUtil.hasSkill(Wolf.Abilities, "Behavior"))
 				{
-					if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Agressive") || args[0].equalsIgnoreCase("Normal")))
+					if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Normal")))
 					{
 						if (args[0].equalsIgnoreCase("Raid"))
 						{
@@ -59,9 +59,9 @@ public class MyWolfBehavior implements CommandExecutor
 						{
 							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
 						}
-						else if (args[0].equalsIgnoreCase("Agressive"))
+						else if (args[0].equalsIgnoreCase("Aggressive"))
 						{
-							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Agressive);
+							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
 						}
 						else if (args[0].equalsIgnoreCase("Normal"))
 						{

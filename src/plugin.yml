@@ -29,7 +29,7 @@ commands:
   wolfbehavior:
     aliases: [wb,wolfb]
     description: switch the behavior mode
-    usage: 'Syntax: /<command> [<Raid/Friendly/Agressive/Normal>]'
+    usage: 'Syntax: /<command> [<Raid/Friendly/Aggressive/Normal>]'
   wolfexp:
     aliases: [we,wolfe]
     description: display wolf's EXP

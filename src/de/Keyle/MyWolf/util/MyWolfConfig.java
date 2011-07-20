@@ -45,7 +45,7 @@ public class MyWolfConfig
 
 	public static void setStandart()
 	{
-		Config.setHeader("#### The names of the Monsters have to be in capital letters!!! Delete the creaturetypes you don't want to change to avoid errors. ####");
+		Config.setHeader("#### The names of the creaturetypes have to be in capital letters!!! Delete the creaturetypes you don't want to change to avoid errors. ####");
 		
 		setProperty("MyWolf.leash.item", 287);
 		setProperty("MyWolf.control.item", 287);
