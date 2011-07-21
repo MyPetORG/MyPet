@@ -109,15 +109,7 @@ public class MyWolfUtil
 		Plugin plugin = server.getPluginManager().getPlugin("Citizens");
 		if (plugin != null)
 		{
-			int version = Integer.parseInt(plugin.getDescription().getVersion().replace(".", ""), 109);
-			if (version <= 108)
-			{
-				return com.fullwall.Citizens.NPCs.NPCManager.isNPC(player);
-			}
-			else
-			{
-				return com.citizens.NPCs.NPCManager.isNPC(player);
-			}
+			return com.citizens.npcs.NPCManager.isNPC(player);
 		}
 		return false;
 	}

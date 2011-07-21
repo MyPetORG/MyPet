@@ -121,7 +121,7 @@ public class MyWolfEntityListener extends EntityListener
 								msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
 							}
 							player.sendMessage(MyWolfUtil.SetColors("%wolfname% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
-							player.sendMessage(MyWolfUtil.SetColors("%wolfname%(Lv%lvl%) (%proz%%) EXP: %exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("{0:F2}", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("{0:F2}", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("{0:F2}", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+							player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
 							if (wolf.Wolf.isSitting())
 							{
 								event.setCancelled(true);
@@ -147,16 +147,24 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								event.setCancelled(true);
 							}
+							if (event.isCancelled() == false)
+							{
+								wolf.SetName(wolf.getHealth()-event.getDamage());
+							}
+							
+							/*
+							}
 							if (event.isCancelled() == false && event.getDamage() < wolf.getHealth())
 							{
+								wolf.setHealth(wolf.getHealth());
 								int demage = event.getDamage();
-								if(wolf.getHealth() - 1 <= 0)
+								if(wolf.getHealth()-demage > 0)
 								{
-									wolf.setHealth(wolf.getHealth()+1);
+									event.setDamage(1);
+									wolf.Demage(demage);
 								}
-								event.setDamage(1);
-								wolf.Demage(demage);
 							}
+							*/
 						}
 					}
 				}

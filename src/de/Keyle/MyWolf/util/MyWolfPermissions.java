@@ -78,7 +78,7 @@ public class MyWolfPermissions
 			return;
 		}
 		
-		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("PermissionsEX");
+		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
 		if (p != null && PermissionsMode == PermissionsType.NONE)
 		{
 			PermissionsMode = PermissionsType.PermissionsEX;

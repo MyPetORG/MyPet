@@ -38,7 +38,7 @@ public class MyWolfEXP implements CommandExecutor
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
 				MyWolf wolf = ConfigBuffer.mWolves.get(player.getName());
-				wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname%(Lv%lvl%) (%proz%%) EXP: %exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("{0:F2}", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("{0:F2}", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("{0:F2}", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+				wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
 				return true;
 			}
 			else

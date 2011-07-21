@@ -142,6 +142,33 @@ public class MyWolf
 			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
 		}
 	}
+	public void SetName(int HP)
+	{
+		String NameColor;
+		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
+		{
+			NameColor = "§" + MyWolfConfig.NameColor;
+		}
+		else
+		{
+			if (HP > HealthMax / 3 * 2)
+			{
+				NameColor = ""+ChatColor.GREEN;
+			}
+			else if (HP > HealthMax / 3 * 1)
+			{
+				NameColor = ""+ChatColor.YELLOW;
+			}
+			else
+			{
+				NameColor = ""+ChatColor.RED;
+			}
+		}
+		if (Status == WolfState.Here)
+		{
+			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
+		}
+	}
 
 	public void OpenInventory()
 	{
@@ -241,7 +268,15 @@ public class MyWolf
 	}
 	public int getHealth()
 	{
-		return HealthNow;
+
+		if (Status == WolfState.Here)
+		{
+			return Wolf.getHealth();
+		}
+		else
+		{
+			return HealthNow;
+		}
 	}
 
 	public double Demage(double Demage)
