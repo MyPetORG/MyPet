@@ -190,6 +190,7 @@ public class MyWolfEntityListener extends EntityListener
 					if (MyWolfConfig.MaxLives > 0)
 					{
 						wolf.Lives -= 1;
+						wolf.getOwner().setCompassTarget(wolf.getLocation().getWorld().getSpawnLocation());
 						if (wolf.Lives <= 0)
 						{
 							for (ItemStack is : wolf.LargeInventory.getContents())
