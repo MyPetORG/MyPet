@@ -36,6 +36,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 
 import de.Keyle.MyWolf.ConfigBuffer;
@@ -49,6 +50,8 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfPlayerListener extends PlayerListener
 {
+	private int[] ControllIgnoreBlocks = {78,6,31,37,38,39,40,44,50,51,59,65,66,67,69,70,72,75,76,77,90,96};
+	
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
 	{
 		if (event.getRightClicked() instanceof Wolf && ((Wolf) event.getRightClicked()).isTamed())
@@ -84,6 +87,14 @@ public class MyWolfPlayerListener extends PlayerListener
 				Block block = event.getPlayer().getTargetBlock(null, 100);
 				if (block != null)
 				{
+					for(int i : ControllIgnoreBlocks)
+					{
+						if(block.getTypeId() == i)
+						{
+							block = block.getRelative(BlockFace.DOWN);
+							break;
+						}
+					}
 					PathPoint[] loc = { new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ()) };
 					EntityWolf wolf = ((CraftWolf) Wolf.Wolf).getHandle();
 					wolf.setPathEntity(new PathEntity(loc));
