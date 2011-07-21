@@ -149,8 +149,13 @@ public class MyWolfEntityListener extends EntityListener
 							}
 							if (event.isCancelled() == false && event.getDamage() < wolf.getHealth())
 							{
-								wolf.setHealth(wolf.getHealth() + event.getDamage());
-								wolf.Demage(event.getDamage());
+								int demage = event.getDamage();
+								if(wolf.getHealth() - 1 <= 0)
+								{
+									wolf.setHealth(wolf.getHealth()+1);
+								}
+								event.setDamage(1);
+								wolf.Demage(demage);
 							}
 						}
 					}

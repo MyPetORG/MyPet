@@ -43,8 +43,8 @@ public class MyWolf
 	public String Name = "Wolf";
 	public String Owner;
 	public int ID;
-	public double HealthMax = 6;
-	public double HealthNow = HealthMax;
+	public int HealthMax = 6;
+	public int HealthNow = HealthMax;
 	public int Lives = 5;
 	public Wolf Wolf;
 	public int RespawnTime = 0;
@@ -216,7 +216,7 @@ public class MyWolf
 		Timer();
 	}
 
-	public void setHealth(double d)
+	public void setHealth(int d)
 	{
 		if (d > HealthMax)
 		{
@@ -228,20 +228,20 @@ public class MyWolf
 		}
 		if (Status == WolfState.Here)
 		{
-			Wolf.setHealth((int) HealthNow);
+			if(d > 20)
+			{
+				Wolf.setHealth(20);
+			}
+			else
+			{
+				Wolf.setHealth(HealthNow);
+			}
 		}
 		SetName();
 	}
-	public double getHealth()
+	public int getHealth()
 	{
-		if (Status == WolfState.Here)
-		{
-			return Wolf.getHealth();
-		}
-		else
-		{
-			return HealthNow;
-		}
+		return HealthNow;
 	}
 
 	public double Demage(double Demage)
@@ -249,7 +249,15 @@ public class MyWolf
 		if (Status == WolfState.Here)
 		{
 			HealthNow -= Demage;
-			Wolf.setHealth((int) (HealthNow + 0.5));
+			if(HealthNow > 20)
+			{
+				Wolf.setHealth(20);
+			}
+			else
+			{
+				Wolf.setHealth(HealthNow);
+			}
+			
 		}
 		return HealthNow;
 	}
