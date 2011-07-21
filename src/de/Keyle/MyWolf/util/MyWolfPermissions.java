@@ -24,6 +24,9 @@ import org.bukkit.plugin.Plugin;
 
 import org.anjocaido.groupmanager.GroupManager;
 
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -35,7 +38,7 @@ public class MyWolfPermissions
 
 	private enum PermissionsType
 	{
-		NONE, GroupManager, Permissions;
+		NONE, GroupManager, Permissions, PermissionsEX;
 	}
 
 	private static PermissionsType PermissionsMode = PermissionsType.NONE;
@@ -54,6 +57,10 @@ public class MyWolfPermissions
 		{
 			return ((GroupManager) Permissions).getWorldsHolder().getWorldPermissions(player).has(player, node);
 		}
+		else if (PermissionsMode == PermissionsType.PermissionsEX && Permissions instanceof PermissionManager)
+		{
+			return ((PermissionManager) Permissions).has(player, node);
+		}
 		return false;
 
 	}
@@ -70,6 +77,15 @@ public class MyWolfPermissions
 			MyWolfUtil.Log.info("[MyWolf] GroupManager integration enabled!");
 			return;
 		}
+		
+		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("PermissionsEX");
+		if (p != null && PermissionsMode == PermissionsType.NONE)
+		{
+			PermissionsMode = PermissionsType.PermissionsEX;
+			Permissions = PermissionsEx.getPermissionManager();
+			MyWolfUtil.Log.info("[MyWolf] PermissionsEX integration enabled!");
+			return;
+		}
 
 		p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("Permissions");
 		if (p != null && PermissionsMode == PermissionsType.NONE)
@@ -79,6 +95,6 @@ public class MyWolfPermissions
 			MyWolfUtil.Log.info("[MyWolf] Permissions integration enabled!");
 			return;
 		}
-		MyWolfUtil.Log.info("[MyWolf] Permissions/GroupManager integration could not be enabled!");
+		MyWolfUtil.Log.info("[MyWolf] No permissions system fund! Permissions feature not enabled.");
 	}
 }
