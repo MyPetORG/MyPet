@@ -110,7 +110,16 @@ public class MyWolfExperience
 	{
 		if (JSreader != null)
 		{
-			return parseJS();
+			ScriptEngine se = parseJS();
+			try
+			{
+				return ((Double) se.get("lvl")).intValue();
+			}
+			catch (Exception e)
+			{
+				MyWolfUtil.Log.info("[MyWolf] EXP-Script doesn't return valid value!");
+				return 1;
+			}
 		}
 		else
 		{
@@ -125,16 +134,34 @@ public class MyWolfExperience
 
 	public double getrequireEXP()
 	{
-		return Math.pow(Factor, this.getLevel() + 1);
+		if (JSreader != null)
+		{
+			ScriptEngine se = parseJS();
+			try
+			{
+				return ((Double) se.get("reqEXP"));
+			}
+			catch (Exception e)
+			{
+				MyWolfUtil.Log.info("[MyWolf] EXP-Script doesn't return valid value!");
+				return 1;
+			}
+		}
+		else
+		{
+			return Math.pow(Factor, this.getLevel() + 1);
+		}
 	}
 
-	public int parseJS()
+	public ScriptEngine parseJS()
 	{
 		if(JSreader != null)
 		{
 			ScriptEngineManager manager = new ScriptEngineManager();
 			ScriptEngine engine = manager.getEngineByName("js");
 			engine.put("lvl", 1);
+			engine.put("reqEXP", 1);
+			
 			engine.put("EXP", Exp);
 			engine.put("factor", Factor);
 			engine.put("name", Wolf.Name);
@@ -148,22 +175,13 @@ public class MyWolfExperience
 			catch (ScriptException e)
 			{
 				MyWolfUtil.Log.info("[MyWolf] Error in EXP-Script!");
-				return 1;
+				return null;
 			}
-			int tmplvl = 1;
-			try
-			{
-				tmplvl = ((Double) engine.get("lvl")).intValue();
-			}
-			catch (Exception e)
-			{
-				MyWolfUtil.Log.info("[MyWolf] EXP-Script doesn't return valid value!");
-			}
-			return tmplvl;
+			return engine;
 		}
 		else
 		{
-			return 1;
+			return null;
 		}
 	}
 }
