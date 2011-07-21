@@ -132,24 +132,6 @@ public class MyWolfEntityListener extends EntityListener
 								event.setCancelled(true);
 							}
 						}
-						/*
-						if(cb.itemfunc.containsKey(player.getItemInHand().getType()))
-						{
-							if(cb.itemfunc.get(player.getItemInHand().getType()).size() != 0)
-							{
-								for(MyWolfFunction itemfunc :cb.itemfunc.get(player.getItemInHand().getType()))
-								{
-									if(MyWolfPermissions.has(player, "mywolf.item." + itemfunc.getName()))
-									{
-										if(itemfunc.run(wolf,null) == false)
-										{
-											event.setCancelled(true);
-										}
-									}
-								}
-							}
-						}
-						*/
 					}
 					for (MyWolf wolf : ConfigBuffer.mWolves.values())
 					{
@@ -170,7 +152,6 @@ public class MyWolfEntityListener extends EntityListener
 								wolf.setHealth(wolf.getHealth() + event.getDamage());
 								wolf.Demage(event.getDamage());
 							}
-							
 						}
 					}
 				}
@@ -208,7 +189,7 @@ public class MyWolfEntityListener extends EntityListener
 						}
 					}
 					wolf.Status = WolfState.Dead;
-					wolf.RespawnTime  = wolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor;
+					wolf.RespawnTime = MyWolfConfig.RespawnTimeFixed + (wolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor);
 					SendDeathMessage(event);
 					wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", wolf.Name).replace("%time%", ""+wolf.RespawnTime)));
 					break;
