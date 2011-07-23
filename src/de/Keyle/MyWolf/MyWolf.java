@@ -35,6 +35,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkitcontrib.BukkitContrib;
 import org.bukkitcontrib.inventory.CustomMCInventory;
 
@@ -398,6 +399,13 @@ public class MyWolf
 									if (e instanceof Item)
 									{
 										Item item = (Item) e;
+										
+										PlayerPickupItemEvent puevent = new PlayerPickupItemEvent(getOwner(), item, item.getItemStack().getAmount());
+						                MyWolfUtil.getServer().getPluginManager().callEvent(puevent);
+
+						                if (puevent.isCancelled()) {
+						                    continue;
+						                }
 
 										int amountleft = Inventory[0].addItem(item);
 										if (amountleft == 0)
