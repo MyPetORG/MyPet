@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.event;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import de.Keyle.MyWolf.MyWolf;
 
