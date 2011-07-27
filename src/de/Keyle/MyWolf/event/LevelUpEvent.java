@@ -27,7 +27,6 @@ import de.Keyle.MyWolf.MyWolf;
 public class LevelUpEvent extends Event
 {
     private final MyWolf wolf;
-	private boolean cancelled;
 	private Location location = null;
 	private final int Level;
 
