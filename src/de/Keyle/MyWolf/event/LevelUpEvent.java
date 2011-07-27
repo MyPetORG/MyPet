@@ -26,6 +26,8 @@ import de.Keyle.MyWolf.MyWolf;
 
 public class LevelUpEvent extends Event
 {
+    private static final long serialVersionUID = -605293022023540119L;
+
     private final MyWolf wolf;
 	private Location location = null;
 	private final int Level;
