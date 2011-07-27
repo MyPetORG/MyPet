@@ -45,7 +45,7 @@ public class MyWolfRelease implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (MyWolfPermissions.has(player, "mywolf.release") == false)
+				if (!MyWolfPermissions.has(player, "mywolf.release"))
 				{
 					return true;
 				}

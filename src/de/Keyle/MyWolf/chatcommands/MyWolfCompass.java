@@ -42,7 +42,7 @@ public class MyWolfCompass implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.Skills.Compass") == false)
+				if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.Skills.Compass"))
 				{
 					return true;
 				}

@@ -45,15 +45,9 @@ import de.Keyle.MyWolf.util.MyWolfPermissions;
 public class MyWolfPlugin extends JavaPlugin
 {
 
-	ConfigBuffer cb;
-	private MyWolfPlayerListener playerListener;
-	private MyWolfEntityListener entityListener;
-	private MyWolfInventoryListener inventoryListener;
-	private MyWolfVehicleListener vehicleListener;
-	private MyWolfLevelUpListener levelupListener;
-	private MyWolfWorldListener worldListener;
+	private ConfigBuffer cb;
 
-	public static MyWolfPlugin Plugin;
+    public static MyWolfPlugin Plugin;
 
 	public void onDisable()
 	{
@@ -78,7 +72,7 @@ public class MyWolfPlugin extends JavaPlugin
 	{
 		Plugin = this;
 
-		playerListener = new MyWolfPlayerListener();
+        MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PORTAL, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
@@ -86,21 +80,21 @@ public class MyWolfPlugin extends JavaPlugin
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
 
-		vehicleListener = new MyWolfVehicleListener();
+        MyWolfVehicleListener vehicleListener = new MyWolfVehicleListener();
 		getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_ENTER, vehicleListener, Event.Priority.Low, this);
 
-		worldListener = new MyWolfWorldListener();
+        MyWolfWorldListener worldListener = new MyWolfWorldListener();
 		getServer().getPluginManager().registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Normal, this);
 
-		entityListener = new MyWolfEntityListener();
+        MyWolfEntityListener entityListener = new MyWolfEntityListener();
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
 
-		levelupListener = new MyWolfLevelUpListener();
+        MyWolfLevelUpListener levelupListener = new MyWolfLevelUpListener();
 		getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, levelupListener, Event.Priority.Normal, this);
 
-		inventoryListener = new MyWolfInventoryListener();
+        MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
 		getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, inventoryListener, Event.Priority.Normal, this);
 
 		MyWolfPermissions.setup();
@@ -145,7 +139,7 @@ public class MyWolfPlugin extends JavaPlugin
 
 		for (Player p : this.getServer().getOnlinePlayers())
 		{
-			if (ConfigBuffer.mWolves.containsKey(p.getName()) && p.isOnline() == true)
+			if (ConfigBuffer.mWolves.containsKey(p.getName()) && p.isOnline())
 			{
 				ConfigBuffer.mWolves.get(p.getName()).createWolf(ConfigBuffer.mWolves.get(p.getName()).isSitting());
 			}
@@ -163,7 +157,7 @@ public class MyWolfPlugin extends JavaPlugin
 		{
 			for (String ownername : WolfList)
 			{
-				int invSlot = 0;
+				int invSlot;
 				double WolfX = Config.getDouble("Wolves." + ownername + ".loc.X", 0);
 				double WolfY = Config.getDouble("Wolves." + ownername + ".loc.Y", 0);
 				double WolfZ = Config.getDouble("Wolves." + ownername + ".loc.Z", 0);

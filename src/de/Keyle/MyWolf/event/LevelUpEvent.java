@@ -25,14 +25,12 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import de.Keyle.MyWolf.MyWolf;
 
-public class LevelUpEvent extends Event implements Cancellable
+public class LevelUpEvent extends Event
 {
-	private static final long serialVersionUID = -605293022023540119L;
-
-	protected MyWolf wolf;
-	protected boolean cancelled;
-	protected Location location = null;
-	protected int Level;
+    private final MyWolf wolf;
+	private boolean cancelled;
+	private Location location = null;
+	private final int Level;
 
 	public LevelUpEvent(MyWolf wolf, int Level)
 	{
@@ -67,17 +65,5 @@ public class LevelUpEvent extends Event implements Cancellable
 	public int getLevel()
 	{
 		return Level;
-	}
-
-	@Override
-	public boolean isCancelled()
-	{
-		return this.cancelled;
-	}
-
-	@Override
-	public void setCancelled(boolean cancel)
-	{
-		this.cancelled = cancel;
 	}
 }

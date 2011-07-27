@@ -54,8 +54,8 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 public class MyWolfUtil
 {
 
-	public static Logger Log = Logger.getLogger("Minecraft");
-	private static Server server = org.bukkit.Bukkit.getServer();
+	public static final Logger Log = Logger.getLogger("Minecraft");
+	private static final Server server = org.bukkit.Bukkit.getServer();
 
 	public static Server getServer()
 	{
@@ -64,7 +64,7 @@ public class MyWolfUtil
 
 	public static String SetColors(String text)
 	{
-		return text.replace("%black%", "§0").replace("%navy%", "§1").replace("%green%", "§2").replace("%teal%", "§3").replace("%red%", "§4").replace("%purple%", "§5").replace("%gold%", "§6").replace("%silver%", "§7").replace("%gray%", "§8").replace("%blue%", "§9").replace("%lime%", "§a").replace("%aqua%", "§b").replace("%rose%", "§c").replace("%pink%", "§d").replace("%yellow%", "§e").replace("%white%", "§f");
+		return text.replace("%black%", "ï¿½0").replace("%navy%", "ï¿½1").replace("%green%", "ï¿½2").replace("%teal%", "ï¿½3").replace("%red%", "ï¿½4").replace("%purple%", "ï¿½5").replace("%gold%", "ï¿½6").replace("%silver%", "ï¿½7").replace("%gray%", "ï¿½8").replace("%blue%", "ï¿½9").replace("%lime%", "ï¿½a").replace("%aqua%", "ï¿½b").replace("%rose%", "ï¿½c").replace("%pink%", "ï¿½d").replace("%yellow%", "ï¿½e").replace("%white%", "ï¿½f");
 	}
 
 	public static Material checkMaterial(int itemid, Material defaultMaterial)
@@ -81,16 +81,8 @@ public class MyWolfUtil
 
 	public static boolean checkMaterial(int itemid)
 	{
-		if (Material.getMaterial(itemid) == null)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+        return Material.getMaterial(itemid) != null;
 	}
-
 	public static boolean isInt(String number)
 	{
 		try
@@ -107,12 +99,8 @@ public class MyWolfUtil
 	public static boolean isNPC(Player player)
 	{
 		Plugin plugin = server.getPluginManager().getPlugin("Citizens");
-		if (plugin != null)
-		{
-			return com.citizens.npcs.NPCManager.isNPC(player);
-		}
-		return false;
-	}
+        return plugin != null && com.citizens.npcs.NPCManager.isNPC(player);
+    }
 
 	public static CreatureType getCreatureType(Entity entity)
 	{
@@ -188,9 +176,7 @@ public class MyWolfUtil
 				Vector pt = new com.sk89q.worldedit.Vector(loc.getX(), loc.getY(), loc.getZ());
 				ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
-				boolean pvp = set.allows(DefaultFlag.PVP);
-
-				return pvp;
+				return set.allows(DefaultFlag.PVP);
 			}
 		}
 		return server.getWorld(loc.getWorld().getName()).getPVP();
@@ -220,10 +206,10 @@ public class MyWolfUtil
 	
 	public static String readFileAsString(String filePath) throws java.io.IOException
 	{
-		StringBuffer fileData = new StringBuffer(1000);
+        StringBuilder fileData = new StringBuilder(1000);
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		char[] buf = new char[1024];
-		int numRead = 0;
+		int numRead;
 		while ((numRead = reader.read(buf)) != -1)
 		{
 			String readData = String.valueOf(buf, 0, numRead);

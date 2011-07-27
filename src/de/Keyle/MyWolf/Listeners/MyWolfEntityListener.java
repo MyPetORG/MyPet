@@ -66,11 +66,11 @@ public class MyWolfEntityListener extends EntityListener
 			{
 				Player player = (Player) e.getDamager();
 
-				if (event.isCancelled() == false)
+				if (!event.isCancelled())
 				{
-					if (ConfigBuffer.mWolves.containsKey(player.getName()) == false)
+					if (!ConfigBuffer.mWolves.containsKey(player.getName()))
 					{
-						if (MyWolfPermissions.has(player, "mywolf.leash") == false || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
+						if (!MyWolfPermissions.has(player, "mywolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
 						{
 							return;
 						}
@@ -81,7 +81,7 @@ public class MyWolfEntityListener extends EntityListener
 
 						boolean isTarmed = TargetWolf.isTamed();
 
-						if (isTarmed == true && OwnerOfTheWolf.equals(Attacker.getName()))
+						if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
 						{
 							event.setCancelled(true);
 							ConfigBuffer.mWolves.put(player.getName(), new MyWolf(player.getName()));
@@ -112,7 +112,7 @@ public class MyWolfEntityListener extends EntityListener
 							{
 								msg = "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
 							}
-							else if (wolf.getHealth() > wolf.HealthMax / 3 * 1)
+							else if (wolf.getHealth() > wolf.HealthMax / 3)
 							{
 								msg = "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
 							}
@@ -143,11 +143,11 @@ public class MyWolfEntityListener extends EntityListener
 								wolf.setHealth(wolf.HealthMax);
 							}
 
-							if (event.isCancelled() == false && MyWolfUtil.getPVP(event.getEntity().getLocation()) == false)
+							if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
 							{
 								event.setCancelled(true);
 							}
-							if (event.isCancelled() == false)
+							if (!event.isCancelled())
 							{
 								wolf.SetName(wolf.getHealth()-event.getDamage());
 							}
@@ -246,7 +246,7 @@ public class MyWolfEntityListener extends EntityListener
 				EntityDamageByProjectileEvent e = (EntityDamageByProjectileEvent) event.getEntity().getLastDamageCause();
 				if (event.getEntity().getLastDamageCause() instanceof Player)
 				{
-					if (((Player) e.getDamager()) == wolf.getOwner())
+					if (e.getDamager() == wolf.getOwner())
 					{
 						Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("You"));
 					}
@@ -269,7 +269,7 @@ public class MyWolfEntityListener extends EntityListener
 				EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 				if (e.getDamager() instanceof Player)
 				{
-					if (((Player) e.getDamager()) == wolf.getOwner())
+					if (e.getDamager() == wolf.getOwner())
 					{
 						Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("You"));
 					}
@@ -301,10 +301,9 @@ public class MyWolfEntityListener extends EntityListener
 				else if (e.getDamager() instanceof Wolf)
 				{
 					Wolf w = (Wolf) e.getDamager();
-					if (w.isTamed() == true)
+					if (w.isTamed())
 					{
-						Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Wolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());;
-						Killer = "a Wolf of " + ((Player) w.getOwner()).getName();
+						Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Wolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
 						for (String owner : ConfigBuffer.mWolves.keySet())
 						{
 							if (ConfigBuffer.mWolves.get(owner).getID() == w.getEntityId())
@@ -370,10 +369,10 @@ public class MyWolfEntityListener extends EntityListener
 						}
 						else if (Wolf.Behavior == BehaviorState.Raid)
 						{
-							if (event.getTarget() instanceof Player || (event.getTarget() instanceof Wolf && ((Wolf) event.getTarget()).isTamed() == true))
+							if (event.getTarget() instanceof Player || (event.getTarget() instanceof Wolf && ((Wolf) event.getTarget()).isTamed()))
 							{
-								continue;
-							}
+                                event.setCancelled(true);
+                            }
 						}
 					}
 				}

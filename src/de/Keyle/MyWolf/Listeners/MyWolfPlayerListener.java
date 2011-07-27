@@ -50,7 +50,7 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfPlayerListener extends PlayerListener
 {
-	private int[] ControllIgnoreBlocks = {78,6,31,37,38,39,40,44,50,51,59,65,66,67,69,70,72,75,76,77,90,96};
+	private final int[] ControllIgnoreBlocks = {78,6,31,37,38,39,40,44,50,51,59,65,66,67,69,70,72,75,76,77,90,96};
 	
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
 	{
@@ -78,9 +78,9 @@ public class MyWolfPlayerListener extends PlayerListener
 		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
 		{
 			MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
-			if (Wolf.Status == WolfState.Here && Wolf.isSitting() == false)
+			if (Wolf.Status == WolfState.Here && !Wolf.isSitting())
 			{
-				if (MyWolfPermissions.has(event.getPlayer(), "mywolf.control.walk") == false)
+				if (!MyWolfPermissions.has(event.getPlayer(), "mywolf.control.walk"))
 				{
 					return;
 				}
@@ -99,7 +99,7 @@ public class MyWolfPlayerListener extends PlayerListener
 					EntityWolf wolf = ((CraftWolf) Wolf.Wolf).getHandle();
 					wolf.setPathEntity(new PathEntity(loc));
 					Wolf.ResetSitTimer();
-					if (MyWolfPermissions.has(event.getPlayer(), "mywolf.control.attack") == false)
+					if (!MyWolfPermissions.has(event.getPlayer(), "mywolf.control.attack"))
 					{
 						return;
 					}
@@ -109,14 +109,14 @@ public class MyWolfPlayerListener extends PlayerListener
 						{
 							if (Wolf.Behavior == BehaviorState.Raid)
 							{
-								if (e instanceof Player || (e instanceof Wolf && ((Wolf) e).isTamed() == true))
+								if (e instanceof Player || (e instanceof Wolf && ((Wolf) e).isTamed()))
 								{
 									continue;
 								}
 							}
 							if (e instanceof Player)
 							{
-								if ((Player) e == Wolf.getOwner() == false && MyWolfUtil.isNPC((Player) e) == false && e.getWorld().getPVP() == true)
+								if (e != Wolf.getOwner() && !MyWolfUtil.isNPC((Player) e) && e.getWorld().getPVP())
 								{
 									Wolf.Wolf.setTarget((LivingEntity) e);
 								}
@@ -209,7 +209,7 @@ public class MyWolfPlayerListener extends PlayerListener
 			{
 				if (Wolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
 				{
-					if (Wolf.isSitting() == false)
+					if (!Wolf.isSitting())
 					{
 						Wolf.removeWolf();
 						Wolf.setLocation(event.getPlayer().getLocation());

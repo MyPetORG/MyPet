@@ -35,14 +35,14 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfExperience
 {
-	private double Factor;
-	MyWolf Wolf;
+	private final double Factor;
+	private final MyWolf Wolf;
 
 	private double Exp = 0;
 
 	public static String JSreader;
 
-	public static Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
+	public static final Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
 	static
 	{
 		MobEXP.put(CreatureType.SKELETON, 1.1);
@@ -153,7 +153,7 @@ public class MyWolfExperience
 		}
 	}
 
-	public ScriptEngine parseJS()
+	ScriptEngine parseJS()
 	{
 		if(JSreader != null)
 		{

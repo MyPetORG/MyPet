@@ -37,7 +37,7 @@ public class MyWolfName implements CommandExecutor
 			Player player = (Player) sender;
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				if (MyWolfPermissions.has(player, "mywolf.setname") == false)
+				if (!MyWolfPermissions.has(player, "mywolf.setname"))
 				{
 					return true;
 				}

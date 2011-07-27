@@ -42,10 +42,10 @@ import org.bukkitcontrib.inventory.CustomMCInventory;
 public class MyWolf
 {
 	public String Name = "Wolf";
-	public String Owner;
-	public int ID;
+	public final String Owner;
+	private int ID;
 	public int HealthMax = 6;
-	public int HealthNow = HealthMax;
+	private int HealthNow = HealthMax;
 	public int Lives = 5;
 	public Wolf Wolf;
 	public int RespawnTime = 0;
@@ -61,26 +61,26 @@ public class MyWolf
 
 	public static enum BehaviorState
 	{
-		Normal, Friendly, Aggressive, Raid;
-	}
+		Normal, Friendly, Aggressive, Raid
+    }
 
 	public static enum WolfState
 	{
-		Dead, Despawned, Here;
-	}
+		Dead, Despawned, Here
+    }
 
 	public BehaviorState Behavior = BehaviorState.Normal;
 	public WolfState Status = WolfState.Despawned;
 
-	public MyWolfInventory[] Inventory = { new MyWolfInventory(), new MyWolfInventory() };
-	public InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
+	public final MyWolfInventory[] Inventory = { new MyWolfInventory(), new MyWolfInventory() };
+	public final InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
 
 	public CustomMCInventory inv = new CustomMCInventory(1, "MyWolfInventory");
 	
 	private Location Location;
 
-	public Map<String, Boolean> Abilities = new HashMap<String, Boolean>();
-	public MyWolfExperience Experience;
+	public final Map<String, Boolean> Abilities = new HashMap<String, Boolean>();
+	public final MyWolfExperience Experience;
 
 	public MyWolf(String Owner)
 	{
@@ -94,7 +94,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "§" + MyWolfConfig.NameColor;
+			NameColor = "ï¿½" + MyWolfConfig.NameColor;
 		}
 		else
 		{
@@ -102,7 +102,7 @@ public class MyWolf
 			{
 				NameColor = ""+ChatColor.GREEN;
 			}
-			else if (getHealth() > HealthMax / 3 * 1)
+			else if (getHealth() > HealthMax / 3)
 			{
 				NameColor = ""+ChatColor.YELLOW;
 			}
@@ -121,7 +121,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "§" + MyWolfConfig.NameColor;
+			NameColor = "ï¿½" + MyWolfConfig.NameColor;
 		}
 		else
 		{
@@ -129,7 +129,7 @@ public class MyWolf
 			{
 				NameColor = ""+ChatColor.GREEN;
 			}
-			else if (getHealth() > HealthMax / 3 * 1)
+			else if (getHealth() > HealthMax / 3)
 			{
 				NameColor = ""+ChatColor.YELLOW;
 			}
@@ -148,7 +148,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "§" + MyWolfConfig.NameColor;
+			NameColor = "ï¿½" + MyWolfConfig.NameColor;
 		}
 		else
 		{
@@ -156,7 +156,7 @@ public class MyWolf
 			{
 				NameColor = ""+ChatColor.GREEN;
 			}
-			else if (HP > HealthMax / 3 * 1)
+			else if (HP > HealthMax / 3)
 			{
 				NameColor = ""+ChatColor.YELLOW;
 			}
@@ -191,14 +191,14 @@ public class MyWolf
 		HealthNow = Wolf.getHealth();
 		Location = Wolf.getLocation();
 		Status = WolfState.Despawned;
-		((LivingEntity) Wolf).remove();
+		Wolf.remove();
 	}
 	
-	public boolean RespawnWolf()
+	void RespawnWolf()
 	{
 		if (Status == WolfState.Here)
 		{
-			return false;
+            return;
 		}
 		else
 		{
@@ -207,7 +207,7 @@ public class MyWolf
 			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
 			createWolf(false);
 			RespawnTime = 0;
-			return true;
+            return;
 		}
 	}
 	
@@ -215,8 +215,7 @@ public class MyWolf
 	{
 		if (Status == WolfState.Here || getOwner() == null )
 		{
-			return;
-		}
+        }
 		else
 		{
 			if(RespawnTime <= 0)
@@ -225,7 +224,7 @@ public class MyWolf
 				Wolf.setOwner(getOwner());
 				Wolf.setSitting(sitting);
 				Location = Wolf.getLocation();
-				Wolf.setHealth((int) HealthNow);
+				Wolf.setHealth(HealthNow);
 				ID = Wolf.getEntityId();
 
 				Status = WolfState.Here;
@@ -469,7 +468,7 @@ public class MyWolf
 	{
 		for (Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
 		{
-			if (p.getName().equals(Owner) && MyWolfUtil.isNPC(p) == false)
+			if (p.getName().equals(Owner) && !MyWolfUtil.isNPC(p))
 			{
 				return p;
 			}

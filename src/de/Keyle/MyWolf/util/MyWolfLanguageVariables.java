@@ -4,7 +4,7 @@ import org.bukkit.util.config.Configuration;
 
 public class MyWolfLanguageVariables
 {
-	public Configuration Config;
+	public final Configuration Config;
 	
 	public MyWolfLanguageVariables(Configuration cfg)
 	{

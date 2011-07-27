@@ -43,7 +43,7 @@ public class MyWolfStop implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (MyWolfPermissions.has(player, "mywolf.stop") == false)
+				if (!MyWolfPermissions.has(player, "mywolf.stop"))
 				{
 					return true;
 				}
@@ -53,7 +53,7 @@ public class MyWolfStop implements CommandExecutor
 					return true;
 				}
 				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
-				Wolf.Wolf.setTarget((LivingEntity) null);
+				Wolf.Wolf.setTarget(null);
 				return true;
 			}
 			else

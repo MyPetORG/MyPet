@@ -37,7 +37,7 @@ public class Live extends MyWolfSkill
 	@Override
 	public void activate(MyWolf wolf, Object args)
 	{
-		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
+		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
 		{
 			return;
 		}

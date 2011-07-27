@@ -41,11 +41,11 @@ public class Inventory extends MyWolfSkill
 	@Override
 	public void run(MyWolf wolf, Object args)
 	{
-		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") && MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge") == false)
+		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") && !MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge"))
 		{
 			return;
 		}
-		else if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") && MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall") == false)
+		else if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") && !MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall"))
 		{
 
 		}
@@ -54,7 +54,7 @@ public class Inventory extends MyWolfSkill
 			if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
 			{
 				wolf.OpenInventory();
-				if (wolf.isSitting() == false)
+				if (!wolf.isSitting())
 				{
 					ConfigBuffer.WolfChestOpened.add(wolf.getOwner());
 				}
@@ -70,9 +70,9 @@ public class Inventory extends MyWolfSkill
 	@Override
 	public void activate(MyWolf wolf, Object args)
 	{
-		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") == false)
+		if (!MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall"))
 		{
-			if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall") == false)
+			if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall"))
 			{
 				return;
 			}
@@ -80,12 +80,12 @@ public class Inventory extends MyWolfSkill
 		}
 		else
 		{
-			if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge") == false)
+			if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge"))
 			{
 				return;
 			}
 			wolf.Abilities.put("InventoryLarge", true);
 		}
-		wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") == false ? MyWolfLanguage.getString("Msg_AddChest") : MyWolfLanguage.getString("Msg_AddChestGreater")).replace("%wolfname%", wolf.Name));
+		wolf.sendMessageToOwner(MyWolfUtil.SetColors(!MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") ? MyWolfLanguage.getString("Msg_AddChest") : MyWolfLanguage.getString("Msg_AddChestGreater")).replace("%wolfname%", wolf.Name));
 	}
 }

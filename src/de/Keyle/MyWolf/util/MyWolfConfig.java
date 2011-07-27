@@ -56,7 +56,7 @@ public class MyWolfConfig
 		setProperty("MyWolf.expfactor", 2);
 		setProperty("MyWolf.namecolor", -1);
 
-		if(Config.getKeys("MyWolf").contains("exp") == false)
+		if(!Config.getKeys("MyWolf").contains("exp"))
 		{
 			setProperty("MyWolf.exp.SKELETON", 1.1);
 			setProperty("MyWolf.exp.ZOMBIE", 1.1);
@@ -73,7 +73,7 @@ public class MyWolfConfig
 			setProperty("MyWolf.exp.SHEEP", 0.25);
 		}
 
-		if(Config.getKeys("MyWolf").contains("skills") == false)
+		if(!Config.getKeys("MyWolf").contains("skills"))
 		{
 			List<String> list = new LinkedList<String>();
 			list.add("InventorySmall");
@@ -125,7 +125,7 @@ public class MyWolfConfig
 		{
 			for (String lvl : Config.getKeys("MyWolf.skills"))
 			{
-				List<String> Skills = Arrays.asList(Config.getString("MyWolf.skills." + lvl.toString()).replace("[", "").replace("]", "").split("\\, "));
+				List<String> Skills = Arrays.asList(Config.getString("MyWolf.skills." + lvl).replace("[", "").replace("]", "").split("\\, "));
 				ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
 			}
 		}

@@ -26,14 +26,14 @@ import org.bukkit.util.config.Configuration;
 
 public class MyWolfLanguage
 {
-	public Configuration Config;
+	private final Configuration Config;
 
 	public MyWolfLanguage(Configuration cfg)
 	{
 		Config = cfg;
 	}
 
-	private static Map<String, String> LV = new HashMap<String, String>();
+	private static final Map<String, String> LV = new HashMap<String, String>();
 
 	public static String getString(String Variable)
 	{

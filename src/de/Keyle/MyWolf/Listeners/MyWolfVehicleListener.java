@@ -53,7 +53,7 @@ public class MyWolfVehicleListener extends VehicleListener
 			Player player = (Player) event.getEntered();
 			if (ConfigBuffer.mWolves.containsKey(player.getName()))
 			{
-				if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && ConfigBuffer.mWolves.get(player.getName()).isSitting() == false)
+				if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && !ConfigBuffer.mWolves.get(player.getName()).isSitting())
 				{
 					ConfigBuffer.mWolves.get(player.getName()).Wolf.setSitting(true);
 				}

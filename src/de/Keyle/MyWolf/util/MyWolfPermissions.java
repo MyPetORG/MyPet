@@ -38,8 +38,8 @@ public class MyWolfPermissions
 
 	private enum PermissionsType
 	{
-		NONE, GroupManager, Permissions, PermissionsEX;
-	}
+		NONE, GroupManager, Permissions, PermissionsEX
+    }
 
 	private static PermissionsType PermissionsMode = PermissionsType.NONE;
 
@@ -73,7 +73,7 @@ public class MyWolfPermissions
 		if (p != null && PermissionsMode == PermissionsType.NONE)
 		{
 			PermissionsMode = PermissionsType.GroupManager;
-			Permissions = (GroupManager) p;
+			Permissions = p;
 			MyWolfUtil.Log.info("[MyWolf] GroupManager integration enabled!");
 			return;
 		}

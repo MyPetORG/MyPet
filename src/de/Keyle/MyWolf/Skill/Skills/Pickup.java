@@ -37,7 +37,7 @@ public class Pickup extends MyWolfSkill
 	@Override
 	public void run(MyWolf wolf, Object args)
 	{
-		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
+		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
 		{
 			return;
 		}
@@ -67,11 +67,11 @@ public class Pickup extends MyWolfSkill
 	public void activate(MyWolf wolf, Object args)
 	{
 		
-		if (MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name) == false)
+		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
 		{
 			return;
 		}
-		if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup") == false)
+		if (!MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
 		{
 			wolf.Abilities.put("Pickup", true);
 			wolf.isPickup = true;
