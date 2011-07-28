@@ -50,7 +50,7 @@ public class MyWolfInventory implements CommandExecutor
 					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
 					return true;
 				}
-				if (MyWolfUtil.hasSkill(Wolf.Abilities, "InventorySmall") || MyWolfUtil.hasSkill(Wolf.Abilities, "InventoryLarge"))
+				if (MyWolfUtil.hasSkill(Wolf.Abilities, "Inventory"))
 				{
 					ConfigBuffer.RegisteredSkills.get("Inventory").run(Wolf, null);
 				}

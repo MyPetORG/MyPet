@@ -19,25 +19,22 @@
 
 package de.Keyle.MyWolf;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.util.*;
+import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.InventoryLargeChest;
+import net.minecraft.server.ItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkitcontrib.BukkitContrib;
 import org.bukkitcontrib.inventory.CustomMCInventory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyWolf
 {
@@ -72,10 +69,7 @@ public class MyWolf
 	public BehaviorState Behavior = BehaviorState.Normal;
 	public WolfState Status = WolfState.Despawned;
 
-	public final MyWolfInventory[] Inventory = { new MyWolfInventory(), new MyWolfInventory() };
-	public final InventoryLargeChest LargeInventory = new InventoryLargeChest(Inventory[0].getName(), Inventory[0], Inventory[1]);
-
-	public CustomMCInventory inv = new CustomMCInventory(1, "MyWolfInventory");
+	public CustomMCInventory inv;
 	
 	private Location Location;
 
@@ -85,12 +79,14 @@ public class MyWolf
 	public MyWolf(String Owner)
 	{
 		this.Owner = Owner;
+        this.inv = new CustomMCInventory(0, Owner);
 		Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
 	}
 
 	public void SetName(String Name)
 	{
 		this.Name = Name;
+        inv.setName(Name + "\'s Inventory (" + inv.getSize() + ")");
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
@@ -173,14 +169,10 @@ public class MyWolf
 
 	public void OpenInventory()
 	{
-		EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
-		if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
+		if (MyWolfUtil.hasSkill(Abilities, "Inventory"))
 		{
-			eh.a(LargeInventory);
-		}
-		else if (MyWolfUtil.hasSkill(Abilities, "InventorySmall"))
-		{
-			eh.a(Inventory[0]);
+			EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
+            eh.a(inv);
 		}
 	}
 
@@ -376,7 +368,7 @@ public class MyWolf
 			}
 			Timer = MyWolfPlugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.Plugin, new Runnable()
 			{
-				public void run()
+                public void run()
 				{
 					if (Status == WolfState.Despawned || getOwner() == null)
 					{
@@ -399,39 +391,64 @@ public class MyWolf
 									{
 										Item item = (Item) e;
 										
-										PlayerPickupItemEvent puevent = new PlayerPickupItemEvent(getOwner(), item, item.getItemStack().getAmount());
-						                MyWolfUtil.getServer().getPluginManager().callEvent(puevent);
+										PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(getOwner(), item, item.getItemStack().getAmount());
+						                MyWolfUtil.getServer().getPluginManager().callEvent(ppievent);
 
-						                if (puevent.isCancelled()) {
+						                if (ppievent.isCancelled()) {
 						                    continue;
 						                }
 
-										int amountleft = Inventory[0].addItem(item);
-										if (amountleft == 0)
+                                        int ItemID = item.getItemStack().getTypeId();
+                                        int ItemDuarbility = item.getItemStack().getDurability();
+                                        int ItemAmount = item.getItemStack().getAmount();
+                                        int ItemMaxStack = item.getItemStack().getMaxStackSize();
+
+                                        for (int i = 0;i<inv.getSize();i++)
+                                        {
+                                            if(inv.getItem(i) != null) MyWolfUtil.Log.info(ItemID + ":" + inv.getItem(i).id + " , " + ItemDuarbility + ":" + inv.getItem(i).damage + " , " + ItemAmount + ":" + inv.getItem(i).count + " , " + ItemMaxStack);
+                                            if (inv.getItem(i) != null && inv.getItem(i).id == ItemID && inv.getItem(i).damage == ItemDuarbility && inv.getItem(i).count < ItemMaxStack)
+                                            {
+                                                if (ItemAmount >= ItemMaxStack - inv.getItem(i).count)
+                                                {
+                                                    ItemAmount = ItemAmount - (ItemMaxStack - inv.getItem(i).count);
+                                                    inv.getItem(i).count = ItemMaxStack;
+                                                }
+                                                else
+                                                {
+                                                    inv.getItem(i).count += ItemAmount;
+                                                    ItemAmount = 0;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        for (int i = 0;i<inv.getSize();i++)
+                                        {
+                                            if (ItemAmount <= 0)
+                                            {
+                                                break;
+                                            }
+                                            if (inv.getItem(i) == null)
+                                            {
+                                                if(ItemAmount <= ItemMaxStack)
+                                                {
+                                                    inv.setItem(i,new ItemStack(ItemID,ItemAmount,ItemDuarbility));
+                                                    ItemAmount = 0;
+                                                }
+                                                else
+                                                {
+                                                    inv.setItem(i,new ItemStack(ItemID,ItemMaxStack,ItemDuarbility));
+                                                    ItemAmount -= ItemMaxStack;
+                                                }
+                                            }
+                                        }
+
+										if (ItemAmount == 0)
 										{
 											e.remove();
 										}
 										else
-										{
-											if (item.getItemStack().getAmount() > amountleft)
-											{
-												item.getItemStack().setAmount(amountleft);
-											}
-											if (MyWolfUtil.hasSkill(Abilities, "InventoryLarge"))
-											{
-												amountleft = Inventory[1].addItem(item);
-												if (amountleft == 0)
-												{
-													e.remove();
-												}
-												else
-												{
-													if (item.getItemStack().getAmount() > amountleft)
-													{
-														item.getItemStack().setAmount(amountleft);
-													}
-												}
-											}
+                                        {
+											item.getItemStack().setAmount(ItemAmount);
 										}
 									}
 								}

@@ -19,14 +19,14 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import org.bukkit.Material;
-
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.Material;
+import org.bukkitcontrib.inventory.CustomMCInventory;
 
 public class Inventory extends MyWolfSkill
 {
@@ -34,22 +34,16 @@ public class Inventory extends MyWolfSkill
 	{
 		this.Name = "Inventory";
 		registerSkill();
-		registerSkill("InventorySmall");
-		registerSkill("InventoryLarge");
 	}
 
 	@Override
 	public void run(MyWolf wolf, Object args)
 	{
-		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") && !MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge"))
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory"))
 		{
 			return;
 		}
-		else if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") && !MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall"))
-		{
-
-		}
-		if (MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall") || MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge"))
+		if (MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
 		{
 			if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
 			{
@@ -70,22 +64,29 @@ public class Inventory extends MyWolfSkill
 	@Override
 	public void activate(MyWolf wolf, Object args)
 	{
-		if (!MyWolfUtil.hasSkill(wolf.Abilities, "InventorySmall"))
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory"))
 		{
-			if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventorySmall"))
-			{
-				return;
-			}
-			wolf.Abilities.put("InventorySmall", true);
+			return;
 		}
-		else
+		if (!MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
 		{
-			if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.InventoryLarge"))
-			{
-				return;
-			}
-			wolf.Abilities.put("InventoryLarge", true);
+			wolf.Abilities.put("Inventory", true);
 		}
-		wolf.sendMessageToOwner(MyWolfUtil.SetColors(!MyWolfUtil.hasSkill(wolf.Abilities, "InventoryLarge") ? MyWolfLanguage.getString("Msg_AddChest") : MyWolfLanguage.getString("Msg_AddChestGreater")).replace("%wolfname%", wolf.Name));
+        if(wolf.inv.getSize() >= 54)
+        {
+            return;
+        }
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory."+(wolf.inv.getSize()+9)))
+		{
+			return;
+		}
+
+        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize()+9, wolf.Name + "\'s Inventory");
+		for(int i = 0; i < wolf.inv.getSize(); i++)
+        {
+            newinv.setItem(i,wolf.inv.getItem(i));
+        }
+        wolf.inv = newinv;
+        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", wolf.Name).replace("%size%",""+wolf.inv.getSize()));
 	}
 }

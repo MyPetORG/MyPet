@@ -19,10 +19,16 @@
 
 package de.Keyle.MyWolf;
 
-import java.io.File;
-import java.util.List;
+import de.Keyle.MyWolf.Listeners.*;
+import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.Skill.Skills.*;
+import de.Keyle.MyWolf.chatcommands.*;
+import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.ItemStack;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,16 +37,8 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Listeners.*;
-import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.Skills.*;
-import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.chatcommands.*;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
+import java.io.File;
+import java.util.List;
 
 public class MyWolfPlugin extends JavaPlugin
 {
@@ -157,7 +155,6 @@ public class MyWolfPlugin extends JavaPlugin
 		{
 			for (String ownername : WolfList)
 			{
-				int invSlot;
 				double WolfX = Config.getDouble("Wolves." + ownername + ".loc.X", 0);
 				double WolfY = Config.getDouble("Wolves." + ownername + ".loc.Y", 0);
 				double WolfZ = Config.getDouble("Wolves." + ownername + ".loc.Z", 0);
@@ -197,28 +194,41 @@ public class MyWolfPlugin extends JavaPlugin
 				{
 					ConfigBuffer.mWolves.get(ownername).Status = WolfState.Despawned;
 				}
-				ConfigBuffer.mWolves.get(ownername).Name = WolfName;
+				ConfigBuffer.mWolves.get(ownername).SetName(WolfName);
 				ConfigBuffer.mWolves.get(ownername).setSitting(Wolvesitting);
 				ConfigBuffer.mWolves.get(ownername).Experience.setExp(WolfEXP);
-				for (int i = 0; i < 2; i++)
-				{
-					invSlot = 0;
-					for (String item : Config.getString("Wolves." + ownername + ".inventory." + (i + 1)).split("\\;"))
-					{
-						String[] itemvalues = item.split("\\,");
-						if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
-						{
-							if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
-							{
-								if (Integer.parseInt(itemvalues[1]) <= 64)
-								{
-									ConfigBuffer.mWolves.get(ownername).Inventory[i].setItem(invSlot, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
-								}
-							}
-						}
-						invSlot++;
-					}
-				}
+                String inv;
+                if(Config.getKeys("Wolves." + ownername + ".inventory") != null)
+                {
+                    String inv1 = Config.getString("Wolves." + ownername + ".inventory.1","");
+                    String inv2 = Config.getString("Wolves." + ownername + ".inventory.2","");
+                    inv = inv1 + (inv2!=""?";" + inv2:"");
+                    inv = inv.replaceAll(";,,;", ";");
+                    inv = inv.replaceAll(";,,", "");
+                }
+                else
+                {
+                    inv = Config.getString("Wolves." + ownername + ".inventory",",,");
+                }
+                System.out.println(inv);
+                String[] invSplit = inv.split(";");
+                for (int i = 0; i < invSplit.length;i++)
+                {
+                    if(i < ConfigBuffer.mWolves.get(ownername).inv.getSize())
+                    {
+                        String[] itemvalues = invSplit[i].split(",");
+                        if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+                        {
+                            if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+                            {
+                                if (Integer.parseInt(itemvalues[1]) <= 64)
+                                {
+                                    ConfigBuffer.mWolves.get(ownername).inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                }
+                            }
+                        }
+                    }
+                }
 				anzahlWolves++;
 			}
 		}
@@ -231,6 +241,7 @@ public class MyWolfPlugin extends JavaPlugin
 		for (String owner : ConfigBuffer.mWolves.keySet())
 		{
 			MyWolf wolf = ConfigBuffer.mWolves.get(owner);
+            /*
 			for (int i = 0; i < 2; i++)
 			{
 				String Items = "";
@@ -251,6 +262,22 @@ public class MyWolfPlugin extends JavaPlugin
 				}
 				Config.setProperty("Wolves." + owner + ".inventory." + (i + 1), Items);
 			}
+			*/
+            String Items = "";
+            for(int i = 0;i < wolf.inv.getSize() ; i++)
+            {
+                ItemStack Item = wolf.inv.getItem(i);
+                if (Item != null)
+                {
+                    Items += Item.id + "," + Item.count + "," + Item.damage + ";";
+                }
+                else
+                {
+                    Items += ",,;";
+                }
+            }
+            Items = Items!=""?Items.substring(0, Items.length() - 1):Items;
+			Config.setProperty("Wolves." + owner + ".inventory", Items);
 			Config.setProperty("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
 			Config.setProperty("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
 			Config.setProperty("Wolves." + owner + ".loc.Z", wolf.getLocation().getZ());
