@@ -19,37 +19,22 @@
 
 package de.Keyle.MyWolf.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Spider;
-import org.bukkit.entity.Squid;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.plugin.Plugin;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.entity.*;
+import org.bukkit.plugin.Plugin;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class MyWolfUtil
 {
@@ -64,7 +49,7 @@ public class MyWolfUtil
 
 	public static String SetColors(String text)
 	{
-		return text.replace("%black%", "�0").replace("%navy%", "�1").replace("%green%", "�2").replace("%teal%", "�3").replace("%red%", "�4").replace("%purple%", "�5").replace("%gold%", "�6").replace("%silver%", "�7").replace("%gray%", "�8").replace("%blue%", "�9").replace("%lime%", "�a").replace("%aqua%", "�b").replace("%rose%", "�c").replace("%pink%", "�d").replace("%yellow%", "�e").replace("%white%", "�f");
+		return text.replace("%black%", ""+ ChatColor.BLACK).replace("%darkgreen%", ""+ ChatColor.DARK_GREEN).replace("%green%", ""+ ChatColor.GREEN).replace("%aqua%", ""+ ChatColor.AQUA).replace("%red%", ""+ ChatColor.RED).replace("%lightpurple%", ""+ ChatColor.LIGHT_PURPLE).replace("%gold%",""+ ChatColor.GOLD).replace("%darkgray%", ""+ ChatColor.DARK_GRAY).replace("%gray%", ""+ ChatColor.GRAY).replace("%blue%", ""+ ChatColor.BLUE).replace("%darkaqua%", ""+ ChatColor.DARK_AQUA).replace("%darkblue%", ""+ ChatColor.DARK_BLUE).replace("%darkpurple%", ""+ ChatColor.DARK_PURPLE).replace("%darkred%", ""+ ChatColor.DARK_RED).replace("%yellow%", ""+ ChatColor.YELLOW).replace("%white%", ""+ ChatColor.WHITE);
 	}
 
 	public static Material checkMaterial(int itemid, Material defaultMaterial)

@@ -90,7 +90,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "�" + MyWolfConfig.NameColor;
+			NameColor = "§" + MyWolfConfig.NameColor;
 		}
 		else
 		{
@@ -117,7 +117,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "�" + MyWolfConfig.NameColor;
+			NameColor = "§" + MyWolfConfig.NameColor;
 		}
 		else
 		{
@@ -144,7 +144,7 @@ public class MyWolf
 		String NameColor;
 		if(MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
 		{
-			NameColor = "�" + MyWolfConfig.NameColor;
+			NameColor = "§" + MyWolfConfig.NameColor;
 		}
 		else
 		{
