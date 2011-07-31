@@ -19,16 +19,15 @@
 
 package de.Keyle.MyWolf.util;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
+import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import org.bukkit.Material;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.util.config.Configuration;
 
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MyWolfConfig
 {
@@ -42,6 +41,7 @@ public class MyWolfConfig
 	public static int MaxLives = -1;
 	public static int ExpFactor = 2;
 	public static int NameColor = -1;
+    public static boolean LevelSystem = true;
 
 	public static void setStandart()
 	{
@@ -55,6 +55,7 @@ public class MyWolfConfig
 		setProperty("MyWolf.max.Lives", -1);
 		setProperty("MyWolf.expfactor", 2);
 		setProperty("MyWolf.namecolor", -1);
+        setProperty("MyWolf.levelsystem", true);
 
 		if(!Config.getKeys("MyWolf").contains("exp"))
 		{
@@ -109,6 +110,7 @@ public class MyWolfConfig
 		ExpFactor = Config.getInt("MyWolf.expfactor", 2);
 		NameColor = Config.getInt("MyWolf.namecolor", -1);
 		NameColor = NameColor<=0xf?NameColor:-1;
+        LevelSystem = Config.getBoolean("MyWolf.levelsystem",true);
 		
 		if(Config.getKeys("MyWolf.exp") != null)
 		{

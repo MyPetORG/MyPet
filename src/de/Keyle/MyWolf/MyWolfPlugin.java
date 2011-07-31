@@ -100,8 +100,11 @@ public class MyWolfPlugin extends JavaPlugin
 		getCommand("wolfinventory").setExecutor(new MyWolfInventory());
 		getCommand("wolfpickup").setExecutor(new MyWolfPickup());
 		getCommand("wolfbehavior").setExecutor(new MyWolfBehavior());
-		getCommand("wolfexp").setExecutor(new MyWolfEXP());
 		getCommand("wolfcompass").setExecutor(new MyWolfCompass());
+        if(MyWolfConfig.LevelSystem)
+        {
+            getCommand("wolfexp").setExecutor(new MyWolfEXP());
+        }
 
 		new Inventory();
 		new HP();
@@ -116,19 +119,22 @@ public class MyWolfPlugin extends JavaPlugin
 		ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
 		ConfigBuffer.lv.setStandart();
 		ConfigBuffer.lv.loadVariables();
-		
-		try
-		{
-			MyWolfExperience.JSreader = MyWolfUtil.readFileAsString(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js");
-		}
-		catch (Exception e)
-		{
-			MyWolfExperience.JSreader = null;
-			MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js). Working with factor.");
-		}
 
 		ConfigBuffer.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
 		LoadWolves(ConfigBuffer.WolvesConfig);
+
+        if(MyWolfConfig.LevelSystem == true)
+        {
+            try
+            {
+                MyWolfExperience.JSreader = MyWolfUtil.readFileAsString(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js");
+            }
+            catch (Exception e)
+            {
+                MyWolfExperience.JSreader = null;
+                MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js). Working with factor.");
+            }
+        }
 
 		for (Player p : this.getServer().getOnlinePlayers())
 		{
