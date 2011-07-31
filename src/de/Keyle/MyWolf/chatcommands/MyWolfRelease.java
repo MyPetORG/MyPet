@@ -45,7 +45,7 @@ public class MyWolfRelease implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (!MyWolfPermissions.has(player, "mywolf.release"))
+				if (!MyWolfPermissions.has(player, "MyWolf.release"))
 				{
 					return true;
 				}
@@ -68,7 +68,7 @@ public class MyWolfRelease implements CommandExecutor
 				{
 					Wolf.Wolf.setOwner(null);
 					Wolf.StopTimer();
-					for (ItemStack is : Wolf.LargeInventory.getContents())
+					for (ItemStack is : Wolf.inv.getContents())
 					{
 						if (is != null)
 						{

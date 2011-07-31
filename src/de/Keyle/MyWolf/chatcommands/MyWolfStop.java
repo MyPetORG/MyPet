@@ -43,7 +43,7 @@ public class MyWolfStop implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (!MyWolfPermissions.has(player, "mywolf.stop"))
+				if (!MyWolfPermissions.has(player, "MyWolf.stop"))
 				{
 					return true;
 				}

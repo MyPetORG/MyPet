@@ -70,7 +70,7 @@ public class MyWolfEntityListener extends EntityListener
 				{
 					if (!ConfigBuffer.mWolves.containsKey(player.getName()))
 					{
-						if (!MyWolfPermissions.has(player, "mywolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
+						if (!MyWolfPermissions.has(player, "MyWolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
 						{
 							return;
 						}
@@ -187,7 +187,7 @@ public class MyWolfEntityListener extends EntityListener
 						wolf.getOwner().setCompassTarget(wolf.getLocation().getWorld().getSpawnLocation());
 						if (wolf.Lives <= 0)
 						{
-							for (ItemStack is : wolf.LargeInventory.getContents())
+							for (ItemStack is : wolf.inv.getContents())
 							{
 								if (is != null)
 								{

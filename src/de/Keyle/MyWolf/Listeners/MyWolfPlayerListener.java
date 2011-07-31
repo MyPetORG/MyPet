@@ -80,7 +80,7 @@ public class MyWolfPlayerListener extends PlayerListener
 			MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
 			if (Wolf.Status == WolfState.Here && !Wolf.isSitting())
 			{
-				if (!MyWolfPermissions.has(event.getPlayer(), "mywolf.control.walk"))
+				if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.walk"))
 				{
 					return;
 				}
@@ -99,7 +99,7 @@ public class MyWolfPlayerListener extends PlayerListener
 					EntityWolf wolf = ((CraftWolf) Wolf.Wolf).getHandle();
 					wolf.setPathEntity(new PathEntity(loc));
 					Wolf.ResetSitTimer();
-					if (!MyWolfPermissions.has(event.getPlayer(), "mywolf.control.attack"))
+					if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.attack"))
 					{
 						return;
 					}

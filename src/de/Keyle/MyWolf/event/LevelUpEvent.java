@@ -19,31 +19,21 @@
 
 package de.Keyle.MyWolf.event;
 
-import org.bukkit.Location;
+import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import de.Keyle.MyWolf.MyWolf;
 
 public class LevelUpEvent extends Event
 {
     private static final long serialVersionUID = -605293022023540119L;
 
     private final MyWolf wolf;
-	private Location location = null;
 	private final int Level;
 
 	public LevelUpEvent(MyWolf wolf, int Level)
 	{
 		super("LevelUpEvent");
 		this.wolf = wolf;
-		this.Level = Level;
-	}
-
-	public LevelUpEvent(MyWolf wolf, int Level, Location location)
-	{
-		super("LevelUpEvent");
-		this.wolf = wolf;
-		this.location = location;
 		this.Level = Level;
 	}
 
@@ -55,11 +45,6 @@ public class LevelUpEvent extends Event
 	public MyWolf getWolf()
 	{
 		return wolf;
-	}
-
-	public Location getLocation()
-	{
-		return location;
 	}
 
 	public int getLevel()
