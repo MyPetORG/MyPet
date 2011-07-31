@@ -42,9 +42,6 @@ import java.util.List;
 
 public class MyWolfPlugin extends JavaPlugin
 {
-
-	private ConfigBuffer cb;
-
     public static MyWolfPlugin Plugin;
 
 	public void onDisable()
@@ -62,8 +59,6 @@ public class MyWolfPlugin extends JavaPlugin
 		ConfigBuffer.WolfChestOpened.clear();
 
 		MyWolfUtil.Log.info("[MyWolf] Disabled");
-
-		cb = null;
 	}
 
 	public void onEnable()
@@ -210,7 +205,6 @@ public class MyWolfPlugin extends JavaPlugin
                 {
                     inv = Config.getString("Wolves." + ownername + ".inventory",",,");
                 }
-                System.out.println(inv);
                 String[] invSplit = inv.split(";");
                 for (int i = 0; i < invSplit.length;i++)
                 {
@@ -241,28 +235,6 @@ public class MyWolfPlugin extends JavaPlugin
 		for (String owner : ConfigBuffer.mWolves.keySet())
 		{
 			MyWolf wolf = ConfigBuffer.mWolves.get(owner);
-            /*
-			for (int i = 0; i < 2; i++)
-			{
-				String Items = "";
-				if (ConfigBuffer.mWolves.get(owner).Inventory[i].getContents().length > 0)
-				{
-					for (ItemStack Item : ConfigBuffer.mWolves.get(owner).Inventory[i].getContents())
-					{
-						if (Item != null)
-						{
-							Items += Item.id + "," + Item.count + "," + Item.damage + ";";
-						}
-						else
-						{
-							Items += ",,;";
-						}
-					}
-					Items = Items.substring(0, Items.length() - 1);
-				}
-				Config.setProperty("Wolves." + owner + ".inventory." + (i + 1), Items);
-			}
-			*/
             String Items = "";
             for(int i = 0;i < wolf.inv.getSize() ; i++)
             {
