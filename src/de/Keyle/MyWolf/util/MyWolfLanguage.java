@@ -19,10 +19,10 @@
 
 package de.Keyle.MyWolf.util;
 
+import org.bukkit.util.config.Configuration;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.bukkit.util.config.Configuration;
 
 public class MyWolfLanguage
 {
@@ -31,6 +31,7 @@ public class MyWolfLanguage
 	public MyWolfLanguage(Configuration cfg)
 	{
 		Config = cfg;
+        Config.load();
 	}
 
 	private static final Map<String, String> LV = new HashMap<String, String>();
