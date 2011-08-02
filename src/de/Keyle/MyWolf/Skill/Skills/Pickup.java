@@ -30,7 +30,7 @@ public class Pickup extends MyWolfSkill
 {
 	public Pickup()
 	{
-		this.Name = "Pickup";
+		super("Pickup");
 		registerSkill();
 	}
 

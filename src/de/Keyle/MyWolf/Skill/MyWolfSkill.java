@@ -28,6 +28,10 @@ public class MyWolfSkill
 {
 	protected String Name;
 
+    public MyWolfSkill(String Name)
+    {
+        this.Name = Name;
+    }
 	public String getName()
 	{
 		return this.Name;

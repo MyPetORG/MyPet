@@ -22,6 +22,7 @@ package de.Keyle.MyWolf;
 import de.Keyle.MyWolf.Listeners.*;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.MyWolfConfig;
@@ -111,6 +112,8 @@ public class MyWolfPlugin extends JavaPlugin
 		new Live();
 		new Pickup();
 		new Behavior();
+
+        new MyWolfSkill("Control").registerSkill();
 
 		MyWolfConfig.Config = this.getConfiguration();
 		MyWolfConfig.setStandart();

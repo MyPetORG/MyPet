@@ -42,7 +42,7 @@ public class MyWolfCompass implements CommandExecutor
 			{
 				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.Skills.Compass"))
+				if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.compass"))
 				{
 					return true;
 				}
@@ -66,7 +66,7 @@ public class MyWolfCompass implements CommandExecutor
 					{
 						Wolf.getOwner().setCompassTarget(Wolf.getLocation());
 					}
-					sender.sendMessage("Your points now to the last known position of " + Wolf.Name);
+					sender.sendMessage("Your compass points now to the last known position of " + Wolf.Name);
 				}
 				return true;
 			}

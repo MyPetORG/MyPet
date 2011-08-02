@@ -30,7 +30,7 @@ public class Live extends MyWolfSkill
 {
 	public Live()
 	{
-		this.Name = "Live";
+		super("Live");
 		registerSkill();
 	}
 

@@ -28,7 +28,7 @@ public class Behavior extends MyWolfSkill
 {
 	public Behavior()
 	{
-		this.Name = "Behavior";
+		super("Behavior");
 		registerSkill();
 	}
 

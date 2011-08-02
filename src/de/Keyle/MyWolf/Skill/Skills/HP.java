@@ -29,7 +29,7 @@ public class HP extends MyWolfSkill
 {
 	public HP()
 	{
-		this.Name = "HP";
+		super("HP");
 		registerSkill();
 	}
 

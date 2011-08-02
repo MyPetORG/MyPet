@@ -32,7 +32,7 @@ public class Inventory extends MyWolfSkill
 {
 	public Inventory()
 	{
-		this.Name = "Inventory";
+		super("Inventory");
 		registerSkill();
 	}
 
@@ -64,10 +64,6 @@ public class Inventory extends MyWolfSkill
 	@Override
 	public void activate(MyWolf wolf, Object args)
 	{
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory"))
-		{
-			return;
-		}
 		if (!MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
 		{
 			wolf.Abilities.put("Inventory", true);
@@ -80,7 +76,6 @@ public class Inventory extends MyWolfSkill
 		{
 			return;
 		}
-
         CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize()+9, wolf.Name + "\'s Inventory");
 		for(int i = 0; i < wolf.inv.getSize(); i++)
         {
