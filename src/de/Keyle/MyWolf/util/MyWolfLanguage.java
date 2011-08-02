@@ -58,7 +58,6 @@ public class MyWolfLanguage
 		setProperty("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
 		setProperty("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
 		setProperty("MyWolf.Message.addchest", "%aqua%%wolfname%%white% has now an inventory.");
-		setProperty("MyWolf.Message.addlargechest", "%aqua%%wolfname%%white% has now a larger inventory.");
 		setProperty("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%");
 		setProperty("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives.");
 		setProperty("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
@@ -102,7 +101,6 @@ public class MyWolfLanguage
 		LV.put("Msg_AddLeash", Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf."));
 		LV.put("Msg_HPinfo", Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%"));
 		LV.put("Msg_AddChest", Config.getString("MyWolf.Message.addchest", "%aqua%%wolfname%%white% has now an inventory."));
-		LV.put("Msg_AddChestGreater", Config.getString("MyWolf.Message.addlargechest", "%aqua%%wolfname%%white% has now a larger inventory."));
 		LV.put("Msg_AddLive", Config.getString("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%"));
 		LV.put("Msg_MaxLives", Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives."));
 		LV.put("Msg_AddPickup", Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%."));
