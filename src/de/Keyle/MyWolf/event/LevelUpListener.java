@@ -23,8 +23,6 @@ import org.bukkit.event.CustomEventListener;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 
-import de.Keyle.MyWolf.event.LevelUpEvent;
-
 public class LevelUpListener extends CustomEventListener implements Listener
 {
 	public void onLevelUp(LevelUpEvent event)

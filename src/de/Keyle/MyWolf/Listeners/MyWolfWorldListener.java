@@ -19,13 +19,12 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldListener;
-
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.MyWolf;
 
 public class MyWolfWorldListener extends WorldListener
 {

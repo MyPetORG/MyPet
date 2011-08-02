@@ -21,8 +21,8 @@ package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
 
 public class Behavior extends MyWolfSkill
 {

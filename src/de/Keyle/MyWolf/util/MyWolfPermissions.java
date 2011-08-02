@@ -19,18 +19,14 @@
 
 package de.Keyle.MyWolf.util;
 
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import org.anjocaido.groupmanager.GroupManager;
-
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
-
 import de.Keyle.MyWolf.MyWolfPlugin;
+import org.anjocaido.groupmanager.GroupManager;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class MyWolfPermissions
 {

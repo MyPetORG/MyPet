@@ -19,36 +19,21 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import net.minecraft.server.ItemStack;
-
-import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftWolf;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Spider;
-import org.bukkit.entity.Wolf;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.entity.EntityTargetEvent;
-
 import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
+import net.minecraft.server.ItemStack;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftWolf;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class MyWolfEntityListener extends EntityListener
 {

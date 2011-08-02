@@ -19,34 +19,26 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolf.BehaviorState;
+import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityWolf;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.PathPoint;
-
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.entity.CraftWolf;
-
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.BehaviorState;
-import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
-import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.event.player.*;
 
 public class MyWolfPlayerListener extends PlayerListener
 {

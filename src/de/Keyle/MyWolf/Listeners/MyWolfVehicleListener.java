@@ -19,14 +19,13 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleListener;
-
-import de.Keyle.MyWolf.ConfigBuffer;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 
 public class MyWolfVehicleListener extends VehicleListener
 {

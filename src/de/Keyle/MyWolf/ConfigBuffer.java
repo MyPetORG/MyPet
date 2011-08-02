@@ -19,16 +19,16 @@
 
 package de.Keyle.MyWolf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.config.Configuration;
 
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConfigBuffer
 {

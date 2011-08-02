@@ -19,19 +19,18 @@
 
 package de.Keyle.MyWolf.Skill;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import org.bukkit.entity.CreatureType;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.entity.CreatureType;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class MyWolfExperience
 {
