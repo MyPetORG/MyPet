@@ -1,34 +1,27 @@
-Plugin Name:	MyWolf v0.4.X
-Author: 		Keyle
+Name:	MyWolf
+Author: Keyle
 
 
 This plugin allows you to take a wolf on a leash.
 
 
-For all features visit the thread in the Bukkit-Forum.
-The link is in the discription of this repository.
+For all features visit the Bukkit-Forum.
 
 
-These commands can be used:
-  /wolf				- show all MyWolf commands
-  /wolfname <newwolfname>	- set the name of your wolf
-  /wolfrelease <wolfname>	- release your wolf so he's free
-  /wolfstop 			- the wolf stop attacking his taget	- alias:  /ws or /wolfs
-  /wolfcall			- teleports your wolf to you		- alias:  /wc or /wolfc
 
 
-Permissions:
-   - 'mywolf.setname'
-   - 'mywolf.release'
-   - 'mywolf.leash'
-   - 'mywolf.chest.add.small'
-   - 'mywolf.chest.add.large'
-   - 'mywolf.chest.open
-   - 'mywolf.info'
-   - 'mywolf.food.hp'
-   - 'mywolf.food.lives'
-   - 'mywolf.pickup.add'
-   - 'mywolf.pickup.add'
-   - 'mywolf.pickup.open'
-   - 'mywolf.call'
-   - 'mywolf.stop'
+Copyright (C) 2011 Keyle
+
+This file is part of MyWolf.
+
+MyWolf is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+MyWolf is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+For the GNU General Public License, see http://www.gnu.org/licenses/
