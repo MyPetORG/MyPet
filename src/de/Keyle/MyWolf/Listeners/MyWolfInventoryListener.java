@@ -19,13 +19,9 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import org.bukkit.Material;
-import org.bukkitcontrib.event.inventory.InventoryClickEvent;
-import org.bukkitcontrib.event.inventory.InventoryCloseEvent;
-import org.bukkitcontrib.event.inventory.InventoryListener;
-import org.bukkitcontrib.inventory.CustomMCInventory;
-
 import de.Keyle.MyWolf.ConfigBuffer;
+import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
+import org.getspout.spoutapi.event.inventory.InventoryListener;
 
 public class MyWolfInventoryListener extends InventoryListener
 {
@@ -36,16 +32,6 @@ public class MyWolfInventoryListener extends InventoryListener
 		{
 			ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
 			ConfigBuffer.WolfChestOpened.remove(event.getPlayer());
-		}
-	}
-	
-	
-	@Override
-	public void onInventoryClick(InventoryClickEvent event)
-	{
-		if(event.getInventory() instanceof CustomMCInventory && event.getItem().getType() == Material.PISTON_MOVING_PIECE)
-		{
-			event.setCancelled(true);
 		}
 	}
 }

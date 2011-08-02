@@ -40,7 +40,7 @@ public class MyWolfExperience
 
 	private double Exp = 0;
 
-	public static String JSreader;
+	public static String JSreader = null;
 
 	public static final Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
 	static

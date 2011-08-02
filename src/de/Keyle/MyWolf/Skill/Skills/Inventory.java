@@ -26,7 +26,7 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.Material;
-import org.bukkitcontrib.inventory.CustomMCInventory;
+import org.getspout.spout.inventory.CustomMCInventory;
 
 public class Inventory extends MyWolfSkill
 {

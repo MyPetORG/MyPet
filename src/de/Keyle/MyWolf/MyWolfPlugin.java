@@ -123,7 +123,7 @@ public class MyWolfPlugin extends JavaPlugin
 		ConfigBuffer.WolvesConfig = new Configuration(new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml"));
 		LoadWolves(ConfigBuffer.WolvesConfig);
 
-        if(MyWolfConfig.LevelSystem == true)
+        if(MyWolfConfig.LevelSystem)
         {
             try
             {

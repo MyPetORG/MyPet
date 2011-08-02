@@ -30,8 +30,8 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkitcontrib.BukkitContrib;
-import org.bukkitcontrib.inventory.CustomMCInventory;
+import org.getspout.spout.inventory.CustomMCInventory;
+import org.getspout.spoutapi.SpoutManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +52,6 @@ public class MyWolf
 	private int SitTimer = 15;
 	private boolean isSitting = false;
 	public boolean isPickup = false;
-
-	public boolean allowAttackPlayer = true;
-	public boolean allowAttackMonster = false;
 
 	public static enum BehaviorState
 	{
@@ -109,7 +106,7 @@ public class MyWolf
 		}
 		if (Status == WolfState.Here)
 		{
-			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
+			SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
 		}
 	}
 	public void SetName()
@@ -136,7 +133,7 @@ public class MyWolf
 		}
 		if (Status == WolfState.Here)
 		{
-			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
+			SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
 		}
 	}
 	public void SetName(int HP)
@@ -163,7 +160,7 @@ public class MyWolf
 		}
 		if (Status == WolfState.Here)
 		{
-			BukkitContrib.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
+			SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
 		}
 	}
 
@@ -188,18 +185,13 @@ public class MyWolf
 	
 	void RespawnWolf()
 	{
-		if (Status == WolfState.Here)
-		{
-            return;
-		}
-		else
+		if (Status != WolfState.Here)
 		{
 			HealthNow = HealthMax;
 			Location = getOwner().getLocation();
 			getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
 			createWolf(false);
 			RespawnTime = 0;
-            return;
 		}
 	}
 	
@@ -269,24 +261,6 @@ public class MyWolf
 		{
 			return HealthNow;
 		}
-	}
-
-	public double Demage(double Demage)
-	{
-		if (Status == WolfState.Here)
-		{
-			HealthNow -= Demage;
-			if(HealthNow > 20)
-			{
-				Wolf.setHealth(20);
-			}
-			else
-			{
-				Wolf.setHealth(HealthNow);
-			}
-			
-		}
-		return HealthNow;
 	}
 
 	public int getID()
