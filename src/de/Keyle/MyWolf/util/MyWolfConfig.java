@@ -77,12 +77,12 @@ public class MyWolfConfig
 		if(!Config.getKeys("MyWolf").contains("skills"))
 		{
 			List<String> list = new LinkedList<String>();
-			list.add("InventorySmall");
+			list.add("Inventory");
 			setProperty("MyWolf.skills.2", list);
 			
 			list = new LinkedList<String>();
-			list.add("InventoryLarge");
-			list.add("InventoryLarge");
+			list.add("Inventory");
+			list.add("Inventory");
 			setProperty("MyWolf.skills.3", list);
 			
 			list = new LinkedList<String>();
