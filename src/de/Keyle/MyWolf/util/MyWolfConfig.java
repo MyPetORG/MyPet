@@ -72,6 +72,7 @@ public class MyWolfConfig
 			setProperty("MyWolf.exp.CHICKEN", 0.25);
 			setProperty("MyWolf.exp.SQUID", 0.25);
 			setProperty("MyWolf.exp.SHEEP", 0.25);
+            setProperty("MyWolf.exp.SLIME", 1.0);
 		}
 
 		if(!Config.getKeys("MyWolf").contains("skills"))
