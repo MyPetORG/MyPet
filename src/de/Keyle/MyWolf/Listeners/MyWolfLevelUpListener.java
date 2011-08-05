@@ -20,23 +20,30 @@
 package de.Keyle.MyWolf.Listeners;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.event.LevelUpListener;
+import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfLevelUpListener extends LevelUpListener
 {
-	@Override
-	public void onLevelUp(LevelUpEvent event)
-	{
-		if (ConfigBuffer.SkillPerLevel.containsKey(event.getLevel()))
-		{
-			for (String skill : ConfigBuffer.SkillPerLevel.get(event.getLevel()))
-			{
-				if (ConfigBuffer.RegisteredSkills.containsKey(skill))
-				{
-					ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), null);
-				}
-			}
-		}
-	}
+    @Override
+    public void onLevelUp(LevelUpEvent event)
+    {
+        if (ConfigBuffer.SkillPerLevel.containsKey(event.getLevel()))
+        {
+            for (String skill : ConfigBuffer.SkillPerLevel.get(event.getLevel()))
+            {
+                if (ConfigBuffer.RegisteredSkills.containsKey(skill))
+                {
+                    ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), null);
+                    if (event.getWolf().Status == WolfState.Here)
+                    {
+                        SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.MP3", false, event.getWolf().getLocation(), 25);
+                    }
+                }
+            }
+        }
+    }
 }
