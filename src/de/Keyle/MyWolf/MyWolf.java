@@ -53,6 +53,8 @@ public class MyWolf
 	private boolean isSitting = false;
 	public boolean isPickup = false;
 
+    //public GenericTexture hpbar = new GenericTexture("http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/hpbar.png");
+
 	public static enum BehaviorState
 	{
 		Normal, Friendly, Aggressive, Raid
@@ -79,7 +81,28 @@ public class MyWolf
         this.inv = new CustomMCInventory(0, Owner);
 		Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
 	}
-
+    /*
+    public void updateHPbar(int HP)
+    {
+        if(getOwner() != null)
+        {
+            double p = (HP<0?0:HP) * 100 / HealthMax;
+            hpbar.setWidth(SpoutCraftPlayer.getPlayer(getOwner()).getMainScreen().getHealthBar().getWidth()* ((Double)p).intValue() /100);
+            hpbar.render();
+            hpbar.setDirty(true);
+        }
+    }
+    public void updateHPbar()
+    {
+        if(getOwner() != null)
+        {
+            double p = (HealthNow<0?0:HealthNow) * 100 / HealthMax;
+            hpbar.setWidth(SpoutCraftPlayer.getPlayer(getOwner()).getMainScreen().getHealthBar().getWidth()* ((Double)p).intValue() /100);
+            hpbar.render();
+            hpbar.setDirty(true);
+        }
+    }
+    */
 	public void SetName(String Name)
 	{
 		this.Name = Name;
@@ -213,6 +236,7 @@ public class MyWolf
 
 				Status = WolfState.Here;
 				SetName();
+                //updateHPbar();
 			}
 			Timer();
 		}
@@ -224,6 +248,7 @@ public class MyWolf
 		Location = Wolf.getLocation();
 		Status = WolfState.Here;
 		SetName();
+        //updateHPbar();
 		Timer();
 	}
 
@@ -249,6 +274,7 @@ public class MyWolf
 			}
 		}
 		SetName();
+        //updateHPbar();
 	}
 	public int getHealth()
 	{
@@ -379,7 +405,6 @@ public class MyWolf
 
                                         for (int i = 0;i<inv.getSize();i++)
                                         {
-                                            if(inv.getItem(i) != null) MyWolfUtil.Log.info(ItemID + ":" + inv.getItem(i).id + " , " + ItemDuarbility + ":" + inv.getItem(i).damage + " , " + ItemAmount + ":" + inv.getItem(i).count + " , " + ItemMaxStack);
                                             if (inv.getItem(i) != null && inv.getItem(i).id == ItemID && inv.getItem(i).damage == ItemDuarbility && inv.getItem(i).count < ItemMaxStack)
                                             {
                                                 if (ItemAmount >= ItemMaxStack - inv.getItem(i).count)
