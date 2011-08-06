@@ -27,18 +27,18 @@ import org.bukkit.entity.Player;
 public class MyWolfHelp implements CommandExecutor
 {
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			player.sendMessage("MyWolf - Help - - - - - - - - - - - - - - - - -");
-			player.sendMessage("Set wolf name:            /wolfname <newwolfname>");
-			player.sendMessage("Release your wolf:    /wolfrelease <wolfname>");
-			player.sendMessage("Stop wolf attacking:  /wolfstop  (alias: /ws or /wolfs)");
-			player.sendMessage("Call your wolf:	          /wolfcall  (alias: /wc or /wolfc)");
-			//player.sendMessage("Compass tagets wolf:	          /wolf compass [stop]");
-		}
-		return true;
-	}
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            player.sendMessage("MyWolf - Help - - - - - - - - - - - - - - - - -");
+            player.sendMessage("Set wolf name:            /wolfname <newwolfname>");
+            player.sendMessage("Release your wolf:    /wolfrelease <wolfname>");
+            player.sendMessage("Stop wolf attacking:  /wolfstop  (alias: /ws or /wolfs)");
+            player.sendMessage("Call your wolf:	          /wolfcall  (alias: /wc or /wolfc)");
+            //player.sendMessage("Compass tagets wolf:	          /wolf compass [stop]");
+        }
+        return true;
+    }
 }

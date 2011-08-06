@@ -32,48 +32,48 @@ import org.bukkit.entity.Player;
 
 public class MyWolfCompass implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.compass"))
-				{
-					return true;
-				}
-				
-				if (Wolf.Status == WolfState.Dead)
-				{
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
-					return true;
-				}
-				else
-				{
-					if (args.length == 1 && args[0].equalsIgnoreCase("Stop"))
-					{
-						Wolf.getOwner().setCompassTarget(Wolf.getLocation().getWorld().getSpawnLocation());
-					}
-					else if (args.length > 1)
-					{
-						return false;
-					}
-					else
-					{
-						Wolf.getOwner().setCompassTarget(Wolf.getLocation());
-					}
-					sender.sendMessage("Your compass points now to the last known position of " + Wolf.Name);
-				}
-				return true;
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-			}
-		}
-		return true;
-	}
+                if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.compass"))
+                {
+                    return true;
+                }
+
+                if (Wolf.Status == WolfState.Dead)
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                    return true;
+                }
+                else
+                {
+                    if (args.length == 1 && args[0].equalsIgnoreCase("Stop"))
+                    {
+                        Wolf.getOwner().setCompassTarget(Wolf.getLocation().getWorld().getSpawnLocation());
+                    }
+                    else if (args.length > 1)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        Wolf.getOwner().setCompassTarget(Wolf.getLocation());
+                    }
+                    sender.sendMessage("Your compass points now to the last known position of " + Wolf.Name);
+                }
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            }
+        }
+        return true;
+    }
 }

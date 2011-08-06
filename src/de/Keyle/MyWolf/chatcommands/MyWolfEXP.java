@@ -30,22 +30,22 @@ import org.bukkit.entity.Player;
 
 public class MyWolfEXP implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				MyWolf wolf = ConfigBuffer.mWolves.get(player.getName());
-				wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
-				return true;
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-			}
-		}
-		return true;
-	}
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                MyWolf wolf = ConfigBuffer.mWolves.get(player.getName());
+                wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            }
+        }
+        return true;
+    }
 }

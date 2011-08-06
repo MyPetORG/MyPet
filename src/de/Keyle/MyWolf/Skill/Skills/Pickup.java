@@ -28,54 +28,54 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class Pickup extends MyWolfSkill
 {
-	public Pickup()
-	{
-		super("Pickup");
-		registerSkill();
-	}
+    public Pickup()
+    {
+        super("Pickup");
+        registerSkill();
+    }
 
-	@Override
-	public void run(MyWolf wolf, Object args)
-	{
-		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-		{
-			return;
-		}
-		if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
-		{
-			if (args != null && args instanceof Boolean)
-			{
-				wolf.isPickup = (Boolean) args;
-			}
-			else
-			{
-				if (wolf.isPickup)
-				{
-					wolf.isPickup = false;
-					wolf.sendMessageToOwner("Pickup stopped!");
-				}
-				else
-				{
-					wolf.isPickup = true;
-					wolf.sendMessageToOwner("Pickup activated!");
-				}
-			}
-		}
-	}
+    @Override
+    public void run(MyWolf wolf, Object args)
+    {
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        {
+            return;
+        }
+        if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
+        {
+            if (args != null && args instanceof Boolean)
+            {
+                wolf.isPickup = (Boolean) args;
+            }
+            else
+            {
+                if (wolf.isPickup)
+                {
+                    wolf.isPickup = false;
+                    wolf.sendMessageToOwner("Pickup stopped!");
+                }
+                else
+                {
+                    wolf.isPickup = true;
+                    wolf.sendMessageToOwner("Pickup activated!");
+                }
+            }
+        }
+    }
 
-	@Override
-	public void activate(MyWolf wolf, Object args)
-	{
-		
-		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-		{
-			return;
-		}
-		if (!MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
-		{
-			wolf.Abilities.put("Pickup", true);
-			wolf.isPickup = true;
-			wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", wolf.Name).replace("%range%", "" + MyWolfConfig.PickupRange));
-		}
-	}
+    @Override
+    public void activate(MyWolf wolf, Object args)
+    {
+
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        {
+            return;
+        }
+        if (!MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
+        {
+            wolf.Abilities.put("Pickup", true);
+            wolf.isPickup = true;
+            wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", wolf.Name).replace("%range%", "" + MyWolfConfig.PickupRange));
+        }
+    }
 }

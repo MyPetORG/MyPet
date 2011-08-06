@@ -27,24 +27,24 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class HP extends MyWolfSkill
 {
-	public HP()
-	{
-		super("HP");
-		registerSkill();
-	}
+    public HP()
+    {
+        super("HP");
+        registerSkill();
+    }
 
-	@Override
-	public void activate(MyWolf wolf, Object args)
-	{
-		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-		{
-			return;
-		}
-		if(wolf.HealthMax < 20)
-		{
-			wolf.HealthMax += 1;
-			wolf.setHealth(wolf.HealthMax);
-			wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", wolf.Name)));
-		}
-	}
+    @Override
+    public void activate(MyWolf wolf, Object args)
+    {
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        {
+            return;
+        }
+        if (wolf.HealthMax < 20)
+        {
+            wolf.HealthMax += 1;
+            wolf.setHealth(wolf.HealthMax);
+            wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", wolf.Name)));
+        }
+    }
 }

@@ -25,13 +25,13 @@ import org.getspout.spoutapi.event.inventory.InventoryListener;
 
 public class MyWolfInventoryListener extends InventoryListener
 {
-	@Override
-	public void onInventoryClose(InventoryCloseEvent event)
-	{
-		if (ConfigBuffer.WolfChestOpened.contains(event.getPlayer()) && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
-		{
-			ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
-			ConfigBuffer.WolfChestOpened.remove(event.getPlayer());
-		}
-	}
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event)
+    {
+        if (ConfigBuffer.WolfChestOpened.contains(event.getPlayer()) && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        {
+            ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
+            ConfigBuffer.WolfChestOpened.remove(event.getPlayer());
+        }
+    }
 }

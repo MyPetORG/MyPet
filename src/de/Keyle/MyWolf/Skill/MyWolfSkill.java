@@ -26,51 +26,52 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 
 public class MyWolfSkill
 {
-	protected String Name;
+    protected String Name;
 
     public MyWolfSkill(String Name)
     {
         this.Name = Name;
     }
-	public String getName()
-	{
-		return this.Name;
-	}
 
-	public final void registerSkill()
-	{
-		try
-		{
-			ConfigBuffer.registerSkill(this.Name, this);
-		}
-		catch (Exception e)
-		{
-			MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
-		}
-	}
+    public String getName()
+    {
+        return this.Name;
+    }
 
-	public final void registerSkill(String Name)
-	{
-		try
-		{
-			ConfigBuffer.registerSkill(Name, this);
-		}
-		catch (Exception e)
-		{
-			MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
-		}
-	}
+    public final void registerSkill()
+    {
+        try
+        {
+            ConfigBuffer.registerSkill(this.Name, this);
+        }
+        catch (Exception e)
+        {
+            MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
+        }
+    }
 
-	public void run(MyWolf wolf, Object args)
-	{
-	}
+    public final void registerSkill(String Name)
+    {
+        try
+        {
+            ConfigBuffer.registerSkill(Name, this);
+        }
+        catch (Exception e)
+        {
+            MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
+        }
+    }
 
-	public void activate(MyWolf wolf, Object args)
-	{
-		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-		{
-			return;
-		}
-		wolf.Abilities.put(this.Name, true);
-	}
+    public void run(MyWolf wolf, Object args)
+    {
+    }
+
+    public void activate(MyWolf wolf, Object args)
+    {
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        {
+            return;
+        }
+        wolf.Abilities.put(this.Name, true);
+    }
 }

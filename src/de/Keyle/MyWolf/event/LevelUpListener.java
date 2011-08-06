@@ -25,16 +25,16 @@ import org.bukkit.event.Listener;
 
 public class LevelUpListener extends CustomEventListener implements Listener
 {
-	public void onLevelUp(LevelUpEvent event)
-	{
-	}
+    public void onLevelUp(LevelUpEvent event)
+    {
+    }
 
-	@Override
-	public void onCustomEvent(Event event)
-	{
-		if (event instanceof LevelUpEvent)
-		{
-			onLevelUp((LevelUpEvent) event);
-		}
-	}
+    @Override
+    public void onCustomEvent(Event event)
+    {
+        if (event instanceof LevelUpEvent)
+        {
+            onLevelUp((LevelUpEvent) event);
+        }
+    }
 }

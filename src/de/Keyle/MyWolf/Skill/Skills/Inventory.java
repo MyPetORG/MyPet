@@ -30,58 +30,58 @@ import org.getspout.spout.inventory.CustomMCInventory;
 
 public class Inventory extends MyWolfSkill
 {
-	public Inventory()
-	{
-		super("Inventory");
-		registerSkill();
-	}
+    public Inventory()
+    {
+        super("Inventory");
+        registerSkill();
+    }
 
-	@Override
-	public void run(MyWolf wolf, Object args)
-	{
+    @Override
+    public void run(MyWolf wolf, Object args)
+    {
         if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory"))
-		{
-			return;
-		}
-		if (MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
-		{
-			if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
-			{
-				wolf.OpenInventory();
-				if (!wolf.isSitting())
-				{
-					ConfigBuffer.WolfChestOpened.add(wolf.getOwner());
-				}
-				wolf.Wolf.setSitting(true);
-			}
-			else
-			{
-				wolf.sendMessageToOwner(MyWolfLanguage.getString("Msg_InventorySwimming"));
-			}
-		}
-	}
-
-	@Override
-	public void activate(MyWolf wolf, Object args)
-	{
-		if (!MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
-		{
-			wolf.Abilities.put("Inventory", true);
-		}
-        if(wolf.inv.getSize() >= 54)
         {
             return;
         }
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory."+(wolf.inv.getSize()+9)))
-		{
-			return;
-		}
-        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize()+9, wolf.Name + "\'s Inventory");
-		for(int i = 0; i < wolf.inv.getSize(); i++)
+        if (MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
         {
-            newinv.setItem(i,wolf.inv.getItem(i));
+            if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
+            {
+                wolf.OpenInventory();
+                if (!wolf.isSitting())
+                {
+                    ConfigBuffer.WolfChestOpened.add(wolf.getOwner());
+                }
+                wolf.Wolf.setSitting(true);
+            }
+            else
+            {
+                wolf.sendMessageToOwner(MyWolfLanguage.getString("Msg_InventorySwimming"));
+            }
+        }
+    }
+
+    @Override
+    public void activate(MyWolf wolf, Object args)
+    {
+        if (!MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
+        {
+            wolf.Abilities.put("Inventory", true);
+        }
+        if (wolf.inv.getSize() >= 54)
+        {
+            return;
+        }
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory." + (wolf.inv.getSize() + 9)))
+        {
+            return;
+        }
+        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize() + 9, wolf.Name + "\'s Inventory");
+        for (int i = 0 ; i < wolf.inv.getSize() ; i++)
+        {
+            newinv.setItem(i, wolf.inv.getItem(i));
         }
         wolf.inv = newinv;
-        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", wolf.Name).replace("%size%",""+wolf.inv.getSize()));
-	}
+        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", wolf.Name).replace("%size%", "" + wolf.inv.getSize()));
+    }
 }

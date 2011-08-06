@@ -35,57 +35,57 @@ import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfCall implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
-				sender.sendMessage(Wolf.Status.toString());
-				if (!MyWolfPermissions.has(player, "MyWolf.call"))
-				{
-					return true;
-				}
-				if (Wolf.Status == WolfState.Here)
-				{
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                sender.sendMessage(Wolf.Status.toString());
+                if (!MyWolfPermissions.has(player, "MyWolf.call"))
+                {
+                    return true;
+                }
+                if (Wolf.Status == WolfState.Here)
+                {
 
-					SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
-					if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
-					{
-						Wolf.removeWolf();
-						Wolf.setLocation(player.getLocation());
-						Wolf.createWolf(false);
-					}
-					else
-					{
-						Wolf.Wolf.teleport(player);
-					}
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
-					return true;
-				}
-				else if (Wolf.Status == WolfState.Despawned)
-				{
+                    SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                    if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
+                    {
+                        Wolf.removeWolf();
+                        Wolf.setLocation(player.getLocation());
+                        Wolf.createWolf(false);
+                    }
+                    else
+                    {
+                        Wolf.Wolf.teleport(player);
+                    }
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
+                    return true;
+                }
+                else if (Wolf.Status == WolfState.Despawned)
+                {
 
-					SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getContribPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                    SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
 
-					Wolf.setLocation(player.getLocation());
-					Wolf.createWolf(false);
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
-					return true;
-				}
-				else if (Wolf.Status == WolfState.Dead)
-				{
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
-					return true;
-				}
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-			}
-		}
-		return true;
-	}
+                    Wolf.setLocation(player.getLocation());
+                    Wolf.createWolf(false);
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
+                    return true;
+                }
+                else if (Wolf.Status == WolfState.Dead)
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                    return true;
+                }
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            }
+        }
+        return true;
+    }
 }

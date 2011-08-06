@@ -32,62 +32,62 @@ import org.bukkit.entity.Player;
 
 public class MyWolfBehavior implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (Wolf.Status == WolfState.Despawned)
-				{
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
-					return true;
-				}
-				else if (MyWolfUtil.hasSkill(Wolf.Abilities, "Behavior"))
-				{
-					if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Normal")))
-					{
-						if (args[0].equalsIgnoreCase("Raid"))
-						{
-							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Raid);
-						}
-						else if (args[0].equalsIgnoreCase("Friendly"))
-						{
-							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
-						}
-						else if (args[0].equalsIgnoreCase("Aggressive"))
-						{
-							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
-						}
-						else if (args[0].equalsIgnoreCase("Normal"))
-						{
-							ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Normal);
-						}
-					}
-					else if (args.length > 0)
-					{
-						return false;
-					}
-					else
-					{
-						ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, null);
-					}
-					sender.sendMessage("Your wolf is now in " + Wolf.Behavior.toString() + " mode");
-				}
-				else
-				{
-					sender.sendMessage("Your wolf can't switch behavior mode!");
-				}
-				return true;
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-			}
-		}
-		return true;
-	}
+                if (Wolf.Status == WolfState.Despawned)
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    return true;
+                }
+                else if (MyWolfUtil.hasSkill(Wolf.Abilities, "Behavior"))
+                {
+                    if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Normal")))
+                    {
+                        if (args[0].equalsIgnoreCase("Raid"))
+                        {
+                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Raid);
+                        }
+                        else if (args[0].equalsIgnoreCase("Friendly"))
+                        {
+                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
+                        }
+                        else if (args[0].equalsIgnoreCase("Aggressive"))
+                        {
+                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
+                        }
+                        else if (args[0].equalsIgnoreCase("Normal"))
+                        {
+                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Normal);
+                        }
+                    }
+                    else if (args.length > 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, null);
+                    }
+                    sender.sendMessage("Your wolf is now in " + Wolf.Behavior.toString() + " mode");
+                }
+                else
+                {
+                    sender.sendMessage("Your wolf can't switch behavior mode!");
+                }
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            }
+        }
+        return true;
+    }
 }

@@ -30,38 +30,38 @@ import org.bukkit.entity.Player;
 
 public class MyWolfName implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				if (!MyWolfPermissions.has(player, "MyWolf.setname"))
-				{
-					return true;
-				}
-				if (args.length < 1)
-				{
-					return false;
-				}
-				String name = "";
-				for (String arg : args)
-				{
-					name += arg + " ";
-				}
-				name = name.substring(0, name.length() - 1);
-				ConfigBuffer.mWolves.get(player.getName()).SetName(name);
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
-				return true;
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-				return true;
-			}
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                if (!MyWolfPermissions.has(player, "MyWolf.setname"))
+                {
+                    return true;
+                }
+                if (args.length < 1)
+                {
+                    return false;
+                }
+                String name = "";
+                for (String arg : args)
+                {
+                    name += arg + " ";
+                }
+                name = name.substring(0, name.length() - 1);
+                ConfigBuffer.mWolves.get(player.getName()).SetName(name);
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                return true;
+            }
 
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 }

@@ -26,40 +26,40 @@ import de.Keyle.MyWolf.util.MyWolfPermissions;
 
 public class Behavior extends MyWolfSkill
 {
-	public Behavior()
-	{
-		super("Behavior");
-		registerSkill();
-	}
+    public Behavior()
+    {
+        super("Behavior");
+        registerSkill();
+    }
 
-	@Override
-	public void run(MyWolf wolf, Object args)
-	{
-		if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-		{
-			return;
-		}
-		if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Behavior"))
-		{
-			if (args instanceof BehaviorState)
-			{
-				wolf.Behavior = (BehaviorState) args;
-			}
-			else
-			{
-				if (wolf.Behavior == BehaviorState.Normal)
-				{
-					wolf.Behavior = BehaviorState.Friendly;
-				}
-				else if (wolf.Behavior == BehaviorState.Friendly)
-				{
-					wolf.Behavior = BehaviorState.Aggressive;
-				}
-				else if (wolf.Behavior == BehaviorState.Aggressive || wolf.Behavior == BehaviorState.Raid)
-				{
-					wolf.Behavior = BehaviorState.Normal;
-				}
-			}
-		}
-	}
+    @Override
+    public void run(MyWolf wolf, Object args)
+    {
+        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        {
+            return;
+        }
+        if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Behavior"))
+        {
+            if (args instanceof BehaviorState)
+            {
+                wolf.Behavior = (BehaviorState) args;
+            }
+            else
+            {
+                if (wolf.Behavior == BehaviorState.Normal)
+                {
+                    wolf.Behavior = BehaviorState.Friendly;
+                }
+                else if (wolf.Behavior == BehaviorState.Friendly)
+                {
+                    wolf.Behavior = BehaviorState.Aggressive;
+                }
+                else if (wolf.Behavior == BehaviorState.Aggressive || wolf.Behavior == BehaviorState.Raid)
+                {
+                    wolf.Behavior = BehaviorState.Normal;
+                }
+            }
+        }
+    }
 }

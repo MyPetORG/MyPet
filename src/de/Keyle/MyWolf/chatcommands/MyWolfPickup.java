@@ -31,40 +31,40 @@ import org.bukkit.entity.Player;
 
 public class MyWolfPickup implements CommandExecutor
 {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-	{
-		if (sender instanceof Player)
-		{
-			Player player = (Player) sender;
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
 
-				if (Wolf.Status == WolfState.Despawned)
-				{
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
-					return true;
-				}
-				else if (Wolf.Status == WolfState.Dead)
-				{
-					sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
-					return true;
-				}
-				if (MyWolfUtil.hasSkill(Wolf.Abilities, "Pickup"))
-				{
-					ConfigBuffer.RegisteredSkills.get("Pickup").run(Wolf, null);
-				}
-				else
-				{
-					sender.sendMessage("Your wolf can't pickup items!");
-				}
-				return true;
-			}
-			else
-			{
-				sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-			}
-		}
-		return true;
-	}
+                if (Wolf.Status == WolfState.Despawned)
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    return true;
+                }
+                else if (Wolf.Status == WolfState.Dead)
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                    return true;
+                }
+                if (MyWolfUtil.hasSkill(Wolf.Abilities, "Pickup"))
+                {
+                    ConfigBuffer.RegisteredSkills.get("Pickup").run(Wolf, null);
+                }
+                else
+                {
+                    sender.sendMessage("Your wolf can't pickup items!");
+                }
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            }
+        }
+        return true;
+    }
 }

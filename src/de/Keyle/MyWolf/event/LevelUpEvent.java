@@ -28,27 +28,27 @@ public class LevelUpEvent extends Event
     private static final long serialVersionUID = -605293022023540119L;
 
     private final MyWolf wolf;
-	private final int Level;
+    private final int Level;
 
-	public LevelUpEvent(MyWolf wolf, int Level)
-	{
-		super("LevelUpEvent");
-		this.wolf = wolf;
-		this.Level = Level;
-	}
+    public LevelUpEvent(MyWolf wolf, int Level)
+    {
+        super("LevelUpEvent");
+        this.wolf = wolf;
+        this.Level = Level;
+    }
 
-	public Player getOwner()
-	{
-		return wolf.getOwner();
-	}
+    public Player getOwner()
+    {
+        return wolf.getOwner();
+    }
 
-	public MyWolf getWolf()
-	{
-		return wolf;
-	}
+    public MyWolf getWolf()
+    {
+        return wolf;
+    }
 
-	public int getLevel()
-	{
-		return Level;
-	}
+    public int getLevel()
+    {
+        return Level;
+    }
 }

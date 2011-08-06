@@ -32,26 +32,26 @@ import java.util.Map;
 
 public class ConfigBuffer
 {
-	public static final PluginDescriptionFile pdfFile = MyWolfPlugin.Plugin.getDescription();
+    public static final PluginDescriptionFile pdfFile = MyWolfPlugin.Plugin.getDescription();
 
-	public static Configuration WolvesConfig;
-	public static MyWolfLanguage lv;
+    public static Configuration WolvesConfig;
+    public static MyWolfLanguage lv;
 
-	public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+    public static final List<Player> WolfChestOpened = new ArrayList<Player>();
 
-	public static final Map<String, MyWolf> mWolves = new HashMap<String, MyWolf>();
-	public static final Map<Integer, List<String>> SkillPerLevel = new HashMap<Integer, List<String>>();
-	public static final Map<String, MyWolfSkill> RegisteredSkills = new HashMap<String, MyWolfSkill>();
+    public static final Map<String, MyWolf> mWolves = new HashMap<String, MyWolf>();
+    public static final Map<Integer, List<String>> SkillPerLevel = new HashMap<Integer, List<String>>();
+    public static final Map<String, MyWolfSkill> RegisteredSkills = new HashMap<String, MyWolfSkill>();
 
-	public static void registerSkill(String Name, MyWolfSkill Skill) throws Exception
-	{
-		if (!RegisteredSkills.containsKey(Name))
-		{
-			RegisteredSkills.put(Name, Skill);
-		}
-		else
-		{
-			throw new Exception("There is already a skill registered for " + Name);
-		}
-	}
+    public static void registerSkill(String Name, MyWolfSkill Skill) throws Exception
+    {
+        if (!RegisteredSkills.containsKey(Name))
+        {
+            RegisteredSkills.put(Name, Skill);
+        }
+        else
+        {
+            throw new Exception("There is already a skill registered for " + Name);
+        }
+    }
 }

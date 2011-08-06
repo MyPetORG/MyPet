@@ -29,34 +29,34 @@ import org.bukkit.event.vehicle.VehicleListener;
 
 public class MyWolfVehicleListener extends VehicleListener
 {
-	@Override
-	public void onVehicleEnter(VehicleEnterEvent event)
-	{
-		if (event.isCancelled() || !(event.getVehicle() instanceof Minecart))
-		{
-			return;
-		}
-		if (event.getEntered() instanceof Wolf)
-		{
-			for (String owner : ConfigBuffer.mWolves.keySet())
-			{
-				if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntered().getEntityId())
-				{
-					event.setCancelled(true);
-					break;
-				}
-			}
-		}
-		if (event.getEntered() instanceof Player)
-		{
-			Player player = (Player) event.getEntered();
-			if (ConfigBuffer.mWolves.containsKey(player.getName()))
-			{
-				if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && !ConfigBuffer.mWolves.get(player.getName()).isSitting())
-				{
-					ConfigBuffer.mWolves.get(player.getName()).Wolf.setSitting(true);
-				}
-			}
-		}
-	}
+    @Override
+    public void onVehicleEnter(VehicleEnterEvent event)
+    {
+        if (event.isCancelled() || !(event.getVehicle() instanceof Minecart))
+        {
+            return;
+        }
+        if (event.getEntered() instanceof Wolf)
+        {
+            for (String owner : ConfigBuffer.mWolves.keySet())
+            {
+                if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntered().getEntityId())
+                {
+                    event.setCancelled(true);
+                    break;
+                }
+            }
+        }
+        if (event.getEntered() instanceof Player)
+        {
+            Player player = (Player) event.getEntered();
+            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            {
+                if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && !ConfigBuffer.mWolves.get(player.getName()).isSitting())
+                {
+                    ConfigBuffer.mWolves.get(player.getName()).Wolf.setSitting(true);
+                }
+            }
+        }
+    }
 }
