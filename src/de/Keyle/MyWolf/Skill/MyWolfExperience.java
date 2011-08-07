@@ -30,7 +30,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class MyWolfExperience
 {
@@ -98,7 +97,6 @@ public class MyWolfExperience
         {
             int tmplvl = getLevel();
             Exp += MobEXP.get(type) + Math.random();
-            Logger.getLogger("Minecraft").info("exp: " + Exp);
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
                 MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
