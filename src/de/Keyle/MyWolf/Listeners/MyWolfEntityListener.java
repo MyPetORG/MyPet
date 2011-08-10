@@ -51,95 +51,92 @@ public class MyWolfEntityListener extends EntityListener
             {
                 Player player = (Player) e.getDamager();
 
-                if (!event.isCancelled())
+                if (!ConfigBuffer.mWolves.containsKey(player.getName()))
                 {
-                    if (!ConfigBuffer.mWolves.containsKey(player.getName()))
+                    if (!MyWolfPermissions.has(player, "MyWolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
                     {
-                        if (!MyWolfPermissions.has(player, "MyWolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
+                        return;
+                    }
+                    Wolf TargetWolf = (Wolf) event.getEntity();
+
+                    String OwnerOfTheWolf = ((CraftWolf) TargetWolf).getHandle().getOwnerName();
+                    Player Attacker = (Player) e.getDamager();
+
+                    boolean isTarmed = TargetWolf.isTamed();
+
+                    if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
+                    {
+                        event.setCancelled(true);
+                        ConfigBuffer.mWolves.put(player.getName(), new MyWolf(player.getName()));
+                        ConfigBuffer.mWolves.get(player.getName()).createWolf((Wolf) event.getEntity());
+                        MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+                        player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
+                    }
+                }
+                String WolfOwner = null;
+                for (String owner : ConfigBuffer.mWolves.keySet())
+                {
+
+                    if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntity().getEntityId())
+                    {
+                        WolfOwner = owner;
+                        break;
+                    }
+                }
+                if (WolfOwner != null && WolfOwner.equals(player.getName()))
+                {
+                    MyWolf wolf = ConfigBuffer.mWolves.get(WolfOwner);
+                    wolf.ResetSitTimer();
+                    wolf.SetName();
+                    if (player.getItemInHand().getType() == MyWolfConfig.LeashItem)
+                    {
+                        String msg;
+                        if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
                         {
-                            return;
+                            msg = "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
                         }
-                        Wolf TargetWolf = (Wolf) event.getEntity();
-
-                        String OwnerOfTheWolf = ((CraftWolf) TargetWolf).getHandle().getOwnerName();
-                        Player Attacker = (Player) e.getDamager();
-
-                        boolean isTarmed = TargetWolf.isTamed();
-
-                        if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
+                        else if (wolf.getHealth() > wolf.HealthMax / 3)
+                        {
+                            msg = "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
+                        }
+                        else
+                        {
+                            msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
+                        }
+                        player.sendMessage(MyWolfUtil.SetColors("%wolfname% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
+                        if (MyWolfConfig.LevelSystem)
+                        {
+                            player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+                        }
+                        if (wolf.Wolf.isSitting())
                         {
                             event.setCancelled(true);
-                            ConfigBuffer.mWolves.put(player.getName(), new MyWolf(player.getName()));
-                            ConfigBuffer.mWolves.get(player.getName()).createWolf((Wolf) event.getEntity());
-                            MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
-                            player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
+                            wolf.Wolf.setSitting(true);
                         }
-                    }
-                    String WolfOwner = null;
-                    for (String owner : ConfigBuffer.mWolves.keySet())
-                    {
-
-                        if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntity().getEntityId())
+                        else
                         {
-                            WolfOwner = owner;
-                            break;
+                            event.setCancelled(true);
                         }
                     }
-                    if (WolfOwner != null && WolfOwner.equals(player.getName()))
+                }
+                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                {
+                    if (wolf.getID() == event.getEntity().getEntityId())
                     {
-                        MyWolf wolf = ConfigBuffer.mWolves.get(WolfOwner);
                         wolf.ResetSitTimer();
-                        wolf.SetName();
-                        if (player.getItemInHand().getType() == MyWolfConfig.LeashItem)
+                        if (wolf.getHealth() > wolf.HealthMax)
                         {
-                            String msg;
-                            if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
-                            {
-                                msg = "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
-                            }
-                            else if (wolf.getHealth() > wolf.HealthMax / 3)
-                            {
-                                msg = "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
-                            }
-                            else
-                            {
-                                msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
-                            }
-                            player.sendMessage(MyWolfUtil.SetColors("%wolfname% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
-                            if (MyWolfConfig.LevelSystem)
-                            {
-                                player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
-                            }
-                            if (wolf.Wolf.isSitting())
-                            {
-                                event.setCancelled(true);
-                                wolf.Wolf.setSitting(true);
-                            }
-                            else
-                            {
-                                event.setCancelled(true);
-                            }
+                            wolf.setHealth(wolf.HealthMax);
                         }
-                    }
-                    for (MyWolf wolf : ConfigBuffer.mWolves.values())
-                    {
-                        if (wolf.getID() == event.getEntity().getEntityId())
-                        {
-                            wolf.ResetSitTimer();
-                            if (wolf.getHealth() > wolf.HealthMax)
-                            {
-                                wolf.setHealth(wolf.HealthMax);
-                            }
 
-                            if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
-                            {
-                                event.setCancelled(true);
-                            }
-                            if (!event.isCancelled())
-                            {
-                                wolf.SetName(wolf.getHealth() - event.getDamage());
-                                //wolf.updateHPbar(wolf.getHealth()-event.getDamage());
-                            }
+                        if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
+                        {
+                            event.setCancelled(true);
+                        }
+                        if (!event.isCancelled())
+                        {
+                            wolf.SetName(wolf.getHealth() - event.getDamage());
+                            //wolf.updateHPbar(wolf.getHealth()-event.getDamage());
                         }
                     }
                 }
@@ -184,7 +181,7 @@ public class MyWolfEntityListener extends EntityListener
                 }
             }
         }
-        else if (MyWolfConfig.LevelSystem == true && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+        else if (MyWolfConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
             {

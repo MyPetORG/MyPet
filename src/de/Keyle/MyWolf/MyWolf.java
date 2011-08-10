@@ -354,7 +354,10 @@ public class MyWolf
 
     public void ResetSitTimer()
     {
-        SitTimer = 15;
+        if(MyWolfConfig.SitdownTime > 0)
+        {
+            SitTimer = MyWolfConfig.SitdownTime;
+        }
     }
 
     public void StopTimer()
@@ -387,7 +390,7 @@ public class MyWolf
                         if (Status == WolfState.Here)
                         {
                             SitTimer--;
-                            if (SitTimer <= 0)
+                            if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
                             {
                                 Wolf.setSitting(true);
                             }
