@@ -43,6 +43,7 @@ public class MyWolfConfig
     public static int ExpFactor = 2;
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
+    public static boolean SpoutSounds = true;
 
     public static void setStandart()
     {
@@ -58,6 +59,7 @@ public class MyWolfConfig
         setProperty("MyWolf.expfactor", 2);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.levelsystem", true);
+        setProperty("MyWolf.spoutsounds", true);
 
         if (!Config.getKeys("MyWolf").contains("exp"))
         {
@@ -114,6 +116,7 @@ public class MyWolfConfig
         NameColor = Config.getInt("MyWolf.namecolor", -1);
         NameColor = NameColor <= 0xf ? NameColor : -1;
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
+        SpoutSounds = Config.getBoolean("MyWolf.spoutsounds", true);
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
 
         if (Config.getKeys("MyWolf.exp") != null)

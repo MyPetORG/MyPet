@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.event.LevelUpListener;
+import de.Keyle.MyWolf.util.MyWolfConfig;
 import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfLevelUpListener extends LevelUpListener
@@ -38,7 +39,7 @@ public class MyWolfLevelUpListener extends LevelUpListener
                 if (ConfigBuffer.RegisteredSkills.containsKey(skill))
                 {
                     ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), null);
-                    if (event.getWolf().Status == WolfState.Here)
+                    if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
                     {
                         SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.MP3", false, event.getWolf().getLocation(), 25);
                     }

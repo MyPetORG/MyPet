@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -50,8 +51,10 @@ public class MyWolfCall implements CommandExecutor
                 }
                 if (Wolf.Status == WolfState.Here)
                 {
-
-                    SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                    if(MyWolfConfig.SpoutSounds)
+                    {
+                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                    }
                     if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
                     {
                         Wolf.removeWolf();
@@ -68,8 +71,10 @@ public class MyWolfCall implements CommandExecutor
                 else if (Wolf.Status == WolfState.Despawned)
                 {
 
-                    SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
-
+                    if(MyWolfConfig.SpoutSounds)
+                    {
+                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                    }
                     Wolf.setLocation(player.getLocation());
                     Wolf.createWolf(false);
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
