@@ -105,6 +105,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfbehavior").setExecutor(new MyWolfBehavior());
         getCommand("wolfcompass").setExecutor(new MyWolfCompass());
         getCommand("wolfinfo").setExecutor(new MyWolfInfo());
+
         if (MyWolfConfig.LevelSystem)
         {
             getCommand("wolfexp").setExecutor(new MyWolfEXP());
@@ -210,10 +211,6 @@ public class MyWolfPlugin extends JavaPlugin
 
                 ConfigBuffer.mWolves.get(ownername).setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
 
-                if (WolfLives > MyWolfConfig.MaxLives)
-                {
-                    WolfLives = MyWolfConfig.MaxLives;
-                }
                 ConfigBuffer.mWolves.get(ownername).setHealth(WolfHealthNow);
                 ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfRespawnTime;
                 if (WolfRespawnTime > 0)
@@ -232,7 +229,7 @@ public class MyWolfPlugin extends JavaPlugin
                 {
                     String inv1 = Config.getString("Wolves." + ownername + ".inventory.1", "");
                     String inv2 = Config.getString("Wolves." + ownername + ".inventory.2", "");
-                    inv = inv1 + (inv2 != "" ? ";" + inv2 : "");
+                    inv = inv1 + (!inv2.equals("") ? ";" + inv2 : "");
                     inv = inv.replaceAll(";,,;", ";");
                     inv = inv.replaceAll(";,,", "");
                 }
@@ -283,7 +280,7 @@ public class MyWolfPlugin extends JavaPlugin
                     Items += ",,;";
                 }
             }
-            Items = Items != "" ? Items.substring(0, Items.length() - 1) : Items;
+            Items = !Items.equals("") ? Items.substring(0, Items.length() - 1) : Items;
             Config.setProperty("Wolves." + owner + ".inventory", Items);
             Config.setProperty("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
             Config.setProperty("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
@@ -342,20 +339,10 @@ public class MyWolfPlugin extends JavaPlugin
                 fos.write(buf, 0, i);
             }
         }
-        catch (Exception e)
-        {
-            throw e;
-        }
         finally
         {
-            if (fis != null)
-            {
-                fis.close();
-            }
-            if (fos != null)
-            {
-                fos.close();
-            }
+            fis.close();
+            fos.close();
         }
     }
 }

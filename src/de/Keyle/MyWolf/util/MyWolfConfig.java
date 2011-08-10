@@ -134,7 +134,7 @@ public class MyWolfConfig
         {
             for (String lvl : Config.getKeys("MyWolf.skills"))
             {
-                List<String> Skills = Arrays.asList(Config.getString("MyWolf.skills." + lvl).replace("[", "").replace("]", "").split("\\, "));
+                List<String> Skills = Arrays.asList(Config.getString("MyWolf.skills." + lvl).replace("[", "").replace("]", "").split(", "));
                 ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
             }
         }
