@@ -33,6 +33,9 @@ commands:
   wolfexp:
     aliases: [we,wolfe]
     description: display wolf's EXP
+  wolfinfo:
+    aliases: [winfo,wolfinfo]
+    description: display wolf's HP and EXP
   wolfcompass:
     aliases: [wcomp,wolfcomp]
     description: Let the compass points to your wolf

@@ -104,6 +104,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfpickup").setExecutor(new MyWolfPickup());
         getCommand("wolfbehavior").setExecutor(new MyWolfBehavior());
         getCommand("wolfcompass").setExecutor(new MyWolfCompass());
+        getCommand("wolfinfo").setExecutor(new MyWolfInfo());
         if (MyWolfConfig.LevelSystem)
         {
             getCommand("wolfexp").setExecutor(new MyWolfEXP());
