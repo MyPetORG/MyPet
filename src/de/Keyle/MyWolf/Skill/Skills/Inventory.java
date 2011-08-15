@@ -39,10 +39,6 @@ public class Inventory extends MyWolfSkill
     @Override
     public void run(MyWolf wolf, Object args)
     {
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory"))
-        {
-            return;
-        }
         if (MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
         {
             if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)

@@ -43,7 +43,6 @@ public class MyWolf
     private int ID;
     public int HealthMax = 6;
     private int HealthNow = HealthMax;
-    public int Lives = 5;
     public Wolf Wolf;
     public int RespawnTime = 0;
 
@@ -268,13 +267,13 @@ public class MyWolf
         }
         if (Status == WolfState.Here)
         {
-            if (d > 20)
+            if (d > 100)
             {
-                Wolf.setHealth(20);
+                ((LivingEntity)Wolf).setHealth(100);
             }
             else
             {
-                Wolf.setHealth(HealthNow);
+                ((LivingEntity)Wolf).setHealth(HealthNow);
             }
         }
         SetName();
@@ -466,7 +465,7 @@ public class MyWolf
                             }
                             if (Behavior == BehaviorState.Aggressive)
                             {
-                                if (Wolf.getTarget() == null)
+                                if (Wolf.getTarget() == null || Wolf.getTarget().isDead())
                                 {
                                     for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
                                     {

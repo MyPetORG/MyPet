@@ -28,7 +28,6 @@ import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.ItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
@@ -83,6 +82,28 @@ public class MyWolfEntityListener extends EntityListener
                         break;
                     }
                 }
+                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                {
+                    if (wolf.getID() == event.getEntity().getEntityId())
+                    {
+                        wolf.ResetSitTimer();
+                        if (wolf.getHealth() > wolf.HealthMax)
+                        {
+                            wolf.setHealth(wolf.HealthMax);
+                        }
+
+                        if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
+                        {
+                            event.setCancelled(true);
+                        }
+                        if (!event.isCancelled())
+                        {
+                            wolf.SetName(wolf.getHealth() - event.getDamage());
+                            //wolf.updateHPbar(wolf.getHealth()-event.getDamage());
+                        }
+                        break;
+                    }
+                }
                 if (WolfOwner != null && WolfOwner.equals(player.getName()))
                 {
                     MyWolf wolf = ConfigBuffer.mWolves.get(WolfOwner);
@@ -119,27 +140,6 @@ public class MyWolfEntityListener extends EntityListener
                         }
                     }
                 }
-                for (MyWolf wolf : ConfigBuffer.mWolves.values())
-                {
-                    if (wolf.getID() == event.getEntity().getEntityId())
-                    {
-                        wolf.ResetSitTimer();
-                        if (wolf.getHealth() > wolf.HealthMax)
-                        {
-                            wolf.setHealth(wolf.HealthMax);
-                        }
-
-                        if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
-                        {
-                            event.setCancelled(true);
-                        }
-                        if (!event.isCancelled())
-                        {
-                            wolf.SetName(wolf.getHealth() - event.getDamage());
-                            //wolf.updateHPbar(wolf.getHealth()-event.getDamage());
-                        }
-                    }
-                }
             }
         }
     }
@@ -153,26 +153,6 @@ public class MyWolfEntityListener extends EntityListener
             {
                 if (wolf.getID() == event.getEntity().getEntityId())
                 {
-                    if (MyWolfConfig.MaxLives > 0)
-                    {
-                        wolf.Lives -= 1;
-                        wolf.getOwner().setCompassTarget(wolf.getLocation().getWorld().getSpawnLocation());
-                        if (wolf.Lives <= 0)
-                        {
-                            for (ItemStack is : wolf.inv.getContents())
-                            {
-                                if (is != null)
-                                {
-                                    wolf.Wolf.getWorld().dropItem(wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.damage));
-                                }
-                            }
-                            SendDeathMessage(event);
-                            wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_WolfIsGone")).replace("%wolfname%", wolf.Name));
-                            ConfigBuffer.mWolves.remove(wolf.getOwner().getName());
-                            MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
-                            return;
-                        }
-                    }
                     wolf.Status = WolfState.Dead;
                     wolf.RespawnTime = MyWolfConfig.RespawnTimeFixed + (wolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor);
                     SendDeathMessage(event);
@@ -181,7 +161,7 @@ public class MyWolfEntityListener extends EntityListener
                 }
             }
         }
-        else if (MyWolfConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+        if (MyWolfConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
             {

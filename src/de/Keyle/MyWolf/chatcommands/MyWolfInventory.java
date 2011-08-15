@@ -23,10 +23,13 @@ import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.EntityPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class MyWolfInventory implements CommandExecutor
@@ -36,32 +39,44 @@ public class MyWolfInventory implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            String playername = player.getName();
+            if(args.length == 0)
             {
-                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
-                if (Wolf.Status == WolfState.Despawned)
+                if (ConfigBuffer.mWolves.containsKey(playername))
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                    if (Wolf.Status == WolfState.Despawned)
+                    {
+                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                        return true;
+                    }
+                    else if (Wolf.Status == WolfState.Dead)
+                    {
+                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                        return true;
+                    }
+                    if (MyWolfUtil.hasSkill(Wolf.Abilities, "Inventory"))
+                    {
+                        ConfigBuffer.RegisteredSkills.get("Inventory").run(Wolf, null);
+                    }
+                    else
+                    {
+                        sender.sendMessage("Your wolf don't have an Inventory");
+                    }
                     return true;
-                }
-                else if (Wolf.Status == WolfState.Dead)
-                {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
-                    return true;
-                }
-                if (MyWolfUtil.hasSkill(Wolf.Abilities, "Inventory"))
-                {
-                    ConfigBuffer.RegisteredSkills.get("Inventory").run(Wolf, null);
                 }
                 else
                 {
-                    sender.sendMessage("Your wolf don't have an Inventory");
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
-                return true;
             }
-            else
+            else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.Skills.Inventory.admin"))
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                if (ConfigBuffer.mWolves.containsKey(playername))
+                {
+                    EntityPlayer eh = ((CraftPlayer) player).getHandle();
+                    eh.a(ConfigBuffer.mWolves.get(player.getName()).inv);
+                }
             }
         }
         return true;
