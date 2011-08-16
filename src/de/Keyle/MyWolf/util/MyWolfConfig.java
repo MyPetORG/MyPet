@@ -39,7 +39,6 @@ public class MyWolfConfig
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
-    public static int MaxLives = -1;
     public static int ExpFactor = 2;
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
@@ -55,11 +54,12 @@ public class MyWolfConfig
         setProperty("MyWolf.respawntime.factor", 5);
         setProperty("MyWolf.respawntime.fixed", 0);
         setProperty("MyWolf.sitdowntime", 15);
-        setProperty("MyWolf.max.Lives", -1);
         setProperty("MyWolf.expfactor", 2);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.spoutsounds", true);
+
+        Config.removeProperty("MyWolf.max.Lives");
 
         if (!Config.getKeys("MyWolf").contains("exp"))
         {
@@ -92,6 +92,7 @@ public class MyWolfConfig
 
             list = new LinkedList<String>();
             list.add("Pickup");
+            list.add("Control");
             setProperty("MyWolf.skills.5", list);
 
             list = new LinkedList<String>();
@@ -111,7 +112,6 @@ public class MyWolfConfig
         PickupRange = Config.getInt("MyWolf.pickup.range", 2);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
-        MaxLives = Config.getInt("MyWolf.max.Lives", -1);
         ExpFactor = Config.getInt("MyWolf.expfactor", 2);
         NameColor = Config.getInt("MyWolf.namecolor", -1);
         NameColor = NameColor <= 0xf ? NameColor : -1;
