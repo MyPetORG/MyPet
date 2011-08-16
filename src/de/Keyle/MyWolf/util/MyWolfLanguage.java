@@ -101,7 +101,7 @@ public class MyWolfLanguage
         LV.put("Msg_AddLeash", Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf."));
         LV.put("Msg_HPinfo", Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%"));
         LV.put("Msg_Inventory", Config.getString("MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots."));
-        LV.put("Msg_AddLive", Config.getString("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%"));
+        LV.put("Msg_AddDemage", Config.getString("MyWolf.Message.adddemage", "%green%+1 attackdemage for %aqua%%wolfname%"));
         LV.put("Msg_MaxLives", Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives."));
         LV.put("Msg_AddPickup", Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%."));
         LV.put("Msg_AddHP", Config.getString("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%"));

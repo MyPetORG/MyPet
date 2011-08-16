@@ -38,14 +38,13 @@ public class MyWolfEntityListener extends EntityListener
 {
     public void onEntityDamage(final EntityDamageEvent event)
     {
+        if (!(event instanceof EntityDamageByEntityEvent))
+        {
+            return;
+        }
+        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
         if (event.getEntity() instanceof Wolf)
         {
-            if (!(event instanceof EntityDamageByEntityEvent))
-            {
-                return;
-            }
-            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-
             if (e.getDamager() instanceof Player)
             {
                 Player player = (Player) e.getDamager();
@@ -138,6 +137,17 @@ public class MyWolfEntityListener extends EntityListener
                         {
                             event.setCancelled(true);
                         }
+                    }
+                }
+            }
+            else if(e.getDamager() instanceof Wolf)
+            {
+                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                {
+                    if (wolf.getID() == e.getDamager().getEntityId())
+                    {
+                        event.setDamage(event.getDamage() + wolf.DemageBonus);
+                        break;
                     }
                 }
             }

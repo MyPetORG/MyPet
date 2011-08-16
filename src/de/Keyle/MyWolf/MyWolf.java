@@ -43,6 +43,7 @@ public class MyWolf
     private int ID;
     public int HealthMax = 6;
     private int HealthNow = HealthMax;
+    public int DemageBonus = 0;
     public Wolf Wolf;
     public int RespawnTime = 0;
 

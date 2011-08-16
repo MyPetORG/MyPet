@@ -88,6 +88,7 @@ public class MyWolfConfig
             list = new LinkedList<String>();
             list.add("Inventory");
             list.add("Inventory");
+            list.add("Demage");
             setProperty("MyWolf.skills.3", list);
 
             list = new LinkedList<String>();
@@ -99,6 +100,7 @@ public class MyWolfConfig
             list.add("Behavior");
             list.add("HP");
             list.add("HP");
+            list.add("Demage");
             setProperty("MyWolf.skills.6", list);
         }
 

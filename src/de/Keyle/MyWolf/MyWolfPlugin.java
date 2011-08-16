@@ -116,6 +116,7 @@ public class MyWolfPlugin extends JavaPlugin
         new Live();
         new Pickup();
         new Behavior();
+        new Demage();
 
         new MyWolfSkill("Control").registerSkill();
 
@@ -192,15 +193,10 @@ public class MyWolfPlugin extends JavaPlugin
                 double WolfEXP = Config.getDouble("Wolves." + ownername + ".exp", 0);
                 String WolfWorld = Config.getString("Wolves." + ownername + ".loc.world", getServer().getWorlds().get(0).getName());
                 int WolfHealthNow = Config.getInt("Wolves." + ownername + ".health.now", 6);
-                int WolfLives = Config.getInt("Wolves." + ownername + ".health.lives", 3);
                 int WolfRespawnTime = Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
                 String WolfName = Config.getString("Wolves." + ownername + ".name", "Wolf");
                 boolean Wolvesitting = Config.getBoolean("Wolves." + ownername + ".sitting", false);
 
-                if (WolfLives == 0)
-                {
-                    continue;
-                }
                 if (getServer().getWorld(WolfWorld) == null)
                 {
                     MyWolfUtil.Log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
@@ -288,7 +284,6 @@ public class MyWolfPlugin extends JavaPlugin
             Config.setProperty("Wolves." + owner + ".loc.world", wolf.getLocation().getWorld().getName());
 
             Config.setProperty("Wolves." + owner + ".health.now", wolf.getHealth());
-            Config.setProperty("Wolves." + owner + ".health.lives", wolf.Lives);
             Config.setProperty("Wolves." + owner + ".health.respawntime", wolf.RespawnTime);
             Config.setProperty("Wolves." + owner + ".name", wolf.Name);
             Config.setProperty("Wolves." + owner + ".sitting", wolf.isSitting());
@@ -333,7 +328,7 @@ public class MyWolfPlugin extends JavaPlugin
         try
         {
             byte[] buf = new byte[1024];
-            int i = 0;
+            int i;
             while ((i = fis.read(buf)) != -1)
             {
                 fos.write(buf, 0, i);
