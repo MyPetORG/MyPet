@@ -146,7 +146,7 @@ public class MyWolfEntityListener extends EntityListener
                 {
                     if (wolf.getID() == e.getDamager().getEntityId())
                     {
-                        event.setDamage(event.getDamage() + wolf.DemageBonus);
+                        event.setDamage(event.getDamage() + wolf.DamageBonus);
                         break;
                     }
                 }
@@ -203,30 +203,7 @@ public class MyWolfEntityListener extends EntityListener
         }
         if (wolf != null)
         {
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByProjectileEvent)
-            {
-                EntityDamageByProjectileEvent e = (EntityDamageByProjectileEvent) event.getEntity().getLastDamageCause();
-                if (event.getEntity().getLastDamageCause() instanceof Player)
-                {
-                    if (e.getDamager() == wolf.getOwner())
-                    {
-                        Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("You"));
-                    }
-                    else
-                    {
-                        Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Player")).replace("%player%", ((Player) e.getDamager()).getName());
-                    }
-                }
-                else if (event.getEntity().getLastDamageCause() instanceof Skeleton)
-                {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Skeleton"));
-                }
-                else if (event.getEntity().getLastDamageCause() instanceof Ghast)
-                {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Ghast"));
-                }
-            }
-            else if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
                 if (e.getDamager() instanceof Player)
