@@ -53,7 +53,7 @@ public class MyWolfCall implements CommandExecutor
                 {
                     if(MyWolfConfig.SpoutSounds)
                     {
-                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
                     }
                     if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
                     {
@@ -73,7 +73,7 @@ public class MyWolfCall implements CommandExecutor
 
                     if(MyWolfConfig.SpoutSounds)
                     {
-                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg", true);
+                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
                     }
                     Wolf.setLocation(player.getLocation());
                     Wolf.createWolf(false);

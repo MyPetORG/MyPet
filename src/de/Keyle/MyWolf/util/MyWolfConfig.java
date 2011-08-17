@@ -43,6 +43,8 @@ public class MyWolfConfig
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
     public static boolean SpoutSounds = true;
+    public static String SpoutSoundCall;
+    public static String SpoutSoundLevelup;
 
     public static void setStandart()
     {
@@ -57,7 +59,9 @@ public class MyWolfConfig
         setProperty("MyWolf.expfactor", 2);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.levelsystem", true);
-        setProperty("MyWolf.spoutsounds", true);
+        setProperty("MyWolf.spoutsounds.enabled", true);
+        setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
+        setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
 
         Config.removeProperty("MyWolf.max.Lives");
 
@@ -118,7 +122,9 @@ public class MyWolfConfig
         NameColor = Config.getInt("MyWolf.namecolor", -1);
         NameColor = NameColor <= 0xf ? NameColor : -1;
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
-        SpoutSounds = Config.getBoolean("MyWolf.spoutsounds", true);
+        SpoutSounds = Config.getBoolean("MyWolf.spoutsounds.enabled", true);
+        SpoutSoundCall = Config.getString("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
+        SpoutSoundLevelup = Config.getString("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
 
         if (Config.getKeys("MyWolf.exp") != null)

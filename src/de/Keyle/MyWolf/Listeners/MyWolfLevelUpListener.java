@@ -32,17 +32,17 @@ public class MyWolfLevelUpListener extends LevelUpListener
     @Override
     public void onLevelUp(LevelUpEvent event)
     {
+        if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
+        {
+            SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, event.getWolf().getLocation(), 25);
+        }
         if (ConfigBuffer.SkillPerLevel.containsKey(event.getLevel()))
         {
             for (String skill : ConfigBuffer.SkillPerLevel.get(event.getLevel()))
             {
                 if (ConfigBuffer.RegisteredSkills.containsKey(skill))
                 {
-                    ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), null);
-                    if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
-                    {
-                        SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.MP3", false, event.getWolf().getLocation(), 25);
-                    }
+                    ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), 0);
                 }
             }
         }
