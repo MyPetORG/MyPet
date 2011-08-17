@@ -116,7 +116,7 @@ public class MyWolfPlugin extends JavaPlugin
         new Live();
         new Pickup();
         new Behavior();
-        new Demage();
+        new Damage();
 
         new MyWolfSkill("Control").registerSkill();
 
