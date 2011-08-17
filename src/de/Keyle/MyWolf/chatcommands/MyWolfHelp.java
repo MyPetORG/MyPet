@@ -37,8 +37,18 @@ public class MyWolfHelp implements CommandExecutor
             player.sendMessage("Release your wolf:    /wolfrelease <wolfname>");
             player.sendMessage("Stop wolf attacking:  /wolfstop  (alias: /ws or /wolfs)");
             player.sendMessage("Call your wolf:	          /wolfcall  (alias: /wc or /wolfc)");
-            //player.sendMessage("Compass tagets wolf:	          /wolf compass [stop]");
+            player.sendMessage("Display the EXP:	          /wolfexp  (alias: /we or /wolfe)");
+            player.sendMessage("Display wolf info:	          /wolfinfo  (alias: /winfo)");
+            player.sendMessage("Toggle the behaivior:	          /wolfbehavior [RAID]   (alias: /wb or /wolfb)");
+            player.sendMessage("Toggle wolf pickup on/off:	          /wolfpickup   (alias: /wp or /wolfp)");
+            player.sendMessage("Open the inventory of the wolf:	          /wolfinventory   (alias: /wi or /wolfi)");
+            player.sendMessage("Compass tagets wolf:	          /wolfcompass [stop]");
         }
         return true;
+    }
+
+    private void sendSkillMessage(Player player, String Skill)
+    {
+
     }
 }
