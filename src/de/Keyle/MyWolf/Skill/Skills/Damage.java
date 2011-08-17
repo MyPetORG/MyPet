@@ -25,11 +25,11 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class Damage extends MyWolfSkill
+public class Demage extends MyWolfSkill
 {
-    public Damage()
+    public Demage()
     {
-        super("Damage");
+        super("Demage");
         registerSkill();
     }
 
@@ -40,7 +40,7 @@ public class Damage extends MyWolfSkill
         {
             return;
         }
-        wolf.DamageBonus += 1;
+        wolf.DemageBonus += 1;
         wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddDemage").replace("%wolfname%", wolf.Name)));
     }
 }
