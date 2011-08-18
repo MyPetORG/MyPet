@@ -1,9 +1,9 @@
 /*
 	#######################################
-	###				###
-	### MyWolf EXP-System Level Script 	###
-	### 		by Keyle 		###
-	###				###
+	###				    ###
+	### MyWolf EXP-System Level Script  ###
+	### 		by Keyle 	    ###
+	###				    ###
 	#######################################
 	
 		Usable variables:
@@ -13,7 +13,6 @@
 			name	-> wolf's name
 			player	-> name of the owner
 			maxhp	-> actual maxHP value the wolf has
-			lives	-> lives the wolf ha
 			
 */
 

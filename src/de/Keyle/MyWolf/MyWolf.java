@@ -52,6 +52,7 @@ public class MyWolf
     private int SitTimer = 15;
     private boolean isSitting = false;
     public boolean isPickup = false;
+    public int Healthregen = 60;
 
     //public GenericTexture hpbar = new GenericTexture("http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/hpbar.png");
 
@@ -379,6 +380,7 @@ public class MyWolf
             }
             Timer = MyWolfPlugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.Plugin, new Runnable()
             {
+                int Time2HPregen = Healthregen;
                 public void run()
                 {
                     if (Status == WolfState.Despawned || getOwner() == null)
@@ -389,10 +391,19 @@ public class MyWolf
                     {
                         if (Status == WolfState.Here)
                         {
+                            Time2HPregen--;
                             SitTimer--;
                             if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
                             {
                                 Wolf.setSitting(true);
+                            }
+                            if(Time2HPregen <= 0)
+                            {
+                                Time2HPregen = Healthregen;
+                                if(MyWolfUtil.hasSkill(Abilities, "HPregeneration") && getHealth() < HealthMax)
+                                {
+                                    setHealth(getHealth()+1);
+                                }
                             }
                             if (isPickup)
                             {

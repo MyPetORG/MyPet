@@ -58,6 +58,7 @@ public class MyWolfConfig
         setProperty("MyWolf.sitdowntime", 15);
         setProperty("MyWolf.expfactor", 2);
         setProperty("MyWolf.namecolor", -1);
+        setProperty("MyWolf.hpregendefault", 60);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.spoutsounds.enabled", true);
         setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
@@ -93,17 +94,21 @@ public class MyWolfConfig
             list.add("Inventory");
             list.add("Inventory");
             list.add("Damage");
+            list.add("HPregeneration");
+            list.add("HPregeneration");
             setProperty("MyWolf.skills.3", list);
 
             list = new LinkedList<String>();
             list.add("Pickup");
             list.add("Control");
+            list.add("HPregeneration");
+            list.add("HPregeneration");
             setProperty("MyWolf.skills.5", list);
 
             list = new LinkedList<String>();
             list.add("Behavior");
             list.add("HP");
-            list.add("HP");
+            list.add("HPregeneration");
             list.add("Damage");
             setProperty("MyWolf.skills.6", list);
         }

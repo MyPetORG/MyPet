@@ -25,11 +25,11 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class HP extends MyWolfSkill
+public class HPregeneration extends MyWolfSkill
 {
-    public HP()
+    public HPregeneration()
     {
-        super("HP");
+        super("HPregeneration");
         registerSkill();
     }
 
@@ -40,8 +40,7 @@ public class HP extends MyWolfSkill
         {
             return;
         }
-        wolf.HealthMax += 1;
-        wolf.setHealth(wolf.HealthMax);
-        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", wolf.Name)));
+        wolf.Healthregen -= 1;
+        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHPregeneration").replace("%wolfname%", wolf.Name)));
     }
 }

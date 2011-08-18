@@ -113,7 +113,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         new Inventory();
         new HP();
-        new Live();
+        new HPregeneration();
         new Pickup();
         new Behavior();
         new Damage();

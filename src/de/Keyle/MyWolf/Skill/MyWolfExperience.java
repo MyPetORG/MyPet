@@ -165,7 +165,6 @@ public class MyWolfExperience
             engine.put("name", Wolf.Name);
             engine.put("player", Wolf.Owner);
             engine.put("maxhp", Wolf.HealthMax);
-            engine.put("lives", Wolf.Lives);
             try
             {
                 engine.eval(JSreader);
