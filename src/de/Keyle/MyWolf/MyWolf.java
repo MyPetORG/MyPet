@@ -39,6 +39,7 @@ import java.util.Map;
 public class MyWolf
 {
     public String Name = "Wolf";
+    public String SkinURL = "";
     public final String Owner;
     private int ID;
     public int HealthMax = 6;
@@ -105,6 +106,21 @@ public class MyWolf
         }
     }
     */
+
+    public void setTameSkin(String URL)
+    {
+        if(true)//get online filesize
+        {
+            SkinURL = URL;
+            for(Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
+            {
+                if(SpoutManager.getPlayer(p).isSpoutCraftEnabled())
+                {
+                    SpoutManager.getAppearanceManager().setEntitySkin(SpoutManager.getPlayer(p),Wolf,SkinURL);
+                }
+            }
+        }
+    }
     public void SetName(String Name)
     {
         this.Name = Name;

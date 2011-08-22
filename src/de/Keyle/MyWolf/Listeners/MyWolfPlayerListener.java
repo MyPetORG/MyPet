@@ -39,6 +39,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
+import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfPlayerListener extends PlayerListener
 {
@@ -127,6 +128,18 @@ public class MyWolfPlayerListener extends PlayerListener
     @Override
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
+        // Temp global skin start
+        if(SpoutManager.getPlayer(event.getPlayer()).isSpoutCraftEnabled())
+        {
+            for(MyWolf wolf : ConfigBuffer.mWolves.values())
+            {
+                if(!wolf.SkinURL.equals(""))
+                {
+                    SpoutManager.getAppearanceManager().setEntitySkin(SpoutManager.getPlayer(event.getPlayer()),wolf.Wolf,wolf.SkinURL);
+                }
+            }
+        }
+        // end
         if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
         {
             MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
