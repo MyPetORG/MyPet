@@ -48,8 +48,6 @@ public class MyWolfConfig
 
     public static void setStandart()
     {
-        Config.setHeader("#### The names of the creaturetypes have to be in capital letters!!! Delete the creaturetypes you don't want to change to avoid errors. ####");
-
         setProperty("MyWolf.leash.item", 287);
         setProperty("MyWolf.control.item", 287);
         setProperty("MyWolf.pickup.range", 2);
@@ -63,8 +61,6 @@ public class MyWolfConfig
         setProperty("MyWolf.spoutsounds.enabled", true);
         setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
         setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
-
-        Config.removeProperty("MyWolf.max.Lives");
 
         if (!Config.getKeys("MyWolf").contains("exp"))
         {
