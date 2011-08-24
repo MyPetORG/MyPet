@@ -39,3 +39,5 @@ commands:
   wolfcompass:
     aliases: [wcomp,wolfcomp]
     description: Let the compass points to your wolf
+  wolfskin:
+    description: Set the skin of a wolf
