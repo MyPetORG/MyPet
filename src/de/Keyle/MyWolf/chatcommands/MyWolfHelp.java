@@ -43,12 +43,8 @@ public class MyWolfHelp implements CommandExecutor
             player.sendMessage("Toggle wolf pickup on/off:	          /wolfpickup   (alias: /wp or /wolfp)");
             player.sendMessage("Open the inventory of the wolf:	          /wolfinventory   (alias: /wi or /wolfi)");
             player.sendMessage("Compass tagets wolf:	          /wolfcompass [stop]");
+            player.sendMessage("Changes wolf skin:	          /wolfskin <URL>");
         }
         return true;
-    }
-
-    private void sendSkillMessage(Player player, String Skill)
-    {
-
     }
 }
