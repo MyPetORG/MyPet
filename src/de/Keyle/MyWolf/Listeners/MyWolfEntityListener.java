@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class MyWolfEntityListener extends EntityListener
 {
+    @Override
     public void onEntityDamage(final EntityDamageEvent event)
     {
         if (!(event instanceof EntityDamageByEntityEvent))

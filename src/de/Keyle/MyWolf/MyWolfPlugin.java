@@ -20,6 +20,7 @@
 package de.Keyle.MyWolf;
 
 import de.Keyle.MyWolf.Listeners.*;
+import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
@@ -197,7 +198,9 @@ public class MyWolfPlugin extends JavaPlugin
                 int WolfRespawnTime = Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
                 String WolfName = Config.getString("Wolves." + ownername + ".name", "Wolf");
                 String WolfSkin = Config.getString("Wolves." + ownername + ".skin", "");
-                boolean Wolvesitting = Config.getBoolean("Wolves." + ownername + ".sitting", false);
+                boolean WolfSitting = Config.getBoolean("Wolves." + ownername + ".sitting", false);
+                BehaviorState WolfBehavior = BehaviorState.valueOf(Config.getString("Wolves." + ownername + ".behavior", "Normal"));
+                boolean WolfPickup = Config.getBoolean("Wolves." + ownername + ".pickup", false);
 
                 if (getServer().getWorld(WolfWorld) == null)
                 {
@@ -205,24 +208,31 @@ public class MyWolfPlugin extends JavaPlugin
                     continue;
                 }
 
-                ConfigBuffer.mWolves.put(ownername, new MyWolf(ownername));
+                MyWolf Wolf = new MyWolf(ownername);
 
-                ConfigBuffer.mWolves.get(ownername).setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+                ConfigBuffer.mWolves.put(ownername, Wolf);
 
-                ConfigBuffer.mWolves.get(ownername).setHealth(WolfHealthNow);
-                ConfigBuffer.mWolves.get(ownername).RespawnTime = WolfRespawnTime;
+
+
+                Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+
+                Wolf.setHealth(WolfHealthNow);
+                Wolf.RespawnTime = WolfRespawnTime;
                 if (WolfRespawnTime > 0)
                 {
-                    ConfigBuffer.mWolves.get(ownername).Status = WolfState.Dead;
+                    Wolf.Status = WolfState.Dead;
                 }
                 else
                 {
-                    ConfigBuffer.mWolves.get(ownername).Status = WolfState.Despawned;
+                    Wolf.Status = WolfState.Despawned;
                 }
-                ConfigBuffer.mWolves.get(ownername).SetName(WolfName);
-                ConfigBuffer.mWolves.get(ownername).setSitting(Wolvesitting);
-                ConfigBuffer.mWolves.get(ownername).Experience.setExp(WolfEXP);
-                ConfigBuffer.mWolves.get(ownername).setTameSkin(WolfSkin);
+                Wolf.SetName(WolfName);
+                Wolf.setSitting(WolfSitting);
+                Wolf.Experience.setExp(WolfEXP);
+                Wolf.setTameSkin(WolfSkin);
+                Wolf.Behavior = WolfBehavior;
+                Wolf.isPickup = WolfPickup;
+
                 String inv;
                 if (Config.getKeys("Wolves." + ownername + ".inventory") != null)
                 {
@@ -239,7 +249,7 @@ public class MyWolfPlugin extends JavaPlugin
                 String[] invSplit = inv.split(";");
                 for (int i = 0 ; i < invSplit.length ; i++)
                 {
-                    if (i < ConfigBuffer.mWolves.get(ownername).inv.getSize())
+                    if (i < Wolf.inv.getSize())
                     {
                         String[] itemvalues = invSplit[i].split(",");
                         if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
@@ -248,7 +258,7 @@ public class MyWolfPlugin extends JavaPlugin
                             {
                                 if (Integer.parseInt(itemvalues[1]) <= 64)
                                 {
-                                    ConfigBuffer.mWolves.get(ownername).inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                    Wolf.inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
                                 }
                             }
                         }
@@ -292,10 +302,13 @@ public class MyWolfPlugin extends JavaPlugin
             Config.setProperty("Wolves." + owner + ".sitting", wolf.isSitting());
             Config.setProperty("Wolves." + owner + ".exp", wolf.Experience.getExp());
             Config.setProperty("Wolves." + owner + ".skin", wolf.SkinURL);
+            Config.setProperty("Wolves." + owner + ".behavior", wolf.Behavior.name());
+            Config.setProperty("Wolves." + owner + ".pickup", wolf.isPickup);
         }
         Config.save();
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public static boolean isMyWolf(Wolf wolf)
     {
         for (MyWolf w : ConfigBuffer.mWolves.values())
@@ -308,6 +321,7 @@ public class MyWolfPlugin extends JavaPlugin
         return false;
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Wolf wolf)
     {
         for (MyWolf w : ConfigBuffer.mWolves.values())
@@ -320,6 +334,7 @@ public class MyWolfPlugin extends JavaPlugin
         return null;
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Player player)
     {
         return ConfigBuffer.mWolves.containsKey(player.getName()) ? ConfigBuffer.mWolves.get(player.getName()) : null;

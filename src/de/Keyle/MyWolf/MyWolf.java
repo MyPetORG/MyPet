@@ -110,7 +110,7 @@ public class MyWolf
 
     public void setTameSkin(String URL)
     {
-        if(true)//get online filesize
+        //if(true)  //get online filesize
         {
             SkinURL = URL;
             for(Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
