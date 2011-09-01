@@ -32,6 +32,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.player.EntitySkinType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +117,7 @@ public class MyWolf
             {
                 if(SpoutManager.getPlayer(p).isSpoutCraftEnabled())
                 {
-                    SpoutManager.getAppearanceManager().setEntitySkin(SpoutManager.getPlayer(p),Wolf,SkinURL);
+                    SpoutManager.getAppearanceManager().setGlobalEntitySkin(Wolf,SkinURL, EntitySkinType.WOLF_TAMED);
                 }
             }
         }
