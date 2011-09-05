@@ -35,7 +35,22 @@ public class MyWolfSkin implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if(args.length == 2)
+            {
+                if (!MyWolfPermissions.has(player, "MyWolf.skin.other"))
+                {
+                    return true;
+                }
+                if (ConfigBuffer.mWolves.containsKey(args[0]))
+                {
+                    ConfigBuffer.mWolves.get(args[0]).setTameSkin(args[1]);
+                }
+                else
+                {
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf")));
+                }
+            }
+            else if (ConfigBuffer.mWolves.containsKey(player.getName()))
             {
                 if (!MyWolfPermissions.has(player, "MyWolf.skin.self"))
                 {
@@ -46,17 +61,6 @@ public class MyWolfSkin implements CommandExecutor
                     ConfigBuffer.mWolves.get(player.getName()).setTameSkin(args[0]);
                 }
                 return true;
-            }
-            else if(args.length == 2)
-            {
-                if (!MyWolfPermissions.has(player, "MyWolf.skin.other"))
-                {
-                    return true;
-                }
-                if (ConfigBuffer.mWolves.containsKey(args[1]))
-                {
-                    ConfigBuffer.mWolves.get(args[0]).setTameSkin(args[0]);
-                }
             }
             else
             {

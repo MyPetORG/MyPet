@@ -44,6 +44,7 @@ public class MyWolfHelp implements CommandExecutor
             player.sendMessage("Open the inventory of the wolf:	          /wolfinventory   (alias: /wi or /wolfi)");
             player.sendMessage("Compass tagets wolf:	          /wolfcompass [stop]");
             player.sendMessage("Changes wolf skin:	          /wolfskin <URL>");
+            player.sendMessage("- - - - - - - - - - - - - - - - - - - - - - - -");
         }
         return true;
     }

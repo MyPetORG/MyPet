@@ -43,6 +43,10 @@ public class Inventory extends MyWolfSkill
         {
             if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
             {
+                if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory.open" ))
+                {
+                    return;
+                }
                 wolf.OpenInventory();
                 if (!wolf.isSitting())
                 {
