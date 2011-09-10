@@ -43,6 +43,7 @@ public class MyWolfConfig
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
     public static boolean SpoutSounds = true;
+    public static boolean PermissionsBukkit = false;
     public static String SpoutSoundCall;
     public static String SpoutSoundLevelup;
 
@@ -57,6 +58,7 @@ public class MyWolfConfig
         setProperty("MyWolf.expfactor", 2);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.hpregendefault", 60);
+        setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.spoutsounds.enabled", true);
         setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
@@ -127,6 +129,7 @@ public class MyWolfConfig
         SpoutSoundCall = Config.getString("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
         SpoutSoundLevelup = Config.getString("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
+        PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
 
         if (Config.getKeys("MyWolf.exp") != null)
         {

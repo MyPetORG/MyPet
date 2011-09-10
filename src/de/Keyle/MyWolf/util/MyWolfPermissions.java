@@ -32,7 +32,7 @@ public class MyWolfPermissions
 {
     private static Object Permissions;
 
-    private enum PermissionsType
+    public enum PermissionsType
     {
         NONE, GroupManager, Permissions, PermissionsEX, BukkitPermissions
     }
@@ -44,6 +44,10 @@ public class MyWolfPermissions
         if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null)
         {
             return true;
+        }
+        else if (PermissionsMode == PermissionsType.BukkitPermissions)
+        {
+            return player.hasPermission(node);
         }
         else if (PermissionsMode == PermissionsType.Permissions && Permissions instanceof PermissionHandler)
         {
@@ -63,6 +67,11 @@ public class MyWolfPermissions
         }
         return false;
 
+    }
+
+    public static void setup(PermissionsType pt)
+    {
+        PermissionsMode = pt;
     }
 
     public static void setup()

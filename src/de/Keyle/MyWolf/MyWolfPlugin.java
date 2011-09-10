@@ -29,6 +29,7 @@ import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.ItemStack;
 import org.bukkit.Location;
@@ -94,7 +95,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
         getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, inventoryListener, Event.Priority.Normal, this);
 
-        MyWolfPermissions.setup();
+
 
         getCommand("wolfname").setExecutor(new MyWolfName());
         getCommand("wolfcall").setExecutor(new MyWolfCall());
@@ -125,6 +126,15 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfConfig.Config = this.getConfiguration();
         MyWolfConfig.setStandart();
         MyWolfConfig.loadVariables();
+
+        if(MyWolfConfig.PermissionsBukkit == false)
+        {
+            MyWolfPermissions.setup();
+        }
+        else
+        {
+            MyWolfPermissions.setup(PermissionsType.BukkitPermissions);
+        }
 
         ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
         ConfigBuffer.lv.setStandart();
