@@ -20,6 +20,7 @@
 package de.Keyle.MyWolf.Listeners;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
 import org.getspout.spoutapi.event.inventory.InventoryListener;
 
@@ -32,6 +33,10 @@ public class MyWolfInventoryListener extends InventoryListener
         {
             ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
             ConfigBuffer.WolfChestOpened.remove(event.getPlayer());
+        }
+        if(MyWolfPlugin.OpenMyWolfChests.contains(event.getPlayer()))
+        {
+            MyWolfPlugin.OpenMyWolfChests.remove(event.getPlayer());
         }
     }
 }

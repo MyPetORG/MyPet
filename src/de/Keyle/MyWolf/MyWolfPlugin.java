@@ -43,11 +43,13 @@ import org.bukkit.util.config.Configuration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyWolfPlugin extends JavaPlugin
 {
     public static MyWolfPlugin Plugin;
+    public static final List<Player> OpenMyWolfChests = new ArrayList<Player>();
 
     public void onDisable()
     {
@@ -348,6 +350,13 @@ public class MyWolfPlugin extends JavaPlugin
     public static MyWolf getMyWolf(Player player)
     {
         return ConfigBuffer.mWolves.containsKey(player.getName()) ? ConfigBuffer.mWolves.get(player.getName()) : null;
+    }
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    public static boolean isMyWolfInventoryOpen(Player player)
+    {
+        return OpenMyWolfChests.contains(player) ? true : false;
+
     }
 
     public static void copyFile(File in, File out) throws Exception
