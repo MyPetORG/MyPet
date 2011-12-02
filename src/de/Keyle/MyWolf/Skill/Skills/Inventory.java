@@ -78,7 +78,7 @@ public class Inventory extends MyWolfSkill
         {
             return;
         }
-        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize() + 9, wolf.Name + "\'s Inventory");
+        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize() + 9, "Wolf\'s Inventory");
         for (int i = 0 ; i < wolf.inv.getSize() ; i++)
         {
             newinv.setItem(i, wolf.inv.getItem(i));
