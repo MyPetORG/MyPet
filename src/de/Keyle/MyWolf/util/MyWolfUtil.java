@@ -85,7 +85,7 @@ public class MyWolfUtil
     public static boolean isNPC(Player player)
     {
         Plugin plugin = server.getPluginManager().getPlugin("Citizens");
-        return plugin != null && com.fullwall.Citizens.NPCs.NPCManager.isNPC(player);
+        return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
     }
 
     public static CreatureType getCreatureType(Entity entity)
