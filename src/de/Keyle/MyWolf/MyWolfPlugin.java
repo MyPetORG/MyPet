@@ -61,11 +61,13 @@ public class MyWolfPlugin extends JavaPlugin
                 ConfigBuffer.mWolves.get(owner).removeWolf();
             }
         }
+        
         getServer().getScheduler().cancelTasks(this);
         ConfigBuffer.mWolves.clear();
         ConfigBuffer.WolfChestOpened.clear();
-
+        
         MyWolfUtil.Log.info("[MyWolf] Disabled");
+        
     }
 
     public void onEnable()
@@ -294,7 +296,7 @@ public class MyWolfPlugin extends JavaPlugin
                 ItemStack Item = wolf.inv.getItem(i);
                 if (Item != null)
                 {
-                    Items += Item.id + "," + Item.count + "," + Item.damage + ";";
+                    Items += Item.id + "," + Item.count + "," + Item.getData() + ";";
                 }
                 else
                 {

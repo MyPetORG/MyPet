@@ -37,9 +37,16 @@ public class MyWolfInfo implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            String playerName;
+            if(args != null && args.length > 0)
+            	playerName = args[0];
+            else
+            	playerName = sender.getName();
+            	
+            
+            if (ConfigBuffer.mWolves.containsKey(playerName))
             {
-                MyWolf wolf = ConfigBuffer.mWolves.get(player.getName());
+                MyWolf wolf = ConfigBuffer.mWolves.get(playerName);
                 String msg;
                 if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
                 {
@@ -58,11 +65,17 @@ public class MyWolfInfo implements CommandExecutor
                 {
                     player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
                 }
+                if(args != null && args.length > 0)
+                	player.sendMessage(MyWolfUtil.SetColors("Owner: %Owner%").replace("%Owner%", playerName));
                 return true;
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            	if(args != null && args.length > 0)
+            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OtherDontHaveWolf").replace("%playername%", playerName)));
+            	else
+            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+            		
             }
         }
         return true;

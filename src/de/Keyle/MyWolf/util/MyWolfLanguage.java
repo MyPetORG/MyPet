@@ -71,6 +71,7 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.callfirst", "You must call your wolf first.");
         setProperty("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!");
         setProperty("MyWolf.Message.donthavewolf", "You don't have a MyWolf!");
+        setProperty("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!");
         setProperty("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
         setProperty("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
         setProperty("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");
@@ -114,6 +115,7 @@ public class MyWolfLanguage
         LV.put("Msg_Call", Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you."));
         LV.put("Msg_CallFirst", Config.getString("MyWolf.Message.callfirst", "You must call your wolf first."));
         LV.put("Msg_DontHaveWolf", Config.getString("MyWolf.Message.donthavewolf", "You don't have a MyWolf!"));
+        LV.put("Msg_OtherDontHaveWolf", Config.getString("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!"));
         LV.put("Msg_UserDontHaveWolf", Config.getString("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!"));
         LV.put("Msg_NewName", Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%"));
         LV.put("Msg_Name", Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%"));

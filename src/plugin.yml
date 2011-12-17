@@ -1,8 +1,8 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolfPlugin
-version: 0.5.1
+version: 0.5.3
 author: Keyle
-website: http://forums.bukkit.org/threads/16014/
+website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [GroupManager, Permissions, PermissionsEX, WorldGuard]
 depend: [Spout]
 commands:
@@ -36,6 +36,7 @@ commands:
   wolfinfo:
     aliases: [winfo]
     description: display wolf's HP and EXP
+    usage: 'Syntax: /<command> [PlayerName]'
   wolfcompass:
     aliases: [wcomp,wolfcomp]
     description: Let the compass points to your wolf
