@@ -330,6 +330,9 @@ public class MyWolfEntityListener extends EntityListener
                         {
                             event.setCancelled(true);
                         }
+                        else if(event.getTarget() instanceof Player && ((Player)event.getTarget()).getName() == Wolf.getOwner().getName() ){
+                        	event.setCancelled(true);
+                        }
                         else if (Wolf.Behavior == BehaviorState.Raid)
                         {
                             if (event.getTarget() instanceof Player || (event.getTarget() instanceof Wolf && ((Wolf) event.getTarget()).isTamed()))
