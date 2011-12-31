@@ -81,7 +81,10 @@ public class MyWolf
     public MyWolf(String Owner)
     {
         this.Owner = Owner;
-        this.inv = new CustomMCInventory(0, Owner);
+        if(MyWolfConfig.LevelSystem)
+        	this.inv = new CustomMCInventory(0, Owner);
+        else
+        	this.inv = new CustomMCInventory(54, Owner);
         Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
     }
 

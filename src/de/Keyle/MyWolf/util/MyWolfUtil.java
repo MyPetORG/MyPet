@@ -90,6 +90,7 @@ public class MyWolfUtil
 
     public static CreatureType getCreatureType(Entity entity)
     {
+    	//TODO Add new mobs
         if (entity instanceof Zombie)
         {
             return CreatureType.ZOMBIE;
@@ -170,6 +171,9 @@ public class MyWolfUtil
 
     public static boolean hasSkill(Map<String, Boolean> skills, String skill)
     {
+    	if(!MyWolfConfig.LevelSystem)
+    		return true;
+    	
         if (skills.containsKey(skill))
         {
             return skills.get(skill);

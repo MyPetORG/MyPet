@@ -207,6 +207,8 @@ public class MyWolfEntityListener extends EntityListener
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+                
+                //TODO: Add new mobs
                 if (e.getDamager() instanceof Player)
                 {
                     if (e.getDamager() == wolf.getOwner())
