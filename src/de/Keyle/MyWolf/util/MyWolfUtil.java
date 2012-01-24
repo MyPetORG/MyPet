@@ -90,7 +90,6 @@ public class MyWolfUtil
 
     public static CreatureType getCreatureType(Entity entity)
     {
-    	//TODO Add new mobs
         if (entity instanceof Zombie)
         {
             return CreatureType.ZOMBIE;
@@ -146,6 +145,42 @@ public class MyWolfUtil
         else if (entity instanceof Sheep)
         {
             return CreatureType.SHEEP;
+        }
+        else if(entity instanceof CaveSpider)
+        {
+            return CreatureType.CAVE_SPIDER;
+        }
+        else if(entity instanceof Blaze)
+        {
+            return CreatureType.BLAZE;
+        }
+        else if(entity instanceof EnderDragon)
+        {
+            return CreatureType.ENDER_DRAGON;
+        }
+        else if(entity instanceof Enderman)
+        {
+            return CreatureType.ENDERMAN;
+        }
+        else if(entity instanceof MagmaCube)
+        {
+            return CreatureType.MAGMA_CUBE;
+        }
+        else if(entity instanceof MushroomCow)
+        {
+            return CreatureType.MUSHROOM_COW;
+        }
+        else if(entity instanceof Silverfish)
+        {
+            return CreatureType.SILVERFISH;
+        }
+        else if(entity instanceof Snowman)
+        {
+            return CreatureType.SNOWMAN;
+        }
+        else if(entity instanceof Villager)
+        {
+            return CreatureType.VILLAGER;
         }
         return null;
     }
