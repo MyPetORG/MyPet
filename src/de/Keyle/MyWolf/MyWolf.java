@@ -81,7 +81,10 @@ public class MyWolf
     public MyWolf(String Owner)
     {
         this.Owner = Owner;
-        this.inv = new CustomMCInventory(0, Owner);
+        if(MyWolfConfig.LevelSystem)
+        	this.inv = new CustomMCInventory(0, Owner);
+        else
+        	this.inv = new CustomMCInventory(54, Owner);
         Experience = new MyWolfExperience(MyWolfConfig.ExpFactor, this);
     }
 
@@ -125,7 +128,8 @@ public class MyWolf
     public void SetName(String Name)
     {
         this.Name = Name;
-        inv.setName(Name + "\'s Inventory (" + inv.getSize() + ")");
+        //inv.setName(Name + "\'s Inventory (" + inv.getSize() + ")");
+        inv.setName("Wolf\'s Inventory");
         String NameColor;
         if (MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
         {
@@ -389,6 +393,7 @@ public class MyWolf
 
     public void Timer()
     {
+    	
         if (Status != WolfState.Despawned)
         {
             if (Timer != -1)
@@ -445,8 +450,10 @@ public class MyWolf
 
                                         for (int i = 0 ; i < inv.getSize() ; i++)
                                         {
-                                            if (inv.getItem(i) != null && inv.getItem(i).id == ItemID && inv.getItem(i).damage == ItemDuarbility && inv.getItem(i).count < ItemMaxStack)
+                                        	
+                                            if (inv.getItem(i) != null && inv.getItem(i).id == ItemID && inv.getItem(i).getData() == ItemDuarbility && inv.getItem(i).count < ItemMaxStack)
                                             {
+                                            	
                                                 if (ItemAmount >= ItemMaxStack - inv.getItem(i).count)
                                                 {
                                                     ItemAmount = ItemAmount - (ItemMaxStack - inv.getItem(i).count);

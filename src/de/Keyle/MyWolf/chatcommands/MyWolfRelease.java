@@ -70,7 +70,7 @@ public class MyWolfRelease implements CommandExecutor
                     {
                         if (is != null)
                         {
-                            Wolf.Wolf.getWorld().dropItem(Wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.damage));
+                            Wolf.Wolf.getWorld().dropItem(Wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
                         }
                     }
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));

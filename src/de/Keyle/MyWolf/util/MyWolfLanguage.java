@@ -68,9 +68,11 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
         setProperty("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
         setProperty("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
+        setProperty("MyWolf.Message.call", "%aqua%%wolfname%%white% go to home.");
         setProperty("MyWolf.Message.callfirst", "You must call your wolf first.");
         setProperty("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!");
         setProperty("MyWolf.Message.donthavewolf", "You don't have a MyWolf!");
+        setProperty("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!");
         setProperty("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
         setProperty("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
         setProperty("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");
@@ -81,10 +83,12 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
         setProperty("MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
         setProperty("MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
+        setProperty("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
         setProperty("MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
         setProperty("MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
         setProperty("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
         setProperty("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
+        setProperty("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman.");
         setProperty("MyWolf.Message.deathmessage.player", "was killed by %player%.");
         setProperty("MyWolf.Message.deathmessage.drowning", "drowned.");
         setProperty("MyWolf.Message.deathmessage.fall", " died by falling down.");
@@ -93,6 +97,8 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
         setProperty("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf.");
         setProperty("MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");
+        setProperty("MyWolf.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
+        setProperty("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
         Config.save();
     }
@@ -112,8 +118,10 @@ public class MyWolfLanguage
         LV.put("Msg_OnRespawn", Config.getString("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned"));
         LV.put("Msg_CallDead", Config.getString("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec"));
         LV.put("Msg_Call", Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you."));
+        LV.put("Msg_Home", Config.getString("MyWolf.Message.home", "%aqua%%wolfname%%white% go to home."));
         LV.put("Msg_CallFirst", Config.getString("MyWolf.Message.callfirst", "You must call your wolf first."));
         LV.put("Msg_DontHaveWolf", Config.getString("MyWolf.Message.donthavewolf", "You don't have a MyWolf!"));
+        LV.put("Msg_OtherDontHaveWolf", Config.getString("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!"));
         LV.put("Msg_UserDontHaveWolf", Config.getString("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!"));
         LV.put("Msg_NewName", Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%"));
         LV.put("Msg_Name", Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%"));
@@ -122,10 +130,14 @@ public class MyWolfLanguage
         LV.put("Msg_InventorySwimming", Config.getString("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!"));
         LV.put("Creeper", Config.getString("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper."));
         LV.put("Zombie", Config.getString("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie."));
+        LV.put("PigZombie", Config.getString("MyWolf.Message.deathmessage.pigzombie", "was killed by a Pig Zombie."));
         LV.put("Unknow", Config.getString("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source."));
         LV.put("You", Config.getString("MyWolf.Message.deathmessage.you", "was killed by %red%YOU."));
         LV.put("Spider", Config.getString("MyWolf.Message.deathmessage.spider", "was killed by a Spider."));
+        LV.put("CaveSpider", Config.getString("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider."));
+        LV.put("Enderman", Config.getString("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman."));
         LV.put("Skeleton", Config.getString("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton."));
+        LV.put("Silverfish", Config.getString("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish."));
         LV.put("Giant", Config.getString("MyWolf.Message.deathmessage.giant", "was killed by a Giant."));
         LV.put("Slime", Config.getString("MyWolf.Message.deathmessage.slime", "was killed by a Slime."));
         LV.put("Ghast", Config.getString("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast."));

@@ -85,11 +85,12 @@ public class MyWolfUtil
     public static boolean isNPC(Player player)
     {
         Plugin plugin = server.getPluginManager().getPlugin("Citizens");
-        return plugin != null && com.fullwall.Citizens.NPCs.NPCManager.isNPC(player);
+        return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
     }
 
     public static CreatureType getCreatureType(Entity entity)
     {
+    	//TODO Add new mobs
         if (entity instanceof Zombie)
         {
             return CreatureType.ZOMBIE;
@@ -170,6 +171,9 @@ public class MyWolfUtil
 
     public static boolean hasSkill(Map<String, Boolean> skills, String skill)
     {
+    	if(!MyWolfConfig.LevelSystem)
+    		return true;
+    	
         if (skills.containsKey(skill))
         {
             return skills.get(skill);
