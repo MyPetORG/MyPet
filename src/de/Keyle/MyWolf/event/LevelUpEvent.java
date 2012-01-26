@@ -22,10 +22,12 @@ package de.Keyle.MyWolf.event;
 import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 public class LevelUpEvent extends Event
 {
     private static final long serialVersionUID = -605293022023540119L;
+    private static final HandlerList handlers = new HandlerList();
 
     private final MyWolf wolf;
     private final int Level;
@@ -50,5 +52,13 @@ public class LevelUpEvent extends Event
     public int getLevel()
     {
         return Level;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }
