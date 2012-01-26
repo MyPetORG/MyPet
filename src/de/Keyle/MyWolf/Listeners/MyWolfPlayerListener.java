@@ -37,13 +37,17 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 
-public class MyWolfPlayerListener extends PlayerListener
+public class MyWolfPlayerListener implements Listener
 {
     private final int[] ControllIgnoreBlocks = {78, 6, 31, 37, 38, 39, 40, 44, 50, 51, 59, 65, 66, 67, 69, 70, 72, 75, 76, 77, 90, 96};
 
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
     {
         if (event.getRightClicked() instanceof Wolf && ((Wolf) event.getRightClicked()).isTamed())
@@ -64,7 +68,7 @@ public class MyWolfPlayerListener extends PlayerListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
@@ -124,7 +128,7 @@ public class MyWolfPlayerListener extends PlayerListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
         if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
@@ -154,7 +158,7 @@ public class MyWolfPlayerListener extends PlayerListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerPortal(final PlayerPortalEvent event)
     {
         if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
@@ -177,7 +181,7 @@ public class MyWolfPlayerListener extends PlayerListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
         if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
@@ -197,7 +201,7 @@ public class MyWolfPlayerListener extends PlayerListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(final PlayerMoveEvent event)
     {
         if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))

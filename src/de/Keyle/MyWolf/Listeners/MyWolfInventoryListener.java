@@ -21,12 +21,14 @@ package de.Keyle.MyWolf.Listeners;
 
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.inventory.InventoryCloseEvent;
-import org.getspout.spoutapi.event.inventory.InventoryListener;
 
-public class MyWolfInventoryListener extends InventoryListener
+public class MyWolfInventoryListener implements Listener
 {
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onInventoryClose(InventoryCloseEvent event)
     {
         if (ConfigBuffer.WolfChestOpened.contains(event.getPlayer()) && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))

@@ -24,12 +24,15 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 
-public class MyWolfVehicleListener extends VehicleListener
+public class MyWolfVehicleListener implements Listener
 {
-    @Override
+    @EventHandler(priority = EventPriority.LOW)
     public void onVehicleEnter(VehicleEnterEvent event)
     {
         if (event.isCancelled() || !(event.getVehicle() instanceof Minecart))

@@ -75,29 +75,22 @@ public class MyWolfPlugin extends JavaPlugin
         Plugin = this;
 
         MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PORTAL, playerListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(playerListener, this);
 
         MyWolfVehicleListener vehicleListener = new MyWolfVehicleListener();
-        getServer().getPluginManager().registerEvent(Event.Type.VEHICLE_ENTER, vehicleListener, Event.Priority.Low, this);
+        getServer().getPluginManager().registerEvents(vehicleListener, this);
 
         MyWolfWorldListener worldListener = new MyWolfWorldListener();
-        getServer().getPluginManager().registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(worldListener, this);
 
         MyWolfEntityListener entityListener = new MyWolfEntityListener();
-        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(entityListener, this);
 
         MyWolfLevelUpListener levelupListener = new MyWolfLevelUpListener();
-        getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, levelupListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(levelupListener, this);
 
         MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
-        getServer().getPluginManager().registerEvent(Event.Type.CUSTOM_EVENT, inventoryListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvents(inventoryListener, this);
 
 
 

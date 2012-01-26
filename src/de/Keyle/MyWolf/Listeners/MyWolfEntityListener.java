@@ -31,12 +31,15 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-public class MyWolfEntityListener extends EntityListener
+public class MyWolfEntityListener implements Listener
 {
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(final EntityDamageEvent event)
     {
         if (!(event instanceof EntityDamageByEntityEvent))
@@ -155,7 +158,7 @@ public class MyWolfEntityListener extends EntityListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDeath(final EntityDeathEvent event)
     {
         if (event.getEntity() instanceof Wolf)
@@ -314,7 +317,7 @@ public class MyWolfEntityListener extends EntityListener
         }
     }
 
-    @Override
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(final EntityTargetEvent event)
     {
         if (!event.isCancelled())
@@ -330,7 +333,8 @@ public class MyWolfEntityListener extends EntityListener
                         {
                             event.setCancelled(true);
                         }
-                        else if(event.getTarget() instanceof Player && ((Player)event.getTarget()).getName() == Wolf.getOwner().getName() ){
+                        else if(event.getTarget() instanceof Player && ((Player)event.getTarget()).getName().equals(Wolf.getOwner().getName()))
+                        {
                         	event.setCancelled(true);
                         }
                         else if (Wolf.Behavior == BehaviorState.Raid)
