@@ -20,10 +20,11 @@
 package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.util.config.Configuration;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class MyWolfConfig
 {
-    public static Configuration Config;
+    public static FileConfiguration Config;
 
     public static Material LeashItem = Material.STRING;
     public static Material ControlItem = Material.STRING;
@@ -64,7 +65,7 @@ public class MyWolfConfig
         setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
         setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
 
-        if (!Config.getKeys("MyWolf").contains("exp"))
+        if (!Config.getStringList("MyWolf").contains("exp"))
         {
             setProperty("MyWolf.exp.SKELETON", 1.1);
             setProperty("MyWolf.exp.ZOMBIE", 1.1);
@@ -82,7 +83,7 @@ public class MyWolfConfig
             setProperty("MyWolf.exp.SLIME", 1.0);
         }
 
-        if (!Config.getKeys("MyWolf").contains("skills"))
+        if (!Config.getStringList("MyWolf").contains("skills"))
         {
             List<String> list = new LinkedList<String>();
             list.add("Inventory");
@@ -111,7 +112,7 @@ public class MyWolfConfig
             setProperty("MyWolf.skills.6", list);
         }
 
-        Config.save();
+        MyWolfPlugin.Plugin.saveConfig();
     }
 
     public static void loadVariables()
@@ -131,9 +132,9 @@ public class MyWolfConfig
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
 
-        if (Config.getKeys("MyWolf.exp") != null)
+        if (Config.getStringList("MyWolf.exp") != null)
         {
-            for (String key : Config.getKeys("MyWolf.exp"))
+            for (String key : Config.getStringList("MyWolf.exp"))
             {
                 double expval = Config.getDouble("MyWolf.exp." + key, -1.0);
                 if (expval > -1)
@@ -142,9 +143,9 @@ public class MyWolfConfig
                 }
             }
         }
-        if (Config.getKeys("MyWolf.skills") != null)
+        if (Config.getStringList("MyWolf.skills") != null)
         {
-            for (String lvl : Config.getKeys("MyWolf.skills"))
+            for (String lvl : Config.getStringList("MyWolf.skills"))
             {
                 List<String> Skills = Arrays.asList(Config.getString("MyWolf.skills." + lvl).replace("[", "").replace("]", "").split(", "));
                 ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
@@ -154,9 +155,9 @@ public class MyWolfConfig
 
     public static void setProperty(String key, Object value)
     {
-        if (Config.getProperty(key) == null)
+        if (Config.get(key) == null)
         {
-            Config.setProperty(key, value);
+            Config.set(key, value);
         }
     }
 }

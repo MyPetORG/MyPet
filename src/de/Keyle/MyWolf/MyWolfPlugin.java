@@ -34,14 +34,13 @@ import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,27 +118,31 @@ public class MyWolfPlugin extends JavaPlugin
 
         new MyWolfSkill("Control").registerSkill();
 
-        MyWolfConfig.Config = this.getConfiguration();
+        MyWolfConfig.Config = this.getConfig();
         MyWolfConfig.setStandart();
         MyWolfConfig.loadVariables();
 
-        if(MyWolfConfig.PermissionsBukkit == false)
-        {
-            MyWolfPermissions.setup();
-        }
-        else
+        if (MyWolfConfig.PermissionsBukkit)
         {
             MyWolfPermissions.setup(PermissionsType.BukkitPermissions);
         }
+        else
+        {
+            MyWolfPermissions.setup();
+        }
 
-        ConfigBuffer.lv = new MyWolfLanguage(new Configuration(new File(this.getDataFolder().getPath() + File.separator + "lang.yml")));
-        ConfigBuffer.lv.setStandart();
+        ConfigBuffer.lv = new MyWolfLanguage(new File(this.getDataFolder().getPath() + File.separator + "lang.yml"));
+        ConfigBuffer.lv.setDefault();
         ConfigBuffer.lv.loadVariables();
 
         File WolvesConfigFile = new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
-        ConfigBuffer.WolvesConfig = new Configuration(WolvesConfigFile);
-        ConfigBuffer.WolvesConfig.load();
-        List<String> WolfList = ConfigBuffer.WolvesConfig.getKeys("Wolves");
+        ConfigBuffer.WolvesConfig = new YamlConfiguration();
+        try
+        {
+            ConfigBuffer.WolvesConfig.load(WolvesConfigFile);
+        }
+        catch (Exception e){}
+        List<String> WolfList = ConfigBuffer.WolvesConfig.getStringList("Wolves");
 
         LoadWolves(ConfigBuffer.WolvesConfig);
 
@@ -166,12 +169,11 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfUtil.Log.info("[" + ConfigBuffer.pdfFile.getName() + "] version " + ConfigBuffer.pdfFile.getVersion() + " ENABLED");
     }
 
-    public void LoadWolves(Configuration Config)
+    public void LoadWolves(FileConfiguration Config)
     {
         int anzahlWolves = 0;
 
-        Config.load();
-        List<String> WolfList = Config.getKeys("Wolves");
+        List<String> WolfList = Config.getStringList("Wolves");
         if (WolfList != null)
         {
             for (String ownername : WolfList)
@@ -220,19 +222,7 @@ public class MyWolfPlugin extends JavaPlugin
                 Wolf.Behavior = WolfBehavior;
                 Wolf.isPickup = WolfPickup;
 
-                String inv;
-                if (Config.getKeys("Wolves." + ownername + ".inventory") != null)
-                {
-                    String inv1 = Config.getString("Wolves." + ownername + ".inventory.1", "");
-                    String inv2 = Config.getString("Wolves." + ownername + ".inventory.2", "");
-                    inv = inv1 + (!inv2.equals("") ? ";" + inv2 : "");
-                    inv = inv.replaceAll(";,,;", ";");
-                    inv = inv.replaceAll(";,,", "");
-                }
-                else
-                {
-                    inv = Config.getString("Wolves." + ownername + ".inventory", ",,");
-                }
+                String inv = Config.getString("Wolves." + ownername + ".inventory", ",,");
                 String[] invSplit = inv.split(";");
                 for (int i = 0 ; i < invSplit.length ; i++)
                 {
@@ -257,9 +247,9 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfUtil.Log.info("[" + this.getDescription().getName() + "] " + anzahlWolves + " wolf/wolves loaded");
     }
 
-    public void SaveWolves(Configuration Config)
+    public void SaveWolves(FileConfiguration Config)
     {
-        Config.removeProperty("Wolves");
+        Config.set("Wolves",null);
         for (String owner : ConfigBuffer.mWolves.keySet())
         {
             MyWolf wolf = ConfigBuffer.mWolves.get(owner);
@@ -277,22 +267,22 @@ public class MyWolfPlugin extends JavaPlugin
                 }
             }
             Items = !Items.equals("") ? Items.substring(0, Items.length() - 1) : Items;
-            Config.setProperty("Wolves." + owner + ".inventory", Items);
-            Config.setProperty("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
-            Config.setProperty("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
-            Config.setProperty("Wolves." + owner + ".loc.Z", wolf.getLocation().getZ());
-            Config.setProperty("Wolves." + owner + ".loc.world", wolf.getLocation().getWorld().getName());
+            Config.set("Wolves." + owner + ".inventory", Items);
+            Config.set("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
+            Config.set("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
+            Config.set("Wolves." + owner + ".loc.Z", wolf.getLocation().getZ());
+            Config.set("Wolves." + owner + ".loc.world", wolf.getLocation().getWorld().getName());
 
-            Config.setProperty("Wolves." + owner + ".health.now", wolf.getHealth());
-            Config.setProperty("Wolves." + owner + ".health.respawntime", wolf.RespawnTime);
-            Config.setProperty("Wolves." + owner + ".name", wolf.Name);
-            Config.setProperty("Wolves." + owner + ".sitting", wolf.isSitting());
-            Config.setProperty("Wolves." + owner + ".exp", wolf.Experience.getExp());
-            Config.setProperty("Wolves." + owner + ".skin", wolf.SkinURL);
-            Config.setProperty("Wolves." + owner + ".behavior", wolf.Behavior.name());
-            Config.setProperty("Wolves." + owner + ".pickup", wolf.isPickup);
+            Config.set("Wolves." + owner + ".health.now", wolf.getHealth());
+            Config.set("Wolves." + owner + ".health.respawntime", wolf.RespawnTime);
+            Config.set("Wolves." + owner + ".name", wolf.Name);
+            Config.set("Wolves." + owner + ".sitting", wolf.isSitting());
+            Config.set("Wolves." + owner + ".exp", wolf.Experience.getExp());
+            Config.set("Wolves." + owner + ".skin", wolf.SkinURL);
+            Config.set("Wolves." + owner + ".behavior", wolf.Behavior.name());
+            Config.set("Wolves." + owner + ".pickup", wolf.isPickup);
         }
-        Config.save();
+        Plugin.saveConfig();
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -330,7 +320,7 @@ public class MyWolfPlugin extends JavaPlugin
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean isMyWolfInventoryOpen(Player player)
     {
-        return OpenMyWolfChests.contains(player) ? true : false;
+        return OpenMyWolfChests.contains(player);
 
     }
 }

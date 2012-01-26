@@ -21,9 +21,9 @@ package de.Keyle.MyWolf;
 
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.util.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class ConfigBuffer
 {
     public static final PluginDescriptionFile pdfFile = MyWolfPlugin.Plugin.getDescription();
 
-    public static Configuration WolvesConfig;
+    public static FileConfiguration WolvesConfig;
     public static MyWolfLanguage lv;
 
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();

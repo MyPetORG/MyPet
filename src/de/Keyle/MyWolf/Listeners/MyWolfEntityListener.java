@@ -32,14 +32,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class MyWolfEntityListener implements Listener
 {
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler()
     public void onEntityDamage(final EntityDamageEvent event)
     {
         if (!(event instanceof EntityDamageByEntityEvent))
@@ -158,7 +157,7 @@ public class MyWolfEntityListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler()
     public void onEntityDeath(final EntityDeathEvent event)
     {
         if (event.getEntity() instanceof Wolf)
@@ -247,19 +246,19 @@ public class MyWolfEntityListener implements Listener
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Skeleton"));
                 }
-                else if (e.getDamager() instanceof org.bukkit.entity.CaveSpider)
+                else if (e.getDamager() instanceof CaveSpider)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("CaveSpider"));
                 }
-                else if (e.getDamager() instanceof org.bukkit.entity.Enderman)
+                else if (e.getDamager() instanceof Enderman)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Enderman"));
                 }
-                else if (e.getDamager() instanceof org.bukkit.entity.PigZombie)
+                else if (e.getDamager() instanceof PigZombie)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("PigZombie"));
                 }
-                else if (e.getDamager() instanceof org.bukkit.entity.Silverfish)
+                else if (e.getDamager() instanceof Silverfish)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Silverfish"));
                 }
@@ -317,7 +316,7 @@ public class MyWolfEntityListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler()
     public void onEntityTarget(final EntityTargetEvent event)
     {
         if (!event.isCancelled())

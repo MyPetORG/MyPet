@@ -25,13 +25,12 @@ import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfLevelUpListener implements Listener
 {
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler()
     public void onLevelUp(LevelUpEvent event)
     {
         if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)

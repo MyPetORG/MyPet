@@ -24,14 +24,12 @@ import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.event.world.WorldListener;
 
 public class MyWolfWorldListener implements Listener
 {
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler()
     public void onChunkUnload(ChunkUnloadEvent event)
     {
         for (Entity e : event.getChunk().getEntities())

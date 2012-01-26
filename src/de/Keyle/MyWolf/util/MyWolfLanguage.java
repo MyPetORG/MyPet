@@ -19,19 +19,29 @@
 
 package de.Keyle.MyWolf.util;
 
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyWolfLanguage
 {
-    private final Configuration Config;
+    private File ConfigFile;
+    private final FileConfiguration Config;
 
-    public MyWolfLanguage(Configuration cfg)
+    public MyWolfLanguage(File cfg)
     {
-        Config = cfg;
-        Config.load();
+        ConfigFile = cfg;
+        Config = new YamlConfiguration();
+        try
+        {
+            Config.load(ConfigFile);
+        }
+        catch (Exception ignored)
+        {}
     }
 
     private static final Map<String, String> LV = new HashMap<String, String>();
@@ -47,13 +57,13 @@ public class MyWolfLanguage
 
     public void setProperty(String key, Object value)
     {
-        if (Config.getProperty(key) == null)
+        if (Config.get(key) == null)
         {
-            Config.setProperty(key, value);
+            Config.set(key, value);
         }
     }
 
-    public void setStandart()
+    public void setDefault()
     {
         setProperty("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
         setProperty("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
@@ -100,7 +110,7 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
         setProperty("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
-        Config.save();
+        saveConfig();
     }
 
     public void loadVariables()
@@ -149,5 +159,18 @@ public class MyWolfLanguage
         LV.put("Fall", Config.getString("MyWolf.Message.deathmessage.fall", " died by falling down."));
         LV.put("Lightning", Config.getString("MyWolf.Message.deathmessage.lightning", "was killed by lightning."));
         LV.put("kvoid", Config.getString("MyWolf.Message.deathmessage.fire", "was killed by the VOID."));
+    }
+
+    public boolean saveConfig()
+    {
+        try
+        {
+            Config.save(ConfigFile);
+            return true;
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
     }
 }
