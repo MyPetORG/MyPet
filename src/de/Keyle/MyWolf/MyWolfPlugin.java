@@ -36,7 +36,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -141,25 +140,6 @@ public class MyWolfPlugin extends JavaPlugin
         ConfigBuffer.WolvesConfig = new Configuration(WolvesConfigFile);
         ConfigBuffer.WolvesConfig.load();
         List<String> WolfList = ConfigBuffer.WolvesConfig.getKeys("Wolves");
-        if (WolfList != null)
-        {
-            for (String ownername : WolfList)
-            {
-                if (ConfigBuffer.WolvesConfig.getKeys("Wolves." + ownername + ".inventory") != null)
-                {
-                    try
-                    {
-                        copyFile(WolvesConfigFile, new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml.backup"));
-                        MyWolfUtil.Log.info("[MyWolf] Created backup. See this file if players want their items back");
-                        break;
-                    }
-                    catch (Exception e)
-                    {
-                        MyWolfUtil.Log.info("[MyWolf] Can not create backup. Sorry for lost items :´(");
-                    }
-                }
-            }
-        }
 
         LoadWolves(ConfigBuffer.WolvesConfig);
 
@@ -352,25 +332,5 @@ public class MyWolfPlugin extends JavaPlugin
     {
         return OpenMyWolfChests.contains(player) ? true : false;
 
-    }
-
-    public static void copyFile(File in, File out) throws Exception
-    {
-        FileInputStream fis = new FileInputStream(in);
-        FileOutputStream fos = new FileOutputStream(out);
-        try
-        {
-            byte[] buf = new byte[1024];
-            int i;
-            while ((i = fis.read(buf)) != -1)
-            {
-                fos.write(buf, 0, i);
-            }
-        }
-        finally
-        {
-            fis.close();
-            fos.close();
-        }
     }
 }
