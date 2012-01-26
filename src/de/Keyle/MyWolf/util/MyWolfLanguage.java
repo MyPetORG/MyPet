@@ -19,29 +19,16 @@
 
 package de.Keyle.MyWolf.util;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyWolfLanguage
 {
-    private File ConfigFile;
-    private final FileConfiguration Config;
+    private final MyWolfConfiguration MWC;
 
-    public MyWolfLanguage(File cfg)
+    public MyWolfLanguage(MyWolfConfiguration MWC)
     {
-        ConfigFile = cfg;
-        Config = new YamlConfiguration();
-        try
-        {
-            Config.load(ConfigFile);
-        }
-        catch (Exception ignored)
-        {}
+        this.MWC = MWC;
     }
 
     private static final Map<String, String> LV = new HashMap<String, String>();
@@ -57,9 +44,9 @@ public class MyWolfLanguage
 
     public void setProperty(String key, Object value)
     {
-        if (Config.get(key) == null)
+        if (MWC.Config.get(key) == null)
         {
-            Config.set(key, value);
+            MWC.Config.set(key, value);
         }
     }
 
@@ -110,67 +97,54 @@ public class MyWolfLanguage
         setProperty("MyWolf.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
         setProperty("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
-        saveConfig();
+        MWC.saveConfig();
     }
 
     public void loadVariables()
     {
-        LV.put("Msg_AddLeash", Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf."));
-        LV.put("Msg_HPinfo", Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%"));
-        LV.put("Msg_Inventory", Config.getString("MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots."));
-        LV.put("Msg_AddDemage", Config.getString("MyWolf.Message.adddemage", "%green%+1 attackdemage for %aqua%%wolfname%"));
-        LV.put("Msg_MaxLives", Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives."));
-        LV.put("Msg_AddPickup", Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%."));
-        LV.put("Msg_AddHP", Config.getString("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%"));
-        LV.put("Msg_WolfIsGone", Config.getString("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . ."));
-        LV.put("Msg_DeathMessage", Config.getString("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% "));
-        LV.put("Msg_RespawnIn", Config.getString("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec"));
-        LV.put("Msg_OnRespawn", Config.getString("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned"));
-        LV.put("Msg_CallDead", Config.getString("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec"));
-        LV.put("Msg_Call", Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you."));
-        LV.put("Msg_Home", Config.getString("MyWolf.Message.home", "%aqua%%wolfname%%white% go to home."));
-        LV.put("Msg_CallFirst", Config.getString("MyWolf.Message.callfirst", "You must call your wolf first."));
-        LV.put("Msg_DontHaveWolf", Config.getString("MyWolf.Message.donthavewolf", "You don't have a MyWolf!"));
-        LV.put("Msg_OtherDontHaveWolf", Config.getString("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!"));
-        LV.put("Msg_UserDontHaveWolf", Config.getString("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!"));
-        LV.put("Msg_NewName", Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%"));
-        LV.put("Msg_Name", Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%"));
-        LV.put("Msg_Release", Config.getString("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green$free%white% . . ."));
-        LV.put("Msg_StopAttack", Config.getString("MyWolf.Message.stopattack", "%wolfname% should now %green%stop%white% attacking!"));
-        LV.put("Msg_InventorySwimming", Config.getString("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!"));
-        LV.put("Creeper", Config.getString("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper."));
-        LV.put("Zombie", Config.getString("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie."));
-        LV.put("PigZombie", Config.getString("MyWolf.Message.deathmessage.pigzombie", "was killed by a Pig Zombie."));
-        LV.put("Unknow", Config.getString("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source."));
-        LV.put("You", Config.getString("MyWolf.Message.deathmessage.you", "was killed by %red%YOU."));
-        LV.put("Spider", Config.getString("MyWolf.Message.deathmessage.spider", "was killed by a Spider."));
-        LV.put("CaveSpider", Config.getString("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider."));
-        LV.put("Enderman", Config.getString("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman."));
-        LV.put("Skeleton", Config.getString("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton."));
-        LV.put("Silverfish", Config.getString("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish."));
-        LV.put("Giant", Config.getString("MyWolf.Message.deathmessage.giant", "was killed by a Giant."));
-        LV.put("Slime", Config.getString("MyWolf.Message.deathmessage.slime", "was killed by a Slime."));
-        LV.put("Ghast", Config.getString("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast."));
-        LV.put("Wolf", Config.getString("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf."));
-        LV.put("PlayerWolf", Config.getString("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf ."));
-        LV.put("Player", Config.getString("MyWolf.Message.deathmessage.player", "was killed by %player%."));
-        LV.put("Drowning", Config.getString("MyWolf.Message.deathmessage.drowning", "drowned."));
-        LV.put("Explosion", Config.getString("MyWolf.Message.deathmessage.explosion", "was killed by an explosion."));
-        LV.put("Fall", Config.getString("MyWolf.Message.deathmessage.fall", " died by falling down."));
-        LV.put("Lightning", Config.getString("MyWolf.Message.deathmessage.lightning", "was killed by lightning."));
-        LV.put("kvoid", Config.getString("MyWolf.Message.deathmessage.fire", "was killed by the VOID."));
-    }
-
-    public boolean saveConfig()
-    {
-        try
-        {
-            Config.save(ConfigFile);
-            return true;
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
+        LV.put("Msg_AddLeash", MWC.Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf."));
+        LV.put("Msg_HPinfo", MWC.Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%"));
+        LV.put("Msg_Inventory", MWC.Config.getString("MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots."));
+        LV.put("Msg_AddDemage", MWC.Config.getString("MyWolf.Message.adddemage", "%green%+1 attackdemage for %aqua%%wolfname%"));
+        LV.put("Msg_MaxLives", MWC.Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives."));
+        LV.put("Msg_AddPickup", MWC.Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%."));
+        LV.put("Msg_AddHP", MWC.Config.getString("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%"));
+        LV.put("Msg_WolfIsGone", MWC.Config.getString("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . ."));
+        LV.put("Msg_DeathMessage", MWC.Config.getString("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% "));
+        LV.put("Msg_RespawnIn", MWC.Config.getString("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec"));
+        LV.put("Msg_OnRespawn", MWC.Config.getString("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned"));
+        LV.put("Msg_CallDead", MWC.Config.getString("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec"));
+        LV.put("Msg_Call", MWC.Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you."));
+        LV.put("Msg_Home", MWC.Config.getString("MyWolf.Message.home", "%aqua%%wolfname%%white% go to home."));
+        LV.put("Msg_CallFirst", MWC.Config.getString("MyWolf.Message.callfirst", "You must call your wolf first."));
+        LV.put("Msg_DontHaveWolf", MWC.Config.getString("MyWolf.Message.donthavewolf", "You don't have a MyWolf!"));
+        LV.put("Msg_OtherDontHaveWolf", MWC.Config.getString("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!"));
+        LV.put("Msg_UserDontHaveWolf", MWC.Config.getString("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!"));
+        LV.put("Msg_NewName", MWC.Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%"));
+        LV.put("Msg_Name", MWC.Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%"));
+        LV.put("Msg_Release", MWC.Config.getString("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green$free%white% . . ."));
+        LV.put("Msg_StopAttack", MWC.Config.getString("MyWolf.Message.stopattack", "%wolfname% should now %green%stop%white% attacking!"));
+        LV.put("Msg_InventorySwimming", MWC.Config.getString("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!"));
+        LV.put("Creeper", MWC.Config.getString("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper."));
+        LV.put("Zombie", MWC.Config.getString("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie."));
+        LV.put("PigZombie", MWC.Config.getString("MyWolf.Message.deathmessage.pigzombie", "was killed by a Pig Zombie."));
+        LV.put("Unknow", MWC.Config.getString("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source."));
+        LV.put("You", MWC.Config.getString("MyWolf.Message.deathmessage.you", "was killed by %red%YOU."));
+        LV.put("Spider", MWC.Config.getString("MyWolf.Message.deathmessage.spider", "was killed by a Spider."));
+        LV.put("CaveSpider", MWC.Config.getString("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider."));
+        LV.put("Enderman", MWC.Config.getString("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman."));
+        LV.put("Skeleton", MWC.Config.getString("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton."));
+        LV.put("Silverfish", MWC.Config.getString("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish."));
+        LV.put("Giant", MWC.Config.getString("MyWolf.Message.deathmessage.giant", "was killed by a Giant."));
+        LV.put("Slime", MWC.Config.getString("MyWolf.Message.deathmessage.slime", "was killed by a Slime."));
+        LV.put("Ghast", MWC.Config.getString("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast."));
+        LV.put("Wolf", MWC.Config.getString("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf."));
+        LV.put("PlayerWolf", MWC.Config.getString("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf ."));
+        LV.put("Player", MWC.Config.getString("MyWolf.Message.deathmessage.player", "was killed by %player%."));
+        LV.put("Drowning", MWC.Config.getString("MyWolf.Message.deathmessage.drowning", "drowned."));
+        LV.put("Explosion", MWC.Config.getString("MyWolf.Message.deathmessage.explosion", "was killed by an explosion."));
+        LV.put("Fall", MWC.Config.getString("MyWolf.Message.deathmessage.fall", " died by falling down."));
+        LV.put("Lightning", MWC.Config.getString("MyWolf.Message.deathmessage.lightning", "was killed by lightning."));
+        LV.put("kvoid", MWC.Config.getString("MyWolf.Message.deathmessage.fire", "was killed by the VOID."));
     }
 }
