@@ -31,7 +31,6 @@ import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import net.minecraft.server.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MyWolfPlugin extends JavaPlugin
 {
@@ -161,76 +161,78 @@ public class MyWolfPlugin extends JavaPlugin
     public void LoadWolves(MyWolfConfiguration MWC)
     {
         int anzahlWolves = 0;
-
-        List<String> WolfList = MWC.Config.getStringList("Wolves");
-        if (WolfList != null)
+        if(MWC.Config.contains("Wolves"))
         {
-            for (String ownername : WolfList)
+            Set<String> WolfList = MWC.Config.getConfigurationSection("Wolves").getKeys(false);
+            if (WolfList.size() != 0)
             {
-                double WolfX = MWC.Config.getDouble("Wolves." + ownername + ".loc.X", 0);
-                double WolfY = MWC.Config.getDouble("Wolves." + ownername + ".loc.Y", 0);
-                double WolfZ = MWC.Config.getDouble("Wolves." + ownername + ".loc.Z", 0);
-                double WolfEXP = MWC.Config.getDouble("Wolves." + ownername + ".exp", 0);
-                String WolfWorld = MWC.Config.getString("Wolves." + ownername + ".loc.world", getServer().getWorlds().get(0).getName());
-                int WolfHealthNow = MWC.Config.getInt("Wolves." + ownername + ".health.now", 6);
-                int WolfRespawnTime = MWC.Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
-                String WolfName = MWC.Config.getString("Wolves." + ownername + ".name", "Wolf");
-                String WolfSkin = MWC.Config.getString("Wolves." + ownername + ".skin", "");
-                boolean WolfSitting = MWC.Config.getBoolean("Wolves." + ownername + ".sitting", false);
-                BehaviorState WolfBehavior = BehaviorState.valueOf(MWC.Config.getString("Wolves." + ownername + ".behavior", "Normal"));
-                boolean WolfPickup = MWC.Config.getBoolean("Wolves." + ownername + ".pickup", false);
-
-                if (getServer().getWorld(WolfWorld) == null)
+                for (String ownername : WolfList)
                 {
-                    MyWolfUtil.Log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
-                    continue;
-                }
+                    double WolfX = MWC.Config.getDouble("Wolves." + ownername + ".loc.X", 0);
+                    double WolfY = MWC.Config.getDouble("Wolves." + ownername + ".loc.Y", 0);
+                    double WolfZ = MWC.Config.getDouble("Wolves." + ownername + ".loc.Z", 0);
+                    double WolfEXP = MWC.Config.getDouble("Wolves." + ownername + ".exp", 0);
+                    String WolfWorld = MWC.Config.getString("Wolves." + ownername + ".loc.world", getServer().getWorlds().get(0).getName());
+                    int WolfHealthNow = MWC.Config.getInt("Wolves." + ownername + ".health.now", 6);
+                    int WolfRespawnTime = MWC.Config.getInt("Wolves." + ownername + ".health.respawntime", 0);
+                    String WolfName = MWC.Config.getString("Wolves." + ownername + ".name", "Wolf");
+                    String WolfSkin = MWC.Config.getString("Wolves." + ownername + ".skin", "");
+                    boolean WolfSitting = MWC.Config.getBoolean("Wolves." + ownername + ".sitting", false);
+                    BehaviorState WolfBehavior = BehaviorState.valueOf(MWC.Config.getString("Wolves." + ownername + ".behavior", "Normal"));
+                    boolean WolfPickup = MWC.Config.getBoolean("Wolves." + ownername + ".pickup", false);
 
-                MyWolf Wolf = new MyWolf(ownername);
-
-                ConfigBuffer.mWolves.put(ownername, Wolf);
-
-
-
-                Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
-
-                Wolf.setHealth(WolfHealthNow);
-                Wolf.RespawnTime = WolfRespawnTime;
-                if (WolfRespawnTime > 0)
-                {
-                    Wolf.Status = WolfState.Dead;
-                }
-                else
-                {
-                    Wolf.Status = WolfState.Despawned;
-                }
-                Wolf.SetName(WolfName);
-                Wolf.setSitting(WolfSitting);
-                Wolf.Experience.setExp(WolfEXP);
-                Wolf.setTameSkin(WolfSkin);
-                Wolf.Behavior = WolfBehavior;
-                Wolf.isPickup = WolfPickup;
-
-                String inv = MWC.Config.getString("Wolves." + ownername + ".inventory", ",,");
-                String[] invSplit = inv.split(";");
-                for (int i = 0 ; i < invSplit.length ; i++)
-                {
-                    if (i < Wolf.inv.getSize())
+                    if (getServer().getWorld(WolfWorld) == null)
                     {
-                        String[] itemvalues = invSplit[i].split(",");
-                        if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+                        MyWolfUtil.Log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
+                        continue;
+                    }
+
+                    MyWolf Wolf = new MyWolf(ownername);
+
+                    ConfigBuffer.mWolves.put(ownername, Wolf);
+
+
+
+                    Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+
+                    Wolf.setHealth(WolfHealthNow);
+                    Wolf.RespawnTime = WolfRespawnTime;
+                    if (WolfRespawnTime > 0)
+                    {
+                        Wolf.Status = WolfState.Dead;
+                    }
+                    else
+                    {
+                        Wolf.Status = WolfState.Despawned;
+                    }
+                    Wolf.SetName(WolfName);
+                    Wolf.setSitting(WolfSitting);
+                    Wolf.Experience.setExp(WolfEXP);
+                    Wolf.setTameSkin(WolfSkin);
+                    Wolf.Behavior = WolfBehavior;
+                    Wolf.isPickup = WolfPickup;
+
+                    String inv = MWC.Config.getString("Wolves." + ownername + ".inventory", ",,");
+                    String[] invSplit = inv.split(";");
+                    for (int i = 0 ; i < invSplit.length ; i++)
+                    {
+                        if (i < Wolf.inv.getSize())
                         {
-                            if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+                            String[] itemvalues = invSplit[i].split(",");
+                            if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
                             {
-                                if (Integer.parseInt(itemvalues[1]) <= 64)
+                                if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
                                 {
-                                    Wolf.inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                    if (Integer.parseInt(itemvalues[1]) <= 64)
+                                    {
+                                        Wolf.inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                    }
                                 }
                             }
                         }
                     }
+                    anzahlWolves++;
                 }
-                anzahlWolves++;
             }
         }
         MyWolfUtil.Log.info("[" + this.getDescription().getName() + "] " + anzahlWolves + " wolf/wolves loaded");

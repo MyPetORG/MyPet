@@ -167,7 +167,6 @@ public class MyWolfExperience
         {
             //MyWolfUtil.Log.info(""+(7 + (int)((this.getLevel()-1) * 3.5)));
             return 7 + (int)((this.getLevel()-1) * 3.5);
-            //return Math.pow(Factor, this.getLevel() + 1);
         }
     }
 

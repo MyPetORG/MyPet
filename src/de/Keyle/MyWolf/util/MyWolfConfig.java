@@ -28,6 +28,7 @@ import org.bukkit.entity.CreatureType;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class MyWolfConfig
 {
@@ -127,7 +128,7 @@ public class MyWolfConfig
 
         if (Config.getStringList("MyWolf.exp") != null)
         {
-            for (String key : Config.getConfigurationSection("MyWolf.exp").getKeys(true))
+            for (String key : Config.getConfigurationSection("MyWolf.exp").getKeys(false))
             {
                 double expval = Config.getDouble("MyWolf.exp." + key, -1.0);
                 if (expval > -1)
@@ -136,9 +137,10 @@ public class MyWolfConfig
                 }
             }
         }
-        if (Config.getStringList("MyWolf.skills") != null)
+        Set<String> LevelList = Config.getConfigurationSection("MyWolf.skills").getKeys(false);
+        if (LevelList.size() != 0)
         {
-            for (String lvl : Config.getConfigurationSection("MyWolf.skills").getKeys(true))
+            for (String lvl : LevelList)
             {
                 List<String> Skills = Config.getStringList("MyWolf.skills." + lvl);
                 ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
