@@ -61,7 +61,7 @@ public class MyWolfConfig
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.spoutsounds.enabled", true);
         setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
-        setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
+        setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.ogg");
         setProperty("MyWolf.exp_default", true);
 
         setProperty("MyWolf.exp.SKELETON", 1.1);
@@ -121,7 +121,7 @@ public class MyWolfConfig
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
         SpoutSounds = Config.getBoolean("MyWolf.spoutsounds.enabled", true);
         SpoutSoundCall = Config.getString("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
-        SpoutSoundLevelup = Config.getString("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/levelup.ogg");
+        SpoutSoundLevelup = Config.getString("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.ogg");
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
         MyWolfExperience.defaultEXPvalues  = Config.getBoolean("MyWolf.exp_default", true);
