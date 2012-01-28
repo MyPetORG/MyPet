@@ -1,21 +1,21 @@
 /*
-* Copyright (C) 2011-2012 Keyle
-*
-* This file is part of MyWolf.
-*
-* MyWolf is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* MyWolf is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2011-2012 Keyle
+ *
+ * This file is part of MyWolf
+ *
+ * MyWolf is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MyWolf is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package de.Keyle.MyWolf.Listeners;
 
@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -126,10 +127,13 @@ public class MyWolfEntityListener implements Listener
                         {
                             msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
                         }
-                        player.sendMessage(MyWolfUtil.SetColors("%wolfname% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
+                        player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
                         if (MyWolfConfig.LevelSystem)
                         {
-                            player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+                            int lvl = wolf.Experience.getLevel();
+                            double EXP = wolf.Experience.getActualEXP();
+                            double reqEXP = wolf.Experience.getrequireEXP();
+                            player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
                         if (wolf.Wolf.isSitting())
                         {
@@ -185,7 +189,14 @@ public class MyWolfEntityListener implements Listener
                     {
                         if (MyWolfUtil.getCreatureType(e.getEntity()) != null)
                         {
-                            wolf.Experience.addEXP(MyWolfUtil.getCreatureType(e.getEntity()));
+                            if(MyWolfExperience.defaultEXPvalues)
+                            {
+                                wolf.Experience.addExp((double)event.getDroppedExp());
+                            }
+                            else
+                            {
+                                wolf.Experience.addEXP(MyWolfUtil.getCreatureType(e.getEntity()));
+                            }
                         }
                     }
                 }

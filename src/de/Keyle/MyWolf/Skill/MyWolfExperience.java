@@ -1,21 +1,21 @@
 /*
-* Copyright (C) 2011-2012 Keyle
-*
-* This file is part of MyWolf.
-*
-* MyWolf is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* MyWolf is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2011-2012 Keyle
+ *
+ * This file is part of MyWolf
+ *
+ * MyWolf is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MyWolf is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package de.Keyle.MyWolf.Skill;
 
@@ -33,10 +33,10 @@ import java.util.Map;
 
 public class MyWolfExperience
 {
-    private final double Factor;
     private final MyWolf Wolf;
 
     private double Exp = 0;
+    public static boolean defaultEXPvalues = true;
 
     public static String JSreader = null;
 
@@ -59,10 +59,9 @@ public class MyWolfExperience
         MobEXP.put(CreatureType.SHEEP, 0.25);
     }
 
-    public MyWolfExperience(double Factor, MyWolf Wolf)
+    public MyWolfExperience(MyWolf Wolf)
     {
         this.Wolf = Wolf;
-        this.Factor = Factor;
     }
 
     public void setExp(double Exp)
@@ -96,7 +95,7 @@ public class MyWolfExperience
         if (MobEXP.containsKey(type))
         {
             int tmplvl = getLevel();
-            Exp += MobEXP.get(type) + Math.random();
+            Exp += MobEXP.get(type);
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
                 MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
@@ -121,13 +120,32 @@ public class MyWolfExperience
         }
         else
         {
-            int tmplvl = 1;
-            for (double i = Factor * Factor ; i <= this.Exp ; i = i * Factor)
+            // Minecraft:   E = 7 + roundDown( n    * 3.5)
+
+            double tmpEXP = this.Exp;
+            int tmplvl = 0;
+
+            while (tmpEXP >= 7 + (int)((tmplvl) * 3.5))
             {
+                tmpEXP -= 7 + (int)((tmplvl) * 3.5);
                 tmplvl++;
             }
-            return tmplvl;
+            //MyWolfUtil.Log.info(tmplvl+1 + " - " + tmpEXP + " - " + (7 + (int)((tmplvl) * 3.5)) + " - " + this.getExp());
+            return tmplvl+1;
         }
+    }
+
+    public double getActualEXP()
+    {
+        double tmpEXP = this.Exp;
+        int tmplvl = 0;
+
+        while (tmpEXP >= 7 + (int)((tmplvl) * 3.5))
+        {
+            tmpEXP -= 7 + (int)((tmplvl) * 3.5);
+            tmplvl++;
+        }
+        return tmpEXP;
     }
 
     public double getrequireEXP()
@@ -147,7 +165,9 @@ public class MyWolfExperience
         }
         else
         {
-            return Math.pow(Factor, this.getLevel() + 1);
+            //MyWolfUtil.Log.info(""+(7 + (int)((this.getLevel()-1) * 3.5)));
+            return 7 + (int)((this.getLevel()-1) * 3.5);
+            //return Math.pow(Factor, this.getLevel() + 1);
         }
     }
 
@@ -158,10 +178,9 @@ public class MyWolfExperience
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("js");
             engine.put("lvl", 1);
-            engine.put("reqEXP", 1);
+            engine.put("reqEXP", 0);
 
             engine.put("EXP", Exp);
-            engine.put("factor", Factor);
             engine.put("name", Wolf.Name);
             engine.put("player", Wolf.Owner);
             engine.put("maxhp", Wolf.HealthMax);

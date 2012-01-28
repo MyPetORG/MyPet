@@ -195,7 +195,7 @@ public class MyWolfUtil
             {
                 WorldGuardPlugin WGP = (WorldGuardPlugin) WG;
                 RegionManager mgr = WGP.getGlobalRegionManager().get(loc.getWorld());
-                Vector pt = new com.sk89q.worldedit.Vector(loc.getX(), loc.getY(), loc.getZ());
+                Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
                 ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
                 return set.allows(DefaultFlag.PVP);

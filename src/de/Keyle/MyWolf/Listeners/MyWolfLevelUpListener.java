@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.LevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.SpoutManager;
@@ -33,6 +34,7 @@ public class MyWolfLevelUpListener implements Listener
     @EventHandler()
     public void onLevelUp(LevelUpEvent event)
     {
+
         if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
         {
             SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, event.getWolf().getLocation(), 25);

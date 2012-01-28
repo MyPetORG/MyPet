@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2011-2012 Keyle
  *
- * This file is part of MyWolf.
+ * This file is part of MyWolf
  *
  * MyWolf is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import net.minecraft.server.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -115,7 +116,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         MyWolfConfig.Config = this.getConfig();
         MyWolfConfig.setStandart();
-        MyWolfConfig.loadVariables();
+        MyWolfConfig.loadConfiguration();
 
         if (MyWolfConfig.PermissionsBukkit)
         {

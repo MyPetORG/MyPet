@@ -13,7 +13,6 @@
 
 		Usable variables:
 			EXP		-> EXP the wolf has
-			factor	-> EXP factor from config
 			name	-> wolf's name
 			player	-> name of the owner
 			maxhp	-> actual maxHP value the wolf has
@@ -23,18 +22,22 @@
 //declare variables
 var lvl;
 var EXP;
-var factor;
 
 //example start
-var tmplvl = 1;
-var tmpreqEXP = 1;
 
-for (i = factor * factor; i <= EXP; i = i * factor)
+
+// Minecraft:   E = 7 + roundDown( n    * 3.5)
+var tmpEXP = EXP;
+var tmplvl = 0;
+
+while (tmpEXP >= 7 + Math.floor((tmplvl) * 3.5))
 {
-	tmplvl++;
-	tmpreqEXP = i*factor;
+    tmpEXP -= 7 + Math.floor((tmplvl) * 3.5);
+    tmplvl++;
 }
+
 //example end
 
-lvl = tmplvl; // set return value
-reqEXP = tmpreqEXP;
+// set return values
+lvl = tmplvl+1;
+reqEXP = 7 + Math.floor((tmplvl) * 3.5);
