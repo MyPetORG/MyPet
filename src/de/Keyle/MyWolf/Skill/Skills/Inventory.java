@@ -40,7 +40,7 @@ public class Inventory extends MyWolfSkill
     @Override
     public void run(MyWolf wolf, Object args)
     {
-        if (MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
+        if (MyWolfSkill.hasSkill(wolf.Abilities, "Inventory"))
         {
             if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
             {
@@ -66,7 +66,7 @@ public class Inventory extends MyWolfSkill
     @Override
     public void activate(MyWolf wolf, Object args)
     {
-        if (!MyWolfUtil.hasSkill(wolf.Abilities, "Inventory"))
+        if (!MyWolfSkill.hasSkill(wolf.Abilities, "Inventory"))
         {
             wolf.Abilities.put("Inventory", true);
         }

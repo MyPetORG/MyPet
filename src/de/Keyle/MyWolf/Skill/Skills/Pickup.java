@@ -41,7 +41,7 @@ public class Pickup extends MyWolfSkill
         {
             return;
         }
-        if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
+        if (MyWolfSkill.hasSkill(wolf.Abilities, "Pickup"))
         {
             if (args != null && args instanceof Boolean)
             {
@@ -71,7 +71,7 @@ public class Pickup extends MyWolfSkill
         {
             return;
         }
-        if (!MyWolfUtil.hasSkill(wolf.Abilities, "Pickup"))
+        if (!MyWolfSkill.hasSkill(wolf.Abilities, "Pickup"))
         {
             wolf.Abilities.put("Pickup", true);
             wolf.isPickup = true;

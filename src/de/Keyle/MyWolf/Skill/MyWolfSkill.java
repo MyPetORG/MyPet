@@ -21,12 +21,28 @@ package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+
+import java.util.Map;
 
 public class MyWolfSkill
 {
     protected String Name;
+
+    public static boolean hasSkill(Map<String, Boolean> skills, String skill)
+    {
+        if(!MyWolfConfig.LevelSystem)
+            return true;
+
+        if (skills.containsKey(skill))
+        {
+            return skills.get(skill);
+        }
+        return false;
+    }
+
 
     public MyWolfSkill(String Name)
     {

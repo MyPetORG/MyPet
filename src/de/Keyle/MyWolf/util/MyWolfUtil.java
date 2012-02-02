@@ -198,22 +198,12 @@ public class MyWolfUtil
                 Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
                 ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
+
+
                 return set.allows(DefaultFlag.PVP);
             }
         }
         return server.getWorld(loc.getWorld().getName()).getPVP();
-    }
-
-    public static boolean hasSkill(Map<String, Boolean> skills, String skill)
-    {
-    	if(!MyWolfConfig.LevelSystem)
-    		return true;
-    	
-        if (skills.containsKey(skill))
-        {
-            return skills.get(skill);
-        }
-        return false;
     }
 
     public static void sendMessage(Player player, String Message)

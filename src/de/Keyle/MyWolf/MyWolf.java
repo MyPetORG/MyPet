@@ -20,6 +20,7 @@
 package de.Keyle.MyWolf;
 
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -214,7 +215,7 @@ public class MyWolf
 
     public void OpenInventory()
     {
-        if (MyWolfUtil.hasSkill(Abilities, "Inventory"))
+        if (MyWolfSkill.hasSkill(Abilities, "Inventory"))
         {
             EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
             eh.a(inv);
@@ -422,7 +423,7 @@ public class MyWolf
                             if(Time2HPregen <= 0)
                             {
                                 Time2HPregen = Healthregen;
-                                if(MyWolfUtil.hasSkill(Abilities, "HPregeneration") && getHealth() < HealthMax)
+                                if(MyWolfSkill.hasSkill(Abilities, "HPregeneration") && getHealth() < HealthMax)
                                 {
                                     setHealth(getHealth()+1);
                                 }

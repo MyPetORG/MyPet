@@ -40,7 +40,6 @@ public class MyWolfLevelUpListener implements Listener
 
         if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
         {
-            MyWolfUtil.Log.info("-------------------Wuff-------------------");
             //SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, event.getWolf().getLocation(), 25);
             SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, (SpoutPlayer) event.getOwner(),MyWolfConfig.SpoutSoundLevelup,true);
         }

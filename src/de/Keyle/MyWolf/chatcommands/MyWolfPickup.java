@@ -22,6 +22,7 @@ package de.Keyle.MyWolf.chatcommands;
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -50,7 +51,7 @@ public class MyWolfPickup implements CommandExecutor
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
                     return true;
                 }
-                if (MyWolfUtil.hasSkill(Wolf.Abilities, "Pickup"))
+                if (MyWolfSkill.hasSkill(Wolf.Abilities, "Pickup"))
                 {
                     ConfigBuffer.RegisteredSkills.get("Pickup").run(Wolf, null);
                 }

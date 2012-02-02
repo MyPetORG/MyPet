@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -46,7 +47,7 @@ public class MyWolfBehavior implements CommandExecutor
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MyWolfUtil.hasSkill(Wolf.Abilities, "Behavior"))
+                else if (MyWolfSkill.hasSkill(Wolf.Abilities, "Behavior"))
                 {
                     if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Normal")))
                     {

@@ -39,7 +39,7 @@ public class Behavior extends MyWolfSkill
         {
             return;
         }
-        if (de.Keyle.MyWolf.util.MyWolfUtil.hasSkill(wolf.Abilities, "Behavior"))
+        if (MyWolfSkill.hasSkill(wolf.Abilities, "Behavior"))
         {
             if (args instanceof BehaviorState)
             {

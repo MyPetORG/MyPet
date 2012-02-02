@@ -22,6 +22,7 @@ package de.Keyle.MyWolf.chatcommands;
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -55,7 +56,7 @@ public class MyWolfInventory implements CommandExecutor
                         sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
                         return true;
                     }
-                    if (MyWolfUtil.hasSkill(Wolf.Abilities, "Inventory"))
+                    if (MyWolfSkill.hasSkill(Wolf.Abilities, "Inventory"))
                     {
                         ConfigBuffer.RegisteredSkills.get("Inventory").run(Wolf, null);
                     }
