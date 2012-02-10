@@ -21,6 +21,7 @@ package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.CreatureType;
@@ -66,8 +67,14 @@ public class MyWolfExperience
 
     public void setExp(double Exp)
     {
+        MyWolfExpEvent event = new MyWolfExpEvent(Wolf,this.getExp(),Exp);
+        MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
+        {
+            return;
+        }
         int tmplvl = getLevel();
-        this.Exp = Exp;
+        this.Exp = event.getEXP();
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
             MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
@@ -81,8 +88,14 @@ public class MyWolfExperience
 
     public void addExp(double Exp)
     {
+        MyWolfExpEvent event = new MyWolfExpEvent(Wolf,this.Exp,this.Exp += Exp);
+        MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
+        {
+            return;
+        }
         int tmplvl = getLevel();
-        this.Exp += Exp;
+        this.Exp = event.getEXP();
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
@@ -94,8 +107,14 @@ public class MyWolfExperience
     {
         if (MobEXP.containsKey(type))
         {
+            MyWolfExpEvent event = new MyWolfExpEvent(Wolf,this.Exp,this.Exp + MobEXP.get(type));
+            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+            if(event.isCancelled())
+            {
+                return;
+            }
             int tmplvl = getLevel();
-            Exp += MobEXP.get(type);
+            Exp = event.getEXP();
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
                 MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
