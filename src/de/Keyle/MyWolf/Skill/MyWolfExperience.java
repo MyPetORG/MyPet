@@ -21,7 +21,7 @@ package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.event.LevelUpEvent;
+import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.CreatureType;
 
@@ -70,7 +70,7 @@ public class MyWolfExperience
         this.Exp = Exp;
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
         }
     }
 
@@ -86,7 +86,7 @@ public class MyWolfExperience
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
         }
     }
 
@@ -98,7 +98,7 @@ public class MyWolfExperience
             Exp += MobEXP.get(type);
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
-                MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new LevelUpEvent(Wolf, i + 1));
+                MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
             }
         }
     }

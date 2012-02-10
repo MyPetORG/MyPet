@@ -22,34 +22,31 @@ package de.Keyle.MyWolf.Listeners;
 import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.event.LevelUpEvent;
+import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfUtil;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.getspout.spout.player.SpoutCraftPlayer;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class MyWolfLevelUpListener implements Listener
 {
     @EventHandler()
-    public void onLevelUp(LevelUpEvent event)
+    public void onLevelUp(MyWolfLevelUpEvent eventMyWolf)
     {
 
-        if (event.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
+        if (eventMyWolf.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
         {
-            //SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, event.getWolf().getLocation(), 25);
-            SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, (SpoutPlayer) event.getOwner(),MyWolfConfig.SpoutSoundLevelup,true);
+            //SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, eventMyWolf.getWolf().getLocation(), 25);
+            SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, (SpoutPlayer) eventMyWolf.getOwner(),MyWolfConfig.SpoutSoundLevelup,true);
         }
-        if (ConfigBuffer.SkillPerLevel.containsKey(event.getLevel()))
+        if (ConfigBuffer.SkillPerLevel.containsKey(eventMyWolf.getLevel()))
         {
-            for (String skill : ConfigBuffer.SkillPerLevel.get(event.getLevel()))
+            for (String skill : ConfigBuffer.SkillPerLevel.get(eventMyWolf.getLevel()))
             {
                 if (ConfigBuffer.RegisteredSkills.containsKey(skill))
                 {
-                    ConfigBuffer.RegisteredSkills.get(skill).activate(event.getWolf(), 0);
+                    ConfigBuffer.RegisteredSkills.get(skill).activate(eventMyWolf.getWolf(), 0);
                 }
             }
         }
