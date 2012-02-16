@@ -33,7 +33,9 @@ import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.SpoutManager;
+import org.getspout.spoutapi.gui.ExpBar;
 import org.getspout.spoutapi.player.EntitySkinType;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +58,8 @@ public class MyWolf
     private boolean isSitting = false;
     public boolean isPickup = false;
     public int Healthregen = 60;
+
+    public ExpBar expBar = new ExpBar();
 
     //public GenericTexture hpbar = new GenericTexture("http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/hpbar.png");
 

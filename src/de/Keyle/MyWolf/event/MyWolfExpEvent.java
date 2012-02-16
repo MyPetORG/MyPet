@@ -23,29 +23,32 @@ import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 public class MyWolfExpEvent extends Event implements Cancellable
 {
-    private final MyWolf wolf;
+    private static final HandlerList handlers = new HandlerList();
+
+    private final MyWolf Wolf;
     private boolean isCancelled = false;
     double oldEXP, newEXP;
 
-    public MyWolfExpEvent(MyWolf wolf, double oldEXP, double newEXP)
+    public MyWolfExpEvent(MyWolf Wolf, double oldEXP, double newEXP)
     {
         super("MyWolfExpEvent");
-        this.wolf = wolf;
+        this.Wolf = Wolf;
         this.oldEXP = oldEXP;
         this.newEXP = newEXP;
     }
 
     public Player getOwner()
     {
-        return wolf.getOwner();
+        return Wolf.getOwner();
     }
 
     public MyWolf getWolf()
     {
-        return wolf;
+        return Wolf;
     }
 
     public double getOldEXP()
@@ -83,5 +86,13 @@ public class MyWolfExpEvent extends Event implements Cancellable
     public void setCancelled(boolean b)
     {
         isCancelled = b;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }

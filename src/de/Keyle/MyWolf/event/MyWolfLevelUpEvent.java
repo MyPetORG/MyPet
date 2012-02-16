@@ -22,31 +22,42 @@ package de.Keyle.MyWolf.event;
 import de.Keyle.MyWolf.MyWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 public class MyWolfLevelUpEvent extends Event
 {
-    private final MyWolf wolf;
+    private static final HandlerList handlers = new HandlerList();
+
+    private final MyWolf Wolf;
     private final int Level;
 
-    public MyWolfLevelUpEvent(MyWolf wolf, int Level)
+    public MyWolfLevelUpEvent(MyWolf Wolf, int Level)
     {
         super("MyWolfLevelUpEvent");
-        this.wolf = wolf;
+        this.Wolf = Wolf;
         this.Level = Level;
     }
 
     public Player getOwner()
     {
-        return wolf.getOwner();
+        return Wolf.getOwner();
     }
 
     public MyWolf getWolf()
     {
-        return wolf;
+        return Wolf;
     }
 
     public int getLevel()
     {
         return Level;
+    }
+
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 }
