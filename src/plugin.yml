@@ -1,6 +1,6 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolfPlugin
-version: 0.5.3
+version: 0.5.4
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [GroupManager, Permissions, PermissionsEX, WorldGuard]

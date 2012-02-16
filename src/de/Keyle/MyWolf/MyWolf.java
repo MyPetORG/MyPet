@@ -59,8 +59,6 @@ public class MyWolf
     public boolean isPickup = false;
     public int Healthregen = 60;
 
-    public ExpBar expBar = new ExpBar();
-
     //public GenericTexture hpbar = new GenericTexture("http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/hpbar.png");
 
     public static enum BehaviorState

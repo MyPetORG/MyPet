@@ -144,7 +144,7 @@ public class MyWolfPlugin extends JavaPlugin
             catch (Exception e)
             {
                 MyWolfExperience.JSreader = null;
-                MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js). Wolves will level up like players.");
+                MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js).");
             }
         }
 
