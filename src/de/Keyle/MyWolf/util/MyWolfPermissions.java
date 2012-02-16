@@ -104,6 +104,6 @@ public class MyWolfPermissions
             MyWolfUtil.Log.info("[MyWolf] Permissions integration enabled!");
             return;
         }
-        MyWolfUtil.Log.info("[MyWolf] No permissions system fund! Permissions feature not enabled.");
+        MyWolfUtil.Log.info("[MyWolf] No permissions system fund!");
     }
 }

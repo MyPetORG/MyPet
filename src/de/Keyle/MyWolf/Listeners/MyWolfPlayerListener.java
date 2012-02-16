@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -76,6 +77,10 @@ public class MyWolfPlayerListener implements Listener
             if (Wolf.Status == WolfState.Here && !Wolf.isSitting())
             {
                 if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.walk"))
+                {
+                    return;
+                }
+                if (!MyWolfSkill.hasSkill(Wolf.Abilities, "Control"))
                 {
                     return;
                 }
