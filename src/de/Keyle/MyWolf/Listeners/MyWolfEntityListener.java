@@ -195,7 +195,7 @@ public class MyWolfEntityListener implements Listener
                             }
                             else
                             {
-                                wolf.Experience.addEXP(MyWolfUtil.getCreatureType(e.getEntity()));
+                                wolf.Experience.addExp(MyWolfUtil.getCreatureType(e.getEntity()));
                             }
                         }
                     }

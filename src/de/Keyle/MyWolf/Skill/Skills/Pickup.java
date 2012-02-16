@@ -52,12 +52,12 @@ public class Pickup extends MyWolfSkill
                 if (wolf.isPickup)
                 {
                     wolf.isPickup = false;
-                    wolf.sendMessageToOwner("Pickup stopped!");
+                    wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_PickUpStop")).replace("%wolfname%", wolf.Name));
                 }
                 else
                 {
                     wolf.isPickup = true;
-                    wolf.sendMessageToOwner("Pickup activated!");
+                    wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_PickUpStart")).replace("%wolfname%", wolf.Name));
                 }
             }
         }

@@ -47,7 +47,7 @@ public class MyWolfConfig
     public static String SpoutSoundCall;
     public static String SpoutSoundLevelup;
 
-    public static void setStandart()
+    public static void setDefault()
     {
         setProperty("MyWolf.leash.item", 287);
         setProperty("MyWolf.control.item", 287);

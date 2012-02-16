@@ -49,103 +49,72 @@ public class MyWolfLanguage
             MWC.Config.set(key, value);
         }
     }
-
-    public void setDefault()
+    
+    public void addString(String name, String node, String def)
     {
-        setProperty("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
-        setProperty("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
-        setProperty("MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots.");
-        setProperty("MyWolf.Message.addlive", "%green%+1 life for %aqua%%wolfname%");
-        setProperty("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives.");
-        setProperty("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
-        setProperty("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%");
-        setProperty("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
-        setProperty("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
-        setProperty("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
-        setProperty("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
-        setProperty("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
-        setProperty("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
-        setProperty("MyWolf.Message.call", "%aqua%%wolfname%%white% go to home.");
-        setProperty("MyWolf.Message.callfirst", "You must call your wolf first.");
-        setProperty("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!");
-        setProperty("MyWolf.Message.donthavewolf", "You don't have a MyWolf!");
-        setProperty("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!");
-        setProperty("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
-        setProperty("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
-        setProperty("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");
-        setProperty("MyWolf.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
-        setProperty("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!");
-        setProperty("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
-        setProperty("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
-        setProperty("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
-        setProperty("MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
-        setProperty("MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
-        setProperty("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
-        setProperty("MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
-        setProperty("MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
-        setProperty("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
-        setProperty("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
-        setProperty("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman.");
-        setProperty("MyWolf.Message.deathmessage.player", "was killed by %player%.");
-        setProperty("MyWolf.Message.deathmessage.drowning", "drowned.");
-        setProperty("MyWolf.Message.deathmessage.fall", " died by falling down.");
-        setProperty("MyWolf.Message.deathmessage.lightning", "was killed by lightning.");
-        setProperty("MyWolf.Message.deathmessage.fire", "was killed by VOID.");
-        setProperty("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
-        setProperty("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf.");
-        setProperty("MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");
-        setProperty("MyWolf.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
-        setProperty("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish.");
-
-        MWC.saveConfig();
+        if (MWC.Config.contains(node))
+        {
+            LV.put(name, MWC.Config.getString(node, def));
+        }
+        else
+        {
+            MWC.Config.set(node, def);
+            LV.put(name,def);
+        }
     }
 
     public void loadVariables()
     {
-        LV.put("Msg_AddLeash", MWC.Config.getString("MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf."));
-        LV.put("Msg_HPinfo", MWC.Config.getString("MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%"));
-        LV.put("Msg_Inventory", MWC.Config.getString("MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots."));
-        LV.put("Msg_AddDemage", MWC.Config.getString("MyWolf.Message.adddemage", "%green%+1 attackdemage for %aqua%%wolfname%"));
-        LV.put("Msg_MaxLives", MWC.Config.getString("MyWolf.Message.maxlives", "%aqua%%wolfname%%red% has reached the maximum of %maxlives% lives."));
-        LV.put("Msg_AddPickup", MWC.Config.getString("MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now pickup items in a range of %range%."));
-        LV.put("Msg_AddHP", MWC.Config.getString("MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP for %aqua%%wolfname%"));
-        LV.put("Msg_WolfIsGone", MWC.Config.getString("MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . ."));
-        LV.put("Msg_DeathMessage", MWC.Config.getString("MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% "));
-        LV.put("Msg_RespawnIn", MWC.Config.getString("MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec"));
-        LV.put("Msg_OnRespawn", MWC.Config.getString("MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned"));
-        LV.put("Msg_CallDead", MWC.Config.getString("MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec"));
-        LV.put("Msg_Call", MWC.Config.getString("MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you."));
-        LV.put("Msg_Home", MWC.Config.getString("MyWolf.Message.home", "%aqua%%wolfname%%white% go to home."));
-        LV.put("Msg_CallFirst", MWC.Config.getString("MyWolf.Message.callfirst", "You must call your wolf first."));
-        LV.put("Msg_DontHaveWolf", MWC.Config.getString("MyWolf.Message.donthavewolf", "You don't have a MyWolf!"));
-        LV.put("Msg_OtherDontHaveWolf", MWC.Config.getString("MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!"));
-        LV.put("Msg_UserDontHaveWolf", MWC.Config.getString("MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!"));
-        LV.put("Msg_NewName", MWC.Config.getString("MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%"));
-        LV.put("Msg_Name", MWC.Config.getString("MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%"));
-        LV.put("Msg_Release", MWC.Config.getString("MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green$free%white% . . ."));
-        LV.put("Msg_StopAttack", MWC.Config.getString("MyWolf.Message.stopattack", "%wolfname% should now %green%stop%white% attacking!"));
-        LV.put("Msg_InventorySwimming", MWC.Config.getString("MyWolf.Message.inventorywhileswimming", "You can't open the inventory while the wolf is swimming!"));
-        LV.put("Msg_NoInventory", MWC.Config.getString("MyWolf.Message.noinventory", "%wolfname% doesn't have an inventory."));
-        LV.put("Creeper", MWC.Config.getString("MyWolf.Message.deathmessage.creeper", "was killed by a Creeper."));
-        LV.put("Zombie", MWC.Config.getString("MyWolf.Message.deathmessage.zombie", "was killed by a Zombie."));
-        LV.put("PigZombie", MWC.Config.getString("MyWolf.Message.deathmessage.pigzombie", "was killed by a Pig Zombie."));
-        LV.put("Unknow", MWC.Config.getString("MyWolf.Message.deathmessage.unknow", "was killed by an unknown source."));
-        LV.put("You", MWC.Config.getString("MyWolf.Message.deathmessage.you", "was killed by %red%YOU."));
-        LV.put("Spider", MWC.Config.getString("MyWolf.Message.deathmessage.spider", "was killed by a Spider."));
-        LV.put("CaveSpider", MWC.Config.getString("MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider."));
-        LV.put("Enderman", MWC.Config.getString("MyWolf.Message.deathmessage.enderman", "was killed by a Enderman."));
-        LV.put("Skeleton", MWC.Config.getString("MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton."));
-        LV.put("Silverfish", MWC.Config.getString("MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish."));
-        LV.put("Giant", MWC.Config.getString("MyWolf.Message.deathmessage.giant", "was killed by a Giant."));
-        LV.put("Slime", MWC.Config.getString("MyWolf.Message.deathmessage.slime", "was killed by a Slime."));
-        LV.put("Ghast", MWC.Config.getString("MyWolf.Message.deathmessage.ghast", "was killed by a Ghast."));
-        LV.put("Wolf", MWC.Config.getString("MyWolf.Message.deathmessage.wolf", "was killed by a Wolf."));
-        LV.put("PlayerWolf", MWC.Config.getString("MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf ."));
-        LV.put("Player", MWC.Config.getString("MyWolf.Message.deathmessage.player", "was killed by %player%."));
-        LV.put("Drowning", MWC.Config.getString("MyWolf.Message.deathmessage.drowning", "drowned."));
-        LV.put("Explosion", MWC.Config.getString("MyWolf.Message.deathmessage.explosion", "was killed by an explosion."));
-        LV.put("Fall", MWC.Config.getString("MyWolf.Message.deathmessage.fall", " died by falling down."));
-        LV.put("Lightning", MWC.Config.getString("MyWolf.Message.deathmessage.lightning", "was killed by lightning."));
-        LV.put("kvoid", MWC.Config.getString("MyWolf.Message.deathmessage.fire", "was killed by the VOID."));
+        addString("Msg_AddLeash", "MyWolf.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
+        addString("Msg_LvlUp", "MyWolf.Message.lvlup", "%aqua%%wolfname%%white% is now Lv%lvl%");
+        addString("Msg_HPinfo", "MyWolf.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
+        addString("Msg_Inventory", "MyWolf.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots.");
+        addString("Msg_AddControl", "MyWolf.Message.addcontrol", "%aqua%%wolfname%%white% can now be controlled with a %item%");
+        addString("Msg_AddPickup", "MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
+        addString("Msg_AddHPregeneration", "MyWolf.Message.addhpreg", "%aqua%%wolfname%%white% regenerates now one HP every %sec%sec");
+        addString("Msg_AddHP", "MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP");
+        addString("Msg_AddDemage", "MyWolf.Message.adddemage", "%aqua%%wolfname%%white% %green%+1 attackdemage");
+        addString("Msg_WolfIsGone", "MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
+        addString("Msg_DeathMessage", "MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
+        addString("Msg_RespawnIn", "MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
+        addString("Msg_OnRespawn", "MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
+        addString("Msg_CallDead", "MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
+        addString("Msg_Call", "MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
+        addString("Msg_Home", "MyWolf.Message.call", "%aqua%%wolfname%%white% go to home.");
+        addString("Msg_CallFirst", "MyWolf.Message.callfirst", "You must call %aqua%%wolfname%%white% first.");
+        addString("Msg_UserDontHaveWolf", "MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!");
+        addString("Msg_DontHaveWolf", "MyWolf.Message.donthavewolf", "You don't have a MyWolf!");
+        addString("Msg_OtherDontHaveWolf", "MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!");
+        addString("Msg_NewName", "MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
+        addString("Msg_Name", "MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
+        addString("Msg_Release", "MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");
+        addString("Msg_StopAttack", "MyWolf.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
+        addString("Msg_InventorySwimming", "MyWolf.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%wolfname%%white% is swimming!");
+        addString("Msg_NoInventory", "MyWolf.Message.noinventory", "%aqua%%wolfname%%white% doesn't have an inventory.");
+        addString("Msg_PickUpStop", "MyWolf.Message.pickupstop", "%aqua%%wolfname%%white% pickup: disabled");
+        addString("Msg_PickUpStart", "MyWolf.Message.pickupstart", "%aqua%%wolfname%%white% pickup: activated");
+        addString("Creeper", "MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
+        addString("Zombie", "MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
+        addString("Unknow", "MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
+        addString("You", "MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
+        addString("Spider", "MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
+        addString("CaveSpider", "MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
+        addString("Giant", "MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
+        addString("Slime", "MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
+        addString("Ghast", "MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
+        addString("Wolf", "MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
+        addString("Enderman", "MyWolf.Message.deathmessage.enderman", "was killed by a Enderman.");
+        addString("Player", "MyWolf.Message.deathmessage.player", "was killed by %player%.");
+        addString("Drowning", "MyWolf.Message.deathmessage.drowning", "drowned.");
+        addString("Fall", "MyWolf.Message.deathmessage.fall", " died by falling down.");
+        addString("Lightning", "MyWolf.Message.deathmessage.lightning", "was killed by lightning.");
+        addString("kvoid", "MyWolf.Message.deathmessage.fire", "was killed by VOID.");
+        addString("Skeleton", "MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
+        addString("PlayerWolf", "MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf.");
+        addString("Explosion", "MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");
+        addString("PigZombie", "MyWolf.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
+        addString("Silverfish", "MyWolf.Message.deathmessage.silverfish", "was killed by a Silverfish.");
+
+        MWC.saveConfig();
     }
 }

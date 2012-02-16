@@ -23,7 +23,6 @@ import de.Keyle.MyWolf.Listeners.*;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.*;
@@ -111,11 +110,11 @@ public class MyWolfPlugin extends JavaPlugin
         new Pickup();
         new Behavior();
         new Damage();
+        new Control();
 
-        new MyWolfSkill("Control").registerSkill();
 
         MyWolfConfig.Config = this.getConfig();
-        MyWolfConfig.setStandart();
+        MyWolfConfig.setDefault();
         MyWolfConfig.loadConfiguration();
 
         if (MyWolfConfig.PermissionsBukkit)
@@ -128,7 +127,6 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         ConfigBuffer.lv = new MyWolfLanguage(new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
-        ConfigBuffer.lv.setDefault();
         ConfigBuffer.lv.loadVariables();
 
         ConfigBuffer.WolvesConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
@@ -190,8 +188,6 @@ public class MyWolfPlugin extends JavaPlugin
                     MyWolf Wolf = new MyWolf(ownername);
 
                     ConfigBuffer.mWolves.put(ownername, Wolf);
-
-
 
                     Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
 

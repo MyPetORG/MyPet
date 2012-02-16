@@ -60,10 +60,13 @@ public class MyWolfInfo implements CommandExecutor
                 {
                     msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
                 }
-                player.sendMessage(MyWolfUtil.SetColors("%wolfname% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
+                player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
                 if (MyWolfConfig.LevelSystem)
                 {
-                    player.sendMessage(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+                    int lvl = wolf.Experience.getLevel();
+                    double EXP = wolf.Experience.getActualEXP();
+                    double reqEXP = wolf.Experience.getrequireEXP();
+                    player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                 }
                 if(args != null && args.length > 0)
                 	player.sendMessage(MyWolfUtil.SetColors("Owner: %Owner%").replace("%Owner%", playerName));

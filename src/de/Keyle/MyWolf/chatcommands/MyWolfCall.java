@@ -44,7 +44,7 @@ public class MyWolfCall implements CommandExecutor
             if (ConfigBuffer.mWolves.containsKey(player.getName()))
             {
                 MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
-                sender.sendMessage(Wolf.Status.toString());
+                //sender.sendMessage(Wolf.Status.toString());
                 if (!MyWolfPermissions.has(player, "MyWolf.call"))
                 {
                     return true;

@@ -27,6 +27,7 @@ import org.bukkit.event.HandlerList;
 
 public class MyWolfExpEvent extends Event implements Cancellable
 {
+    private static final long serialVersionUID = -605293022023540120L;
     private static final HandlerList handlers = new HandlerList();
 
     private final MyWolf Wolf;

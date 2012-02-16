@@ -33,9 +33,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.gui.ExpBar;
 import org.getspout.spoutapi.player.EntitySkinType;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,9 +83,13 @@ public class MyWolf
     {
         this.Owner = Owner;
         if(MyWolfConfig.LevelSystem)
+        {
         	this.inv = new CustomMCInventory(0, Owner);
+        }
         else
+        {
         	this.inv = new CustomMCInventory(54, Owner);
+        }
         Experience = new MyWolfExperience(this);
     }
 
@@ -116,7 +118,6 @@ public class MyWolf
 
     public void setTameSkin(String URL)
     {
-        //if(true)  //get online filesize
         {
             SkinURL = URL;
             for(Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
