@@ -49,7 +49,6 @@ public class MyWolfLevelUpListener implements Listener
             {
                 if (ConfigBuffer.RegisteredSkills.containsKey(skill))
                 {
-                    MyWolfUtil.Log.info(skill);
                     ConfigBuffer.RegisteredSkills.get(skill).activate(eventMyWolf.getWolf(), 0);
                 }
             }

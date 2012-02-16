@@ -75,14 +75,9 @@ public class MyWolfExperience
             return;
         }
         int tmplvl = getLevel();
-        MyWolfUtil.Log.info("tmplvl: " + tmplvl);
-        MyWolfUtil.Log.info("oldexp: " + this.Exp);
         this.Exp = event.getEXP();
-        MyWolfUtil.Log.info("newexp: " + this.Exp);
-        MyWolfUtil.Log.info("newlvl: " + getLevel());
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfUtil.Log.info("lvlup event: " + (i + 1));
             MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
         }
     }
@@ -101,16 +96,10 @@ public class MyWolfExperience
             return;
         }
         int tmplvl = getLevel();
-
-        MyWolfUtil.Log.info("tmplvl: " + tmplvl);
-        MyWolfUtil.Log.info("oldexp: " + this.Exp);
         this.Exp = event.getEXP();
-        MyWolfUtil.Log.info("newexp: " + this.Exp);
-        MyWolfUtil.Log.info("newlvl: " + getLevel());
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfUtil.Log.info("lvlup event: " + (i + 1));
             MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
         }
     }
@@ -126,14 +115,9 @@ public class MyWolfExperience
                 return;
             }
             int tmplvl = getLevel();
-            MyWolfUtil.Log.info("tmplvl: " + tmplvl);
-            MyWolfUtil.Log.info("oldexp: " + this.Exp);
             this.Exp = event.getEXP();
-            MyWolfUtil.Log.info("newexp: " + this.Exp);
-            MyWolfUtil.Log.info("newlvl: " + getLevel());
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
-                MyWolfUtil.Log.info("lvlup event: " + (i + 1));
                 MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(Wolf, i + 1));
             }
         }
