@@ -533,14 +533,17 @@ public class MyWolf
 
     public Player getOwner()
     {
-        for (Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
+        Player p = MyWolfPlugin.Plugin.getServer().getPlayer(Owner);
+        if(p != null && p.isOnline())
         {
-            if (p.getName().equals(Owner) && !MyWolfUtil.isNPC(p))
-            {
-                return p;
-            }
+            return p;
         }
         return null;
+    }
+    
+    public String getOwnerName()
+    {
+        return this.Owner;
     }
 
     public void sendMessageToOwner(String Text)

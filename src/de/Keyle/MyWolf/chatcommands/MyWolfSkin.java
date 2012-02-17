@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -41,16 +41,16 @@ public class MyWolfSkin implements CommandExecutor
                 {
                     return true;
                 }
-                if (MyWolfPlugin.MWWolves.containsKey(args[0]))
+                if (MyWolfList.hasMyWolf(args[0]))
                 {
-                    MyWolfPlugin.MWWolves.get(args[0]).setTameSkin(args[1]);
+                    MyWolfList.getMyWolf(args[0]).setTameSkin(args[1]);
                 }
                 else
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf")));
                 }
             }
-            else if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            else if (MyWolfList.hasMyWolf(player))
             {
                 if (!MyWolfPermissions.has(player, "MyWolf.skin.self"))
                 {
@@ -58,7 +58,7 @@ public class MyWolfSkin implements CommandExecutor
                 }
                 if (args.length == 1)
                 {
-                    MyWolfPlugin.MWWolves.get(player.getName()).setTameSkin(args[0]);
+                    MyWolfList.getMyWolf(player).setTameSkin(args[0]);
                 }
                 return true;
             }

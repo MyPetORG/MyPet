@@ -22,10 +22,7 @@ package de.Keyle.MyWolf.chatcommands;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
-import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,49 +36,49 @@ public class MyWolfCall implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
                 //sender.sendMessage(Wolf.Status.toString());
-                if (!MyWolfPermissions.has(player, "MyWolf.call"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.call"))
                 {
                     return true;
                 }
-                if (Wolf.Status == WolfState.Here)
+                if (MWolf.Status == WolfState.Here)
                 {
                     if(MyWolfConfig.SpoutSounds)
                     {
                         SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
                     }
-                    if (Wolf.getLocation().getWorld() != player.getLocation().getWorld())
+                    if (MWolf.getLocation().getWorld() != owner.getLocation().getWorld())
                     {
-                        Wolf.removeWolf();
-                        Wolf.setLocation(player.getLocation());
-                        Wolf.createWolf(false);
+                        MWolf.removeWolf();
+                        MWolf.setLocation(owner.getLocation());
+                        MWolf.createWolf(false);
                     }
                     else
                     {
-                        Wolf.Wolf.teleport(player);
+                        MWolf.Wolf.teleport(owner);
                     }
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
                     return true;
                 }
-                else if (Wolf.Status == WolfState.Despawned)
+                else if (MWolf.Status == WolfState.Despawned)
                 {
 
                     if(MyWolfConfig.SpoutSounds)
                     {
                         SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
                     }
-                    Wolf.setLocation(player.getLocation());
-                    Wolf.createWolf(false);
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
+                    MWolf.setLocation(owner.getLocation());
+                    MWolf.createWolf(false);
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
                     return true;
                 }
-                else if (Wolf.Status == WolfState.Dead)
+                else if (MWolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name).replace("%time%", "" + MyWolfPlugin.MWWolves.get(player.getName()).RespawnTime));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
             }

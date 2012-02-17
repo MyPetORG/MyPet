@@ -21,8 +21,8 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -36,26 +36,26 @@ public class MyWolfCompass implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.compass"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.compass"))
                 {
                     return true;
                 }
 
-                if (Wolf.Status == WolfState.Dead)
+                if (MWolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name).replace("%time%", "" + MyWolfPlugin.MWWolves.get(player.getName()).RespawnTime));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
                 else
                 {
                     if (args.length == 1 && args[0].equalsIgnoreCase("Stop"))
                     {
-                        Wolf.getOwner().setCompassTarget(Wolf.getLocation().getWorld().getSpawnLocation());
+                        owner.setCompassTarget(MWolf.getLocation().getWorld().getSpawnLocation());
                     }
                     else if (args.length > 1)
                     {
@@ -63,9 +63,9 @@ public class MyWolfCompass implements CommandExecutor
                     }
                     else
                     {
-                        Wolf.getOwner().setCompassTarget(Wolf.getLocation());
+                        owner.setCompassTarget(MWolf.getLocation());
                     }
-                    sender.sendMessage("Your compass points now to the last known position of " + Wolf.Name);
+                    sender.sendMessage("Your compass points now to the last known position of " + MWolf.Name);
                 }
                 return true;
             }

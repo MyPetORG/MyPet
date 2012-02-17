@@ -20,8 +20,8 @@
 package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,11 +34,11 @@ public class MyWolfEXP implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf wolf = MyWolfPlugin.MWWolves.get(player.getName());
-                wolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", wolf.Experience.getExp())).replace("%lvl%", "" + wolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", wolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", wolf.Experience.getExp() * 100 / wolf.Experience.getrequireEXP())));
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
+                MWolf.sendMessageToOwner(MyWolfUtil.SetColors("%wolfname% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", MWolf.Experience.getExp())).replace("%lvl%", "" + MWolf.Experience.getLevel()).replace("%reqexp%", String.format("%1.2f", MWolf.Experience.getrequireEXP())).replace("%proz%", String.format("%1.2f", MWolf.Experience.getExp() * 100 / MWolf.Experience.getrequireEXP())));
                 return true;
             }
             else

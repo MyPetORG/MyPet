@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.ItemStack;
@@ -37,16 +38,16 @@ public class MyWolfRelease implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(player, "MyWolf.release"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.release"))
                 {
                     return true;
                 }
-                if (Wolf.Status == WolfState.Despawned)
+                if (MWolf.Status == WolfState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
@@ -61,25 +62,25 @@ public class MyWolfRelease implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (Wolf.Name.equalsIgnoreCase(name))
+                if (MWolf.Name.equalsIgnoreCase(name))
                 {
-                    Wolf.Wolf.setOwner(null);
-                    Wolf.StopTimer();
-                    for (ItemStack is : Wolf.inv.getContents())
+                    MWolf.Wolf.setOwner(null);
+                    MWolf.StopTimer();
+                    for (ItemStack is : MWolf.inv.getContents())
                     {
                         if (is != null)
                         {
-                            Wolf.Wolf.getWorld().dropItem(Wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
+                            MWolf.Wolf.getWorld().dropItem(MWolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
                         }
                     }
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
-                    MyWolfPlugin.MWWolves.remove(player.getName());
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
+                    MyWolfList.removeMyWolf(MWolf);
                     MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MWolf.Name));
                     return false;
                 }
             }

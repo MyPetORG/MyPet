@@ -22,9 +22,9 @@ package de.Keyle.MyWolf.chatcommands;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,35 +37,35 @@ public class MyWolfBehavior implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (Wolf.Status == WolfState.Despawned)
+                if (MWolf.Status == WolfState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MyWolfSkill.hasSkill(Wolf.Abilities, "Behavior"))
+                else if (MyWolfSkill.hasSkill(MWolf.Abilities, "Behavior"))
                 {
                     if (args.length > 0 && (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Normal")))
                     {
                         if (args[0].equalsIgnoreCase("Raid"))
                         {
-                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Raid);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(MWolf, BehaviorState.Raid);
                         }
                         else if (args[0].equalsIgnoreCase("Friendly"))
                         {
-                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(MWolf, BehaviorState.Friendly);
                         }
                         else if (args[0].equalsIgnoreCase("Aggressive"))
                         {
-                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(MWolf, BehaviorState.Aggressive);
                         }
                         else if (args[0].equalsIgnoreCase("Normal"))
                         {
-                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Normal);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(MWolf, BehaviorState.Normal);
                         }
                     }
                     else if (args.length > 0)
@@ -74,9 +74,9 @@ public class MyWolfBehavior implements CommandExecutor
                     }
                     else
                     {
-                        MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, null);
+                        MyWolfSkill.RegisteredSkills.get("Behavior").run(MWolf, null);
                     }
-                    sender.sendMessage("Your wolf is now in " + Wolf.Behavior.toString() + " mode");
+                    sender.sendMessage("Your wolf is now in " + MWolf.Behavior.toString() + " mode");
                 }
                 else
                 {

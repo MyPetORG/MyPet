@@ -20,9 +20,9 @@
 package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -37,36 +37,35 @@ public class MyWolfInfo implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            String playerName;
+            String playerName = sender.getName();
             if(args != null && args.length > 0)
-            	playerName = args[0];
-            else
-            	playerName = sender.getName();
-            	
-            
-            if (MyWolfPlugin.MWWolves.containsKey(playerName))
             {
-                MyWolf wolf = MyWolfPlugin.MWWolves.get(playerName);
+                playerName = args[0];
+            }
+
+            if (MyWolfList.hasMyWolf(playerName))
+            {
+                MyWolf MWolf = MyWolfList.getMyWolf(playerName);
                 String msg;
-                if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
+                if (MWolf.getHealth() > MWolf.HealthMax / 3 * 2)
                 {
-                    msg = "" + ChatColor.GREEN + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
                 }
-                else if (wolf.getHealth() > wolf.HealthMax / 3)
+                else if (MWolf.getHealth() > MWolf.HealthMax / 3)
                 {
-                    msg = "" + ChatColor.YELLOW + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
                 }
                 else
                 {
-                    msg = "" + ChatColor.RED + wolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + wolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
                 }
-                player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", wolf.Name).replace("%hp%", msg));
+                player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
                 if (MyWolfConfig.LevelSystem)
                 {
-                    int lvl = wolf.Experience.getLevel();
-                    double EXP = wolf.Experience.getActualEXP();
-                    double reqEXP = wolf.Experience.getrequireEXP();
-                    player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", wolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
+                    int lvl = MWolf.Experience.getLevel();
+                    double EXP = MWolf.Experience.getActualEXP();
+                    double reqEXP = MWolf.Experience.getrequireEXP();
+                    player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                 }
                 if(args != null && args.length > 0)
                 	player.sendMessage(MyWolfUtil.SetColors("Owner: %Owner%").replace("%Owner%", playerName));
@@ -75,10 +74,13 @@ public class MyWolfInfo implements CommandExecutor
             else
             {
             	if(args != null && args.length > 0)
+                {
             		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OtherDontHaveWolf").replace("%playername%", playerName)));
+                }
             	else
+                {
             		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
-            		
+                }
             }
         }
         return true;

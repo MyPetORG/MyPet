@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -34,10 +34,10 @@ public class MyWolfName implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                if (!MyWolfPermissions.has(player, "MyWolf.setname"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.setname"))
                 {
                     return true;
                 }
@@ -51,7 +51,7 @@ public class MyWolfName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyWolfPlugin.MWWolves.get(player.getName()).SetName(name);
+                MyWolfList.getMyWolf(owner).SetName(name);
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
                 return true;
             }

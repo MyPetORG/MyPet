@@ -44,23 +44,21 @@ public class MyWolfPlugin extends JavaPlugin
     public static MyWolfLanguage MWLanguage;
 
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
-
-    public static final Map<String, MyWolf> MWWolves = new HashMap<String, MyWolf>();
     public static final List<Player> OpenMyWolfChests = new ArrayList<Player>();
 
     public void onDisable()
     {
         SaveWolves(MWWolvesConfig);
-        for (String owner : MWWolves.keySet())
+        for (MyWolf MWolf : MyWolfList.getMyWolfList())
         {
-            if (MWWolves.get(owner).Status == WolfState.Here)
+            if (MWolf.Status == WolfState.Here)
             {
-                MWWolves.get(owner).removeWolf();
+                MWolf.removeWolf();
             }
         }
         
         getServer().getScheduler().cancelTasks(this);
-        MWWolves.clear();
+        MyWolfList.clearList();
         WolfChestOpened.clear();
         
         MyWolfUtil.Log.info("[MyWolf] Disabled");
@@ -153,13 +151,6 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
 
-        for (Player p : this.getServer().getOnlinePlayers())
-        {
-            if (MWWolves.containsKey(p.getName()) && p.isOnline())
-            {
-                MWWolves.get(p.getName()).createWolf(MWWolves.get(p.getName()).isSitting());
-            }
-        }
         MyWolfUtil.Log.info("[" + MyWolfPlugin.Plugin.getDescription().getName() + "] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
@@ -192,34 +183,34 @@ public class MyWolfPlugin extends JavaPlugin
                         continue;
                     }
 
-                    MyWolf Wolf = new MyWolf(ownername);
+                    MyWolf MWolf = new MyWolf(ownername);
 
-                    MWWolves.put(ownername, Wolf);
+                    MyWolfList.addMyWolf(MWolf);
 
-                    Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+                    MWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
 
-                    Wolf.setHealth(WolfHealthNow);
-                    Wolf.RespawnTime = WolfRespawnTime;
+                    MWolf.setHealth(WolfHealthNow);
+                    MWolf.RespawnTime = WolfRespawnTime;
                     if (WolfRespawnTime > 0)
                     {
-                        Wolf.Status = WolfState.Dead;
+                        MWolf.Status = WolfState.Dead;
                     }
                     else
                     {
-                        Wolf.Status = WolfState.Despawned;
+                        MWolf.Status = WolfState.Despawned;
                     }
-                    Wolf.SetName(WolfName);
-                    Wolf.setSitting(WolfSitting);
-                    Wolf.Experience.setExp(WolfEXP);
-                    Wolf.setTameSkin(WolfSkin);
-                    Wolf.Behavior = WolfBehavior;
-                    Wolf.isPickup = WolfPickup;
+                    MWolf.SetName(WolfName);
+                    MWolf.setSitting(WolfSitting);
+                    MWolf.Experience.setExp(WolfEXP);
+                    MWolf.setTameSkin(WolfSkin);
+                    MWolf.Behavior = WolfBehavior;
+                    MWolf.isPickup = WolfPickup;
 
                     String inv = MWC.Config.getString("Wolves." + ownername + ".inventory", ",,");
                     String[] invSplit = inv.split(";");
                     for (int i = 0 ; i < invSplit.length ; i++)
                     {
-                        if (i < Wolf.inv.getSize())
+                        if (i < MWolf.inv.getSize())
                         {
                             String[] itemvalues = invSplit[i].split(",");
                             if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
@@ -228,7 +219,7 @@ public class MyWolfPlugin extends JavaPlugin
                                 {
                                     if (Integer.parseInt(itemvalues[1]) <= 64)
                                     {
-                                        Wolf.inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                        MWolf.inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
                                     }
                                 }
                             }
@@ -244,13 +235,13 @@ public class MyWolfPlugin extends JavaPlugin
     public void SaveWolves(MyWolfConfiguration MWC)
     {
         MWC.Config.set("Wolves",null);
-        for (String owner : MWWolves.keySet())
+        for (MyWolf MWolf : MyWolfList.getMyWolfList())
         {
-            MyWolf wolf = MWWolves.get(owner);
             String Items = "";
-            for (int i = 0 ; i < wolf.inv.getSize() ; i++)
+            String owner = MWolf.getOwnerName();
+            for (int i = 0 ; i < MWolf.inv.getSize() ; i++)
             {
-                ItemStack Item = wolf.inv.getItem(i);
+                ItemStack Item = MWolf.inv.getItem(i);
                 if (Item != null)
                 {
                     Items += Item.id + "," + Item.count + "," + Item.getData() + ";";
@@ -262,19 +253,19 @@ public class MyWolfPlugin extends JavaPlugin
             }
             Items = !Items.equals("") ? Items.substring(0, Items.length() - 1) : Items;
             MWC.Config.set("Wolves." + owner + ".inventory", Items);
-            MWC.Config.set("Wolves." + owner + ".loc.X", wolf.getLocation().getX());
-            MWC.Config.set("Wolves." + owner + ".loc.Y", wolf.getLocation().getY());
-            MWC.Config.set("Wolves." + owner + ".loc.Z", wolf.getLocation().getZ());
-            MWC.Config.set("Wolves." + owner + ".loc.world", wolf.getLocation().getWorld().getName());
+            MWC.Config.set("Wolves." + owner + ".loc.X", MWolf.getLocation().getX());
+            MWC.Config.set("Wolves." + owner + ".loc.Y", MWolf.getLocation().getY());
+            MWC.Config.set("Wolves." + owner + ".loc.Z", MWolf.getLocation().getZ());
+            MWC.Config.set("Wolves." + owner + ".loc.world", MWolf.getLocation().getWorld().getName());
 
-            MWC.Config.set("Wolves." + owner + ".health.now", wolf.getHealth());
-            MWC.Config.set("Wolves." + owner + ".health.respawntime", wolf.RespawnTime);
-            MWC.Config.set("Wolves." + owner + ".name", wolf.Name);
-            MWC.Config.set("Wolves." + owner + ".sitting", wolf.isSitting());
-            MWC.Config.set("Wolves." + owner + ".exp", wolf.Experience.getExp());
-            MWC.Config.set("Wolves." + owner + ".skin", wolf.SkinURL);
-            MWC.Config.set("Wolves." + owner + ".behavior", wolf.Behavior.name());
-            MWC.Config.set("Wolves." + owner + ".pickup", wolf.isPickup);
+            MWC.Config.set("Wolves." + owner + ".health.now", MWolf.getHealth());
+            MWC.Config.set("Wolves." + owner + ".health.respawntime", MWolf.RespawnTime);
+            MWC.Config.set("Wolves." + owner + ".name", MWolf.Name);
+            MWC.Config.set("Wolves." + owner + ".sitting", MWolf.isSitting());
+            MWC.Config.set("Wolves." + owner + ".exp", MWolf.Experience.getExp());
+            MWC.Config.set("Wolves." + owner + ".skin", MWolf.SkinURL);
+            MWC.Config.set("Wolves." + owner + ".behavior", MWolf.Behavior.name());
+            MWC.Config.set("Wolves." + owner + ".pickup", MWolf.isPickup);
         }
         MWC.saveConfig();
     }
@@ -282,33 +273,19 @@ public class MyWolfPlugin extends JavaPlugin
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean isMyWolf(Wolf wolf)
     {
-        for (MyWolf w : MWWolves.values())
-        {
-            if (w.getID() == wolf.getEntityId())
-            {
-                return true;
-            }
-        }
-        return false;
+        return MyWolfList.getMyWolf(wolf.getEntityId()) != null;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Wolf wolf)
     {
-        for (MyWolf w : MWWolves.values())
-        {
-            if (w.getID() == wolf.getEntityId())
-            {
-                return w;
-            }
-        }
-        return null;
+        return MyWolfList.getMyWolf(wolf.getEntityId());
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Player player)
     {
-        return MWWolves.containsKey(player.getName()) ? MWWolves.get(player.getName()) : null;
+        return MyWolfList.getMyWolf(player);
     }
 
     @SuppressWarnings({"UnusedDeclaration"})

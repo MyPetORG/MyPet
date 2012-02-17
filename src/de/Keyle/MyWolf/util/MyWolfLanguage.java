@@ -103,6 +103,8 @@ public class MyWolfLanguage
         addString("Slime", "MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
         addString("Ghast", "MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
         addString("Wolf", "MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
+        addString("MyWolf", "MyWolf.Message.deathmessage.mywolf", "was killed by %wolfname% of %player%.");
+        addString("OwnedWolf", "MyWolf.Message.deathmessage.mywolf", "was killed by a Wolf of %player%.");
         addString("Enderman", "MyWolf.Message.deathmessage.enderman", "was killed by a Enderman.");
         addString("Player", "MyWolf.Message.deathmessage.player", "was killed by %player%.");
         addString("Drowning", "MyWolf.Message.deathmessage.drowning", "drowned.");

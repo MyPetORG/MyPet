@@ -21,9 +21,9 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,24 +36,24 @@ public class MyWolfPickup implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (Wolf.Status == WolfState.Despawned)
+                if (MWolf.Status == WolfState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (Wolf.Status == WolfState.Dead)
+                else if (MWolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name).replace("%time%", "" + MyWolfPlugin.MWWolves.get(player.getName()).RespawnTime));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
-                if (MyWolfSkill.hasSkill(Wolf.Abilities, "Pickup"))
+                if (MyWolfSkill.hasSkill(MWolf.Abilities, "Pickup"))
                 {
-                    MyWolfSkill.RegisteredSkills.get("Pickup").run(Wolf, null);
+                    MyWolfSkill.RegisteredSkills.get("Pickup").run(MWolf, null);
                 }
                 else
                 {

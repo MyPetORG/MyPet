@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
-import org.bukkit.entity.Minecart;
+import de.Keyle.MyWolf.util.MyWolfList;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -34,29 +34,26 @@ public class MyWolfVehicleListener implements Listener
     @EventHandler(priority = EventPriority.LOW)
     public void onVehicleEnter(VehicleEnterEvent event)
     {
-        if (event.isCancelled() || !(event.getVehicle() instanceof Minecart))
+        if (event.isCancelled())
         {
             return;
         }
         if (event.getEntered() instanceof Wolf)
         {
-            for (String owner : MyWolfPlugin.MWWolves.keySet())
+            if(MyWolfList.getMyWolf(event.getEntered().getEntityId()) != null)
             {
-                if (MyWolfPlugin.MWWolves.get(owner).getID() == event.getEntered().getEntityId())
-                {
-                    event.setCancelled(true);
-                    break;
-                }
+                event.setCancelled(true);
             }
         }
         if (event.getEntered() instanceof Player)
         {
             Player player = (Player) event.getEntered();
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            if (MyWolfList.hasMyWolf(player))
             {
-                if (MyWolfPlugin.MWWolves.get(player.getName()).Status == WolfState.Here && !MyWolfPlugin.MWWolves.get(player.getName()).isSitting())
+                MyWolf MWolf = MyWolfList.getMyWolf(player);
+                if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
                 {
-                    MyWolfPlugin.MWWolves.get(player.getName()).Wolf.setSitting(true);
+                    MWolf.setSitting(true);
                 }
             }
         }

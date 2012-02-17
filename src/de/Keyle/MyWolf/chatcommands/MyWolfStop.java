@@ -21,8 +21,8 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
@@ -36,22 +36,22 @@ public class MyWolfStop implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
+            Player owner = (Player) sender;
+            if (MyWolfList.hasMyWolf(owner))
             {
-                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(player, "MyWolf.stop"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.stop"))
                 {
                     return true;
                 }
-                if (Wolf.Status == WolfState.Despawned)
+                if (MWolf.Status == WolfState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
-                Wolf.Wolf.setTarget(null);
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
+                MWolf.Wolf.setTarget(null);
                 return true;
             }
             else
