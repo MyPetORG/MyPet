@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -44,9 +44,9 @@ public class MyWolfInfo implements CommandExecutor
             	playerName = sender.getName();
             	
             
-            if (ConfigBuffer.mWolves.containsKey(playerName))
+            if (MyWolfPlugin.MWWolves.containsKey(playerName))
             {
-                MyWolf wolf = ConfigBuffer.mWolves.get(playerName);
+                MyWolf wolf = MyWolfPlugin.MWWolves.get(playerName);
                 String msg;
                 if (wolf.getHealth() > wolf.HealthMax / 3 * 2)
                 {

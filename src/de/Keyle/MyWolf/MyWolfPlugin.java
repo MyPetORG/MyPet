@@ -35,29 +35,33 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MyWolfPlugin extends JavaPlugin
 {
     public static MyWolfPlugin Plugin;
+    public static MyWolfConfiguration MWWolvesConfig;
+    public static MyWolfLanguage MWLanguage;
+
+    public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+
+    public static final Map<String, MyWolf> MWWolves = new HashMap<String, MyWolf>();
     public static final List<Player> OpenMyWolfChests = new ArrayList<Player>();
 
     public void onDisable()
     {
-        SaveWolves(ConfigBuffer.WolvesConfig);
-        for (String owner : ConfigBuffer.mWolves.keySet())
+        SaveWolves(MWWolvesConfig);
+        for (String owner : MWWolves.keySet())
         {
-            if (ConfigBuffer.mWolves.get(owner).Status == WolfState.Here)
+            if (MWWolves.get(owner).Status == WolfState.Here)
             {
-                ConfigBuffer.mWolves.get(owner).removeWolf();
+                MWWolves.get(owner).removeWolf();
             }
         }
         
         getServer().getScheduler().cancelTasks(this);
-        ConfigBuffer.mWolves.clear();
-        ConfigBuffer.WolfChestOpened.clear();
+        MWWolves.clear();
+        WolfChestOpened.clear();
         
         MyWolfUtil.Log.info("[MyWolf] Disabled");
         
@@ -112,6 +116,9 @@ public class MyWolfPlugin extends JavaPlugin
         new Damage();
         new Control();
 
+        // For future of the client mod
+        //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");
+
 
         MyWolfConfig.Config = this.getConfig();
         MyWolfConfig.setDefault();
@@ -126,12 +133,12 @@ public class MyWolfPlugin extends JavaPlugin
             MyWolfPermissions.setup();
         }
 
-        ConfigBuffer.lv = new MyWolfLanguage(new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
-        ConfigBuffer.lv.loadVariables();
+        MWLanguage = new MyWolfLanguage(new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
+        MWLanguage.loadVariables();
 
-        ConfigBuffer.WolvesConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
+        MWWolvesConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
 
-        LoadWolves(ConfigBuffer.WolvesConfig);
+        LoadWolves(MWWolvesConfig);
 
         if (MyWolfConfig.LevelSystem)
         {
@@ -148,12 +155,12 @@ public class MyWolfPlugin extends JavaPlugin
 
         for (Player p : this.getServer().getOnlinePlayers())
         {
-            if (ConfigBuffer.mWolves.containsKey(p.getName()) && p.isOnline())
+            if (MWWolves.containsKey(p.getName()) && p.isOnline())
             {
-                ConfigBuffer.mWolves.get(p.getName()).createWolf(ConfigBuffer.mWolves.get(p.getName()).isSitting());
+                MWWolves.get(p.getName()).createWolf(MWWolves.get(p.getName()).isSitting());
             }
         }
-        MyWolfUtil.Log.info("[" + ConfigBuffer.pdfFile.getName() + "] version " + ConfigBuffer.pdfFile.getVersion() + " ENABLED");
+        MyWolfUtil.Log.info("[" + MyWolfPlugin.Plugin.getDescription().getName() + "] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
     public void LoadWolves(MyWolfConfiguration MWC)
@@ -187,7 +194,7 @@ public class MyWolfPlugin extends JavaPlugin
 
                     MyWolf Wolf = new MyWolf(ownername);
 
-                    ConfigBuffer.mWolves.put(ownername, Wolf);
+                    MWWolves.put(ownername, Wolf);
 
                     Wolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
 
@@ -237,9 +244,9 @@ public class MyWolfPlugin extends JavaPlugin
     public void SaveWolves(MyWolfConfiguration MWC)
     {
         MWC.Config.set("Wolves",null);
-        for (String owner : ConfigBuffer.mWolves.keySet())
+        for (String owner : MWWolves.keySet())
         {
-            MyWolf wolf = ConfigBuffer.mWolves.get(owner);
+            MyWolf wolf = MWWolves.get(owner);
             String Items = "";
             for (int i = 0 ; i < wolf.inv.getSize() ; i++)
             {
@@ -275,7 +282,7 @@ public class MyWolfPlugin extends JavaPlugin
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean isMyWolf(Wolf wolf)
     {
-        for (MyWolf w : ConfigBuffer.mWolves.values())
+        for (MyWolf w : MWWolves.values())
         {
             if (w.getID() == wolf.getEntityId())
             {
@@ -288,7 +295,7 @@ public class MyWolfPlugin extends JavaPlugin
     @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Wolf wolf)
     {
-        for (MyWolf w : ConfigBuffer.mWolves.values())
+        for (MyWolf w : MWWolves.values())
         {
             if (w.getID() == wolf.getEntityId())
             {
@@ -301,7 +308,7 @@ public class MyWolfPlugin extends JavaPlugin
     @SuppressWarnings({"UnusedDeclaration"})
     public static MyWolf getMyWolf(Player player)
     {
-        return ConfigBuffer.mWolves.containsKey(player.getName()) ? ConfigBuffer.mWolves.get(player.getName()) : null;
+        return MWWolves.containsKey(player.getName()) ? MWWolves.get(player.getName()) : null;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})

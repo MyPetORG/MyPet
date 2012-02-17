@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
@@ -34,8 +33,11 @@ import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyWolfEntityListener implements Listener
 {
@@ -53,7 +55,7 @@ public class MyWolfEntityListener implements Listener
             {
                 Player player = (Player) e.getDamager();
 
-                if (!ConfigBuffer.mWolves.containsKey(player.getName()))
+                if (!MyWolfPlugin.MWWolves.containsKey(player.getName()))
                 {
                     if (!MyWolfPermissions.has(player, "MyWolf.leash") || player.getItemInHand().getType() != MyWolfConfig.LeashItem)
                     {
@@ -69,23 +71,23 @@ public class MyWolfEntityListener implements Listener
                     if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
                     {
                         event.setCancelled(true);
-                        ConfigBuffer.mWolves.put(player.getName(), new MyWolf(player.getName()));
-                        ConfigBuffer.mWolves.get(player.getName()).createWolf((Wolf) event.getEntity());
-                        MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+                        MyWolfPlugin.MWWolves.put(player.getName(), new MyWolf(player.getName()));
+                        MyWolfPlugin.MWWolves.get(player.getName()).createWolf((Wolf) event.getEntity());
+                        MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
                         player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
                 }
                 String WolfOwner = null;
-                for (String owner : ConfigBuffer.mWolves.keySet())
+                for (String owner : MyWolfPlugin.MWWolves.keySet())
                 {
 
-                    if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntity().getEntityId())
+                    if (MyWolfPlugin.MWWolves.get(owner).getID() == event.getEntity().getEntityId())
                     {
                         WolfOwner = owner;
                         break;
                     }
                 }
-                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                for (MyWolf wolf : MyWolfPlugin.MWWolves.values())
                 {
                     if (wolf.getID() == event.getEntity().getEntityId())
                     {
@@ -109,7 +111,7 @@ public class MyWolfEntityListener implements Listener
                 }
                 if (WolfOwner != null && WolfOwner.equals(player.getName()))
                 {
-                    MyWolf wolf = ConfigBuffer.mWolves.get(WolfOwner);
+                    MyWolf wolf = MyWolfPlugin.MWWolves.get(WolfOwner);
                     wolf.ResetSitTimer();
                     wolf.SetName();
                     if (player.getItemInHand().getType() == MyWolfConfig.LeashItem)
@@ -149,7 +151,7 @@ public class MyWolfEntityListener implements Listener
             }
             else if(e.getDamager() instanceof Wolf)
             {
-                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                for (MyWolf wolf : MyWolfPlugin.MWWolves.values())
                 {
                     if (wolf.getID() == e.getDamager().getEntityId())
                     {
@@ -166,7 +168,7 @@ public class MyWolfEntityListener implements Listener
     {
         if (event.getEntity() instanceof Wolf)
         {
-            for (MyWolf wolf : ConfigBuffer.mWolves.values())
+            for (MyWolf wolf : MyWolfPlugin.MWWolves.values())
             {
                 if (wolf.getID() == event.getEntity().getEntityId())
                 {
@@ -183,7 +185,7 @@ public class MyWolfEntityListener implements Listener
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                for (MyWolf wolf : ConfigBuffer.mWolves.values())
+                for (MyWolf wolf : MyWolfPlugin.MWWolves.values())
                 {
                     if (wolf.getID() == e.getDamager().getEntityId())
                     {
@@ -208,7 +210,7 @@ public class MyWolfEntityListener implements Listener
     {
         MyWolf wolf = null;
         String Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Unknow"));
-        for (MyWolf w : ConfigBuffer.mWolves.values())
+        for (MyWolf w : MyWolfPlugin.MWWolves.values())
         {
             if (w.getID() == event.getEntity().getEntityId())
             {
@@ -279,9 +281,9 @@ public class MyWolfEntityListener implements Listener
                     if (w.isTamed())
                     {
                         Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Wolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
-                        for (String owner : ConfigBuffer.mWolves.keySet())
+                        for (String owner : MyWolfPlugin.MWWolves.keySet())
                         {
-                            if (ConfigBuffer.mWolves.get(owner).getID() == w.getEntityId())
+                            if (MyWolfPlugin.MWWolves.get(owner).getID() == w.getEntityId())
                             {
                                 //Killer = "the wolf \"" +ChatColor.AQUA+ cb.mWolves.get(owner).Name + ChatColor.WHITE+ "\" of " + ((Player)w.getOwner()).getName();
 
@@ -334,7 +336,7 @@ public class MyWolfEntityListener implements Listener
         {
             if (event.getEntity() instanceof Wolf)
             {
-                for (MyWolf Wolf : ConfigBuffer.mWolves.values())
+                for (MyWolf Wolf : MyWolfPlugin.MWWolves.values())
                 {
                     if (Wolf.getID() == event.getEntity().getEntityId())
                     {

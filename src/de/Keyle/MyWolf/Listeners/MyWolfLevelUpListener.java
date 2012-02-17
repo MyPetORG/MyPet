@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
@@ -43,13 +43,13 @@ public class MyWolfLevelUpListener implements Listener
             SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, (SpoutPlayer) eventMyWolf.getOwner(),MyWolfConfig.SpoutSoundLevelup,true);
             eventMyWolf.getWolf().sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", eventMyWolf.getWolf().Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
         }
-        if (ConfigBuffer.SkillPerLevel.containsKey(eventMyWolf.getLevel()))
+        if (MyWolfSkill.SkillPerLevel.containsKey(eventMyWolf.getLevel()))
         {
-            for (String skill : ConfigBuffer.SkillPerLevel.get(eventMyWolf.getLevel()))
+            for (String skill : MyWolfSkill.SkillPerLevel.get(eventMyWolf.getLevel()))
             {
-                if (ConfigBuffer.RegisteredSkills.containsKey(skill))
+                if (MyWolfSkill.RegisteredSkills.containsKey(skill))
                 {
-                    ConfigBuffer.RegisteredSkills.get(skill).activate(eventMyWolf.getWolf(), 0);
+                    MyWolfSkill.RegisteredSkills.get(skill).activate(eventMyWolf.getWolf(), 0);
                 }
             }
         }

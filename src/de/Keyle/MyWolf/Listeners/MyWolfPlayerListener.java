@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
@@ -55,9 +54,9 @@ public class MyWolfPlayerListener implements Listener
             if (event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem)
             {
                 Wolf w = (Wolf) event.getRightClicked();
-                if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+                if (MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
                 {
-                    MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+                    MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
                     Wolf.ResetSitTimer();
                     if (Wolf.getID() == w.getEntityId())
                     {
@@ -71,9 +70,9 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName())) // && cb.cv.WolfControlItemSneak == event.getPlayer().isSneaking()
         {
-            MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+            MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
             if (Wolf.Status == WolfState.Here && !Wolf.isSitting())
             {
                 if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.walk"))
@@ -123,7 +122,7 @@ public class MyWolfPlayerListener implements Listener
                             }
                             else
                             {
-                                ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setTarget((LivingEntity) e);
+                                MyWolfPlugin.MWWolves.get(event.getPlayer().getName()).Wolf.setTarget((LivingEntity) e);
                             }
                         }
                     }
@@ -135,9 +134,22 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        if (MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
         {
-            MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+            MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
+            /*
+            // For future of the client mod
+
+            String EntityIDs = Wolf.getID() + "\0";
+            for(MyWolf w : MyWolfPlugin.MWWolves.values())
+            {
+                if(w.Status == WolfState.Here)
+                {
+                    EntityIDs += w.getID() + "\0";
+                }
+            }
+            event.getPlayer().sendPluginMessage(MyWolfPlugin.Plugin,"MyWolfByKeyle",EntityIDs.getBytes());
+            */
 
             if (Wolf.Status == WolfState.Dead)
             {
@@ -165,9 +177,9 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerPortal(final PlayerPortalEvent event)
     {
-        if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        if (MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
         {
-            MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+            MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
 
             if (Wolf.Status == WolfState.Dead)
             {
@@ -188,9 +200,9 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
-        if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        if (MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
         {
-            MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+            MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
 
             if (Wolf.Status == WolfState.Here)
             {
@@ -201,16 +213,16 @@ public class MyWolfPlayerListener implements Listener
                 }
             }
             Wolf.StopTimer();
-            MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+            MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
         }
     }
 
     @EventHandler()
     public void onPlayerMove(final PlayerMoveEvent event)
     {
-        if (ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        if (MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
         {
-            MyWolf Wolf = ConfigBuffer.mWolves.get(event.getPlayer().getName());
+            MyWolf Wolf = MyWolfPlugin.MWWolves.get(event.getPlayer().getName());
 
             Wolf.ResetSitTimer();
             if (Wolf.Status == WolfState.Here)

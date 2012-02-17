@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -35,7 +35,7 @@ public class MyWolfName implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
                 if (!MyWolfPermissions.has(player, "MyWolf.setname"))
                 {
@@ -51,7 +51,7 @@ public class MyWolfName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                ConfigBuffer.mWolves.get(player.getName()).SetName(name);
+                MyWolfPlugin.MWWolves.get(player.getName()).SetName(name);
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
                 return true;
             }

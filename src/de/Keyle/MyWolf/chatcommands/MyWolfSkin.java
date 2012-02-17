@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -41,16 +41,16 @@ public class MyWolfSkin implements CommandExecutor
                 {
                     return true;
                 }
-                if (ConfigBuffer.mWolves.containsKey(args[0]))
+                if (MyWolfPlugin.MWWolves.containsKey(args[0]))
                 {
-                    ConfigBuffer.mWolves.get(args[0]).setTameSkin(args[1]);
+                    MyWolfPlugin.MWWolves.get(args[0]).setTameSkin(args[1]);
                 }
                 else
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf")));
                 }
             }
-            else if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            else if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
                 if (!MyWolfPermissions.has(player, "MyWolf.skin.self"))
                 {
@@ -58,7 +58,7 @@ public class MyWolfSkin implements CommandExecutor
                 }
                 if (args.length == 1)
                 {
-                    ConfigBuffer.mWolves.get(player.getName()).setTameSkin(args[0]);
+                    MyWolfPlugin.MWWolves.get(player.getName()).setTameSkin(args[0]);
                 }
                 return true;
             }

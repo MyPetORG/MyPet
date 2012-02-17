@@ -33,7 +33,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class MyWolfUtil

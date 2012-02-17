@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -43,9 +43,9 @@ public class MyWolfInventory implements CommandExecutor
             String playername = player.getName();
             if(args.length == 0)
             {
-                if (ConfigBuffer.mWolves.containsKey(playername))
+                if (MyWolfPlugin.MWWolves.containsKey(playername))
                 {
-                    MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                    MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
                     if (Wolf.Status == WolfState.Despawned)
                     {
                         sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
@@ -53,16 +53,16 @@ public class MyWolfInventory implements CommandExecutor
                     }
                     else if (Wolf.Status == WolfState.Dead)
                     {
-                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name).replace("%time%", "" + MyWolfPlugin.MWWolves.get(player.getName()).RespawnTime));
                         return true;
                     }
                     if (MyWolfSkill.hasSkill(Wolf.Abilities, "Inventory"))
                     {
-                        ConfigBuffer.RegisteredSkills.get("Inventory").run(Wolf, null);
+                        MyWolfSkill.RegisteredSkills.get("Inventory").run(Wolf, null);
                     }
                     else
                     {
-                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NoInventory")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
+                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
                     }
                     return true;
                 }
@@ -73,10 +73,10 @@ public class MyWolfInventory implements CommandExecutor
             }
             else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.Skills.Inventory.admin"))
             {
-                if (ConfigBuffer.mWolves.containsKey(playername))
+                if (MyWolfPlugin.MWWolves.containsKey(playername))
                 {
                     EntityPlayer eh = ((CraftPlayer) player).getHandle();
-                    eh.a(ConfigBuffer.mWolves.get(player.getName()).inv);
+                    eh.a(MyWolfPlugin.MWWolves.get(player.getName()).inv);
                 }
             }
         }

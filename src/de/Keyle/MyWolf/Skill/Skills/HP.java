@@ -30,7 +30,6 @@ public class HP extends MyWolfSkill
     public HP()
     {
         super("HP");
-        registerSkill();
     }
 
     @Override

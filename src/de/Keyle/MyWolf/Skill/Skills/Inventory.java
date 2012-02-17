@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
@@ -34,7 +33,6 @@ public class Inventory extends MyWolfSkill
     public Inventory()
     {
         super("Inventory");
-        registerSkill();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class Inventory extends MyWolfSkill
                 MyWolfPlugin.OpenMyWolfChests.add(wolf.getOwner());
                 if (!wolf.isSitting())
                 {
-                    ConfigBuffer.WolfChestOpened.add(wolf.getOwner());
+                    MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
                 }
                 wolf.Wolf.setSitting(true);
             }

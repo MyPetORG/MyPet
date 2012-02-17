@@ -19,17 +19,50 @@
 
 package de.Keyle.MyWolf.Skill;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MyWolfSkill
 {
     protected String Name;
+    public static final Map<Integer, List<String>> SkillPerLevel = new HashMap<Integer, List<String>>();
+    public static final Map<String, MyWolfSkill> RegisteredSkills = new HashMap<String, MyWolfSkill>();
+
+    public MyWolfSkill(String Name)
+    {
+        this.Name = Name;
+        registerSkill();
+    }
+
+    public final void registerSkill()
+    {
+        if (!RegisteredSkills.containsKey(Name))
+        {
+            RegisteredSkills.put(this.Name, this);
+        }
+        else
+        {
+            MyWolfUtil.Log.info("[MyWolf] There is already a skill registered for " + Name);
+        }
+    }
+
+    public final void registerSkill(String Name)
+    {
+        if (!RegisteredSkills.containsKey(Name))
+        {
+            RegisteredSkills.put(Name, this);
+        }
+        else
+        {
+            MyWolfUtil.Log.info("[MyWolf] There is already a skill registered for " + Name);
+        }
+    }
 
     public static boolean hasSkill(Map<String, Boolean> skills, String skill)
     {
@@ -43,39 +76,9 @@ public class MyWolfSkill
         return false;
     }
 
-
-    public MyWolfSkill(String Name)
-    {
-        this.Name = Name;
-    }
-
     public String getName()
     {
         return this.Name;
-    }
-
-    public final void registerSkill()
-    {
-        try
-        {
-            ConfigBuffer.registerSkill(this.Name, this);
-        }
-        catch (Exception e)
-        {
-            MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
-        }
-    }
-
-    public final void registerSkill(String Name)
-    {
-        try
-        {
-            ConfigBuffer.registerSkill(Name, this);
-        }
-        catch (Exception e)
-        {
-            MyWolfUtil.Log.info("[MyWolf] " + e.getMessage());
-        }
     }
 
     public void run(MyWolf wolf, Object args)

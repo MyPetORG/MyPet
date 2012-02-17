@@ -29,7 +29,6 @@ public class Behavior extends MyWolfSkill
     public Behavior()
     {
         super("Behavior");
-        registerSkill();
     }
 
     @Override

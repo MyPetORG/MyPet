@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
@@ -39,9 +38,9 @@ public class MyWolfRelease implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
-                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
 
                 if (!MyWolfPermissions.has(player, "MyWolf.release"))
                 {
@@ -73,14 +72,14 @@ public class MyWolfRelease implements CommandExecutor
                             Wolf.Wolf.getWorld().dropItem(Wolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
                         }
                     }
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
-                    ConfigBuffer.mWolves.remove(player.getName());
-                    MyWolfPlugin.Plugin.SaveWolves(ConfigBuffer.WolvesConfig);
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
+                    MyWolfPlugin.MWWolves.remove(player.getName());
+                    MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
                     return false;
                 }
             }

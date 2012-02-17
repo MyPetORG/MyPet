@@ -31,7 +31,6 @@ public class Control extends MyWolfSkill
     public Control()
     {
         super("Control");
-        registerSkill();
     }
 
     @Override

@@ -31,7 +31,6 @@ public class Pickup extends MyWolfSkill
     public Pickup()
     {
         super("Pickup");
-        registerSkill();
     }
 
     @Override

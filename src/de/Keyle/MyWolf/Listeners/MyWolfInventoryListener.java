@@ -19,7 +19,6 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,10 +30,10 @@ public class MyWolfInventoryListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL)
     public void onInventoryClose(InventoryCloseEvent event)
     {
-        if (ConfigBuffer.WolfChestOpened.contains(event.getPlayer()) && ConfigBuffer.mWolves.containsKey(event.getPlayer().getName()))
+        if (MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()) && MyWolfPlugin.MWWolves.containsKey(event.getPlayer().getName()))
         {
-            ConfigBuffer.mWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
-            ConfigBuffer.WolfChestOpened.remove(event.getPlayer());
+            MyWolfPlugin.MWWolves.get(event.getPlayer().getName()).Wolf.setSitting(false);
+            MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());
         }
         if(MyWolfPlugin.OpenMyWolfChests.contains(event.getPlayer()))
         {

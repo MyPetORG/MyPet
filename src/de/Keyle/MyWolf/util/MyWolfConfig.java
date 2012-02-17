@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.util;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;
@@ -143,7 +143,7 @@ public class MyWolfConfig
             for (String lvl : LevelList)
             {
                 List<String> Skills = Config.getStringList("MyWolf.skills." + lvl);
-                ConfigBuffer.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
+                MyWolfSkill.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
             }
         }
     }

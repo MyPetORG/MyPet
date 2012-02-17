@@ -19,10 +19,10 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -38,9 +38,9 @@ public class MyWolfBehavior implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
-                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
 
                 if (Wolf.Status == WolfState.Despawned)
                 {
@@ -53,19 +53,19 @@ public class MyWolfBehavior implements CommandExecutor
                     {
                         if (args[0].equalsIgnoreCase("Raid"))
                         {
-                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Raid);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Raid);
                         }
                         else if (args[0].equalsIgnoreCase("Friendly"))
                         {
-                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Friendly);
                         }
                         else if (args[0].equalsIgnoreCase("Aggressive"))
                         {
-                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Aggressive);
                         }
                         else if (args[0].equalsIgnoreCase("Normal"))
                         {
-                            ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Normal);
+                            MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, BehaviorState.Normal);
                         }
                     }
                     else if (args.length > 0)
@@ -74,7 +74,7 @@ public class MyWolfBehavior implements CommandExecutor
                     }
                     else
                     {
-                        ConfigBuffer.RegisteredSkills.get("Behavior").run(Wolf, null);
+                        MyWolfSkill.RegisteredSkills.get("Behavior").run(Wolf, null);
                     }
                     sender.sendMessage("Your wolf is now in " + Wolf.Behavior.toString() + " mode");
                 }

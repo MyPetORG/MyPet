@@ -30,7 +30,6 @@ public class HPregeneration extends MyWolfSkill
     public HPregeneration()
     {
         super("HPregeneration");
-        registerSkill();
     }
 
     @Override

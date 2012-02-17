@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -37,9 +37,9 @@ public class MyWolfCompass implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
-                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
 
                 if (!MyWolfPermissions.has(Wolf.getOwner(), "MyWolf.compass"))
                 {
@@ -48,7 +48,7 @@ public class MyWolfCompass implements CommandExecutor
 
                 if (Wolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name).replace("%time%", "" + ConfigBuffer.mWolves.get(player.getName()).RespawnTime));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name).replace("%time%", "" + MyWolfPlugin.MWWolves.get(player.getName()).RespawnTime));
                     return true;
                 }
                 else

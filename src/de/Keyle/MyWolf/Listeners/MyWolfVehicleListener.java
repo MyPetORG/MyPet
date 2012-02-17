@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -40,9 +40,9 @@ public class MyWolfVehicleListener implements Listener
         }
         if (event.getEntered() instanceof Wolf)
         {
-            for (String owner : ConfigBuffer.mWolves.keySet())
+            for (String owner : MyWolfPlugin.MWWolves.keySet())
             {
-                if (ConfigBuffer.mWolves.get(owner).getID() == event.getEntered().getEntityId())
+                if (MyWolfPlugin.MWWolves.get(owner).getID() == event.getEntered().getEntityId())
                 {
                     event.setCancelled(true);
                     break;
@@ -52,11 +52,11 @@ public class MyWolfVehicleListener implements Listener
         if (event.getEntered() instanceof Player)
         {
             Player player = (Player) event.getEntered();
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
-                if (ConfigBuffer.mWolves.get(player.getName()).Status == WolfState.Here && !ConfigBuffer.mWolves.get(player.getName()).isSitting())
+                if (MyWolfPlugin.MWWolves.get(player.getName()).Status == WolfState.Here && !MyWolfPlugin.MWWolves.get(player.getName()).isSitting())
                 {
-                    ConfigBuffer.mWolves.get(player.getName()).Wolf.setSitting(true);
+                    MyWolfPlugin.MWWolves.get(player.getName()).Wolf.setSitting(true);
                 }
             }
         }

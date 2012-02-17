@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -37,9 +37,9 @@ public class MyWolfStop implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (ConfigBuffer.mWolves.containsKey(player.getName()))
+            if (MyWolfPlugin.MWWolves.containsKey(player.getName()))
             {
-                MyWolf Wolf = ConfigBuffer.mWolves.get(player.getName());
+                MyWolf Wolf = MyWolfPlugin.MWWolves.get(player.getName());
 
                 if (!MyWolfPermissions.has(player, "MyWolf.stop"))
                 {
@@ -50,7 +50,7 @@ public class MyWolfStop implements CommandExecutor
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", ConfigBuffer.mWolves.get(player.getName()).Name));
+                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MyWolfPlugin.MWWolves.get(player.getName()).Name));
                 Wolf.Wolf.setTarget(null);
                 return true;
             }

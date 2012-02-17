@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.ConfigBuffer;
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -36,7 +36,7 @@ public class MyWolfWorldListener implements Listener
         {
             if (e instanceof Wolf)
             {
-                for (MyWolf w : ConfigBuffer.mWolves.values())
+                for (MyWolf w : MyWolfPlugin.MWWolves.values())
                 {
                     if (w.getID() == e.getEntityId())
                     {

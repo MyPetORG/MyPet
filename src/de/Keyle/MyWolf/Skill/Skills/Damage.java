@@ -30,7 +30,6 @@ public class Damage extends MyWolfSkill
     public Damage()
     {
         super("Damage");
-        registerSkill();
     }
 
     @Override
