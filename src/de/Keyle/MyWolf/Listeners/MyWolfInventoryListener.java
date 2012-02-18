@@ -36,9 +36,5 @@ public class MyWolfInventoryListener implements Listener
             MyWolfList.getMyWolf(event.getPlayer()).setSitting(false);
             MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());
         }
-        if(MyWolfPlugin.OpenMyWolfChests.contains(event.getPlayer()))
-        {
-            MyWolfPlugin.OpenMyWolfChests.remove(event.getPlayer());
-        }
     }
 }

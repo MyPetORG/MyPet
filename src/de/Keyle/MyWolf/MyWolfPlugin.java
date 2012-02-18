@@ -31,7 +31,6 @@ import net.minecraft.server.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -46,7 +45,6 @@ public class MyWolfPlugin extends JavaPlugin
     public static MyWolfLanguage MWLanguage;
 
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
-    public static final List<Player> OpenMyWolfChests = new ArrayList<Player>();
 
     public void onDisable()
     {
@@ -129,9 +127,6 @@ public class MyWolfPlugin extends JavaPlugin
         // For future of the client mod
         //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");
 
-
-
-
         if (MyWolfConfig.PermissionsBukkit)
         {
             MyWolfPermissions.setup(PermissionsType.BukkitPermissions);
@@ -164,7 +159,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfUtil.Log.info("[" + MyWolfPlugin.Plugin.getDescription().getName() + "] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
-    public void LoadWolves(MyWolfConfiguration MWC)
+    void LoadWolves(MyWolfConfiguration MWC)
     {
         int anzahlWolves = 0;
         if(MWC.Config.contains("Wolves"))
@@ -278,30 +273,5 @@ public class MyWolfPlugin extends JavaPlugin
             MWC.Config.set("Wolves." + owner + ".pickup", MWolf.isPickup);
         }
         MWC.saveConfig();
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public static boolean isMyWolf(Wolf wolf)
-    {
-        return MyWolfList.getMyWolf(wolf.getEntityId()) != null;
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public static MyWolf getMyWolf(Wolf wolf)
-    {
-        return MyWolfList.getMyWolf(wolf.getEntityId());
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public static MyWolf getMyWolf(Player player)
-    {
-        return MyWolfList.getMyWolf(player);
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public static boolean isMyWolfInventoryOpen(Player player)
-    {
-        return OpenMyWolfChests.contains(player);
-
     }
 }

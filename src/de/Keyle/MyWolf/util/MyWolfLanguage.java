@@ -41,14 +41,6 @@ public class MyWolfLanguage
         }
         return Variable;
     }
-
-    public void setProperty(String key, Object value)
-    {
-        if (MWC.Config.get(key) == null)
-        {
-            MWC.Config.set(key, value);
-        }
-    }
     
     public void addString(String name, String node, String def)
     {
@@ -101,11 +93,15 @@ public class MyWolfLanguage
         addString("CaveSpider", "MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
         addString("Giant", "MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
         addString("Slime", "MyWolf.Message.deathmessage.slime", "was killed by a Slime.");
+        addString("MagmaCube", "MyWolf.Message.deathmessage.magmacube", "was killed by a Magma Cube.");
         addString("Ghast", "MyWolf.Message.deathmessage.ghast", "was killed by a Ghast.");
+        addString("Blaze", "MyWolf.Message.deathmessage.blace", "was killed by a Blaze.");
+        addString("EnderDragon", "MyWolf.Message.deathmessage.enderdragon", "was killed by the Ender Dragon.");
         addString("Wolf", "MyWolf.Message.deathmessage.wolf", "was killed by a Wolf.");
         addString("MyWolf", "MyWolf.Message.deathmessage.mywolf", "was killed by %wolfname% of %player%.");
         addString("OwnedWolf", "MyWolf.Message.deathmessage.mywolf", "was killed by a Wolf of %player%.");
         addString("Enderman", "MyWolf.Message.deathmessage.enderman", "was killed by a Enderman.");
+        addString("Snowman", "MyWolf.Message.deathmessage.snowman", "was killed by a Snowman.");
         addString("Player", "MyWolf.Message.deathmessage.player", "was killed by %player%.");
         addString("Drowning", "MyWolf.Message.deathmessage.drowning", "drowned.");
         addString("Fall", "MyWolf.Message.deathmessage.fall", " died by falling down.");

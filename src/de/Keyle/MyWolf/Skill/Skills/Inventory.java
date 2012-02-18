@@ -22,7 +22,6 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -47,15 +46,11 @@ public class Inventory extends MyWolfSkill
                     return;
                 }
                 wolf.OpenInventory();
-                if(MyWolfConfig.UseSpout)
+                if (!wolf.isSitting())
                 {
-                    MyWolfPlugin.OpenMyWolfChests.add(wolf.getOwner());
-                    if (!wolf.isSitting())
-                    {
-                        MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
-                    }
-                    wolf.Wolf.setSitting(true);
+                    MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
                 }
+                wolf.Wolf.setSitting(true);
             }
             else
             {

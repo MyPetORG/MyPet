@@ -40,7 +40,7 @@ public class MyWolfSkill
         registerSkill();
     }
 
-    public final void registerSkill()
+    final void registerSkill()
     {
         if (!RegisteredSkills.containsKey(Name))
         {

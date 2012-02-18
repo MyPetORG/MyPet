@@ -186,8 +186,7 @@ public class MyWolfEntityListener implements Listener
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-               
-                //TODO: Add new mobs
+
                 if (e.getDamager() instanceof Player)
                 {
                     if (e.getDamager() == MWolf.getOwner())
@@ -238,6 +237,22 @@ public class MyWolfEntityListener implements Listener
                 else if (e.getDamager() instanceof Silverfish)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Silverfish"));
+                }
+                else if (e.getDamager() instanceof Snowman)
+                {
+                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Snowman"));
+                }
+                else if (e.getDamager() instanceof EnderDragon)
+                {
+                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("EnderDragon"));
+                }
+                else if (e.getDamager() instanceof Blaze)
+                {
+                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Blaze"));
+                }
+                else if (e.getDamager() instanceof MagmaCube)
+                {
+                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("MagmaCube"));
                 }
                 else if (e.getDamager() instanceof Wolf)
                 {
