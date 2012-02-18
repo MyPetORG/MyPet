@@ -42,10 +42,10 @@ public class MyWolfConfig
     public static int SitdownTime = 15;
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
-    public static boolean SpoutSounds = true;
+    public static boolean UseSpout = true;
+
     public static boolean PermissionsBukkit = false;
-    public static String SpoutSoundCall;
-    public static String SpoutSoundLevelup;
+
 
     public static void setDefault()
     {
@@ -57,11 +57,9 @@ public class MyWolfConfig
         setProperty("MyWolf.sitdowntime", 15);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.hpregendefault", 60);
+        setProperty("MyWolf.useSpout", true);
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
-        setProperty("MyWolf.spoutsounds.enabled", true);
-        setProperty("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
-        setProperty("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.ogg");
         setProperty("MyWolf.exp_default", true);
 
         setProperty("MyWolf.exp.SKELETON", 1.1);
@@ -119,11 +117,9 @@ public class MyWolfConfig
         NameColor = Config.getInt("MyWolf.namecolor", -1);
         NameColor = NameColor <= 0xf ? NameColor : -1;
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
-        SpoutSounds = Config.getBoolean("MyWolf.spoutsounds.enabled", true);
-        SpoutSoundCall = Config.getString("MyWolf.spoutsounds.call", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/call.ogg");
-        SpoutSoundLevelup = Config.getString("MyWolf.spoutsounds.levelup", "http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/Levelup.ogg");
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
+        UseSpout = Config.getBoolean("MyWolf.useSpout", true);
         MyWolfExperience.defaultEXPvalues  = Config.getBoolean("MyWolf.exp_default", true);
 
         if (Config.getStringList("MyWolf.exp") != null)

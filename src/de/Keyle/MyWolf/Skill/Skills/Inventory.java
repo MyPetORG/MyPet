@@ -22,11 +22,11 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.Material;
-import org.getspout.spout.inventory.CustomMCInventory;
 
 public class Inventory extends MyWolfSkill
 {
@@ -47,12 +47,15 @@ public class Inventory extends MyWolfSkill
                     return;
                 }
                 wolf.OpenInventory();
-                MyWolfPlugin.OpenMyWolfChests.add(wolf.getOwner());
-                if (!wolf.isSitting())
+                if(MyWolfConfig.UseSpout)
                 {
-                    MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
+                    MyWolfPlugin.OpenMyWolfChests.add(wolf.getOwner());
+                    if (!wolf.isSitting())
+                    {
+                        MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
+                    }
+                    wolf.Wolf.setSitting(true);
                 }
-                wolf.Wolf.setSitting(true);
             }
             else
             {
@@ -76,12 +79,7 @@ public class Inventory extends MyWolfSkill
         {
             return;
         }
-        CustomMCInventory newinv = new CustomMCInventory(wolf.inv.getSize() + 9, "Wolf\'s Inventory");
-        for (int i = 0 ; i < wolf.inv.getSize() ; i++)
-        {
-            newinv.setItem(i, wolf.inv.getItem(i));
-        }
-        wolf.inv = newinv;
+        wolf.inv.setSize(wolf.inv.getSize() + 9);
         wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", wolf.Name).replace("%size%", "" + wolf.inv.getSize()));
     }
 }

@@ -19,30 +19,19 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class MyWolfLevelUpListener implements Listener
 {
     @EventHandler()
     public void onLevelUp(MyWolfLevelUpEvent eventMyWolf)
     {
-
-        if (eventMyWolf.getWolf().Status == WolfState.Here && MyWolfConfig.SpoutSounds)
-        {
-            //SpoutManager.getSoundManager().playGlobalCustomSoundEffect(MyWolfPlugin.Plugin, MyWolfConfig.SpoutSoundLevelup, false, eventMyWolf.getWolf().getLocation(), 25);
-            SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, (SpoutPlayer) eventMyWolf.getOwner(),MyWolfConfig.SpoutSoundLevelup,true);
-            eventMyWolf.getWolf().sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", eventMyWolf.getWolf().Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
-        }
+        eventMyWolf.getWolf().sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", eventMyWolf.getWolf().Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
         if (MyWolfSkill.SkillPerLevel.containsKey(eventMyWolf.getLevel()))
         {
             for (String skill : MyWolfSkill.SkillPerLevel.get(eventMyWolf.getLevel()))

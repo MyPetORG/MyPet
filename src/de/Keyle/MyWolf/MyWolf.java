@@ -22,16 +22,15 @@ package de.Keyle.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.ItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.getspout.spout.inventory.CustomMCInventory;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.EntitySkinType;
 
@@ -72,7 +71,7 @@ public class MyWolf
     public BehaviorState Behavior = BehaviorState.Normal;
     public WolfState Status = WolfState.Despawned;
 
-    public CustomMCInventory inv;
+    public MyWolfCustomInventory inv;
 
     private Location Location;
 
@@ -84,40 +83,18 @@ public class MyWolf
         this.Owner = Owner;
         if(MyWolfConfig.LevelSystem)
         {
-        	this.inv = new CustomMCInventory(0, Owner);
+        	this.inv = new MyWolfCustomInventory(Owner, 0);
         }
         else
         {
-        	this.inv = new CustomMCInventory(54, Owner);
+        	this.inv = new MyWolfCustomInventory(Owner,54);
         }
         Experience = new MyWolfExperience(this);
     }
 
-    /*
-    public void updateHPbar(int HP)
-    {
-        if(getOwner() != null)
-        {
-            double p = (HP<0?0:HP) * 100 / HealthMax;
-            hpbar.setWidth(SpoutCraftPlayer.getPlayer(getOwner()).getMainScreen().getHealthBar().getWidth()* ((Double)p).intValue() /100);
-            hpbar.render();
-            hpbar.setDirty(true);
-        }
-    }
-    public void updateHPbar()
-    {
-        if(getOwner() != null)
-        {
-            double p = (HealthNow<0?0:HealthNow) * 100 / HealthMax;
-            hpbar.setWidth(SpoutCraftPlayer.getPlayer(getOwner()).getMainScreen().getHealthBar().getWidth()* ((Double)p).intValue() /100);
-            hpbar.render();
-            hpbar.setDirty(true);
-        }
-    }
-    */
-
     public void setTameSkin(String URL)
     {
+        if (MyWolfConfig.UseSpout)
         {
             SkinURL = URL;
             for(Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
@@ -154,7 +131,7 @@ public class MyWolf
                 NameColor = "" + ChatColor.RED;
             }
         }
-        if (Status == WolfState.Here)
+        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
         {
             SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
         }
@@ -182,7 +159,7 @@ public class MyWolf
                 NameColor = "" + ChatColor.RED;
             }
         }
-        if (Status == WolfState.Here)
+        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
         {
             SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
         }
@@ -210,7 +187,7 @@ public class MyWolf
                 NameColor = "" + ChatColor.RED;
             }
         }
-        if (Status == WolfState.Here)
+        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
         {
             SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
         }
@@ -447,51 +424,7 @@ public class MyWolf
                                             continue;
                                         }
 
-                                        int ItemID = item.getItemStack().getTypeId();
-                                        int ItemDuarbility = item.getItemStack().getDurability();
-                                        int ItemAmount = item.getItemStack().getAmount();
-                                        int ItemMaxStack = item.getItemStack().getMaxStackSize();
-
-                                        for (int i = 0 ; i < inv.getSize() ; i++)
-                                        {
-                                        	
-                                            if (inv.getItem(i) != null && inv.getItem(i).id == ItemID && inv.getItem(i).getData() == ItemDuarbility && inv.getItem(i).count < ItemMaxStack)
-                                            {
-                                            	
-                                                if (ItemAmount >= ItemMaxStack - inv.getItem(i).count)
-                                                {
-                                                    ItemAmount = ItemAmount - (ItemMaxStack - inv.getItem(i).count);
-                                                    inv.getItem(i).count = ItemMaxStack;
-                                                }
-                                                else
-                                                {
-                                                    inv.getItem(i).count += ItemAmount;
-                                                    ItemAmount = 0;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        for (int i = 0 ; i < inv.getSize() ; i++)
-                                        {
-                                            if (ItemAmount <= 0)
-                                            {
-                                                break;
-                                            }
-                                            if (inv.getItem(i) == null)
-                                            {
-                                                if (ItemAmount <= ItemMaxStack)
-                                                {
-                                                    inv.setItem(i, new ItemStack(ItemID, ItemAmount, ItemDuarbility));
-                                                    ItemAmount = 0;
-                                                }
-                                                else
-                                                {
-                                                    inv.setItem(i, new ItemStack(ItemID, ItemMaxStack, ItemDuarbility));
-                                                    ItemAmount -= ItemMaxStack;
-                                                }
-                                            }
-                                        }
-
+                                        int ItemAmount = inv.addItem(item.getItemStack());
                                         if (ItemAmount == 0)
                                         {
                                             e.remove();

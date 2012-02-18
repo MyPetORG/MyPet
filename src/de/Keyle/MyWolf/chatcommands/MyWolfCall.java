@@ -21,14 +21,14 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.util.*;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfList;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.getspout.spout.player.SpoutCraftPlayer;
-import org.getspout.spoutapi.SpoutManager;
 
 public class MyWolfCall implements CommandExecutor
 {
@@ -40,17 +40,12 @@ public class MyWolfCall implements CommandExecutor
             if (MyWolfList.hasMyWolf(owner))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
-                //sender.sendMessage(Wolf.Status.toString());
                 if (!MyWolfPermissions.has(owner, "MyWolf.call"))
                 {
                     return true;
                 }
                 if (MWolf.Status == WolfState.Here)
                 {
-                    if(MyWolfConfig.SpoutSounds)
-                    {
-                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
-                    }
                     if (MWolf.getLocation().getWorld() != owner.getLocation().getWorld())
                     {
                         MWolf.removeWolf();
@@ -66,11 +61,6 @@ public class MyWolfCall implements CommandExecutor
                 }
                 else if (MWolf.Status == WolfState.Despawned)
                 {
-
-                    if(MyWolfConfig.SpoutSounds)
-                    {
-                        SpoutManager.getSoundManager().playCustomMusic(MyWolfPlugin.Plugin, SpoutCraftPlayer.getPlayer((Player) sender), MyWolfConfig.SpoutSoundCall, true);
-                    }
                     MWolf.setLocation(owner.getLocation());
                     MWolf.createWolf(false);
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));

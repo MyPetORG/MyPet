@@ -78,7 +78,7 @@ public class MyWolfLanguage
         addString("Msg_DeathMessage", "MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
         addString("Msg_RespawnIn", "MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
         addString("Msg_OnRespawn", "MyWolf.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
-        addString("Msg_CallDead", "MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is dead! and respawns in %gold%%time%%white% sec");
+        addString("Msg_CallDead", "MyWolf.Message.callwhendead", "%aqua%%wolfname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
         addString("Msg_Call", "MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
         addString("Msg_Home", "MyWolf.Message.call", "%aqua%%wolfname%%white% go to home.");
         addString("Msg_CallFirst", "MyWolf.Message.callfirst", "You must call %aqua%%wolfname%%white% first.");

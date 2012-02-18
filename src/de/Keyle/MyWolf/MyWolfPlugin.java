@@ -35,7 +35,9 @@ import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class MyWolfPlugin extends JavaPlugin
 {
@@ -69,6 +71,15 @@ public class MyWolfPlugin extends JavaPlugin
     {
         Plugin = this;
 
+        MyWolfConfig.Config = this.getConfig();
+        MyWolfConfig.setDefault();
+        MyWolfConfig.loadConfiguration();
+
+        if(Plugin.getServer().getPluginManager().getPlugin("Spout") == null)
+        {
+            MyWolfConfig.UseSpout = false;
+        }
+
         MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);
 
@@ -84,10 +95,11 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfLevelUpListener levelupListener = new MyWolfLevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
 
-        MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
-        getServer().getPluginManager().registerEvents(inventoryListener, this);
-
-
+        if (MyWolfConfig.UseSpout)
+        {
+            MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
+            getServer().getPluginManager().registerEvents(inventoryListener, this);
+        }
 
         getCommand("wolfname").setExecutor(new MyWolfName());
         getCommand("wolfcall").setExecutor(new MyWolfCall());
@@ -118,9 +130,7 @@ public class MyWolfPlugin extends JavaPlugin
         //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");
 
 
-        MyWolfConfig.Config = this.getConfig();
-        MyWolfConfig.setDefault();
-        MyWolfConfig.loadConfiguration();
+
 
         if (MyWolfConfig.PermissionsBukkit)
         {
