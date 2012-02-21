@@ -20,22 +20,20 @@
 package de.Keyle.MyWolf;
 
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfCustomInventory;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.EntityPlayer;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.Skill.MyWolfSkillSystem;
+import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
+import de.Keyle.MyWolf.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.*;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.EntitySkinType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 public class MyWolf
 {
@@ -51,44 +49,45 @@ public class MyWolf
 
     private int Timer = -1;
 
-    private int SitTimer = 15;
+    private int SitTimer = MyWolfConfig.SitdownTime;
     private boolean isSitting = false;
     public boolean isPickup = false;
     public int Healthregen = 60;
 
-    //public GenericTexture hpbar = new GenericTexture("http://dl.dropbox.com/u/23957620/MinecraftPlugins/util/hpbar.png");
+    public WolfState Status = WolfState.Despawned;
 
-    public static enum BehaviorState
-    {
-        Normal, Friendly, Aggressive, Raid
-    }
+    private Location Location;
+
+    public MyWolfSkillTree SkillTree = null;
+    public MyWolfSkillSystem SkillSystem;
+    public final MyWolfExperience Experience;
 
     public static enum WolfState
     {
         Dead, Despawned, Here
     }
 
-    public BehaviorState Behavior = BehaviorState.Normal;
-    public WolfState Status = WolfState.Despawned;
-
-    public MyWolfCustomInventory inv;
-
-    private Location Location;
-
-    public final Map<String, Boolean> Abilities = new HashMap<String, Boolean>();
-    public final MyWolfExperience Experience;
-
     public MyWolf(String Owner)
     {
         this.Owner = Owner;
-        if(MyWolfConfig.LevelSystem)
+
+        if(MyWolfSkillTreeConfigLoader.getSkillTreeNames().length > 0)
         {
-        	this.inv = new MyWolfCustomInventory(Owner, 0);
+            for(String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
+            {
+                if(MyWolfPermissions.has(Owner, "MyWolf.skilltree." + ST))
+                {
+                    this.SkillTree = MyWolfSkillTreeConfigLoader.getSkillTree(ST);
+                    break;
+                }
+            }
         }
-        else
+        if(this.SkillTree == null)
         {
-        	this.inv = new MyWolfCustomInventory(Owner,54);
+            this.SkillTree = new MyWolfSkillTree("%+-%NoNe%-+%");
         }
+
+        SkillSystem = new MyWolfSkillSystem(this);
         Experience = new MyWolfExperience(this);
     }
 
@@ -109,8 +108,6 @@ public class MyWolf
     public void SetName(String Name)
     {
         this.Name = Name;
-        //inv.setName(Name + "\'s Inventory (" + inv.getSize() + ")");
-        inv.setName("Wolf\'s Inventory");
         String NameColor;
         if (MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
         {
@@ -193,15 +190,6 @@ public class MyWolf
         }
     }
 
-    public void OpenInventory()
-    {
-        if (MyWolfSkill.hasSkill(Abilities, "Inventory"))
-        {
-            EntityPlayer eh = ((CraftPlayer) getOwner()).getHandle();
-            eh.a(inv);
-        }
-    }
-
     public void removeWolf()
     {
         StopTimer();
@@ -242,7 +230,6 @@ public class MyWolf
 
                 Status = WolfState.Here;
                 SetName();
-                //updateHPbar();
             }
             Timer();
         }
@@ -255,7 +242,6 @@ public class MyWolf
         Location = Wolf.getLocation();
         Status = WolfState.Here;
         SetName();
-        //updateHPbar();
         Timer();
     }
 
@@ -281,7 +267,6 @@ public class MyWolf
             }
         }
         SetName();
-        //updateHPbar();
     }
 
     public int getHealth()
@@ -381,9 +366,11 @@ public class MyWolf
             {
                 StopTimer();
             }
+
             Timer = MyWolfPlugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.Plugin, new Runnable()
             {
-                int Time2HPregen = Healthregen;
+                Collection<MyWolfGenericSkill> Skills = SkillSystem.getSkills();
+
                 public void run()
                 {
                     if (Status == WolfState.Despawned || getOwner() == null)
@@ -392,65 +379,25 @@ public class MyWolf
                     }
                     else
                     {
+
+                        if(Skills.size() > 0)
+                        {
+                            for(MyWolfGenericSkill skill : Skills)
+                            {
+                                skill.schedule();
+                            }
+                        }
                         if (Status == WolfState.Here)
                         {
-                            Time2HPregen--;
+
                             SitTimer--;
                             if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
                             {
                                 Wolf.setSitting(true);
-                            }
-                            if(Time2HPregen <= 0)
-                            {
-                                Time2HPregen = Healthregen;
-                                if(MyWolfSkill.hasSkill(Abilities, "HPregeneration") && getHealth() < HealthMax)
-                                {
-                                    setHealth(getHealth()+1);
-                                }
-                            }
-                            if (isPickup)
-                            {
-                                for (Entity e : Wolf.getNearbyEntities(MyWolfConfig.PickupRange, MyWolfConfig.PickupRange, MyWolfConfig.PickupRange))
-                                {
-                                    if (e instanceof Item)
-                                    {
-                                        Item item = (Item) e;
-
-                                        PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(getOwner(), item, item.getItemStack().getAmount());
-                                        MyWolfUtil.getServer().getPluginManager().callEvent(ppievent);
-
-                                        if (ppievent.isCancelled())
-                                        {
-                                            continue;
-                                        }
-
-                                        int ItemAmount = inv.addItem(item.getItemStack());
-                                        if (ItemAmount == 0)
-                                        {
-                                            e.remove();
-                                        }
-                                        else
-                                        {
-                                            item.getItemStack().setAmount(ItemAmount);
-                                        }
-                                    }
-                                }
-                            }
-                            if (Behavior == BehaviorState.Aggressive)
-                            {
-                                if (Wolf.getTarget() == null || Wolf.getTarget().isDead())
-                                {
-                                    for (Entity e : Wolf.getNearbyEntities(10, 10, 10))
-                                    {
-                                        if (MyWolfUtil.getCreatureType(e) != null)
-                                        {
-                                            Wolf.setTarget((LivingEntity) e);
-                                        }
-                                    }
-                                }
+                                SitTimer = MyWolfConfig.SitdownTime;
                             }
                         }
-                        if (Status == WolfState.Dead)
+                        else if (Status == WolfState.Dead)
                         {
                             RespawnTime--;
                             if (RespawnTime <= 0)

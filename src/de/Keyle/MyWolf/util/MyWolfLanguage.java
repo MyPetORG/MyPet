@@ -44,13 +44,13 @@ public class MyWolfLanguage
     
     public void addString(String name, String node, String def)
     {
-        if (MWC.Config.contains(node))
+        if (MWC.getConfig().contains(node))
         {
-            LV.put(name, MWC.Config.getString(node, def));
+            LV.put(name, MWC.getConfig().getString(node, def));
         }
         else
         {
-            MWC.Config.set(node, def);
+            MWC.getConfig().set(node, def);
             LV.put(name,def);
         }
     }
@@ -65,7 +65,7 @@ public class MyWolfLanguage
         addString("Msg_AddPickup", "MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
         addString("Msg_AddHPregeneration", "MyWolf.Message.addhpreg", "%aqua%%wolfname%%white% regenerates now one HP every %sec%sec");
         addString("Msg_AddHP", "MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP");
-        addString("Msg_AddDemage", "MyWolf.Message.adddemage", "%aqua%%wolfname%%white% %green%+1 attackdemage");
+        addString("Msg_AddDemage", "MyWolf.Message.adddemage", "%aqua%%wolfname%%white% has now %dmg% bonusdemage");
         addString("Msg_WolfIsGone", "MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
         addString("Msg_DeathMessage", "MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
         addString("Msg_RespawnIn", "MyWolf.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
@@ -83,8 +83,12 @@ public class MyWolfLanguage
         addString("Msg_StopAttack", "MyWolf.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
         addString("Msg_InventorySwimming", "MyWolf.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%wolfname%%white% is swimming!");
         addString("Msg_NoInventory", "MyWolf.Message.noinventory", "%aqua%%wolfname%%white% doesn't have an inventory.");
+        addString("Msg_PickButNoInventory", "MyWolf.Message.pickupbutnoinventory", "%aqua%%wolfname%%white% could pickup items but has no inventoy.");
+        addString("Msg_NoSkill", "MyWolf.Message.noskill", "%aqua%%wolfname%%white% doesn't know the skill %skill%.");
+        addString("Msg_LearnedSkill", "MyWolf.Message.noskill", "%aqua%%wolfname%%white% learned the skill %skill%.");
         addString("Msg_PickUpStop", "MyWolf.Message.pickupstop", "%aqua%%wolfname%%white% pickup: disabled");
         addString("Msg_PickUpStart", "MyWolf.Message.pickupstart", "%aqua%%wolfname%%white% pickup: activated");
+        addString("Msg_BehaviorState", "MyWolf.Message.behaviorstate", "%aqua%%wolfname%%white% is now in %mode% mode.");
         addString("Creeper", "MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
         addString("Zombie", "MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
         addString("Unknow", "MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");

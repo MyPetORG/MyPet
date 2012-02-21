@@ -21,14 +21,9 @@ package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 public class MyWolfConfig
 {
@@ -36,7 +31,7 @@ public class MyWolfConfig
 
     public static Material LeashItem = Material.STRING;
     public static Material ControlItem = Material.STRING;
-    public static int PickupRange = 2;
+    public static int PickupRangePerLevel = 1;
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
@@ -51,7 +46,7 @@ public class MyWolfConfig
     {
         setProperty("MyWolf.leash.item", 287);
         setProperty("MyWolf.control.item", 287);
-        setProperty("MyWolf.pickup.range", 2);
+        setProperty("MyWolf.pickuprangeperlvl", 1);
         setProperty("MyWolf.respawntime.factor", 5);
         setProperty("MyWolf.respawntime.fixed", 0);
         setProperty("MyWolf.sitdowntime", 15);
@@ -77,7 +72,7 @@ public class MyWolfConfig
         setProperty("MyWolf.exp.SHEEP", 0.25);
         setProperty("MyWolf.exp.SLIME", 1.0);
 
-
+        /*
         List<String> list = new LinkedList<String>();
         list.add("Inventory");
         setProperty("MyWolf.skills.2", list);
@@ -103,7 +98,7 @@ public class MyWolfConfig
         list.add("HPregeneration");
         list.add("Damage");
         setProperty("MyWolf.skills.6", list);
-
+        */
         MyWolfPlugin.Plugin.saveConfig();
     }
 
@@ -111,7 +106,7 @@ public class MyWolfConfig
     {
         LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
         ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item", 287), Material.STRING);
-        PickupRange = Config.getInt("MyWolf.pickup.range", 2);
+        PickupRangePerLevel = Config.getInt("MyWolf.pickuprangeperlvl", 1);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
         NameColor = Config.getInt("MyWolf.namecolor", -1);
@@ -131,15 +126,6 @@ public class MyWolfConfig
                 {
                     MyWolfExperience.MobEXP.put(CreatureType.valueOf(key), expval);
                 }
-            }
-        }
-        Set<String> LevelList = Config.getConfigurationSection("MyWolf.skills").getKeys(false);
-        if (LevelList.size() != 0)
-        {
-            for (String lvl : LevelList)
-            {
-                List<String> Skills = Config.getStringList("MyWolf.skills." + lvl);
-                MyWolfSkill.SkillPerLevel.put(Integer.parseInt(lvl), Skills);
             }
         }
     }

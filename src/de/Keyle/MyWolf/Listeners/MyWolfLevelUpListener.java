@@ -19,7 +19,8 @@
 
 package de.Keyle.MyWolf.Listeners;
 
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -31,14 +32,19 @@ public class MyWolfLevelUpListener implements Listener
     @EventHandler()
     public void onLevelUp(MyWolfLevelUpEvent eventMyWolf)
     {
-        eventMyWolf.getWolf().sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", eventMyWolf.getWolf().Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
-        if (MyWolfSkill.SkillPerLevel.containsKey(eventMyWolf.getLevel()))
+        MyWolf MWolf = eventMyWolf.getWolf();
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
+
+        int lvl = eventMyWolf.getLevel();
+        MyWolfSkillTree st = MWolf.SkillTree;
+        String[] Skills = st.getSkills(lvl);
+        if (Skills.length > 0)
         {
-            for (String skill : MyWolfSkill.SkillPerLevel.get(eventMyWolf.getLevel()))
+            for (String skill : Skills)
             {
-                if (MyWolfSkill.RegisteredSkills.containsKey(skill))
+                if(MWolf.SkillSystem.getSkill(skill) != null)
                 {
-                    MyWolfSkill.RegisteredSkills.get(skill).activate(eventMyWolf.getWolf(), 0);
+                    MWolf.SkillSystem.getSkill(skill).upgrade();
                 }
             }
         }

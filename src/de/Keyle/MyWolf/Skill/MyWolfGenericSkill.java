@@ -20,60 +20,17 @@
 package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
-import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.MyWolfConfiguration;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class MyWolfSkill
+public class MyWolfGenericSkill
 {
     protected String Name;
-    public static final Map<Integer, List<String>> SkillPerLevel = new HashMap<Integer, List<String>>();
-    public static final Map<String, MyWolfSkill> RegisteredSkills = new HashMap<String, MyWolfSkill>();
+    protected int Level = 0;
+    protected MyWolf MWolf;
 
-    public MyWolfSkill(String Name)
+    public MyWolfGenericSkill(String Name)
     {
         this.Name = Name;
-        registerSkill();
-    }
-
-    final void registerSkill()
-    {
-        if (!RegisteredSkills.containsKey(Name))
-        {
-            RegisteredSkills.put(this.Name, this);
-        }
-        else
-        {
-            MyWolfUtil.Log.info("[MyWolf] There is already a skill registered for " + Name);
-        }
-    }
-
-    public final void registerSkill(String Name)
-    {
-        if (!RegisteredSkills.containsKey(Name))
-        {
-            RegisteredSkills.put(Name, this);
-        }
-        else
-        {
-            MyWolfUtil.Log.info("[MyWolf] There is already a skill registered for " + Name);
-        }
-    }
-
-    public static boolean hasSkill(Map<String, Boolean> skills, String skill)
-    {
-        if(!MyWolfConfig.LevelSystem)
-            return true;
-
-        if (skills.containsKey(skill))
-        {
-            return skills.get(skill);
-        }
-        return false;
     }
 
     public String getName()
@@ -81,16 +38,39 @@ public class MyWolfSkill
         return this.Name;
     }
 
-    public void run(MyWolf wolf, Object args)
+    public void setMyWolf(MyWolf MWolf)
+    {
+        this.MWolf = MWolf;
+    }
+
+    public MyWolf getMyWolf()
+    {
+        return MWolf;
+    }
+
+    public int getLevel()
+    {
+        return this.Level;
+    }
+
+    public void upgrade()
+    {
+        this.Level++;
+    }
+
+    public void save(MyWolfConfiguration configuration)
     {
     }
 
-    public void activate(MyWolf wolf, Object args)
+    public void load(MyWolfConfiguration configuration)
     {
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-        {
-            return;
-        }
-        wolf.Abilities.put(this.Name, true);
+    }
+
+    public void activate()
+    {
+    }
+
+    public void schedule()
+    {
     }
 }

@@ -20,13 +20,11 @@
 package de.Keyle.MyWolf.Listeners;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.BehaviorState;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.Skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfList;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityWolf;
 import net.minecraft.server.PathEntity;
@@ -80,56 +78,53 @@ public class MyWolfPlayerListener implements Listener
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
             if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
             {
-                if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.walk"))
+                if(MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
                 {
-                    return;
-                }
-                if (!MyWolfSkill.hasSkill(MWolf.Abilities, "Control"))
-                {
-                    return;
-                }
-                Block block = event.getPlayer().getTargetBlock(null, 100);
-                if (block != null)
-                {
-                    for (int i : ControllIgnoreBlocks)
+                    Block block = event.getPlayer().getTargetBlock(null, 100);
+                    if (block != null)
                     {
-                        if (block.getTypeId() == i)
+                        for (int i : ControllIgnoreBlocks)
                         {
-                            block = block.getRelative(BlockFace.DOWN);
-                            break;
-                        }
-                    }
-                    PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
-                    EntityWolf wolf = ((CraftWolf) MWolf.Wolf).getHandle();
-                    wolf.setPathEntity(new PathEntity(loc));
-                    MWolf.ResetSitTimer();
-                    if (!MyWolfPermissions.has(event.getPlayer(), "MyWolf.Skills.control.attack"))
-                    {
-                        return;
-                    }
-                    for (Entity e : MWolf.Wolf.getNearbyEntities(1, 1, 1))
-                    {
-                        if (e instanceof LivingEntity)
-                        {
-                            if (MWolf.Behavior == BehaviorState.Raid)
+                            if (block.getTypeId() == i)
                             {
-                                if (e instanceof Player || (e instanceof Wolf && ((Wolf) e).isTamed()))
-                                {
-                                    continue;
-                                }
-                            }
-                            if (e instanceof Player)
-                            {
-                                if (e != MWolf.getOwner() && !MyWolfUtil.isNPC((Player) e) && e.getWorld().getPVP())
-                                {
-                                    MWolf.Wolf.setTarget((LivingEntity) e);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                MWolf.Wolf.setTarget((LivingEntity) e);
+                                block = block.getRelative(BlockFace.DOWN);
                                 break;
+                            }
+                        }
+                        PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
+                        EntityWolf wolf = ((CraftWolf) MWolf.Wolf).getHandle();
+                        wolf.setPathEntity(new PathEntity(loc));
+                        MWolf.ResetSitTimer();
+                        if(MWolf.SkillSystem.getSkill("Control").getLevel() > 1)
+                        {
+                            for (Entity e : MWolf.Wolf.getNearbyEntities(1, 1, 1))
+                            {
+                                if (e instanceof LivingEntity)
+                                {
+                                    if(MWolf.SkillSystem.hasSkill("Behavior"))
+                                    {
+                                        if (((Behavior) MWolf.SkillSystem.getSkill("Behavior")).getBehavior() == Behavior.BehaviorState.Raid)
+                                        {
+                                            if (e instanceof Player || (e instanceof Wolf && ((Wolf) e).isTamed()))
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    if (e instanceof Player)
+                                    {
+                                        if (e != MWolf.getOwner() && !MyWolfUtil.isNPC((Player) e) && e.getWorld().getPVP())
+                                        {
+                                            MWolf.Wolf.setTarget((LivingEntity) e);
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MWolf.Wolf.setTarget((LivingEntity) e);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

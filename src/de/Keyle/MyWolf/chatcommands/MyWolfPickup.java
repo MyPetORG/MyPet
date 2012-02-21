@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -51,13 +50,9 @@ public class MyWolfPickup implements CommandExecutor
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
-                if (MyWolfSkill.hasSkill(MWolf.Abilities, "Pickup"))
+                if (MWolf.SkillSystem.hasSkill("Pickup"))
                 {
-                    MyWolfSkill.RegisteredSkills.get("Pickup").run(MWolf, null);
-                }
-                else
-                {
-                    sender.sendMessage("Your wolf can't pickup items!");
+                    MWolf.SkillSystem.getSkill("Pickup").activate();
                 }
                 return true;
             }

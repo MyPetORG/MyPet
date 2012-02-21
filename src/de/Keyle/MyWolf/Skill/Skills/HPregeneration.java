@@ -20,29 +20,38 @@
 package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class HPregeneration extends MyWolfSkill
+public class HPregeneration extends MyWolfGenericSkill
 {
+    int HealtregenTime = 60;
+    int timeCounter = HealtregenTime - Level;
+    
     public HPregeneration()
     {
         super("HPregeneration");
     }
 
     @Override
-    public void activate(MyWolf wolf, Object args)
+    public void upgrade()
     {
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        Level++;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHPregeneration")).replace("%wolfname%", MWolf.Name).replace("%sec%", "" + (HealtregenTime - Level)));
+    }
+
+    @Override
+    public void schedule()
+    {
+        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here)
         {
-            return;
+            timeCounter--;
+            if(timeCounter <= 0)
+            {
+                MWolf.setHealth(MWolf.getHealth()+1);
+                timeCounter = HealtregenTime - Level;
+            }
         }
-        if(wolf.Healthregen > 1)
-        {
-            wolf.Healthregen -= 1;
-        }
-        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHPregeneration").replace("%wolfname%", wolf.Name).replace("%sec%", ""+wolf.Healthregen)));
     }
 }

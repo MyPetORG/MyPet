@@ -19,46 +19,121 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.BehaviorState;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.util.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
-public class Behavior extends MyWolfSkill
+public class Behavior extends MyWolfGenericSkill
 {
+    private BehaviorState Behavior = BehaviorState.Normal;
+
+    private int schedulerCounter = 0;
+
+    public static enum BehaviorState
+    {
+        Normal, Friendly, Aggressive, Raid
+    }
+
     public Behavior()
     {
         super("Behavior");
     }
 
-    @Override
-    public void run(MyWolf wolf, Object args)
+    public void setBehavior(BehaviorState behaviorState)
     {
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
+        Behavior = behaviorState;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
+    }
+
+    public void activateBehavior(BehaviorState behaviorState)
+    {
+        if (Level > 0)
         {
-            return;
+            Behavior = behaviorState;
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
         }
-        if (MyWolfSkill.hasSkill(wolf.Abilities, "Behavior"))
+        else
         {
-            if (args instanceof BehaviorState)
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
+        }
+    }
+
+    public BehaviorState getBehavior()
+    {
+        return Behavior;
+    }
+
+    @Override
+    public void upgrade()
+    {
+        Level = 1;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
+    }
+
+    @Override
+    public void activate()
+    {
+        if (Level > 0)
+        {
+            if (Behavior == BehaviorState.Normal)
             {
-                wolf.Behavior = (BehaviorState) args;
+                Behavior = BehaviorState.Friendly;
             }
-            else
+            else if (Behavior == BehaviorState.Friendly)
             {
-                if (wolf.Behavior == BehaviorState.Normal)
+                Behavior = BehaviorState.Aggressive;
+            }
+            else if (Behavior == BehaviorState.Aggressive || Behavior == BehaviorState.Raid)
+            {
+                Behavior = BehaviorState.Normal;
+            }
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
+        }
+        else 
+        {
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
+        }
+    }
+
+    @Override
+    public void schedule()
+    {
+        schedulerCounter++;
+        if(schedulerCounter >= 10)
+        {
+            schedulerCounter = 0;
+            if (Behavior == BehaviorState.Aggressive)
+            {
+                if (MWolf.Wolf.getTarget() == null || MWolf.Wolf.getTarget().isDead())
                 {
-                    wolf.Behavior = BehaviorState.Friendly;
-                }
-                else if (wolf.Behavior == BehaviorState.Friendly)
-                {
-                    wolf.Behavior = BehaviorState.Aggressive;
-                }
-                else if (wolf.Behavior == BehaviorState.Aggressive || wolf.Behavior == BehaviorState.Raid)
-                {
-                    wolf.Behavior = BehaviorState.Normal;
+                    for (Entity e : MWolf.Wolf.getNearbyEntities(10, 10, 10))
+                    {
+                        if (MyWolfUtil.getCreatureType(e) != null)
+                        {
+                            MWolf.Wolf.setTarget((LivingEntity) e);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    public void load(MyWolfConfiguration configuration)
+    {
+        String b = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".behavior", "QwE");
+        if(b.equals("QwE"))
+        {
+            b = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".skills.behavior", "Normal");
+        }
+        Behavior = BehaviorState.valueOf(b);
+    }
+
+    @Override
+    public void save(MyWolfConfiguration configuration)
+    {
+        configuration.getConfig().set("Wolves." + MWolf.getOwnerName() + ".skills.behavior", Behavior.name());
     }
 }

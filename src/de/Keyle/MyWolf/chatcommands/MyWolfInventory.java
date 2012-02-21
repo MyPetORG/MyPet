@@ -21,16 +21,14 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.Skills.Inventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.EntityPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class MyWolfInventory implements CommandExecutor
@@ -50,32 +48,30 @@ public class MyWolfInventory implements CommandExecutor
                         sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                         return true;
                     }
-                    else if (MWolf.Status == WolfState.Dead)
+                    if (MWolf.Status == WolfState.Dead)
                     {
                         sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                         return true;
                     }
-                    if (MyWolfSkill.hasSkill(MWolf.Abilities, "Inventory"))
+                    if (MWolf.SkillSystem.hasSkill("Inventory"))
                     {
-                        MyWolfSkill.RegisteredSkills.get("Inventory").run(MWolf, null);
+                        MWolf.SkillSystem.getSkill("Inventory").activate();
                     }
-                    else
-                    {
-                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MWolf.Name));
-                    }
-                    return true;
                 }
                 else
                 {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
-            else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.Skills.Inventory.admin"))
+            else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.admin"))
             {
-                if (MyWolfList.hasMyWolf(player))
+                if (MyWolfList.hasMyWolf(args[0]))
                 {
-                    EntityPlayer eh = ((CraftPlayer) player).getHandle();
-                    eh.a(MyWolfList.getMyWolf(player).inv);
+                    MyWolf MWolf = MyWolfList.getMyWolf(args[0]);
+                    if (MWolf.SkillSystem.getSkill("Inventory") != null && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
+                    {
+                        ((Inventory) MWolf.SkillSystem.getSkill("Inventory")).OpenInventory(player);
+                    }
                 }
             }
         }

@@ -20,7 +20,9 @@
 package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.plugin.Plugin;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -36,6 +38,7 @@ public class MyWolfPermissions
 
     private static PermissionsType PermissionsMode = PermissionsType.NONE;
 
+
     public static boolean has(Player player, String node)
     {
         if(player.isOp())
@@ -45,10 +48,6 @@ public class MyWolfPermissions
         else if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null)
         {
             return true;
-        }
-        else if (PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
-        {
-            return player.hasPermission(node);
         }
         /*
         else if (PermissionsMode == PermissionsType.Permissions && Permissions instanceof PermissionHandler)
@@ -64,12 +63,32 @@ public class MyWolfPermissions
         {
             return ((PermissionManager) Permissions).has(player, node);
         }
-        else if(PermissionsMode == PermissionsType.BukkitPermissions)
+        else if(PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
         {
             player.hasPermission(node);
         }
         return false;
 
+    }
+
+    public static boolean has(String player, String node)
+    {
+        OfflinePlayer offlinePlayer  = MyWolfPlugin.Plugin.getServer().getOfflinePlayer(player);
+        PermissibleBase perm = new PermissibleBase(offlinePlayer);
+
+        if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null || offlinePlayer.isOp())
+        {
+            return true;
+        }
+        else if (PermissionsMode == PermissionsType.PermissionsEX && Permissions instanceof PermissionManager)
+        {
+            return ((PermissionManager) Permissions).has(player, node, MyWolfPlugin.Plugin.getServer().getWorlds().get(0).getName());
+        }
+        else if(PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
+        {
+            perm.hasPermission(node);
+        }
+        return false;
     }
 
     public static void setup(PermissionsType pt)

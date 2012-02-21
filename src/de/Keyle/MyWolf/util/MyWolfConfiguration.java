@@ -28,7 +28,7 @@ import java.io.IOException;
 public class MyWolfConfiguration
 {
     public File ConfigFile;
-    public FileConfiguration Config;
+    private FileConfiguration Config;
 
     public MyWolfConfiguration(String Path)
     {
@@ -52,6 +52,11 @@ public class MyWolfConfiguration
         catch (Exception ignored){}
     }
 
+    public FileConfiguration getConfig()
+    {
+        return  Config;
+    }
+
     public boolean saveConfig()
     {
         try
@@ -64,5 +69,10 @@ public class MyWolfConfiguration
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public void clearConfig()
+    {
+        Config = new YamlConfiguration();   
     }
 }

@@ -26,7 +26,6 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.ItemStack;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -66,6 +65,7 @@ public class MyWolfRelease implements CommandExecutor
                 {
                     MWolf.Wolf.setOwner(null);
                     MWolf.StopTimer();
+                    /*
                     for (ItemStack is : MWolf.inv.getContents())
                     {
                         if (is != null)
@@ -73,6 +73,7 @@ public class MyWolfRelease implements CommandExecutor
                             MWolf.Wolf.getWorld().dropItem(MWolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
                         }
                     }
+                    */
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
                     MyWolfList.removeMyWolf(MWolf);
                     MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);

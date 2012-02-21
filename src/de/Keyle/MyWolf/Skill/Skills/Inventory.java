@@ -21,60 +21,122 @@ package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.util.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.ItemStack;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 
-public class Inventory extends MyWolfSkill
+public class Inventory extends MyWolfGenericSkill
 {
+    public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory",0);
+
     public Inventory()
     {
         super("Inventory");
     }
 
     @Override
-    public void run(MyWolf wolf, Object args)
+    public void activate()
     {
-        if (MyWolfSkill.hasSkill(wolf.Abilities, "Inventory"))
+        if (Level > 0)
         {
-            if (wolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && wolf.getLocation().getBlock().getType() != Material.WATER)
+            if (MWolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MWolf.getLocation().getBlock().getType() != Material.WATER)
             {
-                if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory.open" ))
+                inv.setName(MWolf.Name);
+                OpenInventory(MWolf.getOwner());
+                if (!MWolf.isSitting())
                 {
-                    return;
+                    MyWolfPlugin.WolfChestOpened.add(MWolf.getOwner());
                 }
-                wolf.OpenInventory();
-                if (!wolf.isSitting())
-                {
-                    MyWolfPlugin.WolfChestOpened.add(wolf.getOwner());
-                }
-                wolf.Wolf.setSitting(true);
+                MWolf.Wolf.setSitting(true);
             }
             else
             {
-                wolf.sendMessageToOwner(MyWolfLanguage.getString("Msg_InventorySwimming"));
+                MWolf.sendMessageToOwner(MyWolfLanguage.getString("Msg_InventorySwimming"));
+            }
+        }
+        else
+        {
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MWolf.Name));
+        }
+    }
+
+    @Override
+    public void upgrade()
+    {
+        if (Level >= 6)
+        {
+            return;
+        }
+        Level++;
+        inv.setSize(Level * 9);
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", MWolf.Name).replace("%size%", "" + inv.getSize()));
+    }
+
+    public void OpenInventory(Player p)
+    {
+        EntityPlayer eh = ((CraftPlayer) p).getHandle();
+        eh.a(inv);
+    }
+    
+    @Override
+    public void load(MyWolfConfiguration configuration)
+    {
+        String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".inventory", "QwE");
+        if(Sinv.equals("QwE"))
+        {
+            Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".skills.inventory", ",,");
+        }
+        String[] invSplit = Sinv.split(";");
+        for (int i = 0 ; i < invSplit.length ; i++)
+        {
+            if (i < inv.getSize())
+            {
+                String[] itemvalues = invSplit[i].split(",");
+                if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+                {
+                    if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+                    {
+                        if (Integer.parseInt(itemvalues[1]) <= 64)
+                        {
+                            inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                        }
+                    }
+                }
             }
         }
     }
 
     @Override
-    public void activate(MyWolf wolf, Object args)
+    public void save(MyWolfConfiguration configuration)
     {
-        if (!MyWolfSkill.hasSkill(wolf.Abilities, "Inventory"))
+        String Items = "";
+        for (int i = 0 ; i < this.inv.getSize() ; i++)
         {
-            wolf.Abilities.put("Inventory", true);
+            ItemStack Item = this.inv.getItem(i);
+            if (Item != null)
+            {
+                Items += Item.id + "," + Item.count + "," + Item.getData() + ";";
+            }
+            else
+            {
+                Items += ",,;";
+            }
         }
-        if (wolf.inv.getSize() >= 54)
-        {
-            return;
-        }
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills.Inventory." + (wolf.inv.getSize() + 9)))
-        {
-            return;
-        }
-        wolf.inv.setSize(wolf.inv.getSize() + 9);
-        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", wolf.Name).replace("%size%", "" + wolf.inv.getSize()));
+        Items = !Items.equals("") ? Items.substring(0, Items.length() - 1) : Items;
+        configuration.getConfig().set("Wolves." + MWolf.getOwnerName() + ".skills.inventory", Items);
+    }
+    
+    @Override
+    public void setMyWolf(MyWolf MWolf)
+    {
+        this.MWolf = MWolf;
+        inv.setName(MWolf.Name);
     }
 }

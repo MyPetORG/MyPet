@@ -19,14 +19,12 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class Control extends MyWolfSkill
+public class Control extends MyWolfGenericSkill
 {
     public Control()
     {
@@ -34,17 +32,9 @@ public class Control extends MyWolfSkill
     }
 
     @Override
-    public void activate(MyWolf wolf, Object args)
+    public void upgrade()
     {
-
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-        {
-            return;
-        }
-        if (!MyWolfSkill.hasSkill(wolf.Abilities, "Control"))
-        {
-            wolf.Abilities.put("Control", true);
-            wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", wolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
-        }
+        Level++;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
     }
 }

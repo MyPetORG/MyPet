@@ -19,13 +19,11 @@
 
 package de.Keyle.MyWolf.Skill.Skills;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Skill.MyWolfSkill;
+import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class HP extends MyWolfSkill
+public class HP extends MyWolfGenericSkill
 {
     public HP()
     {
@@ -33,14 +31,10 @@ public class HP extends MyWolfSkill
     }
 
     @Override
-    public void activate(MyWolf wolf, Object args)
+    public void upgrade()
     {
-        if (!MyWolfPermissions.has(wolf.getOwner(), "MyWolf.Skills." + this.Name))
-        {
-            return;
-        }
-        wolf.HealthMax += 1;
-        wolf.setHealth(wolf.HealthMax);
-        wolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", wolf.Name)));
+        Level++;
+        MWolf.HealthMax += 1;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP").replace("%wolfname%", MWolf.Name)));
     }
 }
