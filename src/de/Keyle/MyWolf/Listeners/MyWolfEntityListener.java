@@ -104,7 +104,7 @@ public class MyWolfEntityListener implements Listener
                             damager.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
 
-                        MyWolfUtil.Log.info(MWolf.SkillTree.getName());
+                        MyWolfUtil.getLogger().info(MWolf.SkillTree.getName());
 
                         if (MWolf.Wolf.isSitting())
                         {

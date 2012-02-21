@@ -114,7 +114,7 @@ public class MyWolfPermissions
         {
             PermissionsMode = PermissionsType.bPermissions;
             Permissions = null;
-            MyWolfUtil.Log.info("[MyWolf] bPermissions integration enabled!");
+            MyWolfUtil.getLogger().info("[MyWolf] bPermissions integration enabled!");
             return;
         }
 
@@ -123,7 +123,7 @@ public class MyWolfPermissions
         {
             PermissionsMode = PermissionsType.PermissionsEX;
             Permissions = PermissionsEx.getPermissionManager();
-            MyWolfUtil.Log.info("[MyWolf] PermissionsEX integration enabled!");
+            MyWolfUtil.getLogger().info("[MyWolf] PermissionsEX integration enabled!");
             return;
         }
         /*
@@ -136,6 +136,6 @@ public class MyWolfPermissions
             return;
         }
         */
-        MyWolfUtil.Log.info("[MyWolf] No permissions system fund!");
+        MyWolfUtil.getLogger().info("[MyWolf] No permissions system fund!");
     }
 }

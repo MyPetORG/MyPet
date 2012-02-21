@@ -62,7 +62,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfList.clearList();
         WolfChestOpened.clear();
         
-        MyWolfUtil.Log.info("[MyWolf] Disabled");
+        MyWolfUtil.getLogger().info("[MyWolf] Disabled");
         
     }
 
@@ -159,11 +159,11 @@ public class MyWolfPlugin extends JavaPlugin
             catch (Exception e)
             {
                 MyWolfExperience.JSreader = null;
-                MyWolfUtil.Log.info("[MyWolf] EXP-Script not found (exp.js).");
+                MyWolfUtil.getLogger().info("[MyWolf] EXP-Script not found (exp.js).");
             }
         }
 
-        MyWolfUtil.Log.info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+        MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
     void LoadWolves(MyWolfConfiguration MWC)
@@ -189,7 +189,7 @@ public class MyWolfPlugin extends JavaPlugin
 
                     if (getServer().getWorld(WolfWorld) == null)
                     {
-                        MyWolfUtil.Log.info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
+                        MyWolfUtil.getLogger().info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
                         continue;
                     }
 
@@ -226,7 +226,7 @@ public class MyWolfPlugin extends JavaPlugin
                 }
             }
         }
-        MyWolfUtil.Log.info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+        MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
     }
 
     public void SaveWolves(MyWolfConfiguration MWC)

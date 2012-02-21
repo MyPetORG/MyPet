@@ -38,12 +38,17 @@ import java.util.logging.Logger;
 public class MyWolfUtil
 {
 
-    public static final Logger Log = Logger.getLogger("Minecraft");
+    private static final Logger Log = Logger.getLogger("Minecraft");
     private static final Server server = org.bukkit.Bukkit.getServer();
 
     public static Server getServer()
     {
         return server;
+    }
+    
+    public static Logger getLogger()
+    {
+        return Log;
     }
 
     public static String SetColors(String text)
