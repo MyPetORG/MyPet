@@ -61,7 +61,7 @@ public class MyWolfPlayerListener implements Listener
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
                     MWolf.ResetSitTimer();
-                    if (MWolf.getID() == w.getEntityId())
+                    if (MWolf.getEntityId() == w.getEntityId())
                     {
                         event.setCancelled(true);
                     }

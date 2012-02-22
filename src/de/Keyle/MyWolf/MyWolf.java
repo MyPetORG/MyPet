@@ -42,7 +42,7 @@ public class MyWolf
     private int ID;
     public int DamageBonus = 0;
     public int HealthNow;
-    public static int HealthMax = 20;
+    public int HealthMax = 20;
     public Wolf Wolf;
     public int RespawnTime = 0;
 
@@ -273,7 +273,7 @@ public class MyWolf
         }
     }
 
-    public int getID()
+    public int getEntityId()
     {
         if (Status == WolfState.Here)
         {

@@ -100,21 +100,21 @@ public class MyWolfPlugin extends JavaPlugin
             getServer().getPluginManager().registerEvents(inventoryListener, this);
         }
 
-        getCommand("wolfname").setExecutor(new MyWolfName());
-        getCommand("wolfcall").setExecutor(new MyWolfCall());
-        getCommand("wolfstop").setExecutor(new MyWolfStop());
-        getCommand("wolfrelease").setExecutor(new MyWolfRelease());
-        getCommand("wolf").setExecutor(new MyWolfHelp());
-        getCommand("wolfinventory").setExecutor(new MyWolfInventory());
-        getCommand("wolfpickup").setExecutor(new MyWolfPickup());
-        getCommand("wolfbehavior").setExecutor(new MyWolfBehavior());
-        getCommand("wolfcompass").setExecutor(new MyWolfCompass());
-        getCommand("wolfinfo").setExecutor(new MyWolfInfo());
-        getCommand("wolfskin").setExecutor(new MyWolfSkin());
+        getCommand("wolfname").setExecutor(new CommandName());
+        getCommand("wolfcall").setExecutor(new CommandCall());
+        getCommand("wolfstop").setExecutor(new CommandStop());
+        getCommand("wolfrelease").setExecutor(new CommandRelease());
+        getCommand("wolf").setExecutor(new CommandHelp());
+        getCommand("wolfinventory").setExecutor(new CommandInventory());
+        getCommand("wolfpickup").setExecutor(new CommandPickup());
+        getCommand("wolfbehavior").setExecutor(new CommandBehavior());
+        getCommand("wolfcompass").setExecutor(new CommandCompass());
+        getCommand("wolfinfo").setExecutor(new CommandInfo());
+        getCommand("wolfskin").setExecutor(new CommandSkin());
 
         if (MyWolfConfig.LevelSystem)
         {
-            getCommand("wolfexp").setExecutor(new MyWolfEXP());
+            getCommand("wolfexp").setExecutor(new CommandExp());
         }
         
 

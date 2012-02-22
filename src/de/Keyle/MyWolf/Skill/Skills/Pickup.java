@@ -94,7 +94,7 @@ public class Pickup extends MyWolfGenericSkill
                         {
                             if(p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.getID()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.getEntityId()));
                             }
                         }
                         e.remove();
