@@ -36,12 +36,14 @@ public class MyWolfLevelUpListener implements Listener
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
 
         int lvl = eventMyWolf.getLevel();
+        MyWolfUtil.getLogger().info("------lvl: " + lvl);
         MyWolfSkillTree st = MWolf.SkillTree;
         String[] Skills = st.getSkills(lvl);
         if (Skills.length > 0)
         {
             for (String skill : Skills)
             {
+                MyWolfUtil.getLogger().info("           " + skill);
                 if(MWolf.SkillSystem.hasSkill(skill))
                 {
                     MWolf.SkillSystem.getSkill(skill).upgrade();

@@ -64,7 +64,6 @@ public class MyWolfLanguage
         addString("Msg_AddControl", "MyWolf.Message.addcontrol", "%aqua%%wolfname%%white% can now be controlled with a %item%");
         addString("Msg_AddPickup", "MyWolf.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
         addString("Msg_AddHPregeneration", "MyWolf.Message.addhpreg", "%aqua%%wolfname%%white% regenerates now one HP every %sec%sec");
-        addString("Msg_AddHP", "MyWolf.Message.addhp", "%aqua%%wolfname%%white% +1 maxHP");
         addString("Msg_AddDemage", "MyWolf.Message.adddemage", "%aqua%%wolfname%%white% has now %dmg% bonusdemage");
         addString("Msg_WolfIsGone", "MyWolf.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
         addString("Msg_DeathMessage", "MyWolf.Message.deathmessage.text", "%aqua%%wolfname%%white% ");

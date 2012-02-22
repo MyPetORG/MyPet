@@ -64,13 +64,13 @@ public class Pickup extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Inventory")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level*MyWolfConfig.PickupRangePerLevel)));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level*MyWolfConfig.PickupRangePerLevel)));
     }
 
     @Override
     public void schedule()
     {
-        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
+        if (Level > 0 && Pickup && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
         {
             for (Entity e : MWolf.Wolf.getNearbyEntities(Level*MyWolfConfig.PickupRangePerLevel, Level*MyWolfConfig.PickupRangePerLevel, MyWolfConfig.PickupRangePerLevel))
             {
@@ -94,10 +94,10 @@ public class Pickup extends MyWolfGenericSkill
                         {
                             if(p instanceof Player)
                             {
-                                ((CraftPlayer)((Player) p)).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.getID()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.getID()));
                             }
-                            e.remove();
                         }
+                        e.remove();
                     }
                     else
                     {

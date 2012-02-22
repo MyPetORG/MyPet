@@ -31,7 +31,7 @@ public class MyWolfConfig
 
     public static Material LeashItem = Material.STRING;
     public static Material ControlItem = Material.STRING;
-    public static int PickupRangePerLevel = 1;
+    public static double PickupRangePerLevel = 1;
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
@@ -106,7 +106,7 @@ public class MyWolfConfig
     {
         LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
         ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item", 287), Material.STRING);
-        PickupRangePerLevel = Config.getInt("MyWolf.pickuprangeperlvl", 1);
+        PickupRangePerLevel = Config.getDouble("MyWolf.pickuprangeperlvl", 1.0);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
         NameColor = Config.getInt("MyWolf.namecolor", -1);

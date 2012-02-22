@@ -100,7 +100,6 @@ public class MyWolfSkillTree implements Cloneable
             {
                 addSkillToLevel(Level,skillname);
             }
-            addSkillToLevel(Level, Skills);
         }
     }
 

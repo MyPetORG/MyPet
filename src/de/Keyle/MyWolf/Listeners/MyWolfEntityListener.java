@@ -75,9 +75,9 @@ public class MyWolfEntityListener implements Listener
                         damager.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
                 }
-                if(MyWolfList.hasMyWolf(damager))
+                if(MyWolfList.isMyWolf(event.getEntity().getEntityId()))
                 {
-                    MyWolf MWolf = MyWolfList.getMyWolf(damager);
+                    MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
                     MWolf.SetName();
                     if (damager.getItemInHand().getType() == MyWolfConfig.LeashItem)
@@ -103,8 +103,6 @@ public class MyWolfEntityListener implements Listener
                             double reqEXP = MWolf.Experience.getrequireEXP();
                             damager.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
-
-                        MyWolfUtil.getLogger().info(MWolf.SkillTree.getName());
 
                         if (MWolf.Wolf.isSitting())
                         {
