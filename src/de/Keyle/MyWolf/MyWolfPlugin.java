@@ -124,7 +124,6 @@ public class MyWolfPlugin extends JavaPlugin
 
 
         MyWolfSkillSystem.registerSkill(Inventory.class);
-        //MyWolfSkillSystem.registerSkill(HP.class);
         MyWolfSkillSystem.registerSkill(HPregeneration.class);
         MyWolfSkillSystem.registerSkill(Pickup.class);
         MyWolfSkillSystem.registerSkill(Behavior.class);

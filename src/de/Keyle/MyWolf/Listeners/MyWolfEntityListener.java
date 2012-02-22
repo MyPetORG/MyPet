@@ -122,7 +122,7 @@ public class MyWolfEntityListener implements Listener
                         MWolf.setHealth(MWolf.HealthMax);
                     }
 
-                    if (!event.isCancelled() && !MyWolfUtil.getPVP(event.getEntity().getLocation()))
+                    if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
                     {
                         event.setCancelled(true);
                     }
