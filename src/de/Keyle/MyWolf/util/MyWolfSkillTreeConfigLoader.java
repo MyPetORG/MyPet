@@ -95,7 +95,7 @@ public class MyWolfSkillTreeConfigLoader
                     //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- is there: " + SkillTrees.containsKey(Name));
                     if(SkillTrees.containsKey(Name))
                     {
-                        MyWolfSkillTree NextMWST = SkillTrees.get(Name);
+                        MyWolfSkillTree NextMWST = SkillTrees.get(NextInheritance);
                         //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- Name(Object): " + NextMWST.getName());
                         if(NextMWST.getLevels() != null)
                         {

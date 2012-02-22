@@ -22,8 +22,11 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.*;
+import net.minecraft.server.Packet22Collect;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class Pickup extends MyWolfGenericSkill
@@ -41,7 +44,7 @@ public class Pickup extends MyWolfGenericSkill
     {
         if (Level > 0)
         {
-            if(MWolf.SkillSystem.hasSkill("Invetory") && MWolf.SkillSystem.getSkill("Inventroy").getLevel() > 0)
+            if(MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
             {
                 Pickup = !Pickup;
                 MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString((Pickup?"Msg_PickUpStart":"Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
@@ -67,7 +70,7 @@ public class Pickup extends MyWolfGenericSkill
     @Override
     public void schedule()
     {
-        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here)
+        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
         {
             for (Entity e : MWolf.Wolf.getNearbyEntities(Level*MyWolfConfig.PickupRangePerLevel, Level*MyWolfConfig.PickupRangePerLevel, MyWolfConfig.PickupRangePerLevel))
             {
@@ -87,7 +90,14 @@ public class Pickup extends MyWolfGenericSkill
                     int ItemAmount = inv.addItem(item.getItemStack());
                     if (ItemAmount == 0)
                     {
-                        e.remove();
+                        for(Entity p : e.getNearbyEntities(20,20,20))
+                        {
+                            if(p instanceof Player)
+                            {
+                                ((CraftPlayer)((Player) p)).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.getID()));
+                            }
+                            e.remove();
+                        }
                     }
                     else
                     {

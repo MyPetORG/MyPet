@@ -42,7 +42,7 @@ public class MyWolfLevelUpListener implements Listener
         {
             for (String skill : Skills)
             {
-                if(MWolf.SkillSystem.getSkill(skill) != null)
+                if(MWolf.SkillSystem.hasSkill(skill))
                 {
                     MWolf.SkillSystem.getSkill(skill).upgrade();
                 }
