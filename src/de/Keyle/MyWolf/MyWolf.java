@@ -109,6 +109,7 @@ public class MyWolf
             getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
             createWolf(false);
             RespawnTime = 0;
+            HealthNow = HealthMax;
         }
     }
 

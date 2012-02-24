@@ -19,13 +19,11 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.util.MyWolfList;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class CommandHelp implements CommandExecutor
 {
@@ -35,7 +33,6 @@ public class CommandHelp implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            JavaPlugin Plugin = MyWolfPlugin.Plugin;
             player.sendMessage("--------------- MyWolf - Help -------------------------");
             player.sendMessage("/wolfinfo [player] | Display info about a MyWolf  (alias: /winfo)");
             if(MyWolfList.hasMyWolf(player))
