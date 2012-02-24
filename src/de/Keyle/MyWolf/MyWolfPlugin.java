@@ -97,14 +97,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfinventory").setExecutor(new CommandInventory());
         getCommand("wolfpickup").setExecutor(new CommandPickup());
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());
-        getCommand("wolfcompass").setExecutor(new CommandCompass());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
-
-        if (MyWolfConfig.LevelSystem)
-        {
-            getCommand("wolfexp").setExecutor(new CommandExp());
-        }
-        
 
         MyWolfConfiguration MWSkillTreeConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
         MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);

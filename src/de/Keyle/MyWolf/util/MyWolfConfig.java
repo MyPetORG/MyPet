@@ -35,7 +35,6 @@ public class MyWolfConfig
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
-    public static int NameColor = -1;
     public static boolean LevelSystem = true;
 
     public static boolean PermissionsBukkit = false;
@@ -49,7 +48,6 @@ public class MyWolfConfig
         setProperty("MyWolf.respawntime.factor", 5);
         setProperty("MyWolf.respawntime.fixed", 0);
         setProperty("MyWolf.sitdowntime", 15);
-        setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.hpregendefault", 60);
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
@@ -107,8 +105,6 @@ public class MyWolfConfig
         PickupRangePerLevel = Config.getDouble("MyWolf.pickuprangeperlvl", 1.0);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
-        NameColor = Config.getInt("MyWolf.namecolor", -1);
-        NameColor = NameColor <= 0xf ? NameColor : -1;
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);

@@ -29,15 +29,7 @@ commands:
     aliases: [wb,wolfb]
     description: switch the behavior mode
     usage: 'Syntax: /<command> [<Raid/Friendly/Aggressive/Normal>]'
-  wolfexp:
-    aliases: [we,wolfe]
-    description: display wolf's EXP
   wolfinfo:
     aliases: [winfo]
-    description: display wolf's HP and EXP
+    description: display HP and EXP of your MyWolf
     usage: 'Syntax: /<command> [PlayerName]'
-  wolfcompass:
-    aliases: [wcomp,wolfcomp]
-    description: Let the compass points to your wolf
-  wolfskin:
-    description: Set the skin of a wolf
