@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.Skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityWolf;
@@ -151,10 +152,11 @@ public class MyWolfPlayerListener implements Listener
         if (MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-
             if (MWolf.Status == WolfState.Dead)
             {
+                event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                 MWolf.Timer();
+
             }
             else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
             {
