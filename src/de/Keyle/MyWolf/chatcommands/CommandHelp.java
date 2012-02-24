@@ -19,10 +19,13 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
+import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.util.MyWolfList;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class CommandHelp implements CommandExecutor
 {
@@ -32,19 +35,32 @@ public class CommandHelp implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            player.sendMessage("MyWolf - Help - - - - - - - - - - - - - - - - -");
-            player.sendMessage("Set wolf name:            /wolfname <newwolfname>");
-            player.sendMessage("Release your wolf:    /wolfrelease <wolfname>");
-            player.sendMessage("Stop wolf attacking:  /wolfstop  (alias: /ws or /wolfs)");
-            player.sendMessage("Call your wolf:	          /wolfcall  (alias: /wc or /wolfc)");
-            player.sendMessage("Display the EXP:	          /wolfexp  (alias: /we or /wolfe)");
-            player.sendMessage("Display wolf info:	          /wolfinfo  (alias: /winfo)");
-            player.sendMessage("Toggle the behaivior:	          /wolfbehavior [RAID]   (alias: /wb or /wolfb)");
-            player.sendMessage("Toggle wolf pickup on/off:	          /wolfpickup   (alias: /wp or /wolfp)");
-            player.sendMessage("Open the inventory of the wolf:	          /wolfinventory   (alias: /wi or /wolfi)");
-            player.sendMessage("Compass tagets wolf:	          /wolfcompass [stop]");
-            player.sendMessage("Changes wolf skin:	          /wolfskin <URL>");
-            player.sendMessage("- - - - - - - - - - - - - - - - - - - - - - - -");
+            JavaPlugin Plugin = MyWolfPlugin.Plugin;
+            player.sendMessage("--------------- MyWolf - Help -------------------------");
+            player.sendMessage("/wolfinfo [player] | Display info about a MyWolf  (alias: /winfo)");
+            if(MyWolfList.hasMyWolf(player))
+            {
+                player.sendMessage("/wolfname <newwolfname> | Set wolf name");
+                player.sendMessage("/wolfrelease <wolfname> | Release your wolf");
+                player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
+                player.sendMessage("/wolfcall | Call your wolf | (alias: /wc or /wolfc)");
+
+                if(MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Inventory") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Inventory").getLevel() > 0)
+                {
+                    player.sendMessage("/wolfinventory | Open the inventory of the wolf  (alias: /wi or /wolfi)");
+                }
+                if(MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Pickup") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Pickup").getLevel() > 0)
+                {
+                    player.sendMessage("/wolfpickup | Toggle wolf pickup on/off  (alias: /wp or /wolfp)");
+                }
+                if(MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Behavior") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Behavior").getLevel() > 0)
+                {
+                    player.sendMessage("/wolfbehavior [RAID] | Toggle the behaivior  (alias: /wb or /wolfb)");
+                }
+            }
+            player.sendMessage("");
+            player.sendMessage("For more information read the Command-Page on BukkitDev");
+            player.sendMessage("-----------------------------------------------------");
         }
         return true;
     }

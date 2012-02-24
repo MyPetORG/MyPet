@@ -93,7 +93,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfcall").setExecutor(new CommandCall());
         getCommand("wolfstop").setExecutor(new CommandStop());
         getCommand("wolfrelease").setExecutor(new CommandRelease());
-        getCommand("wolf").setExecutor(new CommandHelp());
+        getCommand("mywolf").setExecutor(new CommandHelp());
         getCommand("wolfinventory").setExecutor(new CommandInventory());
         getCommand("wolfpickup").setExecutor(new CommandPickup());
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());

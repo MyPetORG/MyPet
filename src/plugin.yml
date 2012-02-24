@@ -5,31 +5,31 @@ author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [GroupManager, Permissions, PermissionsEX, WorldGuard]
 commands:
-  wolf:
-    description: wolf commands
+  mywolf:
+    description: Help for all MyWolf commands.
   wolfname:
-    description: set the name of the wolf
-    usage: 'Syntax: /<command> <WolfName>'
+    description: Set the name of your MyWolf
+    usage: '/<command> <WolfName>'
   wolfcall:
-    aliases: [wc,wolfc]
-    description: call your wolf
+    aliases: [wolfc, wc]
+    description: Call your MyWolf.
   wolfrelease:
-    description: release your wolf
-    usage: 'Syntax: /<command> <WolfName>'
+    description: Release your MyWolf.
+    usage: '/<command> <WolfName>'
   wolfstop:
-    aliases: [ws,wolfs]
-    description: you wolf stopping attacking
+    aliases: [wolfs, ws]
+    description: your MyWolf stop attacking.
   wolfpickup:
-    aliases: [wp,wolfp]
-    description: toogle pickup
+    aliases: [wolfp, wp]
+    description: Toogles pickup of your MyWolf.
   wolfinventory:
-    aliases: [wi,wolfi]
-    description: open inventory of the wolf
+    aliases: [wolfi, wi]
+    description: Open the inventory of your MyWolf.
   wolfbehavior:
-    aliases: [wb,wolfb]
-    description: switch the behavior mode
-    usage: 'Syntax: /<command> [<Raid/Friendly/Aggressive/Normal>]'
+    aliases: [wolfb, wb]
+    description: Switch the behavior mode of your MyWolf.
+    usage: '/<command> [<Raid/rai/Friendly/fri/Aggressive/agg/Normal/nor>]'
   wolfinfo:
     aliases: [winfo]
-    description: display HP and EXP of your MyWolf
-    usage: 'Syntax: /<command> [PlayerName]'
+    description: Shows HP and EXP of your MyWolf
+    usage: '/<command> [PlayerName]'
