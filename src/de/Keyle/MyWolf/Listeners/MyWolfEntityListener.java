@@ -149,6 +149,14 @@ public class MyWolfEntityListener implements Listener
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                 MWolf.Status = WolfState.Dead;
                 MWolf.RespawnTime = MyWolfConfig.RespawnTimeFixed + (MWolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor);
+                if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+                {
+                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event.getEntity().getLastDamageCause();
+                    if(!(e.getDamager() instanceof Player && MWolf.getOwner() != e.getDamager()))
+                    {
+                        event.setDroppedExp(0);
+                    }
+                }
                 SendDeathMessage(event);
                 MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
             }
