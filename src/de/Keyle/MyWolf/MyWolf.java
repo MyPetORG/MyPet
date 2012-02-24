@@ -24,20 +24,16 @@ import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.Skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.*;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.getspout.spoutapi.SpoutManager;
-import org.getspout.spoutapi.player.EntitySkinType;
 
 import java.util.Collection;
 
 public class MyWolf
 {
     public String Name = "Wolf";
-    public String SkinURL = "";
     public final String Owner;
     private int ID;
     public int DamageBonus = 0;
@@ -90,103 +86,9 @@ public class MyWolf
         Experience = new MyWolfExperience(this);
     }
 
-    public void setTameSkin(String URL)
-    {
-        if (MyWolfConfig.UseSpout)
-        {
-            SkinURL = URL;
-            for(Player p : MyWolfPlugin.Plugin.getServer().getOnlinePlayers())
-            {
-                if(SpoutManager.getPlayer(p).isSpoutCraftEnabled())
-                {
-                    SpoutManager.getAppearanceManager().setGlobalEntitySkin(Wolf,SkinURL, EntitySkinType.WOLF_TAMED);
-                }
-            }
-        }
-    }
     public void SetName(String Name)
     {
         this.Name = Name;
-        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
-        {
-            String NameColor;
-            if (MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
-            {
-                NameColor = "§" + MyWolfConfig.NameColor;
-            }
-            else
-            {
-                if (getHealth() > HealthMax / 3 * 2)
-                {
-                    NameColor = "" + ChatColor.GREEN;
-                }
-                else if (getHealth() > HealthMax / 3)
-                {
-                    NameColor = "" + ChatColor.YELLOW;
-                }
-                else
-                {
-                    NameColor = "" + ChatColor.RED;
-                }
-            }
-            SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + Name);
-        }
-    }
-
-    public void SetName()
-    {
-        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
-        {
-            String NameColor;
-            if (MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
-            {
-                NameColor = "§" + MyWolfConfig.NameColor;
-            }
-            else
-            {
-                if (getHealth() > HealthMax / 3 * 2)
-                {
-                    NameColor = "" + ChatColor.GREEN;
-                }
-                else if (getHealth() > HealthMax / 3)
-                {
-                    NameColor = "" + ChatColor.YELLOW;
-                }
-                else
-                {
-                    NameColor = "" + ChatColor.RED;
-                }
-            }
-            SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
-        }
-    }
-
-    public void SetName(int HP)
-    {
-        if (MyWolfConfig.UseSpout && Status == WolfState.Here)
-        {
-            String NameColor;
-            if (MyWolfConfig.NameColor >= 0 && MyWolfConfig.NameColor <= 0xf)
-            {
-                NameColor = "§" + MyWolfConfig.NameColor;
-            }
-            else
-            {
-                if (HP > HealthMax / 3 * 2)
-                {
-                    NameColor = "" + ChatColor.GREEN;
-                }
-                else if (HP > HealthMax / 3)
-                {
-                    NameColor = "" + ChatColor.YELLOW;
-                }
-                else
-                {
-                    NameColor = "" + ChatColor.RED;
-                }
-            }
-            SpoutManager.getAppearanceManager().setGlobalTitle(Wolf, NameColor + this.Name);
-        }
     }
 
     public void removeWolf()
@@ -227,7 +129,6 @@ public class MyWolf
                 ID = Wolf.getEntityId();
 
                 Status = WolfState.Here;
-                SetName();
             }
             Timer();
         }
@@ -239,7 +140,6 @@ public class MyWolf
         ID = Wolf.getEntityId();
         Location = Wolf.getLocation();
         Status = WolfState.Here;
-        SetName();
         Timer();
     }
 
@@ -257,7 +157,6 @@ public class MyWolf
         {
             Wolf.setHealth(HealthNow);
         }
-        SetName();
     }
 
     public int getHealth()

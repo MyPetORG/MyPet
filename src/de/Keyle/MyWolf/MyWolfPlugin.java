@@ -74,11 +74,6 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfConfig.setDefault();
         MyWolfConfig.loadConfiguration();
 
-        if(Plugin.getServer().getPluginManager().getPlugin("Spout") == null)
-        {
-            MyWolfConfig.UseSpout = false;
-        }
-
         MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);
 
@@ -94,12 +89,6 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfLevelUpListener levelupListener = new MyWolfLevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
 
-        if (MyWolfConfig.UseSpout)
-        {
-            MyWolfInventoryListener inventoryListener = new MyWolfInventoryListener();
-            getServer().getPluginManager().registerEvents(inventoryListener, this);
-        }
-
         getCommand("wolfname").setExecutor(new CommandName());
         getCommand("wolfcall").setExecutor(new CommandCall());
         getCommand("wolfstop").setExecutor(new CommandStop());
@@ -110,7 +99,6 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());
         getCommand("wolfcompass").setExecutor(new CommandCompass());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
-        getCommand("wolfskin").setExecutor(new CommandSkin());
 
         if (MyWolfConfig.LevelSystem)
         {
@@ -183,7 +171,6 @@ public class MyWolfPlugin extends JavaPlugin
                     int WolfHealthNow = MWC.getConfig().getInt("Wolves." + ownername + ".health.now", 6);
                     int WolfRespawnTime = MWC.getConfig().getInt("Wolves." + ownername + ".health.respawntime", 0);
                     String WolfName = MWC.getConfig().getString("Wolves." + ownername + ".name", "Wolf");
-                    String WolfSkin = MWC.getConfig().getString("Wolves." + ownername + ".skin", "");
                     boolean WolfSitting = MWC.getConfig().getBoolean("Wolves." + ownername + ".sitting", false);
 
                     if (getServer().getWorld(WolfWorld) == null)
@@ -210,7 +197,6 @@ public class MyWolfPlugin extends JavaPlugin
                     }
                     MWolf.SetName(WolfName);
                     MWolf.setSitting(WolfSitting);
-                    MWolf.setTameSkin(WolfSkin);
                     MWolf.Experience.setExp(WolfEXP);
 
                     Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
@@ -244,7 +230,6 @@ public class MyWolfPlugin extends JavaPlugin
             MWC.getConfig().set("Wolves." + owner + ".name", MWolf.Name);
             MWC.getConfig().set("Wolves." + owner + ".sitting", MWolf.isSitting());
             MWC.getConfig().set("Wolves." + owner + ".exp", MWolf.Experience.getExp());
-            MWC.getConfig().set("Wolves." + owner + ".skin", MWolf.SkinURL);
 
             Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
             if(Skills.size() > 0)

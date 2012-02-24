@@ -79,7 +79,6 @@ public class MyWolfEntityListener implements Listener
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
-                    MWolf.SetName();
                     if (damager.getItemInHand().getType() == MyWolfConfig.LeashItem)
                     {
                         String msg;
@@ -123,10 +122,6 @@ public class MyWolfEntityListener implements Listener
                     if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
                     {
                         event.setCancelled(true);
-                    }
-                    if (!event.isCancelled())
-                    {
-                        MWolf.SetName(MWolf.getHealth() - event.getDamage());
                     }
                 }
             }

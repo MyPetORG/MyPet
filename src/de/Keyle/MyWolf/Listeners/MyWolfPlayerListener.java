@@ -221,7 +221,7 @@ public class MyWolfPlayerListener implements Listener
             MWolf.ResetSitTimer();
             if (MWolf.Status == WolfState.Here)
             {
-                if(!MyWolfConfig.UseSpout && MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
+                if(MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
                 {
                     MWolf.setSitting(false);
                     MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());

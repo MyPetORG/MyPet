@@ -202,8 +202,6 @@ public class MyWolfUtil
                 Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
                 ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
-
-
                 return set.allows(DefaultFlag.PVP);
             }
         }

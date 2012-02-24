@@ -37,7 +37,6 @@ public class MyWolfConfig
     public static int SitdownTime = 15;
     public static int NameColor = -1;
     public static boolean LevelSystem = true;
-    public static boolean UseSpout = true;
 
     public static boolean PermissionsBukkit = false;
 
@@ -52,7 +51,6 @@ public class MyWolfConfig
         setProperty("MyWolf.sitdowntime", 15);
         setProperty("MyWolf.namecolor", -1);
         setProperty("MyWolf.hpregendefault", 60);
-        setProperty("MyWolf.useSpout", true);
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.exp_default", true);
@@ -114,7 +112,6 @@ public class MyWolfConfig
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
-        UseSpout = Config.getBoolean("MyWolf.useSpout", true);
         MyWolfExperience.defaultEXPvalues  = Config.getBoolean("MyWolf.exp_default", true);
 
         if (Config.getStringList("MyWolf.exp") != null)
