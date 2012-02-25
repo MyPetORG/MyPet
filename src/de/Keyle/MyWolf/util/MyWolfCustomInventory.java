@@ -19,10 +19,9 @@
 
 package de.Keyle.MyWolf.util;
 
-import net.minecraft.server.EntityHuman;
-import net.minecraft.server.IInventory;
-import net.minecraft.server.ItemStack;
+import net.minecraft.server.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,6 +161,50 @@ public class MyWolfCustomInventory implements IInventory
     public int getMaxStackSize()
     {
         return 64;
+    }
+    
+    public void save(File file) throws IOException
+    {
+        DataOutputStream F_Out = new DataOutputStream( new FileOutputStream(file));
+        NBTTagList Items = new NBTTagList();
+        for (int i = 0; i < this.Items.size(); i++)
+        {
+            ItemStack itemStack = this.Items.get(i);
+            if (itemStack != null)
+            {
+                NBTTagCompound Item = new NBTTagCompound();
+                Item.setByte("Slot", (byte)i);
+                itemStack.b(Item);
+                Items.add(Item);
+            }
+        }
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        nbtTagCompound.set("Items", Items);
+        NBTBase.a(nbtTagCompound, F_Out);
+        F_Out.close();
+    }
+
+    public void load(File file) throws IOException
+    {
+        DataInputStream F_In = new DataInputStream( new FileInputStream(file));
+        NBTTagCompound nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
+        NBTTagList Items = nbtTagCompound.getList("Items");
+
+        for (int i = 0; i < Items.size(); i++)
+        {
+            NBTTagCompound Item = (NBTTagCompound) Items.get(i);
+
+            ItemStack itemStack = ItemStack.a(Item);
+            if(Item.getByte("Slot") < this.Items.size() )
+            {
+                this.Items.set(Item.getByte("Slot"), itemStack);
+            }
+            else
+            {
+                this.Items.add(Item.getByte("Slot"), itemStack);
+            }
+        }
+        F_In.close();
     }
 
     public void update()

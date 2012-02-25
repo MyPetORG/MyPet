@@ -32,13 +32,24 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Inventory extends MyWolfGenericSkill
 {
     public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory",0);
+    String PathToInventory;
 
     public Inventory()
     {
         super("Inventory");
+
+        PathToInventory = MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "Inventory";
+        File pti = new File(PathToInventory);
+        if(!pti.exists())
+        {
+            pti.mkdirs();
+        }
     }
 
     @Override
@@ -89,26 +100,40 @@ public class Inventory extends MyWolfGenericSkill
     public void load(MyWolfConfiguration configuration)
     {
         String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".inventory", "QwE");
-        if(Sinv.equals("QwE"))
+        if(!Sinv.equals("QwE"))
         {
-            Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".skills.inventory", ",,");
-        }
-        String[] invSplit = Sinv.split(";");
-        for (int i = 0 ; i < invSplit.length ; i++)
-        {
-            if (i < inv.getSize())
+            String[] invSplit = Sinv.split(";");
+            for (int i = 0 ; i < invSplit.length ; i++)
             {
-                String[] itemvalues = invSplit[i].split(",");
-                if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+                if (i < inv.getSize())
                 {
-                    if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+                    String[] itemvalues = invSplit[i].split(",");
+                    if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
                     {
-                        if (Integer.parseInt(itemvalues[1]) <= 64)
+                        if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
                         {
-                            inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                            if (Integer.parseInt(itemvalues[1]) <= 64)
+                            {
+                                inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                            }
                         }
                     }
                 }
+            }
+        }
+        else
+        {
+            try
+            {
+                File invFile = new File(PathToInventory + File.separator + MWolf.getOwnerName() + ".MyWolfInventory");
+                if(invFile.exists())
+                {
+                    inv.load(invFile);
+                }
+            }
+            catch (IOException e)
+            {
+                MyWolfUtil.getLogger().info("[MyWolf] Can't load " + MWolf.getOwnerName() + ".MyWolfInventory" );
             }
         }
     }
@@ -116,21 +141,21 @@ public class Inventory extends MyWolfGenericSkill
     @Override
     public void save(MyWolfConfiguration configuration)
     {
-        String Items = "";
-        for (int i = 0 ; i < this.inv.getSize() ; i++)
+        File invFile;
+        try
         {
-            ItemStack Item = this.inv.getItem(i);
-            if (Item != null)
+            invFile = new File(PathToInventory + File.separator + MWolf.getOwnerName() + ".MyWolfInventory");
+            if(!invFile.exists())
             {
-                Items += Item.id + "," + Item.count + "," + Item.getData() + ";";
+                invFile.createNewFile();
             }
-            else
-            {
-                Items += ",,;";
-            }
+            inv.save(invFile);
         }
-        Items = !Items.equals("") ? Items.substring(0, Items.length() - 1) : Items;
-        configuration.getConfig().set("Wolves." + MWolf.getOwnerName() + ".skills.inventory", Items);
+        catch (IOException e)
+        {
+            MyWolfUtil.getLogger().info("[MyWolf] Can't save " + MWolf.getOwnerName() + ".MyWolfInventory" );
+            e.printStackTrace();
+        }
     }
     
     @Override

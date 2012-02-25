@@ -156,7 +156,6 @@ public class MyWolfPlayerListener implements Listener
             {
                 event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                 MWolf.Timer();
-
             }
             else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
             {
