@@ -19,6 +19,7 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.Entity.EntityMyWolf;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
@@ -27,12 +28,10 @@ import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.EntityWolf;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.PathPoint;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,6 +49,7 @@ public class MyWolfPlayerListener implements Listener
         72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105 ,106, 111, 115, 116, 117, 118, 119
     };
 
+    /*
     @EventHandler()
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
     {
@@ -61,20 +61,24 @@ public class MyWolfPlayerListener implements Listener
                 if (MyWolfList.hasMyWolf(event.getPlayer()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-                    MWolf.ResetSitTimer();
                     if (MWolf.getEntityId() == w.getEntityId())
                     {
-                        event.setCancelled(true);
+                        if(MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
+                        {
+                            MWolf.ResetSitTimer();
+                            event.setCancelled(true);
+                        }
                     }
                 }
             }
         }
     }
+    */
 
     @EventHandler()
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && MyWolfList.hasMyWolf(event.getPlayer()))
+        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
             if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
@@ -93,7 +97,7 @@ public class MyWolfPlayerListener implements Listener
                             }
                         }
                         PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
-                        EntityWolf wolf = ((CraftWolf) MWolf.Wolf).getHandle();
+                        EntityMyWolf wolf = MWolf.Wolf.getHandle();
                         wolf.setPathEntity(new PathEntity(loc));
                         MWolf.ResetSitTimer();
                         if(MWolf.SkillSystem.getSkill("Control").getLevel() > 1)

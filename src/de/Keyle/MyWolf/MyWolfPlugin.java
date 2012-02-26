@@ -19,6 +19,7 @@
 
 package de.Keyle.MyWolf;
 
+import de.Keyle.MyWolf.Entity.EntityMyWolf;
 import de.Keyle.MyWolf.Listeners.*;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
@@ -28,11 +29,13 @@ import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
+import net.minecraft.server.EntityTypes;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -110,6 +113,26 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfSkillSystem.registerSkill(Behavior.class);
         MyWolfSkillSystem.registerSkill(Damage.class);
         MyWolfSkillSystem.registerSkill(Control.class);
+
+        try
+        {
+            Class[] args = new Class[5];
+            args[0] = Class.class;
+            args[1] = String.class;
+            args[2] = Integer.TYPE;
+            args[3] = Integer.TYPE;
+            args[4] = Integer.TYPE;
+
+            Method a = EntityTypes.class.getDeclaredMethod("a", args);
+            a.setAccessible(true);
+            a.invoke(a, new Object[] { EntityMyWolf.class, "Wolf", 95, 14144467, 13545366});
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            setEnabled(false);
+            return;
+        }
 
         // For future of the client mod
         //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");

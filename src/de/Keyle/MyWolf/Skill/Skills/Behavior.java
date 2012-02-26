@@ -23,14 +23,12 @@ import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfConfiguration;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 
 public class Behavior extends MyWolfGenericSkill
 {
     private BehaviorState Behavior = BehaviorState.Normal;
 
-    private int schedulerCounter = 0;
+    //private int schedulerCounter = 0;
 
     public static enum BehaviorState
     {
@@ -46,6 +44,10 @@ public class Behavior extends MyWolfGenericSkill
     {
         Behavior = behaviorState;
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
+        if(Behavior == BehaviorState.Friendly)
+        {
+            MWolf.Wolf.setTarget(null);
+        }
     }
 
     public void activateBehavior(BehaviorState behaviorState)
@@ -54,6 +56,10 @@ public class Behavior extends MyWolfGenericSkill
         {
             Behavior = behaviorState;
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
+            if(Behavior == BehaviorState.Friendly)
+            {
+                MWolf.Wolf.setTarget(null);
+            }
         }
         else
         {
@@ -81,6 +87,7 @@ public class Behavior extends MyWolfGenericSkill
             if (Behavior == BehaviorState.Normal)
             {
                 Behavior = BehaviorState.Friendly;
+                MWolf.Wolf.setTarget(null);
             }
             else if (Behavior == BehaviorState.Friendly)
             {
@@ -97,7 +104,7 @@ public class Behavior extends MyWolfGenericSkill
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
         }
     }
-
+    /*
     @Override
     public void schedule()
     {
@@ -120,6 +127,7 @@ public class Behavior extends MyWolfGenericSkill
             }
         }
     }
+    */
 
     public void load(MyWolfConfiguration configuration)
     {

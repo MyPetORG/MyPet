@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 public class HPregeneration extends MyWolfGenericSkill
 {
@@ -49,7 +50,7 @@ public class HPregeneration extends MyWolfGenericSkill
             timeCounter--;
             if(timeCounter <= 0)
             {
-                MWolf.setHealth(MWolf.getHealth()+1);
+                MWolf.Wolf.getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = HealtregenTime - Level;
             }
         }

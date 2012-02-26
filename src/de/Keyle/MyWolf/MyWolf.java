@@ -19,15 +19,18 @@
 
 package de.Keyle.MyWolf;
 
+import de.Keyle.MyWolf.Entity.CraftMyWolf;
+import de.Keyle.MyWolf.Entity.EntityMyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.Skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.*;
 import org.bukkit.Location;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.Collection;
 
@@ -36,18 +39,15 @@ public class MyWolf
     public String Name = "Wolf";
     public final String Owner;
     private int ID;
-    public int DamageBonus = 0;
     public int HealthNow;
     public int HealthMax = 20;
-    public Wolf Wolf;
+    public CraftMyWolf Wolf;
     public int RespawnTime = 0;
 
     private int Timer = -1;
 
     private int SitTimer = MyWolfConfig.SitdownTime;
     private boolean isSitting = false;
-    public boolean isPickup = false;
-    public int Healthregen = 60;
 
     public WolfState Status = WolfState.Despawned;
 
@@ -122,13 +122,14 @@ public class MyWolf
         {
             if (RespawnTime <= 0)
             {
-                Wolf = (Wolf) MyWolfPlugin.Plugin.getServer().getWorld(Location.getWorld().getName()).spawnCreature(Location, CreatureType.WOLF);
-                Wolf.setOwner(getOwner());
-                Wolf.setSitting(sitting);
-                Location = Wolf.getLocation();
-                Wolf.setHealth(HealthNow);
+                net.minecraft.server.World mcWorld = ((CraftWorld)Location.getWorld()).getHandle();
+                EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld);
+                MWentityMyWolf.setMyWolf(this);
+                MWentityMyWolf.setLocation(Location);
+                mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
+                Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
                 ID = Wolf.getEntityId();
-
+                Wolf.setSitting(sitting);
                 Status = WolfState.Here;
             }
             Timer();
@@ -137,10 +138,17 @@ public class MyWolf
 
     public void createWolf(Wolf wolf)
     {
-        Wolf = wolf;
+        net.minecraft.server.World mcWorld = ((CraftWorld)wolf.getWorld()).getHandle();
+        EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld);
+        MWentityMyWolf.setMyWolf(this);
+        MWentityMyWolf.setLocation(wolf.getLocation());
+        mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        wolf.remove();
+        Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
         ID = Wolf.getEntityId();
         Location = Wolf.getLocation();
         Status = WolfState.Here;
+        Wolf.setSitting(true);
         Timer();
     }
 
