@@ -37,7 +37,7 @@ public class CommandName implements CommandExecutor
             Player owner = (Player) sender;
             if (MyWolfList.hasMyWolf(owner))
             {
-                if (!MyWolfPermissions.has(owner, "MyWolf.setname"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.setname"))
                 {
                     return true;
                 }

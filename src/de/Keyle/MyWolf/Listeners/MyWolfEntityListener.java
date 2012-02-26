@@ -54,7 +54,7 @@ public class MyWolfEntityListener implements Listener
 
                 if (!MyWolfList.hasMyWolf(damager))
                 {
-                    if (!MyWolfPermissions.has(damager, "MyWolf.leash") || damager.getItemInHand().getType() != MyWolfConfig.LeashItem)
+                    if (!MyWolfPermissions.has(damager, "MyWolf.user.leash") || damager.getItemInHand().getType() != MyWolfConfig.LeashItem)
                     {
                         return;
                     }

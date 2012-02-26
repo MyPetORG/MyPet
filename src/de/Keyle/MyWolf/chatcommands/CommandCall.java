@@ -40,7 +40,7 @@ public class CommandCall implements CommandExecutor
             if (MyWolfList.hasMyWolf(owner))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
-                if (!MyWolfPermissions.has(owner, "MyWolf.call"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.call"))
                 {
                     return true;
                 }

@@ -42,7 +42,7 @@ public class CommandRelease implements CommandExecutor
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(owner, "MyWolf.release"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.release"))
                 {
                     return true;
                 }

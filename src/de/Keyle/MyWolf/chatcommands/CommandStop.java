@@ -41,7 +41,7 @@ public class CommandStop implements CommandExecutor
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(owner, "MyWolf.stop"))
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.stop"))
                 {
                     return true;
                 }

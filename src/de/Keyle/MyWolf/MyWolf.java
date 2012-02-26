@@ -70,7 +70,7 @@ public class MyWolf
         {
             for(String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
             {
-                if(MyWolfPermissions.has(Owner, "MyWolf.skilltree." + ST))
+                if(MyWolfPermissions.has(Owner, "MyWolf.user.skilltree." + ST))
                 {
                     this.SkillTree = MyWolfSkillTreeConfigLoader.getSkillTree(ST);
                     break;
