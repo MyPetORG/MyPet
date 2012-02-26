@@ -67,6 +67,15 @@ public class MyWolfConfig
         setProperty("MyWolf.exp.SQUID", 0.25);
         setProperty("MyWolf.exp.SHEEP", 0.25);
         setProperty("MyWolf.exp.SLIME", 1.0);
+        setProperty("MyWolf.exp.CAVE_SPIDER", 1.0);
+        setProperty("MyWolf.exp.BLAZE", 1.1);
+        setProperty("MyWolf.exp.ENDER_DRAGON", 20.0);
+        setProperty("MyWolf.exp.ENDERMAN", 1.4);
+        setProperty("MyWolf.exp.MAGMA_CUBE", 1.0);
+        setProperty("MyWolf.exp.MUSHROOM_COW", 0.3);
+        setProperty("MyWolf.exp.SILVERFISH", 0.6);
+        setProperty("MyWolf.exp.SNOWMAN", 0.5);
+        setProperty("MyWolf.exp.VILLAGER", 0.01);
 
         /*
         List<String> list = new LinkedList<String>();
