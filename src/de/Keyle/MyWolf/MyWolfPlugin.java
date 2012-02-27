@@ -43,12 +43,16 @@ import java.util.Set;
 
 public class MyWolfPlugin extends JavaPlugin
 {
-    public static MyWolfPlugin Plugin;
+    private static MyWolfPlugin Plugin;
     public static MyWolfConfiguration MWWolvesConfig;
     public static MyWolfLanguage MWLanguage;
 
-
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+
+    public static MyWolfPlugin getPlugin()
+    {
+        return Plugin;
+    }
 
     public void onDisable()
     {

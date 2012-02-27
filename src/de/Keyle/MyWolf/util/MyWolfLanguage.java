@@ -91,7 +91,7 @@ public class MyWolfLanguage
         addString("Creeper", "MyWolf.Message.deathmessage.creeper", "was killed by a Creeper.");
         addString("Zombie", "MyWolf.Message.deathmessage.zombie", "was killed by a Zombie.");
         addString("Unknow", "MyWolf.Message.deathmessage.unknow", "was killed by an unknown source.");
-        addString("You", "MyWolf.Message.deathmessage.you", "was killed by %red%YOU.");
+        addString("You", "MyWolf.Message.deathmessage.you", "was killed by %red%YOU%white%.");
         addString("Spider", "MyWolf.Message.deathmessage.spider", "was killed by a Spider.");
         addString("CaveSpider", "MyWolf.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
         addString("Giant", "MyWolf.Message.deathmessage.giant", "was killed by a Giant.");
@@ -107,9 +107,9 @@ public class MyWolfLanguage
         addString("Snowman", "MyWolf.Message.deathmessage.snowman", "was killed by a Snowman.");
         addString("Player", "MyWolf.Message.deathmessage.player", "was killed by %player%.");
         addString("Drowning", "MyWolf.Message.deathmessage.drowning", "drowned.");
-        addString("Fall", "MyWolf.Message.deathmessage.fall", " died by falling down.");
+        addString("Fall", "MyWolf.Message.deathmessage.fall", "died by falling down.");
         addString("Lightning", "MyWolf.Message.deathmessage.lightning", "was killed by lightning.");
-        addString("kvoid", "MyWolf.Message.deathmessage.fire", "was killed by VOID.");
+        addString("kvoid", "MyWolf.Message.deathmessage.fire", "was killed by the VOID.");
         addString("Skeleton", "MyWolf.Message.deathmessage.skeleton", "was killed by a Skeleton.");
         addString("PlayerWolf", "MyWolf.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf.");
         addString("Explosion", "MyWolf.Message.deathmessage.explosion", "was killed by an explosion.");

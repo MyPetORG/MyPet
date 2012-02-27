@@ -251,7 +251,7 @@ public class MyWolf
     {
         if (Timer != -1)
         {
-            MyWolfPlugin.Plugin.getServer().getScheduler().cancelTask(Timer);
+            MyWolfPlugin.getPlugin().getServer().getScheduler().cancelTask(Timer);
             Timer = -1;
         }
     }
@@ -266,7 +266,7 @@ public class MyWolf
                 StopTimer();
             }
 
-            Timer = MyWolfPlugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.Plugin, new Runnable()
+            Timer = MyWolfPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.getPlugin(), new Runnable()
             {
                 Collection<MyWolfGenericSkill> Skills = SkillSystem.getSkills();
 
@@ -312,7 +312,7 @@ public class MyWolf
 
     public Player getOwner()
     {
-        Player p = MyWolfPlugin.Plugin.getServer().getPlayer(Owner);
+        Player p = MyWolfPlugin.getPlugin().getServer().getPlayer(Owner);
         if(p != null && p.isOnline())
         {
             return p;

@@ -44,7 +44,7 @@ public class Inventory extends MyWolfGenericSkill
     {
         super("Inventory");
 
-        PathToInventory = MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "Inventory";
+        PathToInventory = MyWolfPlugin.getPlugin().getDataFolder().getPath() + File.separator + "Inventory";
         File pti = new File(PathToInventory);
         if(!pti.exists())
         {

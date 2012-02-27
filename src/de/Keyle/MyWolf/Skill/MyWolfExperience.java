@@ -63,13 +63,13 @@ public class MyWolfExperience
     public MyWolfExperience(MyWolf Wolf)
     {
         this.MWolf = Wolf;
-        MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1));
+        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1));
     }
 
     public void setExp(double Exp)
     {
         MyWolfExpEvent event = new MyWolfExpEvent(MWolf,this.getExp(),Exp);
-        MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if(event.isCancelled())
         {
             return;
@@ -78,7 +78,7 @@ public class MyWolfExperience
         this.Exp = event.getEXP();
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
         }
     }
 
@@ -90,7 +90,7 @@ public class MyWolfExperience
     public void addExp(double Exp)
     {
         MyWolfExpEvent event = new MyWolfExpEvent(MWolf,this.Exp,this.Exp + Exp);
-        MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if(event.isCancelled())
         {
             return;
@@ -100,7 +100,7 @@ public class MyWolfExperience
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
         }
     }
 
@@ -109,7 +109,7 @@ public class MyWolfExperience
         if (MobEXP.containsKey(type))
         {
             MyWolfExpEvent event = new MyWolfExpEvent(MWolf,this.Exp,MobEXP.get(type) + this.Exp);
-            MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(event);
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
             if(event.isCancelled())
             {
                 return;
@@ -118,7 +118,7 @@ public class MyWolfExperience
             this.Exp = event.getEXP();
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
-                MyWolfPlugin.Plugin.getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
+                MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
             }
         }
     }

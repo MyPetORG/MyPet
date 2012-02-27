@@ -71,7 +71,7 @@ public class MyWolfEntityListener implements Listener
                         MyWolf MWolf = new MyWolf(damager.getName());
                         MyWolfList.addMyWolf(MWolf);
                         MWolf.createWolf((Wolf) event.getEntity());
-                        MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
+                        MyWolfPlugin.getPlugin().SaveWolves(MyWolfPlugin.MWWolvesConfig);
                         damager.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
                 }

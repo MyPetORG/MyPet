@@ -73,7 +73,7 @@ public class MyWolfPermissions
 
     public static boolean has(String player, String node)
     {
-        OfflinePlayer offlinePlayer  = MyWolfPlugin.Plugin.getServer().getOfflinePlayer(player);
+        OfflinePlayer offlinePlayer  = MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(player);
         PermissibleBase perm = new PermissibleBase(offlinePlayer);
 
         if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null || offlinePlayer.isOp())
@@ -82,7 +82,7 @@ public class MyWolfPermissions
         }
         else if (PermissionsMode == PermissionsType.PermissionsEX && Permissions instanceof PermissionManager)
         {
-            return ((PermissionManager) Permissions).has(player, node, MyWolfPlugin.Plugin.getServer().getWorlds().get(0).getName());
+            return ((PermissionManager) Permissions).has(player, node, MyWolfPlugin.getPlugin().getServer().getWorlds().get(0).getName());
         }
         else if(PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
         {
@@ -109,7 +109,7 @@ public class MyWolfPermissions
             return;
         }
         */
-        p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("bPermissions");
+        p = MyWolfPlugin.getPlugin().getServer().getPluginManager().getPlugin("bPermissions");
         if (p != null && PermissionsMode == PermissionsType.NONE)
         {
             PermissionsMode = PermissionsType.bPermissions;
@@ -118,7 +118,7 @@ public class MyWolfPermissions
             return;
         }
 
-        p = MyWolfPlugin.Plugin.getServer().getPluginManager().getPlugin("PermissionsEx");
+        p = MyWolfPlugin.getPlugin().getServer().getPluginManager().getPlugin("PermissionsEx");
         if (p != null && PermissionsMode == PermissionsType.NONE)
         {
             PermissionsMode = PermissionsType.PermissionsEX;

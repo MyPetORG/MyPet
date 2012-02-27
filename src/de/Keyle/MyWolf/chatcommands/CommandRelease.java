@@ -76,7 +76,7 @@ public class CommandRelease implements CommandExecutor
                     */
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
                     MyWolfList.removeMyWolf(MWolf);
-                    MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
+                    MyWolfPlugin.getPlugin().SaveWolves(MyWolfPlugin.MWWolvesConfig);
                     return true;
                 }
                 else

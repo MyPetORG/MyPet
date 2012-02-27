@@ -212,7 +212,7 @@ public class MyWolfPlayerListener implements Listener
                 }
             }
             MWolf.StopTimer();
-            MyWolfPlugin.Plugin.SaveWolves(MyWolfPlugin.MWWolvesConfig);
+            MyWolfPlugin.getPlugin().SaveWolves(MyWolfPlugin.MWWolvesConfig);
         }
     }
 

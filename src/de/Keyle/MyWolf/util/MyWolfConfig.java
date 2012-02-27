@@ -104,7 +104,7 @@ public class MyWolfConfig
         list.add("Damage");
         setProperty("MyWolf.skills.6", list);
         */
-        MyWolfPlugin.Plugin.saveConfig();
+        MyWolfPlugin.getPlugin().saveConfig();
     }
 
     public static void loadConfiguration()
