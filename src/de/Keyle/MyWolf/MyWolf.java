@@ -38,7 +38,6 @@ public class MyWolf
 {
     public String Name = "Wolf";
     public final String Owner;
-    private int ID;
     public int HealthNow;
     public int HealthMax = 20;
     public CraftMyWolf Wolf;
@@ -128,7 +127,6 @@ public class MyWolf
                 MWentityMyWolf.setLocation(Location);
                 mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
-                ID = Wolf.getEntityId();
                 Wolf.setSitting(sitting);
                 Status = WolfState.Here;
             }
@@ -145,7 +143,6 @@ public class MyWolf
         mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
         wolf.remove();
         Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
-        ID = Wolf.getEntityId();
         Location = Wolf.getLocation();
         Status = WolfState.Here;
         Wolf.setSitting(true);
@@ -178,18 +175,6 @@ public class MyWolf
         else
         {
             return HealthNow;
-        }
-    }
-
-    public int getEntityId()
-    {
-        if (Status == WolfState.Here)
-        {
-            return Wolf.getEntityId();
-        }
-        else
-        {
-            return ID;
         }
     }
 

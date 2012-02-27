@@ -60,7 +60,7 @@ public class MyWolfList
     {
         for(MyWolf wolf : lWolves)
         {
-            if(wolf.getEntityId() == EntityID)
+            if(wolf.Wolf.getEntityId() == EntityID)
             {
                 return wolf;
             }
