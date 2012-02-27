@@ -47,17 +47,17 @@ public class CommandInfo implements CommandExecutor
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(playerName);
                 String msg;
-                if (MWolf.getHealth() > MWolf.HealthMax / 3 * 2)
+                if (MWolf.getHealth() > MWolf.getMaxHealth() / 3 * 2)
                 {
-                    msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                 }
-                else if (MWolf.getHealth() > MWolf.HealthMax / 3)
+                else if (MWolf.getHealth() > MWolf.getMaxHealth() / 3)
                 {
-                    msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                 }
                 else
                 {
-                    msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                    msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                 }
                 player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
                 if (MyWolfConfig.LevelSystem)

@@ -36,8 +36,7 @@ public class MyWolf
 {
     public String Name = "Wolf";
     public final String Owner;
-    public int HealthNow;
-    public int HealthMax = 20;
+    public int Health;
     public CraftMyWolf Wolf;
     public int RespawnTime = 0;
 
@@ -89,7 +88,7 @@ public class MyWolf
     public void removeWolf()
     {
         isSitting = Wolf.isSitting();
-        HealthNow = Wolf.getHealth();
+        Health = Wolf.getHealth();
         Location = Wolf.getLocation();
         Status = WolfState.Despawned;
         Wolf.remove();
@@ -103,7 +102,7 @@ public class MyWolf
             getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
             createWolf(false);
             RespawnTime = 0;
-            HealthNow = HealthMax;
+            Health = getMaxHealth();
         }
     }
 
@@ -142,17 +141,17 @@ public class MyWolf
 
     public void setHealth(int d)
     {
-        if (d > HealthMax)
+        if (d > getMaxHealth())
         {
-            HealthNow = HealthMax;
+            Health = getMaxHealth();
         }
         else
         {
-            HealthNow = d;
+            Health = d;
         }
         if (Status == WolfState.Here)
         {
-            Wolf.setHealth(HealthNow);
+            Wolf.setHealth(Health);
         }
     }
 
@@ -165,8 +164,12 @@ public class MyWolf
         }
         else
         {
-            return HealthNow;
+            return Health;
         }
+    }
+    public int getMaxHealth()
+    {
+        return MyWolfConfig.StartHP + (SkillSystem.hasSkill("HP")?SkillSystem.getSkill("HP").getLevel():0);
     }
 
     public Location getLocation()

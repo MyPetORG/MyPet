@@ -56,7 +56,7 @@ public class EntityMyWolf extends EntityWolf
                 this.setTamed(true);
                 this.setPathEntity(null);
                 this.setSitting(MWolf.isSitting());
-                this.setHealth(MWolf.HealthNow);
+                this.setHealth(getMaxHealth());
                 this.setOwnerName(MWolf.getOwnerName());
                 this.world.a(this, (byte) 7);
             }
@@ -65,7 +65,14 @@ public class EntityMyWolf extends EntityWolf
 
     public int getMaxHealth()
     {
-        return this.isTamed() ? (this.isMyWolf ? MWolf.HealthMax : 20) : 8;
+        if(isMyWolf)
+        {
+            return MyWolfConfig.StartHP + (MWolf.SkillSystem.hasSkill("HP")?MWolf.SkillSystem.getSkill("HP").getLevel():0);
+        }
+        else
+        {
+            return this.isTamed() ? 20 : 8;
+        }
     }
 
     public void b(NBTTagCompound nbttagcompound)

@@ -82,17 +82,17 @@ public class MyWolfEntityListener implements Listener
                     if (damager.getItemInHand().getType() == MyWolfConfig.LeashItem)
                     {
                         String msg;
-                        if (MWolf.getHealth() > MWolf.HealthMax / 3 * 2)
+                        if (MWolf.getHealth() > MWolf.getMaxHealth() / 3 * 2)
                         {
-                            msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                            msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                         }
-                        else if (MWolf.getHealth() > MWolf.HealthMax / 3)
+                        else if (MWolf.getHealth() > MWolf.getMaxHealth() / 3)
                         {
-                            msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                            msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                         }
                         else
                         {
-                            msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.HealthMax + ChatColor.WHITE;
+                            msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                         }
                         damager.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
                         if (MyWolfConfig.LevelSystem)
@@ -114,9 +114,9 @@ public class MyWolfEntityListener implements Listener
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
-                    if (MWolf.getHealth() > MWolf.HealthMax)
+                    if (MWolf.getHealth() > MWolf.getMaxHealth())
                     {
-                        MWolf.setHealth(MWolf.HealthMax);
+                        MWolf.setHealth(MWolf.getMaxHealth());
                     }
 
                     if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
