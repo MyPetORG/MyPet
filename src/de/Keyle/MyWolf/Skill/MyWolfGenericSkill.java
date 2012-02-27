@@ -20,7 +20,8 @@
 package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
+import net.minecraft.server.NBTTagCompound;
 
 public class MyWolfGenericSkill
 {
@@ -58,11 +59,15 @@ public class MyWolfGenericSkill
         this.Level++;
     }
 
-    public void save(MyWolfConfiguration configuration)
+    public void save(NBTTagCompound nbtTagCompound)
     {
     }
 
-    public void load(MyWolfConfiguration configuration)
+    public void load(MyWolfYamlConfiguration configuration)
+    {
+    }
+
+    public void load(NBTTagCompound nbtTagCompound)
     {
     }
 

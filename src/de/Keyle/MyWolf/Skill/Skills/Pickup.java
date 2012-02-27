@@ -22,7 +22,8 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.*;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
+import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet22Collect;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -110,7 +111,7 @@ public class Pickup extends MyWolfGenericSkill
     }
 
     @Override
-    public void load(MyWolfConfiguration configuration)
+    public void load(MyWolfYamlConfiguration configuration)
     {
         if(configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".pickup","QwE").equals("QwE"))
         {
@@ -123,8 +124,14 @@ public class Pickup extends MyWolfGenericSkill
     }
 
     @Override
-    public void save(MyWolfConfiguration configuration)
+    public void load(NBTTagCompound nbtTagCompound)
     {
-        configuration.getConfig().set("Wolves." + MWolf.getOwnerName() + ".skills.pickup", Pickup);
+        Pickup = nbtTagCompound.getBoolean("Activ");
+    }
+
+    @Override
+    public void save(NBTTagCompound nbtTagCompound)
+    {
+        nbtTagCompound.setBoolean("Activ", Pickup);
     }
 }

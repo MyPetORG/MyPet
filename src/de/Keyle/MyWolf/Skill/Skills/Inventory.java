@@ -22,12 +22,13 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
+import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -97,7 +98,7 @@ public class Inventory extends MyWolfGenericSkill
     }
     
     @Override
-    public void load(MyWolfConfiguration configuration)
+    public void load(MyWolfYamlConfiguration configuration)
     {
         String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".inventory", "QwE");
         if(!Sinv.equals("QwE"))
@@ -139,23 +140,15 @@ public class Inventory extends MyWolfGenericSkill
     }
 
     @Override
-    public void save(MyWolfConfiguration configuration)
+    public void load(NBTTagCompound nbtTagCompound)
     {
-        File invFile;
-        try
-        {
-            invFile = new File(PathToInventory + File.separator + MWolf.getOwnerName() + ".MyWolfInventory");
-            if(!invFile.exists())
-            {
-                invFile.createNewFile();
-            }
-            inv.save(invFile);
-        }
-        catch (IOException e)
-        {
-            MyWolfUtil.getLogger().info("[MyWolf] Can't save " + MWolf.getOwnerName() + ".MyWolfInventory" );
-            e.printStackTrace();
-        }
+        inv.load(nbtTagCompound);
+    }
+
+    @Override
+    public void save(NBTTagCompound nbtTagCompound)
+    {
+        inv.save(nbtTagCompound);
     }
     
     @Override

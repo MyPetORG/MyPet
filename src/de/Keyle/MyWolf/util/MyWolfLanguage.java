@@ -19,16 +19,16 @@
 
 package de.Keyle.MyWolf.util;
 
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyWolfLanguage
 {
-    private final MyWolfConfiguration MWC;
+    private final MyWolfYamlConfiguration MWC;
 
-    public MyWolfLanguage(MyWolfConfiguration MWC)
+    public MyWolfLanguage(MyWolfYamlConfiguration MWC)
     {
         this.MWC = MWC;
     }

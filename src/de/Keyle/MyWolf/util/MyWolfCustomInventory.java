@@ -184,6 +184,23 @@ public class MyWolfCustomInventory implements IInventory
         F_Out.close();
     }
 
+    public void save(NBTTagCompound nbtTagCompound)
+    {
+        NBTTagList Items = new NBTTagList();
+        for (int i = 0; i < this.Items.size(); i++)
+        {
+            ItemStack itemStack = this.Items.get(i);
+            if (itemStack != null)
+            {
+                NBTTagCompound Item = new NBTTagCompound();
+                Item.setByte("Slot", (byte)i);
+                itemStack.b(Item);
+                Items.add(Item);
+            }
+        }
+        nbtTagCompound.set("Items", Items);
+    }
+
     public void load(File file) throws IOException
     {
         DataInputStream F_In = new DataInputStream( new FileInputStream(file));
@@ -205,6 +222,26 @@ public class MyWolfCustomInventory implements IInventory
             }
         }
         F_In.close();
+    }
+
+    public void load(NBTTagCompound nbtTagCompound)
+    {
+        NBTTagList Items = nbtTagCompound.getList("Items");
+
+        for (int i = 0; i < Items.size(); i++)
+        {
+            NBTTagCompound Item = (NBTTagCompound) Items.get(i);
+
+            ItemStack itemStack = ItemStack.a(Item);
+            if(Item.getByte("Slot") < this.Items.size() )
+            {
+                this.Items.set(Item.getByte("Slot"), itemStack);
+            }
+            else
+            {
+                this.Items.add(Item.getByte("Slot"), itemStack);
+            }
+        }
     }
 
     public void update()

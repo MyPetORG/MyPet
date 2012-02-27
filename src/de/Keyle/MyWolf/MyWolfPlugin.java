@@ -29,8 +29,9 @@ import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
-import net.minecraft.server.EntityTypes;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;
+import net.minecraft.server.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,12 +46,13 @@ import java.util.Set;
 public class MyWolfPlugin extends JavaPlugin
 {
     private static MyWolfPlugin Plugin;
-    public static MyWolfConfiguration MWWolvesConfig;
     public static MyWolfLanguage MWLanguage;
 
     private MyWolfTimer Timer = new MyWolfTimer();
 
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+
+    public static File NBTWolvesFile;
 
     public static MyWolfPlugin getPlugin()
     {
@@ -59,7 +61,7 @@ public class MyWolfPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        SaveWolves(MWWolvesConfig);
+        saveWolves(NBTWolvesFile);
         for (MyWolf MWolf : MyWolfList.getMyWolfList())
         {
             if (MWolf.Status == WolfState.Here)
@@ -109,7 +111,8 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
 
-        MyWolfConfiguration MWSkillTreeConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+        MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+
         MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
         MyWolfSkillTreeConfigLoader.loadSkillTrees();
 
@@ -153,10 +156,10 @@ public class MyWolfPlugin extends JavaPlugin
             MyWolfPermissions.setup();
         }
 
-        MWLanguage = new MyWolfLanguage(new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
+        MWLanguage = new MyWolfLanguage(new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
         MWLanguage.loadVariables();
 
-        MWWolvesConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
+        
 
         if (MyWolfConfig.LevelSystem)
         {
@@ -171,14 +174,93 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
 
-        LoadWolves(MWWolvesConfig);
+        File MWWolvesConfigFile = new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
+        NBTWolvesFile = new File(this.getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
+
+        if(MWWolvesConfigFile.exists())
+        {
+            MyWolfYamlConfiguration MWWolvesConfig = new MyWolfYamlConfiguration(MWWolvesConfigFile);
+            loadWolves(MWWolvesConfig);
+            MWWolvesConfigFile.renameTo(new File(this.getDataFolder().getPath() + File.separator + "oldWolves.yml"));
+        }
+        else
+        {
+            loadWolves(NBTWolvesFile);
+        }
 
         Timer.startTimer();
+
+
 
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
-    void LoadWolves(MyWolfConfiguration MWC)
+    void loadWolves(File f)
+    {
+        int anzahlWolves = 0;
+
+        MyWolfNBTConfiguration nbtConfiguration = new MyWolfNBTConfiguration(f);
+        nbtConfiguration.load();
+        NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Wolves");
+
+        for (int i = 0; i < Wolves.size(); i++)
+        {
+            NBTTagCompound MWolfNBT = (NBTTagCompound) Wolves.get(i);
+            NBTTagCompound Location = MWolfNBT.getCompound("Location");
+
+            double WolfX = Location.getDouble("X");
+            double WolfY = Location.getDouble("Y");
+            double WolfZ = Location.getDouble("Z");
+            String WolfWorld = Location.getString("World");
+            double WolfEXP = MWolfNBT.getDouble("Exp");
+            int WolfHealthNow = MWolfNBT.getInt("Health");
+            int WolfRespawnTime = MWolfNBT.getInt("Respawntime");
+            String WolfName = MWolfNBT.getString("Name");
+            String Owner = MWolfNBT.getString("Owner");
+            boolean WolfSitting = MWolfNBT.getBoolean("Sitting");
+
+            if (getServer().getWorld(WolfWorld) == null)
+            {
+                MyWolfUtil.getLogger().info("[MyWolf] World \"" + WolfWorld + "\" for " + Owner + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
+                continue;
+            }
+
+            MyWolfUtil.getLogger().info("-- " +  Owner + " " + WolfName + " " + WolfEXP + " " + WolfHealthNow + " " + WolfWorld);
+
+            MyWolf MWolf = new MyWolf(Owner);
+
+            MyWolfList.addMyWolf(MWolf);
+
+            MWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
+
+            MWolf.setHealth(WolfHealthNow);
+            MWolf.RespawnTime = WolfRespawnTime;
+            if (WolfRespawnTime > 0)
+            {
+                MWolf.Status = WolfState.Dead;
+            }
+            else
+            {
+                MWolf.Status = WolfState.Despawned;
+            }
+            MWolf.SetName(WolfName);
+            MWolf.setSitting(WolfSitting);
+            MWolf.Experience.setExp(WolfEXP);
+
+            Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
+            if(Skills.size() > 0)
+            {
+                for(MyWolfGenericSkill Skill : Skills)
+                {
+                    Skill.load(MWolfNBT.getCompound("Skills").getCompound(Skill.getName()));
+                }
+            }
+            anzahlWolves++;
+        }
+        MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+    }
+
+    void loadWolves(MyWolfYamlConfiguration MWC)
     {
         int anzahlWolves = 0;
         if(MWC.getConfig().contains("Wolves"))
@@ -239,32 +321,44 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
     }
 
-    public void SaveWolves(MyWolfConfiguration MWC)
+    public void saveWolves(File f)
     {
-        MWC.clearConfig();
+        MyWolfNBTConfiguration nbtConfiguration = new MyWolfNBTConfiguration(f);
+        NBTTagList Wolves = new NBTTagList();
         for (MyWolf MWolf : MyWolfList.getMyWolfList())
         {
-            String owner = MWolf.getOwnerName();
-            MWC.getConfig().set("Wolves." + owner + ".loc.X", MWolf.getLocation().getX());
-            MWC.getConfig().set("Wolves." + owner + ".loc.Y", MWolf.getLocation().getY());
-            MWC.getConfig().set("Wolves." + owner + ".loc.Z", MWolf.getLocation().getZ());
-            MWC.getConfig().set("Wolves." + owner + ".loc.world", MWolf.getLocation().getWorld().getName());
 
-            MWC.getConfig().set("Wolves." + owner + ".health.now", MWolf.getHealth());
-            MWC.getConfig().set("Wolves." + owner + ".health.respawntime", MWolf.RespawnTime);
-            MWC.getConfig().set("Wolves." + owner + ".name", MWolf.Name);
-            MWC.getConfig().set("Wolves." + owner + ".sitting", MWolf.isSitting());
-            MWC.getConfig().set("Wolves." + owner + ".exp", MWolf.Experience.getExp());
+            NBTTagCompound Wolf = new NBTTagCompound();
 
+            NBTTagCompound Location = new NBTTagCompound("Location");
+            Location.setDouble("X", MWolf.getLocation().getX());
+            Location.setDouble("Y", MWolf.getLocation().getY());
+            Location.setDouble("Z", MWolf.getLocation().getZ());
+            Location.setString("World", MWolf.getLocation().getWorld().getName());
+
+            Wolf.setString("Owner",  MWolf.getOwnerName());
+            Wolf.setCompound("Location", Location);
+            Wolf.setInt("Health", MWolf.getHealth());
+            Wolf.setInt("Respawntime", MWolf.RespawnTime);
+            Wolf.setString("Name", MWolf.Name);
+            Wolf.setBoolean("Sitting", MWolf.isSitting());
+            Wolf.setDouble("Exp", MWolf.Experience.getExp());
+
+            NBTTagCompound SkillsNBTTagCompound = new NBTTagCompound("Skills");
             Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
             if(Skills.size() > 0)
             {
                 for(MyWolfGenericSkill Skill : Skills)
                 {
-                    Skill.save(MWC);
+                    NBTTagCompound s = new NBTTagCompound(Skill.getName());
+                    Skill.save(s);
+                    SkillsNBTTagCompound.set(Skill.getName(), s);
                 }
             }
+            Wolf.set("Skills",SkillsNBTTagCompound);
+            Wolves.add(Wolf);
         }
-        MWC.saveConfig();
+        nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
+        nbtConfiguration.save();
     }
 }

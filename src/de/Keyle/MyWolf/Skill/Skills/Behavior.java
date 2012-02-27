@@ -20,15 +20,14 @@
 package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.NBTTagCompound;
 
 public class Behavior extends MyWolfGenericSkill
 {
     private BehaviorState Behavior = BehaviorState.Normal;
-
-    //private int schedulerCounter = 0;
 
     public static enum BehaviorState
     {
@@ -104,32 +103,8 @@ public class Behavior extends MyWolfGenericSkill
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
         }
     }
-    /*
-    @Override
-    public void schedule()
-    {
-        schedulerCounter++;
-        if(schedulerCounter >= 10)
-        {
-            schedulerCounter = 0;
-            if (Behavior == BehaviorState.Aggressive)
-            {
-                if (MWolf.Wolf.getTarget() == null || MWolf.Wolf.getTarget().isDead())
-                {
-                    for (Entity e : MWolf.Wolf.getNearbyEntities(10, 10, 10))
-                    {
-                        if (MyWolfUtil.getCreatureType(e) != null)
-                        {
-                            MWolf.Wolf.setTarget((LivingEntity) e);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    */
 
-    public void load(MyWolfConfiguration configuration)
+    public void load(MyWolfYamlConfiguration configuration)
     {
         String b = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".behavior", "QwE");
         if(b.equals("QwE"))
@@ -140,8 +115,14 @@ public class Behavior extends MyWolfGenericSkill
     }
 
     @Override
-    public void save(MyWolfConfiguration configuration)
+    public void load(NBTTagCompound nbtTagCompound)
     {
-        configuration.getConfig().set("Wolves." + MWolf.getOwnerName() + ".skills.behavior", Behavior.name());
+        Behavior = BehaviorState.valueOf(nbtTagCompound.getString("Mode"));
+    }
+
+    @Override
+    public void save(NBTTagCompound nbtTagCompound)
+    {
+        nbtTagCompound.setString("Mode", Behavior.name());
     }
 }

@@ -25,12 +25,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class MyWolfConfiguration
+public class MyWolfYamlConfiguration
 {
     public File ConfigFile;
     private FileConfiguration Config;
 
-    public MyWolfConfiguration(String Path)
+    public MyWolfYamlConfiguration(String Path)
     {
         ConfigFile = new File(Path);
         Config = new YamlConfiguration();
@@ -41,7 +41,7 @@ public class MyWolfConfiguration
         catch (Exception ignored) {}
     }
     
-    public MyWolfConfiguration(File f)
+    public MyWolfYamlConfiguration(File f)
     {
         ConfigFile = f;
         Config = new YamlConfiguration();

@@ -21,7 +21,7 @@ package de.Keyle.MyWolf.util;
 
 
 import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
-import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -33,9 +33,9 @@ public class MyWolfSkillTreeConfigLoader
     private static Map<String, MyWolfSkillTree> SkillTrees = new HashMap<String, MyWolfSkillTree>();
     private static Map<String, String> Inheritances = new HashMap<String, String>();
 
-    private static MyWolfConfiguration MWConfig = null;
+    private static MyWolfYamlConfiguration MWConfig = null;
 
-    public static void setConfig(MyWolfConfiguration newMWConfig)
+    public static void setConfig(MyWolfYamlConfiguration newMWConfig)
     {
         MWConfig = newMWConfig;
     }

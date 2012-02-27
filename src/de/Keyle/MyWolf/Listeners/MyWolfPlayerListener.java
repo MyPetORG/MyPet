@@ -206,7 +206,7 @@ public class MyWolfPlayerListener implements Listener
                     MWolf.setLocation(event.getPlayer().getLocation());
                 }
             }
-            MyWolfPlugin.getPlugin().SaveWolves(MyWolfPlugin.MWWolvesConfig);
+            MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
         }
     }
 
