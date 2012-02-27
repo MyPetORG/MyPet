@@ -32,8 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-import java.util.Collection;
-
 public class MyWolf
 {
     public String Name = "Wolf";
@@ -42,8 +40,6 @@ public class MyWolf
     public int HealthMax = 20;
     public CraftMyWolf Wolf;
     public int RespawnTime = 0;
-
-    private int Timer = -1;
 
     private int SitTimer = MyWolfConfig.SitdownTime;
     private boolean isSitting = false;
@@ -92,7 +88,6 @@ public class MyWolf
 
     public void removeWolf()
     {
-        StopTimer();
         isSitting = Wolf.isSitting();
         HealthNow = Wolf.getHealth();
         Location = Wolf.getLocation();
@@ -130,7 +125,6 @@ public class MyWolf
                 Wolf.setSitting(sitting);
                 Status = WolfState.Here;
             }
-            Timer();
         }
     }
 
@@ -146,7 +140,6 @@ public class MyWolf
         Location = Wolf.getLocation();
         Status = WolfState.Here;
         Wolf.setSitting(true);
-        Timer();
     }
 
     public void setHealth(int d)
@@ -226,72 +219,38 @@ public class MyWolf
 
     public void ResetSitTimer()
     {
-        if(MyWolfConfig.SitdownTime > 0)
-        {
-            SitTimer = MyWolfConfig.SitdownTime;
-        }
+        SitTimer = MyWolfConfig.SitdownTime;
     }
 
-    public void StopTimer()
+    public void scheduleTask()
     {
-        if (Timer != -1)
+        if (Status != WolfState.Despawned && getOwner() != null)
         {
-            MyWolfPlugin.getPlugin().getServer().getScheduler().cancelTask(Timer);
-            Timer = -1;
-        }
-    }
-
-    public void Timer()
-    {
-    	
-        if (Status != WolfState.Despawned)
-        {
-            if (Timer != -1)
+            if(SkillSystem.getSkills().size() > 0)
             {
-                StopTimer();
-            }
-
-            Timer = MyWolfPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.getPlugin(), new Runnable()
-            {
-                Collection<MyWolfGenericSkill> Skills = SkillSystem.getSkills();
-
-                public void run()
+                for(MyWolfGenericSkill skill : SkillSystem.getSkills())
                 {
-                    if (Status == WolfState.Despawned || getOwner() == null)
-                    {
-                        StopTimer();
-                    }
-                    else
-                    {
-
-                        if(Skills.size() > 0)
-                        {
-                            for(MyWolfGenericSkill skill : Skills)
-                            {
-                                skill.schedule();
-                            }
-                        }
-                        if (Status == WolfState.Here)
-                        {
-
-                            SitTimer--;
-                            if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
-                            {
-                                Wolf.setSitting(true);
-                                SitTimer = MyWolfConfig.SitdownTime;
-                            }
-                        }
-                        else if (Status == WolfState.Dead)
-                        {
-                            RespawnTime--;
-                            if (RespawnTime <= 0)
-                            {
-                                RespawnWolf();
-                            }
-                        }
-                    }
+                    skill.schedule();
                 }
-            }, 0L, 20L);
+            }
+            if (Status == WolfState.Here)
+            {
+
+                SitTimer--;
+                if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
+                {
+                    Wolf.setSitting(true);
+                    ResetSitTimer();
+                }
+            }
+            else if (Status == WolfState.Dead)
+            {
+                RespawnTime--;
+                if (RespawnTime <= 0)
+                {
+                    RespawnWolf();
+                }
+            }
         }
     }
 

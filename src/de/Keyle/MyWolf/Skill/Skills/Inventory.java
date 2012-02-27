@@ -22,7 +22,7 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;

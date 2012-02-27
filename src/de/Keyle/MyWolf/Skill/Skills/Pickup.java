@@ -22,6 +22,7 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.*;
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
 import net.minecraft.server.Packet22Collect;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;

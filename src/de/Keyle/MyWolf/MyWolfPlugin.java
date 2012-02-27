@@ -29,6 +29,7 @@ import de.Keyle.MyWolf.Skill.Skills.*;
 import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
 import net.minecraft.server.EntityTypes;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -46,6 +47,8 @@ public class MyWolfPlugin extends JavaPlugin
     private static MyWolfPlugin Plugin;
     public static MyWolfConfiguration MWWolvesConfig;
     public static MyWolfLanguage MWLanguage;
+
+    private MyWolfTimer Timer = new MyWolfTimer();
 
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
 
@@ -65,7 +68,7 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
         
-        getServer().getScheduler().cancelTasks(this);
+        Timer.stopTimer();
         MyWolfList.clearList();
         WolfChestOpened.clear();
         
@@ -169,6 +172,8 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         LoadWolves(MWWolvesConfig);
+
+        Timer.startTimer();
 
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }

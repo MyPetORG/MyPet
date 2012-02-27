@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.util;
+package de.Keyle.MyWolf.util.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

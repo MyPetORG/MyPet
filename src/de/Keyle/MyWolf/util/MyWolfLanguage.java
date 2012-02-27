@@ -19,6 +19,8 @@
 
 package de.Keyle.MyWolf.util;
 
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
+
 import java.util.HashMap;
 import java.util.Map;
 

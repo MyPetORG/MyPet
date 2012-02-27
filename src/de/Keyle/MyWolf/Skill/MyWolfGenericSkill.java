@@ -20,7 +20,7 @@
 package de.Keyle.MyWolf.Skill;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.util.MyWolfConfiguration;
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
 
 public class MyWolfGenericSkill
 {

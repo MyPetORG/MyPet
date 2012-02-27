@@ -21,6 +21,7 @@ package de.Keyle.MyWolf.util;
 
 
 import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
+import de.Keyle.MyWolf.util.configuration.MyWolfConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
