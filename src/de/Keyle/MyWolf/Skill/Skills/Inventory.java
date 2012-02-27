@@ -22,10 +22,10 @@ package de.Keyle.MyWolf.Skill.Skills;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.NBTTagCompound;
@@ -33,24 +33,13 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
-
 public class Inventory extends MyWolfGenericSkill
 {
     public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory",0);
-    String PathToInventory;
 
     public Inventory()
     {
         super("Inventory");
-
-        PathToInventory = MyWolfPlugin.getPlugin().getDataFolder().getPath() + File.separator + "Inventory";
-        File pti = new File(PathToInventory);
-        if(!pti.exists())
-        {
-            pti.mkdirs();
-        }
     }
 
     @Override
@@ -120,21 +109,6 @@ public class Inventory extends MyWolfGenericSkill
                         }
                     }
                 }
-            }
-        }
-        else
-        {
-            try
-            {
-                File invFile = new File(PathToInventory + File.separator + MWolf.getOwnerName() + ".MyWolfInventory");
-                if(invFile.exists())
-                {
-                    inv.load(invFile);
-                }
-            }
-            catch (IOException e)
-            {
-                MyWolfUtil.getLogger().info("[MyWolf] Can't load " + MWolf.getOwnerName() + ".MyWolfInventory" );
             }
         }
     }

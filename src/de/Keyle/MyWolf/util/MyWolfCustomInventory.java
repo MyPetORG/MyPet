@@ -155,7 +155,12 @@ public class MyWolfCustomInventory implements IInventory
 
     public ItemStack[] getContents()
     {
-        return (ItemStack[])Items.toArray();
+        ItemStack[] itemStack = new ItemStack[getSize()];
+        for(int i = 0; i < getSize(); i++)
+        {
+            itemStack[i] = Items.get(i);
+        }
+        return itemStack;
     }
 
     public int getMaxStackSize()

@@ -123,6 +123,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfSkillSystem.registerSkill(Behavior.class);
         MyWolfSkillSystem.registerSkill(Damage.class);
         MyWolfSkillSystem.registerSkill(Control.class);
+        MyWolfSkillSystem.registerSkill(HP.class);
 
         try
         {
@@ -135,7 +136,7 @@ public class MyWolfPlugin extends JavaPlugin
 
             Method a = EntityTypes.class.getDeclaredMethod("a", args);
             a.setAccessible(true);
-            a.invoke(a, new Object[] { EntityMyWolf.class, "Wolf", 95, 14144467, 13545366});
+            a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
         }
         catch (Exception e)
         {

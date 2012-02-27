@@ -49,6 +49,6 @@ public class MyWolfLevelUpListener implements Listener
             }
         }
 
-        MWolf.setHealth(MWolf.Wolf.getMaxHealth());
+        MWolf.setHealth(MWolf.getMaxHealth());
     }
 }
