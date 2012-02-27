@@ -155,8 +155,6 @@ public class MyWolfPlugin extends JavaPlugin
 
         MWWolvesConfig = new MyWolfConfiguration(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
 
-        LoadWolves(MWWolvesConfig);
-
         if (MyWolfConfig.LevelSystem)
         {
             try
@@ -166,9 +164,11 @@ public class MyWolfPlugin extends JavaPlugin
             catch (Exception e)
             {
                 MyWolfExperience.JSreader = null;
-                MyWolfUtil.getLogger().info("[MyWolf] EXP-Script not found (exp.js).");
+                MyWolfUtil.getLogger().info("[MyWolf] No custom EXP-Script found (exp.js).");
             }
         }
+
+        LoadWolves(MWWolvesConfig);
 
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
