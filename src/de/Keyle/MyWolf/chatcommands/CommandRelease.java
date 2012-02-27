@@ -64,7 +64,6 @@ public class CommandRelease implements CommandExecutor
                 if (MWolf.Name.equalsIgnoreCase(name))
                 {
                     MWolf.Wolf.setOwner(null);
-                    MWolf.StopTimer();
                     /*
                     for (ItemStack is : MWolf.inv.getContents())
                     {

@@ -159,7 +159,6 @@ public class MyWolfPlayerListener implements Listener
             if (MWolf.Status == WolfState.Dead)
             {
                 event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
-                MWolf.Timer();
             }
             else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
             {
@@ -180,11 +179,7 @@ public class MyWolfPlayerListener implements Listener
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
-            if (MWolf.Status == WolfState.Dead)
-            {
-                MWolf.Timer();
-            }
-            else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
+            if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
             {
                 MWolf.ResetSitTimer();
                 MWolf.createWolf(MWolf.isSitting());
@@ -211,7 +206,6 @@ public class MyWolfPlayerListener implements Listener
                     MWolf.setLocation(event.getPlayer().getLocation());
                 }
             }
-            MWolf.StopTimer();
             MyWolfPlugin.getPlugin().SaveWolves(MyWolfPlugin.MWWolvesConfig);
         }
     }
