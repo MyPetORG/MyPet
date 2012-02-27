@@ -39,6 +39,12 @@ public class EntityMyWolf extends EntityWolf
         super(world);
     }
 
+    public EntityMyWolf(World world, MyWolf MWolf)
+    {
+        super(world);
+        setMyWolf(MWolf);
+    }
+
     public void setMyWolf(MyWolf MWolf)
     {
         if (MWolf != null)

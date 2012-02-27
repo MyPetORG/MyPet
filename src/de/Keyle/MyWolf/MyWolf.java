@@ -117,8 +117,7 @@ public class MyWolf
             if (RespawnTime <= 0)
             {
                 net.minecraft.server.World mcWorld = ((CraftWorld)Location.getWorld()).getHandle();
-                EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld);
-                MWentityMyWolf.setMyWolf(this);
+                EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld, this);
                 MWentityMyWolf.setLocation(Location);
                 mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
@@ -131,8 +130,7 @@ public class MyWolf
     public void createWolf(Wolf wolf)
     {
         net.minecraft.server.World mcWorld = ((CraftWorld)wolf.getWorld()).getHandle();
-        EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld);
-        MWentityMyWolf.setMyWolf(this);
+        EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld, this);
         MWentityMyWolf.setLocation(wolf.getLocation());
         mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
         wolf.remove();
