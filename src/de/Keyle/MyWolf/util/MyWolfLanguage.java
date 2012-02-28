@@ -76,9 +76,8 @@ public class MyWolfLanguage
         addString("Msg_Call", "MyWolf.Message.call", "%aqua%%wolfname%%white% comes to you.");
         addString("Msg_Home", "MyWolf.Message.call", "%aqua%%wolfname%%white% go to home.");
         addString("Msg_CallFirst", "MyWolf.Message.callfirst", "You must call %aqua%%wolfname%%white% first.");
-        addString("Msg_UserDontHaveWolf", "MyWolf.Message.userdonthavewolf", "This user doesn't have a MyWolf!");
+        addString("Msg_UserDontHaveWolf", "MyWolf.Message.userdonthavewolf", "%gold%%playername%%white% doesn't have a MyWolf!");
         addString("Msg_DontHaveWolf", "MyWolf.Message.donthavewolf", "You don't have a MyWolf!");
-        addString("Msg_OtherDontHaveWolf", "MyWolf.Message.otherdonthavewolf", "%aqua%%playername%%white% don't have a MyWolf!");
         addString("Msg_NewName", "MyWolf.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
         addString("Msg_Name", "MyWolf.Message.name", "The name of your wolf is: %aqua%%wolfname%");
         addString("Msg_Release", "MyWolf.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");

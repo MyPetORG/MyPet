@@ -75,7 +75,7 @@ public class CommandInfo implements CommandExecutor
             {
             	if(args != null && args.length > 0)
                 {
-            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OtherDontHaveWolf").replace("%playername%", playerName)));
+            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
                 }
             	else
                 {
