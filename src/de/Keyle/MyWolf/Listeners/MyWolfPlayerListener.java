@@ -141,18 +141,10 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        // For the future -> client mod
-        /*
-        String EntityIDs = MWolf.getID() + "\0";
-        for(MyWolf MW : MyWolfList.getMyWolfList())
+        if(MyWolfList.hasInactiveMyWolf(event.getPlayer()))
         {
-            if(w.Status == WolfState.Here)
-            {
-                EntityIDs += w.getID() + "\0";
-            }
+            MyWolfList.setMyWolfActive(event.getPlayer(),true);
         }
-        event.getPlayer().sendPluginMessage(MyWolfPlugin.Plugin,"MyWolfByKeyle",EntityIDs.getBytes());
-        */
         if (MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
@@ -170,6 +162,19 @@ public class MyWolfPlayerListener implements Listener
                 MWolf.Status = WolfState.Despawned;
             }
         }
+
+        // For the future -> client mod
+        /*
+        String EntityIDs = MWolf.getID() + "\0";
+        for(MyWolf MW : MyWolfList.getMyWolfList())
+        {
+            if(w.Status == WolfState.Here)
+            {
+                EntityIDs += w.getID() + "\0";
+            }
+        }
+        event.getPlayer().sendPluginMessage(MyWolfPlugin.Plugin,"MyWolfByKeyle",EntityIDs.getBytes());
+        */
     }
 
     @EventHandler()

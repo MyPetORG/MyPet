@@ -120,9 +120,11 @@ public class Inventory extends MyWolfGenericSkill
     }
 
     @Override
-    public void save(NBTTagCompound nbtTagCompound)
+    public NBTTagCompound save()
     {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
         inv.save(nbtTagCompound);
+        return nbtTagCompound;
     }
     
     @Override

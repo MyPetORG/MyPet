@@ -49,11 +49,17 @@ public class InactiveMyWolf
         {
             for(MyWolfGenericSkill Skill : Skills)
             {
-                NBTTagCompound s = new NBTTagCompound(Skill.getName());
-                Skill.save(s);
-                this.NBTSkills.set(Skill.getName(), s);
+                NBTTagCompound s = Skill.save();
+                if(s != null)
+                {
+                    this.NBTSkills.set(Skill.getName(), s);
+                }
             }
         }
+    }
+    public void setSkills(NBTTagCompound Skills)
+    {
+        NBTSkills = Skills;
     }
 
     public NBTTagCompound getSkills()

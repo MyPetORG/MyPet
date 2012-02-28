@@ -36,6 +36,11 @@ public class MyWolfCustomInventory implements IInventory
         setName(Name);
         setSize(Size);
     }
+
+    public MyWolfCustomInventory(String Name)
+    {
+        setName(Name);
+    }
     
     public int getSize()
     {
@@ -76,9 +81,17 @@ public class MyWolfCustomInventory implements IInventory
 
     public void setItem(int i, ItemStack itemStack)
     {
-        if(i<=Size)
+        if(i<Items.size())
         {
             Items.set(i,itemStack);
+        }
+        else
+        {
+            for(int x = Items.size(); x < i;x++)
+            {
+                Items.add(x,null);
+            }
+            Items.add(i,itemStack);
         }
     }
 
@@ -189,7 +202,7 @@ public class MyWolfCustomInventory implements IInventory
         F_Out.close();
     }
 
-    public void save(NBTTagCompound nbtTagCompound)
+    public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
         NBTTagList Items = new NBTTagList();
         for (int i = 0; i < this.Items.size(); i++)
@@ -204,6 +217,7 @@ public class MyWolfCustomInventory implements IInventory
             }
         }
         nbtTagCompound.set("Items", Items);
+        return nbtTagCompound;
     }
 
     public void load(File file) throws IOException
@@ -217,14 +231,7 @@ public class MyWolfCustomInventory implements IInventory
             NBTTagCompound Item = (NBTTagCompound) Items.get(i);
 
             ItemStack itemStack = ItemStack.a(Item);
-            if(Item.getByte("Slot") < this.Items.size() )
-            {
-                this.Items.set(Item.getByte("Slot"), itemStack);
-            }
-            else
-            {
-                this.Items.add(Item.getByte("Slot"), itemStack);
-            }
+            setItem(Item.getByte("Slot"), itemStack);
         }
         F_In.close();
     }
@@ -238,14 +245,7 @@ public class MyWolfCustomInventory implements IInventory
             NBTTagCompound Item = (NBTTagCompound) Items.get(i);
 
             ItemStack itemStack = ItemStack.a(Item);
-            if(Item.getByte("Slot") < this.Items.size() )
-            {
-                this.Items.set(Item.getByte("Slot"), itemStack);
-            }
-            else
-            {
-                this.Items.add(Item.getByte("Slot"), itemStack);
-            }
+            setItem(Item.getByte("Slot"), itemStack);
         }
     }
 

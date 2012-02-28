@@ -32,7 +32,7 @@ import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;
 import net.minecraft.server.*;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -140,6 +140,7 @@ public class MyWolfPlugin extends JavaPlugin
         }
         catch (Exception e)
         {
+            MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
             e.printStackTrace();
             setEnabled(false);
             return;
@@ -218,40 +219,18 @@ public class MyWolfPlugin extends JavaPlugin
             String Owner = MWolfNBT.getString("Owner");
             boolean WolfSitting = MWolfNBT.getBoolean("Sitting");
 
-            if (getServer().getWorld(WolfWorld) == null)
-            {
-                MyWolfUtil.getLogger().info("[MyWolf] World \"" + WolfWorld + "\" for " + Owner + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
-                continue;
-            }
+            InactiveMyWolf IMWolf = new InactiveMyWolf(MyWolfUtil.getOfflinePlayer(Owner));
 
-            MyWolf MWolf = new MyWolf(Plugin.getServer().getOfflinePlayer(Owner));
+            IMWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld)!=null?this.getServer().getWorld(WolfWorld):this.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+            IMWolf.setHealth(WolfHealthNow);
+            IMWolf.setRespawnTime(WolfRespawnTime);
+            IMWolf.setName(WolfName);
+            IMWolf.setSitting(WolfSitting);
+            IMWolf.setExp(WolfEXP);
+            IMWolf.setSkills(MWolfNBT.getCompound("Skills"));
 
-            MyWolfList.addMyWolf(MWolf);
+            MyWolfList.addInactiveMyWolf(IMWolf);
 
-            MWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
-
-            MWolf.setHealth(WolfHealthNow);
-            MWolf.RespawnTime = WolfRespawnTime;
-            if (WolfRespawnTime > 0)
-            {
-                MWolf.Status = WolfState.Dead;
-            }
-            else
-            {
-                MWolf.Status = WolfState.Despawned;
-            }
-            MWolf.SetName(WolfName);
-            MWolf.setSitting(WolfSitting);
-            MWolf.Experience.setExp(WolfEXP);
-
-            Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
-            if(Skills.size() > 0)
-            {
-                for(MyWolfGenericSkill Skill : Skills)
-                {
-                    Skill.load(MWolfNBT.getCompound("Skills").getCompound(Skill.getName()));
-                }
-            }
             anzahlWolves++;
         }
         MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
@@ -277,40 +256,44 @@ public class MyWolfPlugin extends JavaPlugin
                     String WolfName = MWC.getConfig().getString("Wolves." + ownername + ".name", "Wolf");
                     boolean WolfSitting = MWC.getConfig().getBoolean("Wolves." + ownername + ".sitting", false);
 
-                    if (getServer().getWorld(WolfWorld) == null)
+                    NBTTagCompound Skills = new NBTTagCompound("Skills");
+                    if(MWC.getConfig().contains("Wolves." + ownername + ".inventory"))
                     {
-                        MyWolfUtil.getLogger().info("[MyWolf] World \"" + WolfWorld + "\" for " + ownername + "'s wolf \"" + WolfName + "\" not found - skiped wolf");
-                        continue;
-                    }
-
-                    MyWolf MWolf = new MyWolf(Plugin.getServer().getOfflinePlayer(ownername));
-
-                    MyWolfList.addMyWolf(MWolf);
-
-                    MWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld), WolfX, WolfY, WolfZ));
-
-                    MWolf.setHealth(WolfHealthNow);
-                    MWolf.RespawnTime = WolfRespawnTime;
-                    if (WolfRespawnTime > 0)
-                    {
-                        MWolf.Status = WolfState.Dead;
-                    }
-                    else
-                    {
-                        MWolf.Status = WolfState.Despawned;
-                    }
-                    MWolf.SetName(WolfName);
-                    MWolf.setSitting(WolfSitting);
-                    MWolf.Experience.setExp(WolfEXP);
-
-                    Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
-                    if(Skills.size() > 0)
-                    {
-                        for(MyWolfGenericSkill Skill : Skills)
+                        String Sinv = MWC.getConfig().getString("Wolves." + ownername + ".inventory", "QwE");
+                        if(!Sinv.equals("QwE"))
                         {
-                            Skill.load(MWC);
+                            String[] invSplit = Sinv.split(";");
+                            MyWolfCustomInventory inv = new MyWolfCustomInventory(WolfName);
+                            for (int i = 0 ; i < invSplit.length ; i++)
+                            {
+                                String[] itemvalues = invSplit[i].split(",");
+                                if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
+                                {
+                                    if (org.bukkit.Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
+                                    {
+                                        if (Integer.parseInt(itemvalues[1]) <= 64)
+                                        {
+                                            inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
+                                        }
+                                    }
+                                }
+                            }
+                            Skills.set("Inventory",inv.save(new NBTTagCompound("Inventory")));
                         }
                     }
+
+                    InactiveMyWolf IMWolf = new InactiveMyWolf(MyWolfUtil.getOfflinePlayer(ownername));
+
+                    IMWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld)!=null?this.getServer().getWorld(WolfWorld):this.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+                    IMWolf.setHealth(WolfHealthNow);
+                    IMWolf.setRespawnTime(WolfRespawnTime);
+                    IMWolf.setName(WolfName);
+                    IMWolf.setSitting(WolfSitting);
+                    IMWolf.setExp(WolfEXP);
+                    IMWolf.setSkills(Skills);
+
+                    MyWolfList.addInactiveMyWolf(IMWolf);
+
                     anzahlWolves++;
                 }
             }
@@ -347,12 +330,36 @@ public class MyWolfPlugin extends JavaPlugin
             {
                 for(MyWolfGenericSkill Skill : Skills)
                 {
-                    NBTTagCompound s = new NBTTagCompound(Skill.getName());
-                    Skill.save(s);
-                    SkillsNBTTagCompound.set(Skill.getName(), s);
+                    NBTTagCompound s = Skill.save();
+                    if(s != null)
+                    {
+                        SkillsNBTTagCompound.set(Skill.getName(), s);
+                    }
                 }
             }
             Wolf.set("Skills",SkillsNBTTagCompound);
+            Wolves.add(Wolf);
+        }
+        for (InactiveMyWolf IMWolf : MyWolfList.getInactiveMyWolfList())
+        {
+
+            NBTTagCompound Wolf = new NBTTagCompound();
+
+            NBTTagCompound Location = new NBTTagCompound("Location");
+            Location.setDouble("X", IMWolf.getLocation().getX());
+            Location.setDouble("Y", IMWolf.getLocation().getY());
+            Location.setDouble("Z", IMWolf.getLocation().getZ());
+            Location.setString("World", IMWolf.getLocation().getWorld().getName());
+
+            Wolf.setString("Owner",  IMWolf.getOwner().getName());
+            Wolf.setCompound("Location", Location);
+            Wolf.setInt("Health", IMWolf.getHealth());
+            Wolf.setInt("Respawntime", IMWolf.getRespawnTime());
+            Wolf.setString("Name", IMWolf.getName());
+            Wolf.setBoolean("Sitting", IMWolf.isSitting());
+            Wolf.setDouble("Exp", IMWolf.getExp());
+
+            Wolf.set("Skills",IMWolf.getSkills());
             Wolves.add(Wolf);
         }
         nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);

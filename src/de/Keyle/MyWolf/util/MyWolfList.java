@@ -40,22 +40,38 @@ public class MyWolfList
 
     public static MyWolf getMyWolf(InactiveMyWolf IMWolf)
     {
-        MyWolf AMWolf = new MyWolf(IMWolf.getOwner());
-        AMWolf.setHealth(IMWolf.getHealth());
-        AMWolf.setLocation(IMWolf.getLocation());
-        AMWolf.Name = IMWolf.getName();
-        AMWolf.RespawnTime = IMWolf.getRespawnTime();
-        AMWolf.Experience.setExp(IMWolf.getExp());
-        Collection<MyWolfGenericSkill> Skills = AMWolf.SkillSystem.getSkills();
-        if(Skills.size() > 0)
+        if(IMWolf.getOwner().isOnline())
         {
-            for(MyWolfGenericSkill Skill : Skills)
-            {
-                Skill.load(IMWolf.getSkills().getCompound(Skill.getName()));
-            }
-        }
+            MyWolf AMWolf = new MyWolf(IMWolf.getOwner());
+            AMWolf.setHealth(IMWolf.getHealth());
+            AMWolf.setLocation(IMWolf.getLocation());
+            AMWolf.Name = IMWolf.getName();
+            AMWolf.RespawnTime = IMWolf.getRespawnTime();
 
-        return AMWolf;
+            if (AMWolf.RespawnTime > 0)
+            {
+                AMWolf.Status = MyWolf.WolfState.Dead;
+            }
+            else
+            {
+                AMWolf.Status = MyWolf.WolfState.Despawned;
+            }
+
+            AMWolf.Experience.setExp(IMWolf.getExp());
+            Collection<MyWolfGenericSkill> Skills = AMWolf.SkillSystem.getSkills();
+            if(Skills.size() > 0)
+            {
+                for(MyWolfGenericSkill Skill : Skills)
+                {
+                    if(IMWolf.getSkills().hasKey(Skill.getName()))
+                    {
+                        Skill.load(IMWolf.getSkills().getCompound(Skill.getName()));
+                    }
+                }
+            }
+            return AMWolf;
+        }
+        return null;
     }
     
     public static void addMyWolf(MyWolf MW)
@@ -155,7 +171,7 @@ public class MyWolfList
     {
         if(Activate)
         {
-            if(mInctiveWolves.containsKey(Owner))
+            if(mInctiveWolves.containsKey(Owner) && mInctiveWolves.get(Owner).getOwner().isOnline())
             {
                 InactiveMyWolf IMWolf = mInctiveWolves.get(Owner);
                 MyWolf AMWolf = getMyWolf(IMWolf);
@@ -169,6 +185,7 @@ public class MyWolfList
             {
                 MyWolf AMWolf = mActiveWolves.get(Owner);
                 InactiveMyWolf IAMWolf = getInactiveMyWolf(AMWolf);
+                AMWolf.removeWolf();
                 removeMyWolf(AMWolf);
                 addInactiveMyWolf(IAMWolf);
             }

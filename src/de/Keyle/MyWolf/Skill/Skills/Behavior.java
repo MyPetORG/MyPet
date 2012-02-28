@@ -121,8 +121,10 @@ public class Behavior extends MyWolfGenericSkill
     }
 
     @Override
-    public void save(NBTTagCompound nbtTagCompound)
+    public NBTTagCompound save()
     {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
         nbtTagCompound.setString("Mode", Behavior.name());
+        return nbtTagCompound;
     }
 }

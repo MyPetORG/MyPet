@@ -126,12 +126,15 @@ public class Pickup extends MyWolfGenericSkill
     @Override
     public void load(NBTTagCompound nbtTagCompound)
     {
-        Pickup = nbtTagCompound.getBoolean("Activ");
+        Pickup = nbtTagCompound.getBoolean("Active");
     }
 
     @Override
-    public void save(NBTTagCompound nbtTagCompound)
+    public NBTTagCompound save()
     {
-        nbtTagCompound.setBoolean("Activ", Pickup);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
+        nbtTagCompound.setBoolean("Active", Pickup);
+        return nbtTagCompound;
+
     }
 }

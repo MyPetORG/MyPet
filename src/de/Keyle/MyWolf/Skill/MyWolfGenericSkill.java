@@ -59,8 +59,9 @@ public class MyWolfGenericSkill
         this.Level++;
     }
 
-    public void save(NBTTagCompound nbtTagCompound)
+    public NBTTagCompound save()
     {
+        return null;
     }
 
     public void load(MyWolfYamlConfiguration configuration)
