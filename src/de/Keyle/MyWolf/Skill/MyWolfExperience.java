@@ -63,7 +63,7 @@ public class MyWolfExperience
     public MyWolfExperience(MyWolf Wolf)
     {
         this.MWolf = Wolf;
-        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1));
+        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1, true));
     }
 
     public void setExp(double Exp)
@@ -78,7 +78,7 @@ public class MyWolfExperience
         this.Exp = event.getEXP();
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1, true));
         }
     }
 

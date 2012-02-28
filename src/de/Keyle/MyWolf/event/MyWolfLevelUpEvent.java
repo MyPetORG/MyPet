@@ -31,17 +31,32 @@ public class MyWolfLevelUpEvent extends Event
 
     private final MyWolf Wolf;
     private final int Level;
+    private final boolean Quiet;
 
     public MyWolfLevelUpEvent(MyWolf Wolf, int Level)
     {
         super("MyWolfLevelUpEvent");
         this.Wolf = Wolf;
         this.Level = Level;
+        this.Quiet = false;
+    }
+
+    public MyWolfLevelUpEvent(MyWolf Wolf, int Level, boolean Quiet)
+    {
+        super("MyWolfLevelUpEvent");
+        this.Wolf = Wolf;
+        this.Level = Level;
+        this.Quiet = Quiet;
     }
 
     public Player getOwner()
     {
         return Wolf.getOwner().getPlayer();
+    }
+
+    public boolean isQuiet()
+    {
+        return Quiet;
     }
 
     public MyWolf getWolf()

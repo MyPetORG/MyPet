@@ -71,7 +71,7 @@ public class Inventory extends MyWolfGenericSkill
     @Override
     public void setLevel(int level)
     {
-        Level = level;
+        Level = level>6? 6: level;
         inv.setSize(Level * 9);
     }
 
