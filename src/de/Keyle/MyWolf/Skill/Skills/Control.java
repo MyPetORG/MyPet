@@ -34,7 +34,7 @@ public class Control extends MyWolfGenericSkill
     @Override
     public void upgrade()
     {
-        Level++;
+        Level = 1;
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
     }
 }

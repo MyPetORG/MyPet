@@ -54,6 +54,11 @@ public class MyWolfGenericSkill
         return this.Level;
     }
 
+    public void setLevel(int level)
+    {
+        this.Level = level;
+    }
+
     public void upgrade()
     {
         this.Level++;

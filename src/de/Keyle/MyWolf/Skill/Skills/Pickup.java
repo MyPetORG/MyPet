@@ -33,7 +33,6 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class Pickup extends MyWolfGenericSkill
 {
-
     private boolean Pickup = false;
 
     public Pickup()
