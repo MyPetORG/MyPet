@@ -191,8 +191,6 @@ public class MyWolfPlugin extends JavaPlugin
 
         Timer.startTimer();
 
-
-
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
@@ -226,9 +224,7 @@ public class MyWolfPlugin extends JavaPlugin
                 continue;
             }
 
-            MyWolfUtil.getLogger().info("-- " +  Owner + " " + WolfName + " " + WolfEXP + " " + WolfHealthNow + " " + WolfWorld);
-
-            MyWolf MWolf = new MyWolf(Owner);
+            MyWolf MWolf = new MyWolf(Plugin.getServer().getOfflinePlayer(Owner));
 
             MyWolfList.addMyWolf(MWolf);
 
@@ -287,7 +283,7 @@ public class MyWolfPlugin extends JavaPlugin
                         continue;
                     }
 
-                    MyWolf MWolf = new MyWolf(ownername);
+                    MyWolf MWolf = new MyWolf(Plugin.getServer().getOfflinePlayer(ownername));
 
                     MyWolfList.addMyWolf(MWolf);
 
@@ -337,7 +333,7 @@ public class MyWolfPlugin extends JavaPlugin
             Location.setDouble("Z", MWolf.getLocation().getZ());
             Location.setString("World", MWolf.getLocation().getWorld().getName());
 
-            Wolf.setString("Owner",  MWolf.getOwnerName());
+            Wolf.setString("Owner",  MWolf.getOwner().getName());
             Wolf.setCompound("Location", Location);
             Wolf.setInt("Health", MWolf.getHealth());
             Wolf.setInt("Respawntime", MWolf.RespawnTime);

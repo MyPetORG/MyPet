@@ -57,7 +57,7 @@ public class EntityMyWolf extends EntityWolf
                 this.setPathEntity(null);
                 this.setSitting(MWolf.isSitting());
                 this.setHealth(getMaxHealth());
-                this.setOwnerName(MWolf.getOwnerName());
+                this.setOwnerName(MWolf.getOwner().getName());
                 this.world.a(this, (byte) 7);
             }
         }
@@ -182,7 +182,7 @@ public class EntityMyWolf extends EntityWolf
                 {
                     if (isMyWolf && MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
                     {
-                        if (MWolf.getOwner().getItemInHand().getType() != MyWolfConfig.ControlItem)
+                        if (MWolf.getOwner().getPlayer().getItemInHand().getType() != MyWolfConfig.ControlItem)
                         {
                             this.setSitting(!this.isSitting());
                             this.aZ = false;

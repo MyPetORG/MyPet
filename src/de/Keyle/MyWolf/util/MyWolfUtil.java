@@ -24,10 +24,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.Plugin;
 
@@ -44,6 +41,11 @@ public class MyWolfUtil
     public static Server getServer()
     {
         return server;
+    }
+
+    public static OfflinePlayer getOfflinePlayer(String Name)
+    {
+        return getServer().getOfflinePlayer(Name);
     }
     
     public static Logger getLogger()

@@ -65,9 +65,9 @@ public class CommandInventory implements CommandExecutor
             }
             else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.admin"))
             {
-                if (MyWolfList.hasMyWolf(args[0]))
+                if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(args[0])))
                 {
-                    MyWolf MWolf = MyWolfList.getMyWolf(args[0]);
+                    MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(args[0]));
                     if (MWolf.SkillSystem.getSkill("Inventory") != null && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
                     {
                         ((Inventory) MWolf.SkillSystem.getSkill("Inventory")).OpenInventory(player);

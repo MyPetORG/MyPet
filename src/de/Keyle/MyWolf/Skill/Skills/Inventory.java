@@ -50,10 +50,10 @@ public class Inventory extends MyWolfGenericSkill
             if (MWolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MWolf.getLocation().getBlock().getType() != Material.WATER)
             {
                 inv.setName(MWolf.Name);
-                OpenInventory(MWolf.getOwner());
+                OpenInventory(MWolf.getOwner().getPlayer());
                 if (!MWolf.isSitting())
                 {
-                    MyWolfPlugin.WolfChestOpened.add(MWolf.getOwner());
+                    MyWolfPlugin.WolfChestOpened.add(MWolf.getOwner().getPlayer());
                 }
                 MWolf.Wolf.setSitting(true);
             }
@@ -89,7 +89,7 @@ public class Inventory extends MyWolfGenericSkill
     @Override
     public void load(MyWolfYamlConfiguration configuration)
     {
-        String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".inventory", "QwE");
+        String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".inventory", "QwE");
         if(!Sinv.equals("QwE"))
         {
             String[] invSplit = Sinv.split(";");

@@ -106,10 +106,10 @@ public class Behavior extends MyWolfGenericSkill
 
     public void load(MyWolfYamlConfiguration configuration)
     {
-        String b = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".behavior", "QwE");
+        String b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".behavior", "QwE");
         if(b.equals("QwE"))
         {
-            b = configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".skills.behavior", "Normal");
+            b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".skills.behavior", "Normal");
         }
         Behavior = BehaviorState.valueOf(b);
     }

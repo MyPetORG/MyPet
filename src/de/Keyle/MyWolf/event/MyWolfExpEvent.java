@@ -44,7 +44,7 @@ public class MyWolfExpEvent extends Event implements Cancellable
 
     public Player getOwner()
     {
-        return Wolf.getOwner();
+        return Wolf.getOwner().getPlayer();
     }
 
     public MyWolf getWolf()

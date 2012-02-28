@@ -80,7 +80,7 @@ public class Pickup extends MyWolfGenericSkill
                 {
                     Item item = (Item) e;
 
-                    PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(MWolf.getOwner(), item, item.getItemStack().getAmount());
+                    PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(MWolf.getOwner().getPlayer(), item, item.getItemStack().getAmount());
                     MyWolfUtil.getServer().getPluginManager().callEvent(ppievent);
 
                     if (ppievent.isCancelled())
@@ -113,13 +113,13 @@ public class Pickup extends MyWolfGenericSkill
     @Override
     public void load(MyWolfYamlConfiguration configuration)
     {
-        if(configuration.getConfig().getString("Wolves." + MWolf.getOwnerName() + ".pickup","QwE").equals("QwE"))
+        if(configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".pickup","QwE").equals("QwE"))
         {
-            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwnerName() + ".skills.pickup", false);
+            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwner().getName() + ".skills.pickup", false);
         }
         else
         {
-            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwnerName() + ".pickup", false);
+            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwner().getName() + ".pickup", false);
         }
     }
 

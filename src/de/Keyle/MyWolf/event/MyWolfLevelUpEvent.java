@@ -41,7 +41,7 @@ public class MyWolfLevelUpEvent extends Event
 
     public Player getOwner()
     {
-        return Wolf.getOwner();
+        return Wolf.getOwner().getPlayer();
     }
 
     public MyWolf getWolf()

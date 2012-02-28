@@ -27,15 +27,15 @@ import de.Keyle.MyWolf.Skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.*;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public class MyWolf
 {
     public String Name = "Wolf";
-    public final String Owner;
+    public final OfflinePlayer Owner;
     public int Health;
     public CraftMyWolf Wolf;
     public int RespawnTime = 0;
@@ -56,7 +56,7 @@ public class MyWolf
         Dead, Despawned, Here
     }
 
-    public MyWolf(String Owner)
+    public MyWolf(OfflinePlayer Owner)
     {
         this.Owner = Owner;
 
@@ -64,7 +64,7 @@ public class MyWolf
         {
             for(String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
             {
-                if(MyWolfPermissions.has(Owner, "MyWolf.user.skilltree." + ST))
+                if(MyWolfPermissions.has(Owner.getName(), "MyWolf.user.skilltree." + ST))
                 {
                     this.SkillTree = MyWolfSkillTreeConfigLoader.getSkillTree(ST);
                     break;
@@ -98,8 +98,8 @@ public class MyWolf
     {
         if (Status != WolfState.Here)
         {
-            Location = getOwner().getLocation();
-            getOwner().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
+            Location = getOwner().getPlayer().getLocation();
+            sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
             createWolf(false);
             RespawnTime = 0;
             Health = getMaxHealth();
@@ -255,26 +255,20 @@ public class MyWolf
         }
     }
 
-    public Player getOwner()
+    public OfflinePlayer getOwner()
     {
-        Player p = MyWolfPlugin.getPlugin().getServer().getPlayer(Owner);
-        if(p != null && p.isOnline())
+        if(Owner.isOnline())
         {
-            return p;
+            return Owner.getPlayer();
         }
-        return null;
-    }
-    
-    public String getOwnerName()
-    {
-        return this.Owner;
+        return Owner;
     }
 
     public void sendMessageToOwner(String Text)
     {
-        if (getOwner() != null)
+        if (Owner.isOnline())
         {
-            getOwner().sendMessage(Text);
+            getOwner().getPlayer().sendMessage(Text);
         }
     }
 }

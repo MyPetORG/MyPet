@@ -43,9 +43,9 @@ public class CommandInfo implements CommandExecutor
                 playerName = args[0];
             }
 
-            if (MyWolfList.hasMyWolf(playerName))
+            if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(playerName)))
             {
-                MyWolf MWolf = MyWolfList.getMyWolf(playerName);
+                MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(playerName));
                 String msg;
                 if (MWolf.getHealth() > MWolf.getMaxHealth() / 3 * 2)
                 {
