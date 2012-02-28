@@ -36,6 +36,7 @@ public class MyWolfConfig
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
     public static int StartHP = 20;
+    public static int AutoSaveTime = 60;
     public static boolean LevelSystem = true;
 
     public static boolean PermissionsBukkit = false;
@@ -54,6 +55,7 @@ public class MyWolfConfig
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.exp_default", true);
+        setProperty("MyWolf.AutoSaveTime", 60);
 
         setProperty("MyWolf.exp.SKELETON", 1.1);
         setProperty("MyWolf.exp.ZOMBIE", 1.1);

@@ -44,11 +44,17 @@ public class MyWolfTimer
 
         Timer = MyWolfPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.getPlugin(), new Runnable()
         {
+            int AutoSaveTimer = MyWolfConfig.AutoSaveTime;
             public void run()
             {
                 for (MyWolf MWolf : MyWolfList.getMyWolfList())
                 {
                     MWolf.scheduleTask();
+                }
+                if(MyWolfConfig.AutoSaveTime > 0 && AutoSaveTimer-- <= 0)
+                {
+                    MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
+                    AutoSaveTimer = MyWolfConfig.AutoSaveTime;
                 }
             }
         }, 0L, 20L);
