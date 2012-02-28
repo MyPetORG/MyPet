@@ -20,6 +20,7 @@
 package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.util.MyWolfList;
+import de.Keyle.MyWolf.util.MyWolfPermissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,12 +36,17 @@ public class CommandHelp implements CommandExecutor
             Player player = (Player) sender;
             player.sendMessage("--------------- MyWolf - Help -------------------------");
             player.sendMessage("/wolfinfo [player] | Display info about a MyWolf  (alias: /winfo)");
+            if(MyWolfPermissions.has(player,"MyWolf.admin"))
+            {
+                player.sendMessage("/wolfadmin [PlayerName] name/exp [Value] | (alias: /ws or /wolfs)");
+            }
             if(MyWolfList.hasMyWolf(player))
             {
                 player.sendMessage("/wolfname <newwolfname> | Set wolf name");
                 player.sendMessage("/wolfrelease <wolfname> | Release your wolf");
                 player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
-                player.sendMessage("/wolfcall | Call your wolf | (alias: /wc or /wolfc)");
+                player.sendMessage("/wolfcall | Call your wolf  (alias: /wc or /wolfc)");
+                player.sendMessage("/wolfskill | Shows the skill-levels");
 
                 if(MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Inventory") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Inventory").getLevel() > 0)
                 {

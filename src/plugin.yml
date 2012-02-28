@@ -38,5 +38,5 @@ commands:
     usage: '/<command> <playername>'
   wolfadmin:
     aliases: [wolfa, wa]
-    description: Set the Eexp or Name of a MyWolf
+    description: Set the Exp or Name of a MyWolf
     usage: '/<command> [PlayerName] name/exp [Value]'
