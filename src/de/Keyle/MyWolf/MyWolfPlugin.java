@@ -110,6 +110,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
         getCommand("wolfadmin").setExecutor(new CommandAdmin());
+        getCommand("wolfskill").setExecutor(new CommandSkill());
 
         //MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
 

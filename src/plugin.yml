@@ -33,6 +33,9 @@ commands:
     aliases: [winfo]
     description: Shows HP and Exp of your MyWolf
     usage: '/<command> [PlayerName]'
+  wolfskill:
+    description: Shows the skill-levels of a online MyWolf
+    usage: '/<command> <playername>'
   wolfadmin:
     aliases: [wolfa, wa]
     description: Set the Eexp or Name of a MyWolf

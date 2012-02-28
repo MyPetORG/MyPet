@@ -78,6 +78,7 @@ public class CommandAdmin implements CommandExecutor
                 if(MyWolfUtil.isInt(Value))
                 {
                     int Exp = Integer.parseInt(Value);
+                    Exp = Exp<0?0:Exp;
                     if(MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
                     {
                         MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner));
