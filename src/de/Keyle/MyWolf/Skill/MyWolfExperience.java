@@ -66,6 +66,12 @@ public class MyWolfExperience
         MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1, true));
     }
 
+    public void reset()
+    {
+        Exp = 0;
+        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1, true));
+    }
+
     public void setExp(double Exp)
     {
         MyWolfExpEvent event = new MyWolfExpEvent(MWolf,this.getExp(),Exp);

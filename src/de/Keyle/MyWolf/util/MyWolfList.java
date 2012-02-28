@@ -153,6 +153,15 @@ public class MyWolfList
         return IAMWolf;
     }
 
+    public static InactiveMyWolf getInactiveMyWolf(OfflinePlayer owner)
+    {
+        if(mInctiveWolves.containsKey(owner))
+        {
+            return mInctiveWolves.get(owner);
+        }
+        return null;
+    }
+
     public static void removeInactiveMyWolf(InactiveMyWolf IMWolf)
     {
         mInctiveWolves.remove(IMWolf.getOwner());

@@ -31,5 +31,9 @@ commands:
     usage: '/<command> [<Raid/rai/Friendly/fri/Aggressive/agg/Normal/nor>]'
   wolfinfo:
     aliases: [winfo]
-    description: Shows HP and EXP of your MyWolf
+    description: Shows HP and Exp of your MyWolf
     usage: '/<command> [PlayerName]'
+  wolfadmin:
+    aliases: [wolfa, wa]
+    description: Set the Eexp or Name of a MyWolf
+    usage: '/<command> [PlayerName] name/exp [Value]'
