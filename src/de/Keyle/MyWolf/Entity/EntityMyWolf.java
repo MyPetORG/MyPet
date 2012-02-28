@@ -45,6 +45,11 @@ public class EntityMyWolf extends EntityWolf
         setMyWolf(MWolf);
     }
 
+    public boolean isMyWolf()
+    {
+        return isMyWolf;
+    }
+
     public void setMyWolf(MyWolf MWolf)
     {
         if (MWolf != null)

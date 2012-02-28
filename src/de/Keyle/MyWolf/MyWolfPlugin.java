@@ -75,7 +75,6 @@ public class MyWolfPlugin extends JavaPlugin
         WolfChestOpened.clear();
         
         MyWolfUtil.getLogger().info("[MyWolf] Disabled");
-        
     }
 
     public void onEnable()
@@ -111,9 +110,9 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfbehavior").setExecutor(new CommandBehavior());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
 
-        MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+        //MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
 
-        MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
+        MyWolfSkillTreeConfigLoader.setConfig(new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml"));
         MyWolfSkillTreeConfigLoader.loadSkillTrees();
 
 
@@ -127,13 +126,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         try
         {
-            Class[] args = new Class[5];
-            args[0] = Class.class;
-            args[1] = String.class;
-            args[2] = Integer.TYPE;
-            args[3] = Integer.TYPE;
-            args[4] = Integer.TYPE;
-
+            Class[] args = {Class.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE};
             Method a = EntityTypes.class.getDeclaredMethod("a", args);
             a.setAccessible(true);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);

@@ -19,22 +19,24 @@
 
 package de.Keyle.MyWolf.Listeners;
 
+import de.Keyle.MyWolf.Entity.CraftMyWolf;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.Skill.MyWolfExperience;
 import de.Keyle.MyWolf.Skill.Skills.Behavior;
 import de.Keyle.MyWolf.util.*;
+import net.minecraft.server.EntityWolf;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyWolfEntityListener implements Listener
 {
@@ -219,6 +221,24 @@ public class MyWolfEntityListener implements Listener
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntitySpawn(CreatureSpawnEvent event)
+    {
+        if(event.getEntity() instanceof CraftMyWolf)
+        {
+            CraftMyWolf MWolf = (CraftMyWolf)event.getEntity();
+            if(!MWolf.getHandle().isMyWolf())
+            {
+                event.setCancelled(true);
+                net.minecraft.server.World mcWorld = ((CraftWorld)event.getLocation().getWorld()).getHandle();
+                EntityWolf entityWolf = new EntityWolf(mcWorld);
+                Location loc = event.getLocation();
+                entityWolf.setLocation(loc.getX(),loc.getY(),loc.getZ(),loc.getYaw(),loc.getPitch());
+                mcWorld.addEntity(entityWolf, CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
             }
         }
     }
