@@ -39,7 +39,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,9 +115,29 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfadmin").setExecutor(new CommandAdmin());
         getCommand("wolfskill").setExecutor(new CommandSkill());
 
-        //MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+        MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+        if(!MWSkillTreeConfig.ConfigFile.exists())
+        {
+            try
+            {
+                InputStream template = getPlugin().getResource("skill.yml");
+                OutputStream out = new FileOutputStream(MWSkillTreeConfig.ConfigFile);
 
-        MyWolfSkillTreeConfigLoader.setConfig(new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml"));
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = template.read(buf)) > 0){
+                    out.write(buf, 0, len);
+                }
+                template.close();
+                out.close();
+                MyWolfUtil.getLogger().info("[MyWolf] Default skill.yml file created. Please restart the server to load the skilltrees!");
+            }
+            catch(IOException ex)
+            {
+                MyWolfUtil.getLogger().info("[MyWolf] Unable to create the default skill.yml file!");
+            }
+        }
+        MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
         MyWolfSkillTreeConfigLoader.loadSkillTrees();
 
 

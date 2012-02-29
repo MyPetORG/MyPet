@@ -63,7 +63,7 @@ public class MyWolfSkillTreeConfigLoader
                     Inheritances.put(ST, inherit);
                 }
                 Set<String> Level = MWConfig.getConfig().getConfigurationSection("skilltrees." + ST).getKeys(false);
-                if (Level.size() != 0)
+                if (Level.size() > 0)
                 {
                     MyWolfSkillTree MWST = new MyWolfSkillTree(ST);
                     for (String Lv : Level)
@@ -73,6 +73,12 @@ public class MyWolfSkillTreeConfigLoader
                             MWST.addLevel(Integer.parseInt(Lv), MWConfig.getConfig().getStringList("skilltrees." + ST + "." + Lv));
                         }
                     }
+                    SkillTrees.put(ST, MWST);
+                    lSkillTrees.add(ST);
+                }
+                else if(Level.size() == 0)
+                {
+                    MyWolfSkillTree MWST = new MyWolfSkillTree(ST);
                     SkillTrees.put(ST, MWST);
                     lSkillTrees.add(ST);
                 }
@@ -95,26 +101,20 @@ public class MyWolfSkillTreeConfigLoader
                 }
             }
 
-            //MyWolfUtil.Log.info("----- clone: " + MWST.getName() + " ---- FI: " + MWST.getSkills(1)[0]);
-            //MyWolfUtil.Log.info("------Inheritances: " + Inheritances.toString());
             if (Inheritances.containsKey(Name))
             {
                 String NextInheritance = Inheritances.get(Name);
                 while (!NextInheritance.isEmpty())
                 {
-                    //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- is there: " + SkillTrees.containsKey(Name));
                     if (SkillTrees.containsKey(Name))
                     {
                         MyWolfSkillTree NextMWST = SkillTrees.get(NextInheritance);
-                        //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- Name(Object): " + NextMWST.getName());
                         if (NextMWST.getLevels() != null)
                         {
-                            //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- Name(Object): " + NextMWST.getName() + " -- Levels: " + NextMWST.getLevels().length);
                             for (int level : NextMWST.getLevels())
                             {
                                 MWST.addSkillToLevel(level, NextMWST.getSkills(level));
                             }
-                            //MyWolfUtil.Log.info("------Next: " + NextInheritance + " ---- Name(Object): " + NextMWST.getName() + " -- Next: " + Inheritances.get(NextInheritance));
                             if (Inheritances.containsKey(NextInheritance))
                             {
                                 NextInheritance = Inheritances.get(NextInheritance);

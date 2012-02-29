@@ -1,0 +1,108 @@
+# the order of this skilltrees is from top (admins eg.) to the bottom (losers)
+skilltrees:
+
+  # Admin skilltree -> MyWolf.user.skilltree.admin
+  admin:
+    '1':
+      - Inventory
+      - Inventory
+      - Inventory
+      - Inventory
+      - Inventory
+      - Inventory
+      - Control
+      - Pickup
+      - HP
+      - HP
+      - HP
+      - HP
+      - HP
+
+  # Hunter skilltree -> MyWolf.user.skilltree.Hunter
+  Hunter:
+    inherit: Pickup
+    '2':
+      - Control
+      - Inventory
+      - Damage
+      - Damage
+    '4':
+      - HP
+      - Damage
+    '6':
+      - Inventory
+      - Behavior
+    '8':
+      - Inventory
+      - HP
+      - Damage
+    '10':
+      - Inventory
+      - HP
+      - Damage
+    '12':
+      - Inventory
+      - HP
+      - Damage
+    '14':
+      - Inventory
+      - HP
+      - Damage
+    '16':
+      - HP
+      - Damage
+    '18':
+      - HP
+      - Damage
+    '20':
+      - HP
+      - Damage
+
+  # every normal should have permissions for this skilltree -> MyWolf.user.skilltree.default
+  default:
+    '2':
+      - Inventory
+    '4':
+      - Inventory
+      - Control
+      - HP
+      - Damage
+    '6':
+      - Inventory
+      - Behavior
+    '8':
+      - Pickup
+      - HP
+      - Damage
+    '10':
+      - Inventory
+      - HP
+      - Damage
+    '12':
+      - Inventory
+      - HP
+      - Damage
+    '14':
+      - Inventory
+      - HP
+      - Damage
+    '16':
+      - HP
+      - Damage
+    '18':
+      - HP
+      - Damage
+    '20':
+      - HP
+      - Damage
+
+  # skilltree for loser :P every MyWolf with this skilltree will have NO skills -> MyWolf.user.skilltree.loser
+  loser:
+    '1':
+
+# -------------------------------------------------------------------------------------------------------------------------------------
+
+  # Hunter will inherit this
+  Pickup:
+    '2':
+      - Pickup

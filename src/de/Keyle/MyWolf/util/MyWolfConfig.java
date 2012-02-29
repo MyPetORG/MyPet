@@ -81,33 +81,6 @@ public class MyWolfConfig
         setProperty("MyWolf.exp.SNOWMAN", 0.5);
         setProperty("MyWolf.exp.VILLAGER", 0.01);
 
-        /*
-        List<String> list = new LinkedList<String>();
-        list.add("Inventory");
-        setProperty("MyWolf.skills.2", list);
-
-        list = new LinkedList<String>();
-        list.add("Inventory");
-        list.add("Inventory");
-        list.add("Damage");
-        list.add("HPregeneration");
-        list.add("HPregeneration");
-        setProperty("MyWolf.skills.3", list);
-
-        list = new LinkedList<String>();
-        list.add("Pickup");
-        list.add("Control");
-        list.add("HPregeneration");
-        list.add("HPregeneration");
-        setProperty("MyWolf.skills.5", list);
-
-        list = new LinkedList<String>();
-        list.add("Behavior");
-        list.add("HP");
-        list.add("HPregeneration");
-        list.add("Damage");
-        setProperty("MyWolf.skills.6", list);
-        */
         MyWolfPlugin.getPlugin().saveConfig();
     }
 
