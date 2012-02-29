@@ -19,12 +19,12 @@
 
 package de.Keyle.MyWolf;
 
-import de.Keyle.MyWolf.Entity.CraftMyWolf;
-import de.Keyle.MyWolf.Entity.EntityMyWolf;
-import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.Skill.MyWolfSkillSystem;
-import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
+import de.Keyle.MyWolf.entity.CraftMyWolf;
+import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.skill.MyWolfExperience;
+import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.skill.MyWolfSkillSystem;
+import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.*;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

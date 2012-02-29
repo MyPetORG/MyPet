@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Skill;
+package de.Keyle.MyWolf.skill;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -73,7 +73,7 @@ public class MyWolfSkillSystem
         }
         catch (Exception e)
         {
-            MyWolfUtil.getLogger().warning("[MyWolf] " + cls.getName() + "is no valid Skill!");
+            MyWolfUtil.getLogger().warning("[MyWolf] " + cls.getName() + "is no valid skill!");
             ClassSkillList.remove(cls);
         }
     }

@@ -17,10 +17,10 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Entity;
+package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Skill.Skills.Behavior;
+import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import net.minecraft.server.*;
 import org.bukkit.Location;

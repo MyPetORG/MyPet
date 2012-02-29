@@ -23,7 +23,7 @@ package de.Keyle.MyWolf.util;
 import de.Keyle.MyWolf.InactiveMyWolf;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;

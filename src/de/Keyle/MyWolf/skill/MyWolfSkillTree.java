@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Skill;
+package de.Keyle.MyWolf.skill;
 
 import java.util.ArrayList;
 import java.util.HashMap;

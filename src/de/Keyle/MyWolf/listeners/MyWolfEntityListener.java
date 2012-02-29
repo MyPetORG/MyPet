@@ -17,14 +17,14 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Listeners;
+package de.Keyle.MyWolf.listeners;
 
-import de.Keyle.MyWolf.Entity.CraftMyWolf;
+import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.Skill.MyWolfExperience;
-import de.Keyle.MyWolf.Skill.Skills.Behavior;
+import de.Keyle.MyWolf.skill.MyWolfExperience;
+import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityWolf;
 import org.bukkit.ChatColor;

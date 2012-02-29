@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Skill;
+package de.Keyle.MyWolf.skill;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;

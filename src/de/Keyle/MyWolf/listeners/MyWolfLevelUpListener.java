@@ -17,10 +17,10 @@
 * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package de.Keyle.MyWolf.Listeners;
+package de.Keyle.MyWolf.listeners;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
+import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;

@@ -20,7 +20,7 @@
 package de.Keyle.MyWolf.util;
 
 
-import de.Keyle.MyWolf.Skill.MyWolfSkillTree;
+import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 

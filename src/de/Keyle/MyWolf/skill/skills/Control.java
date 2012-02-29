@@ -17,29 +17,24 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.Listeners;
+package de.Keyle.MyWolf.skill.skills;
 
-import de.Keyle.MyWolf.util.MyWolfList;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Wolf;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkUnloadEvent;
+import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 
-public class MyWolfWorldListener implements Listener
+public class Control extends MyWolfGenericSkill
 {
-    @EventHandler()
-    public void onChunkUnload(ChunkUnloadEvent event)
+    public Control()
     {
-        for (Entity e : event.getChunk().getEntities())
-        {
-            if (e instanceof Wolf)
-            {
-                if (MyWolfList.isMyWolf(e.getEntityId()))
-                {
-                    MyWolfList.getMyWolf(e.getEntityId()).removeWolf();
-                }
-            }
-        }
+        super("Control");
+    }
+
+    @Override
+    public void upgrade()
+    {
+        Level = 1;
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
     }
 }

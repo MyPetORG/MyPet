@@ -20,7 +20,7 @@
 package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.Skill.MyWolfExperience;
+import de.Keyle.MyWolf.skill.MyWolfExperience;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.CreatureType;

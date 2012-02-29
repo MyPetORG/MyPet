@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf;
 
-import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -36,7 +36,7 @@ public class InactiveMyWolf
     private Location Location;
     private double Exp;
 
-    private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
+    private NBTTagCompound NBTSkills = new NBTTagCompound("skills");
 
     public InactiveMyWolf(OfflinePlayer Owner)
     {
