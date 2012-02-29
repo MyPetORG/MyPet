@@ -19,14 +19,14 @@
 
 package de.Keyle.MyWolf;
 
+import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.listeners.*;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.skill.skills.*;
-import de.Keyle.MyWolf.chatcommands.*;
 import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;

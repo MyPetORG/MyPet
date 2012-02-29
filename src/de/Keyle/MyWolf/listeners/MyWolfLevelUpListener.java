@@ -20,8 +20,8 @@
 package de.Keyle.MyWolf.listeners;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
+import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.event.EventHandler;

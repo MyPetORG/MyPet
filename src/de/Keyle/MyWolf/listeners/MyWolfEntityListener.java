@@ -19,10 +19,10 @@
 
 package de.Keyle.MyWolf.listeners;
 
-import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.*;

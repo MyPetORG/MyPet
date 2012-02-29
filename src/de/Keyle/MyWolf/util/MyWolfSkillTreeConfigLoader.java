@@ -24,14 +24,13 @@ import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MyWolfSkillTreeConfigLoader
 {
     private static Map<String, MyWolfSkillTree> SkillTrees = new HashMap<String, MyWolfSkillTree>();
     private static Map<String, String> Inheritances = new HashMap<String, String>();
+    private static List<String> lSkillTrees = new ArrayList<String>();
 
     private static MyWolfYamlConfiguration MWConfig = null;
 
@@ -75,6 +74,7 @@ public class MyWolfSkillTreeConfigLoader
                         }
                     }
                     SkillTrees.put(ST, MWST);
+                    lSkillTrees.add(ST);
                 }
             }
         }
@@ -84,7 +84,16 @@ public class MyWolfSkillTreeConfigLoader
     {
         if (SkillTrees.containsKey(Name))
         {
-            MyWolfSkillTree MWST = (MyWolfSkillTree) SkillTrees.get(Name).cloneSkillTree();
+
+            MyWolfSkillTree MWST = new MyWolfSkillTree(SkillTrees.get(Name).getName());
+
+            if (SkillTrees.get(Name).getLevels() != null)
+            {
+                for (int level : SkillTrees.get(Name).getLevels())
+                {
+                    MWST.addSkillToLevel(level, SkillTrees.get(Name).getSkills(level));
+                }
+            }
 
             //MyWolfUtil.Log.info("----- clone: " + MWST.getName() + " ---- FI: " + MWST.getSkills(1)[0]);
             //MyWolfUtil.Log.info("------Inheritances: " + Inheritances.toString());
@@ -134,13 +143,12 @@ public class MyWolfSkillTreeConfigLoader
 
     public static String[] getSkillTreeNames()
     {
-        if (SkillTrees.keySet().size() > 0)
+        if (lSkillTrees.size() > 0)
         {
-            String[] TN = new String[SkillTrees.keySet().size()];
-            int i = 0;
-            for (String name : SkillTrees.keySet())
+            String[] TN = new String[lSkillTrees.size()];
+            for (int i = 0; i < lSkillTrees.size(); i++)
             {
-                TN[i] = name;
+                TN[i] = lSkillTrees.get(i);
                 i++;
             }
             return TN;

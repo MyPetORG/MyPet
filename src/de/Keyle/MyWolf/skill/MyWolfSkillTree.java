@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyWolfSkillTree implements Cloneable
+public class MyWolfSkillTree
 {
     String Name;
 
@@ -131,17 +131,5 @@ public class MyWolfSkillTree implements Cloneable
             return SN;
         }
         return new String[0];
-    }
-
-    public Object cloneSkillTree()
-    {
-        try
-        {
-            return super.clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
-            return null;
-        }
     }
 }
