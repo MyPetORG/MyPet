@@ -36,7 +36,7 @@ public class InactiveMyWolf
     private Location Location;
     private double Exp;
 
-    private NBTTagCompound NBTSkills = new NBTTagCompound("skills");
+    private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
 
     public InactiveMyWolf(OfflinePlayer Owner)
     {

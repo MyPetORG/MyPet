@@ -224,7 +224,7 @@ public class MyWolfPlugin extends JavaPlugin
             IMWolf.setName(WolfName);
             IMWolf.setSitting(WolfSitting);
             IMWolf.setExp(WolfEXP);
-            IMWolf.setSkills(MWolfNBT.getCompound("skills"));
+            IMWolf.setSkills(MWolfNBT.getCompound("Skills"));
 
             MyWolfList.addInactiveMyWolf(IMWolf);
 
@@ -253,7 +253,7 @@ public class MyWolfPlugin extends JavaPlugin
                     String WolfName = MWC.getConfig().getString("Wolves." + ownername + ".name", "Wolf");
                     boolean WolfSitting = MWC.getConfig().getBoolean("Wolves." + ownername + ".sitting", false);
 
-                    NBTTagCompound Skills = new NBTTagCompound("skills");
+                    NBTTagCompound Skills = new NBTTagCompound("Skills");
                     if (MWC.getConfig().contains("Wolves." + ownername + ".inventory"))
                     {
                         String Sinv = MWC.getConfig().getString("Wolves." + ownername + ".inventory", "QwE");
@@ -321,7 +321,7 @@ public class MyWolfPlugin extends JavaPlugin
             Wolf.setBoolean("Sitting", MWolf.isSitting());
             Wolf.setDouble("Exp", MWolf.Experience.getExp());
 
-            NBTTagCompound SkillsNBTTagCompound = new NBTTagCompound("skills");
+            NBTTagCompound SkillsNBTTagCompound = new NBTTagCompound("Skills");
             Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
             if (Skills.size() > 0)
             {
@@ -334,7 +334,7 @@ public class MyWolfPlugin extends JavaPlugin
                     }
                 }
             }
-            Wolf.set("skills", SkillsNBTTagCompound);
+            Wolf.set("Skills", SkillsNBTTagCompound);
             Wolves.add(Wolf);
         }
         for (InactiveMyWolf IMWolf : MyWolfList.getInactiveMyWolfList())
@@ -356,7 +356,7 @@ public class MyWolfPlugin extends JavaPlugin
             Wolf.setBoolean("Sitting", IMWolf.isSitting());
             Wolf.setDouble("Exp", IMWolf.getExp());
 
-            Wolf.set("skills", IMWolf.getSkills());
+            Wolf.set("Skills", IMWolf.getSkills());
             Wolves.add(Wolf);
         }
         nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
