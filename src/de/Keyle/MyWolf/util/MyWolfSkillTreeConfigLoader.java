@@ -149,7 +149,6 @@ public class MyWolfSkillTreeConfigLoader
             for (int i = 0; i < lSkillTrees.size(); i++)
             {
                 TN[i] = lSkillTrees.get(i);
-                i++;
             }
             return TN;
         }
