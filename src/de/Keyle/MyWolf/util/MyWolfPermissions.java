@@ -45,7 +45,7 @@ public class MyWolfPermissions
         {
             return true;
         }
-        else if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null)
+        else if (PermissionsMode == PermissionsType.NONE || Permissions == null)
         {
             return true;
         }

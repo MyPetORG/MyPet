@@ -75,7 +75,6 @@ public class MyWolfSkillSystem
         {
             MyWolfUtil.getLogger().warning("[MyWolf] " + cls.getName() + "is no valid Skill!");
             ClassSkillList.remove(cls);
-            return;
         }
     }
 
@@ -111,10 +110,6 @@ public class MyWolfSkillSystem
 
     public boolean hasSkill(String Name)
     {
-        if (Skills.containsKey(Name))
-        {
-            return true;
-        }
-        return false;
+        return Skills.containsKey(Name);
     }
 }
