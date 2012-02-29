@@ -70,9 +70,9 @@ public class EntityMyWolf extends EntityWolf
 
     public int getMaxHealth()
     {
-        if(isMyWolf)
+        if (isMyWolf)
         {
-            return MyWolfConfig.StartHP + (MWolf.SkillSystem.hasSkill("HP")?MWolf.SkillSystem.getSkill("HP").getLevel():0);
+            return MyWolfConfig.StartHP + (MWolf.SkillSystem.hasSkill("HP") ? MWolf.SkillSystem.getSkill("HP").getLevel() : 0);
         }
         else
         {
@@ -225,7 +225,7 @@ public class EntityMyWolf extends EntityWolf
     {
         if (this.bukkitEntity == null)
         {
-            this.bukkitEntity = new CraftMyWolf(this.world.getServer(),this);
+            this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }

@@ -51,20 +51,20 @@ public class CommandAdmin implements CommandExecutor
             String Change = args[1];
             String Value = args[2];
 
-            if(!MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)) && !MyWolfList.hasInactiveMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
+            if (!MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)) && !MyWolfList.hasInactiveMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
             {
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OtherDontHaveWolf").replace("%playername%", Wolfowner)));
                 return true;
             }
-            if(Change.equalsIgnoreCase("name"))
+            if (Change.equalsIgnoreCase("name"))
             {
                 String name = "";
-                for (int i = 2; i<args.length; i++)
+                for (int i = 2; i < args.length; i++)
                 {
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if(MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
+                if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
                 {
                     MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)).Name = name;
                 }
@@ -73,20 +73,20 @@ public class CommandAdmin implements CommandExecutor
                     MyWolfList.getInactiveMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)).setName(name);
                 }
             }
-            else  if(Change.equalsIgnoreCase("exp"))
+            else if (Change.equalsIgnoreCase("exp"))
             {
-                if(MyWolfUtil.isInt(Value))
+                if (MyWolfUtil.isInt(Value))
                 {
                     int Exp = Integer.parseInt(Value);
-                    Exp = Exp<0?0:Exp;
-                    if(MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
+                    Exp = Exp < 0 ? 0 : Exp;
+                    if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
                     {
                         MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner));
 
                         Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
-                        if(Skills.size() > 0)
+                        if (Skills.size() > 0)
                         {
-                            for(MyWolfGenericSkill Skill : Skills)
+                            for (MyWolfGenericSkill Skill : Skills)
                             {
                                 Skill.setLevel(0);
                             }

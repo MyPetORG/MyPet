@@ -34,6 +34,6 @@ public class Damage extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddDemage")).replace("%wolfname%", MWolf.Name).replace("%dmg%",""+Level));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddDemage")).replace("%wolfname%", MWolf.Name).replace("%dmg%", "" + Level));
     }
 }

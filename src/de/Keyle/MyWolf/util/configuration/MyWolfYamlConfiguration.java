@@ -38,9 +38,11 @@ public class MyWolfYamlConfiguration
         {
             Config.load(ConfigFile);
         }
-        catch (Exception ignored) {}
+        catch (Exception ignored)
+        {
+        }
     }
-    
+
     public MyWolfYamlConfiguration(File f)
     {
         ConfigFile = f;
@@ -49,12 +51,14 @@ public class MyWolfYamlConfiguration
         {
             Config.load(ConfigFile);
         }
-        catch (Exception ignored){}
+        catch (Exception ignored)
+        {
+        }
     }
 
     public FileConfiguration getConfig()
     {
-        return  Config;
+        return Config;
     }
 
     public boolean saveConfig()
@@ -70,9 +74,9 @@ public class MyWolfYamlConfiguration
             return false;
         }
     }
-    
+
     public void clearConfig()
     {
-        Config = new YamlConfiguration();   
+        Config = new YamlConfiguration();
     }
 }

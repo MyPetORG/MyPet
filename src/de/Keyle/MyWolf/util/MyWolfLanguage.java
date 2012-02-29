@@ -43,7 +43,7 @@ public class MyWolfLanguage
         }
         return Variable;
     }
-    
+
     public void addString(String name, String node, String def)
     {
         if (MWC.getConfig().contains(node))
@@ -53,7 +53,7 @@ public class MyWolfLanguage
         else
         {
             MWC.getConfig().set(node, def);
-            LV.put(name,def);
+            LV.put(name, def);
         }
     }
 

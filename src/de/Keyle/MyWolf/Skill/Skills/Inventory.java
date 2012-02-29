@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 
 public class Inventory extends MyWolfGenericSkill
 {
-    public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory",0);
+    public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory", 0);
 
     public Inventory()
     {
@@ -71,7 +71,7 @@ public class Inventory extends MyWolfGenericSkill
     @Override
     public void setLevel(int level)
     {
-        Level = level>6? 6: level;
+        Level = level > 6 ? 6 : level;
         inv.setSize(Level * 9);
     }
 
@@ -92,15 +92,15 @@ public class Inventory extends MyWolfGenericSkill
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
         eh.a(inv);
     }
-    
+
     @Override
     public void load(MyWolfYamlConfiguration configuration)
     {
         String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".inventory", "QwE");
-        if(!Sinv.equals("QwE"))
+        if (!Sinv.equals("QwE"))
         {
             String[] invSplit = Sinv.split(";");
-            for (int i = 0 ; i < invSplit.length ; i++)
+            for (int i = 0; i < invSplit.length; i++)
             {
                 if (i < inv.getSize())
                 {
@@ -133,7 +133,7 @@ public class Inventory extends MyWolfGenericSkill
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }
-    
+
     @Override
     public void setMyWolf(MyWolf MWolf)
     {

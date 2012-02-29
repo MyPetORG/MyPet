@@ -39,7 +39,7 @@ public class CommandSkill implements CommandExecutor
         {
             Player player = (Player) sender;
             String playerName = sender.getName();
-            if(args != null && args.length > 0)
+            if (args != null && args.length > 0)
             {
                 playerName = args[0];
             }
@@ -50,11 +50,11 @@ public class CommandSkill implements CommandExecutor
 
                 player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white%'s skills:").replace("%wolfname%", MWolf.Name));
                 Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
-                if(Skills.size() > 0)
+                if (Skills.size() > 0)
                 {
-                    for(MyWolfGenericSkill Skill : Skills)
+                    for (MyWolfGenericSkill Skill : Skills)
                     {
-                        if(Skill.getLevel() > 0)
+                        if (Skill.getLevel() > 0)
                         {
                             player.sendMessage(MyWolfUtil.SetColors("%green%%skillname%%white% lv: %gold%%lvl%").replace("%skillname%", Skill.getName()).replace("%lvl%", "" + Skill.getLevel()));
                         }
@@ -64,13 +64,13 @@ public class CommandSkill implements CommandExecutor
             }
             else
             {
-            	if(args != null && args.length > 0)
+                if (args != null && args.length > 0)
                 {
-            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
                 }
-            	else
+                else
                 {
-            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
         }

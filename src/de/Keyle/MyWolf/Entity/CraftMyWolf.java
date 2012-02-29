@@ -45,7 +45,7 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
         }
         else if (target instanceof CraftLivingEntity)
         {
-            if(getHandle().isMyWolf && getHandle().MWolf.SkillSystem.hasSkill("Behavior"))
+            if (getHandle().isMyWolf && getHandle().MWolf.SkillSystem.hasSkill("Behavior"))
             {
                 Behavior behavior = (Behavior) getHandle().MWolf.SkillSystem.getSkill("Behavior");
                 if (behavior.getLevel() > 0)

@@ -38,7 +38,7 @@ public class CommandInventory implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if(args.length == 0)
+            if (args.length == 0)
             {
                 if (MyWolfList.hasMyWolf(player))
                 {
@@ -63,7 +63,7 @@ public class CommandInventory implements CommandExecutor
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
-            else if(args.length == 1 && MyWolfPermissions.has(player,"MyWolf.admin"))
+            else if (args.length == 1 && MyWolfPermissions.has(player, "MyWolf.admin"))
             {
                 if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(args[0])))
                 {

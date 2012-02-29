@@ -40,7 +40,7 @@ public class MyWolfList
 
     public static MyWolf getMyWolf(InactiveMyWolf IMWolf)
     {
-        if(IMWolf.getOwner().isOnline())
+        if (IMWolf.getOwner().isOnline())
         {
             MyWolf AMWolf = new MyWolf(IMWolf.getOwner());
             AMWolf.setHealth(IMWolf.getHealth());
@@ -59,11 +59,11 @@ public class MyWolfList
 
             AMWolf.Experience.setExp(IMWolf.getExp());
             Collection<MyWolfGenericSkill> Skills = AMWolf.SkillSystem.getSkills();
-            if(Skills.size() > 0)
+            if (Skills.size() > 0)
             {
-                for(MyWolfGenericSkill Skill : Skills)
+                for (MyWolfGenericSkill Skill : Skills)
                 {
-                    if(IMWolf.getSkills().hasKey(Skill.getName()))
+                    if (IMWolf.getSkills().hasKey(Skill.getName()))
                     {
                         Skill.load(IMWolf.getSkills().getCompound(Skill.getName()));
                     }
@@ -73,19 +73,19 @@ public class MyWolfList
         }
         return null;
     }
-    
+
     public static void addMyWolf(MyWolf MW)
     {
         mActiveWolves.put(MW.getOwner(), MW);
         lActiveWolves.add(MW);
     }
-    
+
     public static void removeMyWolf(MyWolf MW)
     {
-       lActiveWolves.remove(MW);
+        lActiveWolves.remove(MW);
         mActiveWolves.remove(MW.getOwner());
     }
-    
+
     public static void removeMyWolf(OfflinePlayer Owner)
     {
         lActiveWolves.remove(mActiveWolves.get(Owner));
@@ -94,19 +94,19 @@ public class MyWolfList
 
     public static MyWolf getMyWolf(int EntityID)
     {
-        for(MyWolf wolf : lActiveWolves)
+        for (MyWolf wolf : lActiveWolves)
         {
-            if(wolf.Wolf.getEntityId() == EntityID)
+            if (wolf.Wolf.getEntityId() == EntityID)
             {
                 return wolf;
             }
         }
         return null;
     }
-    
+
     public static MyWolf getMyWolf(OfflinePlayer owner)
     {
-        if(mActiveWolves.containsKey(owner))
+        if (mActiveWolves.containsKey(owner))
         {
             return mActiveWolves.get(owner);
         }
@@ -120,7 +120,7 @@ public class MyWolfList
 
     public static boolean hasMyWolf(OfflinePlayer player)
     {
-       return mActiveWolves.containsKey(player);
+        return mActiveWolves.containsKey(player);
     }
 
     public static boolean isMyWolf(int EnityID)
@@ -155,7 +155,7 @@ public class MyWolfList
 
     public static InactiveMyWolf getInactiveMyWolf(OfflinePlayer owner)
     {
-        if(mInctiveWolves.containsKey(owner))
+        if (mInctiveWolves.containsKey(owner))
         {
             return mInctiveWolves.get(owner);
         }
@@ -170,7 +170,7 @@ public class MyWolfList
 
     public static void addInactiveMyWolf(InactiveMyWolf IMWolf)
     {
-        mInctiveWolves.put(IMWolf.getOwner(),IMWolf);
+        mInctiveWolves.put(IMWolf.getOwner(), IMWolf);
         lInactiveWolves.add(IMWolf);
     }
 
@@ -178,9 +178,9 @@ public class MyWolfList
 
     public static void setMyWolfActive(OfflinePlayer Owner, boolean Activate)
     {
-        if(Activate)
+        if (Activate)
         {
-            if(mInctiveWolves.containsKey(Owner) && mInctiveWolves.get(Owner).getOwner().isOnline())
+            if (mInctiveWolves.containsKey(Owner) && mInctiveWolves.get(Owner).getOwner().isOnline())
             {
                 InactiveMyWolf IMWolf = mInctiveWolves.get(Owner);
                 MyWolf AMWolf = getMyWolf(IMWolf);
@@ -190,7 +190,7 @@ public class MyWolfList
         }
         else
         {
-            if(mActiveWolves.containsKey(Owner))
+            if (mActiveWolves.containsKey(Owner))
             {
                 MyWolf AMWolf = mActiveWolves.get(Owner);
                 InactiveMyWolf IAMWolf = getInactiveMyWolf(AMWolf);

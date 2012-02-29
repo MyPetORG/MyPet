@@ -35,6 +35,6 @@ public class HP extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP")).replace("%wolfname%", MWolf.Name).replace("%maxhealth%",""+ (MyWolfConfig.StartHP+Level)));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHP")).replace("%wolfname%", MWolf.Name).replace("%maxhealth%", "" + (MyWolfConfig.StartHP + Level)));
     }
 }

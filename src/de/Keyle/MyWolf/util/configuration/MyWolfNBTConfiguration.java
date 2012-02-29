@@ -32,7 +32,7 @@ public class MyWolfNBTConfiguration
     public MyWolfNBTConfiguration(String Path)
     {
         NBTFile = new File(Path);
-        if(!NBTFile.exists())
+        if (!NBTFile.exists())
         {
             try
             {
@@ -48,7 +48,7 @@ public class MyWolfNBTConfiguration
     public MyWolfNBTConfiguration(File f)
     {
         NBTFile = f;
-        if(!NBTFile.exists())
+        if (!NBTFile.exists())
         {
             try
             {
@@ -70,7 +70,7 @@ public class MyWolfNBTConfiguration
     {
         try
         {
-            DataOutputStream F_Out = new DataOutputStream( new FileOutputStream(NBTFile));
+            DataOutputStream F_Out = new DataOutputStream(new FileOutputStream(NBTFile));
             NBTBase.a(nbtTagCompound, F_Out);
             F_Out.close();
             return true;
@@ -86,7 +86,7 @@ public class MyWolfNBTConfiguration
     {
         try
         {
-            DataInputStream F_In = new DataInputStream( new FileInputStream(NBTFile));
+            DataInputStream F_In = new DataInputStream(new FileInputStream(NBTFile));
             nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
             F_In.close();
         }

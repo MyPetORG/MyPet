@@ -21,7 +21,10 @@ package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.*;
+import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfCustomInventory;
+import de.Keyle.MyWolf.util.MyWolfLanguage;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet22Collect;
@@ -45,10 +48,10 @@ public class Pickup extends MyWolfGenericSkill
     {
         if (Level > 0)
         {
-            if(MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
+            if (MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
             {
                 Pickup = !Pickup;
-                MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString((Pickup?"Msg_PickUpStart":"Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
+                MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
             }
             else
             {
@@ -65,7 +68,7 @@ public class Pickup extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level*MyWolfConfig.PickupRangePerLevel)));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * MyWolfConfig.PickupRangePerLevel)));
     }
 
     @Override
@@ -73,7 +76,7 @@ public class Pickup extends MyWolfGenericSkill
     {
         if (Level > 0 && Pickup && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
         {
-            for (Entity e : MWolf.Wolf.getNearbyEntities(Level*MyWolfConfig.PickupRangePerLevel, Level*MyWolfConfig.PickupRangePerLevel, MyWolfConfig.PickupRangePerLevel))
+            for (Entity e : MWolf.Wolf.getNearbyEntities(Level * MyWolfConfig.PickupRangePerLevel, Level * MyWolfConfig.PickupRangePerLevel, MyWolfConfig.PickupRangePerLevel))
             {
                 if (e instanceof Item)
                 {
@@ -87,15 +90,15 @@ public class Pickup extends MyWolfGenericSkill
                         continue;
                     }
 
-                    MyWolfCustomInventory inv = ((Inventory)MWolf.SkillSystem.getSkill("Inventory")).inv;
+                    MyWolfCustomInventory inv = ((Inventory) MWolf.SkillSystem.getSkill("Inventory")).inv;
                     int ItemAmount = inv.addItem(item.getItemStack());
                     if (ItemAmount == 0)
                     {
-                        for(Entity p : e.getNearbyEntities(20,20,20))
+                        for (Entity p : e.getNearbyEntities(20, 20, 20))
                         {
-                            if(p instanceof Player)
+                            if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(),MWolf.Wolf.getEntityId()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MWolf.Wolf.getEntityId()));
                             }
                         }
                         e.remove();
@@ -112,7 +115,7 @@ public class Pickup extends MyWolfGenericSkill
     @Override
     public void load(MyWolfYamlConfiguration configuration)
     {
-        if(configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".pickup","QwE").equals("QwE"))
+        if (configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".pickup", "QwE").equals("QwE"))
         {
             Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwner().getName() + ".skills.pickup", false);
         }

@@ -41,7 +41,7 @@ public class MyWolfPermissions
 
     public static boolean has(Player player, String node)
     {
-        if(player.isOp())
+        if (player.isOp())
         {
             return true;
         }
@@ -63,7 +63,7 @@ public class MyWolfPermissions
         {
             return ((PermissionManager) Permissions).has(player, node);
         }
-        else if(PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
+        else if (PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
         {
             player.hasPermission(node);
         }
@@ -73,7 +73,7 @@ public class MyWolfPermissions
 
     public static boolean has(String player, String node)
     {
-        OfflinePlayer offlinePlayer  = MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(player);
+        OfflinePlayer offlinePlayer = MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(player);
         PermissibleBase perm = new PermissibleBase(offlinePlayer);
 
         if (PermissionsMode == PermissionsType.NONE || Permissions == null || player == null || offlinePlayer.isOp())
@@ -84,7 +84,7 @@ public class MyWolfPermissions
         {
             return ((PermissionManager) Permissions).has(player, node, MyWolfPlugin.getPlugin().getServer().getWorlds().get(0).getName());
         }
-        else if(PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
+        else if (PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
         {
             perm.hasPermission(node);
         }

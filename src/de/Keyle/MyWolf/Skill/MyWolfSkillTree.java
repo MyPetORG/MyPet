@@ -28,7 +28,7 @@ public class MyWolfSkillTree implements Cloneable
 {
     String Name;
 
-    Map<Integer,List<String>> SkillsPerLevel = new HashMap<Integer,List<String>>();
+    Map<Integer, List<String>> SkillsPerLevel = new HashMap<Integer, List<String>>();
 
     public MyWolfSkillTree(String Name)
     {
@@ -42,26 +42,26 @@ public class MyWolfSkillTree implements Cloneable
 
     public void addLevel(int Level, String Skill)
     {
-        if(!SkillsPerLevel.containsKey(Level))
+        if (!SkillsPerLevel.containsKey(Level))
         {
             List<String> stringList = new ArrayList<String>();
             stringList.add((Skill));
-            SkillsPerLevel.put(Level,stringList);
+            SkillsPerLevel.put(Level, stringList);
         }
         else
         {
-            addSkillToLevel(Level,Skill);
+            addSkillToLevel(Level, Skill);
         }
     }
 
     public void addLevel(int Level, List<String> Skills)
     {
-        SkillsPerLevel.put(Level,Skills);
+        SkillsPerLevel.put(Level, Skills);
     }
-    
+
     public void addSkillToLevel(int Level, String Skill)
     {
-        if(SkillsPerLevel.containsKey(Level))
+        if (SkillsPerLevel.containsKey(Level))
         {
             SkillsPerLevel.get(Level).add(Skill);
         }
@@ -69,47 +69,47 @@ public class MyWolfSkillTree implements Cloneable
         {
             List<String> tmps = new ArrayList<String>();
             tmps.add(Skill);
-            addLevel(Level,tmps);
+            addLevel(Level, tmps);
         }
     }
 
     public void addSkillToLevel(int Level, List<String> Skills)
     {
-        if(SkillsPerLevel.containsKey(Level))
+        if (SkillsPerLevel.containsKey(Level))
         {
             SkillsPerLevel.get(Level).addAll(Skills);
         }
         else
         {
-            addLevel(Level,Skills);
+            addLevel(Level, Skills);
         }
     }
 
     public void addSkillToLevel(int Level, String[] Skills)
     {
-        if(SkillsPerLevel.containsKey(Level))
+        if (SkillsPerLevel.containsKey(Level))
         {
-            for(String skillname : Skills)
+            for (String skillname : Skills)
             {
                 SkillsPerLevel.get(Level).add(skillname);
             }
         }
         else
         {
-            for(String skillname : Skills)
+            for (String skillname : Skills)
             {
-                addSkillToLevel(Level,skillname);
+                addSkillToLevel(Level, skillname);
             }
         }
     }
 
     public Integer[] getLevels()
     {
-        if(SkillsPerLevel.size() > 0)
+        if (SkillsPerLevel.size() > 0)
         {
             Integer[] Levels = new Integer[SkillsPerLevel.keySet().size()];
             int i = 0;
-            for(int level : SkillsPerLevel.keySet())
+            for (int level : SkillsPerLevel.keySet())
             {
                 Levels[i] = level;
                 i++;
@@ -121,10 +121,10 @@ public class MyWolfSkillTree implements Cloneable
 
     public String[] getSkills(int Level)
     {
-        if(SkillsPerLevel.containsKey(Level) && SkillsPerLevel.get(Level).size() > 0)
+        if (SkillsPerLevel.containsKey(Level) && SkillsPerLevel.get(Level).size() > 0)
         {
             String[] SN = new String[SkillsPerLevel.get(Level).size()];
-            for(int i = 0; i < SkillsPerLevel.get(Level).size();i++)
+            for (int i = 0; i < SkillsPerLevel.get(Level).size(); i++)
             {
                 SN[i] = SkillsPerLevel.get(Level).get(i);
             }
@@ -139,7 +139,7 @@ public class MyWolfSkillTree implements Cloneable
         {
             return super.clone();
         }
-        catch( CloneNotSupportedException e )
+        catch (CloneNotSupportedException e)
         {
             return null;
         }

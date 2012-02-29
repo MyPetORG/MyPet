@@ -20,9 +20,9 @@
 package de.Keyle.MyWolf.Skill.Skills;
 
 import de.Keyle.MyWolf.Skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 
 public class Behavior extends MyWolfGenericSkill
@@ -43,7 +43,7 @@ public class Behavior extends MyWolfGenericSkill
     {
         Behavior = behaviorState;
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
-        if(Behavior == BehaviorState.Friendly)
+        if (Behavior == BehaviorState.Friendly)
         {
             MWolf.Wolf.setTarget(null);
         }
@@ -55,7 +55,7 @@ public class Behavior extends MyWolfGenericSkill
         {
             Behavior = behaviorState;
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
-            if(Behavior == BehaviorState.Friendly)
+            if (Behavior == BehaviorState.Friendly)
             {
                 MWolf.Wolf.setTarget(null);
             }
@@ -98,7 +98,7 @@ public class Behavior extends MyWolfGenericSkill
             }
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MWolf.Name).replace("%mode%", Behavior.name()));
         }
-        else 
+        else
         {
             MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
         }
@@ -107,7 +107,7 @@ public class Behavior extends MyWolfGenericSkill
     public void load(MyWolfYamlConfiguration configuration)
     {
         String b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".behavior", "QwE");
-        if(b.equals("QwE"))
+        if (b.equals("QwE"))
         {
             b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".skills.behavior", "Normal");
         }

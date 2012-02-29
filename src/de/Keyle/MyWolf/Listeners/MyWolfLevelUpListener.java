@@ -33,9 +33,9 @@ public class MyWolfLevelUpListener implements Listener
     public void onLevelUp(MyWolfLevelUpEvent eventMyWolf)
     {
         MyWolf MWolf = eventMyWolf.getWolf();
-        if(!eventMyWolf.isQuiet())
+        if (!eventMyWolf.isQuiet())
         {
-            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", ""+eventMyWolf.getLevel()));
+            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", "" + eventMyWolf.getLevel()));
         }
         int lvl = eventMyWolf.getLevel();
         MyWolfSkillTree st = MWolf.SkillTree;
@@ -44,11 +44,11 @@ public class MyWolfLevelUpListener implements Listener
         {
             for (String skill : Skills)
             {
-                if(MWolf.SkillSystem.hasSkill(skill))
+                if (MWolf.SkillSystem.hasSkill(skill))
                 {
-                    if(eventMyWolf.isQuiet())
+                    if (eventMyWolf.isQuiet())
                     {
-                        MWolf.SkillSystem.getSkill(skill).setLevel(MWolf.SkillSystem.getSkill(skill).getLevel()+1);
+                        MWolf.SkillSystem.getSkill(skill).setLevel(MWolf.SkillSystem.getSkill(skill).getLevel() + 1);
                     }
                     else
                     {

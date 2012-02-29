@@ -69,7 +69,7 @@ public class MyWolfExpEvent extends Event implements Cancellable
 
     public double getEXP()
     {
-        if(isCancelled)
+        if (isCancelled)
         {
             return oldEXP;
         }
@@ -89,11 +89,13 @@ public class MyWolfExpEvent extends Event implements Cancellable
         isCancelled = b;
     }
 
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

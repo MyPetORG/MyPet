@@ -69,11 +69,13 @@ public class MyWolfLevelUpEvent extends Event
         return Level;
     }
 
-    public HandlerList getHandlers() {
+    public HandlerList getHandlers()
+    {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public static HandlerList getHandlerList()
+    {
         return handlers;
     }
 }

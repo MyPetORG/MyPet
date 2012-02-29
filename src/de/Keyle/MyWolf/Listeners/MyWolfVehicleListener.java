@@ -40,7 +40,7 @@ public class MyWolfVehicleListener implements Listener
         }
         if (event.getEntered() instanceof Wolf)
         {
-            if(MyWolfList.getMyWolf(event.getEntered().getEntityId()) != null)
+            if (MyWolfList.getMyWolf(event.getEntered().getEntityId()) != null)
             {
                 event.setCancelled(true);
             }

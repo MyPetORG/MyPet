@@ -60,18 +60,18 @@ public class MyWolf
     {
         this.Owner = Owner;
 
-        if(MyWolfSkillTreeConfigLoader.getSkillTreeNames().length > 0)
+        if (MyWolfSkillTreeConfigLoader.getSkillTreeNames().length > 0)
         {
-            for(String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
+            for (String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
             {
-                if(MyWolfPermissions.has(Owner.getPlayer(), "MyWolf.user.skilltree." + ST))
+                if (MyWolfPermissions.has(Owner.getPlayer(), "MyWolf.user.skilltree." + ST))
                 {
                     this.SkillTree = MyWolfSkillTreeConfigLoader.getSkillTree(ST);
                     break;
                 }
             }
         }
-        if(this.SkillTree == null)
+        if (this.SkillTree == null)
         {
             this.SkillTree = new MyWolfSkillTree("%+-%NoNe%-+%");
         }
@@ -115,7 +115,7 @@ public class MyWolf
         {
             if (RespawnTime <= 0)
             {
-                net.minecraft.server.World mcWorld = ((CraftWorld)Location.getWorld()).getHandle();
+                net.minecraft.server.World mcWorld = ((CraftWorld) Location.getWorld()).getHandle();
                 EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld, this);
                 MWentityMyWolf.setLocation(Location);
                 mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -128,7 +128,7 @@ public class MyWolf
 
     public void createWolf(Wolf wolf)
     {
-        net.minecraft.server.World mcWorld = ((CraftWorld)wolf.getWorld()).getHandle();
+        net.minecraft.server.World mcWorld = ((CraftWorld) wolf.getWorld()).getHandle();
         EntityMyWolf MWentityMyWolf = new EntityMyWolf(mcWorld, this);
         MWentityMyWolf.setLocation(wolf.getLocation());
         mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -167,9 +167,10 @@ public class MyWolf
             return Health;
         }
     }
+
     public int getMaxHealth()
     {
-        return MyWolfConfig.StartHP + (SkillSystem.hasSkill("HP")?SkillSystem.getSkill("HP").getLevel():0);
+        return MyWolfConfig.StartHP + (SkillSystem.hasSkill("HP") ? SkillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public Location getLocation()
@@ -227,9 +228,9 @@ public class MyWolf
     {
         if (Status != WolfState.Despawned && getOwner() != null)
         {
-            if(SkillSystem.getSkills().size() > 0)
+            if (SkillSystem.getSkills().size() > 0)
             {
-                for(MyWolfGenericSkill skill : SkillSystem.getSkills())
+                for (MyWolfGenericSkill skill : SkillSystem.getSkills())
                 {
                     skill.schedule();
                 }
@@ -257,7 +258,7 @@ public class MyWolf
 
     public OfflinePlayer getOwner()
     {
-        if(Owner.isOnline())
+        if (Owner.isOnline())
         {
             return Owner.getPlayer();
         }

@@ -29,17 +29,17 @@ public class MyWolfSkillSystem
     private static List<Class> ClassSkillList = new ArrayList<Class>();
 
     private MyWolf MWolf;
-    
-    private Map<String,MyWolfGenericSkill> Skills = new HashMap<String, MyWolfGenericSkill>();
+
+    private Map<String, MyWolfGenericSkill> Skills = new HashMap<String, MyWolfGenericSkill>();
 
     public static void registerSkill(Class cls)
     {
-        if(!ClassSkillList.contains(cls))
+        if (!ClassSkillList.contains(cls))
         {
             ClassSkillList.add(cls);
         }
     }
-    
+
     public MyWolfSkillSystem(MyWolf MWolf)
     {
         this.MWolf = MWolf;
@@ -59,15 +59,15 @@ public class MyWolfSkillSystem
         try
         {
             Object obj = cls.newInstance();
-            if(obj instanceof MyWolfGenericSkill)
+            if (obj instanceof MyWolfGenericSkill)
             {
-                Skill =  (MyWolfGenericSkill)obj;
+                Skill = (MyWolfGenericSkill) obj;
                 Name = Skill.getName();
 
-                if(!Skills.containsKey(Name))
+                if (!Skills.containsKey(Name))
                 {
                     Skill.MWolf = this.MWolf;
-                    Skills.put(Name,Skill);
+                    Skills.put(Name, Skill);
                 }
             }
         }
@@ -81,7 +81,7 @@ public class MyWolfSkillSystem
 
     public void addSkills(List<Class> clsList)
     {
-        if(clsList.size() > 0)
+        if (clsList.size() > 0)
         {
             for (Class cls : clsList)
             {
@@ -92,7 +92,7 @@ public class MyWolfSkillSystem
 
     public MyWolfGenericSkill getSkill(String Name)
     {
-        if(Skills.containsKey(Name))
+        if (Skills.containsKey(Name))
         {
             return Skills.get(Name);
         }
@@ -111,7 +111,7 @@ public class MyWolfSkillSystem
 
     public boolean hasSkill(String Name)
     {
-        if(Skills.containsKey(Name))
+        if (Skills.containsKey(Name))
         {
             return true;
         }

@@ -122,7 +122,7 @@ public class MyWolfConfig
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         StartHP = Config.getInt("MyWolf.starthp", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
-        MyWolfExperience.defaultEXPvalues  = Config.getBoolean("MyWolf.exp_default", true);
+        MyWolfExperience.defaultEXPvalues = Config.getBoolean("MyWolf.exp_default", true);
 
         if (Config.getStringList("MyWolf.exp") != null)
         {

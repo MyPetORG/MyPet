@@ -43,11 +43,7 @@ import org.bukkit.event.player.*;
 
 public class MyWolfPlayerListener implements Listener
 {
-    private final int[] ControllIgnoreBlocks =
-    {
-        6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70,
-        72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105 ,106, 111, 115, 116, 117, 118, 119
-    };
+    private final int[] ControllIgnoreBlocks = {6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70, 72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 116, 117, 118, 119};
 
     /*
     @EventHandler()
@@ -83,7 +79,7 @@ public class MyWolfPlayerListener implements Listener
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
             if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
             {
-                if(MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
+                if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
                 {
                     Block block = event.getPlayer().getTargetBlock(null, 100);
                     if (block != null)
@@ -100,13 +96,13 @@ public class MyWolfPlayerListener implements Listener
                         EntityMyWolf wolf = MWolf.Wolf.getHandle();
                         wolf.setPathEntity(new PathEntity(loc));
                         MWolf.ResetSitTimer();
-                        if(MWolf.SkillSystem.getSkill("Control").getLevel() > 1)
+                        if (MWolf.SkillSystem.getSkill("Control").getLevel() > 1)
                         {
                             for (Entity e : MWolf.Wolf.getNearbyEntities(1, 1, 1))
                             {
                                 if (e instanceof LivingEntity)
                                 {
-                                    if(MWolf.SkillSystem.hasSkill("Behavior"))
+                                    if (MWolf.SkillSystem.hasSkill("Behavior"))
                                     {
                                         if (((Behavior) MWolf.SkillSystem.getSkill("Behavior")).getBehavior() == Behavior.BehaviorState.Raid)
                                         {
@@ -141,9 +137,9 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        if(MyWolfList.hasInactiveMyWolf(event.getPlayer()))
+        if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
         {
-            MyWolfList.setMyWolfActive(event.getPlayer(),true);
+            MyWolfList.setMyWolfActive(event.getPlayer(), true);
         }
         if (MyWolfList.hasMyWolf(event.getPlayer()))
         {
@@ -225,7 +221,7 @@ public class MyWolfPlayerListener implements Listener
             MWolf.ResetSitTimer();
             if (MWolf.Status == WolfState.Here)
             {
-                if(MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
+                if (MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
                 {
                     MWolf.setSitting(false);
                     MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());

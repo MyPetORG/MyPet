@@ -77,7 +77,7 @@ public class MyWolfEntityListener implements Listener
                         damager.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
                 }
-                if(MyWolfList.isMyWolf(event.getEntity().getEntityId()))
+                if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
@@ -129,10 +129,10 @@ public class MyWolfEntityListener implements Listener
             }
             else if (e.getDamager() instanceof Wolf)
             {
-                if(MyWolfList.isMyWolf(e.getDamager().getEntityId()))
+                if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(e.getDamager().getEntityId());
-                    if(MWolf.SkillSystem.hasSkill("Demage"))
+                    if (MWolf.SkillSystem.hasSkill("Demage"))
                     {
                         event.setDamage(event.getDamage() + MWolf.SkillSystem.getSkill("Demage").getLevel());
                     }
@@ -146,15 +146,15 @@ public class MyWolfEntityListener implements Listener
     {
         if (event.getEntity() instanceof Wolf)
         {
-            if(MyWolfList.isMyWolf(event.getEntity().getEntityId()))
+            if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                 MWolf.Status = WolfState.Dead;
                 MWolf.RespawnTime = MyWolfConfig.RespawnTimeFixed + (MWolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor);
-                if(event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+                if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
                 {
-                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event.getEntity().getLastDamageCause();
-                    if(!(e.getDamager() instanceof Player && MWolf.getOwner() != e.getDamager()))
+                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+                    if (!(e.getDamager() instanceof Player && MWolf.getOwner() != e.getDamager()))
                     {
                         event.setDroppedExp(0);
                     }
@@ -168,14 +168,14 @@ public class MyWolfEntityListener implements Listener
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                if(MyWolfList.isMyWolf(e.getDamager().getEntityId()))
+                if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(e.getDamager().getEntityId());
                     if (MyWolfUtil.getCreatureType(e.getEntity()) != null)
                     {
-                        if(MyWolfExperience.defaultEXPvalues)
+                        if (MyWolfExperience.defaultEXPvalues)
                         {
-                            MWolf.Experience.addExp((double)event.getDroppedExp());
+                            MWolf.Experience.addExp((double) event.getDroppedExp());
                         }
                         else
                         {
@@ -194,20 +194,20 @@ public class MyWolfEntityListener implements Listener
         {
             if (event.getEntity() instanceof Wolf)
             {
-                if(MyWolfList.isMyWolf(event.getEntity().getEntityId()))
+                if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
-                    if(MWolf.SkillSystem.hasSkill("Behavior"))
+                    if (MWolf.SkillSystem.hasSkill("Behavior"))
                     {
                         Behavior behavior = (Behavior) MWolf.SkillSystem.getSkill("Behavior");
-                        if(behavior.getLevel() > 0)
+                        if (behavior.getLevel() > 0)
                         {
                             if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
                             {
                                 event.setCancelled(true);
                             }
-                            else if(event.getTarget() instanceof Player && ((Player)event.getTarget()).getName().equals(MWolf.getOwner().getName()))
+                            else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(MWolf.getOwner().getName()))
                             {
                                 event.setCancelled(true);
                             }
@@ -228,16 +228,16 @@ public class MyWolfEntityListener implements Listener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntitySpawn(CreatureSpawnEvent event)
     {
-        if(event.getEntity() instanceof CraftMyWolf)
+        if (event.getEntity() instanceof CraftMyWolf)
         {
-            CraftMyWolf MWolf = (CraftMyWolf)event.getEntity();
-            if(!MWolf.getHandle().isMyWolf())
+            CraftMyWolf MWolf = (CraftMyWolf) event.getEntity();
+            if (!MWolf.getHandle().isMyWolf())
             {
                 event.setCancelled(true);
-                net.minecraft.server.World mcWorld = ((CraftWorld)event.getLocation().getWorld()).getHandle();
+                net.minecraft.server.World mcWorld = ((CraftWorld) event.getLocation().getWorld()).getHandle();
                 EntityWolf entityWolf = new EntityWolf(mcWorld);
                 Location loc = event.getLocation();
-                entityWolf.setLocation(loc.getX(),loc.getY(),loc.getZ(),loc.getYaw(),loc.getPitch());
+                entityWolf.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
                 mcWorld.addEntity(entityWolf, CreatureSpawnEvent.SpawnReason.SPAWNER_EGG);
             }
         }
@@ -325,7 +325,7 @@ public class MyWolfEntityListener implements Listener
                     Wolf w = (Wolf) e.getDamager();
                     if (w.isTamed())
                     {
-                        if(MyWolfList.isMyWolf(w.getEntityId()))
+                        if (MyWolfList.isMyWolf(w.getEntityId()))
                         {
                             Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("MyWolf")).replace("%player%", MyWolfList.getMyWolf(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyWolfList.getMyWolf(w.getEntityId()).Name);
                         }

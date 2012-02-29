@@ -47,7 +47,7 @@ public class MyWolfUtil
     {
         return getServer().getOfflinePlayer(Name);
     }
-    
+
     public static Logger getLogger()
     {
         return Log;
@@ -152,39 +152,39 @@ public class MyWolfUtil
         {
             return CreatureType.SHEEP;
         }
-        else if(entity instanceof CaveSpider)
+        else if (entity instanceof CaveSpider)
         {
             return CreatureType.CAVE_SPIDER;
         }
-        else if(entity instanceof Blaze)
+        else if (entity instanceof Blaze)
         {
             return CreatureType.BLAZE;
         }
-        else if(entity instanceof EnderDragon)
+        else if (entity instanceof EnderDragon)
         {
             return CreatureType.ENDER_DRAGON;
         }
-        else if(entity instanceof Enderman)
+        else if (entity instanceof Enderman)
         {
             return CreatureType.ENDERMAN;
         }
-        else if(entity instanceof MagmaCube)
+        else if (entity instanceof MagmaCube)
         {
             return CreatureType.MAGMA_CUBE;
         }
-        else if(entity instanceof MushroomCow)
+        else if (entity instanceof MushroomCow)
         {
             return CreatureType.MUSHROOM_COW;
         }
-        else if(entity instanceof Silverfish)
+        else if (entity instanceof Silverfish)
         {
             return CreatureType.SILVERFISH;
         }
-        else if(entity instanceof Snowman)
+        else if (entity instanceof Snowman)
         {
             return CreatureType.SNOWMAN;
         }
-        else if(entity instanceof Villager)
+        else if (entity instanceof Villager)
         {
             return CreatureType.VILLAGER;
         }

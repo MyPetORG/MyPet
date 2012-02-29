@@ -41,7 +41,7 @@ public class MyWolfCustomInventory implements IInventory
     {
         setName(Name);
     }
-    
+
     public int getSize()
     {
         return Items.size();
@@ -50,9 +50,9 @@ public class MyWolfCustomInventory implements IInventory
     public void setSize(int Size)
     {
         this.Size = Size;
-        for(int i = Items.size();i<Size;i++)
+        for (int i = Items.size(); i < Size; i++)
         {
-            Items.add(i,null);
+            Items.add(i, null);
         }
     }
 
@@ -63,16 +63,16 @@ public class MyWolfCustomInventory implements IInventory
 
     public void setName(String Name)
     {
-        if(Name.length()>16)
+        if (Name.length() > 16)
         {
-            Name = Name.substring(0,16);
+            Name = Name.substring(0, 16);
         }
         this.MyWolfInventroyName = Name;
     }
 
     public ItemStack getItem(int i)
     {
-        if(i<=Size)
+        if (i <= Size)
         {
             return Items.get(i);
         }
@@ -81,17 +81,17 @@ public class MyWolfCustomInventory implements IInventory
 
     public void setItem(int i, ItemStack itemStack)
     {
-        if(i<Items.size())
+        if (i < Items.size())
         {
-            Items.set(i,itemStack);
+            Items.set(i, itemStack);
         }
         else
         {
-            for(int x = Items.size(); x < i;x++)
+            for (int x = Items.size(); x < i; x++)
             {
-                Items.add(x,null);
+                Items.add(x, null);
             }
-            Items.add(i,itemStack);
+            Items.add(i, itemStack);
         }
     }
 
@@ -102,7 +102,7 @@ public class MyWolfCustomInventory implements IInventory
         int ItemAmount = item.getAmount();
         int ItemMaxStack = item.getMaxStackSize();
 
-        for (int i = 0 ; i < this.getSize() ; i++)
+        for (int i = 0; i < this.getSize(); i++)
         {
             if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).count < ItemMaxStack)
             {
@@ -119,7 +119,7 @@ public class MyWolfCustomInventory implements IInventory
                 }
             }
         }
-        for (int i = 0 ; i < getSize() ; i++)
+        for (int i = 0; i < getSize(); i++)
         {
             if (ItemAmount <= 0)
             {
@@ -144,13 +144,13 @@ public class MyWolfCustomInventory implements IInventory
 
     public ItemStack splitStack(int i, int j)
     {
-        if (i<=Size && Items.get(i) != null)
+        if (i <= Size && Items.get(i) != null)
         {
             ItemStack itemstack;
             if (Items.get(i).count <= j)
             {
                 itemstack = Items.get(i);
-                Items.set(i,null);
+                Items.set(i, null);
                 return itemstack;
             }
             else
@@ -169,7 +169,7 @@ public class MyWolfCustomInventory implements IInventory
     public ItemStack[] getContents()
     {
         ItemStack[] itemStack = new ItemStack[getSize()];
-        for(int i = 0; i < getSize(); i++)
+        for (int i = 0; i < getSize(); i++)
         {
             itemStack[i] = Items.get(i);
         }
@@ -180,10 +180,10 @@ public class MyWolfCustomInventory implements IInventory
     {
         return 64;
     }
-    
+
     public void save(File file) throws IOException
     {
-        DataOutputStream F_Out = new DataOutputStream( new FileOutputStream(file));
+        DataOutputStream F_Out = new DataOutputStream(new FileOutputStream(file));
         NBTTagList Items = new NBTTagList();
         for (int i = 0; i < this.Items.size(); i++)
         {
@@ -191,7 +191,7 @@ public class MyWolfCustomInventory implements IInventory
             if (itemStack != null)
             {
                 NBTTagCompound Item = new NBTTagCompound();
-                Item.setByte("Slot", (byte)i);
+                Item.setByte("Slot", (byte) i);
                 itemStack.b(Item);
                 Items.add(Item);
             }
@@ -211,7 +211,7 @@ public class MyWolfCustomInventory implements IInventory
             if (itemStack != null)
             {
                 NBTTagCompound Item = new NBTTagCompound();
-                Item.setByte("Slot", (byte)i);
+                Item.setByte("Slot", (byte) i);
                 itemStack.b(Item);
                 Items.add(Item);
             }
@@ -222,7 +222,7 @@ public class MyWolfCustomInventory implements IInventory
 
     public void load(File file) throws IOException
     {
-        DataInputStream F_In = new DataInputStream( new FileInputStream(file));
+        DataInputStream F_In = new DataInputStream(new FileInputStream(file));
         NBTTagCompound nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
         NBTTagList Items = nbtTagCompound.getList("Items");
 

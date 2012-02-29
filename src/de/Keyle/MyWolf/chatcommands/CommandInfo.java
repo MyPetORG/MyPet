@@ -38,7 +38,7 @@ public class CommandInfo implements CommandExecutor
         {
             Player player = (Player) sender;
             String playerName = sender.getName();
-            if(args != null && args.length > 0)
+            if (args != null && args.length > 0)
             {
                 playerName = args[0];
             }
@@ -67,19 +67,21 @@ public class CommandInfo implements CommandExecutor
                     double reqEXP = MWolf.Experience.getrequireEXP();
                     player.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                 }
-                if(args != null && args.length > 0)
-                	player.sendMessage(MyWolfUtil.SetColors("Owner: %Owner%").replace("%Owner%", playerName));
+                if (args != null && args.length > 0)
+                {
+                    player.sendMessage(MyWolfUtil.SetColors("Owner: %Owner%").replace("%Owner%", playerName));
+                }
                 return true;
             }
             else
             {
-            	if(args != null && args.length > 0)
+                if (args != null && args.length > 0)
                 {
-            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
                 }
-            	else
+                else
                 {
-            		sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
         }

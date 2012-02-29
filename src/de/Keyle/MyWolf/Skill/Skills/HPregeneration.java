@@ -29,7 +29,7 @@ public class HPregeneration extends MyWolfGenericSkill
 {
     int HealtregenTime = 60;
     int timeCounter = HealtregenTime - Level;
-    
+
     public HPregeneration()
     {
         super("HPregeneration");
@@ -48,7 +48,7 @@ public class HPregeneration extends MyWolfGenericSkill
         if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here)
         {
             timeCounter--;
-            if(timeCounter <= 0)
+            if (timeCounter <= 0)
             {
                 MWolf.Wolf.getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = HealtregenTime - Level;

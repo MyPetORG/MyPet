@@ -45,18 +45,19 @@ public class InactiveMyWolf
 
     public void setSkills(Collection<MyWolfGenericSkill> Skills)
     {
-        if(Skills.size() > 0)
+        if (Skills.size() > 0)
         {
-            for(MyWolfGenericSkill Skill : Skills)
+            for (MyWolfGenericSkill Skill : Skills)
             {
                 NBTTagCompound s = Skill.save();
-                if(s != null)
+                if (s != null)
                 {
                     this.NBTSkills.set(Skill.getName(), s);
                 }
             }
         }
     }
+
     public void setSkills(NBTTagCompound Skills)
     {
         NBTSkills = Skills;
