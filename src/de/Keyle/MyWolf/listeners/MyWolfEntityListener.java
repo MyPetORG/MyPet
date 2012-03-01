@@ -54,7 +54,7 @@ public class MyWolfEntityListener implements Listener
             {
                 Player damager = (Player) e.getDamager();
 
-                if (!MyWolfList.hasMyWolf(damager))
+                if (!MyWolfList.hasMyWolf(damager) && !(event.getEntity() instanceof CraftMyWolf))
                 {
                     if (!MyWolfPermissions.has(damager, "MyWolf.user.leash") || damager.getItemInHand().getType() != MyWolfConfig.LeashItem)
                     {
