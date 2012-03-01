@@ -34,8 +34,6 @@ public class MyWolfList
 
     private static final Map<OfflinePlayer, InactiveMyWolf> mInctiveWolves = new HashMap<OfflinePlayer, InactiveMyWolf>();
     private static final List<InactiveMyWolf> lInactiveWolves = new ArrayList<InactiveMyWolf>();
-    
-    private static int MyWolfCount = 0;
 
     // Active -------------------------------------------------------------------
 
@@ -79,21 +77,18 @@ public class MyWolfList
     {
         mActiveWolves.put(MW.getOwner(), MW);
         lActiveWolves.add(MW);
-        MyWolfCount++;
     }
 
     public static void removeMyWolf(MyWolf MW)
     {
         lActiveWolves.remove(MW);
         mActiveWolves.remove(MW.getOwner());
-        MyWolfCount--;
     }
 
     public static void removeMyWolf(OfflinePlayer Owner)
     {
         lActiveWolves.remove(mActiveWolves.get(Owner));
         mActiveWolves.remove(Owner);
-        MyWolfCount--;
     }
 
     public static MyWolf getMyWolf(int EntityID)
@@ -170,14 +165,12 @@ public class MyWolfList
     {
         mInctiveWolves.remove(IMWolf.getOwner());
         lInactiveWolves.remove(IMWolf);
-        MyWolfCount--;
     }
 
     public static void addInactiveMyWolf(InactiveMyWolf IMWolf)
     {
         mInctiveWolves.put(IMWolf.getOwner(), IMWolf);
         lInactiveWolves.add(IMWolf);
-        MyWolfCount--;
     }
 
     // All ----------------------------------------------------------------------
@@ -213,11 +206,10 @@ public class MyWolfList
         lActiveWolves.clear();
         mInctiveWolves.clear();
         lInactiveWolves.clear();
-        MyWolfCount = 0;
     }
     
     public static int getMyWolfCount()
     {
-        return MyWolfCount;
+        return mActiveWolves.size() + mInctiveWolves.size();
     }
 }

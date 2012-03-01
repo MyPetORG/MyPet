@@ -209,32 +209,20 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         Timer.startTimer();
+
         if(MyWolfConfig.sendMetrics)
         {
             try
             {
                 Metrics metrics = new Metrics();
 
-                Metrics.Graph graph = metrics.createGraph(getPlugin(), Metrics.Graph.Type.Column, "MyWolf Count on the Servers");
-
-                metrics.addCustomData(getPlugin(), new Metrics.Plotter("Total number of all MyWolves")
+                metrics.addCustomData(getPlugin(), new Metrics.Plotter("Total MyWolves")
                 {
                     @Override
                     public int getValue()
                     {
                         return MyWolfList.getMyWolfCount();
                     }
-
-                });
-
-                graph.addPlotter(new Metrics.Plotter("Total MyWolves")
-                {
-                    @Override
-                    public int getValue()
-                    {
-                        return MyWolfList.getMyWolfCount();
-                    }
-
                 });
 
                 metrics.beginMeasuringPlugin(getPlugin());
@@ -244,7 +232,6 @@ public class MyWolfPlugin extends JavaPlugin
                 MyWolfUtil.getLogger().info(e.getMessage());
             }
         }
-
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
