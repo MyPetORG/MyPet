@@ -23,7 +23,6 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.util.MyWolfList;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,18 +33,7 @@ public class MyWolfVehicleListener implements Listener
     @EventHandler(priority = EventPriority.LOW)
     public void onVehicleEnter(VehicleEnterEvent event)
     {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        if (event.getEntered() instanceof Wolf)
-        {
-            if (MyWolfList.getMyWolf(event.getEntered().getEntityId()) != null)
-            {
-                event.setCancelled(true);
-            }
-        }
-        if (event.getEntered() instanceof Player)
+        if (!event.isCancelled() && event.getEntered() instanceof Player)
         {
             Player player = (Player) event.getEntered();
             if (MyWolfList.hasMyWolf(player))
