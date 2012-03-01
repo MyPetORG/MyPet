@@ -73,9 +73,9 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
 
-        Timer.stopTimer();
         MyWolfList.clearList();
         WolfChestOpened.clear();
+        getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
 
         MyWolfUtil.getLogger().info("[MyWolf] Disabled");
     }
@@ -116,7 +116,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfskill").setExecutor(new CommandSkill());
 
         MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
-        if(!MWSkillTreeConfig.ConfigFile.exists())
+        if (!MWSkillTreeConfig.ConfigFile.exists())
         {
             try
             {
@@ -125,14 +125,15 @@ public class MyWolfPlugin extends JavaPlugin
 
                 byte[] buf = new byte[1024];
                 int len;
-                while ((len = template.read(buf)) > 0){
+                while ((len = template.read(buf)) > 0)
+                {
                     out.write(buf, 0, len);
                 }
                 template.close();
                 out.close();
                 MyWolfUtil.getLogger().info("[MyWolf] Default skill.yml file created. Please restart the server to load the skilltrees!");
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 MyWolfUtil.getLogger().info("[MyWolf] Unable to create the default skill.yml file!");
             }
@@ -208,11 +209,46 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         Timer.startTimer();
+        if(MyWolfConfig.sendMetrics)
+        {
+            try
+            {
+                Metrics metrics = new Metrics();
+
+                Metrics.Graph graph = metrics.createGraph(getPlugin(), Metrics.Graph.Type.Column, "MyWolf Count on the Servers");
+
+                metrics.addCustomData(getPlugin(), new Metrics.Plotter("Total number of all MyWolves")
+                {
+                    @Override
+                    public int getValue()
+                    {
+                        return MyWolfList.getMyWolfCount();
+                    }
+
+                });
+
+                graph.addPlotter(new Metrics.Plotter("Total MyWolves")
+                {
+                    @Override
+                    public int getValue()
+                    {
+                        return MyWolfList.getMyWolfCount();
+                    }
+
+                });
+
+                metrics.beginMeasuringPlugin(getPlugin());
+            }
+            catch (IOException e)
+            {
+                MyWolfUtil.getLogger().info(e.getMessage());
+            }
+        }
 
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
     }
 
-    void loadWolves(File f)
+    int loadWolves(File f)
     {
         int anzahlWolves = 0;
 
@@ -251,9 +287,10 @@ public class MyWolfPlugin extends JavaPlugin
             anzahlWolves++;
         }
         MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+        return anzahlWolves;
     }
 
-    void loadWolves(MyWolfYamlConfiguration MWC)
+    int loadWolves(MyWolfYamlConfiguration MWC)
     {
         int anzahlWolves = 0;
         if (MWC.getConfig().contains("Wolves"))
@@ -316,6 +353,7 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
         MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+        return anzahlWolves;
     }
 
     public void saveWolves(File f)
