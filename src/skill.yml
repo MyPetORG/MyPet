@@ -12,6 +12,7 @@ skilltrees:
       - Inventory
       - Control
       - Pickup
+      - Behavior
       - HP
       - HP
       - HP
