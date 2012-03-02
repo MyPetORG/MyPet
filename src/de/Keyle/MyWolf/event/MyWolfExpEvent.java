@@ -36,7 +36,7 @@ public class MyWolfExpEvent extends Event implements Cancellable
 
     public MyWolfExpEvent(MyWolf Wolf, double oldEXP, double newEXP)
     {
-        super("MyWolfExpEvent");
+        super();
         this.Wolf = Wolf;
         this.oldEXP = oldEXP;
         this.newEXP = newEXP;

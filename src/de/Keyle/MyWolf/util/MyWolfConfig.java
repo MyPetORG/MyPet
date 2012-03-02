@@ -23,7 +23,7 @@ import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 
 public class MyWolfConfig
 {
@@ -107,7 +107,7 @@ public class MyWolfConfig
                 double expval = Config.getDouble("MyWolf.exp." + key, -1.0);
                 if (expval > -1)
                 {
-                    MyWolfExperience.MobEXP.put(CreatureType.valueOf(key), expval);
+                    MyWolfExperience.MobEXP.put(EntityType.valueOf(key), expval);
                 }
             }
         }

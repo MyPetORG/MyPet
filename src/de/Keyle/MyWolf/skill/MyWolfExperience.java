@@ -24,7 +24,7 @@ import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.EntityType;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -41,23 +41,23 @@ public class MyWolfExperience
 
     public static String JSreader = null;
 
-    public static final Map<CreatureType, Double> MobEXP = new HashMap<CreatureType, Double>();
+    public static final Map<EntityType, Double> MobEXP = new HashMap<EntityType, Double>();
 
     static
     {
-        MobEXP.put(CreatureType.SKELETON, 1.1);
-        MobEXP.put(CreatureType.ZOMBIE, 1.1);
-        MobEXP.put(CreatureType.SPIDER, 1.05);
-        MobEXP.put(CreatureType.WOLF, 0.5);
-        MobEXP.put(CreatureType.CREEPER, 1.55);
-        MobEXP.put(CreatureType.GHAST, 0.85);
-        MobEXP.put(CreatureType.PIG_ZOMBIE, 1.1);
-        MobEXP.put(CreatureType.GIANT, 10.75);
-        MobEXP.put(CreatureType.COW, 0.25);
-        MobEXP.put(CreatureType.PIG, 0.25);
-        MobEXP.put(CreatureType.CHICKEN, 0.1);
-        MobEXP.put(CreatureType.SQUID, 0.25);
-        MobEXP.put(CreatureType.SHEEP, 0.25);
+        MobEXP.put(EntityType.SKELETON, 1.1);
+        MobEXP.put(EntityType.ZOMBIE, 1.1);
+        MobEXP.put(EntityType.SPIDER, 1.05);
+        MobEXP.put(EntityType.WOLF, 0.5);
+        MobEXP.put(EntityType.CREEPER, 1.55);
+        MobEXP.put(EntityType.GHAST, 0.85);
+        MobEXP.put(EntityType.PIG_ZOMBIE, 1.1);
+        MobEXP.put(EntityType.GIANT, 10.75);
+        MobEXP.put(EntityType.COW, 0.25);
+        MobEXP.put(EntityType.PIG, 0.25);
+        MobEXP.put(EntityType.CHICKEN, 0.1);
+        MobEXP.put(EntityType.SQUID, 0.25);
+        MobEXP.put(EntityType.SHEEP, 0.25);
     }
 
     public MyWolfExperience(MyWolf Wolf)
@@ -110,7 +110,7 @@ public class MyWolfExperience
         }
     }
 
-    public void addExp(CreatureType type)
+    public void addExp(EntityType type)
     {
         if (MobEXP.containsKey(type))
         {

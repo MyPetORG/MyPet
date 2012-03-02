@@ -171,16 +171,13 @@ public class MyWolfEntityListener implements Listener
                 if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(e.getDamager().getEntityId());
-                    if (MyWolfUtil.getCreatureType(e.getEntity()) != null)
+                    if (MyWolfExperience.defaultEXPvalues)
                     {
-                        if (MyWolfExperience.defaultEXPvalues)
-                        {
-                            MWolf.Experience.addExp((double) event.getDroppedExp());
-                        }
-                        else
-                        {
-                            MWolf.Experience.addExp(MyWolfUtil.getCreatureType(e.getEntity()));
-                        }
+                        MWolf.Experience.addExp((double) event.getDroppedExp());
+                    }
+                    else
+                    {
+                        MWolf.Experience.addExp(e.getEntity().getType());
                     }
                 }
             }
@@ -253,7 +250,7 @@ public class MyWolfEntityListener implements Listener
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
-                if (e.getDamager() instanceof Player)
+                if (e.getDamager().getType() == EntityType.PLAYER)
                 {
                     if (e.getDamager() == MWolf.getOwner())
                     {
@@ -264,63 +261,63 @@ public class MyWolfEntityListener implements Listener
                         Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Player")).replace("%player%", ((Player) e.getDamager()).getName());
                     }
                 }
-                else if (e.getDamager() instanceof Zombie)
+                else if (e.getDamager().getType() == EntityType.ZOMBIE)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Zombie"));
                 }
-                else if (e.getDamager() instanceof Creeper)
+                else if (e.getDamager().getType() == EntityType.CREEPER)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Creeper"));
                 }
-                else if (e.getDamager() instanceof Spider)
+                else if (e.getDamager().getType() == EntityType.SPIDER)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Spider"));
                 }
-                else if (e.getDamager() instanceof Slime)
+                else if (e.getDamager().getType() == EntityType.SLIME)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Slime"));
                 }
-                else if (e.getDamager() instanceof Giant)
+                else if (e.getDamager().getType() == EntityType.GIANT)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Giant"));
                 }
-                else if (e.getDamager() instanceof Skeleton)
+                else if (e.getDamager().getType() == EntityType.SKELETON)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Skeleton"));
                 }
-                else if (e.getDamager() instanceof CaveSpider)
+                else if (e.getDamager().getType() == EntityType.CAVE_SPIDER)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("CaveSpider"));
                 }
-                else if (e.getDamager() instanceof Enderman)
+                else if (e.getDamager().getType() == EntityType.ENDERMAN)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Enderman"));
                 }
-                else if (e.getDamager() instanceof PigZombie)
+                else if (e.getDamager().getType() == EntityType.PIG_ZOMBIE)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("PigZombie"));
                 }
-                else if (e.getDamager() instanceof Silverfish)
+                else if (e.getDamager().getType() == EntityType.SILVERFISH)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Silverfish"));
                 }
-                else if (e.getDamager() instanceof Snowman)
+                else if (e.getDamager().getType() == EntityType.SNOWMAN)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Snowman"));
                 }
-                else if (e.getDamager() instanceof EnderDragon)
+                else if (e.getDamager().getType() == EntityType.ENDER_DRAGON)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("EnderDragon"));
                 }
-                else if (e.getDamager() instanceof Blaze)
+                else if (e.getDamager().getType() == EntityType.BLAZE)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Blaze"));
                 }
-                else if (e.getDamager() instanceof MagmaCube)
+                else if (e.getDamager().getType() == EntityType.MAGMA_CUBE)
                 {
                     Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("MagmaCube"));
                 }
-                else if (e.getDamager() instanceof Wolf)
+                else if (e.getDamager().getType() == EntityType.WOLF)
                 {
                     Wolf w = (Wolf) e.getDamager();
                     if (w.isTamed())

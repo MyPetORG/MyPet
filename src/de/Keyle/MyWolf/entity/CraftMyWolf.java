@@ -165,8 +165,8 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
         return "CraftMyWolf{anger=" + isAngry() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
-    public CreatureType getType()
+    public EntityType getType()
     {
-        return CreatureType.WOLF;
+        return EntityType.WOLF;
     }
 }

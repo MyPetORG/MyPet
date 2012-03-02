@@ -22,6 +22,7 @@ package de.Keyle.MyWolf.entity;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
@@ -37,17 +38,36 @@ public class EntityMyWolf extends EntityWolf
     public EntityMyWolf(World world)
     {
         super(world);
+        MyWolfUtil.getLogger().info("-- Normal Way");
     }
 
     public EntityMyWolf(World world, MyWolf MWolf)
     {
         super(world);
         setMyWolf(MWolf);
+        MyWolfUtil.getLogger().info("-- MyWolf Way");
     }
 
     public boolean isMyWolf()
     {
         return isMyWolf;
+    }
+
+    public void e(NBTTagCompound nbttagcompound)
+    {
+        if(!isMyWolf)
+        {
+            MyWolfUtil.getLogger().info("-- Replaced");
+            super.d(nbttagcompound);
+            EntityWolf entityWolf = new EntityWolf(world);
+            entityWolf.d(nbttagcompound);
+            this.getBukkitEntity().remove();
+        }
+        else
+        {
+            MyWolfUtil.getLogger().info("-- NOT Replaced");
+            super.d(nbttagcompound);
+        }
     }
 
     public void setMyWolf(MyWolf MWolf)
@@ -63,7 +83,7 @@ public class EntityMyWolf extends EntityWolf
                 this.setSitting(MWolf.isSitting());
                 this.setHealth(getMaxHealth());
                 this.setOwnerName(MWolf.getOwner().getName());
-                this.world.a(this, (byte) 7);
+                this.world.broadcastEntityEffect(this, (byte) 7);
             }
         }
     }
@@ -78,10 +98,6 @@ public class EntityMyWolf extends EntityWolf
         {
             return this.isTamed() ? 20 : 8;
         }
-    }
-
-    public void b(NBTTagCompound nbttagcompound)
-    {
     }
 
     public void m_()
@@ -151,11 +167,11 @@ public class EntityMyWolf extends EntityWolf
                         this.setSitting(true);
                         this.setHealth(20);
                         this.setOwnerName(entityhuman.name);
-                        this.world.a(this, (byte) 7);
+                        this.world.broadcastEntityEffect(this, (byte) 7);
                     }
                     else
                     {
-                        this.world.a(this, (byte) 6);
+                        this.world.broadcastEntityEffect(this, (byte) 6);
                     }
                 }
 

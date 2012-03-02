@@ -90,7 +90,7 @@ public class Inventory extends MyWolfGenericSkill
     public void OpenInventory(Player p)
     {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
-        eh.a(inv);
+        eh.openContainer(inv);
     }
 
     @Override

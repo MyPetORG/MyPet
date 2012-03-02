@@ -20,6 +20,9 @@
 package de.Keyle.MyWolf.util;
 
 import net.minecraft.server.*;
+import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -176,6 +179,24 @@ public class MyWolfCustomInventory implements IInventory
         return itemStack;
     }
 
+    public void onOpen(CraftHumanEntity craftHumanEntity)
+    {
+    }
+
+    public void onClose(CraftHumanEntity craftHumanEntity)
+    {
+    }
+
+    public List<HumanEntity> getViewers()
+    {
+        return null;
+    }
+
+    public InventoryHolder getOwner()
+    {
+        return null;
+    }
+
     public int getMaxStackSize()
     {
         return 64;
@@ -192,7 +213,7 @@ public class MyWolfCustomInventory implements IInventory
             {
                 NBTTagCompound Item = new NBTTagCompound();
                 Item.setByte("Slot", (byte) i);
-                itemStack.b(Item);
+                itemStack.save(Item);
                 Items.add(Item);
             }
         }
@@ -212,7 +233,7 @@ public class MyWolfCustomInventory implements IInventory
             {
                 NBTTagCompound Item = new NBTTagCompound();
                 Item.setByte("Slot", (byte) i);
-                itemStack.b(Item);
+                itemStack.save(Item);
                 Items.add(Item);
             }
         }
