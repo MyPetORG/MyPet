@@ -86,9 +86,18 @@ public class MyWolfNBTConfiguration
     {
         try
         {
-            DataInputStream F_In = new DataInputStream(new FileInputStream(NBTFile));
-            nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
-            F_In.close();
+            FileInputStream fi = new FileInputStream(NBTFile);            
+            fi.read();
+            
+            if(fi.read() != -1)
+            {
+                fi.close();
+                fi = new FileInputStream(NBTFile);
+                DataInputStream F_In = new DataInputStream(fi);
+                nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
+                F_In.close();
+            }
+            fi.close();
         }
         catch (IOException e)
         {
