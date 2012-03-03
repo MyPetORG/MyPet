@@ -31,10 +31,7 @@ import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
-import net.minecraft.server.EntityTypes;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NBTTagList;
+import net.minecraft.server.*;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -156,6 +153,7 @@ public class MyWolfPlugin extends JavaPlugin
             Method a = EntityTypes.class.getDeclaredMethod("a", args);
             a.setAccessible(true);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
+            a.invoke(a, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
         }
         catch (Exception e)
         {

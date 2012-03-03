@@ -38,14 +38,14 @@ public class EntityMyWolf extends EntityWolf
     public EntityMyWolf(World world)
     {
         super(world);
-        MyWolfUtil.getLogger().info("-- Normal Way");
+        //MyWolfUtil.getLogger().info("-- Normal Way");
     }
 
     public EntityMyWolf(World world, MyWolf MWolf)
     {
         super(world);
         setMyWolf(MWolf);
-        MyWolfUtil.getLogger().info("-- MyWolf Way");
+        //MyWolfUtil.getLogger().info("-- MyWolf Way");
     }
 
     public boolean isMyWolf()
@@ -57,15 +57,16 @@ public class EntityMyWolf extends EntityWolf
     {
         if(!isMyWolf)
         {
-            MyWolfUtil.getLogger().info("-- Replaced");
+            //MyWolfUtil.getLogger().info("-- Replaced");
             super.d(nbttagcompound);
             EntityWolf entityWolf = new EntityWolf(world);
             entityWolf.d(nbttagcompound);
             this.getBukkitEntity().remove();
+            MyWolfUtil.getLogger().severe("If there is a unnormal messege around here, please contact the developer and inform him about this!");
         }
         else
         {
-            MyWolfUtil.getLogger().info("-- NOT Replaced");
+            //MyWolfUtil.getLogger().info("-- NOT Replaced");
             super.d(nbttagcompound);
         }
     }
