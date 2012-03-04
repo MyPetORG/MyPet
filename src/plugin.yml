@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolfPlugin
 version: 0.6.1
@@ -41,3 +42,32 @@ commands:
     aliases: [wolfa, wa]
     description: Set the Exp or Name of a MyWolf
     usage: '/<command> [PlayerName] name/exp [Value]'
+=======
+
+permissions:
+  MyWolf.*:
+    description: Gives access to all Mywolf commands
+    children:
+      MyWolf.respawn: true
+      MyWolf.use: true
+      MyWolf.leash: true
+      MyWolf.stop: true
+      MyWolf.call: true
+      MyWolf.setname: true
+      MyWolf.release: true
+
+  MyWolf.respawn:
+    description: Allows MyWolf to respawn
+  Mywolf.use:
+    description: Allows useage of MyWolf
+  MyWolf.leash:
+    description: Allows useage of leash
+  MyWolf.stop:
+    description: Allows useage of /wolfstop
+  MyWolf.call:
+    description: Allows useage of /wolfcall
+  MyWolf.setname:
+    description: Allows useage of /wolfname
+  MyWolf.release:
+    description: Allows useage of /wolfrelease
+>>>>>>> ec0d508... Test Commit
