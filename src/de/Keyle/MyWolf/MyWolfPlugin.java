@@ -28,7 +28,6 @@ import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.skill.skills.*;
 import de.Keyle.MyWolf.util.*;
-import de.Keyle.MyWolf.util.MyWolfPermissions.PermissionsType;
 import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.*;
@@ -166,14 +165,7 @@ public class MyWolfPlugin extends JavaPlugin
         // For future of the client mod
         //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");
 
-        if (MyWolfConfig.PermissionsBukkit)
-        {
-            MyWolfPermissions.setup(PermissionsType.BukkitPermissions);
-        }
-        else
-        {
-            MyWolfPermissions.setup();
-        }
+        MyWolfPermissions.setup();
 
         MWLanguage = new MyWolfLanguage(new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
         MWLanguage.loadVariables();

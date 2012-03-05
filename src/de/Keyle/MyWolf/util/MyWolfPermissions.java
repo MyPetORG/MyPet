@@ -24,8 +24,6 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class MyWolfPermissions
 {
@@ -33,7 +31,7 @@ public class MyWolfPermissions
 
     public enum PermissionsType
     {
-        NONE, Vault, bPermissions, PermissionsEX, BukkitPermissions//, Permissions, GroupManager
+        NONE, Vault, BukkitPermissions
     }
 
     private static PermissionsType PermissionsMode = PermissionsType.NONE;
@@ -45,7 +43,7 @@ public class MyWolfPermissions
         {
             return true;
         }
-        else if (PermissionsMode == PermissionsType.NONE || Permissions == null)
+        else if (PermissionsMode == PermissionsType.NONE)
         {
             return true;
         }
@@ -53,11 +51,7 @@ public class MyWolfPermissions
         {
             ((Permission)Permissions).has(player,node);
         }
-        else if (PermissionsMode == PermissionsType.PermissionsEX && Permissions instanceof PermissionManager)
-        {
-            return ((PermissionManager) Permissions).has(player, node);
-        }
-        else if (PermissionsMode == PermissionsType.BukkitPermissions || PermissionsMode == PermissionsType.bPermissions)
+        else if (PermissionsMode == PermissionsType.BukkitPermissions)
         {
             player.hasPermission(node);
         }
@@ -87,27 +81,16 @@ public class MyWolfPermissions
             }
             if(Permissions != null)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] bPermissions integration enabled!");
+                MyWolfUtil.getLogger().info("[MyWolf] Vault integration enabled!");
                 return;
             }
             PermissionsMode = PermissionsType.NONE;
         }
 
-        p = MyWolfPlugin.getPlugin().getServer().getPluginManager().getPlugin("bPermissions");
-        if (p != null && PermissionsMode == PermissionsType.NONE)
+        if (PermissionsMode == PermissionsType.NONE && MyWolfConfig.PermissionsBukkit)
         {
-            PermissionsMode = PermissionsType.bPermissions;
-            Permissions = null;
-            MyWolfUtil.getLogger().info("[MyWolf] bPermissions integration enabled!");
-            return;
-        }
-
-        p = MyWolfPlugin.getPlugin().getServer().getPluginManager().getPlugin("PermissionsEx");
-        if (p != null && PermissionsMode == PermissionsType.NONE)
-        {
-            PermissionsMode = PermissionsType.PermissionsEX;
-            Permissions = PermissionsEx.getPermissionManager();
-            MyWolfUtil.getLogger().info("[MyWolf] PermissionsEX integration enabled!");
+            PermissionsMode = PermissionsType.BukkitPermissions;
+            MyWolfUtil.getLogger().info("[MyWolf] BukkitPermissions enabled!");
             return;
         }
 
