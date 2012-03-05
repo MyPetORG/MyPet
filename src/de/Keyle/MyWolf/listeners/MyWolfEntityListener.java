@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.entity.CraftMyWolf;
+import de.Keyle.MyWolf.event.MyWolfLeashEvent;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.*;
@@ -71,6 +72,7 @@ public class MyWolfEntityListener implements Listener
                     {
                         event.setCancelled(true);
                         MyWolf MWolf = new MyWolf(damager);
+                        MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfLeashEvent(MWolf));
                         MyWolfList.addMyWolf(MWolf);
                         MWolf.createWolf((Wolf) event.getEntity());
                         MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
