@@ -25,8 +25,6 @@ import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import java.util.List;
 
@@ -97,13 +95,8 @@ public class EntityMyWolf extends EntityWolf
         }
         else
         {
-            return this.isTamed() ? 20 : 8;
+            return super.getMaxHealth();
         }
-    }
-
-    public void m_()
-    {
-        super.m_();
     }
 
     protected Entity findTarget()
@@ -139,86 +132,23 @@ public class EntityMyWolf extends EntityWolf
                 }
             }
         }
-        return this.isAngry() ? this.world.findNearbyPlayer(this, 16.0D) : null;
+        return super.findTarget();
     }
 
     @Override
     public boolean b(EntityHuman entityhuman)
     {
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
-
-        if (!this.isTamed())
+        if(isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
-            if (itemstack != null && itemstack.id == Item.BONE.id && !this.isAngry())
+            if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
             {
-                --itemstack.count;
-                if (itemstack.count <= 0)
+                if (MWolf.getOwner().getPlayer().getItemInHand().getType() != MyWolfConfig.ControlItem)
                 {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-
-                if (!this.world.isStatic)
-                {
-                    // CraftBukkit start - added event call and isCancelled check.
-                    if (this.random.nextInt(3) == 0 && !CraftEventFactory.callEntityTameEvent(this, entityhuman).isCancelled())
-                    {
-                        // CraftBukkit end
-                        this.setTamed(true);
-                        this.setPathEntity(null);
-                        this.setSitting(true);
-                        this.setHealth(20);
-                        this.setOwnerName(entityhuman.name);
-                        this.world.broadcastEntityEffect(this, (byte) 7);
-                    }
-                    else
-                    {
-                        this.world.broadcastEntityEffect(this, (byte) 6);
-                    }
-                }
-
-                return true;
-            }
-        }
-        else
-        {
-            if (itemstack != null && Item.byId[itemstack.id] instanceof ItemFood)
-            {
-                ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
-
-                if (itemfood.q() && this.datawatcher.getInt(18) < 20)
-                {
-                    --itemstack.count;
-                    this.heal(itemfood.getNutrition(), EntityRegainHealthEvent.RegainReason.EATING); // CraftBukkit
-                    if (itemstack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
-
+                    this.setSitting(!this.isSitting());
+                    this.aZ = false;
+                    this.setPathEntity(null);
                     return true;
                 }
-            }
-
-            if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
-            {
-                if (!this.world.isStatic)
-                {
-                    if (isMyWolf && MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
-                    {
-                        if (MWolf.getOwner().getPlayer().getItemInHand().getType() != MyWolfConfig.ControlItem)
-                        {
-                            this.setSitting(!this.isSitting());
-                            this.aZ = false;
-                            this.setPathEntity(null);
-                        }
-                    }
-                    else
-                    {
-                        this.setSitting(!this.isSitting());
-                        this.aZ = false;
-                        this.setPathEntity(null);
-                    }
-                }
-                return true;
             }
         }
         return super.b(entityhuman);
