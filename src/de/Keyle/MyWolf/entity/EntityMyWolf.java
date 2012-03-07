@@ -36,14 +36,12 @@ public class EntityMyWolf extends EntityWolf
     public EntityMyWolf(World world)
     {
         super(world);
-        //MyWolfUtil.getLogger().info("-- Normal Way");
     }
 
     public EntityMyWolf(World world, MyWolf MWolf)
     {
         super(world);
         setMyWolf(MWolf);
-        //MyWolfUtil.getLogger().info("-- MyWolf Way");
     }
 
     public boolean isMyWolf()
@@ -55,7 +53,6 @@ public class EntityMyWolf extends EntityWolf
     {
         if(!isMyWolf)
         {
-            //MyWolfUtil.getLogger().info("-- Replaced");
             super.d(nbttagcompound);
             EntityWolf entityWolf = new EntityWolf(world);
             entityWolf.d(nbttagcompound);
@@ -64,7 +61,6 @@ public class EntityMyWolf extends EntityWolf
         }
         else
         {
-            //MyWolfUtil.getLogger().info("-- NOT Replaced");
             super.d(nbttagcompound);
         }
     }
@@ -112,7 +108,7 @@ public class EntityMyWolf extends EntityWolf
                     {
                         return null;
                     }
-                    else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive)
+                    else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && !this.isSitting())
                     {
                         List list = this.world.a(EntityLiving.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).grow(16.0D, 4.0D, 16.0D));
                         EntityHuman owner = this.world.a(this.getOwnerName());
@@ -142,11 +138,8 @@ public class EntityMyWolf extends EntityWolf
         {
             if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
             {
-                if (MWolf.getOwner().getPlayer().getItemInHand().getType() != MyWolfConfig.ControlItem)
+                if (MWolf.getOwner().getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem)
                 {
-                    this.setSitting(!this.isSitting());
-                    this.aZ = false;
-                    this.setPathEntity(null);
                     return true;
                 }
             }
@@ -175,5 +168,10 @@ public class EntityMyWolf extends EntityWolf
             this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
         }
         return this.bukkitEntity;
+    }
+    
+    public MyWolf getMyWolf()
+    {
+        return MWolf;
     }
 }
