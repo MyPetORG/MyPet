@@ -52,7 +52,7 @@ public class MyWolfTimer
                 {
                     MWolf.scheduleTask();
                 }
-                if (MyWolfConfig.AutoSaveTime > 0 && AutoSaveTimer-- <= 0)
+                if (MyWolfConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
                 {
                     MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
                     AutoSaveTimer = MyWolfConfig.AutoSaveTime;

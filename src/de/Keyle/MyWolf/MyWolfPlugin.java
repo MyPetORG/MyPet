@@ -223,6 +223,31 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
         MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+
+        for(Player p: getServer().getOnlinePlayers())
+        {
+            if (MyWolfList.hasInactiveMyWolf(p))
+            {
+                MyWolfList.setMyWolfActive(p, true);
+            }
+            if (MyWolfList.hasMyWolf(p))
+            {
+                MyWolf MWolf = MyWolfList.getMyWolf(p);
+                if (MWolf.Status == WolfState.Dead)
+                {
+                    p.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                }
+                else if (MyWolfUtil.getDistance(MWolf.getLocation(), p.getLocation()) < 75)
+                {
+                    MWolf.ResetSitTimer();
+                    MWolf.createWolf(MWolf.isSitting());
+                }
+                else
+                {
+                    MWolf.Status = WolfState.Despawned;
+                }
+            }
+        }
     }
 
     int loadWolves(File f)
