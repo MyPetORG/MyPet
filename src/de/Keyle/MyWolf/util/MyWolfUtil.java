@@ -24,6 +24,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.Plugin;
@@ -34,8 +35,6 @@ import java.util.logging.Logger;
 
 public class MyWolfUtil
 {
-
-    private static final Logger Log = Logger.getLogger("Minecraft");
     private static final Server server = org.bukkit.Bukkit.getServer();
 
     public static Server getServer()
@@ -50,7 +49,7 @@ public class MyWolfUtil
 
     public static Logger getLogger()
     {
-        return Log;
+        return MyWolfPlugin.getPlugin().getLogger();
     }
 
     public static String SetColors(String text)

@@ -81,7 +81,7 @@ public class MyWolfPermissions
             }
             if(Permissions != null)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] Vault integration enabled!");
+                MyWolfUtil.getLogger().info("Vault integration enabled!");
                 return;
             }
             PermissionsMode = PermissionsType.NONE;
@@ -90,10 +90,10 @@ public class MyWolfPermissions
         if (PermissionsMode == PermissionsType.NONE && MyWolfConfig.PermissionsBukkit)
         {
             PermissionsMode = PermissionsType.BukkitPermissions;
-            MyWolfUtil.getLogger().info("[MyWolf] BukkitPermissions enabled!");
+            MyWolfUtil.getLogger().info("BukkitPermissions enabled!");
             return;
         }
 
-        MyWolfUtil.getLogger().info("[MyWolf] No permissions system fund!");
+        MyWolfUtil.getLogger().info("No permissions system fund!");
     }
 }

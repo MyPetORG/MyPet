@@ -73,7 +73,7 @@ public class MyWolfSkillSystem
         }
         catch (Exception e)
         {
-            MyWolfUtil.getLogger().warning("[MyWolf] " + cls.getName() + "is no valid skill!");
+            MyWolfUtil.getLogger().warning(cls.getName() + "is no valid skill!");
             ClassSkillList.remove(cls);
         }
     }

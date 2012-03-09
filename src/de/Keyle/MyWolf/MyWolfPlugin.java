@@ -73,7 +73,7 @@ public class MyWolfPlugin extends JavaPlugin
         WolfChestOpened.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
 
-        MyWolfUtil.getLogger().info("[MyWolf] Disabled");
+        MyWolfUtil.getLogger().info("Disabled");
     }
 
     public void onEnable()
@@ -127,11 +127,11 @@ public class MyWolfPlugin extends JavaPlugin
                 }
                 template.close();
                 out.close();
-                MyWolfUtil.getLogger().info("[MyWolf] Default skill.yml file created. Please restart the server to load the skilltrees!");
+                MyWolfUtil.getLogger().info("Default skill.yml file created. Please restart the server to load the skilltrees!");
             }
             catch (IOException ex)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] Unable to create the default skill.yml file!");
+                MyWolfUtil.getLogger().info("Unable to create the default skill.yml file!");
             }
         }
         MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
@@ -156,7 +156,7 @@ public class MyWolfPlugin extends JavaPlugin
         }
         catch (Exception e)
         {
-            MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
+            MyWolfUtil.getLogger().info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
             e.printStackTrace();
             setEnabled(false);
             return;
@@ -180,7 +180,7 @@ public class MyWolfPlugin extends JavaPlugin
             catch (Exception e)
             {
                 MyWolfExperience.JSreader = null;
-                MyWolfUtil.getLogger().info("[MyWolf] No custom EXP-Script found (exp.js).");
+                MyWolfUtil.getLogger().info("No custom EXP-Script found (exp.js).");
             }
         }
 
@@ -222,7 +222,7 @@ public class MyWolfPlugin extends JavaPlugin
                 MyWolfUtil.getLogger().info(e.getMessage());
             }
         }
-        MyWolfUtil.getLogger().info("[MyWolf] version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+        MyWolfUtil.getLogger().info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
 
         for(Player p: getServer().getOnlinePlayers())
         {
@@ -288,7 +288,7 @@ public class MyWolfPlugin extends JavaPlugin
 
             anzahlWolves++;
         }
-        MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+        MyWolfUtil.getLogger().info(anzahlWolves + " wolf/wolves loaded");
         return anzahlWolves;
     }
 
@@ -354,7 +354,7 @@ public class MyWolfPlugin extends JavaPlugin
                 }
             }
         }
-        MyWolfUtil.getLogger().info("[MyWolf] " + anzahlWolves + " wolf/wolves loaded");
+        MyWolfUtil.getLogger().info(anzahlWolves + " wolf/wolves loaded");
         return anzahlWolves;
     }
 

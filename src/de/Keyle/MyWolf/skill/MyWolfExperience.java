@@ -140,7 +140,7 @@ public class MyWolfExperience
             }
             catch (Exception e)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] EXP-Script doesn't return valid value!");
+                MyWolfUtil.getLogger().info("EXP-Script doesn't return a valid value!");
                 return 1;
             }
         }
@@ -185,7 +185,7 @@ public class MyWolfExperience
             }
             catch (Exception e)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] EXP-Script doesn't return valid value!");
+                MyWolfUtil.getLogger().info("EXP-Script doesn't return a valid value!");
                 return 1;
             }
         }
@@ -214,7 +214,7 @@ public class MyWolfExperience
             }
             catch (ScriptException e)
             {
-                MyWolfUtil.getLogger().info("[MyWolf] Error in EXP-Script!");
+                MyWolfUtil.getLogger().info("Error in EXP-Script!");
                 return null;
             }
             return engine;
