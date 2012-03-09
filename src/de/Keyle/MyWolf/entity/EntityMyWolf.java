@@ -51,7 +51,7 @@ public class EntityMyWolf extends EntityWolf
 
     public void e(NBTTagCompound nbttagcompound)
     {
-        if(!isMyWolf)
+        if (!isMyWolf)
         {
             super.d(nbttagcompound);
             EntityWolf entityWolf = new EntityWolf(world);
@@ -134,7 +134,7 @@ public class EntityMyWolf extends EntityWolf
     @Override
     public boolean b(EntityHuman entityhuman)
     {
-        if(isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
+        if (isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
             if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
             {
@@ -145,6 +145,14 @@ public class EntityMyWolf extends EntityWolf
             }
         }
         return super.b(entityhuman);
+    }
+
+    public boolean a(Entity entity)
+    {
+        int i = this.isTamed() ? 4 : 2;
+        i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage"))?MWolf.SkillSystem.getSkill("Demage").getLevel():0;
+
+        return entity.damageEntity(DamageSource.mobAttack(this), i);
     }
 
     public void setLocation(Location loc)
@@ -169,7 +177,7 @@ public class EntityMyWolf extends EntityWolf
         }
         return this.bukkitEntity;
     }
-    
+
     public MyWolf getMyWolf()
     {
         return MWolf;

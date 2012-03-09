@@ -129,17 +129,6 @@ public class MyWolfEntityListener implements Listener
                     }
                 }
             }
-            else if (e.getDamager() instanceof Wolf)
-            {
-                if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))
-                {
-                    MyWolf MWolf = MyWolfList.getMyWolf(e.getDamager().getEntityId());
-                    if (MWolf.SkillSystem.hasSkill("Demage"))
-                    {
-                        event.setDamage(event.getDamage() + MWolf.SkillSystem.getSkill("Demage").getLevel());
-                    }
-                }
-            }
         }
     }
 
