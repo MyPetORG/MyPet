@@ -96,4 +96,9 @@ public class MyWolfPermissions
 
         MyWolfUtil.getLogger().info("No permissions system fund!");
     }
+
+    public static PermissionsType getPermissionsMode()
+    {
+        return PermissionsMode;
+    }
 }
