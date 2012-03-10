@@ -131,7 +131,6 @@ public class EntityMyWolf extends EntityWolf
         return super.findTarget();
     }
 
-    @Override
     public boolean b(EntityHuman entityhuman)
     {
         if (isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
@@ -150,9 +149,14 @@ public class EntityMyWolf extends EntityWolf
     public boolean a(Entity entity)
     {
         int i = this.isTamed() ? 4 : 2;
-        i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage"))?MWolf.SkillSystem.getSkill("Demage").getLevel():0;
+        i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage")) ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0;
 
         return entity.damageEntity(DamageSource.mobAttack(this), i);
+    }
+
+    public EntityAnimal createChild(EntityAnimal entityanimal)
+    {
+        return null;
     }
 
     public void setLocation(Location loc)
