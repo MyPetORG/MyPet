@@ -30,6 +30,7 @@ import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.PathEntity;
 import net.minecraft.server.PathPoint;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -74,16 +75,21 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
+        MyWolfPlugin.getPlugin().getLogger().info("1");
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && MyWolfList.hasMyWolf(event.getPlayer()))
         {
+            MyWolfPlugin.getPlugin().getLogger().info("2");
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
             if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
             {
+                MyWolfPlugin.getPlugin().getLogger().info("3");
                 if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
                 {
+                    MyWolfPlugin.getPlugin().getLogger().info("4");
                     Block block = event.getPlayer().getTargetBlock(null, 100);
-                    if (block != null)
+                    if (block != null && block.getType() != Material.AIR)
                     {
+                        MyWolfPlugin.getPlugin().getLogger().info("5 " + block.toString());
                         for (int i : ControllIgnoreBlocks)
                         {
                             if (block.getTypeId() == i)
@@ -92,9 +98,10 @@ public class MyWolfPlayerListener implements Listener
                                 break;
                             }
                         }
-                        PathPoint[] loc = {new PathPoint(block.getLocation().getBlockX(), block.getLocation().getBlockY(), block.getLocation().getBlockZ())};
+                        PathPoint[] loc = {new PathPoint(block.getX(), block.getY(), block.getZ())};
                         EntityMyWolf wolf = MWolf.Wolf.getHandle();
-                        wolf.setPathEntity(new PathEntity(loc));
+                        wolf.pathEntity = new PathEntity(loc);
+                        MyWolfPlugin.getPlugin().getLogger().info("6 " + wolf.pathEntity);
                         MWolf.ResetSitTimer();
                         if (MWolf.SkillSystem.getSkill("Control").getLevel() > 1)
                         {
@@ -208,6 +215,7 @@ public class MyWolfPlayerListener implements Listener
                 }
             }
             MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
+            MyWolfPlugin.getPlugin().Timer.resetTimer();
         }
     }
 

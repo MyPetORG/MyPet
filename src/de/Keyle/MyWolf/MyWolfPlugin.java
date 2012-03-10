@@ -46,11 +46,8 @@ public class MyWolfPlugin extends JavaPlugin
 {
     private static MyWolfPlugin Plugin;
     public static MyWolfLanguage MWLanguage;
-
-    private MyWolfTimer Timer = new MyWolfTimer();
-
+    public final MyWolfTimer Timer = new MyWolfTimer();
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
-
     public static File NBTWolvesFile;
 
     public static MyWolfPlugin getPlugin()
@@ -200,7 +197,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         Timer.startTimer();
 
-        if(MyWolfConfig.sendMetrics)
+        if (MyWolfConfig.sendMetrics)
         {
             try
             {
@@ -224,7 +221,7 @@ public class MyWolfPlugin extends JavaPlugin
         }
         MyWolfUtil.getLogger().info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
 
-        for(Player p: getServer().getOnlinePlayers())
+        for (Player p : getServer().getOnlinePlayers())
         {
             if (MyWolfList.hasInactiveMyWolf(p))
             {
@@ -258,7 +255,7 @@ public class MyWolfPlugin extends JavaPlugin
         nbtConfiguration.load();
         NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Wolves");
 
-        for (int i = 0; i < Wolves.size(); i++)
+        for (int i = 0 ; i < Wolves.size() ; i++)
         {
             NBTTagCompound MWolfNBT = (NBTTagCompound) Wolves.get(i);
             NBTTagCompound Location = MWolfNBT.getCompound("Location");
@@ -320,7 +317,7 @@ public class MyWolfPlugin extends JavaPlugin
                         {
                             String[] invSplit = Sinv.split(";");
                             MyWolfCustomInventory inv = new MyWolfCustomInventory(WolfName);
-                            for (int i = 0; i < invSplit.length; i++)
+                            for (int i = 0 ; i < invSplit.length ; i++)
                             {
                                 String[] itemvalues = invSplit[i].split(",");
                                 if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))

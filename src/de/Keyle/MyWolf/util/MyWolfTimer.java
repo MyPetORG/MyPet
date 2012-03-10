@@ -26,6 +26,8 @@ public class MyWolfTimer
 {
     private int Timer = -1;
 
+    private static boolean resetTimer = false;
+
     public void stopTimer()
     {
         if (Timer != -1)
@@ -52,6 +54,11 @@ public class MyWolfTimer
                 {
                     MWolf.scheduleTask();
                 }
+                if (resetTimer)
+                {
+                    AutoSaveTimer = MyWolfConfig.AutoSaveTime;
+                    resetTimer = false;
+                }
                 if (MyWolfConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
                 {
                     MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
@@ -59,5 +66,10 @@ public class MyWolfTimer
                 }
             }
         }, 0L, 20L);
+    }
+
+    public void resetTimer()
+    {
+        resetTimer = true;
     }
 }
