@@ -54,7 +54,7 @@ public class MyWolfTimer
                 {
                     MWolf.scheduleTask();
                 }
-                if (resetTimer)
+                if (resetTimer && MyWolfConfig.AutoSaveTime > 0)
                 {
                     AutoSaveTimer = MyWolfConfig.AutoSaveTime;
                     resetTimer = false;

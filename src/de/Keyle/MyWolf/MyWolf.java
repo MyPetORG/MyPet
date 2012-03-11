@@ -237,13 +237,12 @@ public class MyWolf
             }
             if (Status == WolfState.Here)
             {
-
-                SitTimer--;
                 if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
                 {
                     Wolf.setSitting(true);
                     ResetSitTimer();
                 }
+                SitTimer--;
             }
             else if (Status == WolfState.Dead)
             {

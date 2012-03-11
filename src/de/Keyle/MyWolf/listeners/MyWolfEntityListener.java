@@ -118,10 +118,6 @@ public class MyWolfEntityListener implements Listener
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
                     MWolf.ResetSitTimer();
-                    if (MWolf.getHealth() > MWolf.getMaxHealth())
-                    {
-                        MWolf.setHealth(MWolf.getMaxHealth());
-                    }
 
                     if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
                     {
@@ -135,7 +131,7 @@ public class MyWolfEntityListener implements Listener
     @EventHandler()
     public void onEntityDeath(final EntityDeathEvent event)
     {
-        if (event.getEntity() instanceof Wolf)
+        if (event.getEntity() instanceof CraftMyWolf)
         {
             if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
             {
@@ -156,7 +152,7 @@ public class MyWolfEntityListener implements Listener
         }
         if (MyWolfConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {
-            if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Wolf)
+            if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof CraftMyWolf)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
                 if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))

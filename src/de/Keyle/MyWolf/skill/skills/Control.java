@@ -23,9 +23,12 @@ import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import org.bukkit.Location;
 
 public class Control extends MyWolfGenericSkill
 {
+    Location moveTo;
+
     public Control()
     {
         super("Control");
@@ -36,5 +39,17 @@ public class Control extends MyWolfGenericSkill
     {
         Level = 1;
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
+    }
+
+    public Location getLocation()
+    {
+        Location tmpMoveTo = moveTo;
+        moveTo = null;
+        return tmpMoveTo;
+    }
+
+    public void setMoveTo(Location loc)
+    {
+        moveTo = loc;
     }
 }

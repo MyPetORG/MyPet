@@ -24,7 +24,10 @@ import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.List;
 
@@ -79,6 +82,7 @@ public class EntityMyWolf extends EntityWolf
                 this.setHealth(getMaxHealth());
                 this.setOwnerName(MWolf.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
+                this.goalSelector.a(4, new PathfinderGoalControl(MWolf, 0.4F));
             }
         }
     }
@@ -150,6 +154,20 @@ public class EntityMyWolf extends EntityWolf
     {
         int i = this.isTamed() ? 4 : 2;
         i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage")) ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0;
+
+        if (entity instanceof EntityLiving && !(entity instanceof EntityHuman)) {
+            org.bukkit.entity.Entity damagee = (entity == null) ? null : entity.getBukkitEntity();
+
+            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
+            Bukkit.getPluginManager().callEvent(event);
+            i = event.getDamage();
+
+            if (!event.isCancelled()) {
+                return entity.damageEntity(DamageSource.mobAttack(this), i);
+            }
+
+            return false;
+        }
 
         return entity.damageEntity(DamageSource.mobAttack(this), i);
     }

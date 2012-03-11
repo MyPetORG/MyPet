@@ -45,28 +45,17 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
         }
         else if (target instanceof CraftLivingEntity)
         {
-            if (getHandle().isMyWolf && getHandle().MWolf.SkillSystem.hasSkill("Behavior"))
+            if (!getHandle().isMyWolf || !getHandle().MWolf.SkillSystem.hasSkill("Behavior"))
             {
-                Behavior behavior = (Behavior) getHandle().MWolf.SkillSystem.getSkill("Behavior");
-                if (behavior.getLevel() > 0)
-                {
-                    if (behavior.getBehavior() != Behavior.BehaviorState.Friendly)
-                    {
-                        entity.target = ((CraftLivingEntity) target).getHandle();
-                        entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F);
-                    }
-                }
-                else
-                {
-                    entity.target = ((CraftLivingEntity) target).getHandle();
-                    entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F);
-                }
+                return;
             }
-            else
+            Behavior behavior = (Behavior) getHandle().MWolf.SkillSystem.getSkill("Behavior");
+            if (behavior.getLevel() <= 0 || behavior.getBehavior() != Behavior.BehaviorState.Friendly)
             {
-                entity.target = ((CraftLivingEntity) target).getHandle();
-                entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F);
+                return;
             }
+            entity.target = ((CraftLivingEntity) target).getHandle();
+            entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F, true, false, false, true);
         }
     }
 
@@ -162,7 +151,7 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
     @Override
     public String toString()
     {
-        return "CraftMyWolf{anger=" + isAngry() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyWolf{MyWolf=" + getHandle().isMyWolf() + "anger=" + isAngry() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()
