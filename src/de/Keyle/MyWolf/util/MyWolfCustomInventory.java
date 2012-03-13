@@ -21,10 +21,10 @@ package de.Keyle.MyWolf.util;
 
 import net.minecraft.server.*;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,49 +100,52 @@ public class MyWolfCustomInventory implements IInventory
 
     public int addItem(org.bukkit.inventory.ItemStack item)
     {
+        item = item.clone();
         int ItemID = item.getTypeId();
         int ItemDuarbility = item.getDurability();
-        int ItemAmount = item.getAmount();
         int ItemMaxStack = item.getMaxStackSize();
 
         for (int i = 0 ; i < this.getSize() ; i++)
         {
-            if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).count < ItemMaxStack)
+            if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).getEnchantments() == null && item.getEnchantments().size() == 0 && getItem(i).count < ItemMaxStack)
             {
-                if (ItemAmount >= ItemMaxStack - getItem(i).count)
+                if (item.getAmount() >= ItemMaxStack - getItem(i).count)
                 {
-                    ItemAmount = ItemAmount - (ItemMaxStack - getItem(i).count);
+                    item.setAmount(item.getAmount() - (ItemMaxStack - getItem(i).count));
                     getItem(i).count = ItemMaxStack;
                 }
                 else
                 {
-                    getItem(i).count += ItemAmount;
-                    ItemAmount = 0;
+                    getItem(i).count += item.getAmount();
+                    item.setAmount(0);
                     break;
                 }
             }
         }
         for (int i = 0 ; i < getSize() ; i++)
         {
-            if (ItemAmount <= 0)
+            if (item.getAmount() <= 0)
             {
                 break;
             }
             if (getItem(i) == null)
             {
-                if (ItemAmount <= ItemMaxStack)
+                if (item.getAmount() <= ItemMaxStack)
                 {
-                    setItem(i, new ItemStack(ItemID, ItemAmount, ItemDuarbility));
-                    ItemAmount = 0;
+                    setItem(i, ((CraftItemStack) item.clone()).getHandle());
+                    item.setAmount(0);
+                    break;
                 }
                 else
                 {
-                    setItem(i, new ItemStack(ItemID, ItemMaxStack, ItemDuarbility));
-                    ItemAmount -= ItemMaxStack;
+                    org.bukkit.inventory.ItemStack is = item.clone();
+                    is.setAmount(is.getMaxStackSize());
+                    setItem(i, ((CraftItemStack) is).getHandle());
+                    item.setAmount(item.getAmount() - is.getMaxStackSize());
                 }
             }
         }
-        return ItemAmount;
+        return item.getAmount();
     }
 
     public ItemStack splitStack(int i, int j)
@@ -184,27 +187,6 @@ public class MyWolfCustomInventory implements IInventory
         return 64;
     }
 
-    public void save(File file) throws IOException
-    {
-        DataOutputStream F_Out = new DataOutputStream(new FileOutputStream(file));
-        NBTTagList Items = new NBTTagList();
-        for (int i = 0 ; i < this.Items.size() ; i++)
-        {
-            ItemStack itemStack = this.Items.get(i);
-            if (itemStack != null)
-            {
-                NBTTagCompound Item = new NBTTagCompound();
-                Item.setByte("Slot", (byte) i);
-                itemStack.save(Item);
-                Items.add(Item);
-            }
-        }
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.set("Items", Items);
-        NBTBase.a(nbtTagCompound, F_Out);
-        F_Out.close();
-    }
-
     public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
         NBTTagList Items = new NBTTagList();
@@ -221,22 +203,6 @@ public class MyWolfCustomInventory implements IInventory
         }
         nbtTagCompound.set("Items", Items);
         return nbtTagCompound;
-    }
-
-    public void load(File file) throws IOException
-    {
-        DataInputStream F_In = new DataInputStream(new FileInputStream(file));
-        NBTTagCompound nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
-        NBTTagList Items = nbtTagCompound.getList("Items");
-
-        for (int i = 0 ; i < Items.size() ; i++)
-        {
-            NBTTagCompound Item = (NBTTagCompound) Items.get(i);
-
-            ItemStack itemStack = ItemStack.a(Item);
-            setItem(Item.getByte("Slot"), itemStack);
-        }
-        F_In.close();
     }
 
     public void load(NBTTagCompound nbtTagCompound)
