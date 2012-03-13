@@ -100,7 +100,7 @@ public class Inventory extends MyWolfGenericSkill
         if (!Sinv.equals("QwE"))
         {
             String[] invSplit = Sinv.split(";");
-            for (int i = 0; i < invSplit.length; i++)
+            for (int i = 0 ; i < invSplit.length ; i++)
             {
                 if (i < inv.getSize())
                 {

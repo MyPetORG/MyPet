@@ -53,7 +53,7 @@ public class MyWolfCustomInventory implements IInventory
     public void setSize(int Size)
     {
         this.Size = Size;
-        for (int i = Items.size(); i < Size; i++)
+        for (int i = Items.size() ; i < Size ; i++)
         {
             Items.add(i, null);
         }
@@ -90,7 +90,7 @@ public class MyWolfCustomInventory implements IInventory
         }
         else
         {
-            for (int x = Items.size(); x < i; x++)
+            for (int x = Items.size() ; x < i ; x++)
             {
                 Items.add(x, null);
             }
@@ -105,7 +105,7 @@ public class MyWolfCustomInventory implements IInventory
         int ItemAmount = item.getAmount();
         int ItemMaxStack = item.getMaxStackSize();
 
-        for (int i = 0; i < this.getSize(); i++)
+        for (int i = 0 ; i < this.getSize() ; i++)
         {
             if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).count < ItemMaxStack)
             {
@@ -122,7 +122,7 @@ public class MyWolfCustomInventory implements IInventory
                 }
             }
         }
-        for (int i = 0; i < getSize(); i++)
+        for (int i = 0 ; i < getSize() ; i++)
         {
             if (ItemAmount <= 0)
             {
@@ -172,29 +172,11 @@ public class MyWolfCustomInventory implements IInventory
     public ItemStack[] getContents()
     {
         ItemStack[] itemStack = new ItemStack[getSize()];
-        for (int i = 0; i < getSize(); i++)
+        for (int i = 0 ; i < getSize() ; i++)
         {
             itemStack[i] = Items.get(i);
         }
         return itemStack;
-    }
-
-    public void onOpen(CraftHumanEntity craftHumanEntity)
-    {
-    }
-
-    public void onClose(CraftHumanEntity craftHumanEntity)
-    {
-    }
-
-    public List<HumanEntity> getViewers()
-    {
-        return null;
-    }
-
-    public InventoryHolder getOwner()
-    {
-        return null;
     }
 
     public int getMaxStackSize()
@@ -206,7 +188,7 @@ public class MyWolfCustomInventory implements IInventory
     {
         DataOutputStream F_Out = new DataOutputStream(new FileOutputStream(file));
         NBTTagList Items = new NBTTagList();
-        for (int i = 0; i < this.Items.size(); i++)
+        for (int i = 0 ; i < this.Items.size() ; i++)
         {
             ItemStack itemStack = this.Items.get(i);
             if (itemStack != null)
@@ -226,7 +208,7 @@ public class MyWolfCustomInventory implements IInventory
     public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
         NBTTagList Items = new NBTTagList();
-        for (int i = 0; i < this.Items.size(); i++)
+        for (int i = 0 ; i < this.Items.size() ; i++)
         {
             ItemStack itemStack = this.Items.get(i);
             if (itemStack != null)
@@ -247,7 +229,7 @@ public class MyWolfCustomInventory implements IInventory
         NBTTagCompound nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
         NBTTagList Items = nbtTagCompound.getList("Items");
 
-        for (int i = 0; i < Items.size(); i++)
+        for (int i = 0 ; i < Items.size() ; i++)
         {
             NBTTagCompound Item = (NBTTagCompound) Items.get(i);
 
@@ -261,7 +243,7 @@ public class MyWolfCustomInventory implements IInventory
     {
         NBTTagList Items = nbtTagCompound.getList("Items");
 
-        for (int i = 0; i < Items.size(); i++)
+        for (int i = 0 ; i < Items.size() ; i++)
         {
             NBTTagCompound Item = (NBTTagCompound) Items.get(i);
 
@@ -270,13 +252,36 @@ public class MyWolfCustomInventory implements IInventory
         }
     }
 
-    public void update()
-    {
-    }
-
     public boolean a(EntityHuman entityHuman)
     {
         return true;
+    }
+
+    public void onOpen(CraftHumanEntity craftHumanEntity)
+    {
+    }
+
+    public void onClose(CraftHumanEntity craftHumanEntity)
+    {
+    }
+
+    public List<HumanEntity> getViewers()
+    {
+        return null;
+    }
+
+    public InventoryHolder getOwner()
+    {
+        return null;
+    }
+
+    public ItemStack splitWithoutUpdate(int i)
+    {
+        return null;
+    }
+
+    public void update()
+    {
     }
 
     public void f()

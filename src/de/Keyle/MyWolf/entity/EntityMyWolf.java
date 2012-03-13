@@ -155,14 +155,16 @@ public class EntityMyWolf extends EntityWolf
         int i = this.isTamed() ? 4 : 2;
         i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage")) ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0;
 
-        if (entity instanceof EntityLiving && !(entity instanceof EntityHuman)) {
+        if (entity instanceof EntityLiving && !(entity instanceof EntityHuman))
+        {
             org.bukkit.entity.Entity damagee = (entity == null) ? null : entity.getBukkitEntity();
 
             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
             Bukkit.getPluginManager().callEvent(event);
             i = event.getDamage();
 
-            if (!event.isCancelled()) {
+            if (!event.isCancelled())
+            {
                 return entity.damageEntity(DamageSource.mobAttack(this), i);
             }
 

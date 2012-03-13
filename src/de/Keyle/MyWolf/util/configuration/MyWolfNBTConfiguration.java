@@ -86,10 +86,10 @@ public class MyWolfNBTConfiguration
     {
         try
         {
-            FileInputStream fi = new FileInputStream(NBTFile);            
+            FileInputStream fi = new FileInputStream(NBTFile);
             fi.read();
-            
-            if(fi.read() != -1)
+
+            if (fi.read() != -1)
             {
                 fi.close();
                 fi = new FileInputStream(NBTFile);

@@ -207,7 +207,7 @@ public class MyWolfList
         mInctiveWolves.clear();
         lInactiveWolves.clear();
     }
-    
+
     public static int getMyWolfCount()
     {
         return mActiveWolves.size() + mInctiveWolves.size();

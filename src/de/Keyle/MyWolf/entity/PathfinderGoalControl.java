@@ -36,13 +36,13 @@ public class PathfinderGoalControl extends PathfinderGoal
     MyWolf MWolf;
     float Speed;
     Location moveTo;
-    
+
     public PathfinderGoalControl(MyWolf MWolf, float f)
     {
         this.MWolf = MWolf;
         Speed = f;
     }
-    
+
     @Override
     public boolean a()
     {
@@ -50,7 +50,7 @@ public class PathfinderGoalControl extends PathfinderGoal
         {
             Control control = (Control) MWolf.SkillSystem.getSkill("Control");
             moveTo = control.getLocation();
-            if(moveTo != null)
+            if (moveTo != null)
             {
                 return true;
             }
@@ -60,7 +60,7 @@ public class PathfinderGoalControl extends PathfinderGoal
 
     public void c()
     {
-        if(moveTo != null)
+        if (moveTo != null)
         {
             this.MWolf.Wolf.getHandle().ak().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed);
             moveTo = null;

@@ -76,7 +76,7 @@ public class MyWolfSkillTreeConfigLoader
                     SkillTrees.put(ST, MWST);
                     lSkillTrees.add(ST);
                 }
-                else if(Level.size() == 0)
+                else if (Level.size() == 0)
                 {
                     MyWolfSkillTree MWST = new MyWolfSkillTree(ST);
                     SkillTrees.put(ST, MWST);
@@ -146,7 +146,7 @@ public class MyWolfSkillTreeConfigLoader
         if (lSkillTrees.size() > 0)
         {
             String[] TN = new String[lSkillTrees.size()];
-            for (int i = 0; i < lSkillTrees.size(); i++)
+            for (int i = 0 ; i < lSkillTrees.size() ; i++)
             {
                 TN[i] = lSkillTrees.get(i);
             }

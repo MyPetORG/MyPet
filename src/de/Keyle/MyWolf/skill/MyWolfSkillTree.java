@@ -124,7 +124,7 @@ public class MyWolfSkillTree
         if (SkillsPerLevel.containsKey(Level) && SkillsPerLevel.get(Level).size() > 0)
         {
             String[] SN = new String[SkillsPerLevel.get(Level).size()];
-            for (int i = 0; i < SkillsPerLevel.get(Level).size(); i++)
+            for (int i = 0 ; i < SkillsPerLevel.get(Level).size() ; i++)
             {
                 SN[i] = SkillsPerLevel.get(Level).get(i);
             }

@@ -52,7 +52,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class Metrics {
+public class Metrics
+{
 
     /**
      * The current revision number
@@ -105,7 +106,8 @@ public class Metrics {
      */
     private String guid;
 
-    public Metrics() throws IOException {
+    public Metrics() throws IOException
+    {
         // load the config
         File file = new File(CONFIG_FILE);
         configuration = YamlConfiguration.loadConfiguration(file);
@@ -115,7 +117,8 @@ public class Metrics {
         configuration.addDefault("guid", UUID.randomUUID().toString());
 
         // Do we need to create the file?
-        if (configuration.get("guid", null) == null) {
+        if (configuration.get("guid", null) == null)
+        {
             configuration.options().header("http://metrics.griefcraft.com").copyDefaults(true);
             configuration.save(file);
         }
@@ -133,8 +136,10 @@ public class Metrics {
      * @param name
      * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
      */
-    public Graph createGraph(Plugin plugin, Graph.Type type, String name) {
-        if (plugin == null || type == null || name == null) {
+    public Graph createGraph(Plugin plugin, Graph.Type type, String name)
+    {
+        if (plugin == null || type == null || name == null)
+        {
             throw new IllegalArgumentException("All arguments must not be null");
         }
 
@@ -157,7 +162,8 @@ public class Metrics {
      * @param plugin
      * @param plotter
      */
-    public void addCustomData(Plugin plugin, Plotter plotter) {
+    public void addCustomData(Plugin plugin, Plotter plotter)
+    {
         // The default graph for the plugin
         Graph graph = getOrCreateDefaultGraph(plugin);
 
@@ -173,18 +179,23 @@ public class Metrics {
      *
      * @param plugin
      */
-    public void beginMeasuringPlugin(final Plugin plugin) {
+    public void beginMeasuringPlugin(final Plugin plugin)
+    {
         // Did we opt out?
-        if (configuration.getBoolean("opt-out", false)) {
+        if (configuration.getBoolean("opt-out", false))
+        {
             return;
         }
 
         // Begin hitting the server with glorious data
-        plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+        plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable()
+        {
             private boolean firstPost = true;
 
-            public void run() {
-                try {
+            public void run()
+            {
+                try
+                {
                     // We use the inverse of firstPost because if it is the first time we are posting,
                     // it is not a interval ping, so it evaluates to FALSE
                     // Each time thereafter it will evaluate to TRUE, i.e PING!
@@ -193,7 +204,9 @@ public class Metrics {
                     // After the first post we set firstPost to false
                     // Each post thereafter will be a ping
                     firstPost = false;
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     System.out.println("[Metrics] " + e.getMessage());
                 }
             }
@@ -205,7 +218,8 @@ public class Metrics {
      *
      * @param plugin
      */
-    private void postPlugin(Plugin plugin, boolean isPing) throws IOException {
+    private void postPlugin(Plugin plugin, boolean isPing) throws IOException
+    {
         // The plugin's description file containg all of the plugin data such as name, version, author, etc
         PluginDescriptionFile description = plugin.getDescription();
 
@@ -214,26 +228,24 @@ public class Metrics {
         String authors = "";
 
         // Add each author to the string
-        for (String author : description.getAuthors()) {
+        for (String author : description.getAuthors())
+        {
             authors += author + ", ";
         }
 
         // If there were any authors at all, we need to remove the last 2 characters
         // the last 2 characters are the last comma and space
-        if (!authors.isEmpty()) {
+        if (!authors.isEmpty())
+        {
             authors = authors.substring(0, authors.length() - 2);
         }
 
         // Construct the post data
-        String data = encode("guid") + '=' + encode(guid)
-                + encodeDataPair("authors", authors)
-                + encodeDataPair("version", description.getVersion())
-                + encodeDataPair("server", Bukkit.getVersion())
-                + encodeDataPair("players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length))
-                + encodeDataPair("revision", String.valueOf(REVISION));
+        String data = encode("guid") + '=' + encode(guid) + encodeDataPair("authors", authors) + encodeDataPair("version", description.getVersion()) + encodeDataPair("server", Bukkit.getVersion()) + encodeDataPair("players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length)) + encodeDataPair("revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
-        if (isPing) {
+        if (isPing)
+        {
             data += encodeDataPair("ping", "true");
         }
 
@@ -242,17 +254,20 @@ public class Metrics {
 
         // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
         // inside of the graph (e.g plotters)
-        synchronized(graphs) {
+        synchronized (graphs)
+        {
             Iterator<Graph> iter = graphs.iterator();
 
-            while (iter.hasNext()) {
+            while (iter.hasNext())
+            {
                 Graph graph = iter.next();
 
                 // Because we have a lock on the graphs set already, it is reasonable to assume
                 // that our lock transcends down to the individual plotters in the graphs also.
                 // Because our methods are private, no one but us can reasonably access this list
                 // without reflection so this is a safe assumption without adding more code.
-                for (Plotter plotter : graph.getPlotters()) {
+                for (Plotter plotter : graph.getPlotters())
+                {
                     // The key name to send to the metrics server
                     // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
                     // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
@@ -276,9 +291,12 @@ public class Metrics {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) {
+        if (isMineshafterPresent())
+        {
             connection = url.openConnection(Proxy.NO_PROXY);
-        } else {
+        }
+        else
+        {
             connection = url.openConnection();
         }
 
@@ -297,18 +315,25 @@ public class Metrics {
         writer.close();
         reader.close();
 
-        if (response.startsWith("ERR")) {
+        if (response.startsWith("ERR"))
+        {
             throw new IOException(response); //Throw the exception
-        } else {
+        }
+        else
+        {
             // Is this the first update this hour?
-            if (response.contains("OK This is your first update this hour")) {
-                synchronized (graphs) {
+            if (response.contains("OK This is your first update this hour"))
+            {
+                synchronized (graphs)
+                {
                     Iterator<Graph> iter = graphs.iterator();
 
-                    while (iter.hasNext()) {
+                    while (iter.hasNext())
+                    {
                         Graph graph = iter.next();
 
-                        for (Plotter plotter : graph.getPlotters()) {
+                        for (Plotter plotter : graph.getPlotters())
+                        {
                             plotter.reset();
                         }
                     }
@@ -324,11 +349,13 @@ public class Metrics {
      * @param plugin
      * @return
      */
-    private Set<Graph> getOrCreateGraphs(Plugin plugin) {
+    private Set<Graph> getOrCreateGraphs(Plugin plugin)
+    {
         Set<Graph> theGraphs = graphs.get(plugin);
 
         // Create the Set if it does not already exist
-        if (theGraphs == null) {
+        if (theGraphs == null)
+        {
             theGraphs = Collections.synchronizedSet(new HashSet<Graph>());
             graphs.put(plugin, theGraphs);
         }
@@ -342,11 +369,13 @@ public class Metrics {
      * @param plugin
      * @return
      */
-    private Graph getOrCreateDefaultGraph(Plugin plugin) {
+    private Graph getOrCreateDefaultGraph(Plugin plugin)
+    {
         Graph graph = defaultGraphs.get(plugin);
 
         // Not yet created :(
-        if (graph == null) {
+        if (graph == null)
+        {
             graph = new Graph(Graph.Type.Line, "Default");
             defaultGraphs.put(plugin, graph);
         }
@@ -359,11 +388,15 @@ public class Metrics {
      *
      * @return
      */
-    private boolean isMineshafterPresent() {
-        try {
+    private boolean isMineshafterPresent()
+    {
+        try
+        {
             Class.forName("mineshafter.MineServer");
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return false;
         }
     }
@@ -372,14 +405,15 @@ public class Metrics {
      * Encode a key/value data pair to be used in a HTTP post request. This INCLUDES a & so the first
      * key/value pair MUST be included manually, e.g:
      * <p>
-     *     String httpData = encode("guid") + "=" + encode("1234") + encodeDataPair("authors") + "..";
+     * String httpData = encode("guid") + "=" + encode("1234") + encodeDataPair("authors") + "..";
      * </p>
      *
      * @param key
      * @param value
      * @return
      */
-    private static String encodeDataPair(String key, String value) throws UnsupportedEncodingException {
+    private static String encodeDataPair(String key, String value) throws UnsupportedEncodingException
+    {
         return "&" + encode(key) + "=" + encode(value);
     }
 
@@ -389,19 +423,22 @@ public class Metrics {
      * @param text
      * @return
      */
-    private static String encode(String text) throws UnsupportedEncodingException {
+    private static String encode(String text) throws UnsupportedEncodingException
+    {
         return URLEncoder.encode(text, "UTF-8");
     }
 
     /**
      * Represents a custom graph on the website
      */
-    public static class Graph {
+    public static class Graph
+    {
 
         /**
          * The graph's type that will be visible on the website
          */
-        public static enum Type {
+        public static enum Type
+        {
 
             /**
              * A simple line graph which also includes a scrollable timeline viewer to view
@@ -444,7 +481,8 @@ public class Metrics {
          */
         private final Set<Plotter> plotters = new LinkedHashSet<Plotter>();
 
-        private Graph(Type type, String name) {
+        private Graph(Type type, String name)
+        {
             this.type = type;
             this.name = name;
         }
@@ -454,7 +492,8 @@ public class Metrics {
          *
          * @return
          */
-        public String getName() {
+        public String getName()
+        {
             return name;
         }
 
@@ -463,7 +502,8 @@ public class Metrics {
          *
          * @param plotter
          */
-        public void addPlotter(Plotter plotter) {
+        public void addPlotter(Plotter plotter)
+        {
             plotters.add(plotter);
         }
 
@@ -472,26 +512,32 @@ public class Metrics {
          *
          * @param plotter
          */
-        public void removePlotter(Plotter plotter) {
+        public void removePlotter(Plotter plotter)
+        {
             plotters.remove(plotter);
         }
 
         /**
          * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
+         *
          * @return
          */
-        public Set<Plotter> getPlotters() {
+        public Set<Plotter> getPlotters()
+        {
             return Collections.unmodifiableSet(plotters);
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return (type.hashCode() * 17) ^ name.hashCode();
         }
 
         @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof Graph)) {
+        public boolean equals(Object object)
+        {
+            if (!(object instanceof Graph))
+            {
                 return false;
             }
 
@@ -504,7 +550,8 @@ public class Metrics {
     /**
      * Interface used to collect custom data for a plugin
      */
-    public static abstract class Plotter {
+    public static abstract class Plotter
+    {
 
         /**
          * The plot's name
@@ -514,7 +561,8 @@ public class Metrics {
         /**
          * Construct a plotter with the default plot name
          */
-        public Plotter() {
+        public Plotter()
+        {
             this("Default");
         }
 
@@ -523,7 +571,8 @@ public class Metrics {
          *
          * @param name
          */
-        public Plotter(String name) {
+        public Plotter(String name)
+        {
             this.name = name;
         }
 
@@ -539,24 +588,29 @@ public class Metrics {
          *
          * @return the plotted point's column name
          */
-        public String getColumnName() {
+        public String getColumnName()
+        {
             return name;
         }
 
         /**
          * Called after the website graphs have been updated
          */
-        public void reset() {
+        public void reset()
+        {
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return getColumnName().hashCode() + getValue();
         }
 
         @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof Plotter)) {
+        public boolean equals(Object object)
+        {
+            if (!(object instanceof Plotter))
+            {
                 return false;
             }
 

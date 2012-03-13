@@ -59,7 +59,7 @@ public class CommandAdmin implements CommandExecutor
             if (Change.equalsIgnoreCase("name"))
             {
                 String name = "";
-                for (int i = 2; i < args.length; i++)
+                for (int i = 2 ; i < args.length ; i++)
                 {
                     name += args[i] + " ";
                 }

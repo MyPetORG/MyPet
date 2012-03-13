@@ -47,9 +47,9 @@ public class MyWolfPermissions
         {
             return true;
         }
-        else if(PermissionsMode == PermissionsType.Vault)
+        else if (PermissionsMode == PermissionsType.Vault)
         {
-            ((Permission)Permissions).has(player,node);
+            ((Permission) Permissions).has(player, node);
         }
         else if (PermissionsMode == PermissionsType.BukkitPermissions)
         {
@@ -79,7 +79,7 @@ public class MyWolfPermissions
             {
                 Permissions = permissionProvider.getProvider();
             }
-            if(Permissions != null)
+            if (Permissions != null)
             {
                 MyWolfUtil.getLogger().info("Vault integration enabled!");
                 return;
