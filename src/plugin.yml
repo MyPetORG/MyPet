@@ -1,6 +1,6 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolfPlugin
-version: 0.5.6
+version: 0.6.0
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Citizens, WorldGuard]
@@ -16,19 +16,19 @@ commands:
   wolfrelease:
     description: Release your MyWolf.
     usage: '/<command> <WolfName>'
-  wolfstop:
-    aliases: [wolfs, ws]
-    description: your MyWolf stop attacking.
+#  wolfstop:
+#    aliases: [wolfs, ws]
+#    description: your MyWolf stop attacking.
   wolfpickup:
     aliases: [wolfp, wp]
     description: Toogles pickup of your MyWolf.
   wolfinventory:
     aliases: [wolfi, wi]
     description: Open the inventory of your MyWolf.
-  wolfbehavior:
-    aliases: [wolfb, wb]
-    description: Switch the behavior mode of your MyWolf.
-    usage: '/<command> [<Raid/rai/Friendly/fri/Aggressive/agg/Normal/nor>]'
+#  wolfbehavior:
+#    aliases: [wolfb, wb]
+#    description: Switch the behavior mode of your MyWolf.
+#    usage: '/<command> [<Raid/rai/Friendly/fri/Aggressive/agg/Normal/nor>]'
   wolfinfo:
     aliases: [winfo]
     description: Shows HP and Exp of your MyWolf
