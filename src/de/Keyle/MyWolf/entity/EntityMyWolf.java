@@ -20,7 +20,6 @@
 package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
@@ -28,44 +27,53 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-import java.util.List;
-
-public class EntityMyWolf extends EntityWolf
+public class EntityMyWolf extends EntityTameableAnimal
 {
+    private boolean b = false;
+    private float c;
+    private boolean h;
+    private boolean i;
+    private float j;
+    private float k;
+
     boolean isMyWolf = false;
     MyWolf MWolf;
 
     public EntityMyWolf(World world)
     {
         super(world);
+        MyWolfUtil.getLogger().severe("Don't try to get a MyWolf this way!");
     }
 
     public EntityMyWolf(World world, MyWolf MWolf)
     {
         super(world);
+        this.texture = "/mob/wolf.png";
+        this.b(0.6F, 0.8F);
+        this.bb = 0.3F;
+        this.ak().a(true);
         setMyWolf(MWolf);
+        MWolf.Wolf = (CraftMyWolf) this.getBukkitEntity();
+
+        this.goalSelector.a(1, new PathfinderGoalFloat(this));
+        this.goalSelector.a(2, this.a);
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
+        this.goalSelector.a(5, new PathfinderGoalControl(MWolf, 0.4F));
+        this.goalSelector.a(6, new PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F));
+        this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
+        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(this));
+        this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
+        //this.targetSelector.a(4, new PathfinderGoalAggressive(MWolf, 10));
     }
 
     public boolean isMyWolf()
     {
         return isMyWolf;
-    }
-
-    public void e(NBTTagCompound nbttagcompound)
-    {
-        if (!isMyWolf)
-        {
-            super.d(nbttagcompound);
-            EntityWolf entityWolf = new EntityWolf(world);
-            entityWolf.d(nbttagcompound);
-            this.getBukkitEntity().remove();
-            MyWolfUtil.getLogger().severe("If there is a unnormal messege around here, please contact the developer and inform him about this!");
-        }
-        else
-        {
-            super.d(nbttagcompound);
-        }
     }
 
     public void setMyWolf(MyWolf MWolf)
@@ -82,61 +90,19 @@ public class EntityMyWolf extends EntityWolf
                 this.setHealth(getMaxHealth());
                 this.setOwnerName(MWolf.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
-                this.goalSelector.a(4, new PathfinderGoalControl(MWolf, 0.4F));
             }
         }
     }
 
     public int getMaxHealth()
     {
-        if (isMyWolf)
-        {
-            return MyWolfConfig.StartHP + (MWolf.SkillSystem.hasSkill("HP") ? MWolf.SkillSystem.getSkill("HP").getLevel() : 0);
-        }
-        else
-        {
-            return super.getMaxHealth();
-        }
-    }
-
-    protected Entity findTarget()
-    {
-        if (isMyWolf)
-        {
-            if (MWolf.SkillSystem.hasSkill("Behavior"))
-            {
-                Behavior behavior = (Behavior) MWolf.SkillSystem.getSkill("Behavior");
-                if (behavior.getLevel() > 0)
-                {
-                    if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
-                    {
-                        return null;
-                    }
-                    else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && !this.isSitting())
-                    {
-                        List list = this.world.a(EntityLiving.class, AxisAlignedBB.b(this.locX, this.locY, this.locZ, this.locX + 1.0D, this.locY + 1.0D, this.locZ + 1.0D).grow(16.0D, 4.0D, 16.0D));
-                        EntityHuman owner = this.world.a(this.getOwnerName());
-
-                        if (!list.isEmpty())
-                        {
-                            for (Object o : list)
-                            {
-                                Entity e = (Entity) o;
-                                if (e != owner && e != this)
-                                {
-                                    return e;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return super.findTarget();
+        return MyWolfConfig.StartHP + (isTamed() && MWolf.SkillSystem.hasSkill("HP") ? MWolf.SkillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public boolean b(EntityHuman entityhuman)
     {
+        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+
         if (isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
             if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
@@ -147,36 +113,50 @@ public class EntityMyWolf extends EntityWolf
                 }
             }
         }
-        return super.b(entityhuman);
+
+        if (this.a(itemstack))
+        {
+            ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
+
+            if (getHealth() < getMaxHealth())
+            {
+                --itemstack.count;
+                this.heal(itemfood.getNutrition()-(getMaxHealth()-getHealth()), RegainReason.EATING);
+                if (itemstack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                this.a(true);
+                return true;
+            }
+        }
+        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
+        {
+            this.a.a(!this.isSitting());
+            this.aZ = false;
+            this.setPathEntity(null);
+        }
+
+        return false;
     }
 
     public boolean a(Entity entity)
     {
-        int i = this.isTamed() ? 4 : 2;
-        i += (isMyWolf && MWolf.SkillSystem.hasSkill("Demage")) ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0;
+        int i = 4 + (isMyWolf && MWolf.SkillSystem.hasSkill("Demage") ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0);
 
         if (entity instanceof EntityLiving && !(entity instanceof EntityHuman))
         {
-            org.bukkit.entity.Entity damagee = (entity == null) ? null : entity.getBukkitEntity();
+            org.bukkit.entity.Entity damagee = entity.getBukkitEntity();
 
             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
             Bukkit.getPluginManager().callEvent(event);
             i = event.getDamage();
 
-            if (!event.isCancelled())
-            {
-                return entity.damageEntity(DamageSource.mobAttack(this), i);
-            }
+            return !event.isCancelled() && entity.damageEntity(DamageSource.mobAttack(this), i);
 
-            return false;
         }
 
         return entity.damageEntity(DamageSource.mobAttack(this), i);
-    }
-
-    public EntityAnimal createChild(EntityAnimal entityanimal)
-    {
-        return null;
     }
 
     public void setLocation(Location loc)
@@ -193,6 +173,12 @@ public class EntityMyWolf extends EntityWolf
         this.health = i;
     }
 
+    public void setSitting(boolean flag)
+    {
+        this.a.a(flag);
+        super.setSitting(flag);
+    }
+
     public org.bukkit.entity.Entity getBukkitEntity()
     {
         if (this.bukkitEntity == null)
@@ -205,5 +191,205 @@ public class EntityMyWolf extends EntityWolf
     public MyWolf getMyWolf()
     {
         return MWolf;
+    }
+
+//Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
+
+    protected String i()
+    {
+        return (this.random.nextInt(3) == 0 ? (getHealth()*100/getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+    }
+
+    public EntityAnimal createChild(EntityAnimal entityanimal)
+    {
+        return null;
+    }
+
+    public boolean mate(EntityAnimal entityanimal)
+    {
+        return false;
+    }
+
+    public void b(NBTTagCompound nbttagcompound)
+    {
+        super.b(nbttagcompound);
+    }
+
+    public void a(NBTTagCompound nbttagcompound)
+    {
+        if (!isMyWolf)
+        {
+            super.d(nbttagcompound);
+            EntityWolf entityWolf = new EntityWolf(world);
+            entityWolf.d(nbttagcompound);
+            this.getBukkitEntity().remove();
+            MyWolfUtil.getLogger().severe("This shouldn't happen, please contact the developer and inform him about this!");
+        }
+        else
+        {
+            super.d(nbttagcompound);
+        }
+    }
+
+//Vanilla Methods ------------------------------------------------------------------------------------------------------
+
+    public boolean c_()
+    {
+        return true;
+    }
+
+    public void b(EntityLiving entityliving)
+    {
+        super.b(entityliving);
+    }
+
+    protected void g()
+    {
+        this.datawatcher.watch(18, this.getHealth());
+    }
+
+    protected void b()
+    {
+        super.b();
+        this.datawatcher.a(18, this.getHealth());
+    }
+
+    protected boolean g_()
+    {
+        return false;
+    }
+
+    protected boolean n()
+    {
+        return false;
+    }
+
+
+
+    protected String j()
+    {
+        return "mob.wolf.hurt";
+    }
+
+    protected String k()
+    {
+        return "mob.wolf.death";
+    }
+
+    protected float p()
+    {
+        return 0.4F;
+    }
+
+    protected int getLootId()
+    {
+        return -1;
+    }
+
+    public void e()
+    {
+        super.e();
+        if (!this.world.isStatic && this.h && !this.i && !this.G() && this.onGround)
+        {
+            this.i = true;
+            this.j = 0.0F;
+            this.k = 0.0F;
+            this.world.broadcastEntityEffect(this, (byte) 8);
+        }
+    }
+
+    public void G_()
+    {
+        super.G_();
+        if (this.b)
+        {
+            this.c += (1.0F - this.c) * 0.4F;
+        }
+        else
+        {
+            this.c += (0.0F - this.c) * 0.4F;
+        }
+
+        if (this.b)
+        {
+            this.bc = 10;
+        }
+
+        if (this.aS())
+        {
+            this.h = true;
+            this.i = false;
+            this.j = 0.0F;
+            this.k = 0.0F;
+        }
+        else if ((this.h || this.i) && this.i)
+        {
+            if (this.j == 0.0F)
+            {
+                this.world.makeSound(this, "mob.wolf.shake", this.p(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            }
+
+            this.k = this.j;
+            this.j += 0.05F;
+            if (this.k >= 2.0F)
+            {
+                this.h = false;
+                this.i = false;
+                this.k = 0.0F;
+                this.j = 0.0F;
+            }
+
+            if (this.j > 0.4F)
+            {
+                float f = (float) this.boundingBox.b;
+                int i = (int) (MathHelper.sin((this.j - 0.4F) * 3.1415927F) * 7.0F);
+
+                for (int j = 0 ; j < i ; ++j)
+                {
+                    float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+
+                    this.world.a("splash", this.locX + (double) f1, (double) (f + 0.8F), this.locZ + (double) f2, this.motX, this.motY, this.motZ);
+                }
+            }
+        }
+    }
+
+    public float getHeadHeight()
+    {
+        return this.length * 0.8F;
+    }
+
+    public int C()
+    {
+        return this.isSitting() ? 20 : super.C();
+    }
+
+    public boolean damageEntity(DamageSource damagesource, int i)
+    {
+        Entity entity = damagesource.getEntity();
+
+        this.a.a(false);
+        if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
+        {
+            i = (i + 1) / 2;
+        }
+
+        return super.damageEntity(damagesource, i);
+    }
+
+    public boolean a(ItemStack itemstack)
+    {
+        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).q());
+    }
+
+    public int q()
+    {
+        return 8;
+    }
+
+    public void e(boolean flag)
+    {
+        this.b = flag;
     }
 }

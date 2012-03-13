@@ -61,12 +61,11 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
 
     public boolean isAngry()
     {
-        return getHandle().isAngry();
+        return false;
     }
 
     public void setAngry(boolean angry)
     {
-        getHandle().setAngry(angry);
     }
 
     public boolean isSitting()
@@ -151,7 +150,7 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
     @Override
     public String toString()
     {
-        return "CraftMyWolf{MyWolf=" + getHandle().isMyWolf() + "anger=" + isAngry() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyWolf{MyWolf=" + getHandle().isMyWolf() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()

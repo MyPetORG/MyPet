@@ -44,32 +44,6 @@ public class MyWolfPlayerListener implements Listener
 {
     private final int[] ControllIgnoreBlocks = {6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70, 72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 116, 117, 118, 119};
 
-    /*
-    @EventHandler()
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
-    {
-        if (event.getRightClicked() instanceof Wolf && ((Wolf) event.getRightClicked()).isTamed())
-        {
-            if (event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem)
-            {
-                Wolf w = (Wolf) event.getRightClicked();
-                if (MyWolfList.hasMyWolf(event.getPlayer()))
-                {
-                    MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-                    if (MWolf.getEntityId() == w.getEntityId())
-                    {
-                        if(MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
-                        {
-                            MWolf.ResetSitTimer();
-                            event.setCancelled(true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    */
-
     @EventHandler()
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
