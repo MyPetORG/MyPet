@@ -1,4 +1,7 @@
 # the order of this skilltrees is from top (admins eg.) to the bottom (losers)
+
+# !!! Behavior and Control are not usable at the moment !!!
+
 skilltrees:
 
   # Admin skilltree -> MyWolf.user.skilltree.admin
@@ -10,9 +13,9 @@ skilltrees:
       - Inventory
       - Inventory
       - Inventory
-      - Control
+#      - Control
       - Pickup
-      - Behavior
+#      - Behavior
       - HP
       - HP
       - HP
@@ -23,7 +26,7 @@ skilltrees:
   Hunter:
     inherit: Pickup
     '2':
-      - Control
+#      - Control
       - Inventory
       - Damage
       - Damage
@@ -32,7 +35,7 @@ skilltrees:
       - Damage
     '6':
       - Inventory
-      - Behavior
+#      - Behavior
     '8':
       - Inventory
       - HP
@@ -65,7 +68,7 @@ skilltrees:
       - Inventory
     '4':
       - Inventory
-      - Control
+#      - Control
       - HP
       - Damage
     '6':
