@@ -87,14 +87,14 @@ public class MyWolfUtil
 
     public static boolean isNPC(Player player)
     {
-        Plugin plugin = server.getPluginManager().getPlugin("Citizens");
+        Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
         return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
     }
 
     public static boolean getPVP(Location loc)
     {
 
-        Plugin WG = server.getPluginManager().getPlugin("WorldGuard");
+        Plugin WG = getServer().getPluginManager().getPlugin("WorldGuard");
         if (WG != null)
         {
             if (WG.isEnabled())
@@ -107,7 +107,7 @@ public class MyWolfUtil
                 return set.allows(DefaultFlag.PVP);
             }
         }
-        return server.getWorld(loc.getWorld().getName()).getPVP();
+        return getServer().getWorld(loc.getWorld().getName()).getPVP();
     }
 
     public static void sendMessage(Player player, String Message)
