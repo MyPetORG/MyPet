@@ -21,6 +21,7 @@ package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.InactiveMyWolf;
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import org.bukkit.OfflinePlayer;
@@ -95,7 +96,7 @@ public class MyWolfList
     {
         for (MyWolf wolf : lActiveWolves)
         {
-            if (wolf.Wolf.getEntityId() == EntityID)
+            if (wolf.Status == WolfState.Here && wolf.Wolf.getEntityId() == EntityID)
             {
                 return wolf;
             }
