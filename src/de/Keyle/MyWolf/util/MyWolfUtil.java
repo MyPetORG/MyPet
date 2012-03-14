@@ -35,11 +35,9 @@ import java.util.logging.Logger;
 
 public class MyWolfUtil
 {
-    private static final Server server = org.bukkit.Bukkit.getServer();
-
     public static Server getServer()
     {
-        return server;
+        return Bukkit.getServer();
     }
 
     public static OfflinePlayer getOfflinePlayer(String Name)
