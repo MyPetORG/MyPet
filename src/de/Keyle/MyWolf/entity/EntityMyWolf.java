@@ -23,10 +23,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityTameableAnimal
@@ -61,7 +58,7 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.goalSelector.a(2, this.a);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
-        this.goalSelector.a(5, new PathfinderGoalControl(MWolf, 0.4F));
+        //this.goalSelector.a(5, new PathfinderGoalControl(MWolf, 0.4F));
         this.goalSelector.a(6, new PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F));
         this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
@@ -142,21 +139,9 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public boolean a(Entity entity)
     {
-        int i = 4 + (isMyWolf && MWolf.SkillSystem.hasSkill("Demage") ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0);
+        int damage = 4 + (isMyWolf && MWolf.SkillSystem.hasSkill("Demage") ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0);
 
-        if (entity instanceof EntityLiving && !(entity instanceof EntityHuman))
-        {
-            org.bukkit.entity.Entity damagee = entity.getBukkitEntity();
-
-            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(this.getBukkitEntity(), damagee, EntityDamageEvent.DamageCause.ENTITY_ATTACK, i);
-            Bukkit.getPluginManager().callEvent(event);
-            i = event.getDamage();
-
-            return !event.isCancelled() && entity.damageEntity(DamageSource.mobAttack(this), i);
-
-        }
-
-        return entity.damageEntity(DamageSource.mobAttack(this), i);
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
     public void setLocation(Location loc)
