@@ -41,19 +41,23 @@ public class MyWolfPermissions
     {
         if (player.isOp())
         {
+            //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> OP -> true");
             return true;
         }
         else if (PermissionsMode == PermissionsType.NONE)
         {
+            //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> None -> true");
             return true;
         }
         else if (PermissionsMode == PermissionsType.Vault)
         {
-            ((Permission) Permissions).has(player, node);
+            //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> Vault -> " + ((Permission) Permissions).has(player, node));
+            return ((Permission) Permissions).has(player, node);
         }
         else if (PermissionsMode == PermissionsType.BukkitPermissions)
         {
-            player.hasPermission(node);
+            //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> Bukkit -> " + player.hasPermission(node));
+            return player.hasPermission(node);
         }
         return false;
 
