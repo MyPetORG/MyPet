@@ -35,7 +35,6 @@ public class MyWolfLevelUpEvent extends Event
 
     public MyWolfLevelUpEvent(MyWolf Wolf, int Level)
     {
-        super();
         this.Wolf = Wolf;
         this.Level = Level;
         this.Quiet = false;
@@ -43,7 +42,6 @@ public class MyWolfLevelUpEvent extends Event
 
     public MyWolfLevelUpEvent(MyWolf Wolf, int Level, boolean Quiet)
     {
-        super();
         this.Wolf = Wolf;
         this.Level = Level;
         this.Quiet = Quiet;

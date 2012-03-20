@@ -32,11 +32,10 @@ public class MyWolfLeashEvent extends Event
 
     public MyWolfLeashEvent(MyWolf Wolf)
     {
-        super();
         this.Wolf = Wolf;
     }
 
-    public Player getOwner()
+    public Player getLeasher()
     {
         return Wolf.getOwner().getPlayer();
     }
