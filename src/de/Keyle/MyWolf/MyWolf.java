@@ -48,7 +48,7 @@ public class MyWolf
     private Location Location;
 
     public MyWolfSkillTree SkillTree = null;
-    public MyWolfSkillSystem SkillSystem;
+    final public MyWolfSkillSystem SkillSystem;
     public final MyWolfExperience Experience;
 
     public static enum WolfState
@@ -64,7 +64,7 @@ public class MyWolf
         {
             for (String ST : MyWolfSkillTreeConfigLoader.getSkillTreeNames())
             {
-                if (MyWolfPermissions.has(Owner.getPlayer(), "MyWolf.user.skilltree." + ST))
+                if (MyWolfPermissions.has(Owner.getPlayer(), "MyWolf.custom.skilltree." + ST))
                 {
                     this.SkillTree = MyWolfSkillTreeConfigLoader.getSkillTree(ST);
                     break;
@@ -75,7 +75,6 @@ public class MyWolf
         {
             this.SkillTree = new MyWolfSkillTree("%+-%NoNe%-+%");
         }
-
         SkillSystem = new MyWolfSkillSystem(this);
         Experience = new MyWolfExperience(this);
     }
@@ -137,6 +136,7 @@ public class MyWolf
         Location = Wolf.getLocation();
         Status = WolfState.Here;
         Wolf.setSitting(true);
+        Status = WolfState.Here;
     }
 
     public void setHealth(int d)
