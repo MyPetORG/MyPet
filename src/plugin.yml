@@ -34,6 +34,7 @@ commands:
     description: Shows HP and Exp of your MyWolf
     usage: '/<command> [PlayerName]'
   wolfskill:
+    aliases: [wskill]
     description: Shows the skill-levels of a online MyWolf
     usage: '/<command> <playername>'
   wolfadmin:
