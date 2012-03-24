@@ -50,7 +50,7 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.texture = "/mob/wolf.png";
         this.b(0.6F, 0.8F);
         this.bb = 0.3F;
-        this.ak().a(true);
+        this.al().a(true);
         setMyWolf(MWolf);
         MWolf.Wolf = (CraftMyWolf) this.getBukkitEntity();
 
@@ -274,7 +274,7 @@ public class EntityMyWolf extends EntityTameableAnimal
     public void e()
     {
         super.e();
-        if (!this.world.isStatic && this.h && !this.i && !this.G() && this.onGround)
+        if (!this.world.isStatic && this.h && !this.i && !this.H() && this.onGround)
         {
             this.i = true;
             this.j = 0.0F;
@@ -283,9 +283,9 @@ public class EntityMyWolf extends EntityTameableAnimal
         }
     }
 
-    public void G_()
+    public void F_()
     {
-        super.G_();
+        super.F_();
         if (this.b)
         {
             this.c += (1.0F - this.c) * 0.4F;
@@ -300,7 +300,7 @@ public class EntityMyWolf extends EntityTameableAnimal
             this.bc = 10;
         }
 
-        if (this.aS())
+        if (this.aT())
         {
             this.h = true;
             this.i = false;
@@ -345,9 +345,9 @@ public class EntityMyWolf extends EntityTameableAnimal
         return this.length * 0.8F;
     }
 
-    public int C()
+    public int D()
     {
-        return this.isSitting() ? 20 : super.C();
+        return this.isSitting() ? 20 : super.D();
     }
 
     public boolean damageEntity(DamageSource damagesource, int i)
