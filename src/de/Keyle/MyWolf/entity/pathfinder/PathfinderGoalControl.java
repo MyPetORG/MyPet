@@ -17,25 +17,22 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.entity;
+package de.Keyle.MyWolf.entity.pathfinder;
 
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Control;
+import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.Scheduler;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.Location;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Keyle
- * Date: 11.03.12
- * Time: 19:11
- * To change this template use File | Settings | File Templates.
- */
-public class PathfinderGoalControl extends PathfinderGoal
+public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
     MyWolf MWolf;
     float Speed;
-    Location moveTo;
+    Location moveTo = null;
+    int TimeToMove = 0;
 
     public PathfinderGoalControl(MyWolf MWolf, float f)
     {
@@ -49,20 +46,37 @@ public class PathfinderGoalControl extends PathfinderGoal
         if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
         {
             Control control = (Control) MWolf.SkillSystem.getSkill("Control");
-            moveTo = control.getLocation();
-            if (moveTo != null)
+            if (control.getLocation(false) != null)
             {
-                return true;
+                moveTo = control.getLocation();
+                TimeToMove = (int) MyWolfUtil.getDistance(MWolf.getLocation(), moveTo);
+                MyWolfUtil.getLogger().info("--- distanz: " + TimeToMove + " ---");
             }
         }
-        return false;
+        return moveTo != null;
     }
 
     public void c()
     {
-        if (moveTo != null)
+        MyWolfUtil.getLogger().info("--- active ---");
+        if(this.MWolf.Wolf.getHandle().al().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed))
         {
-            this.MWolf.Wolf.getHandle().ak().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed);
+            this.MWolf.Wolf.getHandle().al().a(false);
+            MyWolfPlugin.getPlugin().getTimer().addTask(this);
+        }
+    }
+
+    public void d()
+    {
+        MyWolfPlugin.getPlugin().getTimer().removeTask(this);
+        MyWolfUtil.getLogger().info("--- stopped ---");
+    }
+
+    public void schedule()
+    {
+        TimeToMove--;
+        if(TimeToMove <= 0)
+        {
             moveTo = null;
         }
     }

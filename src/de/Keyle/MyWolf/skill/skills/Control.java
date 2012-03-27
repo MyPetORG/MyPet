@@ -48,6 +48,16 @@ public class Control extends MyWolfGenericSkill
         return tmpMoveTo;
     }
 
+    public Location getLocation(boolean delete)
+    {
+        Location tmpMoveTo = moveTo;
+        if(delete)
+        {
+            moveTo = null;
+        }
+        return tmpMoveTo;
+    }
+
     public void setMoveTo(Location loc)
     {
         moveTo = loc;
