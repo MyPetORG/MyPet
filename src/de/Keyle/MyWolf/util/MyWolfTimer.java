@@ -22,11 +22,16 @@ package de.Keyle.MyWolf.util;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyWolfTimer
 {
     private int Timer = -1;
 
     private static boolean resetTimer = false;
+
+    private final List<Scheduler> TasksToSchedule = new ArrayList<Scheduler>();
 
     public void stopTimer()
     {
@@ -54,6 +59,10 @@ public class MyWolfTimer
                 {
                     MWolf.scheduleTask();
                 }
+                for (Scheduler Task : TasksToSchedule)
+                {
+                    Task.schedule();
+                }
                 if (resetTimer && MyWolfConfig.AutoSaveTime > 0)
                 {
                     AutoSaveTimer = MyWolfConfig.AutoSaveTime;
@@ -71,5 +80,15 @@ public class MyWolfTimer
     public void resetTimer()
     {
         resetTimer = true;
+    }
+
+    public void addTask(Scheduler scheduler)
+    {
+        TasksToSchedule.add(scheduler);
+    }
+
+    public void removeTask(Scheduler scheduler)
+    {
+        TasksToSchedule.remove(scheduler);
     }
 }

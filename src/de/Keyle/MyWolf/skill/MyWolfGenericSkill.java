@@ -20,10 +20,11 @@
 package de.Keyle.MyWolf.skill;
 
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.util.Scheduler;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 
-public class MyWolfGenericSkill
+public class MyWolfGenericSkill implements Scheduler
 {
     protected String Name;
     protected int Level = 0;
