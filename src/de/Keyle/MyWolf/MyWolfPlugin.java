@@ -46,13 +46,18 @@ public class MyWolfPlugin extends JavaPlugin
 {
     private static MyWolfPlugin Plugin;
     public static MyWolfLanguage MWLanguage;
-    public final MyWolfTimer Timer = new MyWolfTimer();
+    private final MyWolfTimer Timer = new MyWolfTimer();
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
     public static File NBTWolvesFile;
 
     public static MyWolfPlugin getPlugin()
     {
         return Plugin;
+    }
+
+    public MyWolfTimer getTimer()
+    {
+        return Timer;
     }
 
     public void onDisable()

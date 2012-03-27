@@ -179,7 +179,7 @@ public class MyWolfPlayerListener implements Listener
                 }
             }
             MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
-            MyWolfPlugin.getPlugin().Timer.resetTimer();
+            MyWolfPlugin.getPlugin().getTimer().resetTimer();
         }
     }
 
