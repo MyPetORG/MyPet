@@ -26,38 +26,30 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandHelp implements CommandExecutor
-{
+public class CommandHelp implements CommandExecutor {
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
             player.sendMessage("--------------- MyWolf - Help -------------------------");
             player.sendMessage("/wolfinfo [player] | Display info about a MyWolf  (alias: /winfo)");
-            if (MyWolfPermissions.has(player, "MyWolf.admin"))
-            {
+            if (MyWolfPermissions.has(player, "MyWolf.admin")) {
                 player.sendMessage("/wolfadmin [PlayerName] name/exp [Value] | (alias: /ws or /wolfs)");
             }
-            if (MyWolfList.hasMyWolf(player))
-            {
+            if (MyWolfList.hasMyWolf(player)) {
                 player.sendMessage("/wolfname <newwolfname> | Set wolf name");
                 player.sendMessage("/wolfrelease <wolfname> | Release your wolf");
-                player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
+                //player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
                 player.sendMessage("/wolfcall | Call your wolf  (alias: /wc or /wolfc)");
                 player.sendMessage("/wolfskill | Shows the skill-levels");
 
-                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Inventory") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Inventory").getLevel() > 0)
-                {
+                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Inventory") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Inventory").getLevel() > 0) {
                     player.sendMessage("/wolfinventory | Open the inventory of the wolf  (alias: /wi or /wolfi)");
                 }
-                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Pickup") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Pickup").getLevel() > 0)
-                {
+                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Pickup") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Pickup").getLevel() > 0) {
                     player.sendMessage("/wolfpickup | Toggle wolf pickup on/off  (alias: /wp or /wolfp)");
                 }
-                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Behavior") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Behavior").getLevel() > 0)
-                {
+                if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Behavior") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Behavior").getLevel() > 0) {
                     player.sendMessage("/wolfbehavior [RAID] | Toggle the behaivior  (alias: /wb or /wolfb)");
                 }
             }

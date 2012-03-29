@@ -30,32 +30,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandStop implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandStop implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player owner = (Player) sender;
-            if (MyWolfList.hasMyWolf(owner))
-            {
+            if (MyWolfList.hasMyWolf(owner)) {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(owner, "MyWolf.user.stop"))
-                {
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.stop")) {
                     return true;
                 }
-                if (MWolf.Status == WolfState.Despawned)
-                {
+                if (MWolf.Status == WolfState.Despawned) {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
-                MWolf.Wolf.setTarget(null);
+                MWolf.Wolf.getHandle().setTarget(null);
                 return true;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
