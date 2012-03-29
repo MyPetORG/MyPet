@@ -421,6 +421,7 @@ public class MyWolfPlugin extends JavaPlugin
             Wolf.set("Skills", IMWolf.getSkills());
             Wolves.add(Wolf);
         }
+        nbtConfiguration.getNBTTagCompound().setString("Version", Plugin.getDescription().getVersion());
         nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
         nbtConfiguration.save();
     }
