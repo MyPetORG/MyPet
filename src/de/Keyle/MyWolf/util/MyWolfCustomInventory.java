@@ -33,6 +33,7 @@ public class MyWolfCustomInventory implements IInventory
     protected String MyWolfInventroyName;
     protected List<ItemStack> Items = new ArrayList<ItemStack>();
     protected int Size = 0;
+    protected int stackSize = 64;
 
     public MyWolfCustomInventory(String Name, int Size)
     {
@@ -182,11 +183,6 @@ public class MyWolfCustomInventory implements IInventory
         return itemStack;
     }
 
-    public int getMaxStackSize()
-    {
-        return 64;
-    }
-
     public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
         NBTTagList Items = new NBTTagList();
@@ -239,6 +235,16 @@ public class MyWolfCustomInventory implements IInventory
     public InventoryHolder getOwner()
     {
         return null;
+    }
+
+    public int getMaxStackSize()
+    {
+        return stackSize;
+    }
+
+    public void setMaxStackSize(int i)
+    {
+        this.stackSize = i;
     }
 
     public ItemStack splitWithoutUpdate(int i)
