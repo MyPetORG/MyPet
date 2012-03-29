@@ -22,70 +22,68 @@ package de.Keyle.MyWolf.chatcommands;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.skill.skills.Inventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.EntityItem;
+import net.minecraft.server.ItemStack;
+import net.minecraft.server.World;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class CommandRelease implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandRelease implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player owner = (Player) sender;
-            if (MyWolfList.hasMyWolf(owner))
-            {
+            if (MyWolfList.hasMyWolf(owner)) {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (!MyWolfPermissions.has(owner, "MyWolf.user.release"))
-                {
+                if (!MyWolfPermissions.has(owner, "MyWolf.user.release")) {
                     return true;
                 }
-                if (MWolf.Status == WolfState.Despawned)
-                {
+                if (MWolf.Status == WolfState.Despawned) {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                if (args.length < 1)
-                {
+                if (args.length < 1) {
                     return false;
                 }
                 String name = "";
-                for (String arg : args)
-                {
+                for (String arg : args) {
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MWolf.Name.equalsIgnoreCase(name))
-                {
-                    MWolf.Wolf.setOwner(null);
-                    /*
-                    for (ItemStack is : MWolf.inv.getContents())
-                    {
-                        if (is != null)
-                        {
-                            MWolf.Wolf.getWorld().dropItem(MWolf.getLocation(), new org.bukkit.inventory.ItemStack(is.id, is.count, (short) is.getData()));
+                if (MWolf.Name.equalsIgnoreCase(name)) {
+                    if (MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0) {
+                        World world = MWolf.Wolf.getHandle().world;
+                        Location loc = MWolf.getLocation();
+                        for (ItemStack is : ((Inventory) MWolf.SkillSystem.getSkill("Inventory")).inv.getContents()) {
+                            if (is != null) {
+                                EntityItem entity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
+                                entity.pickupDelay = 10;
+                                world.addEntity(entity);
+                            }
                         }
                     }
-                    */
+                    MWolf.getLocation().getWorld().spawnCreature(MWolf.getLocation(), EntityType.WOLF);
+                    MWolf.removeWolf();
+
+
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
                     MyWolfList.removeMyWolf(MWolf);
                     MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
                     return true;
-                }
-                else
-                {
+                } else {
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MWolf.Name));
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
