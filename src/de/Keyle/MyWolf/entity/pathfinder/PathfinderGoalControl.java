@@ -24,20 +24,23 @@ import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import de.Keyle.MyWolf.util.Scheduler;
+import net.minecraft.server.Navigation;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.Location;
 
 public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
     MyWolf MWolf;
-    float Speed;
+    float speed;
     Location moveTo = null;
     int TimeToMove = 0;
+    Navigation nav;
 
     public PathfinderGoalControl(MyWolf MWolf, float f)
     {
         this.MWolf = MWolf;
-        Speed = f;
+        speed = f;
+        nav = this.MWolf.Wolf.getHandle().al();
     }
 
     @Override
@@ -49,8 +52,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
             if (control.getLocation(false) != null)
             {
                 moveTo = control.getLocation();
-                TimeToMove = (int) MyWolfUtil.getDistance(MWolf.getLocation(), moveTo);
-                MyWolfUtil.getLogger().info("--- distanz: " + TimeToMove + " ---");
+                TimeToMove = (int) MyWolfUtil.getDistance(MWolf.getLocation(), moveTo) / 3;
             }
         }
         return moveTo != null;
@@ -58,18 +60,35 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 
     public void c()
     {
-        MyWolfUtil.getLogger().info("--- active ---");
-        if (this.MWolf.Wolf.getHandle().al().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed))
+        if (nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
         {
-            this.MWolf.Wolf.getHandle().al().a(false);
             MyWolfPlugin.getPlugin().getTimer().addTask(this);
         }
+        else
+        {
+            moveTo = null;
+        }
+    }
+
+    public boolean b()
+    {
+        Control control = (Control) MWolf.SkillSystem.getSkill("Control");
+        if (control.getLocation(false) != null)
+        {
+            moveTo = control.getLocation();
+            TimeToMove = (int) MyWolfUtil.getDistance(MWolf.getLocation(), moveTo) / 3;
+            if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
+            {
+                moveTo = null;
+            }
+        }
+        return moveTo != null && !this.MWolf.Wolf.isSitting();
     }
 
     public void d()
     {
         MyWolfPlugin.getPlugin().getTimer().removeTask(this);
-        MyWolfUtil.getLogger().info("--- stopped ---");
+        moveTo = null;
     }
 
     public void schedule()

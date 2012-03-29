@@ -145,7 +145,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfSkillSystem.registerSkill(Pickup.class);
         //MyWolfSkillSystem.registerSkill(Behavior.class);
         MyWolfSkillSystem.registerSkill(Damage.class);
-        //MyWolfSkillSystem.registerSkill(Control.class);
+        MyWolfSkillSystem.registerSkill(Control.class);
         MyWolfSkillSystem.registerSkill(HP.class);
 
         try
