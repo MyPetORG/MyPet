@@ -20,7 +20,6 @@
 package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
@@ -59,7 +58,7 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.goalSelector.a(2, this.a);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
-        this.goalSelector.a(5, new PathfinderGoalControl(MWolf, 0.4F));
+        //this.goalSelector.a(5, new PathfinderGoalControl(MWolf, 0.4F));
         //this.goalSelector.a(6, new PathfinderGoalTest());
         this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
