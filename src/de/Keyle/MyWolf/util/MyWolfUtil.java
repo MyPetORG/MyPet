@@ -26,7 +26,7 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;

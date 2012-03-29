@@ -59,7 +59,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     public void c()
     {
         MyWolfUtil.getLogger().info("--- active ---");
-        if(this.MWolf.Wolf.getHandle().al().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed))
+        if (this.MWolf.Wolf.getHandle().al().a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.Speed))
         {
             this.MWolf.Wolf.getHandle().al().a(false);
             MyWolfPlugin.getPlugin().getTimer().addTask(this);
@@ -75,7 +75,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     public void schedule()
     {
         TimeToMove--;
-        if(TimeToMove <= 0)
+        if (TimeToMove <= 0)
         {
             moveTo = null;
         }

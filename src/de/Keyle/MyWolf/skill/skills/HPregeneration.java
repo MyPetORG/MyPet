@@ -25,24 +25,30 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
-public class HPregeneration extends MyWolfGenericSkill {
+public class HPregeneration extends MyWolfGenericSkill
+{
     int HealtregenTime = 60;
     int timeCounter = HealtregenTime - Level;
 
-    public HPregeneration() {
+    public HPregeneration()
+    {
         super("HPregeneration");
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade()
+    {
         Level++;
         MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddHPregeneration")).replace("%wolfname%", MWolf.Name).replace("%sec%", "" + (HealtregenTime - Level)));
     }
 
-    public void schedule() {
-        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here) {
+    public void schedule()
+    {
+        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here)
+        {
             timeCounter--;
-            if (timeCounter <= 0) {
+            if (timeCounter <= 0)
+            {
                 MWolf.Wolf.getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = HealtregenTime - Level;
             }

@@ -120,7 +120,7 @@ public class EntityMyWolf extends EntityTameableAnimal
             if (getHealth() < getMaxHealth())
             {
                 --itemstack.count;
-                this.heal(itemfood.getNutrition()-(getMaxHealth()-getHealth()), RegainReason.EATING);
+                this.heal(itemfood.getNutrition() - (getMaxHealth() - getHealth()), RegainReason.EATING);
                 if (itemstack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -180,11 +180,11 @@ public class EntityMyWolf extends EntityTameableAnimal
         return MWolf;
     }
 
-//Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
+    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     protected String i()
     {
-        return (this.random.nextInt(3) == 0 ? (getHealth()*100/getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+        return (this.random.nextInt(3) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 
     public EntityAnimal createChild(EntityAnimal entityanimal)
@@ -218,7 +218,7 @@ public class EntityMyWolf extends EntityTameableAnimal
         }
     }
 
-//Vanilla Methods ------------------------------------------------------------------------------------------------------
+    //Vanilla Methods ------------------------------------------------------------------------------------------------------
 
     public boolean c_()
     {
@@ -250,7 +250,6 @@ public class EntityMyWolf extends EntityTameableAnimal
     {
         return false;
     }
-
 
 
     protected String j()
