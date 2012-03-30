@@ -24,7 +24,6 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.event.MyWolfLeashEvent;
-import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityWolf;
@@ -43,7 +42,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class MyWolfEntityListener implements Listener
 {
-    @EventHandler()
+    @EventHandler
     public void onEntityDamage(final EntityDamageEvent event)
     {
         if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
@@ -130,7 +129,7 @@ public class MyWolfEntityListener implements Listener
         }
     }
 
-    @EventHandler()
+    @EventHandler
     public void onEntityDeath(final EntityDeathEvent event)
     {
         if (event.getEntity() instanceof CraftMyWolf)
@@ -160,20 +159,13 @@ public class MyWolfEntityListener implements Listener
                 if (MyWolfList.isMyWolf(e.getDamager().getEntityId()))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(e.getDamager().getEntityId());
-                    if (MyWolfExperience.defaultEXPvalues)
-                    {
-                        MWolf.Experience.addExp((double) event.getDroppedExp());
-                    }
-                    else
-                    {
-                        MWolf.Experience.addExp(e.getEntity().getType());
-                    }
+                    event.setDroppedExp(MWolf.Experience.addExp(e.getEntity().getType()));
                 }
             }
         }
     }
 
-    @EventHandler()
+    @EventHandler
     public void onEntityTarget(final EntityTargetEvent event)
     {
         if (!event.isCancelled())

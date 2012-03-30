@@ -55,33 +55,14 @@ public class MyWolfConfig
         setProperty("MyWolf.starthp", 20);
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
-        setProperty("MyWolf.exp_default", true);
         setProperty("MyWolf.SendMetrics", true);
         setProperty("MyWolf.AutoSaveTime", 60);
 
-        setProperty("MyWolf.exp.SKELETON", 1.1);
-        setProperty("MyWolf.exp.ZOMBIE", 1.1);
-        setProperty("MyWolf.exp.SPIDER", 1.05);
-        setProperty("MyWolf.exp.WOLF", 0.5);
-        setProperty("MyWolf.exp.CREEPER", 1.55);
-        setProperty("MyWolf.exp.GHAST", 0.85);
-        setProperty("MyWolf.exp.PIG_ZOMBIE", 1.1);
-        setProperty("MyWolf.exp.GIANT", 10.75);
-        setProperty("MyWolf.exp.COW", 0.25);
-        setProperty("MyWolf.exp.PIG", 0.25);
-        setProperty("MyWolf.exp.CHICKEN", 0.25);
-        setProperty("MyWolf.exp.SQUID", 0.25);
-        setProperty("MyWolf.exp.SHEEP", 0.25);
-        setProperty("MyWolf.exp.SLIME", 1.0);
-        setProperty("MyWolf.exp.CAVE_SPIDER", 1.0);
-        setProperty("MyWolf.exp.BLAZE", 1.1);
-        setProperty("MyWolf.exp.ENDER_DRAGON", 20.0);
-        setProperty("MyWolf.exp.ENDERMAN", 1.4);
-        setProperty("MyWolf.exp.MAGMA_CUBE", 1.0);
-        setProperty("MyWolf.exp.MUSHROOM_COW", 0.3);
-        setProperty("MyWolf.exp.SILVERFISH", 0.6);
-        setProperty("MyWolf.exp.SNOWMAN", 0.5);
-        setProperty("MyWolf.exp.VILLAGER", 0.01);
+        for (EntityType entityType : MyWolfExperience.MobEXP.keySet())
+        {
+            setProperty("MyWolf.exp." + entityType.getName() + ".min", MyWolfExperience.MobEXP.get(entityType).getMin());
+            setProperty("MyWolf.exp." + entityType.getName() + ".max", MyWolfExperience.MobEXP.get(entityType).getMax());
+        }
 
         MyWolfPlugin.getPlugin().saveConfig();
     }
@@ -97,17 +78,48 @@ public class MyWolfConfig
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         StartHP = Config.getInt("MyWolf.starthp", 15);
         PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
-        MyWolfExperience.defaultEXPvalues = Config.getBoolean("MyWolf.exp_default", true);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
 
         if (Config.getStringList("MyWolf.exp") != null)
         {
-            for (String key : Config.getConfigurationSection("MyWolf.exp").getKeys(false))
+            int min;
+            int max;
+            for (EntityType entityType : MyWolfExperience.MobEXP.keySet())
             {
-                double expval = Config.getDouble("MyWolf.exp." + key, -1.0);
-                if (expval > -1)
+                min = 0;
+                max = 0;
+                if (Config.contains("MyWolf.exp." + entityType.getName() + ".max"))
                 {
-                    MyWolfExperience.MobEXP.put(EntityType.valueOf(key), expval);
+                    max = Config.getInt("MyWolf.exp." + entityType.getName() + ".max", 0);
+                }
+                if (Config.contains("MyWolf.exp." + entityType.getName() + ".min"))
+                {
+                    min = Config.getInt("MyWolf.exp." + entityType.getName() + ".min", 0);
+                }
+                if (min == max)
+                {
+                    MyWolfExperience.MobEXP.get(entityType).setExp(max);
+                    /*
+                    MyWolfUtil.getLogger().info(entityType.getName() + ":");
+                    MyWolfUtil.getLogger().info("min: " + MyWolfExperience.MobEXP.get(entityType).getMin() + " | max: " + MyWolfExperience.MobEXP.get(entityType).getMax());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("-----");
+                    */
+                }
+                else
+                {
+                    MyWolfExperience.MobEXP.get(entityType).setMin(min);
+                    MyWolfExperience.MobEXP.get(entityType).setMax(max);
+                    /*
+                    MyWolfUtil.getLogger().info(entityType.getName() + ":");
+                    MyWolfUtil.getLogger().info("min: " + MyWolfExperience.MobEXP.get(entityType).getMin() + " | max: " + MyWolfExperience.MobEXP.get(entityType).getMax());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
+                    MyWolfUtil.getLogger().info("-----");
+                    */
                 }
             }
         }
@@ -115,7 +127,7 @@ public class MyWolfConfig
 
     public static void setProperty(String key, Object value)
     {
-        if (Config.get(key) == null)
+        if (!Config.contains(key))
         {
             Config.set(key, value);
         }

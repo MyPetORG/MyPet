@@ -23,6 +23,7 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
+import de.Keyle.MyWolf.skill.skills.MyWolfMonsterExpirience;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.EntityType;
 
@@ -37,27 +38,38 @@ public class MyWolfExperience
     private final MyWolf MWolf;
 
     private double Exp = 0;
-    public static boolean defaultEXPvalues = true;
 
     public static String JSreader = null;
 
-    public static final Map<EntityType, Double> MobEXP = new HashMap<EntityType, Double>();
+    public static final Map<EntityType, MyWolfMonsterExpirience> MobEXP = new HashMap<EntityType, MyWolfMonsterExpirience>();
 
     static
     {
-        MobEXP.put(EntityType.SKELETON, 1.1);
-        MobEXP.put(EntityType.ZOMBIE, 1.1);
-        MobEXP.put(EntityType.SPIDER, 1.05);
-        MobEXP.put(EntityType.WOLF, 0.5);
-        MobEXP.put(EntityType.CREEPER, 1.55);
-        MobEXP.put(EntityType.GHAST, 0.85);
-        MobEXP.put(EntityType.PIG_ZOMBIE, 1.1);
-        MobEXP.put(EntityType.GIANT, 10.75);
-        MobEXP.put(EntityType.COW, 0.25);
-        MobEXP.put(EntityType.PIG, 0.25);
-        MobEXP.put(EntityType.CHICKEN, 0.1);
-        MobEXP.put(EntityType.SQUID, 0.25);
-        MobEXP.put(EntityType.SHEEP, 0.25);
+        MobEXP.put(EntityType.SKELETON, new MyWolfMonsterExpirience(5, EntityType.SKELETON));
+        MobEXP.put(EntityType.ZOMBIE, new MyWolfMonsterExpirience(5, EntityType.ZOMBIE));
+        MobEXP.put(EntityType.SPIDER, new MyWolfMonsterExpirience(5, EntityType.SPIDER));
+        MobEXP.put(EntityType.WOLF, new MyWolfMonsterExpirience(1, 3, EntityType.WOLF));
+        MobEXP.put(EntityType.CREEPER, new MyWolfMonsterExpirience(5, EntityType.CREEPER));
+        MobEXP.put(EntityType.GHAST, new MyWolfMonsterExpirience(5, EntityType.GHAST));
+        MobEXP.put(EntityType.PIG_ZOMBIE, new MyWolfMonsterExpirience(5, EntityType.PIG_ZOMBIE));
+        MobEXP.put(EntityType.ENDERMAN, new MyWolfMonsterExpirience(5, EntityType.ENDERMAN));
+        MobEXP.put(EntityType.CAVE_SPIDER, new MyWolfMonsterExpirience(5, EntityType.CAVE_SPIDER));
+        MobEXP.put(EntityType.MAGMA_CUBE, new MyWolfMonsterExpirience(1, 4, EntityType.MAGMA_CUBE));
+        MobEXP.put(EntityType.SLIME, new MyWolfMonsterExpirience(1, 4, EntityType.SLIME));
+        MobEXP.put(EntityType.SILVERFISH, new MyWolfMonsterExpirience(5, EntityType.SILVERFISH));
+        MobEXP.put(EntityType.BLAZE, new MyWolfMonsterExpirience(10, EntityType.BLAZE));
+        MobEXP.put(EntityType.GIANT, new MyWolfMonsterExpirience(25, EntityType.GIANT));
+        MobEXP.put(EntityType.COW, new MyWolfMonsterExpirience(1, 3, EntityType.COW));
+        MobEXP.put(EntityType.PIG, new MyWolfMonsterExpirience(1, 3, EntityType.PIG));
+        MobEXP.put(EntityType.CHICKEN, new MyWolfMonsterExpirience(1, 3, EntityType.CHICKEN));
+        MobEXP.put(EntityType.SQUID, new MyWolfMonsterExpirience(1, 3, EntityType.SQUID));
+        MobEXP.put(EntityType.SHEEP, new MyWolfMonsterExpirience(1, 3, EntityType.SHEEP));
+        MobEXP.put(EntityType.OCELOT, new MyWolfMonsterExpirience(1, 3, EntityType.OCELOT));
+        MobEXP.put(EntityType.MUSHROOM_COW, new MyWolfMonsterExpirience(1, 3, EntityType.MUSHROOM_COW));
+        MobEXP.put(EntityType.VILLAGER, new MyWolfMonsterExpirience(0, EntityType.VILLAGER));
+        MobEXP.put(EntityType.SNOWMAN, new MyWolfMonsterExpirience(0, EntityType.SNOWMAN));
+        MobEXP.put(EntityType.IRON_GOLEM, new MyWolfMonsterExpirience(0, EntityType.IRON_GOLEM));
+        MobEXP.put(EntityType.ENDER_DRAGON, new MyWolfMonsterExpirience(20000, EntityType.ENDER_DRAGON));
     }
 
     public MyWolfExperience(MyWolf Wolf)
@@ -93,13 +105,14 @@ public class MyWolfExperience
         return this.Exp;
     }
 
-    public void addExp(double Exp)
+    public int addExp(double Exp)
     {
         MyWolfExpEvent event = new MyWolfExpEvent(MWolf, this.Exp, this.Exp + Exp);
         MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
         {
-            return;
+            MyWolfUtil.getLogger().info("7");
+            return 0;
         }
         int tmplvl = getLevel();
         this.Exp = event.getEXP();
@@ -108,17 +121,18 @@ public class MyWolfExperience
         {
             MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
         }
+        return (int) (event.getNewEXP() - event.getOldEXP());
     }
 
-    public void addExp(EntityType type)
+    public int addExp(EntityType type)
     {
         if (MobEXP.containsKey(type))
         {
-            MyWolfExpEvent event = new MyWolfExpEvent(MWolf, this.Exp, MobEXP.get(type) + this.Exp);
+            MyWolfExpEvent event = new MyWolfExpEvent(MWolf, this.Exp, MobEXP.get(type).getRandomExp() + this.Exp);
             MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
             if (event.isCancelled())
             {
-                return;
+                return 0;
             }
             int tmplvl = getLevel();
             this.Exp = event.getEXP();
@@ -126,7 +140,9 @@ public class MyWolfExperience
             {
                 MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i + 1));
             }
+            return (int) (event.getNewEXP() - event.getOldEXP());
         }
+        return 0;
     }
 
     public int getLevel()
