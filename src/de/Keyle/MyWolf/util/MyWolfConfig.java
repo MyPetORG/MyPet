@@ -21,6 +21,8 @@ package de.Keyle.MyWolf.util;
 
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
+import de.Keyle.MyWolf.skill.skills.Control;
+import de.Keyle.MyWolf.skill.skills.Pickup;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -30,8 +32,6 @@ public class MyWolfConfig
     public static FileConfiguration Config;
 
     public static Material LeashItem = Material.STRING;
-    public static Material ControlItem = Material.STRING;
-    public static double PickupRangePerLevel = 1;
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
@@ -69,8 +69,8 @@ public class MyWolfConfig
     public static void loadConfiguration()
     {
         LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
-        ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.skill.control.item", 287), Material.STRING);
-        PickupRangePerLevel = Config.getDouble("MyWolf.skill.pickup.rangeperlvl", 1.0);
+        Control.Item = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.skill.control.item", 287), Material.STRING);
+        Pickup.RangePerLevel = Config.getDouble("MyWolf.skill.pickup.rangeperlvl", 1.0);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);

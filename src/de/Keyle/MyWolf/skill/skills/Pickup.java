@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.skill.skills;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -36,6 +35,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class Pickup extends MyWolfGenericSkill
 {
+    public static double RangePerLevel = 1;
     private boolean Pickup = false;
 
     public Pickup()
@@ -68,7 +68,7 @@ public class Pickup extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * MyWolfConfig.PickupRangePerLevel)));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * RangePerLevel)));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Pickup extends MyWolfGenericSkill
     {
         if (Level > 0 && Pickup && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
         {
-            for (Entity e : MWolf.Wolf.getNearbyEntities(Level * MyWolfConfig.PickupRangePerLevel, Level * MyWolfConfig.PickupRangePerLevel, MyWolfConfig.PickupRangePerLevel))
+            for (Entity e : MWolf.Wolf.getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
             {
                 if (e instanceof Item)
                 {

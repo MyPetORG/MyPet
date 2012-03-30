@@ -21,6 +21,7 @@ package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControl;
+import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.*;
@@ -107,7 +108,7 @@ public class EntityMyWolf extends EntityTameableAnimal
         {
             if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
             {
-                if (MWolf.getOwner().getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem)
+                if (MWolf.getOwner().getPlayer().getItemInHand().getType() == Control.Item)
                 {
                     return true;
                 }

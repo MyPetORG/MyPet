@@ -20,13 +20,14 @@
 package de.Keyle.MyWolf.skill.skills;
 
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 public class Control extends MyWolfGenericSkill
 {
+    public static Material Item = Material.STRING;
     Location moveTo;
 
     public Control()
@@ -38,7 +39,7 @@ public class Control extends MyWolfGenericSkill
     public void upgrade()
     {
         Level = 1;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", MyWolfConfig.ControlItem.name()));
+        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", Item.name()));
     }
 
     public Location getLocation()

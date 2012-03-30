@@ -24,7 +24,6 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Control;
-import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -47,7 +46,7 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler()
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == MyWolfConfig.ControlItem && MyWolfList.hasMyWolf(event.getPlayer()))
+        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.Item && MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
             if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
