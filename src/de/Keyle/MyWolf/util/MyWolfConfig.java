@@ -40,7 +40,7 @@ public class MyWolfConfig
     public static boolean LevelSystem = true;
     public static boolean sendMetrics = true;
 
-    public static boolean PermissionsBukkit = false;
+    public static boolean Superperms = false;
 
 
     public static void setDefault()
@@ -52,7 +52,7 @@ public class MyWolfConfig
         setProperty("MyWolf.respawntime.fixed", 0);
         setProperty("MyWolf.sitdowntime", 15);
         setProperty("MyWolf.starthp", 15);
-        setProperty("MyWolf.bukkitpermissions", false);
+        setProperty("MyWolf.superperms", false);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.SendMetrics", true);
         setProperty("MyWolf.AutoSaveTime", 60);
@@ -76,7 +76,7 @@ public class MyWolfConfig
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
         SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
         StartHP = Config.getInt("MyWolf.starthp", 15);
-        PermissionsBukkit = Config.getBoolean("MyWolf.bukkitpermissions", false);
+        Superperms = Config.getBoolean("MyWolf.superperms", false);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
 
         if (Config.getStringList("MyWolf.exp") != null)

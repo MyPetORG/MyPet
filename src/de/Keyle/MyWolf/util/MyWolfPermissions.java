@@ -31,7 +31,7 @@ public class MyWolfPermissions
 
     public enum PermissionsType
     {
-        NONE, Vault, BukkitPermissions
+        NONE, Vault, Superperms
     }
 
     private static PermissionsType PermissionsMode = PermissionsType.NONE;
@@ -54,7 +54,7 @@ public class MyWolfPermissions
             //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> Vault -> " + ((Permission) Permissions).has(player, node));
             return ((Permission) Permissions).has(player, node);
         }
-        else if (PermissionsMode == PermissionsType.BukkitPermissions)
+        else if (PermissionsMode == PermissionsType.Superperms)
         {
             //MyWolfUtil.getLogger().info("--- permissions:" + node + " -> Bukkit -> " + player.hasPermission(node));
             return player.hasPermission(node);
@@ -91,10 +91,10 @@ public class MyWolfPermissions
             PermissionsMode = PermissionsType.NONE;
         }
 
-        if (PermissionsMode == PermissionsType.NONE && MyWolfConfig.PermissionsBukkit)
+        if (PermissionsMode == PermissionsType.NONE && MyWolfConfig.Superperms)
         {
-            PermissionsMode = PermissionsType.BukkitPermissions;
-            MyWolfUtil.getLogger().info("BukkitPermissions enabled!");
+            PermissionsMode = PermissionsType.Superperms;
+            MyWolfUtil.getLogger().info("Superperms integration enabled!");
             return;
         }
 
