@@ -46,13 +46,12 @@ public class MyWolfConfig
     public static void setDefault()
     {
         setProperty("MyWolf.leash.item", 287);
-        setProperty("MyWolf.control.item", 287);
-        setProperty("MyWolf.pickuprangeperlvl", 1);
+        setProperty("MyWolf.skill.control.item", 287);
+        setProperty("MyWolf.skill.pickup.rangeperlvl", 1);
         setProperty("MyWolf.respawntime.factor", 5);
         setProperty("MyWolf.respawntime.fixed", 0);
         setProperty("MyWolf.sitdowntime", 15);
-        setProperty("MyWolf.hpregendefault", 60);
-        setProperty("MyWolf.starthp", 20);
+        setProperty("MyWolf.starthp", 15);
         setProperty("MyWolf.bukkitpermissions", false);
         setProperty("MyWolf.levelsystem", true);
         setProperty("MyWolf.SendMetrics", true);
@@ -70,8 +69,8 @@ public class MyWolfConfig
     public static void loadConfiguration()
     {
         LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
-        ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.control.item", 287), Material.STRING);
-        PickupRangePerLevel = Config.getDouble("MyWolf.pickuprangeperlvl", 1.0);
+        ControlItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.skill.control.item", 287), Material.STRING);
+        PickupRangePerLevel = Config.getDouble("MyWolf.skill.pickup.rangeperlvl", 1.0);
         RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
         LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
