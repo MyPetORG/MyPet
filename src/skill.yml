@@ -1,10 +1,10 @@
 # the order of this skilltrees is from top (admins eg.) to the bottom (losers)
 
-# !!! Behavior and Control are not usable at the moment !!!
+# !!! Behavior are not usable at the moment !!!
 
 skilltrees:
 
-  # Admin skilltree -> MyWolf.user.skilltree.admin
+  # Admin skilltree -> MyWolf.custom.skilltree.admin
   admin:
     '1':
       - Inventory
@@ -13,7 +13,7 @@ skilltrees:
       - Inventory
       - Inventory
       - Inventory
-#      - Control
+      - Control
       - Pickup
 #      - Behavior
       - HP
@@ -22,11 +22,11 @@ skilltrees:
       - HP
       - HP
 
-  # Hunter skilltree -> MyWolf.user.skilltree.Hunter
+  # Hunter skilltree -> MyWolf.custom.skilltree.Hunter
   Hunter:
     inherit: Pickup
     '2':
-#      - Control
+      - Control
       - Inventory
       - Damage
       - Damage
@@ -62,13 +62,13 @@ skilltrees:
       - HP
       - Damage
 
-  # every normal should have permissions for this skilltree -> MyWolf.user.skilltree.default
+  # every normal should have permissions for this skilltree -> MyWolf.custom.skilltree.default
   default:
     '2':
       - Inventory
     '4':
       - Inventory
-#      - Control
+      - Control
       - HP
       - Damage
     '6':
@@ -100,7 +100,7 @@ skilltrees:
       - HP
       - Damage
 
-  # skilltree for loser :P every MyWolf with this skilltree will have NO skills -> MyWolf.user.skilltree.loser
+  # skilltree for loser :P every MyWolf with this skilltree will have NO skills -> MyWolf.custom.skilltree.loser
   loser:
     '1':
 
