@@ -86,6 +86,7 @@ public class MyWolfLanguage
         addString("Msg_NoInventory", "MyWolf.Message.noinventory", "%aqua%%wolfname%%white% doesn't have an inventory.");
         addString("Msg_PickButNoInventory", "MyWolf.Message.pickupbutnoinventory", "%aqua%%wolfname%%white% could pickup items but has no inventoy.");
         addString("Msg_NoSkill", "MyWolf.Message.noskill", "%aqua%%wolfname%%white% doesn't know the skill %skill%.");
+        addString("Msg_Skills", "MyWolf.Message.skills", "%aqua%%wolfname%%white%'s skills: %skilltree%");
         addString("Msg_LearnedSkill", "MyWolf.Message.noskill", "%aqua%%wolfname%%white% learned the skill %skill%.");
         addString("Msg_PickUpStop", "MyWolf.Message.pickupstop", "%aqua%%wolfname%%white% pickup: disabled");
         addString("Msg_PickUpStart", "MyWolf.Message.pickupstart", "%aqua%%wolfname%%white% pickup: activated");
