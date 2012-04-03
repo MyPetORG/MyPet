@@ -1,6 +1,6 @@
 name: MyWolf
 main: de.Keyle.MyWolf.MyWolfPlugin
-version: 0.6.2 (1.2.4)
+version: 0.6.2 (1.2.4/1.2.5)
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Citizens, WorldGuard]

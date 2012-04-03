@@ -121,7 +121,10 @@ public class EntityMyWolf extends EntityTameableAnimal
 
             if (getHealth() < getMaxHealth())
             {
-                --itemstack.count;
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemstack.count;
+                }
                 this.heal(itemfood.getNutrition() - (getMaxHealth() - getHealth()), RegainReason.EATING);
                 if (itemstack.count <= 0)
                 {

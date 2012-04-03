@@ -85,11 +85,11 @@ public class MyWolfPlugin extends JavaPlugin
         if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
         {
             String mwv = getDescription().getVersion();
-            mwv = getDescription().getVersion().substring(mwv.indexOf('('), mwv.indexOf(')'));
-            MyWolfUtil.getLogger().warning("---------------------------------------------------------" + mwv);
+            mwv = getDescription().getVersion().substring(mwv.indexOf('(') + 1, mwv.indexOf(')'));
+            MyWolfUtil.getLogger().warning("---------------------------------------------------------");
             MyWolfUtil.getLogger().warning("This version of MyWolf should only work with Minecraft " + mwv);
             MyWolfUtil.getLogger().warning("Don't expect any support.");
-            MyWolfUtil.getLogger().warning("---------------------------------------------------------" + mwv);
+            MyWolfUtil.getLogger().warning("---------------------------------------------------------");
         }
 
         MyWolfConfig.Config = this.getConfig();
@@ -438,8 +438,23 @@ public class MyWolfPlugin extends JavaPlugin
 
     private boolean checkVersion(String mc, String mw)
     {
-        mw = mw.substring(mw.indexOf('('), mw.indexOf(')'));
-        mc = mc.substring(mc.indexOf("(MC: "), mc.indexOf(')'));
-        return mw.equals(mc);
+        mw = mw.substring(mw.indexOf('(') + 1, mw.indexOf(')'));
+        mc = mc.substring(mc.indexOf("(MC: ") + 5, mc.indexOf(')'));
+        if (mw.contains("/"))
+        {
+            String[] temp = mw.split("/");
+            for (String v : temp)
+            {
+                if (v.equals(mc))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return mw.equals(mc);
+        }
     }
 }
