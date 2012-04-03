@@ -16,19 +16,20 @@ commands:
   wolfrelease:
     description: Release your MyWolf.
     usage: '/<command> <WolfName>'
-#  wolfstop:
-#    aliases: [wolfs, ws]
-#    description: your MyWolf stop attacking.
+  wolfstop:
+    aliases: [wolfs, ws]
+    description: your MyWolf stop attacking.
   wolfpickup:
     aliases: [wolfp, wp]
     description: Toogles pickup of your MyWolf.
   wolfinventory:
     aliases: [wolfi, wi]
     description: Open the inventory of your MyWolf.
-#  wolfbehavior:
-#    aliases: [wolfb, wb]
-#    description: Switch the behavior mode of your MyWolf.
-#    usage: '/<command> [<Raid/rai/Friendly/fri/Aggressive/agg/Normal/nor>]'
+  wolfbehavior:
+    aliases: [wolfb, wb]
+    description: Switch the behavior mode of your MyWolf.
+    usage: '/<command> [<Friendly/fri/Aggressive/agg/Normal/nor>]'
+# Raid/rai/
   wolfinfo:
     aliases: [winfo]
     description: Shows HP and Exp of your MyWolf
@@ -48,7 +49,7 @@ permissions:
     children:
       MyWolf.admin: true
       MyWolf.user.leash: true
-#      MyWolf.user.stop: true
+      MyWolf.user.stop: true
       MyWolf.user.call: true
       MyWolf.user.setname: true
       MyWolf.user.release: true
@@ -57,19 +58,19 @@ permissions:
     children:
       MyWolf.admin: false
       MyWolf.user.leash: true
-#      MyWolf.user.stop: true
+      MyWolf.user.stop: true
       MyWolf.user.call: true
       MyWolf.user.setname: true
       MyWolf.user.release: true
   MyWolf.user.leash:
     description: Allows a player to leash a MyWolf.
-#  MyWolf.user.stop:
-#    description: Allows useage of /wolfstop
+  MyWolf.user.stop:
+    description: Allows usage of /wolfstop
   MyWolf.user.call:
-    description: Allows useage of /wolfcall
+    description: Allows usage of /wolfcall
   MyWolf.user.setname:
-    description: Allows useage of /wolfname
+    description: Allows usage of /wolfname
   MyWolf.user.release:
-    description: Allows useage of /wolfrelease
+    description: Allows usage of /wolfrelease
   MyWolf.admin:
     description: Allows user to use some MyWolf-admin functions.

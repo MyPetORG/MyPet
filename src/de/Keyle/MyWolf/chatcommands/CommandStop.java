@@ -25,6 +25,7 @@ import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
 import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.EntityLiving;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -52,6 +53,8 @@ public class CommandStop implements CommandExecutor
                 }
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
                 MWolf.Wolf.getHandle().setTarget(null);
+                MWolf.Wolf.getHandle().b((EntityLiving) null);
+                MWolf.Wolf.getHandle().Goaltarget = null;
                 return true;
             }
             else

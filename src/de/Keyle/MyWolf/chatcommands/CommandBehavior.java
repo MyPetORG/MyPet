@@ -50,11 +50,7 @@ public class CommandBehavior implements CommandExecutor
                     Behavior Skill = (Behavior) MWolf.SkillSystem.getSkill("Behavior");
                     if (args.length == 1)
                     {
-                        if (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Rai"))
-                        {
-                            Skill.activateBehavior(Behavior.BehaviorState.Raid);
-                        }
-                        else if (args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Fri"))
+                        if (args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Fri"))
                         {
                             Skill.activateBehavior(Behavior.BehaviorState.Friendly);
                         }
@@ -62,7 +58,13 @@ public class CommandBehavior implements CommandExecutor
                         {
                             Skill.activateBehavior(Behavior.BehaviorState.Aggressive);
                         }
-                        else if (args[0].equalsIgnoreCase("Normal") || args[0].equalsIgnoreCase("Nor"))
+                        /*
+                        else if (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Rai"))
+                        {
+                            Skill.activateBehavior(Behavior.BehaviorState.Raid);
+                        }
+                        */
+                        else
                         {
                             Skill.activateBehavior(Behavior.BehaviorState.Normal);
                         }

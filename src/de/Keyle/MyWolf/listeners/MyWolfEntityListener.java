@@ -30,8 +30,10 @@ import net.minecraft.server.EntityWolf;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
@@ -114,16 +116,26 @@ public class MyWolfEntityListener implements Listener
                         }
                         event.setCancelled(true);
                     }
-                }
-                if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
-                {
-                    MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
-                    MWolf.ResetSitTimer();
-
                     if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
                     {
                         event.setCancelled(true);
                     }
+                }
+            }
+        }
+        if (event.getEntity() instanceof LivingEntity)
+        {
+            if (e.getDamager() instanceof Player)
+            {
+                Player damager = (Player) e.getDamager();
+                if (MyWolfList.hasMyWolf(damager))
+                {
+                    MyWolf MWolf = MyWolfList.getMyWolf(damager);
+                    if (event.getEntity() != MWolf.Wolf)
+                    {
+                        MyWolfList.getMyWolf(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                    }
+
                 }
             }
         }

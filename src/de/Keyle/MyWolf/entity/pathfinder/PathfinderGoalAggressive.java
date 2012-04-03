@@ -3,22 +3,23 @@ package de.Keyle.MyWolf.entity.pathfinder;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
-import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.*;
+import net.minecraft.server.Entity;
+import net.minecraft.server.EntityHuman;
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.PathfinderGoalTarget;
 
 import java.util.List;
 
-public class PathfinderGoalAggressive extends PathfinderGoal
+public class PathfinderGoalAggressive extends PathfinderGoalTarget
 {
     private MyWolf MWolf;
     private EntityMyWolf wolf;
     private EntityLiving target;
-    Class b;
-    private DistanceComparator g;
     private float range;
 
     public PathfinderGoalAggressive(MyWolf MWolf, float range)
     {
+        super(MWolf.Wolf.getHandle(), 32.0F, false);
         this.wolf = MWolf.Wolf.getHandle();
         this.MWolf = MWolf;
         this.range = range;
@@ -46,10 +47,9 @@ public class PathfinderGoalAggressive extends PathfinderGoal
                             Entity entity = (Entity) aList;
                             EntityLiving entityliving = (EntityLiving) entity;
 
-                            if (wolf.am().canSee(entityliving) && !(entityliving instanceof EntityHuman && ((EntityHuman) entityliving).name.equals(MWolf.getOwner().getName())))
+                            if (wolf.am().canSee(entityliving) && entityliving != wolf && !(entityliving instanceof EntityHuman && ((EntityHuman) entityliving).name.equals(MWolf.getOwner().getName())))
                             {
                                 this.target = entityliving;
-                                MyWolfUtil.getLogger().info("target: " + entityliving);
                                 return true;
                             }
                         }
@@ -64,14 +64,7 @@ public class PathfinderGoalAggressive extends PathfinderGoal
 
     public void c()
     {
-        wolf.al().a(target.getBukkitEntity().getLocation().getX(), target.getBukkitEntity().getLocation().getY(), target.getBukkitEntity().getLocation().getZ(), 0.5f);
-        wolf.al().a(false);
-        wolf.setTarget(target);
-    }
-
-    public void d()
-    {
-        wolf.setTarget(null);
-        target = null;
+        wolf.b(this.target);
+        super.c();
     }
 }

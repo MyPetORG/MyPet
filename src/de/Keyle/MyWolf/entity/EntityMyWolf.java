@@ -20,6 +20,7 @@
 package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalAggressive;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.MyWolfConfig;
@@ -36,6 +37,7 @@ public class EntityMyWolf extends EntityTameableAnimal
     private boolean i;
     private float j;
     private float k;
+    public EntityLiving Goaltarget = null;
 
     boolean isMyWolf = false;
     MyWolf MWolf;
@@ -67,9 +69,9 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(this));
+        this.targetSelector.a(2, new de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MWolf));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        //this.targetSelector.a(4, new PathfinderGoalAggressive(MWolf, 10));
+        this.targetSelector.a(4, new PathfinderGoalAggressive(MWolf, 10));
     }
 
     public boolean isMyWolf()

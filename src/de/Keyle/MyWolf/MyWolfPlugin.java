@@ -113,12 +113,12 @@ public class MyWolfPlugin extends JavaPlugin
 
         getCommand("wolfname").setExecutor(new CommandName());
         getCommand("wolfcall").setExecutor(new CommandCall());
-        //getCommand("wolfstop").setExecutor(new CommandStop());
+        getCommand("wolfstop").setExecutor(new CommandStop());
         getCommand("wolfrelease").setExecutor(new CommandRelease());
         getCommand("mywolf").setExecutor(new CommandHelp());
         getCommand("wolfinventory").setExecutor(new CommandInventory());
         getCommand("wolfpickup").setExecutor(new CommandPickup());
-        //getCommand("wolfbehavior").setExecutor(new CommandBehavior());
+        getCommand("wolfbehavior").setExecutor(new CommandBehavior());
         getCommand("wolfinfo").setExecutor(new CommandInfo());
         getCommand("wolfadmin").setExecutor(new CommandAdmin());
         getCommand("wolfskill").setExecutor(new CommandSkill());
@@ -153,7 +153,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfSkillSystem.registerSkill(Inventory.class);
         MyWolfSkillSystem.registerSkill(HPregeneration.class);
         MyWolfSkillSystem.registerSkill(Pickup.class);
-        //MyWolfSkillSystem.registerSkill(Behavior.class);
+        MyWolfSkillSystem.registerSkill(Behavior.class);
         MyWolfSkillSystem.registerSkill(Damage.class);
         MyWolfSkillSystem.registerSkill(Control.class);
         MyWolfSkillSystem.registerSkill(HP.class);
