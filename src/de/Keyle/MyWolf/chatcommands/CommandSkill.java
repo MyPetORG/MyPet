@@ -47,7 +47,6 @@ public class CommandSkill implements CommandExecutor
             if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(playerName)))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(playerName));
-
                 player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Skills")).replace("%wolfname%", MWolf.Name).replace("%skilltree%", MWolf.SkillTree.getName()));
                 Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
                 if (Skills.size() > 0)

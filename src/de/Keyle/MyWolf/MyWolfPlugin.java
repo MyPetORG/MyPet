@@ -82,6 +82,16 @@ public class MyWolfPlugin extends JavaPlugin
     {
         Plugin = this;
 
+        if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
+        {
+            String mwv = getDescription().getVersion();
+            mwv = getDescription().getVersion().substring(mwv.indexOf('('), mwv.indexOf(')'));
+            MyWolfUtil.getLogger().warning("---------------------------------------------------------" + mwv);
+            MyWolfUtil.getLogger().warning("This version of MyWolf should only work with Minecraft " + mwv);
+            MyWolfUtil.getLogger().warning("Don't expect any support.");
+            MyWolfUtil.getLogger().warning("---------------------------------------------------------" + mwv);
+        }
+
         MyWolfConfig.Config = this.getConfig();
         MyWolfConfig.setDefault();
         MyWolfConfig.loadConfiguration();
@@ -424,5 +434,12 @@ public class MyWolfPlugin extends JavaPlugin
         nbtConfiguration.getNBTTagCompound().setString("Version", Plugin.getDescription().getVersion());
         nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
         nbtConfiguration.save();
+    }
+
+    private boolean checkVersion(String mc, String mw)
+    {
+        mw = mw.substring(mw.indexOf('('), mw.indexOf(')'));
+        mc = mc.substring(mc.indexOf("(MC: "), mc.indexOf(')'));
+        return mw.equals(mc);
     }
 }
