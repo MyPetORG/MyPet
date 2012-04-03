@@ -30,11 +30,11 @@ import org.bukkit.Location;
 
 public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
-    MyWolf MWolf;
-    float speed;
+    private MyWolf MWolf;
+    private float speed;
     Location moveTo = null;
-    int TimeToMove = 0;
-    Navigation nav;
+    private int TimeToMove = 0;
+    private Navigation nav;
 
     public PathfinderGoalControl(MyWolf MWolf, float f)
     {

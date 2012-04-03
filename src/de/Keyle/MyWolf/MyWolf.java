@@ -36,7 +36,7 @@ public class MyWolf
 {
     public String Name = "Wolf";
     public final OfflinePlayer Owner;
-    public int Health;
+    private int Health;
     public CraftMyWolf Wolf;
     public int RespawnTime = 0;
 

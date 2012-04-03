@@ -26,9 +26,9 @@ import java.util.Map;
 
 public class MyWolfSkillTree
 {
-    String Name;
+    private String Name;
 
-    Map<Integer, List<String>> SkillsPerLevel = new HashMap<Integer, List<String>>();
+    private Map<Integer, List<String>> SkillsPerLevel = new HashMap<Integer, List<String>>();
 
     public MyWolfSkillTree(String Name)
     {

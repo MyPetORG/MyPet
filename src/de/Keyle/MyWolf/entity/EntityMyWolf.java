@@ -199,11 +199,6 @@ public class EntityMyWolf extends EntityTameableAnimal
         return false;
     }
 
-    public void b(NBTTagCompound nbttagcompound)
-    {
-        super.b(nbttagcompound);
-    }
-
     public void a(NBTTagCompound nbttagcompound)
     {
         if (!isMyWolf)
@@ -225,11 +220,6 @@ public class EntityMyWolf extends EntityTameableAnimal
     public boolean c_()
     {
         return true;
-    }
-
-    public void b(EntityLiving entityliving)
-    {
-        super.b(entityliving);
     }
 
     protected void g()

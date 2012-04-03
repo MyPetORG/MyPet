@@ -10,12 +10,12 @@ import java.util.List;
 
 public class PathfinderGoalAggressive extends PathfinderGoal
 {
-    MyWolf MWolf;
-    EntityMyWolf wolf;
-    EntityLiving target;
+    private MyWolf MWolf;
+    private EntityMyWolf wolf;
+    private EntityLiving target;
     Class b;
     private DistanceComparator g;
-    float range;
+    private float range;
 
     public PathfinderGoalAggressive(MyWolf MWolf, float range)
     {

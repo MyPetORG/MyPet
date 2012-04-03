@@ -30,7 +30,7 @@ public class MyWolfGenericSkill implements Scheduler
     protected int Level = 0;
     protected MyWolf MWolf;
 
-    public MyWolfGenericSkill(String Name)
+    protected MyWolfGenericSkill(String Name)
     {
         this.Name = Name;
     }

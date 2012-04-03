@@ -25,12 +25,12 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 {
     private EntityTameableAnimal wolf;
     private EntityLiving owner;
-    World world;
+    private World world;
     private float f;
     private Navigation nav;
     private int h;
-    float b;
-    float maxdistance;
+    private float b;
+    private float maxdistance;
     private boolean i;
     private PathfinderGoalControl Control;
 

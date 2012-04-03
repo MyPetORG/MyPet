@@ -28,7 +28,7 @@ import org.bukkit.Material;
 public class Control extends MyWolfGenericSkill
 {
     public static Material Item = Material.STRING;
-    Location moveTo;
+    private Location moveTo;
 
     public Control()
     {

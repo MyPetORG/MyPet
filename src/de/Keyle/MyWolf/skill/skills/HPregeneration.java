@@ -27,8 +27,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 public class HPregeneration extends MyWolfGenericSkill
 {
-    int HealtregenTime = 60;
-    int timeCounter = HealtregenTime - Level;
+    private int HealtregenTime = 60;
+    private int timeCounter = HealtregenTime - Level;
 
     public HPregeneration()
     {

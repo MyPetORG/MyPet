@@ -32,7 +32,8 @@ public class MyWolfExpEvent extends Event implements Cancellable
 
     private final MyWolf Wolf;
     private boolean isCancelled = false;
-    double oldEXP, newEXP;
+    private double oldEXP;
+    private double newEXP;
 
     public MyWolfExpEvent(MyWolf Wolf, double oldEXP, double newEXP)
     {

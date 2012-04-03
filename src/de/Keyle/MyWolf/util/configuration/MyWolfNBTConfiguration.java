@@ -26,7 +26,7 @@ import java.io.*;
 
 public class MyWolfNBTConfiguration
 {
-    public File NBTFile;
+    private File NBTFile;
     private NBTTagCompound nbtTagCompound = new NBTTagCompound();
 
     public MyWolfNBTConfiguration(String Path)

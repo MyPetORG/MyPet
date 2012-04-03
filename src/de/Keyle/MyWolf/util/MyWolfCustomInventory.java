@@ -30,10 +30,10 @@ import java.util.List;
 
 public class MyWolfCustomInventory implements IInventory
 {
-    protected String MyWolfInventroyName;
-    protected List<ItemStack> Items = new ArrayList<ItemStack>();
-    protected int Size = 0;
-    protected int stackSize = 64;
+    private String MyWolfInventroyName;
+    private List<ItemStack> Items = new ArrayList<ItemStack>();
+    private int Size = 0;
+    private int stackSize = 64;
 
     public MyWolfCustomInventory(String Name, int Size)
     {
