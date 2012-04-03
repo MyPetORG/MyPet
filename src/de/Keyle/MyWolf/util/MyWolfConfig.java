@@ -19,6 +19,7 @@
 
 package de.Keyle.MyWolf.util;
 
+import com.herocraftonline.heroes.Heroes;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.skills.Control;
@@ -39,6 +40,7 @@ public class MyWolfConfig
     public static int AutoSaveTime = 60;
     public static boolean LevelSystem = true;
     public static boolean HeroesSkill = true;
+    public static Heroes HeroesPlugin = null;
     public static boolean sendMetrics = true;
 
     public static boolean Superperms = false;
@@ -75,7 +77,7 @@ public class MyWolfConfig
         RespawnTimeFactor = Config.getInt("MyWolf.RespawnTime.Factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.RespawnTime.Fixed", 0);
         LevelSystem = Config.getBoolean("MyWolf.LevelSystem", true);
-        HeroesSkill = Config.getBoolean("MyWolf.HeroesSkill", true);
+        HeroesSkill = Config.getBoolean("MyWolf.HeroesSkill", false);
         SitdownTime = Config.getInt("MyWolf.SitdownTime", 15);
         StartHP = Config.getInt("MyWolf.StartHP", 15);
         Superperms = Config.getBoolean("MyWolf.SuperPerms", false);
