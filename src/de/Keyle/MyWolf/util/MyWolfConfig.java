@@ -38,6 +38,7 @@ public class MyWolfConfig
     public static int StartHP = 20;
     public static int AutoSaveTime = 60;
     public static boolean LevelSystem = true;
+    public static boolean HeroesSkill = true;
     public static boolean sendMetrics = true;
 
     public static boolean Superperms = false;
@@ -45,15 +46,15 @@ public class MyWolfConfig
 
     public static void setDefault()
     {
-        setProperty("MyWolf.leash.item", 287);
-        setProperty("MyWolf.skill.control.item", 287);
-        setProperty("MyWolf.skill.pickup.rangeperlvl", 1);
-        setProperty("MyWolf.respawntime.factor", 5);
-        setProperty("MyWolf.respawntime.fixed", 0);
-        setProperty("MyWolf.sitdowntime", 15);
-        setProperty("MyWolf.starthp", 15);
-        setProperty("MyWolf.superperms", false);
-        setProperty("MyWolf.levelsystem", true);
+        setProperty("MyWolf.Leash.Item", 287);
+        setProperty("MyWolf.Skill.Control.Item", 287);
+        setProperty("MyWolf.Skill.Pickup.RangePerLvl", 1);
+        setProperty("MyWolf.RespawnTime.Factor", 5);
+        setProperty("MyWolf.RespawnTime.Fixed", 0);
+        setProperty("MyWolf.SitdownTime", 15);
+        setProperty("MyWolf.StartHP", 15);
+        setProperty("MyWolf.SuperPerms", false);
+        setProperty("MyWolf.LevelSystem", true);
         setProperty("MyWolf.SendMetrics", true);
         setProperty("MyWolf.AutoSaveTime", 60);
 
@@ -68,15 +69,16 @@ public class MyWolfConfig
 
     public static void loadConfiguration()
     {
-        LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.leash.item", 287), Material.STRING);
-        Control.Item = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.skill.control.item", 287), Material.STRING);
-        Pickup.RangePerLevel = Config.getDouble("MyWolf.skill.pickup.rangeperlvl", 1.0);
-        RespawnTimeFactor = Config.getInt("MyWolf.respawntime.factor", 5);
-        RespawnTimeFixed = Config.getInt("MyWolf.respawntime.fixed", 0);
-        LevelSystem = Config.getBoolean("MyWolf.levelsystem", true);
-        SitdownTime = Config.getInt("MyWolf.sitdowntime", 15);
-        StartHP = Config.getInt("MyWolf.starthp", 15);
-        Superperms = Config.getBoolean("MyWolf.superperms", false);
+        LeashItem = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.Leash.Item", 287), Material.STRING);
+        Control.Item = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.Skill.Control.Item", 287), Material.STRING);
+        Pickup.RangePerLevel = Config.getDouble("MyWolf.Skill.Pickup.RangePerLvl", 1.0);
+        RespawnTimeFactor = Config.getInt("MyWolf.RespawnTime.Factor", 5);
+        RespawnTimeFixed = Config.getInt("MyWolf.RespawnTime.Fixed", 0);
+        LevelSystem = Config.getBoolean("MyWolf.LevelSystem", true);
+        HeroesSkill = Config.getBoolean("MyWolf.HeroesSkill", true);
+        SitdownTime = Config.getInt("MyWolf.SitdownTime", 15);
+        StartHP = Config.getInt("MyWolf.StartHP", 15);
+        Superperms = Config.getBoolean("MyWolf.SuperPerms", false);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
 
         if (Config.getStringList("MyWolf.exp") != null)
@@ -98,27 +100,11 @@ public class MyWolfConfig
                 if (min == max)
                 {
                     MyWolfExperience.MobEXP.get(entityType).setExp(max);
-                    /*
-                    MyWolfUtil.getLogger().info(entityType.getName() + ":");
-                    MyWolfUtil.getLogger().info("min: " + MyWolfExperience.MobEXP.get(entityType).getMin() + " | max: " + MyWolfExperience.MobEXP.get(entityType).getMax());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("-----");
-                    */
                 }
                 else
                 {
                     MyWolfExperience.MobEXP.get(entityType).setMin(min);
                     MyWolfExperience.MobEXP.get(entityType).setMax(max);
-                    /*
-                    MyWolfUtil.getLogger().info(entityType.getName() + ":");
-                    MyWolfUtil.getLogger().info("min: " + MyWolfExperience.MobEXP.get(entityType).getMin() + " | max: " + MyWolfExperience.MobEXP.get(entityType).getMax());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("exp-test: " + MyWolfExperience.MobEXP.get(entityType).getRandomExp());
-                    MyWolfUtil.getLogger().info("-----");
-                    */
                 }
             }
         }
