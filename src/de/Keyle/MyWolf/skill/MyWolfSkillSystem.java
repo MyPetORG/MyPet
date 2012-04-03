@@ -26,13 +26,13 @@ import java.util.*;
 
 public class MyWolfSkillSystem
 {
-    private static List<Class> ClassSkillList = new ArrayList<Class>();
+    private static List<Class<? extends MyWolfGenericSkill>> ClassSkillList = new ArrayList<Class<? extends MyWolfGenericSkill>>();
 
     private MyWolf MWolf;
 
     private Map<String, MyWolfGenericSkill> Skills = new HashMap<String, MyWolfGenericSkill>();
 
-    public static void registerSkill(Class cls)
+    public static void registerSkill(Class<? extends MyWolfGenericSkill> cls)
     {
         if (!ClassSkillList.contains(cls))
         {
@@ -51,14 +51,14 @@ public class MyWolfSkillSystem
         addSkills(ClassSkillList);
     }
 
-    public void addSkill(Class cls)
+    public void addSkill(Class<? extends MyWolfGenericSkill> clazz)
     {
         String Name;
         MyWolfGenericSkill Skill;
 
         try
         {
-            Object obj = cls.newInstance();
+            Object obj = clazz.newInstance();
             if (obj instanceof MyWolfGenericSkill)
             {
                 Skill = (MyWolfGenericSkill) obj;
@@ -73,16 +73,16 @@ public class MyWolfSkillSystem
         }
         catch (Exception e)
         {
-            MyWolfUtil.getLogger().warning(cls.getName() + "is no valid skill!");
-            ClassSkillList.remove(cls);
+            MyWolfUtil.getLogger().warning(clazz.getName() + "is no valid skill!");
+            ClassSkillList.remove(clazz);
         }
     }
 
-    public void addSkills(List<Class> clsList)
+    public void addSkills(List<Class<? extends MyWolfGenericSkill>> classList)
     {
-        if (clsList.size() > 0)
+        if (classList.size() > 0)
         {
-            for (Class cls : clsList)
+            for (Class<? extends MyWolfGenericSkill> cls : classList)
             {
                 addSkill(cls);
             }
