@@ -54,6 +54,10 @@ public class CommandCall implements CommandExecutor
                     }
                     else
                     {
+                        if (MWolf.Wolf.isInsideVehicle())
+                        {
+                            MWolf.Wolf.leaveVehicle();
+                        }
                         MWolf.Wolf.teleport(owner);
                     }
                     sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
