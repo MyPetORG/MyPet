@@ -24,12 +24,14 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Control;
+import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -43,7 +45,7 @@ public class MyWolfPlayerListener implements Listener
 {
     private final int[] ControllIgnoreBlocks = {6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70, 72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 116, 117, 118, 119};
 
-    @EventHandler()
+    @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.Item && MyWolfList.hasMyWolf(event.getPlayer()))
@@ -104,7 +106,24 @@ public class MyWolfPlayerListener implements Listener
         }
     }
 
-    @EventHandler()
+    @EventHandler
+    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event)
+    {
+        if (event.isCancelled() || event.getPlayer().getItemInHand().getType() != MyWolfConfig.LeashItem || !(event.getRightClicked() instanceof LivingEntity))
+        {
+            return;
+        }
+        if (MyWolfList.hasMyWolf(event.getPlayer()))
+        {
+            MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
+            if (event.getRightClicked() != MWolf.Wolf)
+            {
+                MWolf.Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
         if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
@@ -143,7 +162,7 @@ public class MyWolfPlayerListener implements Listener
         */
     }
 
-    @EventHandler()
+    @EventHandler
     public void onPlayerPortal(final PlayerPortalEvent event)
     {
         if (MyWolfList.hasMyWolf(event.getPlayer()))
@@ -162,7 +181,7 @@ public class MyWolfPlayerListener implements Listener
         }
     }
 
-    @EventHandler()
+    @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
         if (MyWolfList.hasMyWolf(event.getPlayer()))
@@ -182,7 +201,7 @@ public class MyWolfPlayerListener implements Listener
         }
     }
 
-    @EventHandler()
+    @EventHandler
     public void onPlayerMove(final PlayerMoveEvent event)
     {
         if (MyWolfList.hasMyWolf(event.getPlayer()))
