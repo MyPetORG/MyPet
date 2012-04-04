@@ -79,7 +79,7 @@ public class MyWolf
         Experience = new MyWolfExperience(this);
     }
 
-    public void SetName(String Name)
+    public void setName(String Name)
     {
         this.Name = Name;
     }

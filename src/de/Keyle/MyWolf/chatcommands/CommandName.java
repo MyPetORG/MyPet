@@ -19,6 +19,9 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
+import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent.MyWolfSpoutEventReason;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -51,8 +54,10 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyWolfList.getMyWolf(owner).SetName(name);
+                MyWolf MWolf = MyWolfList.getMyWolf(owner);
+                MWolf.setName(name);
                 sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
+                MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Name));
                 return true;
             }
             else
