@@ -20,8 +20,9 @@
 package de.Keyle.MyWolf.entity;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalAggressive;
+import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControl;
+import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControlTarget;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.MyWolfConfig;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -71,7 +72,8 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MWolf));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalAggressive(MWolf, 10));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(MWolf, Control, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MWolf, 10));
     }
 
     public boolean isMyWolf()
