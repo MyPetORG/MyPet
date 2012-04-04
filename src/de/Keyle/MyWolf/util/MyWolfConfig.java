@@ -53,7 +53,7 @@ public class MyWolfConfig
         setProperty("MyWolf.Skill.Pickup.RangePerLvl", 1);
         setProperty("MyWolf.RespawnTime.Factor", 5);
         setProperty("MyWolf.RespawnTime.Fixed", 0);
-        setProperty("MyWolf.SitdownTime", 15);
+        setProperty("MyWolf.SitdownTime", 60);
         setProperty("MyWolf.StartHP", 15);
         setProperty("MyWolf.SuperPerms", false);
         setProperty("MyWolf.LevelSystem", true);
@@ -78,7 +78,7 @@ public class MyWolfConfig
         RespawnTimeFixed = Config.getInt("MyWolf.RespawnTime.Fixed", 0);
         LevelSystem = Config.getBoolean("MyWolf.LevelSystem", true);
         HeroesSkill = Config.getBoolean("MyWolf.HeroesSkill", false);
-        SitdownTime = Config.getInt("MyWolf.SitdownTime", 15);
+        SitdownTime = Config.getInt("MyWolf.SitdownTime", 60);
         StartHP = Config.getInt("MyWolf.StartHP", 15);
         Superperms = Config.getBoolean("MyWolf.SuperPerms", false);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
