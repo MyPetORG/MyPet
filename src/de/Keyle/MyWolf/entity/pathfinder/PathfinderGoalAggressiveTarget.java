@@ -10,14 +10,14 @@ import net.minecraft.server.PathfinderGoalTarget;
 
 import java.util.List;
 
-public class PathfinderGoalAggressive extends PathfinderGoalTarget
+public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 {
     private MyWolf MWolf;
     private EntityMyWolf wolf;
     private EntityLiving target;
     private float range;
 
-    public PathfinderGoalAggressive(MyWolf MWolf, float range)
+    public PathfinderGoalAggressiveTarget(MyWolf MWolf, float range)
     {
         super(MWolf.Wolf.getHandle(), 32.0F, false);
         this.wolf = MWolf.Wolf.getHandle();
