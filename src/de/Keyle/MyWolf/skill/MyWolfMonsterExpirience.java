@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.skill.skills;
+package de.Keyle.MyWolf.skill;
 
 import org.bukkit.entity.EntityType;
 

@@ -23,7 +23,6 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
-import de.Keyle.MyWolf.skill.skills.MyWolfMonsterExpirience;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.EntityType;
 
