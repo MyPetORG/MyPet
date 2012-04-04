@@ -97,19 +97,19 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfConfig.loadConfiguration();
 
         MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
-        getServer().getPluginManager().registerEvents(playerListener, this);
+        getServer().getPluginManager().registerEvents(playerListener, getPlugin());
 
         MyWolfVehicleListener vehicleListener = new MyWolfVehicleListener();
-        getServer().getPluginManager().registerEvents(vehicleListener, this);
+        getServer().getPluginManager().registerEvents(vehicleListener, getPlugin());
 
         MyWolfWorldListener worldListener = new MyWolfWorldListener();
-        getServer().getPluginManager().registerEvents(worldListener, this);
+        getServer().getPluginManager().registerEvents(worldListener, getPlugin());
 
         MyWolfEntityListener entityListener = new MyWolfEntityListener();
-        getServer().getPluginManager().registerEvents(entityListener, this);
+        getServer().getPluginManager().registerEvents(entityListener, getPlugin());
 
         MyWolfLevelUpListener levelupListener = new MyWolfLevelUpListener();
-        getServer().getPluginManager().registerEvents(levelupListener, this);
+        getServer().getPluginManager().registerEvents(levelupListener, getPlugin());
 
         getCommand("wolfname").setExecutor(new CommandName());
         getCommand("wolfcall").setExecutor(new CommandCall());
@@ -123,7 +123,7 @@ public class MyWolfPlugin extends JavaPlugin
         getCommand("wolfadmin").setExecutor(new CommandAdmin());
         getCommand("wolfskill").setExecutor(new CommandSkill());
 
-        MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "skill.yml");
+        MyWolfYamlConfiguration MWSkillTreeConfig = new MyWolfYamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "skill.yml");
         if (!MWSkillTreeConfig.ConfigFile.exists())
         {
             try
@@ -175,11 +175,11 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         // For future of the client mod
-        //this.getServer().getMessenger().registerOutgoingPluginChannel(this,"MyWolfByKeyle");
+        //MyWolfUtil.getServer().getMessenger().registerOutgoingPluginChannel(getPlugin(),"MyWolfByKeyle");
 
         MyWolfPermissions.setup();
 
-        MWLanguage = new MyWolfLanguage(new MyWolfYamlConfiguration(this.getDataFolder().getPath() + File.separator + "lang.yml"));
+        MWLanguage = new MyWolfLanguage(new MyWolfYamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
         MWLanguage.loadVariables();
 
 
@@ -196,14 +196,14 @@ public class MyWolfPlugin extends JavaPlugin
             }
         }
 
-        File MWWolvesConfigFile = new File(this.getDataFolder().getPath() + File.separator + "Wolves.yml");
-        NBTWolvesFile = new File(this.getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
+        File MWWolvesConfigFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.yml");
+        NBTWolvesFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
 
         if (MWWolvesConfigFile.exists())
         {
             MyWolfYamlConfiguration MWWolvesConfig = new MyWolfYamlConfiguration(MWWolvesConfigFile);
             loadWolves(MWWolvesConfig);
-            MWWolvesConfigFile.renameTo(new File(this.getDataFolder().getPath() + File.separator + "oldWolves.yml"));
+            MWWolvesConfigFile.renameTo(new File(getPlugin().getDataFolder().getPath() + File.separator + "oldWolves.yml"));
         }
         else
         {
@@ -288,7 +288,7 @@ public class MyWolfPlugin extends JavaPlugin
 
             InactiveMyWolf IMWolf = new InactiveMyWolf(MyWolfUtil.getOfflinePlayer(Owner));
 
-            IMWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld) != null ? this.getServer().getWorld(WolfWorld) : this.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+            IMWolf.setLocation(new Location(MyWolfUtil.getServer().getWorld(WolfWorld) != null ? MyWolfUtil.getServer().getWorld(WolfWorld) : MyWolfUtil.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
             IMWolf.setHealth(WolfHealthNow);
             IMWolf.setRespawnTime(WolfRespawnTime);
             IMWolf.setName(WolfName);
@@ -352,7 +352,7 @@ public class MyWolfPlugin extends JavaPlugin
 
                     InactiveMyWolf IMWolf = new InactiveMyWolf(MyWolfUtil.getOfflinePlayer(ownername));
 
-                    IMWolf.setLocation(new Location(this.getServer().getWorld(WolfWorld) != null ? this.getServer().getWorld(WolfWorld) : this.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+                    IMWolf.setLocation(new Location(MyWolfUtil.getServer().getWorld(WolfWorld) != null ? MyWolfUtil.getServer().getWorld(WolfWorld) : MyWolfUtil.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
                     IMWolf.setHealth(WolfHealthNow);
                     IMWolf.setRespawnTime(WolfRespawnTime);
                     IMWolf.setName(WolfName);
