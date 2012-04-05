@@ -135,7 +135,7 @@ public class MyWolfEntityListener implements Listener
                 if (MyWolfList.hasMyWolf(damager))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(damager);
-                    if (event.getEntity() != MWolf.Wolf)
+                    if (MWolf.Status == WolfState.Here && event.getEntity() != MWolf.Wolf)
                     {
                         MyWolfList.getMyWolf(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
