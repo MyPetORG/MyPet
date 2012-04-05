@@ -22,10 +22,12 @@ package de.Keyle.MyWolf.entity.pathfinder;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
+import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.PathfinderGoalTarget;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -70,6 +72,10 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
                 if (wolf.am().canSee(entityliving) && entityliving != wolf && !(entityliving instanceof EntityHuman && ((EntityHuman) entityliving).name.equals(MWolf.getOwner().getName())))
                 {
+                    if (entityliving instanceof EntityHuman && !MyWolfUtil.canHurt(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                    {
+                        return false;
+                    }
                     this.target = entityliving;
                     return true;
                 }

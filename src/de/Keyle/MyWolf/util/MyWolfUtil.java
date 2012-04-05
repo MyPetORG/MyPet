@@ -19,6 +19,8 @@
 
 package de.Keyle.MyWolf.util;
 
+import com.massivecraft.factions.P;
+import com.massivecraft.factions.listeners.FactionsEntityListener;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -27,6 +29,8 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
@@ -108,6 +112,17 @@ public class MyWolfUtil
             }
         }
         return getServer().getWorld(loc.getWorld().getName()).getPVP();
+    }
+
+    public static boolean canHurt(Player attacker, Player victim)
+    {
+        if (MyWolfUtil.getServer().getPluginManager().getPlugin("Factions") != null)
+        {
+            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, victim, EntityDamageEvent.DamageCause.CUSTOM, 0);
+            FactionsEntityListener FEL = new FactionsEntityListener(P.p);
+            return FEL.canDamagerHurtDamagee(sub, false);
+        }
+        return true;
     }
 
     public static void sendMessage(Player player, String Message)
