@@ -3,15 +3,18 @@ package de.Keyle.MyWolf.entity.pathfinder;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
+import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoalTarget;
+import org.bukkit.entity.Player;
 
 public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 {
 
     EntityTameableAnimal wolf;
-    EntityLiving owner;
+    EntityLiving target;
     MyWolf MWolf;
 
     public PathfinderGoalOwnerHurtTarget(MyWolf MWolf)
@@ -30,9 +33,9 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
         }
         else
         {
-            EntityLiving entityliving = this.wolf.getOwner();
+            EntityLiving owner = this.wolf.getOwner();
 
-            if (entityliving == null)
+            if (owner == null)
             {
                 return false;
             }
@@ -49,15 +52,16 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                         }
                     }
                 }
-                this.owner = ((EntityMyWolf) this.wolf).Goaltarget;
-                return this.a(this.owner, false);
+                this.target = ((EntityMyWolf) this.wolf).Goaltarget;
+                ((EntityMyWolf) this.wolf).Goaltarget = null;
+                return !(this.target instanceof EntityHuman && !MyWolfUtil.canHurt(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) this.target).getBukkitEntity()))) && this.a(this.target, false);
             }
         }
     }
 
     public void c()
     {
-        this.c.b(this.owner);
+        this.c.b(this.target);
         super.c();
     }
 }

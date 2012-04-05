@@ -74,7 +74,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                 {
                     if (entityliving instanceof EntityHuman && !MyWolfUtil.canHurt(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
                     {
-                        return false;
+                        continue;
                     }
                     this.target = entityliving;
                     return true;
