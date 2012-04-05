@@ -134,7 +134,6 @@ public class MyWolf
         wolf.remove();
         Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
         Location = Wolf.getLocation();
-        Status = WolfState.Here;
         Wolf.setSitting(true);
         Status = WolfState.Here;
     }
