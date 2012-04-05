@@ -128,6 +128,7 @@ public class MyWolfPlayerListener implements Listener
     {
         if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
         {
+            /*
             if (MyWolfConfig.HeroesSkill && MyWolfUtil.getServer().getPluginManager().getPlugin("Heroes") != null && MyWolfConfig.HeroesPlugin != null)
             {
                 if (!MyWolfConfig.HeroesPlugin.getCharacterManager().getHero(event.getPlayer()).hasAccessToSkill("MyWolf"))
@@ -135,6 +136,7 @@ public class MyWolfPlayerListener implements Listener
                     return;
                 }
             }
+            */
             MyWolfList.setMyWolfActive(event.getPlayer(), true);
         }
         if (MyWolfList.hasMyWolf(event.getPlayer()))
