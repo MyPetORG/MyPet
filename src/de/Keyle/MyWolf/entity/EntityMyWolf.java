@@ -92,7 +92,7 @@ public class EntityMyWolf extends EntityTameableAnimal
                 this.setTamed(true);
                 this.setPathEntity(null);
                 this.setSitting(MWolf.isSitting());
-                this.setHealth(getMaxHealth());
+                this.setHealth(MWolf.getHealth() >= getMaxHealth() ? getMaxHealth() : MWolf.getHealth());
                 this.setOwnerName(MWolf.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
             }
