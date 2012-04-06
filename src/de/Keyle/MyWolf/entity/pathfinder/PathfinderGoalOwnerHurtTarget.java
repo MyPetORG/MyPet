@@ -54,7 +54,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                 }
                 this.target = ((EntityMyWolf) this.wolf).Goaltarget;
                 ((EntityMyWolf) this.wolf).Goaltarget = null;
-                return !(this.target instanceof EntityHuman && !MyWolfUtil.canHurt(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) this.target).getBukkitEntity()))) && this.a(this.target, false);
+                return !(this.target instanceof EntityHuman && !MyWolfUtil.canHurtFaction(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) this.target).getBukkitEntity()))) && this.a(this.target, false);
             }
         }
     }
