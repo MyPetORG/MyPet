@@ -136,4 +136,10 @@ public class InactiveMyWolf
         }
         return Owner;
     }
+
+    @Override
+    public String toString()
+    {
+        return "InactiveMyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
+    }
 }

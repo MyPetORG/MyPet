@@ -176,9 +176,10 @@ public class MyWolfList
 
     // All ----------------------------------------------------------------------
 
-    public static void setMyWolfActive(OfflinePlayer Owner, boolean Activate)
+    public static void setMyWolfActive(OfflinePlayer Owner, boolean activate)
     {
-        if (Activate)
+        MyWolfUtil.getDebugLogger().info("Set MyWolf active: " + activate);
+        if (activate)
         {
             if (mInctiveWolves.containsKey(Owner) && mInctiveWolves.get(Owner).getOwner().isOnline())
             {
@@ -186,6 +187,8 @@ public class MyWolfList
                 MyWolf AMWolf = getMyWolf(IMWolf);
                 addMyWolf(AMWolf);
                 removeInactiveMyWolf(IMWolf);
+                MyWolfUtil.getDebugLogger().info("   A: " + AMWolf);
+                MyWolfUtil.getDebugLogger().info("   I: " + IMWolf);
             }
         }
         else
@@ -193,10 +196,12 @@ public class MyWolfList
             if (mActiveWolves.containsKey(Owner))
             {
                 MyWolf AMWolf = mActiveWolves.get(Owner);
-                InactiveMyWolf IAMWolf = getInactiveMyWolf(AMWolf);
+                InactiveMyWolf IMWolf = getInactiveMyWolf(AMWolf);
                 AMWolf.removeWolf();
                 removeMyWolf(AMWolf);
-                addInactiveMyWolf(IAMWolf);
+                addInactiveMyWolf(IMWolf);
+                MyWolfUtil.getDebugLogger().info("   I: " + IMWolf);
+                MyWolfUtil.getDebugLogger().info("   A: " + AMWolf);
             }
         }
     }

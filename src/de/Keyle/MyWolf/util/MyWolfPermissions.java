@@ -86,6 +86,7 @@ public class MyWolfPermissions
             if (Permissions != null)
             {
                 MyWolfUtil.getLogger().info("Vault integration enabled!");
+                MyWolfUtil.getDebugLogger().info("Permissions: Vault");
                 return;
             }
             PermissionsMode = PermissionsType.NONE;
@@ -95,10 +96,12 @@ public class MyWolfPermissions
         {
             PermissionsMode = PermissionsType.Superperms;
             MyWolfUtil.getLogger().info("Superperms integration enabled!");
+            MyWolfUtil.getDebugLogger().info("Permissions: Superperms");
             return;
         }
 
         MyWolfUtil.getLogger().info("No permissions system found!");
+        MyWolfUtil.getDebugLogger().info("Permissions: -");
     }
 
     public static PermissionsType getPermissionsMode()

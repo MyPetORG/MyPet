@@ -26,6 +26,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.util.logger.MyWolfLogger;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -51,6 +52,11 @@ public class MyWolfUtil
     public static Logger getLogger()
     {
         return MyWolfPlugin.getPlugin().getLogger();
+    }
+
+    public static MyWolfLogger getDebugLogger()
+    {
+        return MyWolfPlugin.getPlugin().getDebugLogger();
     }
 
     public static String SetColors(String text)
@@ -122,6 +128,8 @@ public class MyWolfUtil
         }
         return true;
     }
+
+    //ToDo: add Towny
 
     public static void sendMessage(Player player, String Message)
     {

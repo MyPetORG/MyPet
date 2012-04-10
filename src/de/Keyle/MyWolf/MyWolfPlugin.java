@@ -30,11 +30,13 @@ import de.Keyle.MyWolf.skill.skills.*;
 import de.Keyle.MyWolf.util.*;
 import de.Keyle.MyWolf.util.configuration.MyWolfNBTConfiguration;
 import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
+import de.Keyle.MyWolf.util.logger.MyWolfLogger;
 import net.minecraft.server.EntityTypes;
 import net.minecraft.server.EntityWolf;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.NBTTagList;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,6 +53,7 @@ public class MyWolfPlugin extends JavaPlugin
     private final MyWolfTimer Timer = new MyWolfTimer();
     public static final List<Player> WolfChestOpened = new ArrayList<Player>();
     public static File NBTWolvesFile;
+    private MyWolfLogger MWLogger;
 
     public static MyWolfPlugin getPlugin()
     {
@@ -76,7 +79,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfList.clearList();
         WolfChestOpened.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
-
+        MWLogger.info("MyWolf disabled!");
         MyWolfUtil.getLogger().info("Disabled");
     }
 
@@ -97,6 +100,18 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfConfig.Config = this.getConfig();
         MyWolfConfig.setDefault();
         MyWolfConfig.loadConfiguration();
+
+        MWLogger = new MyWolfLogger(MyWolfConfig.DebugLogger);
+        MWLogger.info("----------- loading MyWolf ... -----------");
+        MWLogger.info("MyWolf " + getDescription().getVersion());
+        MWLogger.info("Bukkit " + getServer().getVersion());
+
+        MyWolfUtil.getDebugLogger().info("MobEXP table: -------------------------");
+        for (EntityType ET : MyWolfExperience.MobEXP.keySet())
+        {
+            MWLogger.info("   " + MyWolfExperience.MobEXP.get(ET).toString());
+        }
+        MyWolfUtil.getDebugLogger().info("MobEXP table end ----------------------");
 
         MyWolfPlayerListener playerListener = new MyWolfPlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, getPlugin());
@@ -142,10 +157,12 @@ public class MyWolfPlugin extends JavaPlugin
                 template.close();
                 out.close();
                 MyWolfUtil.getLogger().info("Default skill.yml file created. Please restart the server to load the skilltrees!");
+                MWLogger.info("created default skill.yml.");
             }
             catch (IOException ex)
             {
                 MyWolfUtil.getLogger().info("Unable to create the default skill.yml file!");
+                MWLogger.info("unable to create skill.yml.");
             }
         }
         MyWolfSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
@@ -167,11 +184,14 @@ public class MyWolfPlugin extends JavaPlugin
             a.setAccessible(true);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
             a.invoke(a, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
+            MWLogger.info("registered MyWolf entity.");
         }
         catch (Exception e)
         {
             MyWolfUtil.getLogger().info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
             e.printStackTrace();
+            MWLogger.severe("error while registering MyWolf entity.");
+            MWLogger.severe(e.getMessage());
             setEnabled(false);
             return;
         }
@@ -190,11 +210,13 @@ public class MyWolfPlugin extends JavaPlugin
             try
             {
                 MyWolfExperience.JSreader = MyWolfUtil.readFileAsString(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js");
+                MWLogger.info("loaded exp.js.");
             }
             catch (Exception e)
             {
                 MyWolfExperience.JSreader = null;
                 MyWolfUtil.getLogger().info("No custom EXP-Script found (exp.js).");
+                MWLogger.info("exp.js not loaded.");
             }
         }
 
@@ -205,6 +227,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         if (MyWolfConfig.sendMetrics)
         {
+            MWLogger.info("Metrics is activivated");
             try
             {
                 Metrics metrics = new Metrics();
@@ -225,6 +248,7 @@ public class MyWolfPlugin extends JavaPlugin
                 MyWolfUtil.getLogger().info(e.getMessage());
             }
         }
+        MWLogger.info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
         MyWolfUtil.getLogger().info("version " + MyWolfPlugin.Plugin.getDescription().getVersion() + " ENABLED");
 
         for (Player p : getServer().getOnlinePlayers())
@@ -251,16 +275,17 @@ public class MyWolfPlugin extends JavaPlugin
                 }
             }
         }
+        MWLogger.info("----------- MyWolf ready -----------");
     }
 
     int loadWolves(File f)
     {
-        int anzahlWolves = 0;
+        int wolfCount = 0;
 
         MyWolfNBTConfiguration nbtConfiguration = new MyWolfNBTConfiguration(f);
         nbtConfiguration.load();
         NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Wolves");
-
+        MWLogger.info("loading MyWolves: -----------------------------");
         for (int i = 0 ; i < Wolves.size() ; i++)
         {
             NBTTagCompound MWolfNBT = (NBTTagCompound) Wolves.get(i);
@@ -289,14 +314,18 @@ public class MyWolfPlugin extends JavaPlugin
 
             MyWolfList.addInactiveMyWolf(IMWolf);
 
-            anzahlWolves++;
+            MWLogger.info("   " + IMWolf.toString());
+
+            wolfCount++;
         }
-        MyWolfUtil.getLogger().info(anzahlWolves + " wolf/wolves loaded");
-        return anzahlWolves;
+        MWLogger.info(wolfCount + " wolf/wolves loaded -------------------------");
+        MyWolfUtil.getLogger().info(wolfCount + " wolf/wolves loaded");
+        return wolfCount;
     }
 
-    public void saveWolves(File f)
+    public int saveWolves(File f)
     {
+        int wolfCount = 0;
         MyWolfNBTConfiguration nbtConfiguration = new MyWolfNBTConfiguration(f);
         NBTTagList Wolves = new NBTTagList();
         for (MyWolf MWolf : MyWolfList.getMyWolfList())
@@ -333,6 +362,7 @@ public class MyWolfPlugin extends JavaPlugin
             }
             Wolf.set("Skills", SkillsNBTTagCompound);
             Wolves.add(Wolf);
+            wolfCount++;
         }
         for (InactiveMyWolf IMWolf : MyWolfList.getInactiveMyWolfList())
         {
@@ -355,11 +385,14 @@ public class MyWolfPlugin extends JavaPlugin
 
             Wolf.set("Skills", IMWolf.getSkills());
             Wolves.add(Wolf);
+            wolfCount++;
         }
         String[] version = Plugin.getDescription().getVersion().split(" \\(");
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
         nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
         nbtConfiguration.save();
+        MWLogger.info(wolfCount + " wolf/wolves saved.");
+        return wolfCount;
     }
 
     private boolean checkVersion(String mc, String mw)
@@ -382,5 +415,10 @@ public class MyWolfPlugin extends JavaPlugin
         {
             return mw.equals(mc);
         }
+    }
+
+    public MyWolfLogger getDebugLogger()
+    {
+        return MWLogger;
     }
 }

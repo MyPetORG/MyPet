@@ -270,4 +270,10 @@ public class MyWolf
             getOwner().getPlayer().sendMessage(Text);
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + Experience.getExp() + "/" + Experience.getrequireEXP() + ", lv=" + Experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + SkillTree.getName() + "}";
+    }
 }

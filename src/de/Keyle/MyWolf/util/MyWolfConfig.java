@@ -43,7 +43,7 @@ public class MyWolfConfig
     public static boolean sendMetrics = true;
 
     public static boolean Superperms = false;
-
+    public static boolean DebugLogger = false;
 
     public static void setDefault()
     {
@@ -57,6 +57,7 @@ public class MyWolfConfig
         setProperty("MyWolf.SuperPerms", false);
         setProperty("MyWolf.LevelSystem", true);
         setProperty("MyWolf.SendMetrics", true);
+        setProperty("MyWolf.DebugLogger", false);
         setProperty("MyWolf.AutoSaveTime", 60);
 
         for (EntityType entityType : MyWolfExperience.MobEXP.keySet())
@@ -81,6 +82,7 @@ public class MyWolfConfig
         StartHP = Config.getInt("MyWolf.StartHP", 15);
         Superperms = Config.getBoolean("MyWolf.SuperPerms", false);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
+        DebugLogger = Config.getBoolean("MyWolf.DebugLogger", false);
 
         if (Config.getStringList("MyWolf.exp") != null)
         {

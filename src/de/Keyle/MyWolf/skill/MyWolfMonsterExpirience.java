@@ -94,4 +94,10 @@ public class MyWolfMonsterExpirience
     {
         max = (min = exp);
     }
+
+    @Override
+    public String toString()
+    {
+        return entityType.getName() + "{min=" + min + ", max=" + max + "}";
+    }
 }
