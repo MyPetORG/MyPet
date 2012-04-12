@@ -44,7 +44,7 @@ public class CommandHelp implements CommandExecutor
             {
                 player.sendMessage("/wolfname <newwolfname> | Set wolf name");
                 player.sendMessage("/wolfrelease <wolfname> | Release your wolf");
-                //player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
+                player.sendMessage("/wolfstop | MyWolf stopps attacking  (alias: /ws or /wolfs)");
                 player.sendMessage("/wolfcall | Call your wolf  (alias: /wc or /wolfc)");
                 player.sendMessage("/wolfskill | Shows the skill-levels");
 
@@ -58,7 +58,7 @@ public class CommandHelp implements CommandExecutor
                 }
                 if (MyWolfList.getMyWolf(player).SkillSystem.hasSkill("Behavior") && MyWolfList.getMyWolf(player).SkillSystem.getSkill("Behavior").getLevel() > 0)
                 {
-                    player.sendMessage("/wolfbehavior [RAID] | Toggle the behaivior  (alias: /wb or /wolfb)");
+                    player.sendMessage("/wolfbehavior | Toggles the behaivior  (alias: /wb or /wolfb)");
                 }
             }
             player.sendMessage("");
