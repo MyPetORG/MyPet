@@ -124,6 +124,10 @@ public class MyWolfEntityListener implements Listener
                     {
                         event.setCancelled(true);
                     }
+                    if (!MyWolfUtil.canHurtTowny(damager, MWolf.getOwner().getPlayer()))
+                    {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

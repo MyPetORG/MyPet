@@ -20,6 +20,10 @@
 package de.Keyle.MyWolf.util;
 
 import com.massivecraft.factions.P;
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.event.TownyEntityListener;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.palmergames.bukkit.towny.object.TownyWorld;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -39,6 +43,8 @@ import java.util.logging.Logger;
 
 public class MyWolfUtil
 {
+    private static TownyEntityListener townyEntityListener = null;
+
     public static Server getServer()
     {
         return Bukkit.getServer();
@@ -129,7 +135,29 @@ public class MyWolfUtil
         return true;
     }
 
-    //ToDo: add Towny
+    public static boolean canHurtTowny(Player attacker, Player defender)
+    {
+        boolean canHurt = true;
+        if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
+        {
+            if (townyEntityListener == null)
+            {
+                townyEntityListener = new TownyEntityListener((Towny) MyWolfUtil.getServer().getPluginManager().getPlugin("Towny"));
+            }
+            try
+            {
+                TownyWorld world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
+                if (townyEntityListener.preventDamageCall(world, attacker, defender, attacker, defender))
+                {
+                    canHurt = false;
+                }
+            }
+            catch (Exception ignored)
+            {
+            }
+        }
+        return canHurt;
+    }
 
     public static void sendMessage(Player player, String Message)
     {
