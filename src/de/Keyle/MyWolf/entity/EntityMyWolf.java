@@ -129,7 +129,7 @@ public class EntityMyWolf extends EntityTameableAnimal
                 {
                     --itemstack.count;
                 }
-                this.heal(itemfood.getNutrition() - (getMaxHealth() - getHealth()), RegainReason.EATING);
+                this.heal(itemfood.getNutrition(), RegainReason.EATING);
                 if (itemstack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
