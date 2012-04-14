@@ -20,10 +20,11 @@
 package de.Keyle.MyWolf.util;
 
 import com.massivecraft.factions.P;
-import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.NotRegisteredException;
 import com.palmergames.bukkit.towny.event.TownyEntityListener;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
+import com.palmergames.bukkit.util.CombatUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -140,20 +141,17 @@ public class MyWolfUtil
         boolean canHurt = true;
         if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
         {
-            if (townyEntityListener == null)
-            {
-                townyEntityListener = new TownyEntityListener((Towny) MyWolfUtil.getServer().getPluginManager().getPlugin("Towny"));
-            }
+            TownyWorld world = null;
             try
             {
-                TownyWorld world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
-                if (townyEntityListener.preventDamageCall(world, attacker, defender, attacker, defender))
-                {
-                    canHurt = false;
-                }
+                world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
             }
-            catch (Exception ignored)
+            catch (NotRegisteredException ignored)
             {
+            }
+            if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
+            {
+                canHurt = false;
             }
         }
         return canHurt;
