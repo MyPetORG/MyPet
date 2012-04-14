@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.util;
 
 import com.massivecraft.factions.P;
 import com.palmergames.bukkit.towny.NotRegisteredException;
-import com.palmergames.bukkit.towny.event.TownyEntityListener;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
 import com.palmergames.bukkit.util.CombatUtil;
@@ -44,8 +43,6 @@ import java.util.logging.Logger;
 
 public class MyWolfUtil
 {
-    private static TownyEntityListener townyEntityListener = null;
-
     public static Server getServer()
     {
         return Bukkit.getServer();
