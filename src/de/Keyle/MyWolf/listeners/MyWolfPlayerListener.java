@@ -24,10 +24,7 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Control;
-import de.Keyle.MyWolf.util.MyWolfConfig;
-import de.Keyle.MyWolf.util.MyWolfLanguage;
-import de.Keyle.MyWolf.util.MyWolfList;
-import de.Keyle.MyWolf.util.MyWolfUtil;
+import de.Keyle.MyWolf.util.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -126,34 +123,54 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
+        if(MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
         {
-            /*
-            if (MyWolfConfig.HeroesSkill && MyWolfUtil.getServer().getPluginManager().getPlugin("Heroes") != null && MyWolfConfig.HeroesPlugin != null)
+            if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
             {
-                if (!MyWolfConfig.HeroesPlugin.getCharacterManager().getHero(event.getPlayer()).hasAccessToSkill("MyWolf"))
+                /*
+                if (MyWolfConfig.HeroesSkill && MyWolfUtil.getServer().getPluginManager().getPlugin("Heroes") != null && MyWolfConfig.HeroesPlugin != null)
                 {
-                    return;
+                    if (!MyWolfConfig.HeroesPlugin.getCharacterManager().getHero(event.getPlayer()).hasAccessToSkill("MyWolf"))
+                    {
+                        return;
+                    }
+                }
+                */
+                MyWolfList.setMyWolfActive(event.getPlayer(), true);
+            }
+            if (MyWolfList.hasMyWolf(event.getPlayer()))
+            {
+                MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
+                if (MWolf.Status == WolfState.Dead)
+                {
+                    event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                }
+                else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
+                {
+                    MWolf.ResetSitTimer();
+                    MWolf.createWolf(MWolf.isSitting());
+                }
+                else
+                {
+                    MWolf.Status = WolfState.Despawned;
                 }
             }
-            */
-            MyWolfList.setMyWolfActive(event.getPlayer(), true);
         }
-        if (MyWolfList.hasMyWolf(event.getPlayer()))
+        else
         {
-            MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-            if (MWolf.Status == WolfState.Dead)
+            if(MyWolfList.hasMyWolf(event.getPlayer()))
             {
-                event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
-            }
-            else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
-            {
-                MWolf.ResetSitTimer();
-                MWolf.createWolf(MWolf.isSitting());
-            }
-            else
-            {
-                MWolf.Status = WolfState.Despawned;
+                MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
+
+                if (MWolf.Status == WolfState.Here)
+                {
+                    MWolf.removeWolf();
+                    if (MWolf.getLocation() == null)
+                    {
+                        MWolf.setLocation(event.getPlayer().getLocation());
+                    }
+                }
+                MyWolfList.setMyWolfActive(event.getPlayer(),false);
             }
         }
 
@@ -169,25 +186,6 @@ public class MyWolfPlayerListener implements Listener
         }
         event.getPlayer().sendPluginMessage(MyWolfPlugin.Plugin,"MyWolfByKeyle",EntityIDs.getBytes());
         */
-    }
-
-    @EventHandler
-    public void onPlayerPortal(final PlayerPortalEvent event)
-    {
-        if (MyWolfList.hasMyWolf(event.getPlayer()))
-        {
-            MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-
-            if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
-            {
-                MWolf.ResetSitTimer();
-                MWolf.createWolf(MWolf.isSitting());
-            }
-            else
-            {
-                MWolf.Status = WolfState.Despawned;
-            }
-        }
     }
 
     @EventHandler
@@ -213,46 +211,67 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler
     public void onPlayerMove(final PlayerMoveEvent event)
     {
-        if (MyWolfList.hasMyWolf(event.getPlayer()))
+        if(MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
+        {
+            if(MyWolfList.hasInactiveMyWolf(event.getPlayer()))
+            {
+                MyWolfList.setMyWolfActive(event.getPlayer(), true);
+            }
+            if(MyWolfList.hasMyWolf(event.getPlayer()))
+            {
+                MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
+
+                MWolf.ResetSitTimer();
+                if (MWolf.Status == WolfState.Here)
+                {
+                    if (MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
+                    {
+                        MWolf.setSitting(false);
+                        MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());
+                    }
+                    if (MWolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
+                    {
+                        if (!MWolf.isSitting())
+                        {
+                            MWolf.removeWolf();
+                            MWolf.setLocation(event.getPlayer().getLocation());
+                            MWolf.createWolf(false);
+                        }
+                        else
+                        {
+                            MWolf.removeWolf();
+                        }
+                    }
+                    else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) > 75)
+                    {
+                        MWolf.removeWolf();
+                    }
+                }
+                else if (MWolf.Status == WolfState.Despawned)
+                {
+                    if (MWolf.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
+                    {
+                        if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
+                        {
+                            MWolf.createWolf(MWolf.isSitting());
+                        }
+                    }
+                }
+            }
+        }
+        else if(MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
-            MWolf.ResetSitTimer();
             if (MWolf.Status == WolfState.Here)
             {
-                if (MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
+                MWolf.removeWolf();
+                if (MWolf.getLocation() == null)
                 {
-                    MWolf.setSitting(false);
-                    MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());
-                }
-                if (MWolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
-                {
-                    if (!MWolf.isSitting())
-                    {
-                        MWolf.removeWolf();
-                        MWolf.setLocation(event.getPlayer().getLocation());
-                        MWolf.createWolf(false);
-                    }
-                    else
-                    {
-                        MWolf.removeWolf();
-                    }
-                }
-                else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) > 75)
-                {
-                    MWolf.removeWolf();
+                    MWolf.setLocation(event.getPlayer().getLocation());
                 }
             }
-            else if (MWolf.Status == WolfState.Despawned)
-            {
-                if (MWolf.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
-                {
-                    if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
-                    {
-                        MWolf.createWolf(MWolf.isSitting());
-                    }
-                }
-            }
+            MyWolfList.setMyWolfActive(event.getPlayer(),false);
         }
     }
 }

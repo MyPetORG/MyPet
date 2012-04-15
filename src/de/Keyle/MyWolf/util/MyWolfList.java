@@ -143,6 +143,7 @@ public class MyWolfList
     public static InactiveMyWolf getInactiveMyWolf(MyWolf AMWolf)
     {
         InactiveMyWolf IAMWolf = new InactiveMyWolf(MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(AMWolf.getOwner().getName()));
+        IAMWolf.setName(AMWolf.Name);
         IAMWolf.setExp(AMWolf.Experience.getExp());
         IAMWolf.setHealth(AMWolf.getHealth());
         IAMWolf.setLocation(AMWolf.getLocation());

@@ -253,25 +253,26 @@ public class MyWolfPlugin extends JavaPlugin
 
         for (Player p : getServer().getOnlinePlayers())
         {
-            if (MyWolfList.hasInactiveMyWolf(p))
+            if(MyWolfPermissions.has(p, "MyWolf.user.leash"))
             {
-                MyWolfList.setMyWolfActive(p, true);
-            }
-            if (MyWolfList.hasMyWolf(p))
-            {
-                MyWolf MWolf = MyWolfList.getMyWolf(p);
-                if (MWolf.Status == WolfState.Dead)
+                if (MyWolfList.hasInactiveMyWolf(p))
                 {
-                    p.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
-                }
-                else if (MyWolfUtil.getDistance(MWolf.getLocation(), p.getLocation()) < 75)
-                {
-                    MWolf.ResetSitTimer();
-                    MWolf.createWolf(MWolf.isSitting());
-                }
-                else
-                {
-                    MWolf.Status = WolfState.Despawned;
+                    MyWolfList.setMyWolfActive(p, true);
+
+                    MyWolf MWolf = MyWolfList.getMyWolf(p);
+                    if (MWolf.Status == WolfState.Dead)
+                    {
+                        p.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                    }
+                    else if (MyWolfUtil.getDistance(MWolf.getLocation(), p.getLocation()) < 75)
+                    {
+                        MWolf.ResetSitTimer();
+                        MWolf.createWolf(MWolf.isSitting());
+                    }
+                    else
+                    {
+                        MWolf.Status = WolfState.Despawned;
+                    }
                 }
             }
         }

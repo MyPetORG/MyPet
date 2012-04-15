@@ -28,7 +28,7 @@ import java.util.Collection;
 
 public class InactiveMyWolf
 {
-    private String Name;
+    private String Name = "Wolf";
     private final OfflinePlayer Owner;
     private int Health;
     private int RespawnTime;
