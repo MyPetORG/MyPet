@@ -261,16 +261,6 @@ public class MyWolfPlayerListener implements Listener
         }
         else if(MyWolfList.hasMyWolf(event.getPlayer()))
         {
-            MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-
-            if (MWolf.Status == WolfState.Here)
-            {
-                MWolf.removeWolf();
-                if (MWolf.getLocation() == null)
-                {
-                    MWolf.setLocation(event.getPlayer().getLocation());
-                }
-            }
             MyWolfList.setMyWolfActive(event.getPlayer(),false);
         }
     }

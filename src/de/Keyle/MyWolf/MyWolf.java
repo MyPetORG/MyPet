@@ -86,11 +86,18 @@ public class MyWolf
 
     public void removeWolf()
     {
-        isSitting = Wolf.isSitting();
-        Health = Wolf.getHealth();
-        Location = Wolf.getLocation();
-        Status = WolfState.Despawned;
-        Wolf.remove();
+        if(Status == WolfState.Here)
+        {
+            isSitting = Wolf.isSitting();
+            Health = Wolf.getHealth();
+            Location = Wolf.getLocation();
+            if(Location == null && getOwner().isOnline())
+            {
+                Location = getOwner().getPlayer().getLocation();
+            }
+            Status = WolfState.Despawned;
+            Wolf.remove();
+        }
     }
 
     void RespawnWolf()
