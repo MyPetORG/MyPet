@@ -20,7 +20,6 @@
 package de.Keyle.MyWolf.util;
 
 import com.massivecraft.factions.P;
-import com.palmergames.bukkit.towny.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
 import com.palmergames.bukkit.util.CombatUtil;
@@ -136,23 +135,22 @@ public class MyWolfUtil
     public static boolean canHurtTowny(Player attacker, Player defender)
     {
         boolean canHurt = true;
-        try
-        {
-            Class.forName("com.palmergames.bukkit.util.CombatUtil", false, null);
-        }
-        catch (ClassNotFoundException e)
-        {
-            return canHurt;
-        }
-
         if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
         {
+            try
+            {
+                Class.forName("com.palmergames.bukkit.util.CombatUtil", false, null);
+            }
+            catch (ClassNotFoundException e)
+            {
+                return canHurt;
+            }
             TownyWorld world = null;
             try
             {
                 world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
             }
-            catch (NotRegisteredException ignored)
+            catch (Exception ignored)
             {
             }
             if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
