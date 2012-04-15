@@ -51,9 +51,20 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
                             if (wolf.am().canSee(entityliving) && entityliving != wolf && !(entityliving instanceof EntityHuman && ((EntityHuman) entityliving).name.equals(MWolf.getOwner().getName())))
                             {
-                                if (entityliving instanceof EntityHuman && !MyWolfUtil.canHurtFaction(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                                if (entityliving instanceof EntityHuman)
                                 {
-                                    continue;
+                                    if(!MyWolfUtil.canHurtFaction(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                                    {
+                                        continue;
+                                    }
+                                    if(!MyWolfUtil.canHurtTowny(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                                    {
+                                        continue;
+                                    }
+                                    if(!MyWolfUtil.getPVP(((EntityHuman) entityliving).getBukkitEntity().getLocation()))
+                                    {
+                                        continue;
+                                    }
                                 }
                                 this.target = entityliving;
                                 return true;
