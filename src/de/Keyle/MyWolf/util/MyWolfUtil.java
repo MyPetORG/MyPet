@@ -136,6 +136,15 @@ public class MyWolfUtil
     public static boolean canHurtTowny(Player attacker, Player defender)
     {
         boolean canHurt = true;
+        try
+        {
+            Class.forName("com.palmergames.bukkit.util.CombatUtil", false, null);
+        }
+        catch (ClassNotFoundException e)
+        {
+            return canHurt;
+        }
+
         if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
         {
             TownyWorld world = null;
