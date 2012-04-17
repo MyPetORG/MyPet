@@ -31,18 +31,7 @@ public class MyWolfNBTConfiguration
 
     public MyWolfNBTConfiguration(String Path)
     {
-        NBTFile = new File(Path);
-        if (!NBTFile.exists())
-        {
-            try
-            {
-                NBTFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+        this(new File(Path));
     }
 
     public MyWolfNBTConfiguration(File f)
