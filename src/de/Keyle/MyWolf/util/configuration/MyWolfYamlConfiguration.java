@@ -32,15 +32,7 @@ public class MyWolfYamlConfiguration
 
     public MyWolfYamlConfiguration(String Path)
     {
-        ConfigFile = new File(Path);
-        Config = new YamlConfiguration();
-        try
-        {
-            Config.load(ConfigFile);
-        }
-        catch (Exception ignored)
-        {
-        }
+        this(new File(Path));
     }
 
     public MyWolfYamlConfiguration(File f)
