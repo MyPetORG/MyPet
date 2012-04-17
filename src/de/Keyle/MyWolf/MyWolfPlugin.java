@@ -50,7 +50,6 @@ public class MyWolfPlugin extends JavaPlugin
     private static MyWolfPlugin Plugin;
     public static MyWolfLanguage MWLanguage;
     private final MyWolfTimer Timer = new MyWolfTimer();
-
     public static File NBTWolvesFile;
     private MyWolfLogger MWLogger;
 
@@ -74,7 +73,7 @@ public class MyWolfPlugin extends JavaPlugin
                 MWolf.removeWolf();
             }
         }
-
+        getTimer().stopTimer();
         MyWolfList.clearList();
         Inventory.WolfChestOpened.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
