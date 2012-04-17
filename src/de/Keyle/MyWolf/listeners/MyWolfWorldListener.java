@@ -28,7 +28,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MyWolfWorldListener implements Listener
 {
-    @EventHandler()
+    @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event)
     {
         for (Entity e : event.getChunk().getEntities())

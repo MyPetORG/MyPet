@@ -29,7 +29,7 @@ import org.bukkit.event.Listener;
 
 public class MyWolfLevelUpListener implements Listener
 {
-    @EventHandler()
+    @EventHandler
     public void onLevelUp(MyWolfLevelUpEvent eventMyWolf)
     {
         MyWolf MWolf = eventMyWolf.getWolf();
