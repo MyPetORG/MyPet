@@ -46,11 +46,6 @@ public class MyWolfSkillSystem
         addSkills(ClassSkillList);
     }
 
-    public void updateSkills()
-    {
-        addSkills(ClassSkillList);
-    }
-
     public void addSkill(Class<? extends MyWolfGenericSkill> clazz)
     {
         String Name;
