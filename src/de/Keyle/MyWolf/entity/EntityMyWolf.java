@@ -193,7 +193,7 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     protected String i()
     {
-        return (this.random.nextInt(3) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+        return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 
     public EntityAnimal createChild(EntityAnimal entityanimal)
