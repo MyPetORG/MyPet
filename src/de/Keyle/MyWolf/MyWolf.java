@@ -21,6 +21,8 @@ package de.Keyle.MyWolf;
 
 import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent.MyWolfSpoutEventReason;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.skill.MyWolfSkillSystem;
@@ -82,6 +84,7 @@ public class MyWolf
     public void setName(String Name)
     {
         this.Name = Name;
+        MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(this, MyWolfSpoutEventReason.Name));
     }
 
     public void removeWolf()

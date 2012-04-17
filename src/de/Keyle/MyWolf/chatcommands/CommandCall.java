@@ -21,6 +21,8 @@ package de.Keyle.MyWolf.chatcommands;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent;
+import de.Keyle.MyWolf.event.MyWolfSpoutEvent.MyWolfSpoutEventReason;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
 import de.Keyle.MyWolf.util.MyWolfPermissions;
@@ -61,6 +63,7 @@ public class CommandCall implements CommandExecutor
                         MWolf.Wolf.teleport(owner);
                     }
                     sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
+                    MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
                     return true;
                 }
                 else if (MWolf.Status == WolfState.Despawned)
@@ -68,6 +71,7 @@ public class CommandCall implements CommandExecutor
                     MWolf.setLocation(owner.getLocation());
                     MWolf.createWolf(false);
                     sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
+                    MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
                     return true;
                 }
                 else if (MWolf.Status == WolfState.Dead)
