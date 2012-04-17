@@ -44,10 +44,7 @@ public class MyWolfTimer
 
     public void startTimer()
     {
-        if (Timer != -1)
-        {
-            stopTimer();
-        }
+        stopTimer();
 
         Timer = MyWolfPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyWolfPlugin.getPlugin(), new Runnable()
         {
