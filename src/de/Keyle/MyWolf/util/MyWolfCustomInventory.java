@@ -19,7 +19,9 @@
 
 package de.Keyle.MyWolf.util;
 
+import de.Keyle.MyWolf.skill.skills.Inventory;
 import net.minecraft.server.*;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -225,6 +227,15 @@ public class MyWolfCustomInventory implements IInventory
 
     public void onClose(CraftHumanEntity craftHumanEntity)
     {
+        OfflinePlayer OfflineP = MyWolfUtil.getOfflinePlayer(craftHumanEntity.getName());
+        if (MyWolfList.hasMyWolf(OfflineP))
+        {
+            if (Inventory.WolfChestOpened.contains(OfflineP.getPlayer()))
+            {
+                MyWolfList.getMyWolf(OfflineP).setSitting(false);
+                Inventory.WolfChestOpened.remove(OfflineP.getPlayer());
+            }
+        }
     }
 
     public List<HumanEntity> getViewers()
