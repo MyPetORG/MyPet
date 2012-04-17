@@ -68,10 +68,7 @@ public class MyWolfPlugin extends JavaPlugin
         saveWolves(NBTWolvesFile);
         for (MyWolf MWolf : MyWolfList.getMyWolfList())
         {
-            if (MWolf.Status == WolfState.Here)
-            {
-                MWolf.removeWolf();
-            }
+            MWolf.removeWolf();
         }
         getTimer().stopTimer();
         MyWolfList.clearList();

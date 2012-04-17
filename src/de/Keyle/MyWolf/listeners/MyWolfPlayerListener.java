@@ -127,14 +127,7 @@ public class MyWolfPlayerListener implements Listener
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
-                if (MWolf.Status == WolfState.Here)
-                {
-                    MWolf.removeWolf();
-                    if (MWolf.getLocation() == null)
-                    {
-                        MWolf.setLocation(event.getPlayer().getLocation());
-                    }
-                }
+                MWolf.removeWolf();
                 MyWolfList.setMyWolfActive(event.getPlayer(), false);
             }
         }
@@ -159,11 +152,7 @@ public class MyWolfPlayerListener implements Listener
         if (MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-
-            if (MWolf.Status == WolfState.Here)
-            {
-                MWolf.removeWolf();
-            }
+            MWolf.removeWolf();
             MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
             MyWolfPlugin.getPlugin().getTimer().resetTimer();
         }
