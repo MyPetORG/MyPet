@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Control;
+import de.Keyle.MyWolf.skill.skills.Inventory;
 import de.Keyle.MyWolf.util.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -224,10 +225,10 @@ public class MyWolfPlayerListener implements Listener
                 MWolf.ResetSitTimer();
                 if (MWolf.Status == WolfState.Here)
                 {
-                    if (MyWolfPlugin.WolfChestOpened.contains(event.getPlayer()))
+                    if (Inventory.WolfChestOpened.contains(event.getPlayer()))
                     {
                         MWolf.setSitting(false);
-                        MyWolfPlugin.WolfChestOpened.remove(event.getPlayer());
+                        Inventory.WolfChestOpened.remove(event.getPlayer());
                     }
                     if (MWolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
                     {

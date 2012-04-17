@@ -20,7 +20,6 @@
 package de.Keyle.MyWolf.skill.skills;
 
 import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
@@ -33,8 +32,12 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Inventory extends MyWolfGenericSkill
 {
+    public static final List<Player> WolfChestOpened = new ArrayList<Player>();
     public MyWolfCustomInventory inv = new MyWolfCustomInventory("Wolf's Inventory", 0);
 
     public Inventory()
@@ -53,7 +56,7 @@ public class Inventory extends MyWolfGenericSkill
                 OpenInventory(MWolf.getOwner().getPlayer());
                 if (!MWolf.isSitting())
                 {
-                    MyWolfPlugin.WolfChestOpened.add(MWolf.getOwner().getPlayer());
+                    WolfChestOpened.add(MWolf.getOwner().getPlayer());
                 }
                 MWolf.Wolf.setSitting(true);
             }

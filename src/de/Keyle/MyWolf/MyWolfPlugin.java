@@ -43,16 +43,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class MyWolfPlugin extends JavaPlugin
 {
     private static MyWolfPlugin Plugin;
     public static MyWolfLanguage MWLanguage;
     private final MyWolfTimer Timer = new MyWolfTimer();
-    public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+
     public static File NBTWolvesFile;
     private MyWolfLogger MWLogger;
 
@@ -78,7 +76,7 @@ public class MyWolfPlugin extends JavaPlugin
         }
 
         MyWolfList.clearList();
-        WolfChestOpened.clear();
+        Inventory.WolfChestOpened.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
         MWLogger.info("MyWolf disabled!");
         MyWolfUtil.getLogger().info("Disabled");
