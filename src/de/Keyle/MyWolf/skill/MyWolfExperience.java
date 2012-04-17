@@ -26,9 +26,6 @@ import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.EntityType;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +34,7 @@ public class MyWolfExperience
     private final MyWolf MWolf;
 
     private double Exp = 0;
-
-    public static String JSreader = null;
+    MyWolfJSexp JSexp;
 
     public static final Map<EntityType, MyWolfMonsterExpirience> MobEXP = new HashMap<EntityType, MyWolfMonsterExpirience>();
 
@@ -74,13 +70,20 @@ public class MyWolfExperience
     public MyWolfExperience(MyWolf Wolf)
     {
         this.MWolf = Wolf;
-        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1, true));
+        JSexp = new MyWolfJSexp(Wolf);
+        for (int i = 1 ; i <= getLevel() ; i++)
+        {
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i, true));
+        }
     }
 
     public void reset()
     {
         Exp = 0;
-        MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, 1, true));
+        for (int i = 1 ; i <= getLevel() ; i++)
+        {
+            MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i, true));
+        }
     }
 
     public void setExp(double Exp)
@@ -144,20 +147,24 @@ public class MyWolfExperience
         return 0;
     }
 
+    public double getActualEXP()
+    {
+        double tmpEXP = this.Exp;
+        int tmplvl = 0;
+
+        while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
+        {
+            tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
+            tmplvl++;
+        }
+        return tmpEXP;
+    }
+
     public int getLevel()
     {
-        if (JSreader != null)
+        if (JSexp.isUsable())
         {
-            ScriptEngine se = parseJS();
-            try
-            {
-                return (Integer)se.get("lvl");
-            }
-            catch (Exception e)
-            {
-                MyWolfUtil.getLogger().info("EXP-Script doesn't return a valid value!");
-                return 1;
-            }
+            return JSexp.getLvl();
         }
         else
         {
@@ -176,67 +183,16 @@ public class MyWolfExperience
         }
     }
 
-    public double getActualEXP()
-    {
-        double tmpEXP = this.Exp;
-        int tmplvl = 0;
-
-        while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
-        {
-            tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
-            tmplvl++;
-        }
-        return tmpEXP;
-    }
-
     public double getrequireEXP()
     {
-        if (JSreader != null)
+        if (JSexp.isUsable())
         {
-            ScriptEngine se = parseJS();
-            try
-            {
-                return ((Double) se.get("reqEXP"));
-            }
-            catch (Exception e)
-            {
-                MyWolfUtil.getLogger().info("EXP-Script doesn't return a valid value!");
-                return 1;
-            }
+            return JSexp.getReqExp();
         }
         else
         {
             //MyWolfUtil.Log.info(""+(7 + (int)((this.getLevel()-1) * 3.5)));
             return 7 + (int) ((this.getLevel() - 1) * 3.5);
-        }
-    }
-
-    ScriptEngine parseJS()
-    {
-        if (JSreader != null)
-        {
-            ScriptEngineManager manager = new ScriptEngineManager();
-            ScriptEngine engine = manager.getEngineByName("js");
-            engine.put("lvl", 1);
-            engine.put("reqEXP", 0);
-
-            engine.put("EXP", Exp);
-            engine.put("name", MWolf.Name);
-            engine.put("player", MWolf.Owner);
-            try
-            {
-                engine.eval(JSreader);
-            }
-            catch (ScriptException e)
-            {
-                MyWolfUtil.getLogger().info("Error in EXP-Script!");
-                return null;
-            }
-            return engine;
-        }
-        else
-        {
-            return null;
         }
     }
 }

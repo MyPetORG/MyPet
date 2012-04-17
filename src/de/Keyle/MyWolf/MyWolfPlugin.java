@@ -25,6 +25,7 @@ import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.listeners.*;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
+import de.Keyle.MyWolf.skill.MyWolfJSexp;
 import de.Keyle.MyWolf.skill.MyWolfSkillSystem;
 import de.Keyle.MyWolf.skill.skills.*;
 import de.Keyle.MyWolf.util.*;
@@ -207,16 +208,15 @@ public class MyWolfPlugin extends JavaPlugin
 
         if (MyWolfConfig.LevelSystem)
         {
-            try
+            if(MyWolfJSexp.setScriptPath(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
-                MyWolfExperience.JSreader = MyWolfUtil.readFileAsString(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js");
-                MWLogger.info("loaded exp.js.");
+                MyWolfUtil.getLogger().info("Custom EXP-Script loaded!");
+                MyWolfUtil.getDebugLogger().info("loaded exp.js.");
             }
-            catch (Exception e)
+            else
             {
-                MyWolfExperience.JSreader = null;
                 MyWolfUtil.getLogger().info("No custom EXP-Script found (exp.js).");
-                MWLogger.info("exp.js not loaded.");
+                MyWolfUtil.getDebugLogger().info("exp.js not loaded.");
             }
         }
 
