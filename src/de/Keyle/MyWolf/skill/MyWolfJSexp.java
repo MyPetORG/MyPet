@@ -49,7 +49,7 @@ public class MyWolfJSexp
 
     public int getLvl()
     {
-        if(lastExp != MWolf.Experience.getExp())
+        if (lastExp != MWolf.Experience.getExp())
         {
             update();
         }
@@ -58,7 +58,7 @@ public class MyWolfJSexp
 
     public double getReqExp()
     {
-        if(lastExp != MWolf.Experience.getExp())
+        if (lastExp != MWolf.Experience.getExp())
         {
             update();
         }
@@ -70,7 +70,7 @@ public class MyWolfJSexp
         try
         {
             ScriptEngine se = parseJS();
-            lvl = (Integer)se.get("lvl");
+            lvl = (Integer) se.get("lvl");
             reqExp = ((Double) se.get("reqEXP"));
             return true;
         }

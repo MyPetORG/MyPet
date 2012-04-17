@@ -208,7 +208,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         if (MyWolfConfig.LevelSystem)
         {
-            if(MyWolfJSexp.setScriptPath(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js"))
+            if (MyWolfJSexp.setScriptPath(MyWolfPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
                 MyWolfUtil.getLogger().info("Custom EXP-Script loaded!");
                 MyWolfUtil.getDebugLogger().info("loaded exp.js.");
@@ -253,7 +253,7 @@ public class MyWolfPlugin extends JavaPlugin
 
         for (Player p : getServer().getOnlinePlayers())
         {
-            if(MyWolfPermissions.has(p, "MyWolf.user.leash"))
+            if (MyWolfPermissions.has(p, "MyWolf.user.leash"))
             {
                 if (MyWolfList.hasInactiveMyWolf(p))
                 {

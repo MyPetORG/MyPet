@@ -123,7 +123,7 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
-        if(MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
+        if (MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
         {
             if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
             {
@@ -158,7 +158,7 @@ public class MyWolfPlayerListener implements Listener
         }
         else
         {
-            if(MyWolfList.hasMyWolf(event.getPlayer()))
+            if (MyWolfList.hasMyWolf(event.getPlayer()))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
@@ -170,7 +170,7 @@ public class MyWolfPlayerListener implements Listener
                         MWolf.setLocation(event.getPlayer().getLocation());
                     }
                 }
-                MyWolfList.setMyWolfActive(event.getPlayer(),false);
+                MyWolfList.setMyWolfActive(event.getPlayer(), false);
             }
         }
 
@@ -211,13 +211,13 @@ public class MyWolfPlayerListener implements Listener
     @EventHandler
     public void onPlayerMove(final PlayerMoveEvent event)
     {
-        if(MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
+        if (MyWolfPermissions.has(event.getPlayer(), "MyWolf.user.leash"))
         {
-            if(MyWolfList.hasInactiveMyWolf(event.getPlayer()))
+            if (MyWolfList.hasInactiveMyWolf(event.getPlayer()))
             {
                 MyWolfList.setMyWolfActive(event.getPlayer(), true);
             }
-            if(MyWolfList.hasMyWolf(event.getPlayer()))
+            if (MyWolfList.hasMyWolf(event.getPlayer()))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
@@ -259,9 +259,9 @@ public class MyWolfPlayerListener implements Listener
                 }
             }
         }
-        else if(MyWolfList.hasMyWolf(event.getPlayer()))
+        else if (MyWolfList.hasMyWolf(event.getPlayer()))
         {
-            MyWolfList.setMyWolfActive(event.getPlayer(),false);
+            MyWolfList.setMyWolfActive(event.getPlayer(), false);
         }
     }
 }
