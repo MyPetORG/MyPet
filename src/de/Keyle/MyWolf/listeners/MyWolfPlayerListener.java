@@ -22,7 +22,6 @@ package de.Keyle.MyWolf.listeners;
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.skill.skills.Inventory;
 import de.Keyle.MyWolf.util.*;
@@ -30,10 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -66,38 +62,6 @@ public class MyWolfPlayerListener implements Listener
                         }
                         ((Control) MWolf.SkillSystem.getSkill("Control")).setMoveTo(block.getLocation());
                         MWolf.ResetSitTimer();
-                        if (MWolf.SkillSystem.getSkill("Control").getLevel() > 1)
-                        {
-                            for (Entity e : MWolf.Wolf.getNearbyEntities(1, 1, 1))
-                            {
-                                if (e instanceof LivingEntity)
-                                {
-                                    if (MWolf.SkillSystem.hasSkill("Behavior"))
-                                    {
-                                        if (((Behavior) MWolf.SkillSystem.getSkill("Behavior")).getBehavior() == Behavior.BehaviorState.Raid)
-                                        {
-                                            if (e instanceof Player || (e instanceof Wolf && ((Wolf) e).isTamed()))
-                                            {
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                    if (e instanceof Player)
-                                    {
-                                        if (e != MWolf.getOwner() && !MyWolfUtil.isNPC((Player) e) && e.getWorld().getPVP())
-                                        {
-                                            MWolf.Wolf.setTarget((LivingEntity) e);
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        MWolf.Wolf.setTarget((LivingEntity) e);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
