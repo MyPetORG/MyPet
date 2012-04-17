@@ -151,7 +151,7 @@ public class MyWolfExperience
             ScriptEngine se = parseJS();
             try
             {
-                return ((Double) se.get("lvl")).intValue();
+                return (Integer)se.get("lvl");
             }
             catch (Exception e)
             {
