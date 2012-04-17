@@ -117,7 +117,7 @@ public class MyWolfSkillTreeConfigLoader
                             }
                             if (Inheritances.containsKey(NextInheritance))
                             {
-                                NextInheritance = Inheritances.get(NextInheritance);
+                                NextInheritance = getInheritance(NextInheritance);
                             }
                             else
                             {
@@ -155,7 +155,7 @@ public class MyWolfSkillTreeConfigLoader
         return new String[0];
     }
 
-    public static boolean existsSkillTree(String Name)
+    public static boolean existSkillTree(String Name)
     {
         return SkillTrees.containsKey(Name);
     }
