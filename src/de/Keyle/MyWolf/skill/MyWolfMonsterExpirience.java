@@ -28,7 +28,7 @@ public class MyWolfMonsterExpirience
     private int min;
     private int max;
     private EntityType entityType;
-    private Random random = new Random();
+    private static Random random = new Random();
 
     public MyWolfMonsterExpirience(int min, int max, EntityType entityType)
     {
