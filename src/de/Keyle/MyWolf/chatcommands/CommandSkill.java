@@ -47,7 +47,7 @@ public class CommandSkill implements CommandExecutor
             if (MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(playerName)))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(MyWolfUtil.getOfflinePlayer(playerName));
-                player.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Skills")).replace("%wolfname%", MWolf.Name).replace("%skilltree%", MWolf.SkillTree.getName()));
+                player.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Skills")).replace("%wolfname%", MWolf.Name).replace("%skilltree%", MWolf.SkillTree.getName()));
                 Collection<MyWolfGenericSkill> Skills = MWolf.SkillSystem.getSkills();
                 if (Skills.size() > 0)
                 {
@@ -55,7 +55,7 @@ public class CommandSkill implements CommandExecutor
                     {
                         if (Skill.getLevel() > 0)
                         {
-                            player.sendMessage(MyWolfUtil.SetColors("%green%%skillname%%white% lv: %gold%%lvl%").replace("%skillname%", Skill.getName()).replace("%lvl%", "" + Skill.getLevel()));
+                            player.sendMessage(MyWolfUtil.setColors("%green%%skillname%%white% lv: %gold%%lvl%").replace("%skillname%", Skill.getName()).replace("%lvl%", "" + Skill.getLevel()));
                         }
                     }
                 }
@@ -65,11 +65,11 @@ public class CommandSkill implements CommandExecutor
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
                 }
                 else
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
         }

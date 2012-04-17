@@ -42,12 +42,12 @@ public class CommandPickup implements CommandExecutor
 
                 if (MWolf.Status == WolfState.Despawned)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
                 else if (MWolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
                 if (MWolf.SkillSystem.hasSkill("Pickup"))
@@ -58,7 +58,7 @@ public class CommandPickup implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
         return true;

@@ -35,7 +35,7 @@ public class MyWolfLevelUpListener implements Listener
         MyWolf MWolf = eventMyWolf.getWolf();
         if (!eventMyWolf.isQuiet())
         {
-            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", "" + eventMyWolf.getLevel()));
+            MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", "" + eventMyWolf.getLevel()));
         }
         int lvl = eventMyWolf.getLevel();
         MyWolfSkillTree st = MWolf.SkillTree;

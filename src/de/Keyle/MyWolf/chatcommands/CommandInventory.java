@@ -45,12 +45,12 @@ public class CommandInventory implements CommandExecutor
                     MyWolf MWolf = MyWolfList.getMyWolf(player);
                     if (MWolf.Status == WolfState.Despawned)
                     {
-                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                        sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                         return true;
                     }
                     if (MWolf.Status == WolfState.Dead)
                     {
-                        sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                        sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                         return true;
                     }
                     if (MWolf.SkillSystem.hasSkill("Inventory"))
@@ -60,7 +60,7 @@ public class CommandInventory implements CommandExecutor
                 }
                 else
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 }
             }
             else if (args.length == 1 && MyWolfPermissions.has(player, "MyWolf.admin"))

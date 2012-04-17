@@ -51,16 +51,16 @@ public class Pickup extends MyWolfGenericSkill
             if (MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
             {
                 Pickup = !Pickup;
-                MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
+                MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
             }
             else
             {
-                MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_PickButNoInventory")).replace("%wolfname%", MWolf.Name));
+                MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_PickButNoInventory")).replace("%wolfname%", MWolf.Name));
             }
         }
         else
         {
-            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NoSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
+            MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_NoSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
         }
     }
 
@@ -68,7 +68,7 @@ public class Pickup extends MyWolfGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * RangePerLevel)));
+        MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * RangePerLevel)));
     }
 
     @Override

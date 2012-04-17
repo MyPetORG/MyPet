@@ -108,7 +108,7 @@ public class MyWolfPlayerListener implements Listener
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
                 if (MWolf.Status == WolfState.Dead)
                 {
-                    event.getPlayer().sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                    event.getPlayer().sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                 }
                 else if (MyWolfUtil.getDistance(MWolf.getLocation(), event.getPlayer().getLocation()) < 75)
                 {

@@ -48,10 +48,10 @@ public class CommandStop implements CommandExecutor
                 }
                 if (MWolf.Status == WolfState.Despawned)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
                 MWolf.Wolf.getHandle().setTarget(null);
                 MWolf.Wolf.getHandle().b((EntityLiving) null);
                 MWolf.Wolf.getHandle().Goaltarget = null;
@@ -59,7 +59,7 @@ public class CommandStop implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
         return true;

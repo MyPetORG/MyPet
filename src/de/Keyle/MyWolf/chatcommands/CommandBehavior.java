@@ -42,7 +42,7 @@ public class CommandBehavior implements CommandExecutor
 
                 if (MWolf.Status == MyWolf.WolfState.Despawned)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
                 else if (MWolf.SkillSystem.hasSkill("Behavior"))
@@ -78,7 +78,7 @@ public class CommandBehavior implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
         return true;

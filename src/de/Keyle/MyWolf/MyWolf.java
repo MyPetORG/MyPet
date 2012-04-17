@@ -105,7 +105,7 @@ public class MyWolf
         if (Status != WolfState.Here)
         {
             Location = getOwner().getPlayer().getLocation();
-            sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
+            sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
             createWolf(false);
             RespawnTime = 0;
             Health = getMaxHealth();

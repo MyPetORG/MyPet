@@ -256,7 +256,7 @@ public class MyWolfPlugin extends JavaPlugin
                     MyWolf MWolf = MyWolfList.getMyWolf(p);
                     if (MWolf.Status == WolfState.Dead)
                     {
-                        p.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                        p.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                     }
                     else if (MyWolfUtil.getDistance(MWolf.getLocation(), p.getLocation()) < 75)
                     {

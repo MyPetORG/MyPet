@@ -53,7 +53,7 @@ public class CommandAdmin implements CommandExecutor
 
             if (!MyWolfList.hasMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)) && !MyWolfList.hasInactiveMyWolf(MyWolfUtil.getOfflinePlayer(Wolfowner)))
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", Wolfowner)));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", Wolfowner)));
                 return true;
             }
             if (Change.equalsIgnoreCase("name"))

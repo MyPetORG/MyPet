@@ -79,7 +79,7 @@ public class MyWolfEntityListener implements Listener
                         MyWolfList.addMyWolf(MWolf);
                         MWolf.createWolf((Wolf) event.getEntity());
                         MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
-                        damager.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_AddLeash")));
+                        damager.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
                 }
                 if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
@@ -101,13 +101,13 @@ public class MyWolfEntityListener implements Listener
                         {
                             msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
                         }
-                        damager.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
+                        damager.sendMessage(MyWolfUtil.setColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
                         if (MyWolfConfig.LevelSystem)
                         {
                             int lvl = MWolf.Experience.getLevel();
                             double EXP = MWolf.Experience.getActualEXP();
                             double reqEXP = MWolf.Experience.getrequireEXP();
-                            damager.sendMessage(MyWolfUtil.SetColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
+                            damager.sendMessage(MyWolfUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
 
                         if (MWolf.Wolf.isSitting())
@@ -168,7 +168,7 @@ public class MyWolfEntityListener implements Listener
                     }
                 }
                 SendDeathMessage(event);
-                MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
             }
         }
         if (MyWolfConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -244,7 +244,7 @@ public class MyWolfEntityListener implements Listener
     private void SendDeathMessage(final EntityDeathEvent event)
     {
         MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
-        String Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Unknow"));
+        String Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Unknow"));
         if (MWolf != null)
         {
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -255,68 +255,68 @@ public class MyWolfEntityListener implements Listener
                 {
                     if (e.getDamager() == MWolf.getOwner())
                     {
-                        Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("You"));
+                        Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("You"));
                     }
                     else
                     {
-                        Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Player")).replace("%player%", ((Player) e.getDamager()).getName());
+                        Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Player")).replace("%player%", ((Player) e.getDamager()).getName());
                     }
                 }
                 else if (e.getDamager().getType() == EntityType.ZOMBIE)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Zombie"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Zombie"));
                 }
                 else if (e.getDamager().getType() == EntityType.CREEPER)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Creeper"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Creeper"));
                 }
                 else if (e.getDamager().getType() == EntityType.SPIDER)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Spider"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Spider"));
                 }
                 else if (e.getDamager().getType() == EntityType.SLIME)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Slime"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Slime"));
                 }
                 else if (e.getDamager().getType() == EntityType.GIANT)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Giant"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Giant"));
                 }
                 else if (e.getDamager().getType() == EntityType.SKELETON)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Skeleton"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Skeleton"));
                 }
                 else if (e.getDamager().getType() == EntityType.CAVE_SPIDER)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("CaveSpider"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("CaveSpider"));
                 }
                 else if (e.getDamager().getType() == EntityType.ENDERMAN)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Enderman"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Enderman"));
                 }
                 else if (e.getDamager().getType() == EntityType.PIG_ZOMBIE)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("PigZombie"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("PigZombie"));
                 }
                 else if (e.getDamager().getType() == EntityType.SILVERFISH)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Silverfish"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Silverfish"));
                 }
                 else if (e.getDamager().getType() == EntityType.SNOWMAN)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Snowman"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Snowman"));
                 }
                 else if (e.getDamager().getType() == EntityType.ENDER_DRAGON)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("EnderDragon"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("EnderDragon"));
                 }
                 else if (e.getDamager().getType() == EntityType.BLAZE)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Blaze"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Blaze"));
                 }
                 else if (e.getDamager().getType() == EntityType.MAGMA_CUBE)
                 {
-                    Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("MagmaCube"));
+                    Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("MagmaCube"));
                 }
                 else if (e.getDamager().getType() == EntityType.WOLF)
                 {
@@ -325,49 +325,49 @@ public class MyWolfEntityListener implements Listener
                     {
                         if (MyWolfList.isMyWolf(w.getEntityId()))
                         {
-                            Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("MyWolf")).replace("%player%", MyWolfList.getMyWolf(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyWolfList.getMyWolf(w.getEntityId()).Name);
+                            Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("MyWolf")).replace("%player%", MyWolfList.getMyWolf(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyWolfList.getMyWolf(w.getEntityId()).Name);
                         }
                         else
                         {
-                            Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("OwnedWolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
+                            Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("OwnedWolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
                         }
                     }
                     else
                     {
-                        Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Wolf"));
+                        Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Wolf"));
                     }
                 }
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.BLOCK_EXPLOSION))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Explosion"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Explosion"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.DROWNING))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Drowning"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Drowning"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FALL))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Fall"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Fall"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Fire"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Fire"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LAVA))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Lava"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Lava"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LIGHTNING))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("Lightning"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("Lightning"));
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.VOID))
             {
-                Killer = MyWolfUtil.SetColors(MyWolfLanguage.getString("kvoid"));
+                Killer = MyWolfUtil.setColors(MyWolfLanguage.getString("kvoid"));
             }
 
-            MWolf.sendMessageToOwner(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DeathMessage")).replace("%wolfname%", MWolf.Name) + Killer);
+            MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DeathMessage")).replace("%wolfname%", MWolf.Name) + Killer);
         }
     }
 }

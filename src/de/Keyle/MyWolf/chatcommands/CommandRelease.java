@@ -54,7 +54,7 @@ public class CommandRelease implements CommandExecutor
                 }
                 if (MWolf.Status == WolfState.Despawned)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallFirst")));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
                 if (args.length < 1)
@@ -87,20 +87,20 @@ public class CommandRelease implements CommandExecutor
                     MWolf.removeWolf();
 
 
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
                     MyWolfList.removeMyWolf(MWolf);
                     MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MWolf.Name));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Name")).replace("%wolfname%", MWolf.Name));
                     return false;
                 }
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
         return false;

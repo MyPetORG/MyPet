@@ -60,25 +60,25 @@ public class CommandCall implements CommandExecutor
                         }
                         MWolf.Wolf.teleport(owner);
                     }
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
                     return true;
                 }
                 else if (MWolf.Status == WolfState.Despawned)
                 {
                     MWolf.setLocation(owner.getLocation());
                     MWolf.createWolf(false);
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
                     return true;
                 }
                 else if (MWolf.Status == WolfState.Dead)
                 {
-                    sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                    sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;
                 }
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
             }
         }
         return true;

@@ -56,13 +56,13 @@ public class CommandName implements CommandExecutor
                 name = name.substring(0, name.length() - 1);
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
                 MWolf.setName(name);
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
                 MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Name));
                 return true;
             }
             else
             {
-                sender.sendMessage(MyWolfUtil.SetColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_DontHaveWolf")));
                 return true;
             }
 
