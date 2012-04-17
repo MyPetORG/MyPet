@@ -94,7 +94,7 @@ public class MyWolfPlugin extends JavaPlugin
             mwv = getDescription().getVersion().substring(mwv.indexOf('(') + 1, mwv.indexOf(')'));
             MyWolfUtil.getLogger().warning("---------------------------------------------------------");
             MyWolfUtil.getLogger().warning("This version of MyWolf should only work with Minecraft " + mwv);
-            MyWolfUtil.getLogger().warning("Don't expect any support.");
+            MyWolfUtil.getLogger().warning("Expect bugs and errors!");
             MyWolfUtil.getLogger().warning("---------------------------------------------------------");
         }
 
