@@ -163,10 +163,6 @@ public class MyWolfPlayerListener implements Listener
             if (MWolf.Status == WolfState.Here)
             {
                 MWolf.removeWolf();
-                if (MWolf.getLocation() == null)
-                {
-                    MWolf.setLocation(event.getPlayer().getLocation());
-                }
             }
             MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
             MyWolfPlugin.getPlugin().getTimer().resetTimer();
