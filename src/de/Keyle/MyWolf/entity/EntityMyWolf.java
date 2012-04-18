@@ -150,7 +150,7 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public boolean a(Entity entity)
     {
-        int damage = 4 + (isMyWolf && MWolf.SkillSystem.hasSkill("Demage") ? MWolf.SkillSystem.getSkill("Demage").getLevel() : 0);
+        int damage = 4 + (isMyWolf && MWolf.SkillSystem.hasSkill("Damage") ? MWolf.SkillSystem.getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
