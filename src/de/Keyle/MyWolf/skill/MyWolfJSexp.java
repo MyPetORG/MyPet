@@ -125,7 +125,7 @@ public class MyWolfJSexp
             ScriptEngine engine = manager.getEngineByName("js");
             engine.put("lvl", 1);
             engine.put("requiredExp", 0);
-            //engine.put("currentExp", 0);
+            engine.put("currentExp", 0);
 
             engine.put("Exp", MWolfExperience.getExp());
             engine.put("name", MWolf.Name);
