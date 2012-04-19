@@ -23,7 +23,6 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
-import de.Keyle.MyWolf.util.MyWolfUtil;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
@@ -113,7 +112,6 @@ public class MyWolfExperience
         MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
         {
-            MyWolfUtil.getLogger().info("7");
             return 0;
         }
         int tmplvl = getLevel();
@@ -158,9 +156,9 @@ public class MyWolfExperience
             double tmpEXP = this.Exp;
             int tmplvl = 0;
 
-            while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
+            while (tmpEXP >= 7 + (int) (tmplvl * 3.5))
             {
-                tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
+                tmpEXP -= 7 + (int) (tmplvl * 3.5);
                 tmplvl++;
             }
             return tmpEXP;
@@ -180,9 +178,9 @@ public class MyWolfExperience
             double tmpEXP = this.Exp;
             int tmplvl = 0;
 
-            while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
+            while (tmpEXP >= 7 + (int) (tmplvl * 3.5))
             {
-                tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
+                tmpEXP -= 7 + (int) (tmplvl * 3.5);
                 tmplvl++;
             }
             return tmplvl + 1;
