@@ -24,10 +24,10 @@
 
 var tmpExp = Exp;
 var tmplvl = 0;
-// Minecraft:   E = 7 + roundDown( n    * 3.5)
-while (tmpExp >= 7 + Math.floor((tmplvl) * 3.5))
+// Minecraft:E = 7 + roundDown (  n    * 3.5)
+while (tmpExp >= 7 + Math.floor(tmplvl * 3.5))
 {
-    tmpExp -= 7 + Math.floor((tmplvl) * 3.5);
+    tmpExp -= 7 + Math.floor(tmplvl * 3.5);
     tmplvl++;
 }
 
@@ -37,5 +37,5 @@ while (tmpExp >= 7 + Math.floor((tmplvl) * 3.5))
 
 // set return values
 lvl = tmplvl+1;
-requiredExp = 7 + Math.floor((tmplvl) * 3.5);
+requiredExp = 7 + Math.floor(tmplvl * 3.5);
 currentExp = tepExp;
