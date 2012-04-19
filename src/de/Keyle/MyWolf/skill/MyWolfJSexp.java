@@ -33,12 +33,14 @@ public class MyWolfJSexp
     private int lvl = 1;
     private MyWolf MWolf;
     private double lastExp = 0;
-    private double reqExp = 0;
+    private double requiredExp = 0;
+    private double currentExp = 0;
+    private MyWolfExperience MWolfExperience;
 
-    public MyWolfJSexp(MyWolf MWolf)
+    public MyWolfJSexp(MyWolf MWolf, MyWolfExperience MWolfExperience)
     {
         this.MWolf = MWolf;
-        update();
+        this.MWolfExperience = MWolfExperience;
     }
 
     public boolean isUsable()
@@ -48,20 +50,29 @@ public class MyWolfJSexp
 
     public int getLvl()
     {
-        if (lastExp != MWolf.Experience.getExp())
+        if (lastExp != MWolfExperience.getExp())
         {
             update();
         }
         return lvl;
     }
 
-    public double getReqExp()
+    public double getRequiredExp()
     {
-        if (lastExp != MWolf.Experience.getExp())
+        if (lastExp != MWolfExperience.getExp())
         {
             update();
         }
-        return reqExp;
+        return requiredExp;
+    }
+
+    public double getCurrentExp()
+    {
+        if (lastExp != MWolfExperience.getExp())
+        {
+            update();
+        }
+        return currentExp;
     }
 
     private boolean update()
@@ -69,14 +80,17 @@ public class MyWolfJSexp
         try
         {
             ScriptEngine se = parseJS();
-            lvl = (Integer) se.get("lvl");
-            reqExp = ((Double) se.get("reqEXP"));
+            lvl = ((Double) se.get("lvl")).intValue();
+            requiredExp = ((Double) se.get("requiredExp"));
+            currentExp = ((Double) se.get("currentExp"));
             return true;
         }
         catch (ScriptException e)
         {
+
             MyWolfUtil.getLogger().info("Error in EXP-Script!");
             MyWolfUtil.getDebugLogger().info("Error in EXP-Script!");
+            MyWolfUtil.getDebugLogger().info("   " + e.getMessage());
             expScript = null;
             return false;
         }
@@ -110,9 +124,10 @@ public class MyWolfJSexp
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("js");
             engine.put("lvl", 1);
-            engine.put("reqEXP", 0);
+            engine.put("requiredExp", 0);
+            //engine.put("currentExp", 0);
 
-            engine.put("EXP", MWolf.Experience.getExp());
+            engine.put("Exp", MWolfExperience.getExp());
             engine.put("name", MWolf.Name);
             engine.put("player", MWolf.getOwner().getName());
 

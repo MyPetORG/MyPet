@@ -70,7 +70,7 @@ public class MyWolfExperience
     public MyWolfExperience(MyWolf Wolf)
     {
         this.MWolf = Wolf;
-        JSexp = new MyWolfJSexp(Wolf);
+        JSexp = new MyWolfJSexp(Wolf, this);
         for (int i = 1 ; i <= getLevel() ; i++)
         {
             MyWolfPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyWolfLevelUpEvent(MWolf, i, true));
@@ -147,17 +147,24 @@ public class MyWolfExperience
         return 0;
     }
 
-    public double getActualEXP()
+    public double getCurrentExp()
     {
-        double tmpEXP = this.Exp;
-        int tmplvl = 0;
-
-        while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
+        if (JSexp.isUsable())
         {
-            tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
-            tmplvl++;
+            return JSexp.getCurrentExp();
         }
-        return tmpEXP;
+        else
+        {
+            double tmpEXP = this.Exp;
+            int tmplvl = 0;
+
+            while (tmpEXP >= 7 + (int) ((tmplvl) * 3.5))
+            {
+                tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
+                tmplvl++;
+            }
+            return tmpEXP;
+        }
     }
 
     public int getLevel()
@@ -178,20 +185,18 @@ public class MyWolfExperience
                 tmpEXP -= 7 + (int) ((tmplvl) * 3.5);
                 tmplvl++;
             }
-            //MyWolfUtil.Log.info(tmplvl+1 + " - " + tmpEXP + " - " + (7 + (int)((tmplvl) * 3.5)) + " - " + this.getExp());
             return tmplvl + 1;
         }
     }
 
-    public double getrequireEXP()
+    public double getRequiredExp()
     {
         if (JSexp.isUsable())
         {
-            return JSexp.getReqExp();
+            return JSexp.getRequiredExp();
         }
         else
         {
-            //MyWolfUtil.Log.info(""+(7 + (int)((this.getLevel()-1) * 3.5)));
             return 7 + (int) ((this.getLevel() - 1) * 3.5);
         }
     }

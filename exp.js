@@ -7,37 +7,35 @@
 	#######################################
 	
 		required return varibles:
-		    lvl 	-> write the return level in this variable
-			reqEXP  -> write the require EXP for the nex level in this variable
+		    lvl         -> write the return level in this variable
+			requiredExp -> write the require EXP for the next level in this variable
+			currentExp  -> write the current EXP for this level in this variable
 
 
 		Usable variables:
 			EXP		-> EXP the wolf has
 			name	-> wolf's name
 			player	-> name of the owner
-			maxhp	-> actual maxHP value the wolf has
-			
 */
 
-//declare variables
-var lvl;
-var EXP;
+//   |---------------|
+//   | example start |
+//   |---------------|
 
-//example start
-
-
-// Minecraft:   E = 7 + roundDown( n    * 3.5)
-var tmpEXP = EXP;
+var tmpExp = Exp;
 var tmplvl = 0;
-
-while (tmpEXP >= 7 + Math.floor((tmplvl) * 3.5))
+// Minecraft:   E = 7 + roundDown( n    * 3.5)
+while (tmpExp >= 7 + Math.floor((tmplvl) * 3.5))
 {
-    tmpEXP -= 7 + Math.floor((tmplvl) * 3.5);
+    tmpExp -= 7 + Math.floor((tmplvl) * 3.5);
     tmplvl++;
 }
 
-//example end
+//   |---------------|
+//   |  example end  |
+//   |---------------|
 
 // set return values
 lvl = tmplvl+1;
-reqEXP = 7 + Math.floor((tmplvl) * 3.5);
+requiredExp = 7 + Math.floor((tmplvl) * 3.5);
+currentExp = tepExp;

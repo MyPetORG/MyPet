@@ -105,8 +105,8 @@ public class MyWolfEntityListener implements Listener
                         if (MyWolfConfig.LevelSystem)
                         {
                             int lvl = MWolf.Experience.getLevel();
-                            double EXP = MWolf.Experience.getActualEXP();
-                            double reqEXP = MWolf.Experience.getrequireEXP();
+                            double EXP = MWolf.Experience.getCurrentExp();
+                            double reqEXP = MWolf.Experience.getRequiredExp();
                             damager.sendMessage(MyWolfUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
 

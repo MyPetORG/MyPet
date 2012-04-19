@@ -284,6 +284,6 @@ public class MyWolf
     @Override
     public String toString()
     {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + Experience.getExp() + "/" + Experience.getrequireEXP() + ", lv=" + Experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + SkillTree.getName() + "}";
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + Experience.getExp() + "/" + Experience.getRequiredExp() + ", lv=" + Experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + SkillTree.getName() + "}";
     }
 }
