@@ -38,7 +38,6 @@ public class MyWolfJSexp
     public MyWolfJSexp(MyWolf MWolf)
     {
         this.MWolf = MWolf;
-        lastExp = MWolf.Experience.getExp();
         update();
     }
 
