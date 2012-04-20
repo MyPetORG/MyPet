@@ -19,11 +19,12 @@
 
 package de.Keyle.MyWolf.entity.pathfinder;
 
+import de.Keyle.MyWolf.entity.EntityMyWolf;
 import net.minecraft.server.*;
 
 public class PathfinderGoalFollowOwner extends PathfinderGoal
 {
-    private EntityTameableAnimal wolf;
+    private EntityMyWolf wolf;
     private EntityLiving owner;
     private World world;
     private float f;
@@ -34,7 +35,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     private boolean i;
     private PathfinderGoalControl Control;
 
-    public PathfinderGoalFollowOwner(EntityTameableAnimal entitytameableanimal, float f, float maxdistance, float f2, PathfinderGoalControl Control)
+    public PathfinderGoalFollowOwner(EntityMyWolf entitytameableanimal, float f, float maxdistance, float f2, PathfinderGoalControl Control)
     {
         this.Control = Control;
         this.wolf = entitytameableanimal;
@@ -104,7 +105,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
                 if (!this.nav.a(this.owner, this.f))
                 {
-                    if (this.wolf.j(this.owner) >= 144.0D && Control.moveTo == null)
+                    if (this.wolf.j(this.owner) >= 144.0D && Control.moveTo == null && wolf.Goaltarget == null)
                     {
                         int i = MathHelper.floor(this.owner.locX) - 2;
                         int j = MathHelper.floor(this.owner.locZ) - 2;
