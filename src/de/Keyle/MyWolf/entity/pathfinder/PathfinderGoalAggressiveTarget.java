@@ -53,7 +53,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                             {
                                 if (entityliving instanceof EntityHuman)
                                 {
-                                    if (!MyWolfUtil.canHurtFaction(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                                    if (!MyWolfUtil.canHurtFactions(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
                                     {
                                         continue;
                                     }
@@ -61,7 +61,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                                     {
                                         continue;
                                     }
-                                    if (!MyWolfUtil.getPVP(((EntityHuman) entityliving).getBukkitEntity().getLocation()))
+                                    if (!MyWolfUtil.canHurtWorldGuard(((Player) ((EntityHuman) this.target).getBukkitEntity())))
                                     {
                                         continue;
                                     }

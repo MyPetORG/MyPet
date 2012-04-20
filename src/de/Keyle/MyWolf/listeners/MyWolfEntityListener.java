@@ -116,11 +116,15 @@ public class MyWolfEntityListener implements Listener
                         }
                         event.setCancelled(true);
                     }
-                    if (!MyWolfUtil.getPVP(event.getEntity().getLocation()))
+                    if (!event.getEntity().getLocation().getWorld().getPVP())
                     {
                         event.setCancelled(true);
                     }
-                    if (!MyWolfUtil.canHurtFaction(damager, MWolf.getOwner().getPlayer()))
+                    if (!MyWolfUtil.canHurtWorldGuard(MWolf.getOwner().getPlayer()))
+                    {
+                        event.setCancelled(true);
+                    }
+                    if (!MyWolfUtil.canHurtFactions(damager, MWolf.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
                     }

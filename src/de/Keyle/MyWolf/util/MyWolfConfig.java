@@ -42,6 +42,9 @@ public class MyWolfConfig
     //public static boolean HeroesSkill = true;
     //public static Heroes HeroesPlugin = null;
     public static boolean sendMetrics = true;
+    public static boolean useTowny = true;
+    public static boolean useFactions = true;
+    public static boolean useWorldGuard = true;
 
     public static boolean Superperms = false;
     public static boolean DebugLogger = false;
@@ -61,6 +64,9 @@ public class MyWolfConfig
         setProperty("MyWolf.SendMetrics", true);
         setProperty("MyWolf.DebugLogger", false);
         setProperty("MyWolf.AutoSaveTime", 60);
+        setProperty("MyWolf.Support.Towny", true);
+        setProperty("MyWolf.Support.Factions", true);
+        setProperty("MyWolf.Support.WorldGuard", true);
 
         for (EntityType entityType : MyWolfExperience.MobEXP.keySet())
         {
@@ -86,6 +92,9 @@ public class MyWolfConfig
         Superperms = Config.getBoolean("MyWolf.SuperPerms", false);
         sendMetrics = Config.getBoolean("MyWolf.SendMetrics", true);
         DebugLogger = Config.getBoolean("MyWolf.DebugLogger", false);
+        useTowny = Config.getBoolean("MyWolf.Support.Towny", true);
+        useFactions = Config.getBoolean("MyWolf.Support.Factions", true);
+        useWorldGuard = Config.getBoolean("MyWolf.Support.WorldGuard", true);
 
         if (Config.getStringList("MyWolf.exp") != null)
         {

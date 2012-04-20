@@ -98,28 +98,24 @@ public class MyWolfUtil
         return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
     }
 
-    public static boolean getPVP(Location loc)
+    public static boolean canHurtWorldGuard(Player victim)
     {
-
-        Plugin WG = getServer().getPluginManager().getPlugin("WorldGuard");
-        if (WG != null)
+        if (MyWolfConfig.useWorldGuard && getServer().getPluginManager().isPluginEnabled("WorldGuard"))
         {
-            if (WG.isEnabled())
-            {
-                WorldGuardPlugin WGP = (WorldGuardPlugin) WG;
-                RegionManager mgr = WGP.getGlobalRegionManager().get(loc.getWorld());
-                Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
-                ApplicableRegionSet set = mgr.getApplicableRegions(pt);
+            Location loc = victim.getLocation();
+            WorldGuardPlugin WGP = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
+            RegionManager mgr = WGP.getGlobalRegionManager().get(loc.getWorld());
+            Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
+            ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
-                return set.allows(DefaultFlag.PVP);
-            }
+            return set.allows(DefaultFlag.PVP);
         }
-        return getServer().getWorld(loc.getWorld().getName()).getPVP();
+        return true;
     }
 
-    public static boolean canHurtFaction(Player attacker, Player victim)
+    public static boolean canHurtFactions(Player attacker, Player victim)
     {
-        if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Factions"))
+        if (MyWolfConfig.useFactions && MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Factions"))
         {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, victim, EntityDamageEvent.DamageCause.CUSTOM, 0);
             return P.p.entityListener.canDamagerHurtDamagee(sub, false);
@@ -130,7 +126,7 @@ public class MyWolfUtil
     public static boolean canHurtTowny(Player attacker, Player defender)
     {
         boolean canHurt = true;
-        if (MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
+        if (MyWolfConfig.useTowny && MyWolfUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
         {
             try
             {
