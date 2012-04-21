@@ -82,7 +82,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                         {
                             continue;
                         }
-                        if (!MyWolfUtil.canHurtWorldGuard(((Player) ((EntityHuman) this.target).getBukkitEntity())))
+                        if (!MyWolfUtil.canHurtWorldGuard(((Player) ((EntityHuman) entityliving).getBukkitEntity())))
                         {
                             continue;
                         }
