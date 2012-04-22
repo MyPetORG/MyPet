@@ -135,6 +135,16 @@ public class MyWolfEntityListener implements Listener
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDamagePlayer(EntityDamageEvent event)
+    {
+        if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
+        {
+            return;
+        }
+        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
         if (event.getEntity() instanceof LivingEntity)
         {
             if (e.getDamager() instanceof Player)
