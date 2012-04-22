@@ -237,7 +237,7 @@ public class MyWolfEntityListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntitySpawn(CreatureSpawnEvent event)
     {
         if (event.getEntity() instanceof CraftMyWolf)
