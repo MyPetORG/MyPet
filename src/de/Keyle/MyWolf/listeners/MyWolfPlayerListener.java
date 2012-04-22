@@ -170,9 +170,9 @@ public class MyWolfPlayerListener implements Listener
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
-                MWolf.ResetSitTimer();
                 if (MWolf.Status == WolfState.Here)
                 {
+                    MWolf.ResetSitTimer();
                     if (MWolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
                     {
                         if (!MWolf.isSitting())
