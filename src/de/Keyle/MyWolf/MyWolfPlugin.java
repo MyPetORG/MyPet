@@ -335,6 +335,7 @@ public class MyWolfPlugin extends JavaPlugin
             Location.setDouble("Z", MWolf.getLocation().getZ());
             Location.setString("World", MWolf.getLocation().getWorld().getName());
 
+            Wolf.setString("Type", "Wolf");
             Wolf.setString("Owner", MWolf.getOwner().getName());
             Wolf.setCompound("Location", Location);
             Wolf.setInt("Health", MWolf.getHealth());
