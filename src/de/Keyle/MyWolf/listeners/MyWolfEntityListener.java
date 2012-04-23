@@ -25,6 +25,7 @@ import de.Keyle.MyWolf.MyWolfPlugin;
 import de.Keyle.MyWolf.entity.CraftMyWolf;
 import de.Keyle.MyWolf.event.MyWolfLeashEvent;
 import de.Keyle.MyWolf.skill.skills.Behavior;
+import de.Keyle.MyWolf.skill.skills.Poison;
 import de.Keyle.MyWolf.util.*;
 import net.minecraft.server.EntityWolf;
 import org.bukkit.ChatColor;
@@ -41,6 +42,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class MyWolfEntityListener implements Listener
 {
@@ -138,7 +141,7 @@ public class MyWolfEntityListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerDamagePlayer(EntityDamageEvent event)
+    public void onEntityDamageResult(EntityDamageEvent event)
     {
         if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
         {
@@ -158,6 +161,19 @@ public class MyWolfEntityListener implements Listener
                         MyWolfList.getMyWolf(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
 
+                }
+                else if (e.getDamager() instanceof CraftMyWolf)
+                {
+                    MyWolf MWolf = ((CraftMyWolf) e.getDamager()).getHandle().getMyWolf();
+                    if (MWolf.SkillSystem.hasSkill("Poison"))
+                    {
+                        Poison poison = (Poison) MWolf.SkillSystem.getSkill("Poison");
+                        if (poison.getPoison())
+                        {
+                            PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
+                            ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                        }
+                    }
                 }
             }
         }

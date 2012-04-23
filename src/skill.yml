@@ -1,7 +1,5 @@
 # the order of this skilltrees is from top (admins eg.) to the bottom (losers)
 
-# !!! Behavior is not usable at the moment !!!
-
 skilltrees:
 
   # Admin skilltree -> MyWolf.custom.skilltree.admin
@@ -15,7 +13,7 @@ skilltrees:
       - Inventory
       - Control
       - Pickup
-#      - Behavior
+      - Behavior
       - HP
       - HP
       - HP
@@ -30,12 +28,14 @@ skilltrees:
       - Inventory
       - Damage
       - Damage
+      - Poison
     '4':
       - HP
       - Damage
     '6':
       - Inventory
-#      - Behavior
+      - Behavior
+      - Poison
     '8':
       - Inventory
       - HP
@@ -44,6 +44,7 @@ skilltrees:
       - Inventory
       - HP
       - Damage
+      - Poison
     '12':
       - Inventory
       - HP
@@ -71,9 +72,11 @@ skilltrees:
       - Control
       - HP
       - Damage
+      - Poison
     '6':
       - Inventory
       - Behavior
+      - Poison
     '8':
       - Pickup
       - HP
@@ -82,6 +85,7 @@ skilltrees:
       - Inventory
       - HP
       - Damage
+      - Poison
     '12':
       - Inventory
       - HP

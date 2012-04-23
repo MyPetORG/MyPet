@@ -171,6 +171,7 @@ public class MyWolfPlugin extends JavaPlugin
         MyWolfSkillSystem.registerSkill(Damage.class);
         MyWolfSkillSystem.registerSkill(Control.class);
         MyWolfSkillSystem.registerSkill(HP.class);
+        MyWolfSkillSystem.registerSkill(Poison.class);
 
         try
         {

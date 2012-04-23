@@ -24,6 +24,7 @@ import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.skill.skills.HPregeneration;
 import de.Keyle.MyWolf.skill.skills.Pickup;
+import de.Keyle.MyWolf.skill.skills.Poison;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -54,6 +55,7 @@ public class MyWolfConfig
         setProperty("MyWolf.Leash.Item", 287);
         setProperty("MyWolf.Skill.Control.Item", 287);
         setProperty("MyWolf.Skill.Pickup.RangePerLvl", 1);
+        setProperty("MyWolf.Skill.Poison.ChancePerLevel", 5);
         setProperty("MyWolf.Skill.HPregeneration.Time", 60);
         setProperty("MyWolf.RespawnTime.Factor", 5);
         setProperty("MyWolf.RespawnTime.Fixed", 0);
@@ -83,6 +85,7 @@ public class MyWolfConfig
         Control.Item = MyWolfUtil.checkMaterial(Config.getInt("MyWolf.Skill.Control.Item", 287), Material.STRING);
         Pickup.RangePerLevel = Config.getDouble("MyWolf.Skill.Pickup.RangePerLvl", 1.0);
         HPregeneration.HealtregenTime = Config.getInt("MyWolf.Skill.HPregeneration.Time", 60);
+        Poison.ChancePerLevel = Config.getInt("MyWolf.Skill.Poison.ChancePerLevel", 5);
         RespawnTimeFactor = Config.getInt("MyWolf.RespawnTime.Factor", 5);
         RespawnTimeFixed = Config.getInt("MyWolf.RespawnTime.Fixed", 0);
         LevelSystem = Config.getBoolean("MyWolf.LevelSystem", true);
