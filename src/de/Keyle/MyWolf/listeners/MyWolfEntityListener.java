@@ -81,6 +81,8 @@ public class MyWolfEntityListener implements Listener
                         MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfLeashEvent(MWolf));
                         MyWolfList.addMyWolf(MWolf);
                         MWolf.createWolf((Wolf) event.getEntity());
+                        MyWolfUtil.getDebugLogger().info("New Wolf leashed:");
+                        MyWolfUtil.getDebugLogger().info("   " + MWolf.toString());
                         MyWolfPlugin.getPlugin().saveWolves(MyWolfPlugin.NBTWolvesFile);
                         damager.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_AddLeash")));
                     }
