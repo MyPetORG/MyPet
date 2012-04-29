@@ -23,11 +23,14 @@ import de.Keyle.MyWolf.skill.skills.Behavior;
 import net.minecraft.server.EntityCreature;
 import net.minecraft.server.PathEntity;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftAnimals;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.*;
+import org.bukkit.craftbukkit.entity.CraftTameableAnimal;
+import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
-public class CraftMyWolf extends CraftAnimals implements Wolf
+public class CraftMyWolf extends CraftTameableAnimal
 {
     private AnimalTamer owner;
 
@@ -57,15 +60,6 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
             entity.target = ((CraftLivingEntity) target).getHandle();
             entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F, true, false, false, true);
         }
-    }
-
-    public boolean isAngry()
-    {
-        return false;
-    }
-
-    public void setAngry(boolean angry)
-    {
     }
 
     public boolean isSitting()
@@ -126,12 +120,12 @@ public class CraftMyWolf extends CraftAnimals implements Wolf
         }
     }
 
-    String getOwnerName()
+    public String getOwnerName()
     {
         return getHandle().getOwnerName();
     }
 
-    void setOwnerName(String ownerName)
+    public void setOwnerName(String ownerName)
     {
         getHandle().setOwnerName(ownerName);
     }
