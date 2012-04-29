@@ -4,8 +4,8 @@ import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
@@ -54,7 +54,39 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                 }
                 this.target = ((EntityMyWolf) this.wolf).Goaltarget;
                 ((EntityMyWolf) this.wolf).Goaltarget = null;
-                return !(this.target instanceof EntityHuman && !MyWolfUtil.canHurtFactions(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) this.target).getBukkitEntity())) && !MyWolfUtil.canHurtWorldGuard(((Player) ((EntityHuman) this.target).getBukkitEntity())) && !MyWolfUtil.canHurtTowny(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) this.target).getBukkitEntity()))) && this.a(this.target, false);
+
+                if (this.target instanceof EntityPlayer)
+                {
+                    String playerName = ((EntityPlayer) this.target).name;
+                    if (!MyWolfUtil.getOfflinePlayer(playerName).isOnline())
+                    {
+                        this.target = null;
+                        return false;
+                    }
+                    Player target = MyWolfUtil.getOfflinePlayer(playerName).getPlayer();
+
+                    if (target == MWolf.getOwner())
+                    {
+                        this.target = null;
+                        return false;
+                    }
+                    else if (!MyWolfUtil.canHurtFactions(MWolf.getOwner().getPlayer(), target))
+                    {
+                        this.target = null;
+                        return false;
+                    }
+                    else if (!MyWolfUtil.canHurtTowny(MWolf.getOwner().getPlayer(), target))
+                    {
+                        this.target = null;
+                        return false;
+                    }
+                    else if (!MyWolfUtil.canHurtWorldGuard(target))
+                    {
+                        this.target = null;
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }

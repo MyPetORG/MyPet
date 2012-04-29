@@ -24,8 +24,8 @@ import de.Keyle.MyWolf.entity.EntityMyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.Entity;
-import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
@@ -70,19 +70,30 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                 Entity entity = (Entity) aList;
                 EntityLiving entityliving = (EntityLiving) entity;
 
-                if (wolf.am().canSee(entityliving) && entityliving != wolf && !(entityliving instanceof EntityHuman && ((EntityHuman) entityliving).name.equals(MWolf.getOwner().getName())))
+                if (wolf.am().canSee(entityliving) && entityliving != wolf)
                 {
-                    if (entityliving instanceof EntityHuman)
+                    if (entityliving instanceof EntityPlayer)
                     {
-                        if (!MyWolfUtil.canHurtFactions(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                        String playerName = ((EntityPlayer) entityliving).name;
+                        if (!MyWolfUtil.getOfflinePlayer(playerName).isOnline())
                         {
                             continue;
                         }
-                        if (!MyWolfUtil.canHurtTowny(MWolf.getOwner().getPlayer(), ((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                        Player target = MyWolfUtil.getOfflinePlayer(playerName).getPlayer();
+
+                        if (target == MWolf.getOwner())
                         {
                             continue;
                         }
-                        if (!MyWolfUtil.canHurtWorldGuard(((Player) ((EntityHuman) entityliving).getBukkitEntity())))
+                        if (!MyWolfUtil.canHurtFactions(MWolf.getOwner().getPlayer(), target))
+                        {
+                            continue;
+                        }
+                        if (!MyWolfUtil.canHurtTowny(MWolf.getOwner().getPlayer(), target))
+                        {
+                            continue;
+                        }
+                        if (!MyWolfUtil.canHurtWorldGuard(target))
                         {
                             continue;
                         }
