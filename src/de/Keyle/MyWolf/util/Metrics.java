@@ -656,7 +656,5 @@ public class Metrics
             final Plotter plotter = (Plotter) object;
             return plotter.name.equals(name) && plotter.getValue() == getValue();
         }
-
     }
-
 }
