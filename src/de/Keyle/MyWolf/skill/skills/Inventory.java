@@ -24,9 +24,7 @@ import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.ItemStack;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -94,33 +92,6 @@ public class Inventory extends MyWolfGenericSkill
     {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
         eh.openContainer(inv);
-    }
-
-    @Override
-    public void load(MyWolfYamlConfiguration configuration)
-    {
-        String Sinv = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".inventory", "QwE");
-        if (!Sinv.equals("QwE"))
-        {
-            String[] invSplit = Sinv.split(";");
-            for (int i = 0 ; i < invSplit.length ; i++)
-            {
-                if (i < inv.getSize())
-                {
-                    String[] itemvalues = invSplit[i].split(",");
-                    if (itemvalues.length == 3 && MyWolfUtil.isInt(itemvalues[0]) && MyWolfUtil.isInt(itemvalues[1]) && MyWolfUtil.isInt(itemvalues[2]))
-                    {
-                        if (Material.getMaterial(Integer.parseInt(itemvalues[0])) != null)
-                        {
-                            if (Integer.parseInt(itemvalues[1]) <= 64)
-                            {
-                                inv.setItem(i, new ItemStack(Integer.parseInt(itemvalues[0]), Integer.parseInt(itemvalues[1]), Integer.parseInt(itemvalues[2])));
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override

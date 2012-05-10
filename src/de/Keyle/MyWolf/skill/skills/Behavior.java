@@ -22,7 +22,6 @@ package de.Keyle.MyWolf.skill.skills;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 
 public class Behavior extends MyWolfGenericSkill
@@ -102,16 +101,6 @@ public class Behavior extends MyWolfGenericSkill
         {
             MWolf.sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
         }
-    }
-
-    public void load(MyWolfYamlConfiguration configuration)
-    {
-        String b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".behavior", "QwE");
-        if (b.equals("QwE"))
-        {
-            b = configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".skills.behavior", "Normal");
-        }
-        Behavior = BehaviorState.valueOf(b);
     }
 
     @Override

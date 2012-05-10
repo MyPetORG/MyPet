@@ -21,7 +21,6 @@ package de.Keyle.MyWolf.skill;
 
 import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.util.Scheduler;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 
 public class MyWolfGenericSkill implements Scheduler
@@ -68,10 +67,6 @@ public class MyWolfGenericSkill implements Scheduler
     public NBTTagCompound save()
     {
         return null;
-    }
-
-    public void load(MyWolfYamlConfiguration configuration)
-    {
     }
 
     public void load(NBTTagCompound nbtTagCompound)

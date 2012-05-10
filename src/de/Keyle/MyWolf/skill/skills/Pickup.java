@@ -24,7 +24,6 @@ import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
-import de.Keyle.MyWolf.util.configuration.MyWolfYamlConfiguration;
 import net.minecraft.server.NBTTagCompound;
 import net.minecraft.server.Packet22Collect;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
@@ -109,19 +108,6 @@ public class Pickup extends MyWolfGenericSkill
                     }
                 }
             }
-        }
-    }
-
-    @Override
-    public void load(MyWolfYamlConfiguration configuration)
-    {
-        if (configuration.getConfig().getString("Wolves." + MWolf.getOwner().getName() + ".pickup", "QwE").equals("QwE"))
-        {
-            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwner().getName() + ".skills.pickup", false);
-        }
-        else
-        {
-            Pickup = configuration.getConfig().getBoolean("Wolves." + MWolf.getOwner().getName() + ".pickup", false);
         }
     }
 
