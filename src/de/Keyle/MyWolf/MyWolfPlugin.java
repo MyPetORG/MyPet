@@ -19,9 +19,11 @@
 
 package de.Keyle.MyWolf;
 
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.chatcommands.*;
-import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.InactiveMyPet;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.listeners.*;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
@@ -256,7 +258,7 @@ public class MyWolfPlugin extends JavaPlugin
                     MyWolfList.setMyWolfActive(p, true);
 
                     MyWolf MWolf = MyWolfList.getMyWolf(p);
-                    if (MWolf.Status == WolfState.Dead)
+                    if (MWolf.Status == PetState.Dead)
                     {
                         p.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                     }
@@ -267,7 +269,7 @@ public class MyWolfPlugin extends JavaPlugin
                     }
                     else
                     {
-                        MWolf.Status = WolfState.Despawned;
+                        MWolf.Status = PetState.Despawned;
                     }
                 }
             }
@@ -299,19 +301,19 @@ public class MyWolfPlugin extends JavaPlugin
             String Owner = MWolfNBT.getString("Owner");
             boolean WolfSitting = MWolfNBT.getBoolean("Sitting");
 
-            InactiveMyWolf IMWolf = new InactiveMyWolf(MyWolfUtil.getOfflinePlayer(Owner));
+            InactiveMyPet IMPet = new InactiveMyPet(MyWolfUtil.getOfflinePlayer(Owner));
 
-            IMWolf.setLocation(new Location(MyWolfUtil.getServer().getWorld(WolfWorld) != null ? MyWolfUtil.getServer().getWorld(WolfWorld) : MyWolfUtil.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
-            IMWolf.setHealth(WolfHealthNow);
-            IMWolf.setRespawnTime(WolfRespawnTime);
-            IMWolf.setName(WolfName);
-            IMWolf.setSitting(WolfSitting);
-            IMWolf.setExp(WolfEXP);
-            IMWolf.setSkills(MWolfNBT.getCompound("Skills"));
+            IMPet.setLocation(new Location(MyWolfUtil.getServer().getWorld(WolfWorld) != null ? MyWolfUtil.getServer().getWorld(WolfWorld) : MyWolfUtil.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+            IMPet.setHealth(WolfHealthNow);
+            IMPet.setRespawnTime(WolfRespawnTime);
+            IMPet.setName(WolfName);
+            IMPet.setSitting(WolfSitting);
+            IMPet.setExp(WolfEXP);
+            IMPet.setSkills(MWolfNBT.getCompound("Skills"));
 
-            MyWolfList.addInactiveMyWolf(IMWolf);
+            MyWolfList.addInactiveMyWolf(IMPet);
 
-            MWLogger.info("   " + IMWolf.toString());
+            MWLogger.info("   " + IMPet.toString());
 
             wolfCount++;
         }
@@ -336,7 +338,7 @@ public class MyWolfPlugin extends JavaPlugin
             Location.setDouble("Z", MWolf.getLocation().getZ());
             Location.setString("World", MWolf.getLocation().getWorld().getName());
 
-            Wolf.setString("Type", "Wolf");
+            Wolf.setString("Type", MWolf.getPetType().getTypeName());
             Wolf.setString("Owner", MWolf.getOwner().getName());
             Wolf.setCompound("Location", Location);
             Wolf.setInt("Health", MWolf.getHealth());
@@ -362,26 +364,26 @@ public class MyWolfPlugin extends JavaPlugin
             Wolves.add(Wolf);
             wolfCount++;
         }
-        for (InactiveMyWolf IMWolf : MyWolfList.getInactiveMyWolfList())
+        for (InactiveMyPet IMPet : MyWolfList.getInactiveMyWolfList())
         {
 
             NBTTagCompound Wolf = new NBTTagCompound();
 
             NBTTagCompound Location = new NBTTagCompound("Location");
-            Location.setDouble("X", IMWolf.getLocation().getX());
-            Location.setDouble("Y", IMWolf.getLocation().getY());
-            Location.setDouble("Z", IMWolf.getLocation().getZ());
-            Location.setString("World", IMWolf.getLocation().getWorld().getName());
+            Location.setDouble("X", IMPet.getLocation().getX());
+            Location.setDouble("Y", IMPet.getLocation().getY());
+            Location.setDouble("Z", IMPet.getLocation().getZ());
+            Location.setString("World", IMPet.getLocation().getWorld().getName());
 
-            Wolf.setString("Owner", IMWolf.getOwner().getName());
+            Wolf.setString("Owner", IMPet.getOwner().getName());
             Wolf.setCompound("Location", Location);
-            Wolf.setInt("Health", IMWolf.getHealth());
-            Wolf.setInt("Respawntime", IMWolf.getRespawnTime());
-            Wolf.setString("Name", IMWolf.getName());
-            Wolf.setBoolean("Sitting", IMWolf.isSitting());
-            Wolf.setDouble("Exp", IMWolf.getExp());
+            Wolf.setInt("Health", IMPet.getHealth());
+            Wolf.setInt("Respawntime", IMPet.getRespawnTime());
+            Wolf.setString("Name", IMPet.getName());
+            Wolf.setBoolean("Sitting", IMPet.isSitting());
+            Wolf.setDouble("Exp", IMPet.getExp());
 
-            Wolf.set("Skills", IMWolf.getSkills());
+            Wolf.set("Skills", IMPet.getSkills());
             Wolves.add(Wolf);
             wolfCount++;
         }

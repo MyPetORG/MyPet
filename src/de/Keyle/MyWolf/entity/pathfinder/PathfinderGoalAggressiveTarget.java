@@ -1,7 +1,7 @@
 package de.Keyle.MyWolf.entity.pathfinder;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import net.minecraft.server.Entity;

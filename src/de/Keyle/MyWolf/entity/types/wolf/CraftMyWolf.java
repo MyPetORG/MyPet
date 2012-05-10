@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.entity;
+package de.Keyle.MyWolf.entity.types.wolf;
 
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import net.minecraft.server.EntityCreature;

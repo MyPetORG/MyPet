@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.util;
 
-import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 
 import java.util.ArrayList;
 import java.util.List;

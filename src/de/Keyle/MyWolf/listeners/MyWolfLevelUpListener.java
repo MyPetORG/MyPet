@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.listeners;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import de.Keyle.MyWolf.skill.MyWolfSkillTree;
 import de.Keyle.MyWolf.util.MyWolfLanguage;

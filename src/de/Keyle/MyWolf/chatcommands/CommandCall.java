@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.event.MyWolfSpoutEvent;
 import de.Keyle.MyWolf.event.MyWolfSpoutEvent.MyWolfSpoutEventReason;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
@@ -46,7 +46,7 @@ public class CommandCall implements CommandExecutor
                 {
                     return true;
                 }
-                if (MWolf.Status == WolfState.Here)
+                if (MWolf.Status == PetState.Here)
                 {
                     if (MWolf.getLocation().getWorld() != owner.getLocation().getWorld())
                     {
@@ -66,7 +66,7 @@ public class CommandCall implements CommandExecutor
                     MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
                     return true;
                 }
-                else if (MWolf.Status == WolfState.Despawned)
+                else if (MWolf.Status == PetState.Despawned)
                 {
                     MWolf.setLocation(owner.getLocation());
                     MWolf.createWolf(false);
@@ -74,7 +74,7 @@ public class CommandCall implements CommandExecutor
                     MyWolfUtil.getServer().getPluginManager().callEvent(new MyWolfSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
                     return true;
                 }
-                else if (MWolf.Status == WolfState.Dead)
+                else if (MWolf.Status == PetState.Dead)
                 {
                     sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                     return true;

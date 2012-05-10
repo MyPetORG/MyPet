@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.entity.pathfinder;
 
-import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.MyWolfUtil;
 import de.Keyle.MyWolf.util.Scheduler;

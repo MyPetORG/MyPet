@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.listeners;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Control;
 import de.Keyle.MyWolf.util.*;
 import org.bukkit.Material;
@@ -44,7 +44,7 @@ public class MyWolfPlayerListener implements Listener
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.Item && MyWolfList.hasMyWolf(event.getPlayer()))
         {
             MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-            if (MWolf.Status == WolfState.Here && !MWolf.isSitting())
+            if (MWolf.Status == PetState.Here && !MWolf.isSitting())
             {
                 if (MWolf.SkillSystem.hasSkill("Control") && MWolf.SkillSystem.getSkill("Control").getLevel() > 0)
                 {
@@ -105,7 +105,7 @@ public class MyWolfPlayerListener implements Listener
             if (MyWolfList.hasMyWolf(event.getPlayer()))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
-                if (MWolf.Status == WolfState.Dead)
+                if (MWolf.Status == PetState.Dead)
                 {
                     event.getPlayer().sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
                 }
@@ -116,7 +116,7 @@ public class MyWolfPlayerListener implements Listener
                 }
                 else
                 {
-                    MWolf.Status = WolfState.Despawned;
+                    MWolf.Status = PetState.Despawned;
                 }
             }
         }
@@ -136,7 +136,7 @@ public class MyWolfPlayerListener implements Listener
         String EntityIDs = MWolf.getID() + "\0";
         for(MyWolf MW : MyWolfList.getMyWolfList())
         {
-            if(w.Status == WolfState.Here)
+            if(w.Status == PetState.Here)
             {
                 EntityIDs += w.getID() + "\0";
             }
@@ -170,7 +170,7 @@ public class MyWolfPlayerListener implements Listener
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getPlayer());
 
-                if (MWolf.Status == WolfState.Here)
+                if (MWolf.Status == PetState.Here)
                 {
                     MWolf.ResetSitTimer();
                     if (MWolf.getLocation().getWorld() != event.getPlayer().getLocation().getWorld())
@@ -191,7 +191,7 @@ public class MyWolfPlayerListener implements Listener
                         MWolf.removeWolf();
                     }
                 }
-                else if (MWolf.Status == WolfState.Despawned)
+                else if (MWolf.Status == PetState.Despawned)
                 {
                     if (MWolf.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
                     {

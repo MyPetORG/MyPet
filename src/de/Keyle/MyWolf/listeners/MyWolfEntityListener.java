@@ -19,10 +19,10 @@
 
 package de.Keyle.MyWolf.listeners;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
-import de.Keyle.MyWolf.entity.CraftMyWolf;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.CraftMyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.event.MyWolfLeashEvent;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.skill.skills.Poison;
@@ -158,7 +158,7 @@ public class MyWolfEntityListener implements Listener
                 if (MyWolfList.hasMyWolf(damager))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(damager);
-                    if (MWolf.Status == WolfState.Here && event.getEntity() != MWolf.Wolf)
+                    if (MWolf.Status == PetState.Here && event.getEntity() != MWolf.Wolf)
                     {
                         MyWolfList.getMyWolf(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
@@ -189,7 +189,7 @@ public class MyWolfEntityListener implements Listener
             if (MyWolfList.isMyWolf(event.getEntity().getEntityId()))
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(event.getEntity().getEntityId());
-                MWolf.Status = WolfState.Dead;
+                MWolf.Status = PetState.Dead;
                 MWolf.RespawnTime = MyWolfConfig.RespawnTimeFixed + (MWolf.Experience.getLevel() * MyWolfConfig.RespawnTimeFactor);
                 if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
                 {

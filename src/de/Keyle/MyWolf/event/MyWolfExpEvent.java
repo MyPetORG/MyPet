@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.event;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

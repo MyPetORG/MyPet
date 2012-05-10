@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.skill.skills;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfUtil;
@@ -44,7 +44,7 @@ public class HPregeneration extends MyWolfGenericSkill
 
     public void schedule()
     {
-        if (Level > 0 && MWolf.Status == MyWolf.WolfState.Here)
+        if (Level > 0 && MWolf.Status == PetState.Here)
         {
             timeCounter--;
             if (timeCounter <= 0)

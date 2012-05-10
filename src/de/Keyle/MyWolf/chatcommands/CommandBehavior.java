@@ -19,7 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Behavior;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
@@ -40,7 +41,7 @@ public class CommandBehavior implements CommandExecutor
             {
                 MyWolf MWolf = MyWolfList.getMyWolf(owner);
 
-                if (MWolf.Status == MyWolf.WolfState.Despawned)
+                if (MWolf.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;

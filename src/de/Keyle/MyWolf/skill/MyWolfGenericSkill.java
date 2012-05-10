@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.skill;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.util.Scheduler;
 import net.minecraft.server.NBTTagCompound;
 

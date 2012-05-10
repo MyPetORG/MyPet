@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Inventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
@@ -43,12 +43,12 @@ public class CommandInventory implements CommandExecutor
                 if (MyWolfList.hasMyWolf(player))
                 {
                     MyWolf MWolf = MyWolfList.getMyWolf(player);
-                    if (MWolf.Status == WolfState.Despawned)
+                    if (MWolf.Status == PetState.Despawned)
                     {
                         sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                         return true;
                     }
-                    if (MWolf.Status == WolfState.Dead)
+                    if (MWolf.Status == PetState.Dead)
                     {
                         sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
                         return true;

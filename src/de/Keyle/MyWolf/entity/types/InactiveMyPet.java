@@ -17,7 +17,7 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf;
+package de.Keyle.MyWolf.entity.types;
 
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import net.minecraft.server.NBTTagCompound;
@@ -26,7 +26,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.Collection;
 
-public class InactiveMyWolf
+public class InactiveMyPet
 {
     private String Name = "Wolf";
     private final OfflinePlayer Owner;
@@ -35,10 +35,11 @@ public class InactiveMyWolf
     private boolean isSitting;
     private Location Location;
     private double Exp;
+    private MyPetType Type = MyPetType.Wolf;
 
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
 
-    public InactiveMyWolf(OfflinePlayer Owner)
+    public InactiveMyPet(OfflinePlayer Owner)
     {
         this.Owner = Owner;
     }
@@ -66,6 +67,16 @@ public class InactiveMyWolf
     public NBTTagCompound getSkills()
     {
         return NBTSkills;
+    }
+
+    public void setType(MyPetType type)
+    {
+        Type = type;
+    }
+
+    public MyPetType getType()
+    {
+        return Type;
     }
 
     public void setHealth(int Health)
@@ -140,6 +151,6 @@ public class InactiveMyWolf
     @Override
     public String toString()
     {
-        return "InactiveMyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
+        return "InactiveMyPet{type=" + getType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
     }
 }

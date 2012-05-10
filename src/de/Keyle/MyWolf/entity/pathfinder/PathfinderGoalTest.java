@@ -17,41 +17,51 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.event;
+package de.Keyle.MyWolf.entity.pathfinder;
 
 import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import de.Keyle.MyWolf.util.MyWolfUtil;
+import net.minecraft.server.PathfinderGoal;
 
-public class MyWolfLeashEvent extends Event
+public class PathfinderGoalTest extends PathfinderGoal
 {
-    private static final HandlerList handlers = new HandlerList();
+    MyWolf MWolf;
+    boolean s = true;
+    boolean d = true;
+    int c = 0;
+    int e = 0;
 
-    private final MyWolf Wolf;
-
-    public MyWolfLeashEvent(MyWolf Wolf)
+    public PathfinderGoalTest()
     {
-        this.Wolf = Wolf;
+
     }
 
-    public Player getLeasher()
+    public boolean b()
     {
-        return Wolf.getOwner().getPlayer();
+        MyWolfUtil.getLogger().info("--- target: " + d + " ---");
+        e = e > 50 ? 0 : e;
+        if (++e > 30)
+        {
+            d = !d;
+        }
+        return d;
     }
 
-    public MyWolf getWolf()
+    @Override
+    public boolean a()
     {
-        return Wolf;
+        MyWolfUtil.getLogger().info("--- a: " + s + " ---");
+        c = c > 50 ? 0 : c;
+        return ++c > 50 ? s = !s : s;
     }
 
-    public HandlerList getHandlers()
+    public void c()
     {
-        return handlers;
+        MyWolfUtil.getLogger().info("--- c ---");
     }
 
-    public static HandlerList getHandlerList()
+    public void d()
     {
-        return handlers;
+        MyWolfUtil.getLogger().info("--- d ---");
     }
 }

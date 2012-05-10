@@ -17,41 +17,38 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.event;
+package de.Keyle.MyWolf.entity.types;
 
 import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import org.bukkit.entity.EntityType;
 
-public class MyWolfLeashEvent extends Event
+public enum MyPetType
 {
-    private static final HandlerList handlers = new HandlerList();
+    Wolf(EntityType.WOLF, "Wolf", MyWolf.class);
 
-    private final MyWolf Wolf;
+    private EntityType entityType;
+    private String typeName;
+    private Class<? extends de.Keyle.MyWolf.entity.types.MyPet> clazz;
 
-    public MyWolfLeashEvent(MyWolf Wolf)
+    private MyPetType(EntityType type, String name, Class<? extends de.Keyle.MyWolf.entity.types.MyPet> clazz)
     {
-        this.Wolf = Wolf;
+        this.entityType = type;
+        this.typeName = name;
+        this.clazz = clazz;
     }
 
-    public Player getLeasher()
+    public EntityType getEntityType()
     {
-        return Wolf.getOwner().getPlayer();
+        return entityType;
     }
 
-    public MyWolf getWolf()
+    public String getTypeName()
     {
-        return Wolf;
+        return typeName;
     }
 
-    public HandlerList getHandlers()
+    public de.Keyle.MyWolf.entity.types.MyPet getNewInstance()
     {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
+        return null;
     }
 }

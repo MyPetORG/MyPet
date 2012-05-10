@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.entity.pathfinder;
 
-import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.wolf.EntityMyWolf;
 import net.minecraft.server.*;
 
 public class PathfinderGoalFollowOwner extends PathfinderGoal

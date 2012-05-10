@@ -19,8 +19,8 @@
 
 package de.Keyle.MyWolf.skill;
 
-import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.event.MyWolfExpEvent;
 import de.Keyle.MyWolf.event.MyWolfLevelUpEvent;
 import org.bukkit.entity.EntityType;

@@ -19,10 +19,10 @@
 
 package de.Keyle.MyWolf.util;
 
-import de.Keyle.MyWolf.InactiveMyWolf;
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.InactiveMyPet;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import org.bukkit.OfflinePlayer;
 
@@ -33,39 +33,39 @@ public class MyWolfList
     private static final Map<OfflinePlayer, MyWolf> mActiveWolves = new HashMap<OfflinePlayer, MyWolf>();
     private static final List<MyWolf> lActiveWolves = new ArrayList<MyWolf>();
 
-    private static final Map<OfflinePlayer, InactiveMyWolf> mInctiveWolves = new HashMap<OfflinePlayer, InactiveMyWolf>();
-    private static final List<InactiveMyWolf> lInactiveWolves = new ArrayList<InactiveMyWolf>();
+    private static final Map<OfflinePlayer, InactiveMyPet> mInctiveWolves = new HashMap<OfflinePlayer, InactiveMyPet>();
+    private static final List<InactiveMyPet> lInactivePets = new ArrayList<InactiveMyPet>();
 
     // Active -------------------------------------------------------------------
 
-    public static MyWolf getMyWolf(InactiveMyWolf IMWolf)
+    public static MyWolf getMyWolf(InactiveMyPet IMPet)
     {
-        if (IMWolf.getOwner().isOnline())
+        if (IMPet.getOwner().isOnline())
         {
-            MyWolf AMWolf = new MyWolf(IMWolf.getOwner());
-            AMWolf.setHealth(IMWolf.getHealth());
-            AMWolf.setLocation(IMWolf.getLocation());
-            AMWolf.Name = IMWolf.getName();
-            AMWolf.RespawnTime = IMWolf.getRespawnTime();
+            MyWolf AMWolf = new MyWolf(IMPet.getOwner());
+            AMWolf.setHealth(IMPet.getHealth());
+            AMWolf.setLocation(IMPet.getLocation());
+            AMWolf.Name = IMPet.getName();
+            AMWolf.RespawnTime = IMPet.getRespawnTime();
 
             if (AMWolf.RespawnTime > 0)
             {
-                AMWolf.Status = MyWolf.WolfState.Dead;
+                AMWolf.Status = PetState.Dead;
             }
             else
             {
-                AMWolf.Status = MyWolf.WolfState.Despawned;
+                AMWolf.Status = PetState.Despawned;
             }
 
-            AMWolf.Experience.setExp(IMWolf.getExp());
+            AMWolf.Experience.setExp(IMPet.getExp());
             Collection<MyWolfGenericSkill> Skills = AMWolf.SkillSystem.getSkills();
             if (Skills.size() > 0)
             {
                 for (MyWolfGenericSkill Skill : Skills)
                 {
-                    if (IMWolf.getSkills().hasKey(Skill.getName()))
+                    if (IMPet.getSkills().hasKey(Skill.getName()))
                     {
-                        Skill.load(IMWolf.getSkills().getCompound(Skill.getName()));
+                        Skill.load(IMPet.getSkills().getCompound(Skill.getName()));
                     }
                 }
             }
@@ -96,7 +96,7 @@ public class MyWolfList
     {
         for (MyWolf wolf : lActiveWolves)
         {
-            if (wolf.Status == WolfState.Here && wolf.Wolf.getEntityId() == EntityID)
+            if (wolf.Status == PetState.Here && wolf.Wolf.getEntityId() == EntityID)
             {
                 return wolf;
             }
@@ -130,9 +130,9 @@ public class MyWolfList
 
     // Inactive -----------------------------------------------------------------
 
-    public static List<InactiveMyWolf> getInactiveMyWolfList()
+    public static List<InactiveMyPet> getInactiveMyWolfList()
     {
-        return lInactiveWolves;
+        return lInactivePets;
     }
 
     public static boolean hasInactiveMyWolf(OfflinePlayer player)
@@ -140,21 +140,21 @@ public class MyWolfList
         return mInctiveWolves.containsKey(player);
     }
 
-    public static InactiveMyWolf getInactiveMyWolf(MyWolf AMWolf)
+    public static InactiveMyPet getInactiveMyWolf(MyWolf AMWolf)
     {
-        InactiveMyWolf IAMWolf = new InactiveMyWolf(MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(AMWolf.getOwner().getName()));
-        IAMWolf.setName(AMWolf.Name);
-        IAMWolf.setExp(AMWolf.Experience.getExp());
-        IAMWolf.setHealth(AMWolf.getHealth());
-        IAMWolf.setLocation(AMWolf.getLocation());
-        IAMWolf.setRespawnTime(AMWolf.RespawnTime);
-        IAMWolf.setSitting(IAMWolf.isSitting());
-        IAMWolf.setSkills(AMWolf.SkillSystem.getSkills());
+        InactiveMyPet IAMPet = new InactiveMyPet(MyWolfPlugin.getPlugin().getServer().getOfflinePlayer(AMWolf.getOwner().getName()));
+        IAMPet.setName(AMWolf.Name);
+        IAMPet.setExp(AMWolf.Experience.getExp());
+        IAMPet.setHealth(AMWolf.getHealth());
+        IAMPet.setLocation(AMWolf.getLocation());
+        IAMPet.setRespawnTime(AMWolf.RespawnTime);
+        IAMPet.setSitting(IAMPet.isSitting());
+        IAMPet.setSkills(AMWolf.SkillSystem.getSkills());
 
-        return IAMWolf;
+        return IAMPet;
     }
 
-    public static InactiveMyWolf getInactiveMyWolf(OfflinePlayer owner)
+    public static InactiveMyPet getInactiveMyWolf(OfflinePlayer owner)
     {
         if (mInctiveWolves.containsKey(owner))
         {
@@ -163,16 +163,16 @@ public class MyWolfList
         return null;
     }
 
-    public static void removeInactiveMyWolf(InactiveMyWolf IMWolf)
+    public static void removeInactiveMyWolf(InactiveMyPet IMPet)
     {
-        mInctiveWolves.remove(IMWolf.getOwner());
-        lInactiveWolves.remove(IMWolf);
+        mInctiveWolves.remove(IMPet.getOwner());
+        lInactivePets.remove(IMPet);
     }
 
-    public static void addInactiveMyWolf(InactiveMyWolf IMWolf)
+    public static void addInactiveMyWolf(InactiveMyPet IMPet)
     {
-        mInctiveWolves.put(IMWolf.getOwner(), IMWolf);
-        lInactiveWolves.add(IMWolf);
+        mInctiveWolves.put(IMPet.getOwner(), IMPet);
+        lInactivePets.add(IMPet);
     }
 
     // All ----------------------------------------------------------------------
@@ -184,12 +184,12 @@ public class MyWolfList
         {
             if (mInctiveWolves.containsKey(Owner) && mInctiveWolves.get(Owner).getOwner().isOnline())
             {
-                InactiveMyWolf IMWolf = mInctiveWolves.get(Owner);
-                MyWolf AMWolf = getMyWolf(IMWolf);
+                InactiveMyPet IMPet = mInctiveWolves.get(Owner);
+                MyWolf AMWolf = getMyWolf(IMPet);
                 addMyWolf(AMWolf);
-                removeInactiveMyWolf(IMWolf);
+                removeInactiveMyWolf(IMPet);
                 MyWolfUtil.getDebugLogger().info("   A: " + AMWolf);
-                MyWolfUtil.getDebugLogger().info("   I: " + IMWolf);
+                MyWolfUtil.getDebugLogger().info("   I: " + IMPet);
             }
         }
         else
@@ -197,11 +197,11 @@ public class MyWolfList
             if (mActiveWolves.containsKey(Owner))
             {
                 MyWolf AMWolf = mActiveWolves.get(Owner);
-                InactiveMyWolf IMWolf = getInactiveMyWolf(AMWolf);
+                InactiveMyPet IMPet = getInactiveMyWolf(AMWolf);
                 AMWolf.removeWolf();
                 removeMyWolf(AMWolf);
-                addInactiveMyWolf(IMWolf);
-                MyWolfUtil.getDebugLogger().info("   I: " + IMWolf);
+                addInactiveMyWolf(IMPet);
+                MyWolfUtil.getDebugLogger().info("   I: " + IMPet);
                 MyWolfUtil.getDebugLogger().info("   A: " + AMWolf);
             }
         }
@@ -212,7 +212,7 @@ public class MyWolfList
         mActiveWolves.clear();
         lActiveWolves.clear();
         mInctiveWolves.clear();
-        lInactiveWolves.clear();
+        lInactivePets.clear();
     }
 
     public static int getMyWolfCount()

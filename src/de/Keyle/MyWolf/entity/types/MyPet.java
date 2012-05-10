@@ -17,41 +17,12 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.event;
+package de.Keyle.MyWolf.entity.types;
 
-import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
-public class MyWolfLeashEvent extends Event
+public class MyPet
 {
-    private static final HandlerList handlers = new HandlerList();
-
-    private final MyWolf Wolf;
-
-    public MyWolfLeashEvent(MyWolf Wolf)
+    public static enum PetState
     {
-        this.Wolf = Wolf;
-    }
-
-    public Player getLeasher()
-    {
-        return Wolf.getOwner().getPlayer();
-    }
-
-    public MyWolf getWolf()
-    {
-        return Wolf;
-    }
-
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
+        Dead, Despawned, Here
     }
 }

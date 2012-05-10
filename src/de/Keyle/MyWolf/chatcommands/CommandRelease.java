@@ -19,9 +19,9 @@
 
 package de.Keyle.MyWolf.chatcommands;
 
-import de.Keyle.MyWolf.MyWolf;
-import de.Keyle.MyWolf.MyWolf.WolfState;
 import de.Keyle.MyWolf.MyWolfPlugin;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
+import de.Keyle.MyWolf.entity.types.wolf.MyWolf;
 import de.Keyle.MyWolf.skill.skills.Inventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
 import de.Keyle.MyWolf.util.MyWolfList;
@@ -52,7 +52,7 @@ public class CommandRelease implements CommandExecutor
                 {
                     return true;
                 }
-                if (MWolf.Status == WolfState.Despawned)
+                if (MWolf.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_CallFirst")));
                     return true;

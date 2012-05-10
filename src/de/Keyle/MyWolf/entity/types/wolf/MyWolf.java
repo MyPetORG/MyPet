@@ -17,10 +17,10 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf;
+package de.Keyle.MyWolf.entity.types.wolf;
 
-import de.Keyle.MyWolf.entity.CraftMyWolf;
-import de.Keyle.MyWolf.entity.EntityMyWolf;
+import de.Keyle.MyWolf.entity.types.MyPet;
+import de.Keyle.MyWolf.entity.types.MyPetType;
 import de.Keyle.MyWolf.event.MyWolfSpoutEvent;
 import de.Keyle.MyWolf.event.MyWolfSpoutEvent.MyWolfSpoutEventReason;
 import de.Keyle.MyWolf.skill.MyWolfExperience;
@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public class MyWolf
+public class MyWolf extends MyPet
 {
     public String Name = "Wolf";
     public final OfflinePlayer Owner;
@@ -45,18 +45,13 @@ public class MyWolf
     private int SitTimer = MyWolfConfig.SitdownTime;
     private boolean isSitting = false;
 
-    public WolfState Status = WolfState.Despawned;
+    public PetState Status = PetState.Despawned;
 
     private Location Location;
 
     public MyWolfSkillTree SkillTree = null;
     final public MyWolfSkillSystem SkillSystem;
     public final MyWolfExperience Experience;
-
-    public static enum WolfState
-    {
-        Dead, Despawned, Here
-    }
 
     public MyWolf(OfflinePlayer Owner)
     {
@@ -89,7 +84,7 @@ public class MyWolf
 
     public void removeWolf()
     {
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             isSitting = Wolf.isSitting();
             Health = Wolf.getHealth();
@@ -98,14 +93,14 @@ public class MyWolf
             {
                 Location = getOwner().getPlayer().getLocation();
             }
-            Status = WolfState.Despawned;
+            Status = PetState.Despawned;
             Wolf.remove();
         }
     }
 
     void RespawnWolf()
     {
-        if (Status != WolfState.Here)
+        if (Status != PetState.Here)
         {
             Location = getOwner().getPlayer().getLocation();
             sendMessageToOwner(MyWolfUtil.setColors(MyWolfLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
@@ -117,7 +112,7 @@ public class MyWolf
 
     public void createWolf(boolean sitting)
     {
-        if (Status == WolfState.Here || getOwner() == null)
+        if (Status == PetState.Here || getOwner() == null)
         {
         }
         else
@@ -130,7 +125,7 @@ public class MyWolf
                 mcWorld.addEntity(MWentityMyWolf, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
                 Wolf.setSitting(sitting);
-                Status = WolfState.Here;
+                Status = PetState.Here;
             }
         }
     }
@@ -145,7 +140,7 @@ public class MyWolf
         Wolf = (CraftMyWolf) MWentityMyWolf.getBukkitEntity();
         Location = Wolf.getLocation();
         Wolf.setSitting(true);
-        Status = WolfState.Here;
+        Status = PetState.Here;
     }
 
     public void setHealth(int d)
@@ -158,7 +153,7 @@ public class MyWolf
         {
             Health = d;
         }
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             Wolf.setHealth(Health);
         }
@@ -167,7 +162,7 @@ public class MyWolf
     public int getHealth()
     {
 
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             return Wolf.getHealth();
         }
@@ -184,7 +179,7 @@ public class MyWolf
 
     public Location getLocation()
     {
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             return Wolf.getLocation();
         }
@@ -197,7 +192,7 @@ public class MyWolf
     public void setLocation(Location loc)
     {
         this.Location = loc;
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             Wolf.teleport(loc);
         }
@@ -205,7 +200,7 @@ public class MyWolf
 
     public boolean isSitting()
     {
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             return Wolf.isSitting();
         }
@@ -217,7 +212,7 @@ public class MyWolf
 
     public void setSitting(boolean sitting)
     {
-        if (Status == WolfState.Here)
+        if (Status == PetState.Here)
         {
             Wolf.setSitting(sitting);
             this.isSitting = sitting;
@@ -235,7 +230,7 @@ public class MyWolf
 
     public void scheduleTask()
     {
-        if (Status != WolfState.Despawned && getOwner() != null)
+        if (Status != PetState.Despawned && getOwner() != null)
         {
             if (SkillSystem.getSkills().size() > 0)
             {
@@ -244,7 +239,7 @@ public class MyWolf
                     skill.schedule();
                 }
             }
-            if (Status == WolfState.Here)
+            if (Status == PetState.Here)
             {
                 if (MyWolfConfig.SitdownTime > 0 && SitTimer <= 0)
                 {
@@ -253,7 +248,7 @@ public class MyWolf
                 }
                 SitTimer--;
             }
-            else if (Status == WolfState.Dead)
+            else if (Status == PetState.Dead)
             {
                 RespawnTime--;
                 if (RespawnTime <= 0)
@@ -279,6 +274,11 @@ public class MyWolf
         {
             getOwner().getPlayer().sendMessage(Text);
         }
+    }
+
+    public MyPetType getPetType()
+    {
+        return MyPetType.Wolf;
     }
 
     @Override

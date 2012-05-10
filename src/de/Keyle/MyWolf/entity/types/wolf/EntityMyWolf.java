@@ -17,9 +17,8 @@
  * along with MyWolf. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyWolf.entity;
+package de.Keyle.MyWolf.entity.types.wolf;
 
-import de.Keyle.MyWolf.MyWolf;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyWolf.entity.pathfinder.PathfinderGoalControlTarget;

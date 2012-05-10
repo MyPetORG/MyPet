@@ -19,7 +19,7 @@
 
 package de.Keyle.MyWolf.skill.skills;
 
-import de.Keyle.MyWolf.MyWolf;
+import de.Keyle.MyWolf.entity.types.MyPet.PetState;
 import de.Keyle.MyWolf.skill.MyWolfGenericSkill;
 import de.Keyle.MyWolf.util.MyWolfCustomInventory;
 import de.Keyle.MyWolf.util.MyWolfLanguage;
@@ -73,7 +73,7 @@ public class Pickup extends MyWolfGenericSkill
     @Override
     public void schedule()
     {
-        if (Level > 0 && Pickup && MWolf.Status == MyWolf.WolfState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
+        if (Level > 0 && Pickup && MWolf.Status == PetState.Here && MWolf.SkillSystem.hasSkill("Inventory") && MWolf.SkillSystem.getSkill("Inventory").getLevel() > 0)
         {
             for (Entity e : MWolf.Wolf.getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
             {
