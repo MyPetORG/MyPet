@@ -1,0 +1,424 @@
+/*
+ * Copyright (C) 2011-2012 Keyle
+ *
+ * This file is part of MyPet
+ *
+ * MyPet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MyPet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package de.Keyle.MyPet;
+
+import de.Keyle.MyPet.chatcommands.*;
+import de.Keyle.MyPet.entity.types.InactiveMyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.listeners.*;
+import de.Keyle.MyPet.skill.MyPetExperience;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetJSexp;
+import de.Keyle.MyPet.skill.MyPetSkillSystem;
+import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.configuration.NBTConfiguration;
+import de.Keyle.MyPet.util.configuration.YamlConfiguration;
+import de.Keyle.MyPet.util.logger.DebugLogger;
+import net.minecraft.server.EntityTypes;
+import net.minecraft.server.EntityWolf;
+import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.NBTTagList;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.util.Collection;
+
+public class MyPetPlugin extends JavaPlugin
+{
+    private static MyPetPlugin Plugin;
+    public static MyPetLanguage MWLanguage;
+    private final MyPetTimer Timer = new MyPetTimer();
+    public static File NBTWolvesFile;
+    private DebugLogger MWLogger;
+
+    public static MyPetPlugin getPlugin()
+    {
+        return Plugin;
+    }
+
+    public MyPetTimer getTimer()
+    {
+        return Timer;
+    }
+
+    public void onDisable()
+    {
+        saveWolves(NBTWolvesFile);
+        for (MyWolf MWolf : MyPetList.getMyWolfList())
+        {
+            MWolf.removeWolf();
+        }
+        getTimer().stopTimer();
+        MyPetList.clearList();
+        Inventory.WolfChestOpened.clear();
+        getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
+        MWLogger.info("MyPet disabled!");
+        MyPetUtil.getLogger().info("Disabled");
+    }
+
+    public void onEnable()
+    {
+        Plugin = this;
+
+        if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
+        {
+            String mwv = getDescription().getVersion();
+            mwv = getDescription().getVersion().substring(mwv.indexOf('(') + 1, mwv.indexOf(')'));
+            MyPetUtil.getLogger().warning("---------------------------------------------------------");
+            MyPetUtil.getLogger().warning("This version of MyPet should only work with Minecraft " + mwv);
+            MyPetUtil.getLogger().warning("Expect bugs and errors!");
+            MyPetUtil.getLogger().warning("---------------------------------------------------------");
+        }
+
+        MyPetConfig.Config = this.getConfig();
+        MyPetConfig.setDefault();
+        MyPetConfig.loadConfiguration();
+
+        MWLogger = new DebugLogger(MyPetConfig.DebugLogger);
+        MWLogger.info("----------- loading MyPet ... -----------");
+        MWLogger.info("MyPet " + getDescription().getVersion());
+        MWLogger.info("Bukkit " + getServer().getVersion());
+
+        MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
+        for (EntityType ET : MyPetExperience.MobEXP.keySet())
+        {
+            MWLogger.info("   " + MyPetExperience.MobEXP.get(ET).toString());
+        }
+        MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
+
+        MyPetPlayerListener playerListener = new MyPetPlayerListener();
+        getServer().getPluginManager().registerEvents(playerListener, getPlugin());
+
+        MyPetVehicleListener vehicleListener = new MyPetVehicleListener();
+        getServer().getPluginManager().registerEvents(vehicleListener, getPlugin());
+
+        MyPetWorldListener worldListener = new MyPetWorldListener();
+        getServer().getPluginManager().registerEvents(worldListener, getPlugin());
+
+        MyPetEntityListener entityListener = new MyPetEntityListener();
+        getServer().getPluginManager().registerEvents(entityListener, getPlugin());
+
+        MyPetLevelUpListener levelupListener = new MyPetLevelUpListener();
+        getServer().getPluginManager().registerEvents(levelupListener, getPlugin());
+
+        getCommand("wolfname").setExecutor(new CommandName());
+        getCommand("wolfcall").setExecutor(new CommandCall());
+        getCommand("wolfstop").setExecutor(new CommandStop());
+        getCommand("wolfrelease").setExecutor(new CommandRelease());
+        getCommand("mywolf").setExecutor(new CommandHelp());
+        getCommand("wolfinventory").setExecutor(new CommandInventory());
+        getCommand("wolfpickup").setExecutor(new CommandPickup());
+        getCommand("wolfbehavior").setExecutor(new CommandBehavior());
+        getCommand("wolfinfo").setExecutor(new CommandInfo());
+        getCommand("wolfadmin").setExecutor(new CommandAdmin());
+        getCommand("wolfskill").setExecutor(new CommandSkill());
+
+        YamlConfiguration MWSkillTreeConfig = new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "skill.yml");
+        if (!MWSkillTreeConfig.ConfigFile.exists())
+        {
+            try
+            {
+                InputStream template = getPlugin().getResource("skill.yml");
+                OutputStream out = new FileOutputStream(MWSkillTreeConfig.ConfigFile);
+
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = template.read(buf)) > 0)
+                {
+                    out.write(buf, 0, len);
+                }
+                template.close();
+                out.close();
+                MyPetUtil.getLogger().info("Default skill.yml file created. Please restart the server to load the skilltrees!");
+                MWLogger.info("created default skill.yml.");
+            }
+            catch (IOException ex)
+            {
+                MyPetUtil.getLogger().info("Unable to create the default skill.yml file!");
+                MWLogger.info("unable to create skill.yml.");
+            }
+        }
+        MyPetSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
+        MyPetSkillTreeConfigLoader.loadSkillTrees();
+
+
+        MyPetSkillSystem.registerSkill(Inventory.class);
+        MyPetSkillSystem.registerSkill(HPregeneration.class);
+        MyPetSkillSystem.registerSkill(Pickup.class);
+        MyPetSkillSystem.registerSkill(Behavior.class);
+        MyPetSkillSystem.registerSkill(Damage.class);
+        MyPetSkillSystem.registerSkill(Control.class);
+        MyPetSkillSystem.registerSkill(HP.class);
+        MyPetSkillSystem.registerSkill(Poison.class);
+
+        try
+        {
+            Class[] args = {Class.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE};
+            Method a = EntityTypes.class.getDeclaredMethod("a", args);
+            a.setAccessible(true);
+            a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
+            a.invoke(a, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
+            MWLogger.info("registered MyPet entity.");
+        }
+        catch (Exception e)
+        {
+            MyPetUtil.getLogger().info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
+            e.printStackTrace();
+            MWLogger.severe("error while registering MyPet entity.");
+            MWLogger.severe(e.getMessage());
+            setEnabled(false);
+            return;
+        }
+
+        // For future of the client mod
+        //MyPetUtil.getServer().getMessenger().registerOutgoingPluginChannel(getPlugin(),"MyWolfByKeyle");
+
+        MyPetPermissions.setup();
+
+        MWLanguage = new MyPetLanguage(new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
+        MWLanguage.loadVariables();
+
+
+        if (MyPetConfig.LevelSystem)
+        {
+            if (MyPetJSexp.setScriptPath(MyPetPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js"))
+            {
+                MyPetUtil.getLogger().info("Custom EXP-Script loaded!");
+                MyPetUtil.getDebugLogger().info("loaded exp.js.");
+            }
+            else
+            {
+                MyPetUtil.getLogger().info("No custom EXP-Script found (exp.js).");
+                MyPetUtil.getDebugLogger().info("exp.js not loaded.");
+            }
+        }
+
+        NBTWolvesFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyPet");
+        loadWolves(NBTWolvesFile);
+
+        Timer.startTimer();
+
+        if (MyPetConfig.sendMetrics)
+        {
+            MWLogger.info("Metrics is activivated");
+            try
+            {
+                Metrics metrics = new Metrics(MyPetPlugin.getPlugin());
+
+                metrics.addCustomData(new Metrics.Plotter("Total MyWolves")
+                {
+                    @Override
+                    public int getValue()
+                    {
+                        return MyPetList.getMyWolfCount();
+                    }
+                });
+
+                metrics.start();
+            }
+            catch (IOException e)
+            {
+                MyPetUtil.getLogger().info(e.getMessage());
+            }
+        }
+
+        MWLogger.info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+        MyPetUtil.getLogger().info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+
+        for (Player p : getServer().getOnlinePlayers())
+        {
+            if (MyPetPermissions.has(p, "MyPet.user.leash"))
+            {
+                if (MyPetList.hasInactiveMyWolf(p))
+                {
+                    MyPetList.setMyWolfActive(p, true);
+
+                    MyWolf MWolf = MyPetList.getMyWolf(p);
+                    if (MWolf.Status == PetState.Dead)
+                    {
+                        p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                    }
+                    else if (MyPetUtil.getDistance(MWolf.getLocation(), p.getLocation()) < 75)
+                    {
+                        MWolf.ResetSitTimer();
+                        MWolf.createWolf(MWolf.isSitting());
+                    }
+                    else
+                    {
+                        MWolf.Status = PetState.Despawned;
+                    }
+                }
+            }
+        }
+        MWLogger.info("----------- MyPet ready -----------");
+    }
+
+    int loadWolves(File f)
+    {
+        int wolfCount = 0;
+
+        NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
+        nbtConfiguration.load();
+        NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Wolves");
+        MWLogger.info("loading MyWolves: -----------------------------");
+        for (int i = 0 ; i < Wolves.size() ; i++)
+        {
+            NBTTagCompound MWolfNBT = (NBTTagCompound) Wolves.get(i);
+            NBTTagCompound Location = MWolfNBT.getCompound("Location");
+
+            double WolfX = Location.getDouble("X");
+            double WolfY = Location.getDouble("Y");
+            double WolfZ = Location.getDouble("Z");
+            String WolfWorld = Location.getString("World");
+            double WolfEXP = MWolfNBT.getDouble("Exp");
+            int WolfHealthNow = MWolfNBT.getInt("Health");
+            int WolfRespawnTime = MWolfNBT.getInt("Respawntime");
+            String WolfName = MWolfNBT.getString("Name");
+            String Owner = MWolfNBT.getString("Owner");
+            boolean WolfSitting = MWolfNBT.getBoolean("Sitting");
+
+            InactiveMyPet IMPet = new InactiveMyPet(MyPetUtil.getOfflinePlayer(Owner));
+
+            IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(WolfWorld) != null ? MyPetUtil.getServer().getWorld(WolfWorld) : MyPetUtil.getServer().getWorlds().get(0), WolfX, WolfY, WolfZ));
+            IMPet.setHealth(WolfHealthNow);
+            IMPet.setRespawnTime(WolfRespawnTime);
+            IMPet.setName(WolfName);
+            IMPet.setSitting(WolfSitting);
+            IMPet.setExp(WolfEXP);
+            IMPet.setSkills(MWolfNBT.getCompound("Skills"));
+
+            MyPetList.addInactiveMyWolf(IMPet);
+
+            MWLogger.info("   " + IMPet.toString());
+
+            wolfCount++;
+        }
+        MWLogger.info(wolfCount + " wolf/wolves loaded -------------------------");
+        MyPetUtil.getLogger().info(wolfCount + " wolf/wolves loaded");
+        return wolfCount;
+    }
+
+    public int saveWolves(File f)
+    {
+        int wolfCount = 0;
+        NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
+        NBTTagList Wolves = new NBTTagList();
+        for (MyWolf MWolf : MyPetList.getMyWolfList())
+        {
+
+            NBTTagCompound Wolf = new NBTTagCompound();
+
+            NBTTagCompound Location = new NBTTagCompound("Location");
+            Location.setDouble("X", MWolf.getLocation().getX());
+            Location.setDouble("Y", MWolf.getLocation().getY());
+            Location.setDouble("Z", MWolf.getLocation().getZ());
+            Location.setString("World", MWolf.getLocation().getWorld().getName());
+
+            Wolf.setString("Type", MWolf.getPetType().getTypeName());
+            Wolf.setString("Owner", MWolf.getOwner().getName());
+            Wolf.setCompound("Location", Location);
+            Wolf.setInt("Health", MWolf.getHealth());
+            Wolf.setInt("Respawntime", MWolf.RespawnTime);
+            Wolf.setString("Name", MWolf.Name);
+            Wolf.setBoolean("Sitting", MWolf.isSitting());
+            Wolf.setDouble("Exp", MWolf.Experience.getExp());
+
+            NBTTagCompound SkillsNBTTagCompound = new NBTTagCompound("Skills");
+            Collection<MyPetGenericSkill> skills = MWolf.skillSystem.getSkills();
+            if (skills.size() > 0)
+            {
+                for (MyPetGenericSkill skill : skills)
+                {
+                    NBTTagCompound s = skill.save();
+                    if (s != null)
+                    {
+                        SkillsNBTTagCompound.set(skill.getName(), s);
+                    }
+                }
+            }
+            Wolf.set("Skills", SkillsNBTTagCompound);
+            Wolves.add(Wolf);
+            wolfCount++;
+        }
+        for (InactiveMyPet IMPet : MyPetList.getInactiveMyWolfList())
+        {
+
+            NBTTagCompound Wolf = new NBTTagCompound();
+
+            NBTTagCompound Location = new NBTTagCompound("Location");
+            Location.setDouble("X", IMPet.getLocation().getX());
+            Location.setDouble("Y", IMPet.getLocation().getY());
+            Location.setDouble("Z", IMPet.getLocation().getZ());
+            Location.setString("World", IMPet.getLocation().getWorld().getName());
+
+            Wolf.setString("Owner", IMPet.getOwner().getName());
+            Wolf.setCompound("Location", Location);
+            Wolf.setInt("Health", IMPet.getHealth());
+            Wolf.setInt("Respawntime", IMPet.getRespawnTime());
+            Wolf.setString("Name", IMPet.getName());
+            Wolf.setBoolean("Sitting", IMPet.isSitting());
+            Wolf.setDouble("Exp", IMPet.getExp());
+
+            Wolf.set("Skills", IMPet.getSkills());
+            Wolves.add(Wolf);
+            wolfCount++;
+        }
+        String[] version = Plugin.getDescription().getVersion().split(" \\(");
+        nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
+        nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
+        nbtConfiguration.save();
+        MWLogger.info(wolfCount + " wolf/wolves saved.");
+        return wolfCount;
+    }
+
+    private boolean checkVersion(String mc, String mw)
+    {
+        mw = mw.substring(mw.indexOf('(') + 1, mw.indexOf(')'));
+        mc = mc.substring(mc.indexOf("(MC: ") + 5, mc.indexOf(')'));
+        if (mw.contains("/"))
+        {
+            String[] temp = mw.split("/");
+            for (String v : temp)
+            {
+                if (v.equals(mc))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return mw.equals(mc);
+        }
+    }
+
+    public DebugLogger getDebugLogger()
+    {
+        return MWLogger;
+    }
+}

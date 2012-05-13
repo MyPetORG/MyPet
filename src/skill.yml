@@ -2,7 +2,7 @@
 
 skilltrees:
 
-  # Admin skilltree -> MyWolf.custom.skilltree.admin
+  # Admin skilltree -> MyPet.custom.skilltree.admin
   admin:
     '1':
       - Inventory
@@ -20,7 +20,7 @@ skilltrees:
       - HP
       - HP
 
-  # Hunter skilltree -> MyWolf.custom.skilltree.Hunter
+  # Hunter skilltree -> MyPet.custom.skilltree.Hunter
   Hunter:
     inherit: Pickup
     '2':
@@ -63,7 +63,7 @@ skilltrees:
       - HP
       - Damage
 
-  # every normal should have permissions for this skilltree -> MyWolf.custom.skilltree.default
+  # every normal should have permissions for this skilltree -> MyPet.custom.skilltree.default
   default:
     '2':
       - Inventory
@@ -104,7 +104,7 @@ skilltrees:
       - HP
       - Damage
 
-  # skilltree for loser :P every MyWolf with this skilltree will have NO skills -> MyWolf.custom.skilltree.loser
+  # skilltree for loser :P every MyPet with this skilltree will have NO skills -> MyPet.custom.skilltree.loser
   loser:
     '1':
 

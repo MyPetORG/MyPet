@@ -1,76 +1,75 @@
-name: MyWolf
-main: de.Keyle.MyWolf.MyWolfPlugin
+name: MyPet
+main: de.Keyle.MyPet.MyPetPlugin
 version: 0.6.4 (1.2.4/1.2.5)
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Citizens, WorldGuard, Factions, Towny]
 commands:
-  mywolf:
-    description: Help for all MyWolf commands.
-  wolfname:
-    description: Set the name of your MyWolf
-    usage: '/<command> <WolfName>'
-  wolfcall:
-    aliases: [wolfc, wc]
-    description: Call your MyWolf.
-  wolfrelease:
-    description: Release your MyWolf.
-    usage: '/<command> <WolfName>'
-  wolfstop:
-    aliases: [wolfs, ws]
-    description: your MyWolf stop attacking.
-  wolfpickup:
-    aliases: [wolfp, wp]
-    description: Toogles pickup of your MyWolf.
-  wolfinventory:
-    aliases: [wolfi, wi]
-    description: Open the inventory of your MyWolf.
-  wolfbehavior:
-    aliases: [wolfb, wb]
-    description: Switch the behavior mode of your MyWolf.
+  myPet:
+    description: Help for all MyPet commands.
+  petname:
+    description: Set the name of your MyPet
+    usage: '/<command> <PetName>'
+  petcall:
+    aliases: [petc, pc]
+    description: Call your MyPet.
+  petrelease:
+    description: Release your MyPet.
+    usage: '/<command> <PetName>'
+  petstop:
+    aliases: [pets, ps]
+    description: your MyPet stop attacking.
+  petpickup:
+    aliases: [petp, pp]
+    description: Toogles pickup of your MyPet.
+  petinventory:
+    aliases: [peti, pi]
+    description: Open the inventory of your MyPet.
+  petbehavior:
+    aliases: [petb, pb]
+    description: Switch the behavior mode of your MyPet.
     usage: '/<command> [<Friendly/fri/Aggressive/agg/Normal/nor>]'
-# Raid/rai/
-  wolfinfo:
-    aliases: [winfo]
-    description: Shows HP and Exp of your MyWolf
+  petinfo:
+    aliases: [pinfo]
+    description: Shows HP and Exp of your MyPet
     usage: '/<command> [PlayerName]'
-  wolfskill:
-    aliases: [wskill]
-    description: Shows the skill-levels of a online MyWolf
-    usage: '/<command> <playername>'
-  wolfadmin:
-    aliases: [wolfa, wa]
-    description: Set the Exp or Name of a MyWolf
+  petskill:
+    aliases: [pskill]
+    description: Shows the skill-levels of a online MyPet
+    usage: '/<command> <Playername>'
+  petadmin:
+    aliases: [peta, pa]
+    description: Set the Exp or Name of a MyPet
     usage: '/<command> [PlayerName] name/exp [Value]'
 
 permissions:
   MyWolf.*:
-    description: Gives access to ALL Mywolf commands
+    description: Gives access to ALL MyPet commands
     children:
-      MyWolf.admin: true
-      MyWolf.user.leash: true
-      MyWolf.user.stop: true
-      MyWolf.user.call: true
-      MyWolf.user.setname: true
-      MyWolf.user.release: true
-  MyWolf.user.*:
-    description: Gives access to MyWolf user commands
+      MyPet.admin: true
+      MyPet.user.leash: true
+      MyPet.user.stop: true
+      MyPet.user.call: true
+      MyPet.user.setname: true
+      MyPet.user.release: true
+  MyPet.user.*:
+    description: Gives access to MyPet user commands
     children:
-      MyWolf.admin: false
-      MyWolf.user.leash: true
-      MyWolf.user.stop: true
-      MyWolf.user.call: true
-      MyWolf.user.setname: true
-      MyWolf.user.release: true
-  MyWolf.user.leash:
-    description: Allows a player to leash a MyWolf.
-  MyWolf.user.stop:
-    description: Allows usage of /wolfstop
-  MyWolf.user.call:
-    description: Allows usage of /wolfcall
-  MyWolf.user.setname:
-    description: Allows usage of /wolfname
-  MyWolf.user.release:
-    description: Allows usage of /wolfrelease
-  MyWolf.admin:
-    description: Allows user to use some MyWolf-admin functions.
+      MyPet.admin: false
+      MyPet.user.leash: true
+      MyPet.user.stop: true
+      MyPet.user.call: true
+      MyPet.user.setname: true
+      MyPet.user.release: true
+  MyPet.user.leash:
+    description: Allows a player to leash a MyPet.
+  MyPet.user.stop:
+    description: Allows usage of /petstop
+  MyPet.user.call:
+    description: Allows usage of /petcall
+  MyPet.user.setname:
+    description: Allows usage of /petname
+  MyPet.user.release:
+    description: Allows usage of /petrelease
+  MyPet.admin:
+    description: Allows user to use some MyPet-admin functions.
