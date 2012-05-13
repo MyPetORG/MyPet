@@ -228,12 +228,12 @@ public class MyPetCustomInventory implements IInventory
     public void onClose(CraftHumanEntity craftHumanEntity)
     {
         OfflinePlayer OfflineP = MyPetUtil.getOfflinePlayer(craftHumanEntity.getName());
-        if (MyPetList.hasMyWolf(OfflineP))
+        if (MyPetList.hasMyPet(OfflineP))
         {
-            if (Inventory.WolfChestOpened.contains(OfflineP.getPlayer()))
+            if (Inventory.PetChestOpened.contains(OfflineP.getPlayer()))
             {
-                MyPetList.getMyWolf(OfflineP).setSitting(false);
-                Inventory.WolfChestOpened.remove(OfflineP.getPlayer());
+                MyPetList.getMyPet(OfflineP).setSitting(false);
+                Inventory.PetChestOpened.remove(OfflineP.getPlayer());
             }
         }
     }

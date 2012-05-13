@@ -35,7 +35,7 @@ import java.util.List;
 
 public class Inventory extends MyPetGenericSkill
 {
-    public static final List<Player> WolfChestOpened = new ArrayList<Player>();
+    public static final List<Player> PetChestOpened = new ArrayList<Player>();
     public MyPetCustomInventory inv = new MyPetCustomInventory("Wolf's Inventory", 0);
 
     public Inventory()
@@ -48,24 +48,24 @@ public class Inventory extends MyPetGenericSkill
     {
         if (Level > 0)
         {
-            if (MWolf.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MWolf.getLocation().getBlock().getType() != Material.WATER)
+            if (MPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MPet.getLocation().getBlock().getType() != Material.WATER)
             {
-                inv.setName(MWolf.Name);
-                OpenInventory(MWolf.getOwner().getPlayer());
-                if (!MWolf.isSitting())
+                inv.setName(MPet.Name);
+                OpenInventory(MPet.getOwner().getPlayer());
+                if (!MPet.isSitting())
                 {
-                    WolfChestOpened.add(MWolf.getOwner().getPlayer());
+                    PetChestOpened.add(MPet.getOwner().getPlayer());
                 }
-                MWolf.Wolf.setSitting(true);
+                MPet.Wolf.setSitting(true);
             }
             else
             {
-                MWolf.sendMessageToOwner(MyPetLanguage.getString("Msg_InventorySwimming"));
+                MPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventorySwimming"));
             }
         }
         else
         {
-            MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MWolf.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MPet.Name));
         }
     }
 
@@ -85,7 +85,7 @@ public class Inventory extends MyPetGenericSkill
         }
         Level++;
         inv.setSize(Level * 9);
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%wolfname%", MWolf.Name).replace("%size%", "" + inv.getSize()));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%wolfname%", MPet.Name).replace("%size%", "" + inv.getSize()));
     }
 
     public void OpenInventory(Player p)
@@ -109,9 +109,9 @@ public class Inventory extends MyPetGenericSkill
     }
 
     @Override
-    public void setMyWolf(MyWolf MWolf)
+    public void setMyWolf(MyWolf MPet)
     {
-        this.MWolf = MWolf;
-        inv.setName(MWolf.Name);
+        this.MPet = MPet;
+        inv.setName(MPet.Name);
     }
 }

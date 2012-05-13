@@ -47,19 +47,19 @@ public class Pickup extends MyPetGenericSkill
     {
         if (Level > 0)
         {
-            if (MWolf.skillSystem.hasSkill("Inventory") && MWolf.skillSystem.getSkill("Inventory").getLevel() > 0)
+            if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
             {
                 Pickup = !Pickup;
-                MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MWolf.Name));
+                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MPet.Name));
             }
             else
             {
-                MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%wolfname%", MWolf.Name));
+                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%wolfname%", MPet.Name));
             }
         }
         else
         {
-            MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%wolfname%", MWolf.Name).replace("%skill%", this.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%wolfname%", MPet.Name).replace("%skill%", this.Name));
         }
     }
 
@@ -67,21 +67,21 @@ public class Pickup extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MWolf.Name).replace("%range%", "" + (Level * RangePerLevel)));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MPet.Name).replace("%range%", "" + (Level * RangePerLevel)));
     }
 
     @Override
     public void schedule()
     {
-        if (Level > 0 && Pickup && MWolf.Status == PetState.Here && MWolf.skillSystem.hasSkill("Inventory") && MWolf.skillSystem.getSkill("Inventory").getLevel() > 0)
+        if (Level > 0 && Pickup && MPet.Status == PetState.Here && MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
         {
-            for (Entity e : MWolf.Wolf.getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
+            for (Entity e : MPet.Wolf.getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
             {
                 if (e instanceof Item)
                 {
                     Item item = (Item) e;
 
-                    PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(MWolf.getOwner().getPlayer(), item, item.getItemStack().getAmount());
+                    PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(MPet.getOwner().getPlayer(), item, item.getItemStack().getAmount());
                     MyPetUtil.getServer().getPluginManager().callEvent(ppievent);
 
                     if (ppievent.isCancelled())
@@ -89,7 +89,7 @@ public class Pickup extends MyPetGenericSkill
                         continue;
                     }
 
-                    MyPetCustomInventory inv = ((Inventory) MWolf.skillSystem.getSkill("Inventory")).inv;
+                    MyPetCustomInventory inv = ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv;
                     int ItemAmount = inv.addItem(item.getItemStack());
                     if (ItemAmount == 0)
                     {
@@ -97,7 +97,7 @@ public class Pickup extends MyPetGenericSkill
                         {
                             if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MWolf.Wolf.getEntityId()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MPet.Wolf.getEntityId()));
                             }
                         }
                         e.remove();

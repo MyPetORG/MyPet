@@ -26,11 +26,11 @@ import java.util.Map;
 
 public class MyPetLanguage
 {
-    private final YamlConfiguration MWC;
+    private final YamlConfiguration MPC;
 
-    public MyPetLanguage(YamlConfiguration MWC)
+    public MyPetLanguage(YamlConfiguration MPC)
     {
-        this.MWC = MWC;
+        this.MPC = MPC;
     }
 
     private static final Map<String, String> LV = new HashMap<String, String>();
@@ -46,51 +46,51 @@ public class MyPetLanguage
 
     public void addString(String name, String node, String def)
     {
-        if (MWC.getConfig().contains(node))
+        if (MPC.getConfig().contains(node))
         {
-            LV.put(name, MWC.getConfig().getString(node, def));
+            LV.put(name, MPC.getConfig().getString(node, def));
         }
         else
         {
-            MWC.getConfig().set(node, def);
+            MPC.getConfig().set(node, def);
             LV.put(name, def);
         }
     }
 
     public void loadVariables()
     {
-        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You take your wolf on the leash, he'll be a good wolf.");
-        addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%wolfname%%white% is now Lv%lvl%");
-        addString("Msg_HPinfo", "MyPet.Message.hpinfo", "%aqua%%wolfname%%white% HP:%hp%");
-        addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%wolfname%%white% has now an inventory with %size%slots.");
-        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%wolfname%%white% can now be controlled with a %item%");
-        addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%wolfname%%white% now can pickup items in a range of %range%.");
-        addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%wolfname%%white% regenerates now one HP every %sec%sec");
-        addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%wolfname%%white% has now a max health of %maxhealth%HP");
-        addString("Msg_AddDemage", "MyPet.Message.adddemage", "%aqua%%wolfname%%white% has now %dmg% bonusdemage");
-        addString("Msg_WolfIsGone", "MyPet.Message.wolfisgone", "%aqua%%wolfname%%white% is %red%gone%white% and will never come back . . .");
-        addString("Msg_DeathMessage", "MyPet.Message.deathmessage.text", "%aqua%%wolfname%%white% ");
-        addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%wolfname%%white% respawn in %gold%%time%%white% sec");
-        addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%wolfname%%white% respawned");
-        addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%wolfname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
-        addString("Msg_Call", "MyPet.Message.call", "%aqua%%wolfname%%white% comes to you.");
-        addString("Msg_Home", "MyPet.Message.call", "%aqua%%wolfname%%white% go to home.");
-        addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%wolfname%%white% first.");
-        addString("Msg_UserDontHaveWolf", "MyPet.Message.userdonthavewolf", "%gold%%playername%%white% doesn't have a MyPet!");
-        addString("Msg_DontHaveWolf", "MyPet.Message.donthavewolf", "You don't have a MyPet!");
-        addString("Msg_NewName", "MyPet.Message.newname", "The name of your wolf is now: %aqua%%wolfname%");
-        addString("Msg_Name", "MyPet.Message.name", "The name of your wolf is: %aqua%%wolfname%");
-        addString("Msg_Release", "MyPet.Message.release", "%aqua%%wolfname%%white% is now %green%free%white% . . .");
-        addString("Msg_StopAttack", "MyPet.Message.stopattack", "Your wolf should now %green%stop%white% attacking!");
-        addString("Msg_InventorySwimming", "MyPet.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%wolfname%%white% is swimming!");
-        addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%wolfname%%white% doesn't have an inventory.");
-        addString("Msg_PickButNoInventory", "MyPet.Message.pickupbutnoinventory", "%aqua%%wolfname%%white% could pickup items but has no inventoy.");
-        addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%wolfname%%white% doesn't know the skill %skill%.");
-        addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%wolfname%%white%'s skills: %skilltree%");
-        addString("Msg_LearnedSkill", "MyPet.Message.noskill", "%aqua%%wolfname%%white% learned the skill %skill%.");
-        addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%wolfname%%white% pickup: disabled");
-        addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%wolfname%%white% pickup: activated");
-        addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%wolfname%%white% is now in %mode% mode.");
+        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You take your pet on the leash, he'll be a good pet.");
+        addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%white% is now Lv%lvl%");
+        addString("Msg_HPinfo", "MyPet.Message.hpinfo", "%aqua%%petname%%white% HP:%hp%");
+        addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%petname%%white% has now an inventory with %size%slots.");
+        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%white% can now be controlled with a %item%");
+        addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%white% now can pickup items in a range of %range%.");
+        addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%white% regenerates now one HP every %sec%sec");
+        addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%white% has now a max health of %maxhealth%HP");
+        addString("Msg_AddDemage", "MyPet.Message.adddemage", "%aqua%%petname%%white% has now %dmg% bonusdemage");
+        addString("Msg_PetIsGone", "MyPet.Message.petisgone", "%aqua%%petname%%white% is %red%gone%white% and will never come back . . .");
+        addString("Msg_DeathMessage", "MyPet.Message.deathmessage.text", "%aqua%%petname%%white% ");
+        addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%white% respawn in %gold%%time%%white% sec");
+        addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%white% respawned");
+        addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
+        addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%white% comes to you.");
+        addString("Msg_Home", "MyPet.Message.call", "%aqua%%petname%%white% go to home.");
+        addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%white% first.");
+        addString("Msg_UserDontHavePet", "MyPet.Message.userdonthavepet", "%gold%%playername%%white% doesn't have a MyPet!");
+        addString("Msg_DontHavePet", "MyPet.Message.donthavepet", "You don't have a MyPet!");
+        addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
+        addString("Msg_Name", "MyPet.Message.name", "The name of your pet is: %aqua%%petname%");
+        addString("Msg_Release", "MyPet.Message.release", "%aqua%%petname%%white% is now %green%free%white% . . .");
+        addString("Msg_StopAttack", "MyPet.Message.stopattack", "Your pet should now %green%stop%white% attacking!");
+        addString("Msg_InventorySwimming", "MyPet.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%petname%%white% is swimming!");
+        addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%petname%%white% doesn't have an inventory.");
+        addString("Msg_PickButNoInventory", "MyPet.Message.pickupbutnoinventory", "%aqua%%petname%%white% could pickup items but has no inventoy.");
+        addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%white% doesn't know the skill %skill%.");
+        addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%petname%%white%'s skills: %skilltree%");
+        addString("Msg_LearnedSkill", "MyPet.Message.noskill", "%aqua%%petname%%white% learned the skill %skill%.");
+        addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%petname%%white% pickup: disabled");
+        addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%white% pickup: activated");
+        addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%white% is now in %mode% mode.");
         addString("Creeper", "MyPet.Message.deathmessage.creeper", "was killed by a Creeper.");
         addString("Zombie", "MyPet.Message.deathmessage.zombie", "was killed by a Zombie.");
         addString("Unknow", "MyPet.Message.deathmessage.unknow", "was killed by an unknown source.");
@@ -104,8 +104,8 @@ public class MyPetLanguage
         addString("Blaze", "MyPet.Message.deathmessage.blace", "was killed by a Blaze.");
         addString("EnderDragon", "MyPet.Message.deathmessage.enderdragon", "was killed by the Ender Dragon.");
         addString("Wolf", "MyPet.Message.deathmessage.wolf", "was killed by a Wolf.");
-        addString("MyPet", "MyPet.Message.deathmessage.mywolf", "was killed by %wolfname% of %player%.");
-        addString("OwnedWolf", "MyPet.Message.deathmessage.mywolf", "was killed by a Wolf of %player%.");
+        addString("MyPet", "MyPet.Message.deathmessage.mypet", "was killed by %petname% of %player%.");
+        addString("OwnedPet", "MyPet.Message.deathmessage.mypet", "was killed by a pet of %player%.");
         addString("Enderman", "MyPet.Message.deathmessage.enderman", "was killed by a Enderman.");
         addString("Snowman", "MyPet.Message.deathmessage.snowman", "was killed by a Snowman.");
         addString("Player", "MyPet.Message.deathmessage.player", "was killed by %player%.");
@@ -119,6 +119,6 @@ public class MyPetLanguage
         addString("PigZombie", "MyPet.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
         addString("Silverfish", "MyPet.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
-        MWC.saveConfig();
+        MPC.saveConfig();
     }
 }

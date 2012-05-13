@@ -19,10 +19,9 @@
 
 package de.Keyle.MyPet.entity.types.wolf;
 
-import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyWolfSpoutEventReason;
+import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillSystem;
@@ -34,7 +33,7 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public class MyWolf extends MyPet
+public class MyWolf extends de.Keyle.MyPet.entity.types.MyPet
 {
     public String Name = "Wolf";
     public final OfflinePlayer Owner;
@@ -50,8 +49,8 @@ public class MyWolf extends MyPet
     private Location Location;
 
     public MyPetSkillTree skillTree = null;
-    final public MyPetSkillSystem skillSystem;
-    public final MyPetExperience Experience;
+    final private MyPetSkillSystem skillSystem;
+    private final MyPetExperience experience;
 
     public MyWolf(OfflinePlayer Owner)
     {
@@ -61,7 +60,7 @@ public class MyWolf extends MyPet
         {
             for (String ST : MyPetSkillTreeConfigLoader.getSkillTreeNames())
             {
-                if (MyPetPermissions.has(Owner.getPlayer(), "MyWolf.custom.skilltree." + ST))
+                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + ST))
                 {
                     this.skillTree = MyPetSkillTreeConfigLoader.getSkillTree(ST);
                     break;
@@ -73,16 +72,16 @@ public class MyWolf extends MyPet
             this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
         }
         skillSystem = new MyPetSkillSystem(this);
-        Experience = new MyPetExperience(this);
+        experience = new MyPetExperience(this);
     }
 
     public void setName(String Name)
     {
         this.Name = Name;
-        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyWolfSpoutEventReason.Name));
+        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
     }
 
-    public void removeWolf()
+    public void removePet()
     {
         if (Status == PetState.Here)
         {
@@ -104,13 +103,13 @@ public class MyWolf extends MyPet
         {
             Location = getOwner().getPlayer().getLocation();
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%wolfname%", Name));
-            createWolf(false);
+            createPet(false);
             RespawnTime = 0;
             Health = getMaxHealth();
         }
     }
 
-    public void createWolf(boolean sitting)
+    public void createPet(boolean sitting)
     {
         if (Status == PetState.Here || getOwner() == null)
         {
@@ -175,6 +174,16 @@ public class MyWolf extends MyPet
     public int getMaxHealth()
     {
         return MyPetConfig.StartHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+    }
+
+    public MyPetSkillSystem getSkillSystem()
+    {
+        return skillSystem;
+    }
+
+    public MyPetExperience getExperience()
+    {
+        return experience;
     }
 
     public Location getLocation()
@@ -284,6 +293,6 @@ public class MyWolf extends MyPet
     @Override
     public String toString()
     {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + Experience.getExp() + "/" + Experience.getRequiredExp() + ", lv=" + Experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 }

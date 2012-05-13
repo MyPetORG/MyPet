@@ -30,29 +30,29 @@ import org.bukkit.Location;
 
 public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
-    private MyWolf MWolf;
+    private MyWolf MPet;
     private float speed;
     Location moveTo = null;
     private int TimeToMove = 0;
     private Navigation nav;
 
-    public PathfinderGoalControl(MyWolf MWolf, float f)
+    public PathfinderGoalControl(MyWolf MPet, float f)
     {
-        this.MWolf = MWolf;
+        this.MPet = MPet;
         speed = f;
-        nav = this.MWolf.Wolf.getHandle().al();
+        nav = this.MPet.Wolf.getHandle().al();
     }
 
     @Override
     public boolean a()
     {
-        if (MWolf.skillSystem.hasSkill("Control") && MWolf.skillSystem.getSkill("Control").getLevel() > 0)
+        if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
         {
-            Control control = (Control) MWolf.skillSystem.getSkill("Control");
+            Control control = (Control) MPet.getSkillSystem().getSkill("Control");
             if (control.getLocation(false) != null)
             {
                 moveTo = control.getLocation();
-                TimeToMove = (int) MyPetUtil.getDistance(MWolf.getLocation(), moveTo) / 3;
+                TimeToMove = (int) MyPetUtil.getDistance(MPet.getLocation(), moveTo) / 3;
             }
         }
         return moveTo != null;
@@ -72,17 +72,17 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 
     public boolean b()
     {
-        Control control = (Control) MWolf.skillSystem.getSkill("Control");
+        Control control = (Control) MPet.getSkillSystem().getSkill("Control");
         if (control.getLocation(false) != null)
         {
             moveTo = control.getLocation();
-            TimeToMove = (int) MyPetUtil.getDistance(MWolf.getLocation(), moveTo) / 3;
+            TimeToMove = (int) MyPetUtil.getDistance(MPet.getLocation(), moveTo) / 3;
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
             {
                 moveTo = null;
             }
         }
-        return moveTo != null && !this.MWolf.Wolf.isSitting();
+        return moveTo != null && !this.MPet.Wolf.isSitting();
     }
 
     public void d()

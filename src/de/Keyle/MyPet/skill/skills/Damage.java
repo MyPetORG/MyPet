@@ -34,6 +34,6 @@ public class Damage extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%wolfname%", MWolf.Name).replace("%dmg%", "" + Level));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%wolfname%", MPet.Name).replace("%dmg%", "" + Level));
     }
 }

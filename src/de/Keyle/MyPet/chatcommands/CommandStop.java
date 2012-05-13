@@ -38,28 +38,28 @@ public class CommandStop implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
+                MyWolf MPet = MyPetList.getMyPet(owner);
 
                 if (!MyPetPermissions.has(owner, "MyPet.user.stop"))
                 {
                     return true;
                 }
-                if (MWolf.Status == PetState.Despawned)
+                if (MPet.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%wolfname%", MWolf.Name));
-                MWolf.Wolf.getHandle().setTarget(null);
-                MWolf.Wolf.getHandle().b((EntityLiving) null);
-                MWolf.Wolf.getHandle().Goaltarget = null;
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", MPet.Name));
+                MPet.Wolf.getHandle().setTarget(null);
+                MPet.Wolf.getHandle().b((EntityLiving) null);
+                MPet.Wolf.getHandle().Goaltarget = null;
                 return true;
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
         return true;

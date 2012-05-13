@@ -43,29 +43,29 @@ public class CommandInfo implements CommandExecutor
                 playerName = args[0];
             }
 
-            if (MyPetList.hasMyWolf(MyPetUtil.getOfflinePlayer(playerName)))
+            if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(MyPetUtil.getOfflinePlayer(playerName));
+                MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
                 String msg;
-                if (MWolf.getHealth() > MWolf.getMaxHealth() / 3 * 2)
+                if (MPet.getHealth() > MPet.getMaxHealth() / 3 * 2)
                 {
-                    msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.GREEN + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                 }
-                else if (MWolf.getHealth() > MWolf.getMaxHealth() / 3)
+                else if (MPet.getHealth() > MPet.getMaxHealth() / 3)
                 {
-                    msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.YELLOW + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                 }
                 else
                 {
-                    msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.RED + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                 }
-                player.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
+                player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", MPet.Name).replace("%hp%", msg));
                 if (MyPetConfig.LevelSystem)
                 {
-                    int lvl = MWolf.Experience.getLevel();
-                    double EXP = MWolf.Experience.getCurrentExp();
-                    double reqEXP = MWolf.Experience.getRequiredExp();
-                    player.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
+                    int lvl = MPet.getExperience().getLevel();
+                    double EXP = MPet.getExperience().getCurrentExp();
+                    double reqEXP = MPet.getExperience().getRequiredExp();
+                    player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", MPet.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                 }
                 if (args != null && args.length > 0)
                 {
@@ -77,11 +77,11 @@ public class CommandInfo implements CommandExecutor
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", playerName)));
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 }
             }
         }

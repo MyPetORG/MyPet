@@ -48,11 +48,11 @@ public class CraftMyWolf extends CraftTameableAnimal
         }
         else if (target instanceof CraftLivingEntity)
         {
-            if (!getHandle().isMyWolf || !getHandle().MWolf.skillSystem.hasSkill("Behavior"))
+            if (!getHandle().isMyWolf || !getHandle().MPet.getSkillSystem().hasSkill("Behavior"))
             {
                 return;
             }
-            Behavior behavior = (Behavior) getHandle().MWolf.skillSystem.getSkill("Behavior");
+            Behavior behavior = (Behavior) getHandle().MPet.getSkillSystem().getSkill("Behavior");
             if (behavior.getLevel() <= 0 || behavior.getBehavior() != Behavior.BehaviorState.Friendly)
             {
                 return;

@@ -36,7 +36,7 @@ public class CommandName implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
                 if (!MyPetPermissions.has(owner, "MyPet.user.setname"))
                 {
@@ -52,14 +52,14 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
-                MWolf.setName(name);
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%wolfname%", name));
+                MyWolf MPet = MyPetList.getMyPet(owner);
+                MPet.setName(name);
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
                 return true;
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 return true;
             }
 

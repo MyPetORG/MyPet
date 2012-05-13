@@ -61,7 +61,7 @@ public class MyPetEntityListener implements Listener
             {
                 Player damager = (Player) e.getDamager();
 
-                if (!MyPetList.hasMyWolf(damager) && !(event.getEntity() instanceof CraftMyWolf))
+                if (!MyPetList.hasMyPet(damager) && !(event.getEntity() instanceof CraftMyWolf))
                 {
                     if (!MyPetPermissions.has(damager, "MyPet.user.leash") || damager.getItemInHand().getType() != MyPetConfig.LeashItem)
                     {
@@ -77,47 +77,47 @@ public class MyPetEntityListener implements Listener
                     if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
                     {
                         event.setCancelled(true);
-                        MyWolf MWolf = new MyWolf(damager);
-                        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(MWolf));
-                        MyPetList.addMyWolf(MWolf);
-                        MWolf.createWolf((Wolf) event.getEntity());
+                        MyWolf MPet = new MyWolf(damager);
+                        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(MPet));
+                        MyPetList.addMyPet(MPet);
+                        MPet.createWolf((Wolf) event.getEntity());
                         MyPetUtil.getDebugLogger().info("New Wolf leashed:");
-                        MyPetUtil.getDebugLogger().info("   " + MWolf.toString());
+                        MyPetUtil.getDebugLogger().info("   " + MPet.toString());
                         MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
                         damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
                     }
                 }
-                if (MyPetList.isMyWolf(event.getEntity().getEntityId()))
+                if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(event.getEntity().getEntityId());
-                    MWolf.ResetSitTimer();
+                    MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    MPet.ResetSitTimer();
                     if (damager.getItemInHand().getType() == MyPetConfig.LeashItem)
                     {
                         String msg;
-                        if (MWolf.getHealth() > MWolf.getMaxHealth() / 3 * 2)
+                        if (MPet.getHealth() > MPet.getMaxHealth() / 3 * 2)
                         {
-                            msg = "" + ChatColor.GREEN + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.GREEN + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                         }
-                        else if (MWolf.getHealth() > MWolf.getMaxHealth() / 3)
+                        else if (MPet.getHealth() > MPet.getMaxHealth() / 3)
                         {
-                            msg = "" + ChatColor.YELLOW + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.YELLOW + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                         }
                         else
                         {
-                            msg = "" + ChatColor.RED + MWolf.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MWolf.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.RED + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                         }
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MWolf.Name).replace("%hp%", msg));
+                        damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", MPet.Name).replace("%hp%", msg));
                         if (MyPetConfig.LevelSystem)
                         {
-                            int lvl = MWolf.Experience.getLevel();
-                            double EXP = MWolf.Experience.getCurrentExp();
-                            double reqEXP = MWolf.Experience.getRequiredExp();
-                            damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MWolf.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
+                            int lvl = MPet.getExperience().getLevel();
+                            double EXP = MPet.getExperience().getCurrentExp();
+                            double reqEXP = MPet.getExperience().getRequiredExp();
+                            damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MPet.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
 
-                        if (MWolf.Wolf.isSitting())
+                        if (MPet.Wolf.isSitting())
                         {
-                            MWolf.Wolf.setSitting(true);
+                            MPet.Wolf.setSitting(true);
                         }
                         event.setCancelled(true);
                     }
@@ -125,15 +125,15 @@ public class MyPetEntityListener implements Listener
                     {
                         event.setCancelled(true);
                     }
-                    if (!MyPetUtil.canHurtWorldGuard(MWolf.getOwner().getPlayer()))
+                    if (!MyPetUtil.canHurtWorldGuard(MPet.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
                     }
-                    if (!MyPetUtil.canHurtFactions(damager, MWolf.getOwner().getPlayer()))
+                    if (!MyPetUtil.canHurtFactions(damager, MPet.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
                     }
-                    if (!MyPetUtil.canHurtTowny(damager, MWolf.getOwner().getPlayer()))
+                    if (!MyPetUtil.canHurtTowny(damager, MPet.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
                     }
@@ -155,21 +155,21 @@ public class MyPetEntityListener implements Listener
             if (e.getDamager() instanceof Player)
             {
                 Player damager = (Player) e.getDamager();
-                if (MyPetList.hasMyWolf(damager))
+                if (MyPetList.hasMyPet(damager))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(damager);
-                    if (MWolf.Status == PetState.Here && event.getEntity() != MWolf.Wolf)
+                    MyWolf MPet = MyPetList.getMyPet(damager);
+                    if (MPet.Status == PetState.Here && event.getEntity() != MPet.Wolf)
                     {
-                        MyPetList.getMyWolf(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        MyPetList.getMyPet(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
 
                 }
                 else if (e.getDamager() instanceof CraftMyWolf)
                 {
-                    MyWolf MWolf = ((CraftMyWolf) e.getDamager()).getHandle().getMyWolf();
-                    if (MWolf.skillSystem.hasSkill("Poison"))
+                    MyWolf MPet = ((CraftMyWolf) e.getDamager()).getHandle().getMyWolf();
+                    if (MPet.getSkillSystem().hasSkill("Poison"))
                     {
-                        Poison poison = (Poison) MWolf.skillSystem.getSkill("Poison");
+                        Poison poison = (Poison) MPet.getSkillSystem().getSkill("Poison");
                         if (poison.getPoison())
                         {
                             PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
@@ -186,21 +186,21 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyWolf)
         {
-            if (MyPetList.isMyWolf(event.getEntity().getEntityId()))
+            if (MyPetList.isMyPet(event.getEntity().getEntityId()))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(event.getEntity().getEntityId());
-                MWolf.Status = PetState.Dead;
-                MWolf.RespawnTime = MyPetConfig.RespawnTimeFixed + (MWolf.Experience.getLevel() * MyPetConfig.RespawnTimeFactor);
+                MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                MPet.Status = PetState.Dead;
+                MPet.RespawnTime = MyPetConfig.RespawnTimeFixed + (MPet.getExperience().getLevel() * MyPetConfig.RespawnTimeFactor);
                 if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
                 {
                     EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                    if (!(e.getDamager() instanceof Player && MWolf.getOwner() != e.getDamager()))
+                    if (!(e.getDamager() instanceof Player && MPet.getOwner() != e.getDamager()))
                     {
                         event.setDroppedExp(0);
                     }
                 }
                 SendDeathMessage(event);
-                MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime)));
+                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%wolfname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
             }
         }
         if (MyPetConfig.LevelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -208,10 +208,10 @@ public class MyPetEntityListener implements Listener
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof CraftMyWolf)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                if (MyPetList.isMyWolf(e.getDamager().getEntityId()))
+                if (MyPetList.isMyPet(e.getDamager().getEntityId()))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(e.getDamager().getEntityId());
-                    event.setDroppedExp(MWolf.Experience.addExp(e.getEntity().getType()));
+                    MyWolf MPet = MyPetList.getMyPet(e.getDamager().getEntityId());
+                    event.setDroppedExp(MPet.getExperience().addExp(e.getEntity().getType()));
                 }
             }
         }
@@ -224,20 +224,20 @@ public class MyPetEntityListener implements Listener
         {
             if (event.getEntity() instanceof Wolf)
             {
-                if (MyPetList.isMyWolf(event.getEntity().getEntityId()))
+                if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(event.getEntity().getEntityId());
-                    MWolf.ResetSitTimer();
-                    if (MWolf.skillSystem.hasSkill("Behavior"))
+                    MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    MPet.ResetSitTimer();
+                    if (MPet.getSkillSystem().hasSkill("Behavior"))
                     {
-                        Behavior behavior = (Behavior) MWolf.skillSystem.getSkill("Behavior");
+                        Behavior behavior = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
                         if (behavior.getLevel() > 0)
                         {
                             if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
                             {
                                 event.setCancelled(true);
                             }
-                            else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(MWolf.getOwner().getName()))
+                            else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(MPet.getOwner().getName()))
                             {
                                 event.setCancelled(true);
                             }
@@ -275,9 +275,9 @@ public class MyPetEntityListener implements Listener
 
     private void SendDeathMessage(final EntityDeathEvent event)
     {
-        MyWolf MWolf = MyPetList.getMyWolf(event.getEntity().getEntityId());
+        MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
         String Killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknow"));
-        if (MWolf != null)
+        if (MPet != null)
         {
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
@@ -285,7 +285,7 @@ public class MyPetEntityListener implements Listener
 
                 if (e.getDamager().getType() == EntityType.PLAYER)
                 {
-                    if (e.getDamager() == MWolf.getOwner())
+                    if (e.getDamager() == MPet.getOwner())
                     {
                         Killer = MyPetUtil.setColors(MyPetLanguage.getString("You"));
                     }
@@ -355,9 +355,9 @@ public class MyPetEntityListener implements Listener
                     Wolf w = (Wolf) e.getDamager();
                     if (w.isTamed())
                     {
-                        if (MyPetList.isMyWolf(w.getEntityId()))
+                        if (MyPetList.isMyPet(w.getEntityId()))
                         {
-                            Killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", MyPetList.getMyWolf(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyPetList.getMyWolf(w.getEntityId()).Name);
+                            Killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", MyPetList.getMyPet(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyPetList.getMyPet(w.getEntityId()).Name);
                         }
                         else
                         {
@@ -399,7 +399,7 @@ public class MyPetEntityListener implements Listener
                 Killer = MyPetUtil.setColors(MyPetLanguage.getString("kvoid"));
             }
 
-            MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%wolfname%", MWolf.Name) + Killer);
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%wolfname%", MPet.Name) + Killer);
         }
     }
 }

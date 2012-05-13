@@ -37,18 +37,18 @@ public class CommandBehavior implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
+                MyWolf MPet = MyPetList.getMyPet(owner);
 
-                if (MWolf.Status == PetState.Despawned)
+                if (MPet.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MWolf.skillSystem.hasSkill("Behavior"))
+                else if (MPet.getSkillSystem().hasSkill("Behavior"))
                 {
-                    Behavior Skill = (Behavior) MWolf.skillSystem.getSkill("Behavior");
+                    Behavior Skill = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
                     if (args.length == 1)
                     {
                         if (args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Fri"))
@@ -79,7 +79,7 @@ public class CommandBehavior implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
         return true;

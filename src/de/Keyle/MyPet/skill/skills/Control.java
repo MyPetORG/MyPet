@@ -39,7 +39,7 @@ public class Control extends MyPetGenericSkill
     public void upgrade()
     {
         Level = 1;
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%wolfname%", MWolf.Name).replace("%item%", Item.name()));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%wolfname%", MPet.Name).replace("%item%", Item.name()));
     }
 
     public Location getLocation()

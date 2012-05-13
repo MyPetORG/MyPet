@@ -52,9 +52,9 @@ public class MyPetTimer
 
             public void run()
             {
-                for (MyWolf MWolf : MyPetList.getMyWolfList())
+                for (MyWolf MPet : MyPetList.getMyPetList())
                 {
-                    MWolf.scheduleTask();
+                    MPet.scheduleTask();
                 }
                 for (Scheduler Task : TasksToSchedule)
                 {

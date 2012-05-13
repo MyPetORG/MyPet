@@ -30,26 +30,26 @@ public class MyPetExpEvent extends Event implements Cancellable
     private static final long serialVersionUID = -605293022023540120L;
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf Wolf;
+    private final MyWolf pet;
     private boolean isCancelled = false;
     private double oldEXP;
     private double newEXP;
 
-    public MyPetExpEvent(MyWolf Wolf, double oldEXP, double newEXP)
+    public MyPetExpEvent(MyWolf pet, double oldEXP, double newEXP)
     {
-        this.Wolf = Wolf;
+        this.pet = pet;
         this.oldEXP = oldEXP;
         this.newEXP = newEXP;
     }
 
     public Player getOwner()
     {
-        return Wolf.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
-    public MyWolf getWolf()
+    public MyWolf getPet()
     {
-        return Wolf;
+        return pet;
     }
 
     public double getOldEXP()

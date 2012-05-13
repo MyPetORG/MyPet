@@ -36,29 +36,29 @@ public class CommandPickup implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
+                MyWolf MPet = MyPetList.getMyPet(owner);
 
-                if (MWolf.Status == PetState.Despawned)
+                if (MPet.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MWolf.Status == PetState.Dead)
+                else if (MPet.Status == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
                     return true;
                 }
-                if (MWolf.skillSystem.hasSkill("Pickup"))
+                if (MPet.getSkillSystem().hasSkill("Pickup"))
                 {
-                    MWolf.skillSystem.getSkill("Pickup").activate();
+                    MPet.getSkillSystem().getSkill("Pickup").activate();
                 }
                 return true;
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
         return true;

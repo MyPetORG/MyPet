@@ -33,31 +33,31 @@ import java.util.List;
 
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 {
-    private MyWolf MWolf;
+    private MyWolf MPet;
     private EntityMyWolf wolf;
     private EntityLiving target;
     private float range;
 
-    public PathfinderGoalAggressiveTarget(MyWolf MWolf, float range)
+    public PathfinderGoalAggressiveTarget(MyWolf MPet, float range)
     {
-        super(MWolf.Wolf.getHandle(), 32.0F, false);
-        this.wolf = MWolf.Wolf.getHandle();
-        this.MWolf = MWolf;
+        super(MPet.Wolf.getHandle(), 32.0F, false);
+        this.wolf = MPet.Wolf.getHandle();
+        this.MPet = MPet;
         this.range = range;
     }
 
     public boolean a()
     {
-        if (MWolf.skillSystem.hasSkill("Behavior"))
+        if (MPet.getSkillSystem().hasSkill("Behavior"))
         {
-            Behavior behavior = (Behavior) MWolf.skillSystem.getSkill("Behavior");
+            Behavior behavior = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
             if (behavior.getLevel() > 0)
             {
                 if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
                     return false;
                 }
-                else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && !MWolf.isSitting())
+                else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && !MPet.isSitting())
                 {
                     if (target == null || !target.isAlive())
                     {
@@ -79,15 +79,15 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                                     }
                                     Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
 
-                                    if (target == MWolf.getOwner())
+                                    if (target == MPet.getOwner())
                                     {
                                         continue;
                                     }
-                                    if (!MyPetUtil.canHurtFactions(MWolf.getOwner().getPlayer(), target))
+                                    if (!MyPetUtil.canHurtFactions(MPet.getOwner().getPlayer(), target))
                                     {
                                         continue;
                                     }
-                                    if (!MyPetUtil.canHurtTowny(MWolf.getOwner().getPlayer(), target))
+                                    if (!MyPetUtil.canHurtTowny(MPet.getOwner().getPlayer(), target))
                                     {
                                         continue;
                                     }

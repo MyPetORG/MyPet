@@ -35,6 +35,6 @@ public class HP extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%wolfname%", MWolf.Name).replace("%maxhealth%", "" + (MyPetConfig.StartHP + Level)));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%wolfname%", MPet.Name).replace("%maxhealth%", "" + (MyPetConfig.StartHP + Level)));
     }
 }

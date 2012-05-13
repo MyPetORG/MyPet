@@ -22,7 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyWolfSpoutEventReason;
+import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -39,50 +39,50 @@ public class CommandCall implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
+                MyWolf MPet = MyPetList.getMyPet(owner);
                 if (!MyPetPermissions.has(owner, "MyPet.user.call"))
                 {
                     return true;
                 }
-                if (MWolf.Status == PetState.Here)
+                if (MPet.Status == PetState.Here)
                 {
-                    if (MWolf.getLocation().getWorld() != owner.getLocation().getWorld())
+                    if (MPet.getLocation().getWorld() != owner.getLocation().getWorld())
                     {
-                        MWolf.removeWolf();
-                        MWolf.setLocation(owner.getLocation());
-                        MWolf.createWolf(false);
+                        MPet.removePet();
+                        MPet.setLocation(owner.getLocation());
+                        MPet.createPet(false);
                     }
                     else
                     {
-                        if (MWolf.Wolf.isInsideVehicle())
+                        if (MPet.Wolf.isInsideVehicle())
                         {
-                            MWolf.Wolf.leaveVehicle();
+                            MPet.Wolf.leaveVehicle();
                         }
-                        MWolf.Wolf.teleport(owner);
+                        MPet.Wolf.teleport(owner);
                     }
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
+                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));
                     return true;
                 }
-                else if (MWolf.Status == PetState.Despawned)
+                else if (MPet.Status == PetState.Despawned)
                 {
-                    MWolf.setLocation(owner.getLocation());
-                    MWolf.createWolf(false);
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%wolfname%", MWolf.Name));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MWolf, MyWolfSpoutEventReason.Call));
+                    MPet.setLocation(owner.getLocation());
+                    MPet.createPet(false);
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
+                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));
                     return true;
                 }
-                else if (MWolf.Status == PetState.Dead)
+                else if (MPet.Status == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
                     return true;
                 }
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
         return true;

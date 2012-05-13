@@ -28,7 +28,7 @@ public class MyPetSkillSystem
 {
     private static List<Class<? extends MyPetGenericSkill>> ClassSkillList = new ArrayList<Class<? extends MyPetGenericSkill>>();
 
-    private MyWolf MWolf;
+    private MyWolf MPet;
 
     private Map<String, MyPetGenericSkill> Skills = new HashMap<String, MyPetGenericSkill>();
 
@@ -40,9 +40,9 @@ public class MyPetSkillSystem
         }
     }
 
-    public MyPetSkillSystem(MyWolf MWolf)
+    public MyPetSkillSystem(MyWolf MPet)
     {
-        this.MWolf = MWolf;
+        this.MPet = MPet;
         addSkills(ClassSkillList);
     }
 
@@ -61,7 +61,7 @@ public class MyPetSkillSystem
 
                 if (!Skills.containsKey(Name))
                 {
-                    skill.MWolf = this.MWolf;
+                    skill.MPet = this.MPet;
                     Skills.put(Name, skill);
                 }
             }

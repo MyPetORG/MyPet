@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class MyPetExperience
 {
-    private final MyWolf MWolf;
+    private final MyWolf MPet;
 
     private double Exp = 0;
     MyPetJSexp JSexp;
@@ -66,13 +66,13 @@ public class MyPetExperience
         MobEXP.put(EntityType.ENDER_DRAGON, new MyPetMonsterExpirience(20000, EntityType.ENDER_DRAGON));
     }
 
-    public MyPetExperience(MyWolf Wolf)
+    public MyPetExperience(MyWolf pet)
     {
-        this.MWolf = Wolf;
-        JSexp = new MyPetJSexp(Wolf, this);
+        this.MPet = pet;
+        JSexp = new MyPetJSexp(pet, this);
         for (int i = 1 ; i <= getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MWolf, i, true));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MPet, i, true));
         }
     }
 
@@ -81,13 +81,13 @@ public class MyPetExperience
         Exp = 0;
         for (int i = 1 ; i <= getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MWolf, i, true));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MPet, i, true));
         }
     }
 
     public void setExp(double Exp)
     {
-        MyPetExpEvent event = new MyPetExpEvent(MWolf, this.getExp(), Exp);
+        MyPetExpEvent event = new MyPetExpEvent(MPet, this.getExp(), Exp);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
         {
@@ -97,7 +97,7 @@ public class MyPetExperience
         this.Exp = event.getEXP();
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MWolf, i + 1, true));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MPet, i + 1, true));
         }
     }
 
@@ -108,7 +108,7 @@ public class MyPetExperience
 
     public int addExp(double Exp)
     {
-        MyPetExpEvent event = new MyPetExpEvent(MWolf, this.Exp, this.Exp + Exp);
+        MyPetExpEvent event = new MyPetExpEvent(MPet, this.Exp, this.Exp + Exp);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
         {
@@ -119,7 +119,7 @@ public class MyPetExperience
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MWolf, i + 1));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MPet, i + 1));
         }
         return (int) (event.getNewEXP() - event.getOldEXP());
     }
@@ -128,7 +128,7 @@ public class MyPetExperience
     {
         if (MobEXP.containsKey(type))
         {
-            MyPetExpEvent event = new MyPetExpEvent(MWolf, this.Exp, MobEXP.get(type).getRandomExp() + this.Exp);
+            MyPetExpEvent event = new MyPetExpEvent(MPet, this.Exp, MobEXP.get(type).getRandomExp() + this.Exp);
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
             if (event.isCancelled())
             {
@@ -138,7 +138,7 @@ public class MyPetExperience
             this.Exp = event.getEXP();
             for (int i = tmplvl ; i < getLevel() ; i++)
             {
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MWolf, i + 1));
+                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(MPet, i + 1));
             }
             return (int) (event.getNewEXP() - event.getOldEXP());
         }

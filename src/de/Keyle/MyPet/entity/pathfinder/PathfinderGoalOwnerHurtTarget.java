@@ -34,13 +34,13 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 
     EntityTameableAnimal wolf;
     EntityLiving target;
-    MyWolf MWolf;
+    MyWolf MPet;
 
-    public PathfinderGoalOwnerHurtTarget(MyWolf MWolf)
+    public PathfinderGoalOwnerHurtTarget(MyWolf MPet)
     {
-        super(MWolf.Wolf.getHandle(), 32.0F, false);
-        this.wolf = MWolf.Wolf.getHandle();
-        this.MWolf = MWolf;
+        super(MPet.Wolf.getHandle(), 32.0F, false);
+        this.wolf = MPet.Wolf.getHandle();
+        this.MPet = MPet;
         this.a(1);
     }
 
@@ -60,9 +60,9 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
             }
             else
             {
-                if (MWolf.skillSystem.hasSkill("Behavior"))
+                if (MPet.getSkillSystem().hasSkill("Behavior"))
                 {
-                    Behavior behavior = (Behavior) MWolf.skillSystem.getSkill("Behavior");
+                    Behavior behavior = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
                     if (behavior.getLevel() > 0)
                     {
                         if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
@@ -84,17 +84,17 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                     }
                     Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
 
-                    if (target == MWolf.getOwner())
+                    if (target == MPet.getOwner())
                     {
                         this.target = null;
                         return false;
                     }
-                    else if (!MyPetUtil.canHurtFactions(MWolf.getOwner().getPlayer(), target))
+                    else if (!MyPetUtil.canHurtFactions(MPet.getOwner().getPlayer(), target))
                     {
                         this.target = null;
                         return false;
                     }
-                    else if (!MyPetUtil.canHurtTowny(MWolf.getOwner().getPlayer(), target))
+                    else if (!MyPetUtil.canHurtTowny(MPet.getOwner().getPlayer(), target))
                     {
                         this.target = null;
                         return false;

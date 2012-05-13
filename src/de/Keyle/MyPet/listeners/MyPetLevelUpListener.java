@@ -32,32 +32,32 @@ public class MyPetLevelUpListener implements Listener
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent eventMyPet)
     {
-        MyWolf MWolf = eventMyPet.getWolf();
+        MyWolf MPet = eventMyPet.getPet();
         if (!eventMyPet.isQuiet())
         {
-            MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MWolf.Name).replace("%lvl%", "" + eventMyPet.getLevel()));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MPet.Name).replace("%lvl%", "" + eventMyPet.getLevel()));
         }
         int lvl = eventMyPet.getLevel();
-        MyPetSkillTree st = MWolf.skillTree;
+        MyPetSkillTree st = MPet.skillTree;
         String[] Skills = st.getSkills(lvl);
         if (Skills.length > 0)
         {
             for (String skill : Skills)
             {
-                if (MWolf.skillSystem.hasSkill(skill))
+                if (MPet.getSkillSystem().hasSkill(skill))
                 {
                     if (eventMyPet.isQuiet())
                     {
-                        MWolf.skillSystem.getSkill(skill).setLevel(MWolf.skillSystem.getSkill(skill).getLevel() + 1);
+                        MPet.getSkillSystem().getSkill(skill).setLevel(MPet.getSkillSystem().getSkill(skill).getLevel() + 1);
                     }
                     else
                     {
-                        MWolf.skillSystem.getSkill(skill).upgrade();
+                        MPet.getSkillSystem().getSkill(skill).upgrade();
                     }
                 }
             }
         }
 
-        MWolf.setHealth(MWolf.getMaxHealth());
+        MPet.setHealth(MPet.getMaxHealth());
     }
 }

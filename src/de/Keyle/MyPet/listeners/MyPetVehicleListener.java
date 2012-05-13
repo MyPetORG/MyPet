@@ -36,12 +36,12 @@ public class MyPetVehicleListener implements Listener
         if (!event.isCancelled() && event.getEntered() instanceof Player)
         {
             Player player = (Player) event.getEntered();
-            if (MyPetList.hasMyWolf(player))
+            if (MyPetList.hasMyPet(player))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(player);
-                if (MWolf.Status == PetState.Here && !MWolf.isSitting())
+                MyWolf MPet = MyPetList.getMyPet(player);
+                if (MPet.Status == PetState.Here && !MPet.isSitting())
                 {
-                    MWolf.setSitting(true);
+                    MPet.setSitting(true);
                 }
             }
         }

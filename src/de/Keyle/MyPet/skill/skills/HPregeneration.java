@@ -39,17 +39,17 @@ public class HPregeneration extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MWolf.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%wolfname%", MWolf.Name).replace("%sec%", "" + (HealtregenTime - Level)));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%wolfname%", MPet.Name).replace("%sec%", "" + (HealtregenTime - Level)));
     }
 
     public void schedule()
     {
-        if (Level > 0 && MWolf.Status == PetState.Here)
+        if (Level > 0 && MPet.Status == PetState.Here)
         {
             timeCounter--;
             if (timeCounter <= 0)
             {
-                MWolf.Wolf.getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
+                MPet.Wolf.getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = HealtregenTime - Level;
             }
         }

@@ -40,7 +40,7 @@ public class EntityMyWolf extends EntityTameableAnimal
     public EntityLiving Goaltarget = null;
 
     boolean isMyWolf = false;
-    MyWolf MWolf;
+    MyWolf MPet;
 
     public EntityMyWolf(World world)
     {
@@ -48,17 +48,17 @@ public class EntityMyWolf extends EntityTameableAnimal
         MyPetUtil.getLogger().severe("Don't try to get a MyWolf this way!");
     }
 
-    public EntityMyWolf(World world, MyWolf MWolf)
+    public EntityMyWolf(World world, MyWolf MPet)
     {
         super(world);
         this.texture = "/mob/wolf.png";
         this.b(0.6F, 0.8F);
         this.bb = 0.3F;
         this.al().a(true);
-        setMyWolf(MWolf);
-        MWolf.Wolf = (CraftMyWolf) this.getBukkitEntity();
+        setMyWolf(MPet);
+        MPet.Wolf = (CraftMyWolf) this.getBukkitEntity();
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MWolf, 0.4F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.a);
@@ -69,10 +69,10 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MWolf));
+        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(MWolf, Control, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MWolf, 10));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
     }
 
     public boolean isMyWolf()
@@ -80,19 +80,19 @@ public class EntityMyWolf extends EntityTameableAnimal
         return isMyWolf;
     }
 
-    public void setMyWolf(MyWolf MWolf)
+    public void setMyWolf(MyWolf MPet)
     {
-        if (MWolf != null)
+        if (MPet != null)
         {
-            this.MWolf = MWolf;
+            this.MPet = MPet;
             isMyWolf = true;
             if (!isTamed())
             {
                 this.setTamed(true);
                 this.setPathEntity(null);
-                this.setSitting(MWolf.isSitting());
-                this.setHealth(MWolf.getHealth() >= getMaxHealth() ? getMaxHealth() : MWolf.getHealth());
-                this.setOwnerName(MWolf.getOwner().getName());
+                this.setSitting(MPet.isSitting());
+                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+                this.setOwnerName(MPet.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
             }
         }
@@ -100,7 +100,7 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public int getMaxHealth()
     {
-        return MyPetConfig.StartHP + (isTamed() && MWolf.skillSystem.hasSkill("HP") ? MWolf.skillSystem.getSkill("HP").getLevel() : 0);
+        return MyPetConfig.StartHP + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public boolean b(EntityHuman entityhuman)
@@ -109,9 +109,9 @@ public class EntityMyWolf extends EntityTameableAnimal
 
         if (isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
-            if (MWolf.skillSystem.hasSkill("Control") && MWolf.skillSystem.getSkill("Control").getLevel() > 0)
+            if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
             {
-                if (MWolf.getOwner().getPlayer().getItemInHand().getType() == Control.Item)
+                if (MPet.getOwner().getPlayer().getItemInHand().getType() == Control.Item)
                 {
                     return true;
                 }
@@ -149,7 +149,7 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public boolean a(Entity entity)
     {
-        int damage = 4 + (isMyWolf && MWolf.skillSystem.hasSkill("Damage") ? MWolf.skillSystem.getSkill("Damage").getLevel() : 0);
+        int damage = 4 + (isMyWolf && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
@@ -185,7 +185,7 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public MyWolf getMyWolf()
     {
-        return MWolf;
+        return MPet;
     }
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------

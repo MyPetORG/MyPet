@@ -27,7 +27,7 @@ public class MyPetGenericSkill implements Scheduler
 {
     protected String Name;
     protected int Level = 0;
-    protected MyWolf MWolf;
+    protected MyWolf MPet;
 
     protected MyPetGenericSkill(String Name)
     {
@@ -39,14 +39,14 @@ public class MyPetGenericSkill implements Scheduler
         return this.Name;
     }
 
-    public void setMyWolf(MyWolf MWolf)
+    public void setMyWolf(MyWolf MPet)
     {
-        this.MWolf = MWolf;
+        this.MPet = MPet;
     }
 
     public MyWolf getMyWolf()
     {
-        return MWolf;
+        return MPet;
     }
 
     public int getLevel()

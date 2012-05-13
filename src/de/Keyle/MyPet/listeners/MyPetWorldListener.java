@@ -35,9 +35,9 @@ public class MyPetWorldListener implements Listener
         {
             if (e instanceof Wolf)
             {
-                if (MyPetList.isMyWolf(e.getEntityId()))
+                if (MyPetList.isMyPet(e.getEntityId()))
                 {
-                    MyPetList.getMyWolf(e.getEntityId()).removeWolf();
+                    MyPetList.getMyPet(e.getEntityId()).removePet();
                 }
             }
         }

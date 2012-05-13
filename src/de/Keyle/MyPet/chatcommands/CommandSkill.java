@@ -44,11 +44,11 @@ public class CommandSkill implements CommandExecutor
                 playerName = args[0];
             }
 
-            if (MyPetList.hasMyWolf(MyPetUtil.getOfflinePlayer(playerName)))
+            if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(MyPetUtil.getOfflinePlayer(playerName));
-                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%wolfname%", MWolf.Name).replace("%skilltree%", MWolf.skillTree.getName()));
-                Collection<MyPetGenericSkill> skills = MWolf.skillSystem.getSkills();
+                MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
+                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", MPet.Name).replace("%skilltree%", MPet.skillTree.getName()));
+                Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                 if (skills.size() > 0)
                 {
                     for (MyPetGenericSkill skill : skills)
@@ -65,11 +65,11 @@ public class CommandSkill implements CommandExecutor
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHaveWolf").replace("%playername%", playerName)));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", playerName)));
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 }
             }
         }

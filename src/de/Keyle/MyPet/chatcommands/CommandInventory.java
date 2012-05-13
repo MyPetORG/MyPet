@@ -40,37 +40,37 @@ public class CommandInventory implements CommandExecutor
             Player player = (Player) sender;
             if (args.length == 0)
             {
-                if (MyPetList.hasMyWolf(player))
+                if (MyPetList.hasMyPet(player))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(player);
-                    if (MWolf.Status == PetState.Despawned)
+                    MyWolf MPet = MyPetList.getMyPet(player);
+                    if (MPet.Status == PetState.Despawned)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                         return true;
                     }
-                    if (MWolf.Status == PetState.Dead)
+                    if (MPet.Status == PetState.Dead)
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%wolfname%", MWolf.Name).replace("%time%", "" + MWolf.RespawnTime));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
                         return true;
                     }
-                    if (MWolf.skillSystem.hasSkill("Inventory"))
+                    if (MPet.getSkillSystem().hasSkill("Inventory"))
                     {
-                        MWolf.skillSystem.getSkill("Inventory").activate();
+                        MPet.getSkillSystem().getSkill("Inventory").activate();
                     }
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 }
             }
             else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin"))
             {
-                if (MyPetList.hasMyWolf(MyPetUtil.getOfflinePlayer(args[0])))
+                if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(args[0])))
                 {
-                    MyWolf MWolf = MyPetList.getMyWolf(MyPetUtil.getOfflinePlayer(args[0]));
-                    if (MWolf.skillSystem.getSkill("Inventory") != null && MWolf.skillSystem.getSkill("Inventory").getLevel() > 0)
+                    MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(args[0]));
+                    if (MPet.getSkillSystem().getSkill("Inventory") != null && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        ((Inventory) MWolf.skillSystem.getSkill("Inventory")).OpenInventory(player);
+                        ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).OpenInventory(player);
                     }
                 }
             }

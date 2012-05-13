@@ -29,27 +29,27 @@ public class MyPetLevelUpEvent extends Event
     private static final long serialVersionUID = -605293022023540119L;
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf Wolf;
+    private final MyWolf pet;
     private final int Level;
     private final boolean Quiet;
 
-    public MyPetLevelUpEvent(MyWolf Wolf, int Level)
+    public MyPetLevelUpEvent(MyWolf pet, int Level)
     {
-        this.Wolf = Wolf;
+        this.pet = pet;
         this.Level = Level;
         this.Quiet = false;
     }
 
-    public MyPetLevelUpEvent(MyWolf Wolf, int Level, boolean Quiet)
+    public MyPetLevelUpEvent(MyWolf pet, int Level, boolean Quiet)
     {
-        this.Wolf = Wolf;
+        this.pet = pet;
         this.Level = Level;
         this.Quiet = Quiet;
     }
 
     public Player getOwner()
     {
-        return Wolf.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
     public boolean isQuiet()
@@ -57,9 +57,9 @@ public class MyPetLevelUpEvent extends Event
         return Quiet;
     }
 
-    public MyWolf getWolf()
+    public MyWolf getPet()
     {
-        return Wolf;
+        return pet;
     }
 
     public int getLevel()

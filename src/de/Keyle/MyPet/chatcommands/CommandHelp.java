@@ -35,30 +35,30 @@ public class CommandHelp implements CommandExecutor
         {
             Player player = (Player) sender;
             player.sendMessage("--------------- MyPet - Help -------------------------");
-            player.sendMessage("/wolfinfo [player] | Display info about a MyPet  (alias: /winfo)");
+            player.sendMessage("/petinfo [player] | Display info about a MyPet  (alias: /winfo)");
             if (MyPetPermissions.has(player, "MyPet.admin"))
             {
-                player.sendMessage("/wolfadmin [PlayerName] name/exp [Value] | (alias: /ws or /wolfs)");
+                player.sendMessage("/petadmin [PlayerName] name/exp [Value]");
             }
-            if (MyPetList.hasMyWolf(player))
+            if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage("/wolfname <newwolfname> | Set wolf name");
-                player.sendMessage("/wolfrelease <wolfname> | Release your wolf");
-                player.sendMessage("/wolfstop | MyPet stopps attacking  (alias: /ws or /wolfs)");
-                player.sendMessage("/wolfcall | Call your wolf  (alias: /wc or /wolfc)");
-                player.sendMessage("/wolfskill | Shows the skill-levels");
+                player.sendMessage("/petname <newwolfname> | Set wolf name");
+                player.sendMessage("/petrelease <wolfname> | Release your wolf");
+                player.sendMessage("/petstop | MyPet stopps attacking  (alias: /ps or /pets)");
+                player.sendMessage("/petcall | Call your wolf  (alias: /pc or /petc)");
+                player.sendMessage("/petskill | Shows the skill-levels");
 
-                if (MyPetList.getMyWolf(player).skillSystem.hasSkill("Inventory") && MyPetList.getMyWolf(player).skillSystem.getSkill("Inventory").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Inventory") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Inventory").getLevel() > 0)
                 {
-                    player.sendMessage("/wolfinventory | Open the inventory of the wolf  (alias: /wi or /wolfi)");
+                    player.sendMessage("/petinventory | Opens the inventory of the pet  (alias: /pi or /peti)");
                 }
-                if (MyPetList.getMyWolf(player).skillSystem.hasSkill("Pickup") && MyPetList.getMyWolf(player).skillSystem.getSkill("Pickup").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Pickup") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Pickup").getLevel() > 0)
                 {
-                    player.sendMessage("/wolfpickup | Toggle wolf pickup on/off  (alias: /wp or /wolfp)");
+                    player.sendMessage("/petpickup | Toggle wolf pickup on/off  (alias: /pp or /petp)");
                 }
-                if (MyPetList.getMyWolf(player).skillSystem.hasSkill("Behavior") && MyPetList.getMyWolf(player).skillSystem.getSkill("Behavior").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Behavior") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Behavior").getLevel() > 0)
                 {
-                    player.sendMessage("/wolfbehavior | Toggles the behaivior  (alias: /wb or /wolfb)");
+                    player.sendMessage("/petbehavior | Toggles the behaivior  (alias: /pb or /petb)");
                 }
             }
             player.sendMessage("");

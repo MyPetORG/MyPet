@@ -28,31 +28,31 @@ public class MyPetSpoutEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf Wolf;
-    private MyWolfSpoutEventReason eventReason = MyWolfSpoutEventReason.Nothing;
+    private final MyWolf pet;
+    private MyPetSpoutEventReason eventReason = MyPetSpoutEventReason.Nothing;
 
-    public enum MyWolfSpoutEventReason
+    public enum MyPetSpoutEventReason
     {
         Nothing, Name, Call
     }
 
-    public MyPetSpoutEvent(MyWolf Wolf, MyWolfSpoutEventReason eventReason)
+    public MyPetSpoutEvent(MyWolf pet, MyPetSpoutEventReason eventReason)
     {
-        this.Wolf = Wolf;
+        this.pet = pet;
         this.eventReason = eventReason;
     }
 
     public Player getOwner()
     {
-        return Wolf.getOwner().getPlayer();
+        return pet.getOwner().getPlayer();
     }
 
-    public MyWolf getWolf()
+    public MyWolf getPet()
     {
-        return Wolf;
+        return pet;
     }
 
-    public MyWolfSpoutEventReason getEventReason()
+    public MyPetSpoutEventReason getEventReason()
     {
         return eventReason;
     }

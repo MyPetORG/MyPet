@@ -44,15 +44,15 @@ public class CommandRelease implements CommandExecutor
         if (sender instanceof Player)
         {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyWolf(owner))
+            if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MWolf = MyPetList.getMyWolf(owner);
+                MyWolf MPet = MyPetList.getMyPet(owner);
 
                 if (!MyPetPermissions.has(owner, "MyPet.user.release"))
                 {
                     return true;
                 }
-                if (MWolf.Status == PetState.Despawned)
+                if (MPet.Status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
@@ -67,13 +67,13 @@ public class CommandRelease implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MWolf.Name.equalsIgnoreCase(name))
+                if (MPet.Name.equalsIgnoreCase(name))
                 {
-                    if (MWolf.skillSystem.hasSkill("Inventory") && MWolf.skillSystem.getSkill("Inventory").getLevel() > 0)
+                    if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        World world = MWolf.Wolf.getHandle().world;
-                        Location loc = MWolf.getLocation();
-                        for (ItemStack is : ((Inventory) MWolf.skillSystem.getSkill("Inventory")).inv.getContents())
+                        World world = MPet.Wolf.getHandle().world;
+                        Location loc = MPet.getLocation();
+                        for (ItemStack is : ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
                         {
                             if (is != null)
                             {
@@ -83,24 +83,24 @@ public class CommandRelease implements CommandExecutor
                             }
                         }
                     }
-                    MWolf.getLocation().getWorld().spawnCreature(MWolf.getLocation(), EntityType.WOLF);
-                    MWolf.removeWolf();
+                    MPet.getLocation().getWorld().spawnCreature(MPet.getLocation(), EntityType.WOLF);
+                    MPet.removePet();
 
 
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%wolfname%", MWolf.Name));
-                    MyPetList.removeMyWolf(MWolf);
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", MPet.Name));
+                    MyPetList.removeMyPet(MPet);
                     MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%wolfname%", MWolf.Name));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", MPet.Name));
                     return false;
                 }
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHaveWolf")));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
         return false;

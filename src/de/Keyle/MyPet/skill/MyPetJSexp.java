@@ -31,15 +31,15 @@ public class MyPetJSexp
 {
     public static String expScript = null;
     private int lvl = 1;
-    private MyWolf MWolf;
+    private MyWolf MPet;
     private double lastExp = 0;
     private double requiredExp = 0;
     private double currentExp = 0;
     private MyPetExperience MPetExperience;
 
-    public MyPetJSexp(MyWolf MWolf, MyPetExperience MPetExperience)
+    public MyPetJSexp(MyWolf MPet, MyPetExperience MPetExperience)
     {
-        this.MWolf = MWolf;
+        this.MPet = MPet;
         this.MPetExperience = MPetExperience;
     }
 
@@ -128,8 +128,8 @@ public class MyPetJSexp
             engine.put("currentExp", 0);
 
             engine.put("Exp", MPetExperience.getExp());
-            engine.put("name", MWolf.Name);
-            engine.put("player", MWolf.getOwner().getName());
+            engine.put("name", MPet.Name);
+            engine.put("player", MPet.getOwner().getName());
 
             engine.eval(expScript);
 
