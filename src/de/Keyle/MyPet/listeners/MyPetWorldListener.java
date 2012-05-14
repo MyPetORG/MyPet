@@ -19,9 +19,9 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.util.MyPetList;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -33,7 +33,7 @@ public class MyPetWorldListener implements Listener
     {
         for (Entity e : event.getChunk().getEntities())
         {
-            if (e instanceof Wolf)
+            if (e instanceof CraftMyPet)
             {
                 if (MyPetList.isMyPet(e.getEntityId()))
                 {

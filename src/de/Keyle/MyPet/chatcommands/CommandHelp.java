@@ -42,10 +42,10 @@ public class CommandHelp implements CommandExecutor
             }
             if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage("/petname <newwolfname> | Set the name of your pet");
-                player.sendMessage("/petrelease <wolfname> | Release your pet");
+                player.sendMessage("/petname <new pet name> | Set the name of your pet");
+                player.sendMessage("/petrelease <petname> | Release your pet");
                 player.sendMessage("/petstop | MyPet stopps attacking  (alias: /ps or /pets)");
-                player.sendMessage("/petcall | Call your wolf  (alias: /pc or /petc)");
+                player.sendMessage("/petcall | Call your pet  (alias: /pc or /petc)");
                 player.sendMessage("/petskill | Shows the skill-levels");
 
                 if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Inventory") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Inventory").getLevel() > 0)

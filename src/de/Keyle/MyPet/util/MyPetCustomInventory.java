@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MyPetCustomInventory implements IInventory
 {
-    private String MyWolfInventroyName;
+    private String InventroyName;
     private List<ItemStack> Items = new ArrayList<ItemStack>();
     private int Size = 0;
     private int stackSize = 64;
@@ -64,7 +64,7 @@ public class MyPetCustomInventory implements IInventory
 
     public String getName()
     {
-        return MyWolfInventroyName;
+        return InventroyName;
     }
 
     public void setName(String Name)
@@ -73,7 +73,7 @@ public class MyPetCustomInventory implements IInventory
         {
             Name = Name.substring(0, 16);
         }
-        this.MyWolfInventroyName = Name;
+        this.InventroyName = Name;
     }
 
     public ItemStack getItem(int i)

@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class MyPetTimer
 
             public void run()
             {
-                for (MyWolf MPet : MyPetList.getMyPetList())
+                for (MyPet MPet : MyPetList.getMyPetList())
                 {
                     MPet.scheduleTask();
                 }

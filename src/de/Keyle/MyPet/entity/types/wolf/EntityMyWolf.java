@@ -147,4 +147,24 @@ public class EntityMyWolf extends EntityMyPet
     {
         return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
+
+    // Vanilla Methods
+
+    @Override
+    protected String j()
+    {
+        return "mob.wolf.hurt";
+    }
+
+    @Override
+    protected String k()
+    {
+        return "mob.wolf.death";
+    }
+
+    @Override
+    protected float p()
+    {
+        return 0.4F;
+    }
 }

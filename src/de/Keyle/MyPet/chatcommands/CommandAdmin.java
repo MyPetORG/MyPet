@@ -47,13 +47,13 @@ public class CommandAdmin implements CommandExecutor
             {
                 return false;
             }
-            String Wolfowner = args[0];
+            String Petowner = args[0];
             String Change = args[1];
             String Value = args[2];
 
-            if (!MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)) && !MyPetList.hasInactiveMypet(MyPetUtil.getOfflinePlayer(Wolfowner)))
+            if (!MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)) && !MyPetList.hasInactiveMypet(MyPetUtil.getOfflinePlayer(Petowner)))
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", Wolfowner)));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", Petowner)));
                 return true;
             }
             if (Change.equalsIgnoreCase("name"))
@@ -64,13 +64,13 @@ public class CommandAdmin implements CommandExecutor
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)))
+                if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
                 {
-                    MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)).Name = name;
+                    MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Petowner)).Name = name;
                 }
                 else
                 {
-                    MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)).setName(name);
+                    MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)).setName(name);
                 }
             }
             else if (Change.equalsIgnoreCase("exp"))
@@ -79,9 +79,9 @@ public class CommandAdmin implements CommandExecutor
                 {
                     int Exp = Integer.parseInt(Value);
                     Exp = Exp < 0 ? 0 : Exp;
-                    if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)))
+                    if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
                     {
-                        MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Wolfowner));
+                        MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Petowner));
 
                         Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                         if (skills.size() > 0)
@@ -96,7 +96,7 @@ public class CommandAdmin implements CommandExecutor
                     }
                     else
                     {
-                        MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)).setExp(Exp);
+                        MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)).setExp(Exp);
                     }
                 }
             }

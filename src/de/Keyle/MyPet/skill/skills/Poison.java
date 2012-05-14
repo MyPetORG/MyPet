@@ -42,7 +42,7 @@ public class Poison extends MyPetGenericSkill
     {
         Level++;
         ChanceToPoison = Level * ChancePerLevel;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PoisonChance")).replace("%wolfname%", MPet.Name).replace("%chance%", "" + ChanceToPoison));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PoisonChance")).replace("%petname%", MPet.Name).replace("%chance%", "" + ChanceToPoison));
     }
 
     public boolean getPoison()

@@ -34,7 +34,6 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public class CommandRelease implements CommandExecutor
@@ -83,7 +82,7 @@ public class CommandRelease implements CommandExecutor
                             }
                         }
                     }
-                    MPet.getLocation().getWorld().spawnCreature(MPet.getLocation(), EntityType.WOLF);
+                    MPet.getLocation().getWorld().spawnCreature(MPet.getLocation(), MPet.getPetType().getEntityType());
                     MPet.removePet();
 
 

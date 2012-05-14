@@ -35,7 +35,7 @@ public class MyPetLevelUpListener implements Listener
         MyPet MPet = eventMyPet.getPet();
         if (!eventMyPet.isQuiet())
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MPet.Name).replace("%lvl%", "" + eventMyPet.getLevel()));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", MPet.Name).replace("%lvl%", "" + eventMyPet.getLevel()));
         }
         int lvl = eventMyPet.getLevel();
         MyPetSkillTree st = MPet.skillTree;

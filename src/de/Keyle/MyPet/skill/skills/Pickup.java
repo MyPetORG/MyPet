@@ -50,16 +50,16 @@ public class Pickup extends MyPetGenericSkill
             if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
             {
                 Pickup = !Pickup;
-                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%wolfname%", MPet.Name));
+                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", MPet.Name));
             }
             else
             {
-                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%wolfname%", MPet.Name));
+                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%petname%", MPet.Name));
             }
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%wolfname%", MPet.Name).replace("%skill%", this.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
         }
     }
 
@@ -67,7 +67,7 @@ public class Pickup extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%wolfname%", MPet.Name).replace("%range%", "" + (Level * RangePerLevel)));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", MPet.Name).replace("%range%", "" + (Level * RangePerLevel)));
     }
 
     @Override

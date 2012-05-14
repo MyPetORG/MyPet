@@ -34,14 +34,14 @@ import java.util.List;
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 {
     private MyPet MPet;
-    private EntityMyPet wolf;
+    private EntityMyPet pet;
     private EntityLiving target;
     private float range;
 
     public PathfinderGoalAggressiveTarget(MyPet MPet, float range)
     {
         super(MPet.Pet.getHandle(), 32.0F, false);
-        this.wolf = MPet.Pet.getHandle();
+        this.pet = MPet.Pet.getHandle();
         this.MPet = MPet;
         this.range = range;
     }
@@ -61,14 +61,14 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                 {
                     if (target == null || !target.isAlive())
                     {
-                        List list = this.wolf.world.a(EntityLiving.class, this.wolf.boundingBox.grow((double) this.range, 4.0D, (double) this.range));
+                        List list = this.pet.world.a(EntityLiving.class, this.pet.boundingBox.grow((double) this.range, 4.0D, (double) this.range));
 
                         for (Object aList : list)
                         {
                             Entity entity = (Entity) aList;
                             EntityLiving entityliving = (EntityLiving) entity;
 
-                            if (wolf.am().canSee(entityliving) && entityliving != wolf)
+                            if (pet.am().canSee(entityliving) && entityliving != pet)
                             {
                                 if (entityliving instanceof EntityPlayer)
                                 {
@@ -111,7 +111,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
     public void c()
     {
-        wolf.b(this.target);
+        pet.b(this.target);
         super.c();
     }
 }

@@ -189,20 +189,11 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     }
 
 
-    protected String j()
-    {
-        return "mob.wolf.hurt";
-    }
+    protected abstract String j();
 
-    protected String k()
-    {
-        return "mob.wolf.death";
-    }
+    protected abstract String k();
 
-    protected float p()
-    {
-        return 0.4F;
-    }
+    protected abstract float p();
 
     protected int getLootId()
     {

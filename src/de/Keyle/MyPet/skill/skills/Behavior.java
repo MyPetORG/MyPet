@@ -41,7 +41,7 @@ public class Behavior extends MyPetGenericSkill
     public void setBehavior(BehaviorState behaviorState)
     {
         Behavior = behaviorState;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MPet.Name).replace("%mode%", Behavior.name()));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
         if (Behavior == BehaviorState.Friendly)
         {
             MPet.Pet.setTarget(null);
@@ -53,7 +53,7 @@ public class Behavior extends MyPetGenericSkill
         if (Level > 0)
         {
             Behavior = behaviorState;
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MPet.Name).replace("%mode%", Behavior.name()));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
             if (Behavior == BehaviorState.Friendly)
             {
                 MPet.Pet.setTarget(null);
@@ -61,7 +61,7 @@ public class Behavior extends MyPetGenericSkill
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MPet.Name).replace("%skill%", this.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
         }
     }
 
@@ -74,7 +74,7 @@ public class Behavior extends MyPetGenericSkill
     public void upgrade()
     {
         Level = 1;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MPet.Name).replace("%skill%", this.Name));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
     }
 
     @Override
@@ -95,11 +95,11 @@ public class Behavior extends MyPetGenericSkill
             {
                 Behavior = BehaviorState.Normal;
             }
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MPet.Name).replace("%mode%", Behavior.name()));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%wolfname%", MPet.Name).replace("%skill%", this.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
         }
     }
 

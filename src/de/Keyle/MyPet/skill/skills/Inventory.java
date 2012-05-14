@@ -36,7 +36,7 @@ import java.util.List;
 public class Inventory extends MyPetGenericSkill
 {
     public static final List<Player> PetChestOpened = new ArrayList<Player>();
-    public MyPetCustomInventory inv = new MyPetCustomInventory("Wolf's Inventory", 0);
+    public MyPetCustomInventory inv = new MyPetCustomInventory("Your Pet's Inventory", 0);
 
     public Inventory()
     {
@@ -65,7 +65,7 @@ public class Inventory extends MyPetGenericSkill
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%wolfname%", MPet.Name));
+            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%petname%", MPet.Name));
         }
     }
 
@@ -85,7 +85,7 @@ public class Inventory extends MyPetGenericSkill
         }
         Level++;
         inv.setSize(Level * 9);
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%wolfname%", MPet.Name).replace("%size%", "" + inv.getSize()));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", MPet.Name).replace("%size%", "" + inv.getSize()));
     }
 
     public void OpenInventory(Player p)
