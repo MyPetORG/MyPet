@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.skill;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Scheduler;
 import net.minecraft.server.NBTTagCompound;
 
@@ -27,7 +27,7 @@ public class MyPetGenericSkill implements Scheduler
 {
     protected String Name;
     protected int Level = 0;
-    protected MyWolf MPet;
+    protected MyPet MPet;
 
     protected MyPetGenericSkill(String Name)
     {
@@ -39,12 +39,12 @@ public class MyPetGenericSkill implements Scheduler
         return this.Name;
     }
 
-    public void setMyWolf(MyWolf MPet)
+    public void setMyPet(MyPet MPet)
     {
         this.MPet = MPet;
     }
 
-    public MyWolf getMyWolf()
+    public MyPet getMyPet()
     {
         return MPet;
     }

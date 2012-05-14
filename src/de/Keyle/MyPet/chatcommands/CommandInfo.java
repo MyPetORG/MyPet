@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -45,7 +45,7 @@ public class CommandInfo implements CommandExecutor
 
             if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
             {
-                MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
+                MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
                 String msg;
                 if (MPet.getHealth() > MPet.getMaxHealth() / 3 * 2)
                 {

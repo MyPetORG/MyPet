@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -39,7 +39,7 @@ public class CommandBehavior implements CommandExecutor
             Player owner = (Player) sender;
             if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MPet = MyPetList.getMyPet(owner);
+                MyPet MPet = MyPetList.getMyPet(owner);
 
                 if (MPet.Status == PetState.Despawned)
                 {

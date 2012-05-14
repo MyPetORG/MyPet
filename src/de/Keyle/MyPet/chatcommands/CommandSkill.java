@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -46,7 +46,7 @@ public class CommandSkill implements CommandExecutor
 
             if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
             {
-                MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
+                MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
                 player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", MPet.Name).replace("%skilltree%", MPet.skillTree.getName()));
                 Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                 if (skills.size() > 0)

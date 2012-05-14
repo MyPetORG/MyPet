@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.event;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -28,7 +28,7 @@ public class MyPetSpoutEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf pet;
+    private final MyPet pet;
     private MyPetSpoutEventReason eventReason = MyPetSpoutEventReason.Nothing;
 
     public enum MyPetSpoutEventReason
@@ -36,7 +36,7 @@ public class MyPetSpoutEvent extends Event
         Nothing, Name, Call
     }
 
-    public MyPetSpoutEvent(MyWolf pet, MyPetSpoutEventReason eventReason)
+    public MyPetSpoutEvent(MyPet pet, MyPetSpoutEventReason eventReason)
     {
         this.pet = pet;
         this.eventReason = eventReason;
@@ -47,7 +47,7 @@ public class MyPetSpoutEvent extends Event
         return pet.getOwner().getPlayer();
     }
 
-    public MyWolf getPet()
+    public MyPet getPet()
     {
         return pet;
     }

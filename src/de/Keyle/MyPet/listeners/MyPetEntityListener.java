@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.wolf.CraftMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
@@ -80,7 +81,8 @@ public class MyPetEntityListener implements Listener
                         MyWolf MPet = new MyWolf(damager);
                         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(MPet));
                         MyPetList.addMyPet(MPet);
-                        MPet.createWolf((Wolf) event.getEntity());
+                        MPet.createPet(((Wolf) event.getEntity()).isSitting());
+                        event.getEntity().remove();
                         MyPetUtil.getDebugLogger().info("New Wolf leashed:");
                         MyPetUtil.getDebugLogger().info("   " + MPet.toString());
                         MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
@@ -89,7 +91,7 @@ public class MyPetEntityListener implements Listener
                 }
                 if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    MyPet MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                     MPet.ResetSitTimer();
                     if (damager.getItemInHand().getType() == MyPetConfig.LeashItem)
                     {
@@ -115,9 +117,9 @@ public class MyPetEntityListener implements Listener
                             damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MPet.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                         }
 
-                        if (MPet.Wolf.isSitting())
+                        if (MPet.Pet.isSitting())
                         {
-                            MPet.Wolf.setSitting(true);
+                            MPet.Pet.setSitting(true);
                         }
                         event.setCancelled(true);
                     }
@@ -157,16 +159,16 @@ public class MyPetEntityListener implements Listener
                 Player damager = (Player) e.getDamager();
                 if (MyPetList.hasMyPet(damager))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(damager);
-                    if (MPet.Status == PetState.Here && event.getEntity() != MPet.Wolf)
+                    MyPet MPet = MyPetList.getMyPet(damager);
+                    if (MPet.Status == PetState.Here && event.getEntity() != MPet.Pet)
                     {
-                        MyPetList.getMyPet(damager).Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        MyPetList.getMyPet(damager).Pet.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
 
                 }
                 else if (e.getDamager() instanceof CraftMyWolf)
                 {
-                    MyWolf MPet = ((CraftMyWolf) e.getDamager()).getHandle().getMyWolf();
+                    MyPet MPet = ((CraftMyWolf) e.getDamager()).getHandle().getMyPet();
                     if (MPet.getSkillSystem().hasSkill("Poison"))
                     {
                         Poison poison = (Poison) MPet.getSkillSystem().getSkill("Poison");
@@ -188,7 +190,7 @@ public class MyPetEntityListener implements Listener
         {
             if (MyPetList.isMyPet(event.getEntity().getEntityId()))
             {
-                MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                MyPet MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                 MPet.Status = PetState.Dead;
                 MPet.RespawnTime = MyPetConfig.RespawnTimeFixed + (MPet.getExperience().getLevel() * MyPetConfig.RespawnTimeFactor);
                 if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -210,7 +212,7 @@ public class MyPetEntityListener implements Listener
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
                 if (MyPetList.isMyPet(e.getDamager().getEntityId()))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(e.getDamager().getEntityId());
+                    MyPet MPet = MyPetList.getMyPet(e.getDamager().getEntityId());
                     event.setDroppedExp(MPet.getExperience().addExp(e.getEntity().getType()));
                 }
             }
@@ -226,7 +228,7 @@ public class MyPetEntityListener implements Listener
             {
                 if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    MyPet MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                     MPet.ResetSitTimer();
                     if (MPet.getSkillSystem().hasSkill("Behavior"))
                     {
@@ -261,7 +263,7 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyWolf)
         {
             CraftMyWolf MWolf = (CraftMyWolf) event.getEntity();
-            if (!MWolf.getHandle().isMyWolf())
+            if (!MWolf.getHandle().isMyPet())
             {
                 event.setCancelled(true);
                 net.minecraft.server.World mcWorld = ((CraftWorld) event.getLocation().getWorld()).getHandle();
@@ -275,7 +277,7 @@ public class MyPetEntityListener implements Listener
 
     private void SendDeathMessage(final EntityDeathEvent event)
     {
-        MyWolf MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+        MyPet MPet = MyPetList.getMyPet(event.getEntity().getEntityId());
         String Killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknow"));
         if (MPet != null)
         {

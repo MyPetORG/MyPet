@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.entity.pathfinder;
 
-import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.Entity;
@@ -33,16 +33,16 @@ import java.util.List;
 
 public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 {
-    private MyWolf MPet;
-    private EntityMyWolf wolf;
+    private MyPet MPet;
+    private EntityMyPet pet;
     private EntityLiving target;
     private float range;
     private PathfinderGoalControl control;
 
-    public PathfinderGoalControlTarget(MyWolf MPet, PathfinderGoalControl control, float range)
+    public PathfinderGoalControlTarget(MyPet MPet, PathfinderGoalControl control, float range)
     {
-        super(MPet.Wolf.getHandle(), 32.0F, false);
-        this.wolf = MPet.Wolf.getHandle();
+        super(MPet.Pet.getHandle(), 32.0F, false);
+        this.pet = MPet.Pet.getHandle();
         this.MPet = MPet;
         this.range = range;
         this.control = control;
@@ -50,7 +50,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
     public boolean a()
     {
-        if (control.moveTo != null && !wolf.isSitting())
+        if (control.moveTo != null && !pet.isSitting())
         {
             if (MPet.getSkillSystem().hasSkill("Behavior"))
             {
@@ -63,14 +63,14 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                     }
                 }
             }
-            List list = this.wolf.world.a(EntityLiving.class, this.wolf.boundingBox.grow((double) this.range, 4.0D, (double) this.range));
+            List list = this.pet.world.a(EntityLiving.class, this.pet.boundingBox.grow((double) this.range, 4.0D, (double) this.range));
 
             for (Object aList : list)
             {
                 Entity entity = (Entity) aList;
                 EntityLiving entityliving = (EntityLiving) entity;
 
-                if (wolf.am().canSee(entityliving) && entityliving != wolf)
+                if (pet.am().canSee(entityliving) && entityliving != pet)
                 {
                     if (entityliving instanceof EntityPlayer)
                     {
@@ -108,7 +108,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
     public void c()
     {
-        wolf.b(this.target);
+        pet.b(this.target);
         super.c();
     }
 }

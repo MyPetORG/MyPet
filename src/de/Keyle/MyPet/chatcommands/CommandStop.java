@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -40,7 +40,7 @@ public class CommandStop implements CommandExecutor
             Player owner = (Player) sender;
             if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MPet = MyPetList.getMyPet(owner);
+                MyPet MPet = MyPetList.getMyPet(owner);
 
                 if (!MyPetPermissions.has(owner, "MyPet.user.stop"))
                 {
@@ -52,9 +52,9 @@ public class CommandStop implements CommandExecutor
                     return true;
                 }
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", MPet.Name));
-                MPet.Wolf.getHandle().setTarget(null);
-                MPet.Wolf.getHandle().b((EntityLiving) null);
-                MPet.Wolf.getHandle().Goaltarget = null;
+                MPet.Pet.getHandle().setTarget(null);
+                MPet.Pet.getHandle().b((EntityLiving) null);
+                MPet.Pet.getHandle().Goaltarget = null;
                 return true;
             }
             else

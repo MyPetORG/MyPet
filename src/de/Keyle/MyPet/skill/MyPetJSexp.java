@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.skill;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import javax.script.ScriptEngine;
@@ -31,13 +31,13 @@ public class MyPetJSexp
 {
     public static String expScript = null;
     private int lvl = 1;
-    private MyWolf MPet;
+    private MyPet MPet;
     private double lastExp = 0;
     private double requiredExp = 0;
     private double currentExp = 0;
     private MyPetExperience MPetExperience;
 
-    public MyPetJSexp(MyWolf MPet, MyPetExperience MPetExperience)
+    public MyPetJSexp(MyPet MPet, MyPetExperience MPetExperience)
     {
         this.MPet = MPet;
         this.MPetExperience = MPetExperience;

@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -42,7 +42,7 @@ public class CommandInventory implements CommandExecutor
             {
                 if (MyPetList.hasMyPet(player))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(player);
+                    MyPet MPet = MyPetList.getMyPet(player);
                     if (MPet.Status == PetState.Despawned)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
@@ -67,7 +67,7 @@ public class CommandInventory implements CommandExecutor
             {
                 if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(args[0])))
                 {
-                    MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(args[0]));
+                    MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(args[0]));
                     if (MPet.getSkillSystem().getSkill("Inventory") != null && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
                         ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).OpenInventory(player);

@@ -44,7 +44,7 @@ public class Behavior extends MyPetGenericSkill
         MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MPet.Name).replace("%mode%", Behavior.name()));
         if (Behavior == BehaviorState.Friendly)
         {
-            MPet.Wolf.setTarget(null);
+            MPet.Pet.setTarget(null);
         }
     }
 
@@ -56,7 +56,7 @@ public class Behavior extends MyPetGenericSkill
             MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%wolfname%", MPet.Name).replace("%mode%", Behavior.name()));
             if (Behavior == BehaviorState.Friendly)
             {
-                MPet.Wolf.setTarget(null);
+                MPet.Pet.setTarget(null);
             }
         }
         else
@@ -85,7 +85,7 @@ public class Behavior extends MyPetGenericSkill
             if (Behavior == BehaviorState.Normal)
             {
                 Behavior = BehaviorState.Friendly;
-                MPet.Wolf.setTarget(null);
+                MPet.Pet.setTarget(null);
             }
             else if (Behavior == BehaviorState.Friendly)
             {

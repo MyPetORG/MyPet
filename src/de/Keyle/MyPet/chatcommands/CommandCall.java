@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.util.MyPetLanguage;
@@ -41,7 +41,7 @@ public class CommandCall implements CommandExecutor
             Player owner = (Player) sender;
             if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MPet = MyPetList.getMyPet(owner);
+                MyPet MPet = MyPetList.getMyPet(owner);
                 if (!MyPetPermissions.has(owner, "MyPet.user.call"))
                 {
                     return true;
@@ -56,11 +56,11 @@ public class CommandCall implements CommandExecutor
                     }
                     else
                     {
-                        if (MPet.Wolf.isInsideVehicle())
+                        if (MPet.Pet.isInsideVehicle())
                         {
-                            MPet.Wolf.leaveVehicle();
+                            MPet.Pet.leaveVehicle();
                         }
-                        MPet.Wolf.teleport(owner);
+                        MPet.Pet.teleport(owner);
                     }
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
                     MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));

@@ -19,22 +19,26 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.entity.EntityType;
 
 public enum MyPetType
 {
-    Wolf(EntityType.WOLF, "Wolf", MyWolf.class);
+    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class);
 
     private EntityType entityType;
     private String typeName;
-    private Class<? extends de.Keyle.MyPet.entity.types.MyPet> clazz;
+    private Class<? extends EntityMyPet> entityClazz;
+    private Class<? extends MyPet> myPetClazz;
 
-    private MyPetType(EntityType type, String name, Class<? extends de.Keyle.MyPet.entity.types.MyPet> clazz)
+    private MyPetType(EntityType type, String name, Class<? extends EntityMyPet> entityClazz, Class<? extends MyPet> myPetClazz)
     {
         this.entityType = type;
         this.typeName = name;
-        this.clazz = clazz;
+        this.entityClazz = entityClazz;
+        this.myPetClazz = myPetClazz;
     }
 
     public EntityType getEntityType()
@@ -47,8 +51,41 @@ public enum MyPetType
         return typeName;
     }
 
-    public de.Keyle.MyPet.entity.types.MyPet getNewInstance()
+    public EntityMyPet getNewEntityInstance()
     {
-        return null;
+        EntityMyPet pet = null;
+
+        try
+        {
+            Object obj = entityClazz.newInstance();
+            if (obj instanceof EntityMyPet)
+            {
+                pet = (EntityMyPet) obj;
+            }
+        }
+        catch (Exception e)
+        {
+            MyPetUtil.getLogger().warning(entityClazz.getName() + "is no valid MyPet(Entity)!");
+        }
+        return pet;
+    }
+
+    public MyPet getNewMyPetInstance()
+    {
+        MyPet pet = null;
+
+        try
+        {
+            Object obj = myPetClazz.newInstance();
+            if (obj instanceof MyPet)
+            {
+                pet = (MyPet) obj;
+            }
+        }
+        catch (Exception e)
+        {
+            MyPetUtil.getLogger().warning(myPetClazz.getName() + "is no valid MyPet!");
+        }
+        return pet;
     }
 }

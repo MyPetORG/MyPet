@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetLanguage;
@@ -32,7 +32,7 @@ public class MyPetLevelUpListener implements Listener
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent eventMyPet)
     {
-        MyWolf MPet = eventMyPet.getPet();
+        MyPet MPet = eventMyPet.getPet();
         if (!eventMyPet.isQuiet())
         {
             MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%wolfname%", MPet.Name).replace("%lvl%", "" + eventMyPet.getLevel()));

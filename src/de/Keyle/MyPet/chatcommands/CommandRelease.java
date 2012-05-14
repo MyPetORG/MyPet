@@ -20,8 +20,8 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -46,7 +46,7 @@ public class CommandRelease implements CommandExecutor
             Player owner = (Player) sender;
             if (MyPetList.hasMyPet(owner))
             {
-                MyWolf MPet = MyPetList.getMyPet(owner);
+                MyPet MPet = MyPetList.getMyPet(owner);
 
                 if (!MyPetPermissions.has(owner, "MyPet.user.release"))
                 {
@@ -71,7 +71,7 @@ public class CommandRelease implements CommandExecutor
                 {
                     if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        World world = MPet.Wolf.getHandle().world;
+                        World world = MPet.Pet.getHandle().world;
                         Location loc = MPet.getLocation();
                         for (ItemStack is : ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
                         {

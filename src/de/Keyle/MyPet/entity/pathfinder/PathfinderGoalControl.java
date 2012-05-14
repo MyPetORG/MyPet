@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.entity.pathfinder;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.Scheduler;
@@ -30,17 +30,17 @@ import org.bukkit.Location;
 
 public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
-    private MyWolf MPet;
+    private MyPet MPet;
     private float speed;
     Location moveTo = null;
     private int TimeToMove = 0;
     private Navigation nav;
 
-    public PathfinderGoalControl(MyWolf MPet, float f)
+    public PathfinderGoalControl(MyPet MPet, float f)
     {
         this.MPet = MPet;
         speed = f;
-        nav = this.MPet.Wolf.getHandle().al();
+        nav = this.MPet.Pet.getHandle().al();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
                 moveTo = null;
             }
         }
-        return moveTo != null && !this.MPet.Wolf.isSitting();
+        return moveTo != null && !this.MPet.Pet.isSitting();
     }
 
     public void d()

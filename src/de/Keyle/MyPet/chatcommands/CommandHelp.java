@@ -42,8 +42,8 @@ public class CommandHelp implements CommandExecutor
             }
             if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage("/petname <newwolfname> | Set wolf name");
-                player.sendMessage("/petrelease <wolfname> | Release your wolf");
+                player.sendMessage("/petname <newwolfname> | Set the name of your pet");
+                player.sendMessage("/petrelease <wolfname> | Release your pet");
                 player.sendMessage("/petstop | MyPet stopps attacking  (alias: /ps or /pets)");
                 player.sendMessage("/petcall | Call your wolf  (alias: /pc or /petc)");
                 player.sendMessage("/petskill | Shows the skill-levels");
@@ -54,7 +54,7 @@ public class CommandHelp implements CommandExecutor
                 }
                 if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Pickup") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Pickup").getLevel() > 0)
                 {
-                    player.sendMessage("/petpickup | Toggle wolf pickup on/off  (alias: /pp or /petp)");
+                    player.sendMessage("/petpickup | Toggle pickup on/off  (alias: /pp or /petp)");
                 }
                 if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Behavior") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Behavior").getLevel() > 0)
                 {

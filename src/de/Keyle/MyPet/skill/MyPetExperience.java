@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.event.MyPetExpEvent;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import org.bukkit.entity.EntityType;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class MyPetExperience
 {
-    private final MyWolf MPet;
+    private final MyPet MPet;
 
     private double Exp = 0;
     MyPetJSexp JSexp;
@@ -66,7 +66,7 @@ public class MyPetExperience
         MobEXP.put(EntityType.ENDER_DRAGON, new MyPetMonsterExpirience(20000, EntityType.ENDER_DRAGON));
     }
 
-    public MyPetExperience(MyWolf pet)
+    public MyPetExperience(MyPet pet)
     {
         this.MPet = pet;
         JSexp = new MyPetJSexp(pet, this);

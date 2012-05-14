@@ -19,12 +19,12 @@
 
 package de.Keyle.MyPet.entity.pathfinder;
 
-import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.*;
 
 public class PathfinderGoalFollowOwner extends PathfinderGoal
 {
-    private EntityMyWolf wolf;
+    private EntityMyPet pet;
     private EntityLiving owner;
     private World world;
     private float f;
@@ -35,10 +35,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     private boolean i;
     private PathfinderGoalControl Control;
 
-    public PathfinderGoalFollowOwner(EntityMyWolf entitytameableanimal, float f, float maxdistance, float f2, PathfinderGoalControl Control)
+    public PathfinderGoalFollowOwner(EntityMyPet entitytameableanimal, float f, float maxdistance, float f2, PathfinderGoalControl Control)
     {
         this.Control = Control;
-        this.wolf = entitytameableanimal;
+        this.pet = entitytameableanimal;
         this.world = entitytameableanimal.world;
         this.f = f;
         this.nav = entitytameableanimal.al();
@@ -49,17 +49,17 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
     public boolean a()
     {
-        EntityLiving entityliving = this.wolf.getOwner();
+        EntityLiving entityliving = this.pet.getOwner();
 
         if (entityliving == null)
         {
             return false;
         }
-        else if (this.wolf.isSitting())
+        else if (this.pet.isSitting())
         {
             return false;
         }
-        else if (this.wolf.j(entityliving) < (double) (this.maxdistance * this.maxdistance))
+        else if (this.pet.j(entityliving) < (double) (this.maxdistance * this.maxdistance))
         {
             return false;
         }
@@ -76,28 +76,28 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
     public boolean b()
     {
-        return Control.moveTo == null && !this.nav.e() && this.wolf.j(this.owner) > (double) (this.b * this.b) && !this.wolf.isSitting();
+        return Control.moveTo == null && !this.nav.e() && this.pet.j(this.owner) > (double) (this.b * this.b) && !this.pet.isSitting();
     }
 
     public void c()
     {
         this.h = 0;
-        this.i = this.wolf.al().a();
-        this.wolf.al().a(false);
+        this.i = this.pet.al().a();
+        this.pet.al().a(false);
     }
 
     public void d()
     {
         this.owner = null;
         this.nav.f();
-        this.wolf.al().a(this.i);
+        this.pet.al().a(this.i);
     }
 
     public void e()
     {
-        this.wolf.getControllerLook().a(this.owner, 10.0F, (float) this.wolf.D());
+        this.pet.getControllerLook().a(this.owner, 10.0F, (float) this.pet.D());
 
-        if (!this.wolf.isSitting())
+        if (!this.pet.isSitting())
         {
             if (--this.h <= 0)
             {
@@ -105,7 +105,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
                 if (!this.nav.a(this.owner, this.f))
                 {
-                    if (this.wolf.j(this.owner) >= 144.0D && Control.moveTo == null && wolf.Goaltarget == null)
+                    if (this.pet.j(this.owner) >= 144.0D && Control.moveTo == null && pet.Goaltarget == null)
                     {
                         int i = MathHelper.floor(this.owner.locX) - 2;
                         int j = MathHelper.floor(this.owner.locZ) - 2;
@@ -117,7 +117,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
                             {
                                 if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.world.e(i + l, k - 1, j + i1) && !this.world.e(i + l, k, j + i1) && !this.world.e(i + l, k + 1, j + i1))
                                 {
-                                    this.wolf.setPositionRotation((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.wolf.yaw, this.wolf.pitch);
+                                    this.pet.setPositionRotation((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.pet.yaw, this.pet.pitch);
                                     this.nav.f();
                                     return;
                                 }

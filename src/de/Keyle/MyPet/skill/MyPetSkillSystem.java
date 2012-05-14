@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.skill;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import java.util.*;
@@ -28,7 +28,7 @@ public class MyPetSkillSystem
 {
     private static List<Class<? extends MyPetGenericSkill>> ClassSkillList = new ArrayList<Class<? extends MyPetGenericSkill>>();
 
-    private MyWolf MPet;
+    private MyPet MPet;
 
     private Map<String, MyPetGenericSkill> Skills = new HashMap<String, MyPetGenericSkill>();
 
@@ -40,7 +40,7 @@ public class MyPetSkillSystem
         }
     }
 
-    public MyPetSkillSystem(MyWolf MPet)
+    public MyPetSkillSystem(MyPet MPet)
     {
         this.MPet = MPet;
         addSkills(ClassSkillList);

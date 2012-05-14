@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.entity.pathfinder;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
@@ -32,27 +32,27 @@ import org.bukkit.entity.Player;
 public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 {
 
-    EntityTameableAnimal wolf;
+    EntityTameableAnimal pet;
     EntityLiving target;
-    MyWolf MPet;
+    MyPet MPet;
 
-    public PathfinderGoalOwnerHurtTarget(MyWolf MPet)
+    public PathfinderGoalOwnerHurtTarget(MyPet MPet)
     {
-        super(MPet.Wolf.getHandle(), 32.0F, false);
-        this.wolf = MPet.Wolf.getHandle();
+        super(MPet.Pet.getHandle(), 32.0F, false);
+        this.pet = MPet.Pet.getHandle();
         this.MPet = MPet;
         this.a(1);
     }
 
     public boolean a()
     {
-        if (!this.wolf.isTamed())
+        if (!this.pet.isTamed())
         {
             return false;
         }
         else
         {
-            EntityLiving owner = this.wolf.getOwner();
+            EntityLiving owner = this.pet.getOwner();
 
             if (owner == null)
             {
@@ -71,8 +71,8 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                         }
                     }
                 }
-                this.target = ((EntityMyWolf) this.wolf).Goaltarget;
-                ((EntityMyWolf) this.wolf).Goaltarget = null;
+                this.target = ((EntityMyWolf) this.pet).Goaltarget;
+                ((EntityMyWolf) this.pet).Goaltarget = null;
 
                 if (this.target instanceof EntityPlayer)
                 {

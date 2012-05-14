@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -81,7 +81,7 @@ public class CommandAdmin implements CommandExecutor
                     Exp = Exp < 0 ? 0 : Exp;
                     if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Wolfowner)))
                     {
-                        MyWolf MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Wolfowner));
+                        MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Wolfowner));
 
                         Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                         if (skills.size() > 0)

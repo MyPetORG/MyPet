@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.entity.pathfinder;
 
-import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.Entity;
@@ -33,15 +33,15 @@ import java.util.List;
 
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 {
-    private MyWolf MPet;
-    private EntityMyWolf wolf;
+    private MyPet MPet;
+    private EntityMyPet wolf;
     private EntityLiving target;
     private float range;
 
-    public PathfinderGoalAggressiveTarget(MyWolf MPet, float range)
+    public PathfinderGoalAggressiveTarget(MyPet MPet, float range)
     {
-        super(MPet.Wolf.getHandle(), 32.0F, false);
-        this.wolf = MPet.Wolf.getHandle();
+        super(MPet.Pet.getHandle(), 32.0F, false);
+        this.wolf = MPet.Pet.getHandle();
         this.MPet = MPet;
         this.range = range;
     }

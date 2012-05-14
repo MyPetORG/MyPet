@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +38,7 @@ public class MyPetVehicleListener implements Listener
             Player player = (Player) event.getEntered();
             if (MyPetList.hasMyPet(player))
             {
-                MyWolf MPet = MyPetList.getMyPet(player);
+                MyPet MPet = MyPetList.getMyPet(player);
                 if (MPet.Status == PetState.Here && !MPet.isSitting())
                 {
                     MPet.setSitting(true);

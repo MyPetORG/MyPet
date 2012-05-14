@@ -21,8 +21,8 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import org.bukkit.OfflinePlayer;
 
@@ -30,19 +30,19 @@ import java.util.*;
 
 public class MyPetList
 {
-    private static final Map<OfflinePlayer, MyWolf> mActiveWolves = new HashMap<OfflinePlayer, MyWolf>();
-    private static final List<MyWolf> lActivePets = new ArrayList<MyWolf>();
+    private static final Map<OfflinePlayer, MyPet> mActivePets = new HashMap<OfflinePlayer, MyPet>();
+    private static final List<MyPet> lActivePets = new ArrayList<MyPet>();
 
     private static final Map<OfflinePlayer, InactiveMyPet> mInctivePets = new HashMap<OfflinePlayer, InactiveMyPet>();
     private static final List<InactiveMyPet> lInactivePets = new ArrayList<InactiveMyPet>();
 
     // Active -------------------------------------------------------------------
 
-    public static MyWolf getMyPet(InactiveMyPet IMPet)
+    public static MyPet getMyPet(InactiveMyPet IMPet)
     {
         if (IMPet.getOwner().isOnline())
         {
-            MyWolf AMPet = new MyWolf(IMPet.getOwner());
+            MyPet AMPet = IMPet.getType().getNewMyPetInstance();
             AMPet.setHealth(IMPet.getHealth());
             AMPet.setLocation(IMPet.getLocation());
             AMPet.Name = IMPet.getName();
@@ -74,29 +74,29 @@ public class MyPetList
         return null;
     }
 
-    public static void addMyPet(MyWolf MW)
+    public static void addMyPet(MyPet MP)
     {
-        mActiveWolves.put(MW.getOwner(), MW);
-        lActivePets.add(MW);
+        mActivePets.put(MP.getOwner(), MP);
+        lActivePets.add(MP);
     }
 
-    public static void removeMyPet(MyWolf MW)
+    public static void removeMyPet(MyPet MP)
     {
-        lActivePets.remove(MW);
-        mActiveWolves.remove(MW.getOwner());
+        lActivePets.remove(MP);
+        mActivePets.remove(MP.getOwner());
     }
 
     public static void removeMyPet(OfflinePlayer Owner)
     {
-        lActivePets.remove(mActiveWolves.get(Owner));
-        mActiveWolves.remove(Owner);
+        lActivePets.remove(mActivePets.get(Owner));
+        mActivePets.remove(Owner);
     }
 
-    public static MyWolf getMyPet(int EntityID)
+    public static MyPet getMyPet(int EntityID)
     {
-        for (MyWolf pet : lActivePets)
+        for (MyPet pet : lActivePets)
         {
-            if (pet.Status == PetState.Here && pet.Wolf.getEntityId() == EntityID)
+            if (pet.Status == PetState.Here && pet.Pet.getEntityId() == EntityID)
             {
                 return pet;
             }
@@ -104,23 +104,23 @@ public class MyPetList
         return null;
     }
 
-    public static MyWolf getMyPet(OfflinePlayer owner)
+    public static MyPet getMyPet(OfflinePlayer owner)
     {
-        if (mActiveWolves.containsKey(owner))
+        if (mActivePets.containsKey(owner))
         {
-            return mActiveWolves.get(owner);
+            return mActivePets.get(owner);
         }
         return null;
     }
 
-    public static List<MyWolf> getMyPetList()
+    public static List<MyPet> getMyPetList()
     {
         return lActivePets;
     }
 
     public static boolean hasMyPet(OfflinePlayer player)
     {
-        return mActiveWolves.containsKey(player);
+        return mActivePets.containsKey(player);
     }
 
     public static boolean isMyPet(int EnityID)
@@ -140,7 +140,7 @@ public class MyPetList
         return mInctivePets.containsKey(player);
     }
 
-    public static InactiveMyPet getInactiveMyPet(MyWolf AMPet)
+    public static InactiveMyPet getInactiveMyPet(MyPet AMPet)
     {
         InactiveMyPet IAMPet = new InactiveMyPet(MyPetPlugin.getPlugin().getServer().getOfflinePlayer(AMPet.getOwner().getName()));
         IAMPet.setName(AMPet.Name);
@@ -185,7 +185,7 @@ public class MyPetList
             if (mInctivePets.containsKey(Owner) && mInctivePets.get(Owner).getOwner().isOnline())
             {
                 InactiveMyPet IMPet = mInctivePets.get(Owner);
-                MyWolf AMPet = getMyPet(IMPet);
+                MyPet AMPet = getMyPet(IMPet);
                 addMyPet(AMPet);
                 removeInactiveMyPet(IMPet);
                 MyPetUtil.getDebugLogger().info("   A: " + AMPet);
@@ -194,9 +194,9 @@ public class MyPetList
         }
         else
         {
-            if (mActiveWolves.containsKey(Owner))
+            if (mActivePets.containsKey(Owner))
             {
-                MyWolf AMPet = mActiveWolves.get(Owner);
+                MyPet AMPet = mActivePets.get(Owner);
                 InactiveMyPet IMPet = getInactiveMyPet(AMPet);
                 AMPet.removePet();
                 removeMyPet(AMPet);
@@ -209,7 +209,7 @@ public class MyPetList
 
     public static void clearList()
     {
-        mActiveWolves.clear();
+        mActivePets.clear();
         lActivePets.clear();
         mInctivePets.clear();
         lInactivePets.clear();
@@ -217,6 +217,6 @@ public class MyPetList
 
     public static int getMyPetCount()
     {
-        return mActiveWolves.size() + mInctivePets.size();
+        return mActivePets.size() + mInctivePets.size();
     }
 }

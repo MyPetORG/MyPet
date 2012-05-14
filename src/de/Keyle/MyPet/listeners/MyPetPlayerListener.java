@@ -20,8 +20,8 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class MyPetPlayerListener implements Listener
     {
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.Item && MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
+            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
             if (MPet.Status == PetState.Here && !MPet.isSitting())
             {
                 if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
@@ -76,10 +76,10 @@ public class MyPetPlayerListener implements Listener
         }
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
-            if (event.getRightClicked() != MPet.Wolf)
+            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
+            if (event.getRightClicked() != MPet.Pet)
             {
-                MPet.Wolf.getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
+                MPet.Pet.getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
             }
         }
     }
@@ -104,7 +104,7 @@ public class MyPetPlayerListener implements Listener
             }
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
+                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
                 if (MPet.Status == PetState.Dead)
                 {
                     event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
@@ -124,7 +124,7 @@ public class MyPetPlayerListener implements Listener
         {
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
+                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
 
                 MPet.removePet();
                 MyPetList.setMyPetActive(event.getPlayer(), false);
@@ -150,7 +150,7 @@ public class MyPetPlayerListener implements Listener
     {
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
+            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
             MPet.removePet();
             MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
@@ -168,8 +168,7 @@ public class MyPetPlayerListener implements Listener
             }
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyWolf MPet = MyPetList.getMyPet(event.getPlayer());
-
+                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
                 if (MPet.Status == PetState.Here)
                 {
                     MPet.ResetSitTimer();

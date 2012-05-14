@@ -21,9 +21,10 @@ package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.chatcommands.*;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
@@ -68,7 +69,7 @@ public class MyPetPlugin extends JavaPlugin
     public void onDisable()
     {
         saveWolves(NBTWolvesFile);
-        for (MyWolf MPet : MyPetList.getMyPetList())
+        for (MyPet MPet : MyPetList.getMyPetList())
         {
             MPet.removePet();
         }
@@ -257,7 +258,7 @@ public class MyPetPlugin extends JavaPlugin
                 {
                     MyPetList.setMyPetActive(p, true);
 
-                    MyWolf MPet = MyPetList.getMyPet(p);
+                    MyPet MPet = MyPetList.getMyPet(p);
                     if (MPet.Status == PetState.Dead)
                     {
                         p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
@@ -299,6 +300,15 @@ public class MyPetPlugin extends JavaPlugin
             int PetRespawnTime = MPetNBT.getInt("Respawntime");
             String PetName = MPetNBT.getString("Name");
             String Owner = MPetNBT.getString("Owner");
+            String PetType;
+            if (MPetNBT.hasKey("Type"))
+            {
+                PetType = MPetNBT.getString("Type");
+            }
+            else
+            {
+                PetType = "Wolf";
+            }
             boolean PetSitting = MPetNBT.getBoolean("Sitting");
 
             InactiveMyPet IMPet = new InactiveMyPet(MyPetUtil.getOfflinePlayer(Owner));
@@ -310,6 +320,7 @@ public class MyPetPlugin extends JavaPlugin
             IMPet.setSitting(PetSitting);
             IMPet.setExp(PetExp);
             IMPet.setSkills(MPetNBT.getCompound("Skills"));
+            IMPet.setType(MyPetType.valueOf(PetType));
 
             MyPetList.addInactiveMyPet(IMPet);
 
@@ -327,7 +338,7 @@ public class MyPetPlugin extends JavaPlugin
         int petCount = 0;
         NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
         NBTTagList Wolves = new NBTTagList();
-        for (MyWolf MPet : MyPetList.getMyPetList())
+        for (MyPet MPet : MyPetList.getMyPetList())
         {
 
             NBTTagCompound Pet = new NBTTagCompound();

@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
@@ -56,7 +56,7 @@ public class Inventory extends MyPetGenericSkill
                 {
                     PetChestOpened.add(MPet.getOwner().getPlayer());
                 }
-                MPet.Wolf.setSitting(true);
+                MPet.Pet.setSitting(true);
             }
             else
             {
@@ -109,7 +109,7 @@ public class Inventory extends MyPetGenericSkill
     }
 
     @Override
-    public void setMyWolf(MyWolf MPet)
+    public void setMyPet(MyPet MPet)
     {
         this.MPet = MPet;
         inv.setName(MPet.Name);

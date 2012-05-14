@@ -22,41 +22,22 @@ package de.Keyle.MyPet.entity.types.wolf;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetConfig;
-import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
-import org.bukkit.Location;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-public class EntityMyWolf extends EntityTameableAnimal
+public class EntityMyWolf extends EntityMyPet
 {
-    private boolean b = false;
-    private float c;
-    private boolean h;
-    private boolean i;
-    private float j;
-    private float k;
-    public EntityLiving Goaltarget = null;
-
-    boolean isMyWolf = false;
-    MyWolf MPet;
-
-    public EntityMyWolf(World world)
-    {
-        super(world);
-        MyPetUtil.getLogger().severe("Don't try to get a MyWolf this way!");
-    }
-
     public EntityMyWolf(World world, MyWolf MPet)
     {
-        super(world);
+        super(world, MPet);
         this.texture = "/mob/wolf.png";
         this.b(0.6F, 0.8F);
         this.bb = 0.3F;
         this.al().a(true);
-        setMyWolf(MPet);
-        MPet.Wolf = (CraftMyWolf) this.getBukkitEntity();
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
@@ -75,17 +56,13 @@ public class EntityMyWolf extends EntityTameableAnimal
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
     }
 
-    public boolean isMyWolf()
-    {
-        return isMyWolf;
-    }
-
-    public void setMyWolf(MyWolf MPet)
+    @Override
+    public void setMyPet(MyPet MPet)
     {
         if (MPet != null)
         {
             this.MPet = MPet;
-            isMyWolf = true;
+            isMyPet = true;
             if (!isTamed())
             {
                 this.setTamed(true);
@@ -107,7 +84,7 @@ public class EntityMyWolf extends EntityTameableAnimal
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
-        if (isMyWolf() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
+        if (isMyPet() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
             if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
             {
@@ -149,31 +126,12 @@ public class EntityMyWolf extends EntityTameableAnimal
 
     public boolean a(Entity entity)
     {
-        int damage = 4 + (isMyWolf && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    public void setLocation(Location loc)
-    {
-        this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
-    }
-
-    public void setHealth(int i)
-    {
-        if (i > this.getMaxHealth())
-        {
-            i = this.getMaxHealth();
-        }
-        this.health = i;
-    }
-
-    public void setSitting(boolean flag)
-    {
-        this.a.a(flag);
-        super.setSitting(flag);
-    }
-
+    @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
         if (this.bukkitEntity == null)
@@ -183,197 +141,10 @@ public class EntityMyWolf extends EntityTameableAnimal
         return this.bukkitEntity;
     }
 
-    public MyWolf getMyWolf()
-    {
-        return MPet;
-    }
-
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     protected String i()
     {
         return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
-    }
-
-    public EntityAnimal createChild(EntityAnimal entityanimal)
-    {
-        return null;
-    }
-
-    public boolean mate(EntityAnimal entityanimal)
-    {
-        return false;
-    }
-
-    public void a(NBTTagCompound nbttagcompound)
-    {
-        if (!isMyWolf)
-        {
-            super.d(nbttagcompound);
-            EntityWolf entityWolf = new EntityWolf(world);
-            entityWolf.d(nbttagcompound);
-            this.getBukkitEntity().remove();
-            MyPetUtil.getLogger().severe("This shouldn't happen, please contact the developer and inform him about this!");
-        }
-        else
-        {
-            super.d(nbttagcompound);
-        }
-    }
-
-    //Vanilla Methods ------------------------------------------------------------------------------------------------------
-
-    public boolean c_()
-    {
-        return true;
-    }
-
-    protected void g()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
-    protected void b()
-    {
-        super.b();
-        this.datawatcher.a(18, this.getHealth());
-    }
-
-    protected boolean g_()
-    {
-        return false;
-    }
-
-    protected boolean n()
-    {
-        return false;
-    }
-
-
-    protected String j()
-    {
-        return "mob.wolf.hurt";
-    }
-
-    protected String k()
-    {
-        return "mob.wolf.death";
-    }
-
-    protected float p()
-    {
-        return 0.4F;
-    }
-
-    protected int getLootId()
-    {
-        return -1;
-    }
-
-    public void e()
-    {
-        super.e();
-        if (!this.world.isStatic && this.h && !this.i && !this.H() && this.onGround)
-        {
-            this.i = true;
-            this.j = 0.0F;
-            this.k = 0.0F;
-            this.world.broadcastEntityEffect(this, (byte) 8);
-        }
-    }
-
-    public void F_()
-    {
-        super.F_();
-        if (this.b)
-        {
-            this.c += (1.0F - this.c) * 0.4F;
-        }
-        else
-        {
-            this.c += (0.0F - this.c) * 0.4F;
-        }
-
-        if (this.b)
-        {
-            this.bc = 10;
-        }
-
-        if (this.aT())
-        {
-            this.h = true;
-            this.i = false;
-            this.j = 0.0F;
-            this.k = 0.0F;
-        }
-        else if ((this.h || this.i) && this.i)
-        {
-            if (this.j == 0.0F)
-            {
-                this.world.makeSound(this, "mob.wolf.shake", this.p(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            }
-
-            this.k = this.j;
-            this.j += 0.05F;
-            if (this.k >= 2.0F)
-            {
-                this.h = false;
-                this.i = false;
-                this.k = 0.0F;
-                this.j = 0.0F;
-            }
-
-            if (this.j > 0.4F)
-            {
-                float f = (float) this.boundingBox.b;
-                int i = (int) (MathHelper.sin((this.j - 0.4F) * 3.1415927F) * 7.0F);
-
-                for (int j = 0 ; j < i ; ++j)
-                {
-                    float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                    float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-
-                    this.world.a("splash", this.locX + (double) f1, (double) (f + 0.8F), this.locZ + (double) f2, this.motX, this.motY, this.motZ);
-                }
-            }
-        }
-    }
-
-    public float getHeadHeight()
-    {
-        return this.length * 0.8F;
-    }
-
-    public int D()
-    {
-        return this.isSitting() ? 20 : super.D();
-    }
-
-    public boolean damageEntity(DamageSource damagesource, int i)
-    {
-        Entity entity = damagesource.getEntity();
-
-        this.a.a(false);
-        if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
-        {
-            i = (i + 1) / 2;
-        }
-
-        return super.damageEntity(damagesource, i);
-    }
-
-    public boolean a(ItemStack itemstack)
-    {
-        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).q());
-    }
-
-    public int q()
-    {
-        return 8;
-    }
-
-    public void e(boolean flag)
-    {
-        this.b = flag;
     }
 }

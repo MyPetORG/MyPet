@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.event;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -27,15 +27,14 @@ import org.bukkit.event.HandlerList;
 
 public class MyPetExpEvent extends Event implements Cancellable
 {
-    private static final long serialVersionUID = -605293022023540120L;
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf pet;
+    private final MyPet pet;
     private boolean isCancelled = false;
     private double oldEXP;
     private double newEXP;
 
-    public MyPetExpEvent(MyWolf pet, double oldEXP, double newEXP)
+    public MyPetExpEvent(MyPet pet, double oldEXP, double newEXP)
     {
         this.pet = pet;
         this.oldEXP = oldEXP;
@@ -47,7 +46,7 @@ public class MyPetExpEvent extends Event implements Cancellable
         return pet.getOwner().getPlayer();
     }
 
-    public MyWolf getPet()
+    public MyPet getPet()
     {
         return pet;
     }

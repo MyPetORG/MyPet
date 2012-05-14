@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -52,7 +52,7 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyWolf MPet = MyPetList.getMyPet(owner);
+                MyPet MPet = MyPetList.getMyPet(owner);
                 MPet.setName(name);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
                 return true;

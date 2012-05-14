@@ -19,28 +19,27 @@
 
 package de.Keyle.MyPet.event;
 
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.MyPet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class MyPetLevelUpEvent extends Event
 {
-    private static final long serialVersionUID = -605293022023540119L;
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyWolf pet;
+    private final MyPet pet;
     private final int Level;
     private final boolean Quiet;
 
-    public MyPetLevelUpEvent(MyWolf pet, int Level)
+    public MyPetLevelUpEvent(MyPet pet, int Level)
     {
         this.pet = pet;
         this.Level = Level;
         this.Quiet = false;
     }
 
-    public MyPetLevelUpEvent(MyWolf pet, int Level, boolean Quiet)
+    public MyPetLevelUpEvent(MyPet pet, int Level, boolean Quiet)
     {
         this.pet = pet;
         this.Level = Level;
@@ -57,7 +56,7 @@ public class MyPetLevelUpEvent extends Event
         return Quiet;
     }
 
-    public MyWolf getPet()
+    public MyPet getPet()
     {
         return pet;
     }
