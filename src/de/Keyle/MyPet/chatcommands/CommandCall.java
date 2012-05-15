@@ -52,7 +52,8 @@ public class CommandCall implements CommandExecutor
                     {
                         MPet.removePet();
                         MPet.setLocation(owner.getLocation());
-                        MPet.createPet(false);
+                        MPet.createPet();
+                        MPet.setSitting(false);
                     }
                     else
                     {
@@ -69,7 +70,8 @@ public class CommandCall implements CommandExecutor
                 else if (MPet.Status == PetState.Despawned)
                 {
                     MPet.setLocation(owner.getLocation());
-                    MPet.createPet(false);
+                    MPet.createPet();
+                    MPet.setSitting(false);
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
                     MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));
                     return true;

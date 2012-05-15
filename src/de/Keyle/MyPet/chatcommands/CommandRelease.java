@@ -88,7 +88,7 @@ public class CommandRelease implements CommandExecutor
 
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", MPet.Name));
                     MyPetList.removeMyPet(MPet);
-                    MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
+                    MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile);
                     return true;
                 }
                 else

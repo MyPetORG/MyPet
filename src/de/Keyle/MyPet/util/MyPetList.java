@@ -42,7 +42,7 @@ public class MyPetList
     {
         if (IMPet.getOwner().isOnline())
         {
-            MyPet AMPet = IMPet.getType().getNewMyPetInstance();
+            MyPet AMPet = IMPet.getType().getNewMyPetInstance(IMPet.getOwner());
             AMPet.setHealth(IMPet.getHealth());
             AMPet.setLocation(IMPet.getLocation());
             AMPet.Name = IMPet.getName();

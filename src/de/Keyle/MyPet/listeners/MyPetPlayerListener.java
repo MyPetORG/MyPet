@@ -112,7 +112,7 @@ public class MyPetPlayerListener implements Listener
                 else if (MyPetUtil.getDistance(MPet.getLocation(), event.getPlayer().getLocation()) < 75)
                 {
                     MPet.ResetSitTimer();
-                    MPet.createPet(MPet.isSitting());
+                    MPet.createPet();
                 }
                 else
                 {
@@ -152,7 +152,7 @@ public class MyPetPlayerListener implements Listener
         {
             MyPet MPet = MyPetList.getMyPet(event.getPlayer());
             MPet.removePet();
-            MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
+            MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
         }
     }
@@ -178,7 +178,8 @@ public class MyPetPlayerListener implements Listener
                         {
                             MPet.removePet();
                             MPet.setLocation(event.getPlayer().getLocation());
-                            MPet.createPet(false);
+                            MPet.createPet();
+                            MPet.setSitting(false);
                         }
                         else
                         {
@@ -196,7 +197,7 @@ public class MyPetPlayerListener implements Listener
                     {
                         if (MyPetUtil.getDistance(MPet.getLocation(), event.getPlayer().getLocation()) < 75)
                         {
-                            MPet.createPet(MPet.isSitting());
+                            MPet.createPet();
                         }
                     }
                 }

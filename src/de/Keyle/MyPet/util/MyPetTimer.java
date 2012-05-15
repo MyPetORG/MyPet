@@ -67,7 +67,7 @@ public class MyPetTimer
                 }
                 if (MyPetConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
                 {
-                    MyPetPlugin.getPlugin().saveWolves(MyPetPlugin.NBTWolvesFile);
+                    MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile);
                     AutoSaveTimer = MyPetConfig.AutoSaveTime;
                 }
             }

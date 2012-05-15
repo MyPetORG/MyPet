@@ -108,13 +108,13 @@ public abstract class MyPet
         {
             Location = getOwner().getPlayer().getLocation();
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", Name));
-            createPet(false);
+            createPet();
             RespawnTime = 0;
             Health = getMaxHealth();
         }
     }
 
-    public void createPet(boolean sitting)
+    public void createPet()
     {
         if (Status == PetState.Here || getOwner() == null)
         {
@@ -128,7 +128,7 @@ public abstract class MyPet
                 MWentityMyPet.setLocation(Location);
                 mcWorld.addEntity(MWentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Pet = (CraftMyPet) MWentityMyPet.getBukkitEntity();
-                Pet.setSitting(sitting);
+                Pet.setSitting(isSitting);
                 Status = PetState.Here;
             }
         }

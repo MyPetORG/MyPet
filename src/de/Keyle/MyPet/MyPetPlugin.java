@@ -50,25 +50,25 @@ import java.util.Collection;
 
 public class MyPetPlugin extends JavaPlugin
 {
-    private static MyPetPlugin Plugin;
-    public static MyPetLanguage MWLanguage;
-    private final MyPetTimer Timer = new MyPetTimer();
-    public static File NBTWolvesFile;
-    private DebugLogger MWLogger;
+    private static MyPetPlugin plugin;
+    public static MyPetLanguage language;
+    private final MyPetTimer timer = new MyPetTimer();
+    public static File NBTPetFile;
+    private DebugLogger debugLogger;
 
     public static MyPetPlugin getPlugin()
     {
-        return Plugin;
+        return plugin;
     }
 
     public MyPetTimer getTimer()
     {
-        return Timer;
+        return timer;
     }
 
     public void onDisable()
     {
-        saveWolves(NBTWolvesFile);
+        savePets(NBTPetFile);
         for (MyPet MPet : MyPetList.getMyPetList())
         {
             MPet.removePet();
@@ -77,13 +77,13 @@ public class MyPetPlugin extends JavaPlugin
         MyPetList.clearList();
         Inventory.PetChestOpened.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
-        MWLogger.info("MyPet disabled!");
+        debugLogger.info("MyPet disabled!");
         MyPetUtil.getLogger().info("Disabled");
     }
 
     public void onEnable()
     {
-        Plugin = this;
+        plugin = this;
 
         if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
         {
@@ -99,15 +99,15 @@ public class MyPetPlugin extends JavaPlugin
         MyPetConfig.setDefault();
         MyPetConfig.loadConfiguration();
 
-        MWLogger = new DebugLogger(MyPetConfig.DebugLogger);
-        MWLogger.info("----------- loading MyPet ... -----------");
-        MWLogger.info("MyPet " + getDescription().getVersion());
-        MWLogger.info("Bukkit " + getServer().getVersion());
+        debugLogger = new DebugLogger(MyPetConfig.DebugLogger);
+        debugLogger.info("----------- loading MyPet ... -----------");
+        debugLogger.info("MyPet " + getDescription().getVersion());
+        debugLogger.info("Bukkit " + getServer().getVersion());
 
         MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
         for (EntityType ET : MyPetExperience.MobEXP.keySet())
         {
-            MWLogger.info("   " + MyPetExperience.MobEXP.get(ET).toString());
+            debugLogger.info("   " + MyPetExperience.MobEXP.get(ET).toString());
         }
         MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
 
@@ -155,12 +155,12 @@ public class MyPetPlugin extends JavaPlugin
                 template.close();
                 out.close();
                 MyPetUtil.getLogger().info("Default skill.yml file created. Please restart the server to load the skilltrees!");
-                MWLogger.info("created default skill.yml.");
+                debugLogger.info("created default skill.yml.");
             }
             catch (IOException ex)
             {
                 MyPetUtil.getLogger().info("Unable to create the default skill.yml file!");
-                MWLogger.info("unable to create skill.yml.");
+                debugLogger.info("unable to create skill.yml.");
             }
         }
         MyPetSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
@@ -183,14 +183,14 @@ public class MyPetPlugin extends JavaPlugin
             a.setAccessible(true);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
             a.invoke(a, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
-            MWLogger.info("registered MyPet entity.");
+            debugLogger.info("registered MyPet entity.");
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " NOT ENABLED");
+            MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " NOT ENABLED");
             e.printStackTrace();
-            MWLogger.severe("error while registering MyPet entity.");
-            MWLogger.severe(e.getMessage());
+            debugLogger.severe("error while registering MyPet entity.");
+            debugLogger.severe(e.getMessage());
             setEnabled(false);
             return;
         }
@@ -200,13 +200,13 @@ public class MyPetPlugin extends JavaPlugin
 
         MyPetPermissions.setup();
 
-        MWLanguage = new MyPetLanguage(new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
-        MWLanguage.loadVariables();
+        language = new MyPetLanguage(new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
+        language.loadVariables();
 
 
         if (MyPetConfig.LevelSystem)
         {
-            if (MyPetJSexp.setScriptPath(MyPetPlugin.Plugin.getDataFolder().getPath() + File.separator + "exp.js"))
+            if (MyPetJSexp.setScriptPath(MyPetPlugin.plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
                 MyPetUtil.getLogger().info("Custom EXP-Script loaded!");
                 MyPetUtil.getDebugLogger().info("loaded exp.js.");
@@ -218,14 +218,19 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
 
-        NBTWolvesFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyPet");
-        loadWolves(NBTWolvesFile);
+        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyPet");
+        if (NBTPetFile.exists())
+        {
+            NBTPetFile.renameTo(new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets"));
+        }
+        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+        loadPets(NBTPetFile);
 
-        Timer.startTimer();
+        timer.startTimer();
 
         if (MyPetConfig.sendMetrics)
         {
-            MWLogger.info("Metrics is activivated");
+            debugLogger.info("Metrics is activivated");
             try
             {
                 Metrics metrics = new Metrics(MyPetPlugin.getPlugin());
@@ -247,8 +252,8 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
 
-        MWLogger.info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " ENABLED");
-        MyPetUtil.getLogger().info("version " + MyPetPlugin.Plugin.getDescription().getVersion() + " ENABLED");
+        debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
+        MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
 
         for (Player p : getServer().getOnlinePlayers())
         {
@@ -266,7 +271,7 @@ public class MyPetPlugin extends JavaPlugin
                     else if (MyPetUtil.getDistance(MPet.getLocation(), p.getLocation()) < 75)
                     {
                         MPet.ResetSitTimer();
-                        MPet.createPet(MPet.isSitting());
+                        MPet.createPet();
                     }
                     else
                     {
@@ -275,17 +280,17 @@ public class MyPetPlugin extends JavaPlugin
                 }
             }
         }
-        MWLogger.info("----------- MyPet ready -----------");
+        debugLogger.info("----------- MyPet ready -----------");
     }
 
-    int loadWolves(File f)
+    int loadPets(File f)
     {
         int petCount = 0;
 
         NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
         nbtConfiguration.load();
-        NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Wolves");
-        MWLogger.info("loading MyWolves: -----------------------------");
+        NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Pets");
+        debugLogger.info("loading Pets: -----------------------------");
         for (int i = 0 ; i < Wolves.size() ; i++)
         {
             NBTTagCompound MPetNBT = (NBTTagCompound) Wolves.get(i);
@@ -324,20 +329,20 @@ public class MyPetPlugin extends JavaPlugin
 
             MyPetList.addInactiveMyPet(IMPet);
 
-            MWLogger.info("   " + IMPet.toString());
+            debugLogger.info("   " + IMPet.toString());
 
             petCount++;
         }
-        MWLogger.info(petCount + " pet/pets loaded -------------------------");
+        debugLogger.info(petCount + " pet/pets loaded -------------------------");
         MyPetUtil.getLogger().info(petCount + " pet/pets loaded");
         return petCount;
     }
 
-    public int saveWolves(File f)
+    public int savePets(File f)
     {
         int petCount = 0;
         NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
-        NBTTagList Wolves = new NBTTagList();
+        NBTTagList Pets = new NBTTagList();
         for (MyPet MPet : MyPetList.getMyPetList())
         {
 
@@ -372,7 +377,7 @@ public class MyPetPlugin extends JavaPlugin
                 }
             }
             Pet.set("Skills", SkillsNBTTagCompound);
-            Wolves.add(Pet);
+            Pets.add(Pet);
             petCount++;
         }
         for (InactiveMyPet IMPet : MyPetList.getInactiveMyPetList())
@@ -395,14 +400,14 @@ public class MyPetPlugin extends JavaPlugin
             Pet.setDouble("Exp", IMPet.getExp());
 
             Pet.set("Skills", IMPet.getSkills());
-            Wolves.add(Pet);
+            Pets.add(Pet);
             petCount++;
         }
-        String[] version = Plugin.getDescription().getVersion().split(" \\(");
+        String[] version = plugin.getDescription().getVersion().split(" \\(");
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
-        nbtConfiguration.getNBTTagCompound().set("Wolves", Wolves);
+        nbtConfiguration.getNBTTagCompound().set("Pets", Pets);
         nbtConfiguration.save();
-        MWLogger.info(petCount + " pet/pets saved.");
+        debugLogger.info(petCount + " pet/pets saved.");
         return petCount;
     }
 
@@ -430,6 +435,6 @@ public class MyPetPlugin extends JavaPlugin
 
     public DebugLogger getDebugLogger()
     {
-        return MWLogger;
+        return debugLogger;
     }
 }

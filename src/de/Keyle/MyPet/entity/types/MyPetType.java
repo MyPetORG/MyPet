@@ -22,7 +22,10 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
+
+import java.lang.reflect.Constructor;
 
 public enum MyPetType
 {
@@ -39,6 +42,30 @@ public enum MyPetType
         this.typeName = name;
         this.entityClazz = entityClazz;
         this.myPetClazz = myPetClazz;
+    }
+
+    public static MyPetType getMyPetTypeByEntityType(EntityType type)
+    {
+        for (MyPetType MPT : MyPetType.values())
+        {
+            if (MPT.entityType == type)
+            {
+                return MPT;
+            }
+        }
+        return null;
+    }
+
+    public static boolean isLeashableEntityType(EntityType type)
+    {
+        for (MyPetType MPT : MyPetType.values())
+        {
+            if (MPT.entityType == type)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public EntityType getEntityType()
@@ -70,13 +97,14 @@ public enum MyPetType
         return pet;
     }
 
-    public MyPet getNewMyPetInstance()
+    public MyPet getNewMyPetInstance(OfflinePlayer owner)
     {
         MyPet pet = null;
 
         try
         {
-            Object obj = myPetClazz.newInstance();
+            Constructor ctor = myPetClazz.getConstructor(OfflinePlayer.class);
+            Object obj = ctor.newInstance(owner);
             if (obj instanceof MyPet)
             {
                 pet = (MyPet) obj;
