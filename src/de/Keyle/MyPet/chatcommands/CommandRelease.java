@@ -70,7 +70,7 @@ public class CommandRelease implements CommandExecutor
                 {
                     if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        World world = MPet.Pet.getHandle().world;
+                        World world = MPet.getPet().getHandle().world;
                         Location loc = MPet.getLocation();
                         for (ItemStack is : ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
                         {

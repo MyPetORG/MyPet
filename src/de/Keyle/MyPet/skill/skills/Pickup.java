@@ -75,7 +75,7 @@ public class Pickup extends MyPetGenericSkill
     {
         if (Level > 0 && Pickup && MPet.Status == PetState.Here && MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
         {
-            for (Entity e : MPet.Pet.getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
+            for (Entity e : MPet.getPet().getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
             {
                 if (e instanceof Item)
                 {
@@ -97,7 +97,7 @@ public class Pickup extends MyPetGenericSkill
                         {
                             if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MPet.Pet.getEntityId()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MPet.getPet().getEntityId()));
                             }
                         }
                         e.remove();

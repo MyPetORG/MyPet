@@ -32,11 +32,10 @@ import org.bukkit.OfflinePlayer;
 
 public class MyWolf extends MyPet
 {
-    public String Name = "Wolf";
-
     public MyWolf(OfflinePlayer Owner)
     {
         super(Owner);
+        this.Name = "Wolf";
 
         if (MyPetSkillTreeConfigLoader.getSkillTreeNames().length > 0)
         {

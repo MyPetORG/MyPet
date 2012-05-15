@@ -57,11 +57,11 @@ public class CommandCall implements CommandExecutor
                     }
                     else
                     {
-                        if (MPet.Pet.isInsideVehicle())
+                        if (MPet.getPet().isInsideVehicle())
                         {
-                            MPet.Pet.leaveVehicle();
+                            MPet.getPet().leaveVehicle();
                         }
-                        MPet.Pet.teleport(owner);
+                        MPet.getPet().teleport(owner);
                     }
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
                     MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));

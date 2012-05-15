@@ -96,7 +96,7 @@ public class MyPetList
     {
         for (MyPet pet : lActivePets)
         {
-            if (pet.Status == PetState.Here && pet.Pet.getEntityId() == EntityID)
+            if (pet.Status == PetState.Here && pet.getPet().getEntityId() == EntityID)
             {
                 return pet;
             }

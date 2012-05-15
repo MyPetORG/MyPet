@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetUtil;
+import net.minecraft.server.World;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 
@@ -78,13 +79,14 @@ public enum MyPetType
         return typeName;
     }
 
-    public EntityMyPet getNewEntityInstance()
+    public EntityMyPet getNewEntityInstance(World world, MyPet myPet)
     {
         EntityMyPet pet = null;
 
         try
         {
-            Object obj = entityClazz.newInstance();
+            Constructor ctor = entityClazz.getConstructor(World.class, MyPet.class);
+            Object obj = ctor.newInstance(world, myPet);
             if (obj instanceof EntityMyPet)
             {
                 pet = (EntityMyPet) obj;
@@ -92,7 +94,8 @@ public enum MyPetType
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(entityClazz.getName() + "is no valid MyPet(Entity)!");
+            MyPetUtil.getLogger().warning(entityClazz.getName() + " is no valid MyPet(Entity)!");
+            e.printStackTrace();
         }
         return pet;
     }

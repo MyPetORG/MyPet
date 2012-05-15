@@ -40,8 +40,8 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
     public PathfinderGoalAggressiveTarget(MyPet MPet, float range)
     {
-        super(MPet.Pet.getHandle(), 32.0F, false);
-        this.pet = MPet.Pet.getHandle();
+        super(MPet.getPet().getHandle(), 32.0F, false);
+        this.pet = MPet.getPet().getHandle();
         this.MPet = MPet;
         this.range = range;
     }

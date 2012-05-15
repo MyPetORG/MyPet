@@ -77,9 +77,9 @@ public class MyPetPlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-            if (event.getRightClicked() != MPet.Pet)
+            if (event.getRightClicked() != MPet.getPet())
             {
-                MPet.Pet.getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
+                MPet.getPet().getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
             }
         }
     }

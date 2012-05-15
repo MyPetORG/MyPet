@@ -19,12 +19,12 @@
 
 package de.Keyle.MyPet.entity.types.wolf;
 
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftTameableAnimal;
 import org.bukkit.entity.EntityType;
 
-public class CraftMyWolf extends CraftTameableAnimal
+public class CraftMyWolf extends CraftMyPet
 {
     public CraftMyWolf(CraftServer server, EntityMyWolf wolf)
     {

@@ -56,7 +56,7 @@ public class Inventory extends MyPetGenericSkill
                 {
                     PetChestOpened.add(MPet.getOwner().getPlayer());
                 }
-                MPet.Pet.setSitting(true);
+                MPet.getPet().setSitting(true);
             }
             else
             {

@@ -47,7 +47,7 @@ public class CommandSkill implements CommandExecutor
             if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
             {
                 MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
-                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", MPet.Name).replace("%skilltree%", MPet.skillTree.getName()));
+                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", MPet.Name).replace("%skilltree%", MPet.getSkillTree().getName()));
                 Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                 if (skills.size() > 0)
                 {

@@ -41,8 +41,8 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
     public PathfinderGoalControlTarget(MyPet MPet, PathfinderGoalControl control, float range)
     {
-        super(MPet.Pet.getHandle(), 32.0F, false);
-        this.pet = MPet.Pet.getHandle();
+        super(MPet.getPet().getHandle(), 32.0F, false);
+        this.pet = MPet.getPet().getHandle();
         this.MPet = MPet;
         this.range = range;
         this.control = control;

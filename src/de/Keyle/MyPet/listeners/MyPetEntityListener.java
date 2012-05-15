@@ -86,9 +86,9 @@ public class MyPetEntityListener implements Listener
                         damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", MPet.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
                     }
 
-                    if (MPet.Pet.isSitting())
+                    if (MPet.getPet().isSitting())
                     {
-                        MPet.Pet.setSitting(true);
+                        MPet.getPet().setSitting(true);
                     }
                     event.setCancelled(true);
                 }
@@ -149,7 +149,7 @@ public class MyPetEntityListener implements Listener
                         MyPet MPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(damager);
                         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(MPet));
                         MyPetList.addMyPet(MPet);
-                        MPet.createPet();
+                        MPet.createPet(leashTarget.getLocation());
                         MPet.setSitting(sitting);
                         event.getEntity().remove();
                         MyPetUtil.getDebugLogger().info("New Pet leashed:");
@@ -179,9 +179,9 @@ public class MyPetEntityListener implements Listener
                 if (MyPetList.hasMyPet(damager))
                 {
                     MyPet MPet = MyPetList.getMyPet(damager);
-                    if (MPet.Status == PetState.Here && event.getEntity() != MPet.Pet)
+                    if (MPet.Status == PetState.Here && event.getEntity() != MPet.getPet())
                     {
-                        MyPetList.getMyPet(damager).Pet.getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        MyPetList.getMyPet(damager).getPet().getHandle().Goaltarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
 
                 }

@@ -33,16 +33,14 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 
 public abstract class MyPet
 {
-
-
     public static enum PetState
     {
         Dead, Despawned, Here
     }
 
-    public CraftMyPet Pet;
+    protected CraftMyPet Pet;
     public String Name = "Pet";
-    public final OfflinePlayer Owner;
+    protected final OfflinePlayer Owner;
     protected int Health;
     public int RespawnTime = 0;
 
@@ -51,9 +49,9 @@ public abstract class MyPet
 
     public PetState Status = PetState.Despawned;
 
-    protected org.bukkit.Location Location;
+    protected Location Location;
 
-    public MyPetSkillTree skillTree = null;
+    protected MyPetSkillTree skillTree = null;
     protected MyPetSkillSystem skillSystem;
     protected MyPetExperience experience;
 
@@ -124,14 +122,47 @@ public abstract class MyPet
             if (RespawnTime <= 0)
             {
                 net.minecraft.server.World mcWorld = ((CraftWorld) Location.getWorld()).getHandle();
-                EntityMyPet MWentityMyPet = getPetType().getNewEntityInstance();
-                MWentityMyPet.setLocation(Location);
+                EntityMyPet MPentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
+                MPentityMyPet.setLocation(Location);
+                if (!Location.getChunk().isLoaded())
+                {
+                    Location.getChunk().load();
+                }
+                if (!mcWorld.addEntity(MPentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                {
+                    return;
+                }
+                Pet = (CraftMyPet) MPentityMyPet.getBukkitEntity();
+                Pet.setSitting(isSitting);
+                Status = PetState.Here;
+            }
+        }
+    }
+
+    public void createPet(Location loc)
+    {
+        if (Status == PetState.Here || getOwner() == null)
+        {
+        }
+        else
+        {
+            if (RespawnTime <= 0)
+            {
+                this.Location = loc;
+                net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+                EntityMyPet MWentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
+                MWentityMyPet.setLocation(loc);
                 mcWorld.addEntity(MWentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM);
                 Pet = (CraftMyPet) MWentityMyPet.getBukkitEntity();
                 Pet.setSitting(isSitting);
                 Status = PetState.Here;
             }
         }
+    }
+
+    public CraftMyPet getPet()
+    {
+        return Pet;
     }
 
     public void setHealth(int d)
@@ -176,6 +207,11 @@ public abstract class MyPet
     public MyPetExperience getExperience()
     {
         return experience;
+    }
+
+    public MyPetSkillTree getSkillTree()
+    {
+        return skillTree;
     }
 
     public Location getLocation()

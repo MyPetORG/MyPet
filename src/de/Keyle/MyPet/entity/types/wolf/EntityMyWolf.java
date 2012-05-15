@@ -31,7 +31,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityMyPet
 {
-    public EntityMyWolf(World world, MyWolf MPet)
+    public EntityMyWolf(World world, MyPet MPet)
     {
         super(world, MPet);
         this.texture = "/mob/wolf.png";
