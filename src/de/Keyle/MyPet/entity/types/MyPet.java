@@ -150,10 +150,17 @@ public abstract class MyPet
             {
                 this.Location = loc;
                 net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-                EntityMyPet MWentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
-                MWentityMyPet.setLocation(loc);
-                mcWorld.addEntity(MWentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM);
-                Pet = (CraftMyPet) MWentityMyPet.getBukkitEntity();
+                EntityMyPet MPentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
+                MPentityMyPet.setLocation(loc);
+                if (!Location.getChunk().isLoaded())
+                {
+                    Location.getChunk().load();
+                }
+                if (!mcWorld.addEntity(MPentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                {
+                    return;
+                }
+                Pet = (CraftMyPet) MPentityMyPet.getBukkitEntity();
                 Pet.setSitting(isSitting);
                 Status = PetState.Here;
             }
