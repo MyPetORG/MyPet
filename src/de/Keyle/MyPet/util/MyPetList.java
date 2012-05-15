@@ -135,7 +135,7 @@ public class MyPetList
         return lInactivePets;
     }
 
-    public static boolean hasInactiveMypet(OfflinePlayer player)
+    public static boolean hasInactiveMyPet(OfflinePlayer player)
     {
         return mInctivePets.containsKey(player);
     }

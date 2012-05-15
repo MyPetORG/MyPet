@@ -259,7 +259,7 @@ public class MyPetPlugin extends JavaPlugin
         {
             if (MyPetPermissions.has(p, "MyPet.user.leash"))
             {
-                if (MyPetList.hasInactiveMypet(p))
+                if (MyPetList.hasInactiveMyPet(p))
                 {
                     MyPetList.setMyPetActive(p, true);
 

@@ -51,7 +51,7 @@ public class CommandAdmin implements CommandExecutor
             String Change = args[1];
             String Value = args[2];
 
-            if (!MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)) && !MyPetList.hasInactiveMypet(MyPetUtil.getOfflinePlayer(Petowner)))
+            if (!MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)) && !MyPetList.hasInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", Petowner)));
                 return true;
