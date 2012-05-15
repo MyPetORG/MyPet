@@ -68,7 +68,7 @@ public class MyPetPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        savePets(NBTPetFile);
+        debugLogger.info(savePets(NBTPetFile) + " pet/pets saved.");
         for (MyPet MPet : MyPetList.getMyPetList())
         {
             MPet.removePet();
@@ -407,7 +407,6 @@ public class MyPetPlugin extends JavaPlugin
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
         nbtConfiguration.getNBTTagCompound().set("Pets", Pets);
         nbtConfiguration.save();
-        debugLogger.info(petCount + " pet/pets saved.");
         return petCount;
     }
 
