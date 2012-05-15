@@ -127,7 +127,8 @@ public class MyPetJSexp
             engine.put("requiredExp", 0);
             engine.put("currentExp", 0);
 
-            engine.put("Exp", MPetExperience.getExp());
+            engine.put("type", MPet.getPetType().getTypeName());
+            engine.put("exp", MPetExperience.getExp());
             engine.put("name", MPet.Name);
             engine.put("player", MPet.getOwner().getName());
 

@@ -122,17 +122,17 @@ public abstract class MyPet
             if (RespawnTime <= 0)
             {
                 net.minecraft.server.World mcWorld = ((CraftWorld) Location.getWorld()).getHandle();
-                EntityMyPet MPentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
-                MPentityMyPet.setLocation(Location);
+                EntityMyPet entityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
+                entityMyPet.setLocation(Location);
                 if (!Location.getChunk().isLoaded())
                 {
                     Location.getChunk().load();
                 }
-                if (!mcWorld.addEntity(MPentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                if (!mcWorld.addEntity(entityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     return;
                 }
-                Pet = (CraftMyPet) MPentityMyPet.getBukkitEntity();
+                Pet = (CraftMyPet) entityMyPet.getBukkitEntity();
                 Pet.setSitting(isSitting);
                 Status = PetState.Here;
             }
@@ -150,17 +150,17 @@ public abstract class MyPet
             {
                 this.Location = loc;
                 net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-                EntityMyPet MPentityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
-                MPentityMyPet.setLocation(loc);
+                EntityMyPet entityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
+                entityMyPet.setLocation(loc);
                 if (!Location.getChunk().isLoaded())
                 {
                     Location.getChunk().load();
                 }
-                if (!mcWorld.addEntity(MPentityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                if (!mcWorld.addEntity(entityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     return;
                 }
-                Pet = (CraftMyPet) MPentityMyPet.getBukkitEntity();
+                Pet = (CraftMyPet) entityMyPet.getBukkitEntity();
                 Pet.setSitting(isSitting);
                 Status = PetState.Here;
             }
