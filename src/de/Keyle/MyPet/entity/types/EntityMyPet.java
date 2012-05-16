@@ -160,6 +160,8 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     {
     }
 
+    protected abstract void g();
+
     //Vanilla Methods ------------------------------------------------------------------------------------------------------
 
     public boolean c_()
@@ -167,15 +169,9 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return true;
     }
 
-    protected void g()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
     protected void b()
     {
         super.b();
-        this.datawatcher.a(18, this.getHealth());
     }
 
     protected boolean g_()

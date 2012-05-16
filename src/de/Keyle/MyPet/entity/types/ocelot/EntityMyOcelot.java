@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types.wolf;
+package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
@@ -29,12 +29,12 @@ import de.Keyle.MyPet.util.MyPetConfig;
 import net.minecraft.server.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-public class EntityMyWolf extends EntityMyPet
+public class EntityMyOcelot extends EntityMyPet
 {
-    public EntityMyWolf(World world, MyPet MPet)
+    public EntityMyOcelot(World world, MyPet MPet)
     {
         super(world, MPet);
-        this.texture = "/mob/wolf.png";
+        this.texture = "/mob/ozelot.png";
         this.b(0.6F, 0.8F);
         this.bb = 0.3F;
         this.al().a(true);
@@ -71,9 +71,23 @@ public class EntityMyWolf extends EntityMyPet
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
+                this.a(true);
+                this.a.a(true);
             }
         }
     }
+
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyOcelot(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    //Changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     public int getMaxHealth()
     {
@@ -95,7 +109,7 @@ public class EntityMyWolf extends EntityMyPet
             }
         }
 
-        if (this.a(itemstack))
+        if (itemstack != null && itemstack.id == Item.RAW_FISH.id)
         {
             ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
 
@@ -120,63 +134,60 @@ public class EntityMyWolf extends EntityMyPet
             this.aZ = false;
             this.setPathEntity(null);
         }
-
         return false;
     }
 
     public boolean a(Entity entity)
     {
-        int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 3 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
     protected String i()
     {
-        return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+        return this.r_() ? "mob.cat.purr" : (this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow");
     }
 
-    @Override
-    protected void g()
+    public void g()
     {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
-    protected void b()
-    {
-        super.b();
-        this.datawatcher.a(18, this.getHealth());
     }
 
     // Vanilla Methods
 
-    @Override
+    protected void b()
+    {
+        super.b();
+        this.datawatcher.a(18, (byte) 0);
+    }
+
     protected String j()
     {
-        return "mob.wolf.hurt";
+        return "mob.cat.hitt";
     }
 
-    @Override
     protected String k()
     {
-        return "mob.wolf.death";
+        return "mob.cat.hitt";
     }
 
-    @Override
     protected float p()
     {
         return 0.4F;
+    }
+
+    public int getCatType()
+    {
+        return this.datawatcher.getByte(18);
+    }
+
+    public void setCatType(int i)
+    {
+        this.datawatcher.watch(18, (byte) i);
+    }
+
+    public String getLocalizedName()
+    {
+        return this.isTamed() ? "entity.Cat.name" : super.getLocalizedName();
     }
 }

@@ -34,6 +34,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.entity.CraftOcelot;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -137,6 +138,21 @@ public class MyPetEntityListener implements Listener
                         sitting = ((Wolf) event.getEntity()).isSitting();
 
                         if (isTarmed && OwnerOfTheWolf.equals(Attacker.getName()))
+                        {
+                            willBeLeashed = true;
+                        }
+                    }
+                    else if (leashTarget instanceof Ocelot)
+                    {
+                        Ocelot TargetOcelot = (Ocelot) event.getEntity();
+
+                        String OwnerOfTheOcelot = ((CraftOcelot) TargetOcelot).getHandle().getOwnerName();
+                        Player Attacker = (Player) e.getDamager();
+
+                        boolean isTarmed = TargetOcelot.isTamed();
+                        sitting = ((Ocelot) event.getEntity()).isSitting();
+
+                        if (isTarmed && OwnerOfTheOcelot.equals(Attacker.getName()))
                         {
                             willBeLeashed = true;
                         }

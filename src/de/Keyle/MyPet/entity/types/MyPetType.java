@@ -19,6 +19,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -30,7 +32,8 @@ import java.lang.reflect.Constructor;
 
 public enum MyPetType
 {
-    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class);
+    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
+    Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class);
 
     private EntityType entityType;
     private String typeName;

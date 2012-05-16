@@ -29,8 +29,6 @@ import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 {
     private MyPet MPet;
@@ -61,9 +59,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                 {
                     if (target == null || !target.isAlive())
                     {
-                        List list = this.pet.world.a(EntityLiving.class, this.pet.boundingBox.grow((double) this.range, 4.0D, (double) this.range));
-
-                        for (Object aList : list)
+                        for (Object aList : this.pet.world.a(EntityLiving.class, this.pet.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
                         {
                             Entity entity = (Entity) aList;
                             EntityLiving entityliving = (EntityLiving) entity;

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -35,10 +36,7 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.configuration.NBTConfiguration;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.EntityTypes;
-import net.minecraft.server.EntityWolf;
-import net.minecraft.server.NBTTagCompound;
-import net.minecraft.server.NBTTagList;
+import net.minecraft.server.*;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -178,12 +176,14 @@ public class MyPetPlugin extends JavaPlugin
 
         try
         {
-            Class[] args = {Class.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE};
+            Class[] args = {Class.class, String.class, Integer.TYPE};
             Method a = EntityTypes.class.getDeclaredMethod("a", args);
             a.setAccessible(true);
-            a.invoke(a, EntityMyWolf.class, "Wolf", 95, 14144467, 13545366);
-            a.invoke(a, EntityWolf.class, "Wolf", 95, 14144467, 13545366);
-            debugLogger.info("registered MyPet entity.");
+            a.invoke(a, EntityMyWolf.class, "Wolf", 95);
+            a.invoke(a, EntityWolf.class, "Wolf", 95);
+            a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
+            a.invoke(a, EntityOcelot.class, "Ozelot", 98);
+            debugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)
         {

@@ -19,8 +19,8 @@
 
 package de.Keyle.MyPet.entity.pathfinder;
 
+import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
@@ -71,8 +71,8 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                         }
                     }
                 }
-                this.target = ((EntityMyWolf) this.pet).Goaltarget;
-                ((EntityMyWolf) this.pet).Goaltarget = null;
+                this.target = ((EntityMyPet) this.pet).Goaltarget;
+                ((EntityMyPet) this.pet).Goaltarget = null;
 
                 if (this.target instanceof EntityPlayer)
                 {
