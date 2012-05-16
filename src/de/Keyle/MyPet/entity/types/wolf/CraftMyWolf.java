@@ -40,7 +40,7 @@ public class CraftMyWolf extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyOcelot{MyWolf=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyWolf{MyWolf=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()
