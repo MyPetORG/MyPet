@@ -43,17 +43,17 @@ public class EntityMyOcelot extends EntityMyPet
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.a);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.6F));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb + 0.3F, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F, Control));
+        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 10.0F, 5.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 13));
     }
 
     @Override
