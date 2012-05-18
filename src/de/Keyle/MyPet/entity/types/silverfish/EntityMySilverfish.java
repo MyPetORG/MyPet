@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types.irongolem;
+package de.Keyle.MyPet.entity.types.silverfish;
 
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
@@ -29,22 +29,24 @@ import de.Keyle.MyPet.util.MyPetConfig;
 import net.minecraft.server.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
-public class EntityMyIronGolem extends EntityMyPet
+public class EntityMySilverfish extends EntityMyPet
 {
-    public EntityMyIronGolem(World world, MyPet MPet)
+    public EntityMySilverfish(World world, MyPet MPet)
     {
         super(world, MPet);
-        this.texture = "/mob/villager_golem.png";
-        this.b(1.4F, 2.9F);
+        this.texture = "/mob/silverfish.png";
+        this.b(0.3F, 0.7F);
+        this.bb = 0.6F;
         this.al().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
+        this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.a);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.25F, true));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, 0.2F, 5.0F, 2.0F, Control));
+        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
@@ -68,7 +70,6 @@ public class EntityMyIronGolem extends EntityMyPet
                 this.setSitting(MPet.isSitting());
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
-                this.world.broadcastEntityEffect(this, (byte) 7);
             }
         }
     }
@@ -93,7 +94,7 @@ public class EntityMyIronGolem extends EntityMyPet
             }
         }
 
-        if (itemstack.id == Item.IRON_INGOT.id)
+        if (itemstack.id == Item.SUGAR.id)
         {
             if (getHealth() < getMaxHealth())
             {
@@ -101,7 +102,7 @@ public class EntityMyIronGolem extends EntityMyPet
                 {
                     --itemstack.count;
                 }
-                this.heal(10, RegainReason.EATING);
+                this.heal(1, RegainReason.EATING);
                 if (itemstack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -122,19 +123,9 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public boolean a(Entity entity)
     {
-        int damage = 7 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 1 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
-        this.c = 10;
-        this.world.broadcastEntityEffect(this, (byte) 4);
-        boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage + this.random.nextInt(15));
-
-        if (flag)
-        {
-            entity.motY += 0.4000000059604645D;
-        }
-
-        this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
-        return flag;
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
     @Override
@@ -142,50 +133,52 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         if (this.bukkitEntity == null)
         {
-            this.bukkitEntity = new CraftMyIronGolem(this.world.getServer(), this);
+            this.bukkitEntity = new CraftMySilverfish(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
 
-    //Changed Vanilla Methods ---------------------------------------------------------------------------------------
+    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     @Override
     protected void g()
     {
+        this.datawatcher.watch(18, this.getHealth());
     }
 
     protected void b()
     {
         super.b();
+        this.datawatcher.a(18, this.getHealth());
     }
 
     // Vanilla Methods
 
     protected String i()
     {
-        return "none";
+        return "mob.silverfish.say";
     }
 
     @Override
     protected String j()
     {
-        return "mob.irongolem.hit";
+        return "mob.silverfish.hit";
     }
 
     @Override
     protected String k()
     {
-        return "mob.irongolem.death";
+        return "mob.silverfish.kill";
+    }
+
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.silverfish.step", 1.0F, 1.0F);
     }
 
     @Override
     protected float p()
     {
         return 0.4F;
-    }
-
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.irongolem.walk", 1.0F, 1.0F);
     }
 }

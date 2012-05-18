@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
+import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -185,6 +186,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityOcelot.class, "Ozelot", 98);
             a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
+            a.invoke(a, EntityMySilverfish.class, "Silverfish", 60);
+            a.invoke(a, EntitySilverfish.class, "Silverfish", 60);
             debugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)

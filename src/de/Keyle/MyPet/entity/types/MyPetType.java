@@ -23,6 +23,8 @@ import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
+import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -36,6 +38,7 @@ public enum MyPetType
 {
     Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
+    Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class);
 
     private EntityType entityType;
