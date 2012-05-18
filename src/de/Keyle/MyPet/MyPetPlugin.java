@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.listeners.*;
@@ -176,13 +177,14 @@ public class MyPetPlugin extends JavaPlugin
 
         try
         {
-            Class[] args = {Class.class, String.class, Integer.TYPE};
-            Method a = EntityTypes.class.getDeclaredMethod("a", args);
+            Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, Integer.TYPE);
             a.setAccessible(true);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95);
             a.invoke(a, EntityWolf.class, "Wolf", 95);
             a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
             a.invoke(a, EntityOcelot.class, "Ozelot", 98);
+            a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
+            a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
             debugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)

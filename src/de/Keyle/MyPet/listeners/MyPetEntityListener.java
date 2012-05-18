@@ -157,6 +157,12 @@ public class MyPetEntityListener implements Listener
                             willBeLeashed = true;
                         }
                     }
+                    else if (leashTarget instanceof IronGolem)
+                    {
+                        IronGolem TargetIronGolem = (IronGolem) event.getEntity();
+
+                        willBeLeashed = TargetIronGolem.isPlayerCreated();
+                    }
 
 
                     if (willBeLeashed)

@@ -40,11 +40,11 @@ public class CraftMyWolf extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyWolf{MyWolf=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()
     {
-        return EntityType.WOLF;
+        return EntityType.UNKNOWN;
     }
 }

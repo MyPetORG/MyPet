@@ -17,30 +17,30 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types.ocelot;
+package de.Keyle.MyPet.entity.types.irongolem;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 
-public class CraftMyOcelot extends CraftMyPet
+public class CraftMyIronGolem extends CraftMyPet
 {
-    public CraftMyOcelot(CraftServer server, EntityMyOcelot ocelot)
+    public CraftMyIronGolem(CraftServer server, EntityMyIronGolem ironGolem)
     {
-        super(server, ocelot);
+        super(server, ironGolem);
     }
 
     @Override
     public EntityMyPet getHandle()
     {
-        return (EntityMyOcelot) entity;
+        return (EntityMyIronGolem) entity;
     }
 
     @Override
     public String toString()
     {
-        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyIronGolem{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()
