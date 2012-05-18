@@ -36,7 +36,7 @@ import java.util.List;
 public class Inventory extends MyPetGenericSkill
 {
     public static final List<Player> PetChestOpened = new ArrayList<Player>();
-    public MyPetCustomInventory inv = new MyPetCustomInventory("Your Pet's Inventory", 0);
+    public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
 
     public Inventory()
     {
