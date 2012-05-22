@@ -23,6 +23,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
+import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
@@ -68,6 +69,7 @@ public class MyPetConfig
         setProperty("MyPet.StartHP.Wolf", 20);
         setProperty("MyPet.StartHP.Chicken", 4);
         setProperty("MyPet.StartHP.Cow", 10);
+        setProperty("MyPet.StartHP.Mooshroom", 10);
         setProperty("MyPet.StartHP.Ocelot", 15);
         setProperty("MyPet.StartHP.IronGolem", 15);
         setProperty("MyPet.StartHP.Silverfish", 8);
@@ -114,6 +116,7 @@ public class MyPetConfig
         MyIronGolem.startHP = Config.getInt("MyPet.StartHP.IronGolem", 20);
         MyChicken.startHP = Config.getInt("MyPet.StartHP.Chicken", 4);
         MyCow.startHP = Config.getInt("MyPet.StartHP.Cow", 10);
+        MyMooshroom.startHP = Config.getInt("MyPet.StartHP.Mooshroom", 10);
 
         if (Config.getStringList("MyPet.exp") != null)
         {

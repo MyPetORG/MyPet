@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
+import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
@@ -194,6 +195,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityChicken.class, "Chicken", 93);
             a.invoke(a, EntityMyCow.class, "Cow", 92);
             a.invoke(a, EntityCow.class, "Cow", 92);
+            a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
+            a.invoke(a, EntityMushroomCow.class, "MushroomCow", 96);
             debugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)

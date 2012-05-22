@@ -167,11 +167,10 @@ public class MyPetEntityListener implements Listener
                     {
                         willBeLeashed = ((Silverfish) leashTarget).getHealth() <= 2;
                     }
-                    else if (leashTarget instanceof Chicken || leashTarget instanceof Cow)
+                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow)
                     {
                         willBeLeashed = !((Ageable) leashTarget).isAdult();
                     }
-
 
                     if (willBeLeashed)
                     {
