@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
+import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.listeners.*;
@@ -183,6 +184,7 @@ public class MyPetPlugin extends JavaPlugin
         {
             Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, Integer.TYPE);
             a.setAccessible(true);
+
             a.invoke(a, EntityMyWolf.class, "Wolf", 95);
             a.invoke(a, EntityWolf.class, "Wolf", 95);
             a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
@@ -197,6 +199,9 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityCow.class, "Cow", 92);
             a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
             a.invoke(a, EntityMushroomCow.class, "MushroomCow", 96);
+            a.invoke(a, EntityMyPig.class, "Pig", 90);
+            a.invoke(a, EntityPig.class, "Pig", 90);
+
             debugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)
