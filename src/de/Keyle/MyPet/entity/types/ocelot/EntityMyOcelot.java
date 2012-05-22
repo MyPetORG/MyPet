@@ -25,7 +25,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
-import de.Keyle.MyPet.util.MyPetConfig;
 import net.minecraft.server.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -91,7 +90,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyPetConfig.StartHP + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MPet.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public boolean b(EntityHuman entityhuman)

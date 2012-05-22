@@ -20,6 +20,10 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.HPregeneration;
@@ -37,7 +41,6 @@ public class MyPetConfig
     public static int RespawnTimeFactor = 5;
     public static int RespawnTimeFixed = 0;
     public static int SitdownTime = 15;
-    public static int StartHP = 20;
     public static int AutoSaveTime = 60;
     public static boolean LevelSystem = true;
     //public static boolean HeroesSkill = true;
@@ -60,7 +63,10 @@ public class MyPetConfig
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
         setProperty("MyPet.SitdownTime", 60);
-        setProperty("MyPet.StartHP", 15);
+        setProperty("MyPet.StartHP.Wolf", 20);
+        setProperty("MyPet.StartHP.Ocelot", 15);
+        setProperty("MyPet.StartHP.IronGolem", 15);
+        setProperty("MyPet.StartHP.Silverfish", 8);
         setProperty("MyPet.SuperPerms", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.SendMetrics", true);
@@ -91,13 +97,17 @@ public class MyPetConfig
         LevelSystem = Config.getBoolean("MyPet.LevelSystem", true);
         //HeroesSkill = Config.getBoolean("MyPet.HeroesSkill", false);
         SitdownTime = Config.getInt("MyPet.SitdownTime", 60);
-        StartHP = Config.getInt("MyPet.StartHP", 15);
         Superperms = Config.getBoolean("MyPet.SuperPerms", false);
         sendMetrics = Config.getBoolean("MyPet.SendMetrics", true);
         DebugLogger = Config.getBoolean("MyPet.DebugLogger", false);
         useTowny = Config.getBoolean("MyPet.Support.Towny", true);
         useFactions = Config.getBoolean("MyPet.Support.Factions", true);
         useWorldGuard = Config.getBoolean("MyPet.Support.WorldGuard", true);
+
+        MyWolf.startHP = Config.getInt("MyPet.StartHP.Wolf", 20);
+        MySilverfish.startHP = Config.getInt("MyPet.StartHP.Silverfish", 8);
+        MyOcelot.startHP = Config.getInt("MyPet.StartHP.Ocelot", 15);
+        MyIronGolem.startHP = Config.getInt("MyPet.StartHP.IronGolem", 20);
 
         if (Config.getStringList("MyPet.exp") != null)
         {

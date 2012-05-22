@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
-import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
@@ -35,6 +34,6 @@ public class HP extends MyPetGenericSkill
     public void upgrade()
     {
         Level++;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", MPet.Name).replace("%maxhealth%", "" + (MyPetConfig.StartHP + Level)));
+        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", MPet.Name).replace("%maxhealth%", "" + (MPet.getStartHP() + Level)));
     }
 }

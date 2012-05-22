@@ -58,7 +58,7 @@ public class MyWolf extends MyPet
 
     public int getMaxHealth()
     {
-        return MyPetConfig.StartHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public void scheduleTask()

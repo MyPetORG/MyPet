@@ -55,6 +55,8 @@ public abstract class MyPet
     protected MyPetSkillSystem skillSystem;
     protected MyPetExperience experience;
 
+    public static int startHP = 10;
+
     public MyPet(OfflinePlayer Owner)
     {
         this.Owner = Owner;
@@ -203,7 +205,7 @@ public abstract class MyPet
 
     public int getMaxHealth()
     {
-        return MyPetConfig.StartHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public MyPetSkillSystem getSkillSystem()
@@ -318,6 +320,11 @@ public abstract class MyPet
         {
             getOwner().getPlayer().sendMessage(Text);
         }
+    }
+
+    public int getStartHP()
+    {
+        return startHP;
     }
 
     public abstract MyPetType getPetType();
