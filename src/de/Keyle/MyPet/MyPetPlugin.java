@@ -278,6 +278,10 @@ public class MyPetPlugin extends JavaPlugin
                 MyPetUtil.getLogger().info(e.getMessage());
             }
         }
+        else
+        {
+            debugLogger.info("Metrics not activivated");
+        }
 
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
         MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
