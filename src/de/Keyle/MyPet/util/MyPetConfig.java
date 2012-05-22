@@ -25,6 +25,8 @@ import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -73,6 +75,8 @@ public class MyPetConfig
         setProperty("MyPet.StartHP.Ocelot", 15);
         setProperty("MyPet.StartHP.IronGolem", 15);
         setProperty("MyPet.StartHP.Silverfish", 8);
+        setProperty("MyPet.StartHP.Pig", 10);
+        setProperty("MyPet.StartHP.Sheep", 8);
         setProperty("MyPet.SuperPerms", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.SendMetrics", true);
@@ -117,6 +121,8 @@ public class MyPetConfig
         MyChicken.startHP = Config.getInt("MyPet.StartHP.Chicken", 4);
         MyCow.startHP = Config.getInt("MyPet.StartHP.Cow", 10);
         MyMooshroom.startHP = Config.getInt("MyPet.StartHP.Mooshroom", 10);
+        MyPig.startHP = Config.getInt("MyPet.StartHP.Pig", 10);
+        MySheep.startHP = Config.getInt("MyPet.StartHP.Sheep", 8);
 
         if (Config.getStringList("MyPet.exp") != null)
         {
