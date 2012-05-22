@@ -94,7 +94,7 @@ public class EntityMySilverfish extends EntityMyPet
             }
         }
 
-        if (itemstack.id == Item.SUGAR.id)
+        if (itemstack.id == org.bukkit.Material.SUGAR.getId())
         {
             if (getHealth() < getMaxHealth())
             {

@@ -109,7 +109,7 @@ public class EntityMyOcelot extends EntityMyPet
             }
         }
 
-        if (itemstack != null && itemstack.id == Item.RAW_FISH.id)
+        if (itemstack != null && itemstack.id == org.bukkit.Material.RAW_FISH.getId())
         {
             ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
 
