@@ -256,15 +256,20 @@ public class MyPetPlugin extends JavaPlugin
             try
             {
                 Metrics metrics = new Metrics(MyPetPlugin.getPlugin());
-
-                metrics.addCustomData(new Metrics.Plotter("Total MyWolves")
+                for (MyPetType MPT : MyPetType.values())
                 {
-                    @Override
-                    public int getValue()
+                    final MyPetType petType = MPT;
+                    metrics.addCustomData(new Metrics.Plotter(petType.getTypeName())
                     {
-                        return MyPetList.getMyPetCount();
-                    }
-                });
+                        final MyPetType type = petType;
+
+                        @Override
+                        public int getValue()
+                        {
+                            return MyPetList.getMyPetCount(type);
+                        }
+                    });
+                }
 
                 metrics.start();
             }

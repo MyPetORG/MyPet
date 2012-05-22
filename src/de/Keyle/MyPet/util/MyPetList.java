@@ -23,6 +23,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import org.bukkit.OfflinePlayer;
 
@@ -218,5 +219,25 @@ public class MyPetList
     public static int getMyPetCount()
     {
         return mActivePets.size() + mInctivePets.size();
+    }
+
+    public static int getMyPetCount(MyPetType myPetType)
+    {
+        int counter = 0;
+        for (MyPet myPet : lActivePets)
+        {
+            if (myPet.getPetType() == myPetType)
+            {
+                counter++;
+            }
+        }
+        for (InactiveMyPet inactiveMyPet : lInactivePets)
+        {
+            if (inactiveMyPet.getType() == myPetType)
+            {
+                counter++;
+            }
+        }
+        return counter;
     }
 }
