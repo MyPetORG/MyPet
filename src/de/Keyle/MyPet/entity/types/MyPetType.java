@@ -21,6 +21,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
+import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
@@ -42,6 +44,7 @@ public enum MyPetType
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
+    Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class);
 
     private EntityType entityType;
