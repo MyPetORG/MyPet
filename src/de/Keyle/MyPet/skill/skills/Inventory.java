@@ -26,6 +26,7 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.NBTTagCompound;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -37,6 +38,7 @@ public class Inventory extends MyPetGenericSkill
 {
     public static final List<Player> PetChestOpened = new ArrayList<Player>();
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
+    public static boolean creative = true;
 
     public Inventory()
     {
@@ -46,7 +48,11 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (Level > 0)
+        if (MPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative)
+        {
+            MPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
+        }
+        else if (Level > 0)
         {
             if (MPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MPet.getLocation().getBlock().getType() != Material.WATER)
             {

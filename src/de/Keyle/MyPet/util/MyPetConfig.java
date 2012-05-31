@@ -30,10 +30,7 @@ import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.skills.Control;
-import de.Keyle.MyPet.skill.skills.HPregeneration;
-import de.Keyle.MyPet.skill.skills.Pickup;
-import de.Keyle.MyPet.skill.skills.Poison;
+import de.Keyle.MyPet.skill.skills.*;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -65,6 +62,7 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Pickup.RangePerLvl", 1);
         setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
+        setProperty("MyPet.Skill.Inventory.Creative", true);
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
         setProperty("MyPet.SitdownTime", 60);
@@ -102,6 +100,8 @@ public class MyPetConfig
         Pickup.RangePerLevel = Config.getDouble("MyPet.Skill.Pickup.RangePerLvl", 1.0);
         HPregeneration.HealtregenTime = Config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Poison.ChancePerLevel = Config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
+        Inventory.creative = Config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+
         RespawnTimeFactor = Config.getInt("MyPet.RespawnTime.Factor", 5);
         RespawnTimeFixed = Config.getInt("MyPet.RespawnTime.Fixed", 0);
         LevelSystem = Config.getBoolean("MyPet.LevelSystem", true);
