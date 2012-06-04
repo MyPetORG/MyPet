@@ -23,6 +23,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.NBTTagCompound;
@@ -48,7 +49,7 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (MPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative)
+        if (MPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative && !MyPetPermissions.has(MPet.getOwner().getPlayer(), "MyPet.admin"))
         {
             MPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
         }
