@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.*;
+import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -328,6 +329,15 @@ public abstract class MyPet
     }
 
     public abstract MyPetType getPetType();
+
+    public NBTTagCompound getExtendedInfo()
+    {
+        return new NBTTagCompound("Info");
+    }
+
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+    }
 
     @Override
     public String toString()

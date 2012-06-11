@@ -38,6 +38,7 @@ public class InactiveMyPet
     private MyPetType Type = MyPetType.Wolf;
 
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
+    private NBTTagCompound NBTextendetInfo;
 
     public InactiveMyPet(OfflinePlayer Owner)
     {
@@ -62,6 +63,16 @@ public class InactiveMyPet
     public void setSkills(NBTTagCompound Skills)
     {
         NBTSkills = Skills;
+    }
+
+    public void setInfo(NBTTagCompound info)
+    {
+        NBTextendetInfo = info;
+    }
+
+    public NBTTagCompound getInfo()
+    {
+        return NBTextendetInfo;
     }
 
     public NBTTagCompound getSkills()

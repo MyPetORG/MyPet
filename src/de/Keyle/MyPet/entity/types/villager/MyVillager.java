@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillSystem;
@@ -28,10 +29,13 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetSkillTreeConfigLoader;
+import net.minecraft.server.NBTTagCompound;
 import org.bukkit.OfflinePlayer;
 
 public class MyVillager extends MyPet
 {
+    int profession = 0;
+
     public MyVillager(OfflinePlayer Owner)
     {
         super(Owner);
@@ -59,6 +63,20 @@ public class MyVillager extends MyPet
     public int getMaxHealth()
     {
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+    }
+
+    public void setProfession(int color)
+    {
+        this.profession = color;
+        if (Status == PetState.Here)
+        {
+            ((EntityMyOcelot) Pet.getHandle()).setCatType(color);
+        }
+    }
+
+    public int getProfession()
+    {
+        return profession;
     }
 
     public void scheduleTask()
@@ -90,6 +108,20 @@ public class MyVillager extends MyPet
                 }
             }
         }
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setInt("Profession", profession);
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setProfession(info.getInt("Profession"));
     }
 
     @Override

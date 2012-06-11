@@ -53,6 +53,7 @@ public class EntityMyVillager extends EntityMyPet
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 13));
+
     }
 
     @Override
@@ -72,6 +73,7 @@ public class EntityMyVillager extends EntityMyPet
                 this.world.broadcastEntityEffect(this, (byte) 7);
                 this.a(true);
                 this.a.a(true);
+                this.setProfession(((MyVillager) MPet).getProfession());
             }
         }
     }

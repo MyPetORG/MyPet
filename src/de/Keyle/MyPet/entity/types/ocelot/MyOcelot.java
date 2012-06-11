@@ -28,10 +28,13 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetSkillTreeConfigLoader;
+import net.minecraft.server.NBTTagCompound;
 import org.bukkit.OfflinePlayer;
 
 public class MyOcelot extends MyPet
 {
+    private int color = 0;
+
     public MyOcelot(OfflinePlayer Owner)
     {
         super(Owner);
@@ -59,6 +62,20 @@ public class MyOcelot extends MyPet
     public int getMaxHealth()
     {
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+    }
+
+    public void setColor(int color)
+    {
+        this.color = color;
+        if (Status == PetState.Here)
+        {
+            ((EntityMyOcelot) Pet.getHandle()).setCatType(color);
+        }
+    }
+
+    public int getColor()
+    {
+        return color;
     }
 
     public void scheduleTask()
@@ -90,6 +107,20 @@ public class MyOcelot extends MyPet
                 }
             }
         }
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setInt("Color", color);
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setColor(info.getInt("Color"));
     }
 
     @Override

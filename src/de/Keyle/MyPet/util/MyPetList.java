@@ -48,6 +48,7 @@ public class MyPetList
             AMPet.setLocation(IMPet.getLocation());
             AMPet.Name = IMPet.getName();
             AMPet.RespawnTime = IMPet.getRespawnTime();
+            AMPet.setExtendedInfo(IMPet.getInfo());
 
             if (AMPet.RespawnTime > 0)
             {
@@ -151,6 +152,7 @@ public class MyPetList
         IAMPet.setRespawnTime(AMPet.RespawnTime);
         IAMPet.setSitting(IAMPet.isSitting());
         IAMPet.setSkills(AMPet.getSkillSystem().getSkills());
+        IAMPet.setInfo(AMPet.getExtendedInfo());
 
         return IAMPet;
     }

@@ -72,6 +72,7 @@ public class EntityMyOcelot extends EntityMyPet
                 this.world.broadcastEntityEffect(this, (byte) 7);
                 this.a(true);
                 this.a.a(true);
+                this.setCatType(((MyOcelot) MPet).getColor());
             }
         }
     }
