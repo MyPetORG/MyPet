@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
@@ -115,6 +116,7 @@ public class MyPetConfig
         useWorldGuard = Config.getBoolean("MyPet.Support.WorldGuard", true);
 
         MyWolf.startHP = Config.getInt("MyPet.StartHP.Wolf", 20);
+        MyVillager.startHP = Config.getInt("MyPet.StartHP.Villager", 20);
         MySilverfish.startHP = Config.getInt("MyPet.StartHP.Silverfish", 8);
         MyOcelot.startHP = Config.getInt("MyPet.StartHP.Ocelot", 15);
         MyIronGolem.startHP = Config.getInt("MyPet.StartHP.IronGolem", 20);
