@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.skills.Control;
-import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
@@ -59,10 +58,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     public abstract void setMyPet(MyPet MPet);
 
-    public int getMaxHealth()
-    {
-        return MyPetConfig.StartHP + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
+    public abstract int getMaxHealth();
 
     public boolean b(EntityHuman entityhuman)
     {
