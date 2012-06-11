@@ -131,6 +131,42 @@ public class EntityMyChicken extends EntityMyPet
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
+    public float b = 0.0F;
+    public float c = 0.0F;
+    public float g;
+    public float h;
+    public float i = 1.0F;
+
+    public void e()
+    {
+        super.e();
+        this.h = this.b;
+        this.g = this.c;
+        this.c = (float) ((double) this.c + (double) (this.onGround ? -1 : 4) * 0.3D);
+        if (this.c < 0.0F)
+        {
+            this.c = 0.0F;
+        }
+
+        if (this.c > 1.0F)
+        {
+            this.c = 1.0F;
+        }
+
+        if (!this.onGround && this.i < 1.0F)
+        {
+            this.i = 1.0F;
+        }
+
+        this.i = (float) ((double) this.i * 0.9D);
+        if (!this.onGround && this.motY < 0.0D)
+        {
+            this.motY *= 0.6D;
+        }
+
+        this.b += this.i * 2.0F;
+    }
+
     @Override
     protected void g()
     {
@@ -160,11 +196,6 @@ public class EntityMyChicken extends EntityMyPet
     protected String k()
     {
         return "mob.chickenhurt";
-    }
-
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.silverfish.step", 1.0F, 1.0F);
     }
 
     @Override
