@@ -61,6 +61,7 @@ public class EntityMySheep extends EntityMyPet
                 this.setSitting(MPet.isSitting());
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
+                this.setColor(((MySheep) MPet).getColor());
             }
         }
     }
