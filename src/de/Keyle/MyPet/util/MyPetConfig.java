@@ -115,16 +115,16 @@ public class MyPetConfig
         useFactions = Config.getBoolean("MyPet.Support.Factions", true);
         useWorldGuard = Config.getBoolean("MyPet.Support.WorldGuard", true);
 
-        MyWolf.startHP = Config.getInt("MyPet.StartHP.Wolf", 20);
-        MyVillager.startHP = Config.getInt("MyPet.StartHP.Villager", 20);
-        MySilverfish.startHP = Config.getInt("MyPet.StartHP.Silverfish", 8);
-        MyOcelot.startHP = Config.getInt("MyPet.StartHP.Ocelot", 15);
-        MyIronGolem.startHP = Config.getInt("MyPet.StartHP.IronGolem", 20);
-        MyChicken.startHP = Config.getInt("MyPet.StartHP.Chicken", 4);
-        MyCow.startHP = Config.getInt("MyPet.StartHP.Cow", 10);
-        MyMooshroom.startHP = Config.getInt("MyPet.StartHP.Mooshroom", 10);
-        MyPig.startHP = Config.getInt("MyPet.StartHP.Pig", 10);
-        MySheep.startHP = Config.getInt("MyPet.StartHP.Sheep", 8);
+        MyWolf.setStartHP(Config.getInt("MyPet.StartHP.Wolf", 20));
+        MyVillager.setStartHP(Config.getInt("MyPet.StartHP.Villager", 20));
+        MySilverfish.setStartHP(Config.getInt("MyPet.StartHP.Silverfish", 8));
+        MyOcelot.setStartHP(Config.getInt("MyPet.StartHP.Ocelot", 15));
+        MyIronGolem.setStartHP(Config.getInt("MyPet.StartHP.IronGolem", 20));
+        MyChicken.setStartHP(Config.getInt("MyPet.StartHP.Chicken", 4));
+        MyCow.setStartHP(Config.getInt("MyPet.StartHP.Cow", 10));
+        MyMooshroom.setStartHP(Config.getInt("MyPet.StartHP.Mooshroom", 10));
+        MyPig.setStartHP(Config.getInt("MyPet.StartHP.Pig", 10));
+        MySheep.setStartHP(Config.getInt("MyPet.StartHP.Sheep", 8));
 
         if (Config.getStringList("MyPet.exp") != null)
         {

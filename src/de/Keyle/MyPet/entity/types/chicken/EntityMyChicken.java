@@ -67,7 +67,7 @@ public class EntityMyChicken extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MPet.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyChicken.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public boolean b(EntityHuman entityhuman)

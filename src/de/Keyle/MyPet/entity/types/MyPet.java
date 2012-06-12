@@ -56,7 +56,7 @@ public abstract class MyPet
     protected MyPetSkillSystem skillSystem;
     protected MyPetExperience experience;
 
-    public static int startHP = 10;
+    protected static int startHP = 10;
 
     public MyPet(OfflinePlayer Owner)
     {
@@ -323,9 +323,14 @@ public abstract class MyPet
         }
     }
 
-    public int getStartHP()
+    public static int getStartHP()
     {
         return startHP;
+    }
+
+    public static void setStartHP(int hp)
+    {
+        startHP = hp;
     }
 
     public abstract MyPetType getPetType();
