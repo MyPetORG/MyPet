@@ -21,11 +21,11 @@ package de.Keyle.MyPet.entity.types.irongolem;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import org.bukkit.OfflinePlayer;
+import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyIronGolem extends MyPet
 {
-    public MyIronGolem(OfflinePlayer Owner)
+    public MyIronGolem(MyPetPlayer Owner)
     {
         super(Owner);
         this.Name = "Iron Golem";

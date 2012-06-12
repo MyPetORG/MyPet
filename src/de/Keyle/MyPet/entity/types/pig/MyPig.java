@@ -21,11 +21,11 @@ package de.Keyle.MyPet.entity.types.pig;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import org.bukkit.OfflinePlayer;
+import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyPig extends MyPet
 {
-    public MyPig(OfflinePlayer Owner)
+    public MyPig(MyPetPlayer Owner)
     {
         super(Owner);
         this.Name = "Pig";

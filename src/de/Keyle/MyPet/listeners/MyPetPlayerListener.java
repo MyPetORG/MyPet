@@ -87,6 +87,9 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
+        MyPetUtil.getDebugLogger().info("PlayerJoin: " + event.getPlayer().getName() + "     ----------------------------------");
+        MyPetUtil.getDebugLogger().info("MyPetPlayer: " + (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()) ? MyPetPlayer.getMyPetPlayer(event.getPlayer().getName()).toString() : "false"));
+        MyPetUtil.getDebugLogger().info("has MyPet-permission: " + MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"));
         if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"))
         {
             if (MyPetList.hasInactiveMyPet(event.getPlayer()))
@@ -102,6 +105,7 @@ public class MyPetPlayerListener implements Listener
                 */
                 MyPetList.setMyPetActive(event.getPlayer(), true);
             }
+            MyPetUtil.getDebugLogger().info("has MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
                 MyPet MPet = MyPetList.getMyPet(event.getPlayer());
@@ -119,6 +123,7 @@ public class MyPetPlayerListener implements Listener
                     MPet.Status = PetState.Despawned;
                 }
             }
+            MyPetUtil.getDebugLogger().info("-------------------------------------------------------------");
         }
         else
         {

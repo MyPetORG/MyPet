@@ -28,15 +28,15 @@ import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetSkillTreeConfigLoader;
 import net.minecraft.server.NBTTagCompound;
-import org.bukkit.OfflinePlayer;
 
 public class MyVillager extends MyPet
 {
     int profession = 0;
 
-    public MyVillager(OfflinePlayer Owner)
+    public MyVillager(MyPetPlayer Owner)
     {
         super(Owner);
         this.Name = "Villager";

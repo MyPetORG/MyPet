@@ -21,14 +21,14 @@ package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
-import org.bukkit.OfflinePlayer;
 
 public class MyOcelot extends MyPet
 {
     private int color = 0;
 
-    public MyOcelot(OfflinePlayer Owner)
+    public MyOcelot(MyPetPlayer Owner)
     {
         super(Owner);
         this.Name = "Ocelot";

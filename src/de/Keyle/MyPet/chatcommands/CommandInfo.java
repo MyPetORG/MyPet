@@ -43,9 +43,9 @@ public class CommandInfo implements CommandExecutor
                 playerName = args[0];
             }
 
-            if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(playerName)))
+            if (MyPetList.hasMyPet(playerName))
             {
-                MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(playerName));
+                MyPet MPet = MyPetList.getMyPet(playerName);
                 String msg;
                 if (MPet.getHealth() > MPet.getMaxHealth() / 3 * 2)
                 {

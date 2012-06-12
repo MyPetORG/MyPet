@@ -84,7 +84,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                     }
                     Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
 
-                    if (target == MPet.getOwner())
+                    if (MPet.getOwner().equals(target))
                     {
                         this.target = null;
                         return false;

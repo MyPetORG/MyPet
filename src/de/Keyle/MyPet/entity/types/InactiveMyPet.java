@@ -20,16 +20,16 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 
 import java.util.Collection;
 
 public class InactiveMyPet
 {
     private String Name = "Wolf";
-    private final OfflinePlayer Owner;
+    private final MyPetPlayer Owner;
     private int Health;
     private int RespawnTime;
     private boolean isSitting;
@@ -40,7 +40,7 @@ public class InactiveMyPet
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
     private NBTTagCompound NBTextendetInfo;
 
-    public InactiveMyPet(OfflinePlayer Owner)
+    public InactiveMyPet(MyPetPlayer Owner)
     {
         this.Owner = Owner;
     }
@@ -150,12 +150,8 @@ public class InactiveMyPet
         this.isSitting = isSitting;
     }
 
-    public OfflinePlayer getOwner()
+    public MyPetPlayer getOwner()
     {
-        if (Owner.isOnline())
-        {
-            return Owner.getPlayer();
-        }
         return Owner;
     }
 

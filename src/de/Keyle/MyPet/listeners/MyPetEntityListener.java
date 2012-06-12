@@ -175,7 +175,7 @@ public class MyPetEntityListener implements Listener
                     if (willBeLeashed)
                     {
                         event.setCancelled(true);
-                        MyPet MPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(damager);
+                        MyPet MPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(MPet));
                         MyPetList.addMyPet(MPet);
                         MPet.createPet(leashTarget.getLocation());

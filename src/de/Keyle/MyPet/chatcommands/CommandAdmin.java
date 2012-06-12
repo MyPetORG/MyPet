@@ -51,7 +51,7 @@ public class CommandAdmin implements CommandExecutor
             String Change = args[1];
             String Value = args[2];
 
-            if (!MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)) && !MyPetList.hasInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
+            if (!MyPetList.hasMyPet(Petowner) && !MyPetList.hasInactiveMyPet(Petowner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", Petowner)));
                 return true;
@@ -64,13 +64,13 @@ public class CommandAdmin implements CommandExecutor
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
+                if (MyPetList.hasMyPet(Petowner))
                 {
-                    MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Petowner)).Name = name;
+                    MyPetList.getMyPet(Petowner).Name = name;
                 }
                 else
                 {
-                    MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)).setName(name);
+                    MyPetList.getInactiveMyPet(Petowner).setName(name);
                 }
             }
             else if (Change.equalsIgnoreCase("exp"))
@@ -79,9 +79,9 @@ public class CommandAdmin implements CommandExecutor
                 {
                     int Exp = Integer.parseInt(Value);
                     Exp = Exp < 0 ? 0 : Exp;
-                    if (MyPetList.hasMyPet(MyPetUtil.getOfflinePlayer(Petowner)))
+                    if (MyPetList.hasMyPet(Petowner))
                     {
-                        MyPet MPet = MyPetList.getMyPet(MyPetUtil.getOfflinePlayer(Petowner));
+                        MyPet MPet = MyPetList.getMyPet(Petowner);
 
                         Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                         if (skills.size() > 0)
@@ -96,7 +96,7 @@ public class CommandAdmin implements CommandExecutor
                     }
                     else
                     {
-                        MyPetList.getInactiveMyPet(MyPetUtil.getOfflinePlayer(Petowner)).setExp(Exp);
+                        MyPetList.getInactiveMyPet(Petowner).setExp(Exp);
                     }
                 }
             }

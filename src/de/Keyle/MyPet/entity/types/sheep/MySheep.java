@@ -21,14 +21,14 @@ package de.Keyle.MyPet.entity.types.sheep;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
-import org.bukkit.OfflinePlayer;
 
 public class MySheep extends MyPet
 {
     int color = 0;
 
-    public MySheep(OfflinePlayer Owner)
+    public MySheep(MyPetPlayer Owner)
     {
         super(Owner);
         this.Name = "Sheep";

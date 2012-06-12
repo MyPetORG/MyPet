@@ -38,6 +38,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class MyPetUtil
@@ -45,6 +46,18 @@ public class MyPetUtil
     public static Server getServer()
     {
         return Bukkit.getServer();
+    }
+
+    public static Player getPlayerByUUID(UUID playerUUID)
+    {
+        for (Player player : getServer().getOnlinePlayers())
+        {
+            if (player.getUniqueId().equals(playerUUID))
+            {
+                return player;
+            }
+        }
+        return null;
     }
 
     public static OfflinePlayer getOfflinePlayer(String Name)

@@ -253,6 +253,13 @@ public class MyPetPlugin extends JavaPlugin
 
         timer.startTimer();
 
+        debugLogger.info("MyPetPlayer: ---------------");
+        for (MyPetPlayer myPetPlayer : MyPetPlayer.getPlayerList())
+        {
+            debugLogger.info("   " + myPetPlayer.toString());
+        }
+        debugLogger.info("----------------------------");
+
         if (MyPetConfig.sendMetrics)
         {
             debugLogger.info("Metrics is activivated");
@@ -350,7 +357,7 @@ public class MyPetPlugin extends JavaPlugin
             }
             boolean PetSitting = MPetNBT.getBoolean("Sitting");
 
-            InactiveMyPet IMPet = new InactiveMyPet(MyPetUtil.getOfflinePlayer(Owner));
+            InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(Owner));
 
             IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(PetWorld) != null ? MyPetUtil.getServer().getWorld(PetWorld) : MyPetUtil.getServer().getWorlds().get(0), PetX, PetY, PetZ));
             IMPet.setHealth(PetHealthNow);

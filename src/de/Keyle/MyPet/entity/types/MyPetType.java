@@ -39,9 +39,9 @@ import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.World;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Constructor;
@@ -127,13 +127,13 @@ public enum MyPetType
         return pet;
     }
 
-    public MyPet getNewMyPetInstance(OfflinePlayer owner)
+    public MyPet getNewMyPetInstance(MyPetPlayer owner)
     {
         MyPet pet = null;
 
         try
         {
-            Constructor ctor = myPetClazz.getConstructor(OfflinePlayer.class);
+            Constructor ctor = myPetClazz.getConstructor(MyPetPlayer.class);
             Object obj = ctor.newInstance(owner);
             if (obj instanceof MyPet)
             {

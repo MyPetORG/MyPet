@@ -75,7 +75,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                                     }
                                     Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
 
-                                    if (target == MPet.getOwner())
+                                    if (MPet.getOwner().equals(target))
                                     {
                                         continue;
                                     }

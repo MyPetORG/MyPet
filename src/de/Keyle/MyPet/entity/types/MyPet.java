@@ -28,7 +28,6 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
@@ -41,7 +40,7 @@ public abstract class MyPet
 
     protected CraftMyPet Pet;
     public String Name = "Pet";
-    protected final OfflinePlayer Owner;
+    protected final MyPetPlayer Owner;
     protected int Health;
     public int RespawnTime = 0;
 
@@ -58,7 +57,7 @@ public abstract class MyPet
 
     protected static int startHP = 10;
 
-    public MyPet(OfflinePlayer Owner)
+    public MyPet(MyPetPlayer Owner)
     {
         this.Owner = Owner;
 
@@ -306,12 +305,8 @@ public abstract class MyPet
         }
     }
 
-    public OfflinePlayer getOwner()
+    public MyPetPlayer getOwner()
     {
-        if (Owner.isOnline())
-        {
-            return Owner.getPlayer();
-        }
         return Owner;
     }
 
