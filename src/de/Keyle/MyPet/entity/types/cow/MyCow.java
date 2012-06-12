@@ -21,13 +21,6 @@ package de.Keyle.MyPet.entity.types.cow;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
-import de.Keyle.MyPet.skill.MyPetSkillSystem;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.util.MyPetConfig;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetSkillTreeConfigLoader;
 import org.bukkit.OfflinePlayer;
 
 public class MyCow extends MyPet
@@ -35,61 +28,12 @@ public class MyCow extends MyPet
     public MyCow(OfflinePlayer Owner)
     {
         super(Owner);
-        this.Name = "Chicken";
-
-        if (MyPetSkillTreeConfigLoader.getSkillTreeNames().length > 0)
-        {
-            for (String ST : MyPetSkillTreeConfigLoader.getSkillTreeNames())
-            {
-                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + ST))
-                {
-                    this.skillTree = MyPetSkillTreeConfigLoader.getSkillTree(ST);
-                    break;
-                }
-            }
-        }
-        if (this.skillTree == null)
-        {
-            this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
-        }
-        skillSystem = new MyPetSkillSystem(this);
-        experience = new MyPetExperience(this);
+        this.Name = "Cow";
     }
 
     public int getMaxHealth()
     {
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
-    }
-
-    public void scheduleTask()
-    {
-        if (Status != PetState.Despawned && getOwner() != null)
-        {
-            if (skillSystem.getSkills().size() > 0)
-            {
-                for (MyPetGenericSkill skill : skillSystem.getSkills())
-                {
-                    skill.schedule();
-                }
-            }
-            if (Status == PetState.Here)
-            {
-                if (MyPetConfig.SitdownTime > 0 && SitTimer <= 0)
-                {
-                    Pet.setSitting(true);
-                    ResetSitTimer();
-                }
-                SitTimer--;
-            }
-            else if (Status == PetState.Dead)
-            {
-                RespawnTime--;
-                if (RespawnTime <= 0)
-                {
-                    RespawnPet();
-                }
-            }
-        }
     }
 
     @Override
