@@ -224,6 +224,26 @@ public class MyPetPlugin extends JavaPlugin
             return;
         }
 
+        debugLogger.info("Pet start HP: ---------------");
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            try
+            {
+                for (Method f : myPetType.getMyPetClass().getDeclaredMethods())
+                {
+                    if (f.getName().equals("getStartHP"))
+                    {
+                        f.setAccessible(true);
+                        debugLogger.info("   " + myPetType.getTypeName() + ": " + f.invoke(null).toString());
+                    }
+                }
+            }
+            catch (Exception ignored)
+            {
+            }
+        }
+        debugLogger.info("----------------------------");
+
         // For future of the client mod
         //MyPetUtil.getServer().getMessenger().registerOutgoingPluginChannel(getPlugin(),"MyPetByKeyle");
 

@@ -104,6 +104,16 @@ public enum MyPetType
         return entityType;
     }
 
+    public Class<? extends EntityMyPet> getEntityClass()
+    {
+        return entityClazz;
+    }
+
+    public Class<? extends MyPet> getMyPetClass()
+    {
+        return myPetClazz;
+    }
+
     public String getTypeName()
     {
         return typeName;

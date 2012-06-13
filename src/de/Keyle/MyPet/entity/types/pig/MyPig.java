@@ -25,6 +25,8 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyPig extends MyPet
 {
+    private static int startHP = 10;
+
     public MyPig(MyPetPlayer Owner)
     {
         super(Owner);
@@ -46,5 +48,15 @@ public class MyPig extends MyPet
     public String toString()
     {
         return "MyPig{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+    }
+
+    public static void setStartHP(int hp)
+    {
+        startHP = hp;
+    }
+
+    public static int getStartHP()
+    {
+        return startHP;
     }
 }

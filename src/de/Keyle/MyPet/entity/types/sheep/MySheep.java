@@ -26,6 +26,8 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MySheep extends MyPet
 {
+    private static int startHP = 10;
+
     int color = 0;
 
     public MySheep(MyPetPlayer Owner)
@@ -77,5 +79,15 @@ public class MySheep extends MyPet
     public String toString()
     {
         return "MySheep{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+    }
+
+    public static void setStartHP(int hp)
+    {
+        startHP = hp;
+    }
+
+    public static int getStartHP()
+    {
+        return startHP;
     }
 }
