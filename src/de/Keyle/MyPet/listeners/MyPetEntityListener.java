@@ -163,11 +163,11 @@ public class MyPetEntityListener implements Listener
 
                         willBeLeashed = TargetIronGolem.isPlayerCreated();
                     }
-                    else if (leashTarget instanceof Silverfish)
+                    else if (leashTarget instanceof Silverfish || leashTarget instanceof CaveSpider)
                     {
                         willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
                     }
-                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep)
+                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep || leashTarget instanceof Villager)
                     {
                         willBeLeashed = !((Ageable) leashTarget).isAdult();
                     }

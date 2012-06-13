@@ -19,6 +19,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
+import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
@@ -57,6 +59,7 @@ public enum MyPetType
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
+    CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class);
 
     private EntityType entityType;

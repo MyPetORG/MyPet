@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
@@ -187,6 +188,7 @@ public class MyPetPlugin extends JavaPlugin
             Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, Integer.TYPE);
             a.setAccessible(true);
 
+            // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
             a.invoke(a, EntityMyWolf.class, "Wolf", 95);
             a.invoke(a, EntityWolf.class, "Wolf", 95);
             a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
@@ -207,6 +209,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntitySheep.class, "Sheep", 91);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
+            a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
+            a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
 
             debugLogger.info("registered MyPet entities.");
         }

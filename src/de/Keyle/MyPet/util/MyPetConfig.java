@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
@@ -125,6 +126,7 @@ public class MyPetConfig
         MyMooshroom.setStartHP(Config.getInt("MyPet.StartHP.Mooshroom", 10));
         MyPig.setStartHP(Config.getInt("MyPet.StartHP.Pig", 10));
         MySheep.setStartHP(Config.getInt("MyPet.StartHP.Sheep", 8));
+        MyCaveSpider.setStartHP(Config.getInt("MyPet.StartHP.CaveSpider", 12));
 
         if (Config.getStringList("MyPet.exp") != null)
         {
