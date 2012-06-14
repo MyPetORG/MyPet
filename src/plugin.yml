@@ -43,7 +43,7 @@ commands:
     usage: '/<command> [PlayerName] name/exp [Value]'
 
 permissions:
-  MyWolf.*:
+  MyPet.*:
     description: Gives access to ALL MyPet commands
     children:
       MyPet.admin: true
