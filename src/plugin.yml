@@ -49,7 +49,6 @@ permissions:
       MyPet.admin: true
       MyPet.user.leash: true
       MyPet.user.stop: true
-      MyPet.user.call: true
       MyPet.user.setname: true
       MyPet.user.release: true
   MyPet.user.*:
@@ -58,15 +57,12 @@ permissions:
       MyPet.admin: false
       MyPet.user.leash: true
       MyPet.user.stop: true
-      MyPet.user.call: true
       MyPet.user.setname: true
       MyPet.user.release: true
   MyPet.user.leash:
     description: Allows a player to leash a MyPet.
   MyPet.user.stop:
     description: Allows usage of /petstop
-  MyPet.user.call:
-    description: Allows usage of /petcall
   MyPet.user.setname:
     description: Allows usage of /petname
   MyPet.user.release:

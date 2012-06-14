@@ -25,7 +25,6 @@ import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,10 +41,6 @@ public class CommandCall implements CommandExecutor
             if (MyPetList.hasMyPet(owner))
             {
                 MyPet MPet = MyPetList.getMyPet(owner);
-                if (!MyPetPermissions.has(owner, "MyPet.user.call"))
-                {
-                    return true;
-                }
                 if (MPet.Status == PetState.Here)
                 {
                     if (MPet.getLocation().getWorld() != owner.getLocation().getWorld())
