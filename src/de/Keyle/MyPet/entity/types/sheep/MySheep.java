@@ -46,7 +46,7 @@ public class MySheep extends MyPet
         this.color = color;
         if (Status == PetState.Here)
         {
-            ((EntityMySheep) Pet.getHandle()).setColor(color);
+            //((EntityMySheep) Pet.getHandle()).setColor(color);
         }
     }
 
@@ -66,7 +66,10 @@ public class MySheep extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setColor(info.getInt("Color"));
+        if (info.hasKey("Color"))
+        {
+            setColor(info.getInt("Color"));
+        }
     }
 
     @Override

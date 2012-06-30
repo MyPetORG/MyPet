@@ -391,6 +391,7 @@ public class MyPetPlugin extends JavaPlugin
             IMPet.setExp(PetExp);
             IMPet.setSkills(MPetNBT.getCompound("Skills"));
             IMPet.setType(MyPetType.valueOf(PetType));
+            IMPet.setInfo(MPetNBT.getCompound("Info"));
 
             MyPetList.addInactiveMyPet(IMPet);
 
@@ -427,6 +428,7 @@ public class MyPetPlugin extends JavaPlugin
             Pet.setString("Name", MPet.Name);
             Pet.setBoolean("Sitting", MPet.isSitting());
             Pet.setDouble("Exp", MPet.getExperience().getExp());
+            Pet.setCompound("Info", MPet.getExtendedInfo());
 
             NBTTagCompound SkillsNBTTagCompound = new NBTTagCompound("Skills");
             Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();

@@ -33,10 +33,10 @@ public class EntityMySheep extends EntityMyPet
         super(world, MPet);
         this.texture = "/mob/sheep.png";
         this.b(0.9F, 1.3F);
-        this.bb = 0.6F;
+        this.bb = 0.25F;
         this.al().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.38F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.a);
@@ -61,7 +61,7 @@ public class EntityMySheep extends EntityMyPet
                 this.setSitting(MPet.isSitting());
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
-                this.setColor(((MySheep) MPet).getColor());
+                //this.setColor(((MySheep) MPet).getColor());
             }
         }
     }
@@ -86,7 +86,7 @@ public class EntityMySheep extends EntityMyPet
             }
         }
 
-        if (itemstack.id == org.bukkit.Material.WHEAT.getId() || itemstack.id == org.bukkit.Material.LONG_GRASS.getId())
+        if (itemstack != null && itemstack.id == org.bukkit.Material.WHEAT.getId())
         {
             if (getHealth() < getMaxHealth())
             {
@@ -100,6 +100,14 @@ public class EntityMySheep extends EntityMyPet
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 this.a(true);
+                return true;
+            }
+        }
+        else if (itemstack != null && itemstack.id == 351)
+        {
+            if (itemstack.getData() <= 15)
+            {
+                ((MySheep) MPet).setColor(15 - itemstack.getData());
                 return true;
             }
         }
