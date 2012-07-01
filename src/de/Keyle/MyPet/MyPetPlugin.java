@@ -250,7 +250,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetPermissions.setup();
 
         language = new MyPetLanguage(new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
-        language.loadVariables();
+        language.load();
 
 
         if (MyPetConfig.LevelSystem)

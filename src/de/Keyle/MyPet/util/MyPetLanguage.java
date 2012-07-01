@@ -57,7 +57,7 @@ public class MyPetLanguage
         }
     }
 
-    public void loadVariables()
+    public void load()
     {
         addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You take your pet on the leash, he'll be a good pet.");
         addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%white% is now Lv%lvl%");
