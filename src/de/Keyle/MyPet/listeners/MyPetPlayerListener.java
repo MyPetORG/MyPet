@@ -192,16 +192,6 @@ public class MyPetPlayerListener implements Listener
                         }
                     }
                 }
-                else if (MPet.Status == PetState.Despawned)
-                {
-                    if (MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
-                    {
-                        if (MyPetUtil.getDistance(MPet.getLocation(), event.getPlayer().getLocation()) < 75)
-                        {
-                            MPet.createPet();
-                        }
-                    }
-                }
             }
         }
         else if (MyPetList.hasMyPet(event.getPlayer()))
