@@ -135,6 +135,7 @@ public class MyPetPlugin extends JavaPlugin
 
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
+        getCommand("petsendaway").setExecutor(new CommandSendAway());
         getCommand("petstop").setExecutor(new CommandStop());
         getCommand("petrelease").setExecutor(new CommandRelease());
         getCommand("mypet").setExecutor(new CommandHelp());

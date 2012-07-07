@@ -13,6 +13,9 @@ commands:
   petcall:
     aliases: [petc, pc]
     description: Call your MyPet.
+  petsendaway:
+    aliases: [petsa, psa]
+    description: Call your MyPet.
   petrelease:
     description: Release your MyPet.
     usage: '/<command> <PetName>'

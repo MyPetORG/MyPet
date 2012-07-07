@@ -74,6 +74,8 @@ public class MyPetLanguage
         addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%white% respawned");
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%white% comes to you.");
+        addString("Msg_SendAway", "MyPet.Message.sendaway", "You send %aqua%%petname%%white% away.");
+        addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%white% is not here.");
         addString("Msg_Home", "MyPet.Message.call", "%aqua%%petname%%white% go to home.");
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%white% first.");
         addString("Msg_UserDontHavePet", "MyPet.Message.userdonthavepet", "%gold%%playername%%white% doesn't have a MyPet!");

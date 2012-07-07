@@ -33,7 +33,7 @@ public class MyPetSpoutEvent extends Event
 
     public enum MyPetSpoutEventReason
     {
-        Nothing, Name, Call
+        Nothing, Name, Call, SendAway
     }
 
     public MyPetSpoutEvent(MyPet pet, MyPetSpoutEventReason eventReason)
