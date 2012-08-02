@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.entity.types.pig;
 
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
@@ -32,17 +33,17 @@ public class EntityMyPig extends EntityMyPet
     {
         super(world, MPet);
         this.texture = "/mob/pig.png";
-        this.b(0.9F, 0.9F);
-        this.bb = 0.6F;
-        this.al().a(true);
+        this.a(0.9F, 0.9F);
+        this.bw = 0.6F;
+        this.getNavigation().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.a);
+        this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, Control);
         this.goalSelector.a(4, new PathfinderGoalPanic(this, 0.38F));
-        this.goalSelector.a(5, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F, Control));
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
     }
@@ -70,7 +71,7 @@ public class EntityMyPig extends EntityMyPet
         return MyPig.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    public boolean b(EntityHuman entityhuman)
+    public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
@@ -98,21 +99,21 @@ public class EntityMyPig extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.a(true);
+                this.e(true);
                 return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
-            this.a.a(!this.isSitting());
-            this.aZ = false;
+            this.d.a(!this.isSitting());
+            this.bu = false;
             this.setPathEntity(null);
         }
 
         return false;
     }
 
-    public boolean a(Entity entity)
+    public boolean k(Entity entity)
     {
         int damage = 1 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
@@ -132,38 +133,38 @@ public class EntityMyPig extends EntityMyPet
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     @Override
-    protected void g()
+    protected void bd()
     {
         this.datawatcher.watch(18, this.getHealth());
     }
 
-    protected void b()
+    protected void a()
     {
-        super.b();
+        super.a();
         this.datawatcher.a(18, this.getHealth());
     }
 
     // Vanilla Methods
 
-    protected String i()
+    protected String aQ()
     {
         return "mob.pig";
     }
 
     @Override
-    protected String j()
+    protected String aR()
     {
         return "mob.pig";
     }
 
     @Override
-    protected String k()
+    protected String aS()
     {
         return "mob.pigdeath";
     }
 
     @Override
-    protected float p()
+    protected float aP()
     {
         return 0.4F;
     }

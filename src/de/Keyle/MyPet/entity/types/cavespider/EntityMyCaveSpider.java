@@ -19,9 +19,9 @@
 
 package de.Keyle.MyPet.entity.types.cavespider;
 
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.pathfinder.*;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
@@ -34,26 +34,25 @@ public class EntityMyCaveSpider extends EntityMyPet
     {
         super(world, MPet);
         this.texture = "/mob/cavespider.png";
-        this.b(0.7F, 0.5F);
-        this.bb = 0.8F;
-        this.al().a(true);
+        this.a(0.7F, 0.5F);
+        this.bw = 0.8F;
+        this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.bb);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.bw);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.a);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.bb));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb, true));
+        this.goalSelector.a(2, this.d);
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.bw));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bw, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 5.0F, 2.0F, Control));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
+        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(MPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
-        ;
     }
 
     @Override
@@ -79,7 +78,7 @@ public class EntityMyCaveSpider extends EntityMyPet
         return MyCaveSpider.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    public boolean b(EntityHuman entityhuman)
+    public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
@@ -107,21 +106,21 @@ public class EntityMyCaveSpider extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.a(true);
+                this.e(true);
                 return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
-            this.a.a(!this.isSitting());
-            this.aZ = false;
+            this.d.a(!this.isSitting());
+            this.bu = false;
             this.setPathEntity(null);
         }
 
         return false;
     }
 
-    public boolean a(Entity entity)
+    public boolean k(Entity entity)
     {
         int damage = 2 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
@@ -141,39 +140,39 @@ public class EntityMyCaveSpider extends EntityMyPet
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     @Override
-    protected void g()
+    protected void bd()
     {
         this.datawatcher.watch(18, this.getHealth());
     }
 
-    protected void b()
+    protected void a()
     {
-        super.b();
+        super.a();
         this.datawatcher.a(16, (byte) 0);
     }
 
     // Vanilla Methods
 
-    protected String i()
+    protected String aQ()
     {
         return "mob.spider";
     }
 
     @Override
-    protected String j()
+    protected String aR()
     {
         return "mob.spider";
     }
 
     @Override
-    protected String k()
+    protected String aS()
     {
         return "mob.spiderdeath";
     }
 
-    public MonsterType getMonsterType()
+    public EnumMonsterType getMonsterType()
     {
-        return MonsterType.ARTHROPOD;
+        return EnumMonsterType.ARTHROPOD;
     }
 
     public void a(boolean flag)
@@ -193,7 +192,7 @@ public class EntityMyCaveSpider extends EntityMyPet
     }
 
     @Override
-    protected float p()
+    protected float aP()
     {
         return 0.4F;
     }

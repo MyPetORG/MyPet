@@ -20,6 +20,8 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.chatcommands.*;
+import de.Keyle.MyPet.chatcommands.CommandHelp;
+import de.Keyle.MyPet.chatcommands.CommandStop;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;

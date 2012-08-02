@@ -27,12 +27,11 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public abstract class EntityMyPet extends EntityTameableAnimal
 {
-    protected boolean b = false;
-    protected float c;
+    protected float e;
     protected boolean h;
-    protected boolean i;
+    protected boolean g;
     protected float j;
-    protected float k;
+    protected float i;
     public EntityLiving Goaltarget = null;
 
     protected boolean isMyPet = false;
@@ -60,7 +59,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     public abstract int getMaxHealth();
 
-    public boolean b(EntityHuman entityhuman)
+    public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
@@ -75,7 +74,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
             }
         }
 
-        if (this.a(itemstack))
+        if (this.b(itemstack))
         {
             ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
 
@@ -90,21 +89,21 @@ public abstract class EntityMyPet extends EntityTameableAnimal
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.a(true);
+                this.e(true);
                 return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
-            this.a.a(!this.isSitting());
-            this.aZ = false;
+            this.d.a(!this.isSitting());
+            this.bu = false;
             this.setPathEntity(null);
         }
 
         return false;
     }
 
-    public boolean a(Entity entity)
+    public boolean k(Entity entity)
     {
         int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
@@ -127,7 +126,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     public void setSitting(boolean flag)
     {
-        this.a.a(flag);
+        this.d.a(flag);
         super.setSitting(flag);
     }
 
@@ -140,7 +139,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
-    protected abstract String i();
+    protected abstract String aQ();
 
     public EntityAnimal createChild(EntityAnimal entityanimal)
     {
@@ -156,109 +155,83 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     {
     }
 
-    protected abstract void g();
+    protected abstract void bd();
 
     //Vanilla Methods ------------------------------------------------------------------------------------------------------
 
-    public boolean c_()
+    public boolean aV()
     {
         return true;
     }
 
-    protected void b()
+    protected void a()
     {
-        super.b();
+        super.a();
     }
 
-    protected boolean g_()
-    {
-        return false;
-    }
-
-    protected boolean n()
+    protected boolean e_()
     {
         return false;
     }
 
+    protected boolean ba()
+    {
+        return false;
+    }
 
-    protected abstract String j();
 
-    protected abstract String k();
+    protected abstract String aR();
 
-    protected abstract float p();
+    protected abstract String aS();
+
+    protected abstract float aP();
 
     protected int getLootId()
     {
         return -1;
     }
 
-    public void e()
+    public void d()
     {
-        super.e();
-        if (!this.world.isStatic && this.h && !this.i && !this.H() && this.onGround)
+        super.d();
+        if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
         {
-            this.i = true;
+            this.g = true;
             this.j = 0.0F;
-            this.k = 0.0F;
+            this.i = 0.0F;
             this.world.broadcastEntityEffect(this, (byte) 8);
         }
     }
 
-    public void F_()
+    public void h_()
     {
-        super.F_();
+        super.h_();
         if (this.b)
         {
-            this.c += (1.0F - this.c) * 0.4F;
+            this.e += (1.0F - this.e) * 0.4F;
         }
         else
         {
-            this.c += (0.0F - this.c) * 0.4F;
+            this.e += (0.0F - this.e) * 0.4F;
         }
 
-        if (this.b)
+        if (this.bv())
         {
-            this.bc = 10;
+            this.bx = 10;
         }
 
-        if (this.aT())
+        if (this.G())
         {
             this.h = true;
-            this.i = false;
+            this.g = false;
             this.j = 0.0F;
-            this.k = 0.0F;
+            this.i = 0.0F;
         }
-        else if ((this.h || this.i) && this.i)
-        {
-            if (this.j == 0.0F)
-            {
-                this.world.makeSound(this, "mob.wolf.shake", this.p(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            }
+    }
 
-            this.k = this.j;
-            this.j += 0.05F;
-            if (this.k >= 2.0F)
-            {
-                this.h = false;
-                this.i = false;
-                this.k = 0.0F;
-                this.j = 0.0F;
-            }
-
-            if (this.j > 0.4F)
-            {
-                float f = (float) this.boundingBox.b;
-                int i = (int) (MathHelper.sin((this.j - 0.4F) * 3.1415927F) * 7.0F);
-
-                for (int j = 0 ; j < i ; ++j)
-                {
-                    float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                    float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-
-                    this.world.a("splash", this.locX + (double) f1, (double) (f + 0.8F), this.locZ + (double) f2, this.motX, this.motY, this.motZ);
-                }
-            }
-        }
+    public boolean bv()
+    {
+        return this.datawatcher.getByte(19) == 1;
     }
 
     public float getHeadHeight()
@@ -266,16 +239,16 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return this.length * 0.8F;
     }
 
-    public int D()
+    public int bf()
     {
-        return this.isSitting() ? 20 : super.D();
+        return this.isSitting() ? 20 : super.bf();
     }
 
     public boolean damageEntity(DamageSource damagesource, int i)
     {
         Entity entity = damagesource.getEntity();
 
-        this.a.a(false);
+        this.d.a(false);
         if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
         {
             i = (i + 1) / 2;
@@ -284,17 +257,17 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return super.damageEntity(damagesource, i);
     }
 
-    public boolean a(ItemStack itemstack)
+    public boolean b(ItemStack itemstack)
     {
-        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).q());
+        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).h());
     }
 
-    public int q()
+    public int bl()
     {
         return 8;
     }
 
-    public void e(boolean flag)
+    public void i(boolean flag)
     {
         this.b = flag;
     }

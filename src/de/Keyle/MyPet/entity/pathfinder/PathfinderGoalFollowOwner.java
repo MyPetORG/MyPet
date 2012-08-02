@@ -41,7 +41,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         this.pet = entitytameableanimal;
         this.world = entitytameableanimal.world;
         this.f = f;
-        this.nav = entitytameableanimal.al();
+        this.nav = entitytameableanimal.getNavigation();
         this.maxdistance = maxdistance;
         this.b = f2;
         this.a(3);
@@ -59,7 +59,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.pet.j(entityliving) < (double) (this.maxdistance * this.maxdistance))
+        else if (this.pet.e(entityliving) < (double) (this.maxdistance * this.maxdistance))
         {
             return false;
         }
@@ -76,26 +76,26 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
     public boolean b()
     {
-        return Control.moveTo == null && !this.nav.e() && this.pet.j(this.owner) > (double) (this.b * this.b) && !this.pet.isSitting();
+        return Control.moveTo == null && !this.nav.f() && this.pet.e(this.owner) > (double) (this.b * this.b) && !this.pet.isSitting();
     }
 
     public void c()
     {
         this.h = 0;
-        this.i = this.pet.al().a();
-        this.pet.al().a(false);
+        this.i = this.nav.a();
+        this.nav.a(false);
     }
 
     public void d()
     {
         this.owner = null;
         this.nav.f();
-        this.pet.al().a(this.i);
+        this.nav.a(this.i);
     }
 
     public void e()
     {
-        this.pet.getControllerLook().a(this.owner, 10.0F, (float) this.pet.D());
+        this.pet.getControllerLook().a(this.owner, 10.0F, (float) this.pet.bf());
 
         if (!this.pet.isSitting())
         {
@@ -105,7 +105,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
                 if (!this.nav.a(this.owner, this.f))
                 {
-                    if (this.pet.j(this.owner) >= 144.0D && Control.moveTo == null && pet.Goaltarget == null)
+                    if (this.pet.e(this.owner) >= 144.0D && Control.moveTo == null && pet.Goaltarget == null)
                     {
                         int i = MathHelper.floor(this.owner.locX) - 2;
                         int j = MathHelper.floor(this.owner.locZ) - 2;
@@ -115,7 +115,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
                         {
                             for (int i1 = 0 ; i1 <= 4 ; ++i1)
                             {
-                                if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.world.e(i + l, k - 1, j + i1) && !this.world.e(i + l, k, j + i1) && !this.world.e(i + l, k + 1, j + i1))
+                                if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.world.t(i + l, k - 1, j + i1) && !this.world.t(i + l, k, j + i1) && !this.world.t(i + l, k + 1, j + i1))
                                 {
                                     this.pet.setPositionRotation((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.pet.yaw, this.pet.pitch);
                                     this.nav.f();

@@ -64,7 +64,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                             Entity entity = (Entity) aList;
                             EntityLiving entityliving = (EntityLiving) entity;
 
-                            if (pet.am().canSee(entityliving) && entityliving != pet)
+                            if (pet.at().canSee(entityliving) && entityliving != pet)
                             {
                                 if (entityliving instanceof EntityPlayer)
                                 {

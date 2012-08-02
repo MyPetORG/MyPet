@@ -40,7 +40,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     {
         this.MPet = MPet;
         speed = f;
-        nav = this.MPet.getPet().getHandle().al();
+        nav = this.MPet.getPet().getHandle().getNavigation();
     }
 
     @Override

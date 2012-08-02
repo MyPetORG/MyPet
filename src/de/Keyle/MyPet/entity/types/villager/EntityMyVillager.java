@@ -19,9 +19,9 @@
 
 package de.Keyle.MyPet.entity.types.villager;
 
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.pathfinder.*;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
@@ -34,22 +34,22 @@ public class EntityMyVillager extends EntityMyPet
     {
         super(world, MPet);
         this.texture = "/mob/villager/villager.png";
-        this.b(0.6F, 0.8F);
-        this.bb = 0.5F;
-        this.al().a(true);
+        this.a(0.6F, 0.8F);
+        this.bw = 0.5F;
+        this.getNavigation().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.a);
+        this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.6F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bb + 0.3F, true));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bw + 0.3F, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.bb, 10.0F, 5.0F, Control));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.bw, 10.0F, 5.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
+        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(MPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 13));
@@ -71,8 +71,8 @@ public class EntityMyVillager extends EntityMyPet
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7);
-                this.a(true);
-                this.a.a(true);
+                this.e(true);
+                this.d.a(true);
                 this.setProfession(((MyVillager) MPet).getProfession());
             }
         }
@@ -95,7 +95,7 @@ public class EntityMyVillager extends EntityMyPet
         return MyVillager.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    public boolean b(EntityHuman entityhuman)
+    public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
@@ -125,54 +125,54 @@ public class EntityMyVillager extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.a(true);
+                this.e(true);
                 return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
-            this.a.a(!this.isSitting());
-            this.aZ = false;
+            this.d.a(!this.isSitting());
+            this.bu = false;
             this.setPathEntity(null);
         }
         return false;
     }
 
-    public boolean a(Entity entity)
+    public boolean k(Entity entity)
     {
         int damage = 3 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    public void g()
+    public void bd()
     {
     }
 
     // Vanilla Methods
 
-    protected void b()
+    protected void a()
     {
-        super.b();
+        super.a();
         this.datawatcher.a(16, (byte) 0);
     }
 
-    protected String i()
+    protected String aQ()
     {
         return "mob.villager.default";
     }
 
-    protected String j()
+    protected String aR()
     {
         return "mob.villager.defaulthurt";
     }
 
-    protected String k()
+    protected String aS()
     {
         return "mob.villager.defaultdeath";
     }
 
-    protected float p()
+    protected float aP()
     {
         return 0.4F;
     }

@@ -34,12 +34,12 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         super(world, MPet);
         this.texture = "/mob/villager_golem.png";
-        this.b(1.4F, 2.9F);
-        this.al().a(true);
+        this.a(1.4F, 2.9F);
+        this.getNavigation().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
-        this.goalSelector.a(2, this.a);
+        this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.25F, true));
         this.goalSelector.a(5, Control);
@@ -77,7 +77,7 @@ public class EntityMyIronGolem extends EntityMyPet
         return MyIronGolem.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    public boolean b(EntityHuman entityhuman)
+    public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
@@ -105,25 +105,25 @@ public class EntityMyIronGolem extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.a(true);
+                this.e(true);
                 return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
-            this.a.a(!this.isSitting());
-            this.aZ = false;
+            this.d.a(!this.isSitting());
+            this.bu = false;
             this.setPathEntity(null);
         }
 
         return false;
     }
 
-    public boolean a(Entity entity)
+    public boolean k(Entity entity)
     {
         int damage = 7 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
-        this.c = 10;
+        this.e = 10;
         this.world.broadcastEntityEffect(this, (byte) 4);
         boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage + this.random.nextInt(15));
 
@@ -149,36 +149,36 @@ public class EntityMyIronGolem extends EntityMyPet
     //Changed Vanilla Methods ---------------------------------------------------------------------------------------
 
     @Override
-    protected void g()
+    protected void bd()
     {
     }
 
-    protected void b()
+    protected void a()
     {
-        super.b();
+        super.a();
     }
 
     // Vanilla Methods
 
-    protected String i()
+    protected String aQ()
     {
         return "none";
     }
 
     @Override
-    protected String j()
+    protected String aR()
     {
         return "mob.irongolem.hit";
     }
 
     @Override
-    protected String k()
+    protected String aS()
     {
         return "mob.irongolem.death";
     }
 
     @Override
-    protected float p()
+    protected float aP()
     {
         return 0.4F;
     }
