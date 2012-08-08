@@ -135,6 +135,7 @@ public enum MyPetType
         catch (Exception e)
         {
             MyPetUtil.getLogger().warning(entityClazz.getName() + " is no valid MyPet(Entity)!");
+            MyPetUtil.getDebugLogger().warning(entityClazz.getName() + " is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
         return pet;
@@ -156,6 +157,7 @@ public enum MyPetType
         catch (Exception e)
         {
             MyPetUtil.getLogger().warning(myPetClazz.getName() + "is no valid MyPet!");
+            MyPetUtil.getDebugLogger().warning(myPetClazz.getName() + "is no valid MyPet!");
         }
         return pet;
     }
