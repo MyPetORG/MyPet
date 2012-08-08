@@ -105,9 +105,9 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
         return false;
     }
 
-    public void c()
+    public void e()
     {
         pet.b(this.target);
-        super.c();
+        super.e();
     }
 }

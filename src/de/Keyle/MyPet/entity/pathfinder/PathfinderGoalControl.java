@@ -58,7 +58,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         return moveTo != null;
     }
 
-    public void c()
+    public void e()
     {
         if (nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
         {

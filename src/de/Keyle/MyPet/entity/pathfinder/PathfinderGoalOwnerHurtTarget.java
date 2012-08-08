@@ -110,9 +110,9 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
         }
     }
 
-    public void c()
+    public void e()
     {
         this.d.b(this.target);
-        super.c();
+        super.e();
     }
 }
