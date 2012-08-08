@@ -37,7 +37,7 @@ public class EntityMyIronGolem extends EntityMyPet
         this.a(1.4F, 2.9F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.25F);
 
         this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
@@ -183,6 +183,7 @@ public class EntityMyIronGolem extends EntityMyPet
         return 0.4F;
     }
 
+    @Override
     protected void a(int i, int j, int k, int l)
     {
         this.world.makeSound(this, "mob.irongolem.walk", 1.0F, 1.0F);
