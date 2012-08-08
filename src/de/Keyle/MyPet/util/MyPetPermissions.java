@@ -85,7 +85,7 @@ public class MyPetPermissions
             }
             if (Permissions != null)
             {
-                MyPetUtil.getLogger().info("Vault integration enabled!");
+                MyPetUtil.getLogger().info("\"Vault\" integration enabled!");
                 MyPetUtil.getDebugLogger().info("Permissions: Vault");
                 return;
             }
@@ -95,7 +95,7 @@ public class MyPetPermissions
         if (PermissionsMode == PermissionsType.NONE && MyPetConfig.Superperms)
         {
             PermissionsMode = PermissionsType.Superperms;
-            MyPetUtil.getLogger().info("Superperms integration enabled!");
+            MyPetUtil.getLogger().info("\"Superperms\" integration enabled!");
             MyPetUtil.getDebugLogger().info("Permissions: Superperms");
             return;
         }

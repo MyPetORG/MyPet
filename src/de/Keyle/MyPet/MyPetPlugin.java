@@ -62,7 +62,7 @@ public class MyPetPlugin extends JavaPlugin
     private static MyPetPlugin plugin;
     public static MyPetLanguage language;
     private final MyPetTimer timer = new MyPetTimer();
-    public static File NBTPetFile;
+    private File NBTPetFile;
     private DebugLogger debugLogger;
 
     public static MyPetPlugin getPlugin()
@@ -77,7 +77,7 @@ public class MyPetPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        debugLogger.info(savePets(NBTPetFile) + " pet/pets saved.");
+        debugLogger.info(savePets() + " pet/pets saved.");
         for (MyPet MPet : MyPetList.getMyPetList())
         {
             MPet.removePet();
@@ -99,7 +99,8 @@ public class MyPetPlugin extends JavaPlugin
             String mwv = getDescription().getVersion();
             mwv = getDescription().getVersion().substring(mwv.indexOf('(') + 1, mwv.indexOf(')'));
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
-            MyPetUtil.getLogger().warning("This version of MyPet should only work with Minecraft " + mwv);
+            MyPetUtil.getLogger().warning("This version of MyPet should only work with:");
+            MyPetUtil.getLogger().warning("   Minecraft " + mwv);
             MyPetUtil.getLogger().warning("Expect bugs and errors!");
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
         }
@@ -214,6 +215,7 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityVillager.class, "Villager", 120);
             a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
             a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
+            //TODO Pigzombie, Creeper
 
             debugLogger.info("registered MyPet entities.");
         }
@@ -246,9 +248,6 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
         debugLogger.info("----------------------------");
-
-        // For future of the client mod
-        //MyPetUtil.getServer().getMessenger().registerOutgoingPluginChannel(getPlugin(),"MyPetByKeyle");
 
         MyPetPermissions.setup();
 
@@ -303,7 +302,7 @@ public class MyPetPlugin extends JavaPlugin
                         @Override
                         public int getValue()
                         {
-                            return MyPetList.getMyPetCount(type);
+                            return MyPetList.countMyPets(type);
                         }
                     });
                 }
@@ -407,10 +406,10 @@ public class MyPetPlugin extends JavaPlugin
         return petCount;
     }
 
-    public int savePets(File f)
+    public int savePets()
     {
         int petCount = 0;
-        NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
+        NBTConfiguration nbtConfiguration = new NBTConfiguration(NBTPetFile);
         NBTTagList Pets = new NBTTagList();
         for (MyPet MPet : MyPetList.getMyPetList())
         {

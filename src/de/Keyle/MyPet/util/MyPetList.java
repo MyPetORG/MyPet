@@ -277,12 +277,12 @@ public class MyPetList
         lInactivePets.clear();
     }
 
-    public static int getMyPetCount()
+    public static int countMyPets()
     {
         return mActivePets.size() + mInctivePets.size();
     }
 
-    public static int getMyPetCount(MyPetType myPetType)
+    public static int countMyPets(MyPetType myPetType)
     {
         int counter = 0;
         for (MyPet myPet : lActivePets)

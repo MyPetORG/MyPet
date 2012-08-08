@@ -155,7 +155,7 @@ public class MyPetSkillTreeConfigLoader
         return new String[0];
     }
 
-    public static boolean existSkillTree(String Name)
+    public static boolean containsSkillTree(String Name)
     {
         return SkillTrees.containsKey(Name);
     }

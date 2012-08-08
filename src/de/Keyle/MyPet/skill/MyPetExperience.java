@@ -35,35 +35,35 @@ public class MyPetExperience
     private double Exp = 0;
     MyPetJSexp JSexp;
 
-    public static final Map<EntityType, MyPetMonsterExpirience> MobEXP = new HashMap<EntityType, MyPetMonsterExpirience>();
+    public static final Map<EntityType, MyPetMonsterExperience> MobEXP = new HashMap<EntityType, MyPetMonsterExperience>();
 
     static
     {
-        MobEXP.put(EntityType.SKELETON, new MyPetMonsterExpirience(5, EntityType.SKELETON));
-        MobEXP.put(EntityType.ZOMBIE, new MyPetMonsterExpirience(5, EntityType.ZOMBIE));
-        MobEXP.put(EntityType.SPIDER, new MyPetMonsterExpirience(5, EntityType.SPIDER));
-        MobEXP.put(EntityType.WOLF, new MyPetMonsterExpirience(1, 3, EntityType.WOLF));
-        MobEXP.put(EntityType.CREEPER, new MyPetMonsterExpirience(5, EntityType.CREEPER));
-        MobEXP.put(EntityType.GHAST, new MyPetMonsterExpirience(5, EntityType.GHAST));
-        MobEXP.put(EntityType.PIG_ZOMBIE, new MyPetMonsterExpirience(5, EntityType.PIG_ZOMBIE));
-        MobEXP.put(EntityType.ENDERMAN, new MyPetMonsterExpirience(5, EntityType.ENDERMAN));
-        MobEXP.put(EntityType.CAVE_SPIDER, new MyPetMonsterExpirience(5, EntityType.CAVE_SPIDER));
-        MobEXP.put(EntityType.MAGMA_CUBE, new MyPetMonsterExpirience(1, 4, EntityType.MAGMA_CUBE));
-        MobEXP.put(EntityType.SLIME, new MyPetMonsterExpirience(1, 4, EntityType.SLIME));
-        MobEXP.put(EntityType.SILVERFISH, new MyPetMonsterExpirience(5, EntityType.SILVERFISH));
-        MobEXP.put(EntityType.BLAZE, new MyPetMonsterExpirience(10, EntityType.BLAZE));
-        MobEXP.put(EntityType.GIANT, new MyPetMonsterExpirience(25, EntityType.GIANT));
-        MobEXP.put(EntityType.COW, new MyPetMonsterExpirience(1, 3, EntityType.COW));
-        MobEXP.put(EntityType.PIG, new MyPetMonsterExpirience(1, 3, EntityType.PIG));
-        MobEXP.put(EntityType.CHICKEN, new MyPetMonsterExpirience(1, 3, EntityType.CHICKEN));
-        MobEXP.put(EntityType.SQUID, new MyPetMonsterExpirience(1, 3, EntityType.SQUID));
-        MobEXP.put(EntityType.SHEEP, new MyPetMonsterExpirience(1, 3, EntityType.SHEEP));
-        MobEXP.put(EntityType.OCELOT, new MyPetMonsterExpirience(1, 3, EntityType.OCELOT));
-        MobEXP.put(EntityType.MUSHROOM_COW, new MyPetMonsterExpirience(1, 3, EntityType.MUSHROOM_COW));
-        MobEXP.put(EntityType.VILLAGER, new MyPetMonsterExpirience(0, EntityType.VILLAGER));
-        MobEXP.put(EntityType.SNOWMAN, new MyPetMonsterExpirience(0, EntityType.SNOWMAN));
-        MobEXP.put(EntityType.IRON_GOLEM, new MyPetMonsterExpirience(0, EntityType.IRON_GOLEM));
-        MobEXP.put(EntityType.ENDER_DRAGON, new MyPetMonsterExpirience(20000, EntityType.ENDER_DRAGON));
+        MobEXP.put(EntityType.SKELETON, new MyPetMonsterExperience(5, EntityType.SKELETON));
+        MobEXP.put(EntityType.ZOMBIE, new MyPetMonsterExperience(5, EntityType.ZOMBIE));
+        MobEXP.put(EntityType.SPIDER, new MyPetMonsterExperience(5, EntityType.SPIDER));
+        MobEXP.put(EntityType.WOLF, new MyPetMonsterExperience(1, 3, EntityType.WOLF));
+        MobEXP.put(EntityType.CREEPER, new MyPetMonsterExperience(5, EntityType.CREEPER));
+        MobEXP.put(EntityType.GHAST, new MyPetMonsterExperience(5, EntityType.GHAST));
+        MobEXP.put(EntityType.PIG_ZOMBIE, new MyPetMonsterExperience(5, EntityType.PIG_ZOMBIE));
+        MobEXP.put(EntityType.ENDERMAN, new MyPetMonsterExperience(5, EntityType.ENDERMAN));
+        MobEXP.put(EntityType.CAVE_SPIDER, new MyPetMonsterExperience(5, EntityType.CAVE_SPIDER));
+        MobEXP.put(EntityType.MAGMA_CUBE, new MyPetMonsterExperience(1, 4, EntityType.MAGMA_CUBE));
+        MobEXP.put(EntityType.SLIME, new MyPetMonsterExperience(1, 4, EntityType.SLIME));
+        MobEXP.put(EntityType.SILVERFISH, new MyPetMonsterExperience(5, EntityType.SILVERFISH));
+        MobEXP.put(EntityType.BLAZE, new MyPetMonsterExperience(10, EntityType.BLAZE));
+        MobEXP.put(EntityType.GIANT, new MyPetMonsterExperience(25, EntityType.GIANT));
+        MobEXP.put(EntityType.COW, new MyPetMonsterExperience(1, 3, EntityType.COW));
+        MobEXP.put(EntityType.PIG, new MyPetMonsterExperience(1, 3, EntityType.PIG));
+        MobEXP.put(EntityType.CHICKEN, new MyPetMonsterExperience(1, 3, EntityType.CHICKEN));
+        MobEXP.put(EntityType.SQUID, new MyPetMonsterExperience(1, 3, EntityType.SQUID));
+        MobEXP.put(EntityType.SHEEP, new MyPetMonsterExperience(1, 3, EntityType.SHEEP));
+        MobEXP.put(EntityType.OCELOT, new MyPetMonsterExperience(1, 3, EntityType.OCELOT));
+        MobEXP.put(EntityType.MUSHROOM_COW, new MyPetMonsterExperience(1, 3, EntityType.MUSHROOM_COW));
+        MobEXP.put(EntityType.VILLAGER, new MyPetMonsterExperience(0, EntityType.VILLAGER));
+        MobEXP.put(EntityType.SNOWMAN, new MyPetMonsterExperience(0, EntityType.SNOWMAN));
+        MobEXP.put(EntityType.IRON_GOLEM, new MyPetMonsterExperience(0, EntityType.IRON_GOLEM));
+        MobEXP.put(EntityType.ENDER_DRAGON, new MyPetMonsterExperience(20000, EntityType.ENDER_DRAGON));
     }
 
     public MyPetExperience(MyPet pet)

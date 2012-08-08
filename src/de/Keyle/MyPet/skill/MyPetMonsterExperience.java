@@ -23,14 +23,14 @@ import org.bukkit.entity.EntityType;
 
 import java.util.Random;
 
-public class MyPetMonsterExpirience
+public class MyPetMonsterExperience
 {
     private int min;
     private int max;
     private EntityType entityType;
     private static Random random = new Random();
 
-    public MyPetMonsterExpirience(int min, int max, EntityType entityType)
+    public MyPetMonsterExperience(int min, int max, EntityType entityType)
     {
         if (max >= min)
         {
@@ -45,7 +45,7 @@ public class MyPetMonsterExpirience
         this.entityType = entityType;
     }
 
-    public MyPetMonsterExpirience(int exp, EntityType entityType)
+    public MyPetMonsterExperience(int exp, EntityType entityType)
     {
         this.max = exp;
         this.min = exp;

@@ -31,7 +31,7 @@ public class MyPetTimer
 
     private static boolean resetTimer = false;
 
-    private final List<Scheduler> TasksToSchedule = new ArrayList<Scheduler>();
+    private final List<Scheduler> tasksToSchedule = new ArrayList<Scheduler>();
 
     public void stopTimer()
     {
@@ -56,7 +56,7 @@ public class MyPetTimer
                 {
                     MPet.scheduleTask();
                 }
-                for (Scheduler Task : TasksToSchedule)
+                for (Scheduler Task : tasksToSchedule)
                 {
                     Task.schedule();
                 }
@@ -67,7 +67,7 @@ public class MyPetTimer
                 }
                 if (MyPetConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
                 {
-                    MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile);
+                    MyPetPlugin.getPlugin().savePets();
                     AutoSaveTimer = MyPetConfig.AutoSaveTime;
                 }
             }
@@ -81,11 +81,11 @@ public class MyPetTimer
 
     public void addTask(Scheduler scheduler)
     {
-        TasksToSchedule.add(scheduler);
+        tasksToSchedule.add(scheduler);
     }
 
     public void removeTask(Scheduler scheduler)
     {
-        TasksToSchedule.remove(scheduler);
+        tasksToSchedule.remove(scheduler);
     }
 }

@@ -90,8 +90,8 @@ public class Pickup extends MyPetGenericSkill
                     }
 
                     MyPetCustomInventory inv = ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv;
-                    int ItemAmount = inv.addItem(item.getItemStack());
-                    if (ItemAmount == 0)
+                    int itemAmount = inv.addItem(item.getItemStack());
+                    if (itemAmount == 0)
                     {
                         for (Entity p : e.getNearbyEntities(20, 20, 20))
                         {
@@ -104,7 +104,7 @@ public class Pickup extends MyPetGenericSkill
                     }
                     else
                     {
-                        item.getItemStack().setAmount(ItemAmount);
+                        item.getItemStack().setAmount(itemAmount);
                     }
                 }
             }

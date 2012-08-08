@@ -82,13 +82,13 @@ public class CommandRelease implements CommandExecutor
                             }
                         }
                     }
-                    MPet.getLocation().getWorld().spawnCreature(MPet.getLocation(), MPet.getPetType().getEntityType());
+                    MPet.getLocation().getWorld().spawnEntity(MPet.getLocation(), MPet.getPetType().getEntityType());
                     MPet.removePet();
 
 
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", MPet.Name));
                     MyPetList.removeMyPet(MPet);
-                    MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile) + " pet/pets saved.");
+                    MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets() + " pet/pets saved.");
                     return true;
                 }
                 else

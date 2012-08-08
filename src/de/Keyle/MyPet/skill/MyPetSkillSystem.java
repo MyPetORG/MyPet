@@ -68,7 +68,7 @@ public class MyPetSkillSystem
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(clazz.getName() + "is no valid skill!");
+            MyPetUtil.getLogger().warning(clazz.getName() + "is not a valid skill!");
             ClassSkillList.remove(clazz);
         }
     }
