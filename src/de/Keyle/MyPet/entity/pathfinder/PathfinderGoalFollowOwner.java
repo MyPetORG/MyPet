@@ -35,12 +35,12 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     private boolean i;
     private PathfinderGoalControl Control;
 
-    public PathfinderGoalFollowOwner(EntityMyPet entitytameableanimal, float f, float maxdistance, float f2, PathfinderGoalControl Control)
+    public PathfinderGoalFollowOwner(EntityMyPet entitytameableanimal, float speed, float maxdistance, float f2, PathfinderGoalControl Control)
     {
         this.Control = Control;
         this.pet = entitytameableanimal;
         this.world = entitytameableanimal.world;
-        this.f = f;
+        this.f = speed;
         this.nav = entitytameableanimal.getNavigation();
         this.maxdistance = maxdistance;
         this.b = f2;

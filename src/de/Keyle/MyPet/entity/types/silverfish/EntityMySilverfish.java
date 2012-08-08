@@ -35,7 +35,6 @@ public class EntityMySilverfish extends EntityMyPet
         super(world, MPet);
         this.texture = "/mob/silverfish.png";
         this.a(0.3F, 0.7F);
-        this.bw = 0.6F;
         this.getNavigation().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
@@ -43,9 +42,9 @@ public class EntityMySilverfish extends EntityMyPet
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bw, true));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.35F, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.35F, 5.0F, 2.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));

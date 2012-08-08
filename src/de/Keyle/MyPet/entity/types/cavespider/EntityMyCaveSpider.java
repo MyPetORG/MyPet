@@ -35,17 +35,16 @@ public class EntityMyCaveSpider extends EntityMyPet
         super(world, MPet);
         this.texture = "/mob/cavespider.png";
         this.a(0.7F, 0.5F);
-        this.bw = 0.8F;
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.bw);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.8F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.d);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.bw));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bw, true));
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.8F));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.8F, true));
         this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.8F, 5.0F, 2.0F, Control));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
