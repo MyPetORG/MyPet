@@ -33,9 +33,10 @@ import java.util.List;
 public class MyPetCustomInventory implements IInventory
 {
     private String InventroyName;
-    private List<ItemStack> Items = new ArrayList<ItemStack>();
+    private List<ItemStack> items = new ArrayList<ItemStack>();
     private int Size = 0;
     private int stackSize = 64;
+    private List<HumanEntity> transaction = new ArrayList<HumanEntity>();
 
     public MyPetCustomInventory(String Name, int Size)
     {
@@ -43,22 +44,17 @@ public class MyPetCustomInventory implements IInventory
         setSize(Size);
     }
 
-    public MyPetCustomInventory(String Name)
-    {
-        setName(Name);
-    }
-
     public int getSize()
     {
-        return Items.size();
+        return items.size();
     }
 
     public void setSize(int Size)
     {
         this.Size = Size;
-        for (int i = Items.size() ; i < Size ; i++)
+        for (int i = items.size() ; i < Size ; i++)
         {
-            Items.add(i, null);
+            items.add(i, null);
         }
     }
 
@@ -80,25 +76,26 @@ public class MyPetCustomInventory implements IInventory
     {
         if (i <= Size)
         {
-            return Items.get(i);
+            return items.get(i);
         }
         return null;
     }
 
     public void setItem(int i, ItemStack itemStack)
     {
-        if (i < Items.size())
+        if (i < items.size())
         {
-            Items.set(i, itemStack);
+            items.set(i, itemStack);
         }
         else
         {
-            for (int x = Items.size() ; x < i ; x++)
+            for (int x = items.size() ; x < i ; x++)
             {
-                Items.add(x, null);
+                items.add(x, null);
             }
-            Items.add(i, itemStack);
+            items.add(i, itemStack);
         }
+        update();
     }
 
     public int addItem(org.bukkit.inventory.ItemStack item)
@@ -107,7 +104,6 @@ public class MyPetCustomInventory implements IInventory
         int ItemID = item.getTypeId();
         int ItemDuarbility = item.getDurability();
         int ItemMaxStack = item.getMaxStackSize();
-
         for (int i = 0 ; i < this.getSize() ; i++)
         {
             if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).getEnchantments() == null && item.getEnchantments().size() == 0 && getItem(i).count < ItemMaxStack)
@@ -148,26 +144,27 @@ public class MyPetCustomInventory implements IInventory
                 }
             }
         }
+        update();
         return item.getAmount();
     }
 
     public ItemStack splitStack(int i, int j)
     {
-        if (i <= Size && Items.get(i) != null)
+        if (i <= Size && items.get(i) != null)
         {
             ItemStack itemstack;
-            if (Items.get(i).count <= j)
+            if (items.get(i).count <= j)
             {
-                itemstack = Items.get(i);
-                Items.set(i, null);
+                itemstack = items.get(i);
+                items.set(i, null);
                 return itemstack;
             }
             else
             {
-                itemstack = Items.get(i).a(j);
-                if (Items.get(i).count == 0)
+                itemstack = items.get(i).a(j);
+                if (items.get(i).count == 0)
                 {
-                    Items.set(i, null);
+                    items.set(i, null);
                 }
                 return itemstack;
             }
@@ -180,7 +177,7 @@ public class MyPetCustomInventory implements IInventory
         ItemStack[] itemStack = new ItemStack[getSize()];
         for (int i = 0 ; i < getSize() ; i++)
         {
-            itemStack[i] = Items.get(i);
+            itemStack[i] = items.get(i);
         }
         return itemStack;
     }
@@ -188,9 +185,9 @@ public class MyPetCustomInventory implements IInventory
     public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
         NBTTagList Items = new NBTTagList();
-        for (int i = 0 ; i < this.Items.size() ; i++)
+        for (int i = 0 ; i < this.items.size() ; i++)
         {
-            ItemStack itemStack = this.Items.get(i);
+            ItemStack itemStack = this.items.get(i);
             if (itemStack != null)
             {
                 NBTTagCompound Item = new NBTTagCompound();
@@ -221,13 +218,19 @@ public class MyPetCustomInventory implements IInventory
         return true;
     }
 
-    public void onOpen(CraftHumanEntity craftHumanEntity)
+    public void startOpen()
     {
     }
 
-    public void onClose(CraftHumanEntity craftHumanEntity)
+    public void onOpen(CraftHumanEntity who)
     {
-        Player player = MyPetUtil.getServer().getPlayer(craftHumanEntity.getName());
+        this.transaction.add(who);
+    }
+
+    public void onClose(CraftHumanEntity who)
+    {
+        this.transaction.remove(who);
+        Player player = MyPetUtil.getServer().getPlayer(who.getName());
         if (MyPetList.hasMyPet(player))
         {
             if (Inventory.PetChestOpened.contains(player.getPlayer()))
@@ -240,7 +243,7 @@ public class MyPetCustomInventory implements IInventory
 
     public List<HumanEntity> getViewers()
     {
-        return null;
+        return this.transaction;
     }
 
     public InventoryHolder getOwner()
@@ -260,6 +263,13 @@ public class MyPetCustomInventory implements IInventory
 
     public ItemStack splitWithoutUpdate(int i)
     {
+        if (items.get(i) != null)
+        {
+            ItemStack itemstack = items.get(i);
+
+            items.set(i, null);
+            return itemstack;
+        }
         return null;
     }
 
@@ -268,10 +278,6 @@ public class MyPetCustomInventory implements IInventory
     }
 
     public void f()
-    {
-    }
-
-    public void g()
     {
     }
 }
