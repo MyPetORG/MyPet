@@ -23,7 +23,6 @@ import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public abstract class EntityMyPet extends EntityTameableAnimal
 {
@@ -67,30 +66,10 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         {
             if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
             {
-                if (MPet.getOwner().getPlayer().getItemInHand().getType() == Control.Item)
+                if (itemstack.id == Control.Item.getId())
                 {
                     return true;
                 }
-            }
-        }
-
-        if (this.b(itemstack))
-        {
-            ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
-
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemstack.count;
-                }
-                this.heal(itemfood.getNutrition(), RegainReason.EATING);
-                if (itemstack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.e(true);
-                return true;
             }
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
@@ -214,12 +193,6 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         {
             this.e += (0.0F - this.e) * 0.4F;
         }
-
-        if (this.bv())
-        {
-            this.bx = 10;
-        }
-
         if (this.G())
         {
             this.h = true;
@@ -227,11 +200,6 @@ public abstract class EntityMyPet extends EntityTameableAnimal
             this.j = 0.0F;
             this.i = 0.0F;
         }
-    }
-
-    public boolean bv()
-    {
-        return this.datawatcher.getByte(19) == 1;
     }
 
     public float getHeadHeight()

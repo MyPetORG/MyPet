@@ -94,15 +94,6 @@ public class MyPetPlayerListener implements Listener
         {
             if (MyPetList.hasInactiveMyPet(event.getPlayer()))
             {
-                /*
-                if (MyPetConfig.HeroesSkill && MyPetUtil.getServer().getPluginManager().getPlugin("Heroes") != null && MyPetConfig.HeroesPlugin != null)
-                {
-                    if (!MyPetConfig.HeroesPlugin.getCharacterManager().getHero(event.getPlayer()).hasAccessToSkill("MyPet"))
-                    {
-                        return;
-                    }
-                }
-                */
                 MyPetList.setMyPetActive(event.getPlayer(), true);
             }
             MyPetUtil.getDebugLogger().info("has MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
@@ -135,19 +126,6 @@ public class MyPetPlayerListener implements Listener
                 MyPetList.setMyPetActive(event.getPlayer(), false);
             }
         }
-
-        // For the future -> client mod
-        /*
-        String EntityIDs = MPet.getID() + "\0";
-        for(MyPet MW : MyPetList.getMyPetList())
-        {
-            if(w.Status == PetState.Here)
-            {
-                EntityIDs += w.getID() + "\0";
-            }
-        }
-        event.getPlayer().sendPluginMessage(MyPetPlugin.Plugin,"MyPetByKeyle",EntityIDs.getBytes());
-        */
     }
 
     @EventHandler
@@ -157,7 +135,7 @@ public class MyPetPlayerListener implements Listener
         {
             MyPet MPet = MyPetList.getMyPet(event.getPlayer());
             MPet.removePet();
-            MyPetPlugin.getPlugin().savePets(MyPetPlugin.NBTPetFile);
+            MyPetPlugin.getPlugin().savePets();
             MyPetPlugin.getPlugin().getTimer().resetTimer();
         }
     }

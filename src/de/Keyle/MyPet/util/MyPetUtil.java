@@ -105,6 +105,7 @@ public class MyPetUtil
         }
     }
 
+    //TODO readd NPC check (update)
     public static boolean isNPC(Player player)
     {
         Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
