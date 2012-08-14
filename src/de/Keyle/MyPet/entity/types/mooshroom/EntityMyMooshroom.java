@@ -85,7 +85,7 @@ public class EntityMyMooshroom extends EntityMyPet
             }
         }
 
-        if (itemstack.id == org.bukkit.Material.RED_MUSHROOM.getId() || itemstack.id == org.bukkit.Material.BROWN_MUSHROOM.getId())
+        if (itemstack != null && (itemstack.id == org.bukkit.Material.RED_MUSHROOM.getId() || itemstack.id == org.bukkit.Material.BROWN_MUSHROOM.getId()))
         {
             if (getHealth() < getMaxHealth())
             {

@@ -92,7 +92,7 @@ public class EntityMyCaveSpider extends EntityMyPet
             }
         }
 
-        if (itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId())
+        if (itemstack != null && itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId())
         {
             if (getHealth() < getMaxHealth())
             {

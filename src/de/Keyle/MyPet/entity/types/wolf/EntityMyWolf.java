@@ -93,7 +93,7 @@ public class EntityMyWolf extends EntityMyPet
             }
         }
 
-        if (this.b(itemstack))
+        if (itemstack != null && this.b(itemstack))
         {
             ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
 

@@ -85,7 +85,7 @@ public class EntityMyChicken extends EntityMyPet
             }
         }
 
-        if (itemstack.id == org.bukkit.Material.WHEAT.getId())
+        if (itemstack != null && itemstack.id == org.bukkit.Material.WHEAT.getId())
         {
             if (getHealth() < getMaxHealth())
             {

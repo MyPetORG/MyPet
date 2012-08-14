@@ -92,7 +92,7 @@ public class EntityMyIronGolem extends EntityMyPet
             }
         }
 
-        if (itemstack.id == org.bukkit.Material.IRON_INGOT.getId())
+        if (itemstack != null && itemstack.id == org.bukkit.Material.IRON_INGOT.getId())
         {
             if (getHealth() < getMaxHealth())
             {
