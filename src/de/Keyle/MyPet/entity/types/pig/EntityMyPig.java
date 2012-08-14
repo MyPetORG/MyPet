@@ -23,7 +23,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.Control;
 import net.minecraft.server.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -72,18 +71,9 @@ public class EntityMyPig extends EntityMyPet
 
     public boolean c(EntityHuman entityhuman)
     {
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        super.c(entityhuman);
 
-        if (isMyPet() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
-        {
-            if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
-            {
-                if (MPet.getOwner().getPlayer().getItemInHand().getType() == Control.Item)
-                {
-                    return true;
-                }
-            }
-        }
+        ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
         if (itemstack != null && itemstack.id == org.bukkit.Material.WHEAT.getId())
         {

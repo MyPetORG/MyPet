@@ -72,13 +72,6 @@ public abstract class EntityMyPet extends EntityTameableAnimal
                 }
             }
         }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
-        }
-
         return false;
     }
 
