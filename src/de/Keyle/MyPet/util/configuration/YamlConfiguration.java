@@ -45,6 +45,8 @@ public class YamlConfiguration
         catch (Exception ignored)
         {
         }
+        f.setWritable(true);
+        f.setReadable(true);
     }
 
     public FileConfiguration getConfig()

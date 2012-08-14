@@ -48,6 +48,8 @@ public class NBTConfiguration
                 e.printStackTrace();
             }
         }
+        f.setWritable(true);
+        f.setReadable(true);
     }
 
     public NBTTagCompound getNBTTagCompound()
