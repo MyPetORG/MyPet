@@ -111,7 +111,7 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public boolean k(Entity entity)
     {
-        int damage = 7 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 2 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         this.e = 10;
         this.world.broadcastEntityEffect(this, (byte) 4);
