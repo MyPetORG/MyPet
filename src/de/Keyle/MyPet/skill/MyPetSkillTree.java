@@ -20,15 +20,15 @@
 package de.Keyle.MyPet.skill;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class MyPetSkillTree
 {
     private String Name;
 
-    private Map<Integer, List<String>> SkillsPerLevel = new HashMap<Integer, List<String>>();
+    private SortedMap<Integer, List<MyPetSkillTreeSkill>> SkillsPerLevel = new TreeMap<Integer, List<MyPetSkillTreeSkill>>();
 
     public MyPetSkillTree(String Name)
     {
@@ -40,70 +40,68 @@ public class MyPetSkillTree
         return Name;
     }
 
-    public void addLevel(int Level, String Skill)
+    public void addLevel(int Level, MyPetSkillTreeSkill skill)
     {
         if (!SkillsPerLevel.containsKey(Level))
         {
-            List<String> stringList = new ArrayList<String>();
-            stringList.add((Skill));
-            SkillsPerLevel.put(Level, stringList);
+            List<MyPetSkillTreeSkill> skillList = new ArrayList<MyPetSkillTreeSkill>();
+            skillList.add((skill));
+            SkillsPerLevel.put(Level, skillList);
         }
         else
         {
-            addSkillToLevel(Level, Skill);
+            addSkillToLevel(Level, skill);
         }
     }
 
-    public void addLevel(int Level, List<String> Skills)
+    public void addLevel(int Level, List<MyPetSkillTreeSkill> skills)
     {
-        SkillsPerLevel.put(Level, Skills);
+        SkillsPerLevel.put(Level, skills);
     }
 
-    public void addSkillToLevel(int Level, String Skill)
+    public void addSkillToLevel(int Level, MyPetSkillTreeSkill skill)
     {
         if (SkillsPerLevel.containsKey(Level))
         {
-            SkillsPerLevel.get(Level).add(Skill);
+            SkillsPerLevel.get(Level).add(skill);
         }
         else
         {
-            List<String> tmps = new ArrayList<String>();
-            tmps.add(Skill);
-            addLevel(Level, tmps);
+            addLevel(Level, skill);
         }
     }
 
-    public void addSkillToLevel(int Level, List<String> Skills)
+    public void addSkillToLevel(int Level, List<MyPetSkillTreeSkill> skills)
     {
         if (SkillsPerLevel.containsKey(Level))
         {
-            SkillsPerLevel.get(Level).addAll(Skills);
+            SkillsPerLevel.get(Level).addAll(skills);
         }
         else
         {
-            addLevel(Level, Skills);
+            addLevel(Level, skills);
         }
     }
 
-    public void addSkillToLevel(int Level, String[] Skills)
+    public void addSkillToLevel(int Level, MyPetSkillTreeSkill[] skills)
     {
         if (SkillsPerLevel.containsKey(Level))
         {
-            for (String skillname : Skills)
+            for (MyPetSkillTreeSkill skillname : skills)
             {
                 SkillsPerLevel.get(Level).add(skillname);
             }
         }
         else
         {
-            for (String skillname : Skills)
+            for (MyPetSkillTreeSkill skillname : skills)
             {
                 addSkillToLevel(Level, skillname);
             }
         }
     }
 
-    public Integer[] getLevels()
+    public Integer[] getAllLevel()
     {
         if (SkillsPerLevel.size() > 0)
         {
@@ -119,17 +117,17 @@ public class MyPetSkillTree
         return new Integer[0];
     }
 
-    public String[] getSkills(int Level)
+    public MyPetSkillTreeSkill[] getSkills(int Level)
     {
         if (SkillsPerLevel.containsKey(Level) && SkillsPerLevel.get(Level).size() > 0)
         {
-            String[] SN = new String[SkillsPerLevel.get(Level).size()];
+            MyPetSkillTreeSkill[] SN = new MyPetSkillTreeSkill[SkillsPerLevel.get(Level).size()];
             for (int i = 0 ; i < SkillsPerLevel.get(Level).size() ; i++)
             {
                 SN[i] = SkillsPerLevel.get(Level).get(i);
             }
             return SN;
         }
-        return new String[0];
+        return new MyPetSkillTreeSkill[0];
     }
 }

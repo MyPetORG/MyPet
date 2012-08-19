@@ -20,7 +20,9 @@
 package de.Keyle.MyPet.util;
 
 
+import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -62,21 +64,32 @@ public class MyPetSkillTreeConfigLoader
                 {
                     Inheritances.put(ST, inherit);
                 }
-                Set<String> Level = MWConfig.getConfig().getConfigurationSection("skilltrees." + ST).getKeys(false);
-                if (Level.size() > 0)
+                Set<String> level = MWConfig.getConfig().getConfigurationSection("skilltrees." + ST).getKeys(false);
+                if (level.size() > 0)
                 {
                     MyPetSkillTree MWST = new MyPetSkillTree(ST);
-                    for (String Lv : Level)
+                    for (String thisLevel : level)
                     {
-                        if (MyPetUtil.isInt(Lv))
+                        if (MyPetUtil.isInt(thisLevel))
                         {
-                            MWST.addLevel(Integer.parseInt(Lv), MWConfig.getConfig().getStringList("skilltrees." + ST + "." + Lv));
+                            List<String> skillsOfThisLevel = MWConfig.getConfig().getStringList("skilltrees." + ST + "." + thisLevel);
+                            if (skillsOfThisLevel.size() > 0)
+                            {
+                                for (String thisSkill : skillsOfThisLevel)
+                                {
+                                    if (MyPetSkillSystem.isValidSkill(thisSkill))
+                                    {
+                                        MyPetSkillTreeSkill skillTreeSkill = new MyPetSkillTreeSkill(thisSkill);
+                                        MWST.addSkillToLevel(Integer.parseInt(thisLevel), skillTreeSkill);
+                                    }
+                                }
+                            }
                         }
                     }
                     SkillTrees.put(ST, MWST);
                     lSkillTrees.add(ST);
                 }
-                else if (Level.size() == 0)
+                else if (level.size() == 0)
                 {
                     MyPetSkillTree MWST = new MyPetSkillTree(ST);
                     SkillTrees.put(ST, MWST);
@@ -93,9 +106,9 @@ public class MyPetSkillTreeConfigLoader
 
             MyPetSkillTree MWST = new MyPetSkillTree(SkillTrees.get(Name).getName());
 
-            if (SkillTrees.get(Name).getLevels() != null)
+            if (SkillTrees.get(Name).getAllLevel() != null)
             {
-                for (int level : SkillTrees.get(Name).getLevels())
+                for (int level : SkillTrees.get(Name).getAllLevel())
                 {
                     MWST.addSkillToLevel(level, SkillTrees.get(Name).getSkills(level));
                 }
@@ -109,9 +122,9 @@ public class MyPetSkillTreeConfigLoader
                     if (SkillTrees.containsKey(Name))
                     {
                         MyPetSkillTree nextMWST = SkillTrees.get(NextInheritance);
-                        if (nextMWST.getLevels() != null)
+                        if (nextMWST.getAllLevel() != null)
                         {
-                            for (int level : nextMWST.getLevels())
+                            for (int level : nextMWST.getAllLevel())
                             {
                                 MWST.addSkillToLevel(level, nextMWST.getSkills(level));
                             }

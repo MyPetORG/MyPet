@@ -150,6 +150,16 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petinfo").setExecutor(new CommandInfo());
         getCommand("petadmin").setExecutor(new CommandAdmin());
         getCommand("petskill").setExecutor(new CommandSkill());
+        getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
+
+        MyPetSkillSystem.registerSkill(Inventory.class);
+        MyPetSkillSystem.registerSkill(HPregeneration.class);
+        MyPetSkillSystem.registerSkill(Pickup.class);
+        MyPetSkillSystem.registerSkill(Behavior.class);
+        MyPetSkillSystem.registerSkill(Damage.class);
+        MyPetSkillSystem.registerSkill(Control.class);
+        MyPetSkillSystem.registerSkill(HP.class);
+        MyPetSkillSystem.registerSkill(Poison.class);
 
         YamlConfiguration MWSkillTreeConfig = new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "skill.yml");
         if (!MWSkillTreeConfig.ConfigFile.exists())
@@ -178,16 +188,6 @@ public class MyPetPlugin extends JavaPlugin
         }
         MyPetSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
         MyPetSkillTreeConfigLoader.loadSkillTrees();
-
-
-        MyPetSkillSystem.registerSkill(Inventory.class);
-        MyPetSkillSystem.registerSkill(HPregeneration.class);
-        MyPetSkillSystem.registerSkill(Pickup.class);
-        MyPetSkillSystem.registerSkill(Behavior.class);
-        MyPetSkillSystem.registerSkill(Damage.class);
-        MyPetSkillSystem.registerSkill(Control.class);
-        MyPetSkillSystem.registerSkill(HP.class);
-        MyPetSkillSystem.registerSkill(Poison.class);
 
         try
         {

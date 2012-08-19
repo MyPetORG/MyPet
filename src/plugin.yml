@@ -44,6 +44,10 @@ commands:
     aliases: [peta, pa]
     description: Set the Exp or Name of a MyPet
     usage: '/<command> [PlayerName] name/exp [Value]'
+  petskilltree:
+    aliases: [pst, petst]
+    description: Shows the fully configured skilltree
+    usage: '/<command> [SkillTreeName]'
 
 permissions:
   MyPet.*:

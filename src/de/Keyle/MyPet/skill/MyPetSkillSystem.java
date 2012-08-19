@@ -27,17 +27,37 @@ import java.util.*;
 public class MyPetSkillSystem
 {
     private static List<Class<? extends MyPetGenericSkill>> ClassSkillList = new ArrayList<Class<? extends MyPetGenericSkill>>();
+    private static List<String> skillNames = new ArrayList<String>();
 
     private MyPet MPet;
 
     private Map<String, MyPetGenericSkill> Skills = new HashMap<String, MyPetGenericSkill>();
 
-    public static void registerSkill(Class<? extends MyPetGenericSkill> cls)
+    public static void registerSkill(Class<? extends MyPetGenericSkill> clazz)
     {
-        if (!ClassSkillList.contains(cls))
+        if (!ClassSkillList.contains(clazz))
         {
-            ClassSkillList.add(cls);
+            try
+            {
+                Object obj = clazz.newInstance();
+                if (obj instanceof MyPetGenericSkill)
+                {
+                    MyPetGenericSkill skill = (MyPetGenericSkill) obj;
+                    skillNames.add(skill.getName().toLowerCase());
+                    ClassSkillList.add(clazz);
+                }
+            }
+            catch (Exception e)
+            {
+                MyPetUtil.getLogger().warning(clazz.getName() + "is not a valid skill!");
+            }
+
         }
+    }
+
+    public static boolean isValidSkill(String name)
+    {
+        return skillNames.contains(name.toLowerCase());
     }
 
     public MyPetSkillSystem(MyPet MPet)
