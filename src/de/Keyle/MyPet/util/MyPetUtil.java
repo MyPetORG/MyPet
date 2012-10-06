@@ -105,7 +105,7 @@ public class MyPetUtil
     }
 
     //TODO readd NPC check (update)
-    public static boolean isNPC(Player player)
+    public static boolean canHurtCitizens(Player player)
     {
         //Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
         //return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
