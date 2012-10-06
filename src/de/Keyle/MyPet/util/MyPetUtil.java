@@ -34,7 +34,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -108,8 +107,9 @@ public class MyPetUtil
     //TODO readd NPC check (update)
     public static boolean isNPC(Player player)
     {
-        Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
-        return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
+        //Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
+        //return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
+        return false;
     }
 
     public static boolean canHurtWorldGuard(Player victim)
@@ -150,17 +150,17 @@ public class MyPetUtil
             {
                 return canHurt;
             }
-            TownyWorld world = null;
             try
             {
-                world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
+                TownyWorld world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
+                if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
+                {
+                    canHurt = false;
+                }
             }
             catch (Exception ignored)
             {
-            }
-            if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
-            {
-                canHurt = false;
+                MyPetUtil.getDebugLogger().info("Towny Exception!");
             }
         }
         return canHurt;
