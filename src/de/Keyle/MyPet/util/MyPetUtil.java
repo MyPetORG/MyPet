@@ -174,7 +174,7 @@ public class MyPetUtil
         }
     }
 
-    public static double getDistance(Location loc1, Location loc2)
+    public static double getDistance2D(Location loc1, Location loc2)
     {
         return Math.sqrt(Math.pow(loc1.getX() - loc2.getX(), 2.0D) + Math.pow(loc1.getZ() - loc2.getZ(), 2.0D));
     }
