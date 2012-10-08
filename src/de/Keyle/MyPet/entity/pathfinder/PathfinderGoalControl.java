@@ -52,7 +52,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
             if (control.getLocation(false) != null)
             {
                 moveTo = control.getLocation();
-                TimeToMove = (int) MyPetUtil.getDistance(MPet.getLocation(), moveTo) / 3;
+                TimeToMove = (int) MyPetUtil.getDistance2D(MPet.getLocation(), moveTo) / 3;
             }
         }
         return moveTo != null;
@@ -76,7 +76,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         if (control.getLocation(false) != null)
         {
             moveTo = control.getLocation();
-            TimeToMove = (int) MyPetUtil.getDistance(MPet.getLocation(), moveTo) / 3;
+            TimeToMove = (int) MyPetUtil.getDistance2D(MPet.getLocation(), moveTo) / 3;
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
             {
                 moveTo = null;
