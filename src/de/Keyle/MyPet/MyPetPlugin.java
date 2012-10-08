@@ -96,6 +96,8 @@ public class MyPetPlugin extends JavaPlugin
     {
         plugin = this;
 
+        new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees").mkdir();
+
         if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
         {
             String mwv = getDescription().getVersion();
@@ -161,13 +163,14 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkillSystem.registerSkill(HP.class);
         MyPetSkillSystem.registerSkill(Poison.class);
 
-        YamlConfiguration MWSkillTreeConfig = new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "skill.yml");
-        if (!MWSkillTreeConfig.ConfigFile.exists())
+        File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
+
+        if (!defaultSkillConfig.exists())
         {
             try
             {
-                InputStream template = getPlugin().getResource("skill.yml");
-                OutputStream out = new FileOutputStream(MWSkillTreeConfig.ConfigFile);
+                InputStream template = getPlugin().getResource("default.yml");
+                OutputStream out = new FileOutputStream(defaultSkillConfig);
 
                 byte[] buf = new byte[1024];
                 int len;
@@ -177,16 +180,16 @@ public class MyPetPlugin extends JavaPlugin
                 }
                 template.close();
                 out.close();
-                MyPetUtil.getLogger().info("Default skill.yml file created. Please restart the server to load the skilltrees!");
-                debugLogger.info("created default skill.yml.");
+                MyPetUtil.getLogger().info("Default skilltree configfile created.");
+                debugLogger.info("created default.yml");
             }
             catch (IOException ex)
             {
-                MyPetUtil.getLogger().info("Unable to create the default skill.yml file!");
-                debugLogger.info("unable to create skill.yml.");
+                MyPetUtil.getLogger().info("Unable to create the default.yml!");
+                debugLogger.info("unable to create default.yml");
             }
         }
-        MyPetSkillTreeConfigLoader.setConfig(MWSkillTreeConfig);
+        MyPetSkillTreeConfigLoader.setConfigPath(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
         MyPetSkillTreeConfigLoader.loadSkillTrees();
 
         try
@@ -344,7 +347,7 @@ public class MyPetPlugin extends JavaPlugin
                     {
                         p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
                     }
-                    else if (MyPetUtil.getDistance(MPet.getLocation(), p.getLocation()) < 75)
+                    else if (MyPetUtil.getDistance2D(MPet.getLocation(), p.getLocation()) < 75)
                     {
                         MPet.ResetSitTimer();
                         MPet.createPet();

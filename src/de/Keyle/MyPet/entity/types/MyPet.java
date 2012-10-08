@@ -61,13 +61,13 @@ public abstract class MyPet
     {
         this.Owner = Owner;
 
-        if (MyPetSkillTreeConfigLoader.getSkillTreeNames().length > 0)
+        if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
         {
-            for (String ST : MyPetSkillTreeConfigLoader.getSkillTreeNames())
+            for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()))
             {
-                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + ST))
+                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
                 {
-                    this.skillTree = MyPetSkillTreeConfigLoader.getSkillTree(ST);
+                    this.skillTree = MyPetSkillTreeConfigLoader.getMobType(this.getPetType().getTypeName()).getSkillTree(skillTreeName);
                     break;
                 }
             }

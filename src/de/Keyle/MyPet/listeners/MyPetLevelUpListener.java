@@ -28,6 +28,8 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.List;
+
 public class MyPetLevelUpListener implements Listener
 {
     @EventHandler
@@ -40,10 +42,10 @@ public class MyPetLevelUpListener implements Listener
         }
         int lvl = eventMyPet.getLevel();
         MyPetSkillTree st = MPet.getSkillTree();
-        MyPetSkillTreeSkill[] skills = st.getSkills(lvl);
-        if (skills.length > 0)
+        if (st.hasLevel(lvl))
         {
-            for (MyPetSkillTreeSkill skill : skills)
+            List<MyPetSkillTreeSkill> skillList = st.getLevel(lvl).getSkills();
+            for (MyPetSkillTreeSkill skill : skillList)
             {
                 if (MPet.getSkillSystem().hasSkill(skill.getName()))
                 {

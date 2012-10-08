@@ -19,41 +19,31 @@
 
 package de.Keyle.MyPet.skill;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MyPetSkillTreeSkill
+public class MyPetSkillTreeLevel
 {
-    String name;
-    Map<String, String> options = new HashMap<String, String>();
+    int level;
+    List<MyPetSkillTreeSkill> skillList = new ArrayList<MyPetSkillTreeSkill>();
 
-    public MyPetSkillTreeSkill(String name)
+    public MyPetSkillTreeLevel(int level)
     {
-        this.name = name;
+        this.level = level;
     }
 
-    public String getName()
+    public int getLevel()
     {
-        return name;
+        return level;
     }
 
-    public void addOption(String option, String value)
+    public void addSkill(MyPetSkillTreeSkill skill)
     {
-        options.put(option, value);
+        skillList.add(skill);
     }
 
-    public String getOption(String option)
+    public List<MyPetSkillTreeSkill> getSkills()
     {
-        if (options.containsKey(option))
-        {
-            return options.get(option);
-        }
-        return null;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MyPetSkillTreeSkill{name=" + this.name + "}";
+        return skillList;
     }
 }

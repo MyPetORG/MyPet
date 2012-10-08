@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.util.MyPetSkillTreeConfigLoader;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -34,29 +35,35 @@ public class CommandShowSkillTree implements CommandExecutor
     {
         if (sender instanceof ConsoleCommandSender)
         {
-            MyPetUtil.getLogger().info("" + sender);
-            if (args.length == 1)
+            if (args.length == 1 || args.length == 2)
             {
-                if (MyPetSkillTreeConfigLoader.containsSkillTree(args[0]))
+                if (MyPetSkillTreeConfigLoader.hasMobType(args[0]))
                 {
-                    MyPetSkillTree skillTree = MyPetSkillTreeConfigLoader.getSkillTree(args[0]);
-                    MyPetUtil.getLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " -----");
-                    MyPetUtil.getDebugLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " -----");
-                    for (int lvl : skillTree.getAllLevel())
+                    if (MyPetSkillTreeConfigLoader.containsSkillTree(args[0], args[1]))
                     {
-                        MyPetUtil.getLogger().info(" " + lvl + ":");
-                        for (MyPetSkillTreeSkill skill : skillTree.getSkills(lvl))
+                        MyPetSkillTree skillTree = MyPetSkillTreeConfigLoader.getMobType(args[0]).getSkillTree(args[1]);
+                        MyPetUtil.getLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " -----");
+                        MyPetUtil.getDebugLogger().info("----- Console: MyPet Skilltree: " + skillTree.getName() + " -----");
+                        for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
-                            MyPetUtil.getLogger().info("   " + skill.toString());
-                            MyPetUtil.getDebugLogger().info("   " + skill.toString());
+                            MyPetUtil.getLogger().info(" " + lvl.getLevel() + ":");
+                            for (MyPetSkillTreeSkill skill : lvl.getSkills())
+                            {
+                                MyPetUtil.getLogger().info("   " + skill.getName());
+                                MyPetUtil.getDebugLogger().info("   " + skill.getName());
+                            }
                         }
+                        MyPetUtil.getLogger().info("----- MyPet Skilltree end -----");
+                        MyPetUtil.getDebugLogger().info("----- MyPet Skilltree end -----");
                     }
-                    MyPetUtil.getLogger().info("----- MyPet Skilltree end -----");
-                    MyPetUtil.getDebugLogger().info("----- MyPet Skilltree end -----");
+                    else
+                    {
+                        MyPetUtil.getLogger().info("There is no skilltree with the name: " + args[1]);
+                    }
                 }
                 else
                 {
-                    MyPetUtil.getLogger().info("There is no skilltree with the name: " + args[0]);
+                    MyPetUtil.getLogger().info("There is no mobtype with the name: " + args[0]);
                 }
             }
         }

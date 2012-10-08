@@ -104,7 +104,7 @@ public class MyPetPlayerListener implements Listener
                 {
                     event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
                 }
-                else if (MyPetUtil.getDistance(MPet.getLocation(), event.getPlayer().getLocation()) < 75 && MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
+                else if (MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) < 75 && MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
                 {
                     MPet.ResetSitTimer();
                     MPet.createPet();
@@ -155,7 +155,7 @@ public class MyPetPlayerListener implements Listener
                 if (MPet.Status == PetState.Here)
                 {
                     MPet.ResetSitTimer();
-                    if (MPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance(MPet.getLocation(), event.getPlayer().getLocation()) > 75)
+                    if (MPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) > 75)
                     {
                         if (MPet.isSitting())
                         {
