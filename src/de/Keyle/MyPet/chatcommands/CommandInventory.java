@@ -26,6 +26,7 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,6 +52,11 @@ public class CommandInventory implements CommandExecutor
                     if (MPet.Status == PetState.Dead)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
+                        return true;
+                    }
+                    if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin"))
+                    {
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CreativeInventory")).replace("%petname%", MPet.Name));
                         return true;
                     }
                     if (MPet.getSkillSystem().hasSkill("Inventory"))
