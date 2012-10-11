@@ -36,11 +36,9 @@ import java.util.Set;
 
 public class MyPetSkillTreeConfigLoader
 {
-    //private static Map<String, MyPetSkillTree> SkillTrees = new HashMap<String, MyPetSkillTree>();
     //private static Map<String, String> Inheritances = new HashMap<String, String>();
     private static Map<String, MyPetSkillTreeMobType> skillTreeMobTypes = new HashMap<String, MyPetSkillTreeMobType>();
 
-    private static YamlConfiguration MWConfig = null;
     private static String configPath;
 
     public static void setConfigPath(String path)
@@ -50,11 +48,15 @@ public class MyPetSkillTreeConfigLoader
 
     public static void loadSkillTrees()
     {
+        YamlConfiguration MWConfig;
         MyPetUtil.getDebugLogger().info("Loading skill configs in: " + configPath);
         File skillFile;
         for (MyPetType mobType : MyPetType.values())
         {
             skillFile = new File(configPath + File.separator + mobType.getTypeName() + ".yml");
+
+            MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName().toLowerCase());
+            skillTreeMobTypes.put(mobType.getTypeName().toLowerCase(), skillTreeMobType);
 
             if (!skillFile.exists())
             {
@@ -62,18 +64,16 @@ public class MyPetSkillTreeConfigLoader
             }
 
             MWConfig = new YamlConfiguration(skillFile);
-            MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName().toLowerCase());
             loadSkillTree(MWConfig, skillTreeMobType);
-            skillTreeMobTypes.put(mobType.getTypeName().toLowerCase(), skillTreeMobType);
             MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".yml");
         }
         skillFile = new File(configPath + File.separator + "default.yml");
+        MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType("default");
+        skillTreeMobTypes.put("default", skillTreeMobType);
         if (skillFile.exists())
         {
             MWConfig = new YamlConfiguration(skillFile);
-            MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType("default");
             loadSkillTree(MWConfig, skillTreeMobType);
-            skillTreeMobTypes.put("default", skillTreeMobType);
             MyPetUtil.getDebugLogger().info("  default.yml");
         }
     }
