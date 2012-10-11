@@ -42,16 +42,16 @@ public class CommandRelease implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet MPet = MyPetList.getMyPet(owner);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (!MyPetPermissions.has(owner, "MyPet.user.release"))
+                if (!MyPetPermissions.has(petOwner, "MyPet.user.release"))
                 {
                     return true;
                 }
-                if (MPet.Status == PetState.Despawned)
+                if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
@@ -66,34 +66,34 @@ public class CommandRelease implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MPet.Name.equalsIgnoreCase(name))
+                if (myPet.petName.equalsIgnoreCase(name))
                 {
-                    if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+                    if (myPet.getSkillSystem().hasSkill("Inventory") && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        World world = MPet.getPet().getHandle().world;
-                        Location loc = MPet.getLocation();
-                        for (ItemStack is : ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
+                        World world = myPet.getPet().getHandle().world;
+                        Location petLocation = myPet.getLocation();
+                        for (ItemStack is : ((Inventory) myPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
                         {
                             if (is != null)
                             {
-                                EntityItem entity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
-                                entity.pickupDelay = 10;
-                                world.addEntity(entity);
+                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                itemEntity.pickupDelay = 10;
+                                world.addEntity(itemEntity);
                             }
                         }
                     }
-                    MPet.getLocation().getWorld().spawnEntity(MPet.getLocation(), MPet.getPetType().getEntityType());
-                    MPet.removePet();
+                    myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
+                    myPet.removePet();
 
 
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", MPet.Name));
-                    MyPetList.removeMyPet(MPet);
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
+                    MyPetList.removeMyPet(myPet);
                     MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", MPet.Name));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", myPet.petName));
                     return false;
                 }
             }

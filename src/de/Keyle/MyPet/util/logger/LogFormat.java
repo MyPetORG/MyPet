@@ -70,7 +70,6 @@ public class LogFormat extends Formatter
             thrown.printStackTrace(new PrintWriter(stringWriter));
             text += stringWriter;
         }
-
         return text;
     }
 }

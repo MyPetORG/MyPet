@@ -28,15 +28,15 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMySheep extends EntityMyPet
 {
-    public EntityMySheep(World world, MyPet MPet)
+    public EntityMySheep(World world, MyPet myPet)
     {
-        super(world, MPet);
+        super(world, myPet);
         this.texture = "/mob/sheep.png";
         this.a(0.9F, 1.3F);
         this.bw = 0.25F;
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.38F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, 0.38F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.d);
@@ -48,27 +48,27 @@ public class EntityMySheep extends EntityMyPet
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        if (MPet != null)
+        if (myPet != null)
         {
-            this.MPet = MPet;
+            this.myPet = myPet;
             isMyPet = true;
             if (!isTamed())
             {
                 this.setTamed(true);
                 this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
-                //this.setColor(((MySheep) MPet).getColor());
+                this.setSitting(myPet.isSitting());
+                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+                this.setOwnerName(myPet.getOwner().getName());
+                //this.setColor(((MySheep) myPet).getColor());
             }
         }
     }
 
     public int getMaxHealth()
     {
-        return MySheep.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MySheep.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -81,18 +81,18 @@ public class EntityMySheep extends EntityMyPet
     {
         super.c(entityhuman);
 
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemstack != null && itemstack.id == org.bukkit.Material.WHEAT.getId())
+        if (itemStack != null && itemStack.id == org.bukkit.Material.WHEAT.getId())
         {
             if (getHealth() < getMaxHealth())
             {
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
-                    --itemstack.count;
+                    --itemStack.count;
                 }
                 this.heal(3, RegainReason.EATING);
-                if (itemstack.count <= 0)
+                if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
@@ -100,11 +100,11 @@ public class EntityMySheep extends EntityMyPet
                 return true;
             }
         }
-        else if (itemstack != null && itemstack.id == 351)
+        else if (itemStack != null && itemStack.id == 351)
         {
-            if (itemstack.getData() <= 15)
+            if (itemStack.getData() <= 15)
             {
-                ((MySheep) MPet).setColor(15 - itemstack.getData());
+                ((MySheep) myPet).setColor(15 - itemStack.getData());
                 return true;
             }
         }
@@ -120,7 +120,7 @@ public class EntityMySheep extends EntityMyPet
 
     public boolean k(Entity entity)
     {
-        int damage = 1 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }

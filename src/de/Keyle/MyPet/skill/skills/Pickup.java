@@ -34,8 +34,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class Pickup extends MyPetGenericSkill
 {
-    public static double RangePerLevel = 1;
-    private boolean Pickup = false;
+    public static double rangePerLevel = 1;
+    private boolean pickup = false;
 
     public Pickup()
     {
@@ -45,51 +45,51 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (Level > 0)
+        if (level > 0)
         {
-            if (MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+            if (myPet.getSkillSystem().hasSkill("Inventory") && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
             {
-                Pickup = !Pickup;
-                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((Pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", MPet.Name));
+                pickup = !pickup;
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", myPet.petName));
             }
             else
             {
-                MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%petname%", MPet.Name));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%petname%", myPet.petName));
             }
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
         }
     }
 
     @Override
     public void upgrade()
     {
-        Level++;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", MPet.Name).replace("%range%", "" + (Level * RangePerLevel)));
+        level++;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + (level * rangePerLevel)));
     }
 
     @Override
     public void schedule()
     {
-        if (Level > 0 && Pickup && MPet.Status == PetState.Here && MPet.getSkillSystem().hasSkill("Inventory") && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+        if (level > 0 && pickup && myPet.status == PetState.Here && myPet.getSkillSystem().hasSkill("Inventory") && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
         {
-            for (Entity e : MPet.getPet().getNearbyEntities(Level * RangePerLevel, Level * RangePerLevel, RangePerLevel))
+            for (Entity e : myPet.getPet().getNearbyEntities(level * rangePerLevel, level * rangePerLevel, rangePerLevel))
             {
                 if (e instanceof Item)
                 {
                     Item item = (Item) e;
 
-                    PlayerPickupItemEvent ppievent = new PlayerPickupItemEvent(MPet.getOwner().getPlayer(), item, item.getItemStack().getAmount());
-                    MyPetUtil.getServer().getPluginManager().callEvent(ppievent);
+                    PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), item, item.getItemStack().getAmount());
+                    MyPetUtil.getServer().getPluginManager().callEvent(playerPickupEvent);
 
-                    if (ppievent.isCancelled())
+                    if (playerPickupEvent.isCancelled())
                     {
                         continue;
                     }
 
-                    MyPetCustomInventory inv = ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).inv;
+                    MyPetCustomInventory inv = ((Inventory) myPet.getSkillSystem().getSkill("Inventory")).inv;
                     int itemAmount = inv.addItem(item.getItemStack());
                     if (itemAmount == 0)
                     {
@@ -97,7 +97,7 @@ public class Pickup extends MyPetGenericSkill
                         {
                             if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), MPet.getPet().getEntityId()));
+                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), myPet.getPet().getEntityId()));
                             }
                         }
                         e.remove();
@@ -114,14 +114,14 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void load(NBTTagCompound nbtTagCompound)
     {
-        Pickup = nbtTagCompound.getBoolean("Active");
+        pickup = nbtTagCompound.getBoolean("Active");
     }
 
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
-        nbtTagCompound.setBoolean("Active", Pickup);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        nbtTagCompound.setBoolean("Active", pickup);
         return nbtTagCompound;
 
     }

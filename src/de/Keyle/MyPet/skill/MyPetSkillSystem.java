@@ -26,16 +26,16 @@ import java.util.*;
 
 public class MyPetSkillSystem
 {
-    private static List<Class<? extends MyPetGenericSkill>> ClassSkillList = new ArrayList<Class<? extends MyPetGenericSkill>>();
+    private static List<Class<? extends MyPetGenericSkill>> skillClassList = new ArrayList<Class<? extends MyPetGenericSkill>>();
     private static List<String> skillNames = new ArrayList<String>();
 
-    private MyPet MPet;
+    private MyPet myPet;
 
-    private Map<String, MyPetGenericSkill> Skills = new HashMap<String, MyPetGenericSkill>();
+    private Map<String, MyPetGenericSkill> skills = new HashMap<String, MyPetGenericSkill>();
 
     public static void registerSkill(Class<? extends MyPetGenericSkill> clazz)
     {
-        if (!ClassSkillList.contains(clazz))
+        if (!skillClassList.contains(clazz))
         {
             try
             {
@@ -44,7 +44,7 @@ public class MyPetSkillSystem
                 {
                     MyPetGenericSkill skill = (MyPetGenericSkill) obj;
                     skillNames.add(skill.getName().toLowerCase());
-                    ClassSkillList.add(clazz);
+                    skillClassList.add(clazz);
                 }
             }
             catch (Exception e)
@@ -60,36 +60,36 @@ public class MyPetSkillSystem
         return skillNames.contains(name.toLowerCase());
     }
 
-    public MyPetSkillSystem(MyPet MPet)
+    public MyPetSkillSystem(MyPet myPet)
     {
-        this.MPet = MPet;
-        addSkills(ClassSkillList);
+        this.myPet = myPet;
+        addSkills(skillClassList);
     }
 
-    public void addSkill(Class<? extends MyPetGenericSkill> clazz)
+    public void addSkill(Class<? extends MyPetGenericSkill> skillClass)
     {
-        String Name;
+        String skillName;
         MyPetGenericSkill skill;
 
         try
         {
-            Object obj = clazz.newInstance();
+            Object obj = skillClass.newInstance();
             if (obj instanceof MyPetGenericSkill)
             {
                 skill = (MyPetGenericSkill) obj;
-                Name = skill.getName();
+                skillName = skill.getName();
 
-                if (!Skills.containsKey(Name))
+                if (!skills.containsKey(skillName))
                 {
-                    skill.MPet = this.MPet;
-                    Skills.put(Name, skill);
+                    skill.myPet = this.myPet;
+                    skills.put(skillName, skill);
                 }
             }
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(clazz.getName() + "is not a valid skill!");
-            ClassSkillList.remove(clazz);
+            MyPetUtil.getLogger().warning(skillClass.getName() + "is not a valid skill!");
+            skillClassList.remove(skillClass);
         }
     }
 
@@ -97,34 +97,34 @@ public class MyPetSkillSystem
     {
         if (classList.size() > 0)
         {
-            for (Class<? extends MyPetGenericSkill> cls : classList)
+            for (Class<? extends MyPetGenericSkill> clazz : classList)
             {
-                addSkill(cls);
+                addSkill(clazz);
             }
         }
     }
 
-    public MyPetGenericSkill getSkill(String Name)
+    public MyPetGenericSkill getSkill(String skillName)
     {
-        if (Skills.containsKey(Name))
+        if (skills.containsKey(skillName))
         {
-            return Skills.get(Name);
+            return skills.get(skillName);
         }
         return null;
     }
 
     public Collection<MyPetGenericSkill> getSkills()
     {
-        return Skills.values();
+        return skills.values();
     }
 
     public Set<String> getSkillNames()
     {
-        return Skills.keySet();
+        return skills.keySet();
     }
 
-    public boolean hasSkill(String Name)
+    public boolean hasSkill(String skillName)
     {
-        return Skills.containsKey(Name);
+        return skills.containsKey(skillName);
     }
 }

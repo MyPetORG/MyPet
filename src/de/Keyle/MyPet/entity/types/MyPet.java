@@ -38,18 +38,18 @@ public abstract class MyPet
         Dead, Despawned, Here
     }
 
-    protected CraftMyPet Pet;
-    public String Name = "Pet";
-    protected final MyPetPlayer Owner;
-    protected int Health;
-    public int RespawnTime = 0;
+    protected CraftMyPet craftPet;
+    public String petName = "Pet";
+    protected final MyPetPlayer petOwner;
+    protected int health;
+    public int respawnTime = 0;
 
-    protected int SitTimer = MyPetConfig.SitdownTime;
+    protected int SitTimer = MyPetConfig.sitdownTime;
     protected boolean isSitting = false;
 
-    public PetState Status = PetState.Despawned;
+    public PetState status = PetState.Despawned;
 
-    protected Location Location;
+    protected Location petLocation;
 
     protected MyPetSkillTree skillTree = null;
     protected MyPetSkillSystem skillSystem;
@@ -59,7 +59,7 @@ public abstract class MyPet
 
     public MyPet(MyPetPlayer Owner)
     {
-        this.Owner = Owner;
+        this.petOwner = Owner;
 
         if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
         {
@@ -80,126 +80,126 @@ public abstract class MyPet
         experience = new MyPetExperience(this);
     }
 
-    public void setName(String Name)
+    public void setPetName(String Name)
     {
-        this.Name = Name;
+        this.petName = Name;
         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
     }
 
     public void removePet()
     {
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            isSitting = Pet.isSitting();
-            Health = Pet.getHealth();
-            Location = Pet.getLocation();
-            if (Location == null && getOwner().isOnline())
+            isSitting = craftPet.isSitting();
+            health = craftPet.getHealth();
+            petLocation = craftPet.getLocation();
+            if (petLocation == null && getOwner().isOnline())
             {
-                Location = getOwner().getPlayer().getLocation();
+                petLocation = getOwner().getPlayer().getLocation();
             }
-            Status = PetState.Despawned;
-            Pet.remove();
+            status = PetState.Despawned;
+            craftPet.remove();
         }
     }
 
-    protected void RespawnPet()
+    protected void respawnPet()
     {
-        if (Status != PetState.Here)
+        if (status != PetState.Here)
         {
-            Location = getOwner().getPlayer().getLocation();
-            sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", Name));
+            petLocation = getOwner().getPlayer().getLocation();
+            sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
             createPet();
-            RespawnTime = 0;
-            Health = getMaxHealth();
+            respawnTime = 0;
+            health = getMaxHealth();
         }
     }
 
     public void createPet()
     {
-        if (Status == PetState.Here || getOwner() == null)
+        if (status == PetState.Here || getOwner() == null)
         {
         }
         else
         {
-            if (RespawnTime <= 0)
+            if (respawnTime <= 0)
             {
-                net.minecraft.server.World mcWorld = ((CraftWorld) Location.getWorld()).getHandle();
-                EntityMyPet entityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
-                entityMyPet.setLocation(Location);
-                if (!Location.getChunk().isLoaded())
+                net.minecraft.server.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
+                petEntity.setLocation(petLocation);
+                if (!petLocation.getChunk().isLoaded())
                 {
-                    Location.getChunk().load();
+                    petLocation.getChunk().load();
                 }
-                if (!mcWorld.addEntity(entityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     return;
                 }
-                Pet = (CraftMyPet) entityMyPet.getBukkitEntity();
-                Pet.setSitting(isSitting);
-                Status = PetState.Here;
+                craftPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftPet.setSitting(isSitting);
+                status = PetState.Here;
             }
         }
     }
 
     public void createPet(Location loc)
     {
-        if (Status == PetState.Here || getOwner() == null)
+        if (status == PetState.Here || getOwner() == null)
         {
         }
         else
         {
-            if (RespawnTime <= 0)
+            if (respawnTime <= 0)
             {
-                this.Location = loc;
+                this.petLocation = loc;
                 net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-                EntityMyPet entityMyPet = getPetType().getNewEntityInstance(mcWorld, this);
-                entityMyPet.setLocation(loc);
-                if (!Location.getChunk().isLoaded())
+                EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
+                petEntity.setLocation(loc);
+                if (!petLocation.getChunk().isLoaded())
                 {
-                    Location.getChunk().load();
+                    petLocation.getChunk().load();
                 }
-                if (!mcWorld.addEntity(entityMyPet, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     return;
                 }
-                Pet = (CraftMyPet) entityMyPet.getBukkitEntity();
-                Pet.setSitting(isSitting);
-                Status = PetState.Here;
+                craftPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftPet.setSitting(isSitting);
+                status = PetState.Here;
             }
         }
     }
 
     public CraftMyPet getPet()
     {
-        return Pet;
+        return craftPet;
     }
 
     public void setHealth(int d)
     {
         if (d > getMaxHealth())
         {
-            Health = getMaxHealth();
+            health = getMaxHealth();
         }
         else
         {
-            Health = d;
+            health = d;
         }
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            Pet.setHealth(Health);
+            craftPet.setHealth(health);
         }
     }
 
     public int getHealth()
     {
 
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            return Pet.getHealth();
+            return craftPet.getHealth();
         }
         else
         {
-            return Health;
+            return health;
         }
     }
 
@@ -225,30 +225,30 @@ public abstract class MyPet
 
     public Location getLocation()
     {
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            return Pet.getLocation();
+            return craftPet.getLocation();
         }
         else
         {
-            return Location;
+            return petLocation;
         }
     }
 
     public void setLocation(Location loc)
     {
-        this.Location = loc;
-        if (Status == PetState.Here)
+        this.petLocation = loc;
+        if (status == PetState.Here)
         {
-            Pet.teleport(loc);
+            craftPet.teleport(loc);
         }
     }
 
     public boolean isSitting()
     {
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            return Pet.isSitting();
+            return craftPet.isSitting();
         }
         else
         {
@@ -258,9 +258,9 @@ public abstract class MyPet
 
     public void setSitting(boolean sitting)
     {
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            Pet.setSitting(sitting);
+            craftPet.setSitting(sitting);
             this.isSitting = sitting;
         }
         else
@@ -269,14 +269,14 @@ public abstract class MyPet
         }
     }
 
-    public void ResetSitTimer()
+    public void resetSitTimer()
     {
-        SitTimer = MyPetConfig.SitdownTime;
+        SitTimer = MyPetConfig.sitdownTime;
     }
 
     public void scheduleTask()
     {
-        if (Status != PetState.Despawned && getOwner() != null)
+        if (status != PetState.Despawned && getOwner() != null)
         {
             if (skillSystem.getSkills().size() > 0)
             {
@@ -285,21 +285,21 @@ public abstract class MyPet
                     skill.schedule();
                 }
             }
-            if (Status == PetState.Here)
+            if (status == PetState.Here)
             {
-                if (MyPetConfig.SitdownTime > 0 && SitTimer <= 0)
+                if (MyPetConfig.sitdownTime > 0 && SitTimer <= 0)
                 {
-                    Pet.setSitting(true);
-                    ResetSitTimer();
+                    craftPet.setSitting(true);
+                    resetSitTimer();
                 }
                 SitTimer--;
             }
-            else if (Status == PetState.Dead)
+            else if (status == PetState.Dead)
             {
-                RespawnTime--;
-                if (RespawnTime <= 0)
+                respawnTime--;
+                if (respawnTime <= 0)
                 {
-                    RespawnPet();
+                    respawnPet();
                 }
             }
         }
@@ -307,14 +307,14 @@ public abstract class MyPet
 
     public MyPetPlayer getOwner()
     {
-        return Owner;
+        return petOwner;
     }
 
-    public void sendMessageToOwner(String Text)
+    public void sendMessageToOwner(String text)
     {
-        if (Owner.isOnline())
+        if (petOwner.isOnline())
         {
-            getOwner().getPlayer().sendMessage(Text);
+            getOwner().getPlayer().sendMessage(text);
         }
     }
 
@@ -342,6 +342,6 @@ public abstract class MyPet
     @Override
     public String toString()
     {
-        return "MyPet{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyPet{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 }

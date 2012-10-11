@@ -29,52 +29,52 @@ public class MyPetExpEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet pet;
+    private final MyPet myPet;
     private boolean isCancelled = false;
-    private double oldEXP;
-    private double newEXP;
+    private double oldExp;
+    private double newExp;
 
-    public MyPetExpEvent(MyPet pet, double oldEXP, double newEXP)
+    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp)
     {
-        this.pet = pet;
-        this.oldEXP = oldEXP;
-        this.newEXP = newEXP;
+        this.myPet = myPet;
+        this.oldExp = oldExp;
+        this.newExp = newExp;
     }
 
     public Player getOwner()
     {
-        return pet.getOwner().getPlayer();
+        return myPet.getOwner().getPlayer();
     }
 
     public MyPet getPet()
     {
-        return pet;
+        return myPet;
     }
 
-    public double getOldEXP()
+    public double getOldExp()
     {
-        return oldEXP;
+        return oldExp;
     }
 
-    public double getNewEXP()
+    public double getNewExp()
     {
-        return newEXP;
+        return newExp;
     }
 
-    public void setNewEXP(double newEXP)
+    public void setNewEXP(double newExp)
     {
-        this.newEXP = newEXP;
+        this.newExp = newExp;
     }
 
-    public double getEXP()
+    public double getExp()
     {
         if (isCancelled)
         {
-            return oldEXP;
+            return oldExp;
         }
         else
         {
-            return newEXP;
+            return newExp;
         }
     }
 

@@ -39,14 +39,14 @@ import org.bukkit.entity.EntityType;
 
 public class MyPetConfig
 {
-    public static FileConfiguration Config;
+    public static FileConfiguration config;
 
-    public static Material LeashItem = Material.STRING;
-    public static int RespawnTimeFactor = 5;
-    public static int RespawnTimeFixed = 0;
-    public static int SitdownTime = 15;
-    public static int AutoSaveTime = 60;
-    public static boolean LevelSystem = true;
+    public static Material leashItem = Material.STRING;
+    public static int respawnTimeFactor = 5;
+    public static int respawnTimeFixed = 0;
+    public static int sitdownTime = 15;
+    public static int autoSaveTime = 60;
+    public static boolean levelSystem = true;
     //public static boolean HeroesSkill = true;
     //public static Heroes HeroesPlugin = null;
     public static boolean sendMetrics = true;
@@ -54,8 +54,8 @@ public class MyPetConfig
     public static boolean useFactions = true;
     public static boolean useWorldGuard = true;
 
-    public static boolean Superperms = false;
-    public static boolean DebugLogger = false;
+    public static boolean superperms = false;
+    public static boolean debugLogger = false;
 
     public static void setDefault()
     {
@@ -86,10 +86,10 @@ public class MyPetConfig
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
 
-        for (EntityType entityType : MyPetExperience.MobEXP.keySet())
+        for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
-            setProperty("MyPet.exp." + entityType.getName() + ".min", MyPetExperience.MobEXP.get(entityType).getMin());
-            setProperty("MyPet.exp." + entityType.getName() + ".max", MyPetExperience.MobEXP.get(entityType).getMax());
+            setProperty("MyPet.exp." + entityType.getName() + ".min", MyPetExperience.mobExp.get(entityType).getMin());
+            setProperty("MyPet.exp." + entityType.getName() + ".max", MyPetExperience.mobExp.get(entityType).getMax());
         }
 
         MyPetPlugin.getPlugin().saveConfig();
@@ -97,61 +97,61 @@ public class MyPetConfig
 
     public static void loadConfiguration()
     {
-        LeashItem = MyPetUtil.checkMaterial(Config.getInt("MyPet.Leash.Item", 287), Material.STRING);
-        Control.Item = MyPetUtil.checkMaterial(Config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
-        Pickup.RangePerLevel = Config.getDouble("MyPet.Skill.Pickup.RangePerLvl", 1.0);
-        HPregeneration.HealtregenTime = Config.getInt("MyPet.Skill.HPregeneration.Time", 60);
-        Poison.ChancePerLevel = Config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
-        Inventory.creative = Config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+        leashItem = MyPetUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
+        Control.item = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
+        Pickup.rangePerLevel = config.getDouble("MyPet.Skill.Pickup.RangePerLvl", 1.0);
+        HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
+        Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
+        Inventory.creative = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
 
-        RespawnTimeFactor = Config.getInt("MyPet.RespawnTime.Factor", 5);
-        RespawnTimeFixed = Config.getInt("MyPet.RespawnTime.Fixed", 0);
-        LevelSystem = Config.getBoolean("MyPet.LevelSystem", true);
-        //HeroesSkill = Config.getBoolean("MyPet.HeroesSkill", false);
-        SitdownTime = Config.getInt("MyPet.SitdownTime", 60);
-        Superperms = Config.getBoolean("MyPet.SuperPerms", false);
-        sendMetrics = Config.getBoolean("MyPet.SendMetrics", true);
-        DebugLogger = Config.getBoolean("MyPet.DebugLogger", false);
-        useTowny = Config.getBoolean("MyPet.Support.Towny", true);
-        useFactions = Config.getBoolean("MyPet.Support.Factions", true);
-        useWorldGuard = Config.getBoolean("MyPet.Support.WorldGuard", true);
+        respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
+        respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
+        levelSystem = config.getBoolean("MyPet.LevelSystem", true);
+        //HeroesSkill = config.getBoolean("MyPet.HeroesSkill", false);
+        sitdownTime = config.getInt("MyPet.SitdownTime", 60);
+        superperms = config.getBoolean("MyPet.SuperPerms", false);
+        sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
+        debugLogger = config.getBoolean("MyPet.DebugLogger", false);
+        useTowny = config.getBoolean("MyPet.Support.Towny", true);
+        useFactions = config.getBoolean("MyPet.Support.Factions", true);
+        useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
 
-        MyWolf.setStartHP(Config.getInt("MyPet.StartHP.Wolf", 20));
-        MyVillager.setStartHP(Config.getInt("MyPet.StartHP.Villager", 20));
-        MySilverfish.setStartHP(Config.getInt("MyPet.StartHP.Silverfish", 8));
-        MyOcelot.setStartHP(Config.getInt("MyPet.StartHP.Ocelot", 15));
-        MyIronGolem.setStartHP(Config.getInt("MyPet.StartHP.IronGolem", 20));
-        MyChicken.setStartHP(Config.getInt("MyPet.StartHP.Chicken", 4));
-        MyCow.setStartHP(Config.getInt("MyPet.StartHP.Cow", 10));
-        MyMooshroom.setStartHP(Config.getInt("MyPet.StartHP.Mooshroom", 10));
-        MyPig.setStartHP(Config.getInt("MyPet.StartHP.Pig", 10));
-        MySheep.setStartHP(Config.getInt("MyPet.StartHP.Sheep", 8));
-        MyCaveSpider.setStartHP(Config.getInt("MyPet.StartHP.CaveSpider", 12));
+        MyWolf.setStartHP(config.getInt("MyPet.StartHP.Wolf", 20));
+        MyVillager.setStartHP(config.getInt("MyPet.StartHP.Villager", 20));
+        MySilverfish.setStartHP(config.getInt("MyPet.StartHP.Silverfish", 8));
+        MyOcelot.setStartHP(config.getInt("MyPet.StartHP.Ocelot", 15));
+        MyIronGolem.setStartHP(config.getInt("MyPet.StartHP.IronGolem", 20));
+        MyChicken.setStartHP(config.getInt("MyPet.StartHP.Chicken", 4));
+        MyCow.setStartHP(config.getInt("MyPet.StartHP.Cow", 10));
+        MyMooshroom.setStartHP(config.getInt("MyPet.StartHP.Mooshroom", 10));
+        MyPig.setStartHP(config.getInt("MyPet.StartHP.Pig", 10));
+        MySheep.setStartHP(config.getInt("MyPet.StartHP.Sheep", 8));
+        MyCaveSpider.setStartHP(config.getInt("MyPet.StartHP.CaveSpider", 12));
 
-        if (Config.getStringList("MyPet.exp") != null)
+        if (config.getStringList("MyPet.exp") != null)
         {
             int min;
             int max;
-            for (EntityType entityType : MyPetExperience.MobEXP.keySet())
+            for (EntityType entityType : MyPetExperience.mobExp.keySet())
             {
                 min = 0;
                 max = 0;
-                if (Config.contains("MyPet.exp." + entityType.getName() + ".max"))
+                if (config.contains("MyPet.exp." + entityType.getName() + ".max"))
                 {
-                    max = Config.getInt("MyPet.exp." + entityType.getName() + ".max", 0);
+                    max = config.getInt("MyPet.exp." + entityType.getName() + ".max", 0);
                 }
-                if (Config.contains("MyPet.exp." + entityType.getName() + ".min"))
+                if (config.contains("MyPet.exp." + entityType.getName() + ".min"))
                 {
-                    min = Config.getInt("MyPet.exp." + entityType.getName() + ".min", 0);
+                    min = config.getInt("MyPet.exp." + entityType.getName() + ".min", 0);
                 }
                 if (min == max)
                 {
-                    MyPetExperience.MobEXP.get(entityType).setExp(max);
+                    MyPetExperience.mobExp.get(entityType).setExp(max);
                 }
                 else
                 {
-                    MyPetExperience.MobEXP.get(entityType).setMin(min);
-                    MyPetExperience.MobEXP.get(entityType).setMax(max);
+                    MyPetExperience.mobExp.get(entityType).setMin(min);
+                    MyPetExperience.mobExp.get(entityType).setMax(max);
                 }
             }
         }
@@ -159,9 +159,9 @@ public class MyPetConfig
 
     public static void setProperty(String key, Object value)
     {
-        if (!Config.contains(key))
+        if (!config.contains(key))
         {
-            Config.set(key, value);
+            config.set(key, value);
         }
     }
 }

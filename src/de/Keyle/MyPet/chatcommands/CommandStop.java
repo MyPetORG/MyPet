@@ -37,24 +37,24 @@ public class CommandStop implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet MPet = MyPetList.getMyPet(owner);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (!MyPetPermissions.has(owner, "MyPet.user.stop"))
+                if (!MyPetPermissions.has(petOwner, "MyPet.user.stop"))
                 {
                     return true;
                 }
-                if (MPet.Status == PetState.Despawned)
+                if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", MPet.Name));
-                MPet.getPet().getHandle().setTarget(null);
-                MPet.getPet().getHandle().b((EntityLiving) null);
-                MPet.getPet().getHandle().Goaltarget = null;
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
+                myPet.getPet().getHandle().setTarget(null);
+                myPet.getPet().getHandle().b((EntityLiving) null);
+                myPet.getPet().getHandle().goalTarget = null;
                 return true;
             }
             else

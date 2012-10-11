@@ -171,11 +171,11 @@ public class MyPetSkillTreeConfigLoader
         return null;
     }
 
-    public static String getInheritance(String Name)
+    public static String getInheritance(String petName)
     {
-        if (Inheritances.containsKey(Name))
+        if (Inheritances.containsKey(petName))
         {
-            return Inheritances.get(Name);
+            return Inheritances.get(petName);
         }
         return null;
     }

@@ -32,16 +32,16 @@ import java.util.List;
 
 public class MyPetCustomInventory implements IInventory
 {
-    private String InventroyName;
+    private String inventroyName;
     private List<ItemStack> items = new ArrayList<ItemStack>();
-    private int Size = 0;
+    private int size = 0;
     private int stackSize = 64;
     private List<HumanEntity> transaction = new ArrayList<HumanEntity>();
 
-    public MyPetCustomInventory(String Name, int Size)
+    public MyPetCustomInventory(String inventroyName, int size)
     {
-        setName(Name);
-        setSize(Size);
+        setName(inventroyName);
+        setSize(size);
     }
 
     public int getSize()
@@ -51,7 +51,7 @@ public class MyPetCustomInventory implements IInventory
 
     public void setSize(int Size)
     {
-        this.Size = Size;
+        this.size = Size;
         for (int i = items.size() ; i < Size ; i++)
         {
             items.add(i, null);
@@ -60,21 +60,21 @@ public class MyPetCustomInventory implements IInventory
 
     public String getName()
     {
-        return InventroyName;
+        return inventroyName;
     }
 
-    public void setName(String Name)
+    public void setName(String name)
     {
-        if (Name.length() > 16)
+        if (name.length() > 16)
         {
-            Name = Name.substring(0, 16);
+            name = name.substring(0, 16);
         }
-        this.InventroyName = Name;
+        this.inventroyName = name;
     }
 
     public ItemStack getItem(int i)
     {
-        if (i <= Size)
+        if (i <= size)
         {
             return items.get(i);
         }
@@ -101,17 +101,17 @@ public class MyPetCustomInventory implements IInventory
     public int addItem(org.bukkit.inventory.ItemStack item)
     {
         item = item.clone();
-        int ItemID = item.getTypeId();
-        int ItemDuarbility = item.getDurability();
-        int ItemMaxStack = item.getMaxStackSize();
+        int itemID = item.getTypeId();
+        int itemDuarbility = item.getDurability();
+        int itemMaxStack = item.getMaxStackSize();
         for (int i = 0 ; i < this.getSize() ; i++)
         {
-            if (getItem(i) != null && getItem(i).id == ItemID && getItem(i).getData() == ItemDuarbility && getItem(i).getEnchantments() == null && item.getEnchantments().size() == 0 && getItem(i).count < ItemMaxStack)
+            if (getItem(i) != null && getItem(i).id == itemID && getItem(i).getData() == itemDuarbility && getItem(i).getEnchantments() == null && item.getEnchantments().size() == 0 && getItem(i).count < itemMaxStack)
             {
-                if (item.getAmount() >= ItemMaxStack - getItem(i).count)
+                if (item.getAmount() >= itemMaxStack - getItem(i).count)
                 {
-                    item.setAmount(item.getAmount() - (ItemMaxStack - getItem(i).count));
-                    getItem(i).count = ItemMaxStack;
+                    item.setAmount(item.getAmount() - (itemMaxStack - getItem(i).count));
+                    getItem(i).count = itemMaxStack;
                 }
                 else
                 {
@@ -129,7 +129,7 @@ public class MyPetCustomInventory implements IInventory
             }
             if (getItem(i) == null)
             {
-                if (item.getAmount() <= ItemMaxStack)
+                if (item.getAmount() <= itemMaxStack)
                 {
                     setItem(i, ((CraftItemStack) item.clone()).getHandle());
                     item.setAmount(0);
@@ -137,10 +137,10 @@ public class MyPetCustomInventory implements IInventory
                 }
                 else
                 {
-                    org.bukkit.inventory.ItemStack is = item.clone();
-                    is.setAmount(is.getMaxStackSize());
-                    setItem(i, ((CraftItemStack) is).getHandle());
-                    item.setAmount(item.getAmount() - is.getMaxStackSize());
+                    org.bukkit.inventory.ItemStack itemStack = item.clone();
+                    itemStack.setAmount(itemStack.getMaxStackSize());
+                    setItem(i, ((CraftItemStack) itemStack).getHandle());
+                    item.setAmount(item.getAmount() - itemStack.getMaxStackSize());
                 }
             }
         }
@@ -150,23 +150,23 @@ public class MyPetCustomInventory implements IInventory
 
     public ItemStack splitStack(int i, int j)
     {
-        if (i <= Size && items.get(i) != null)
+        if (i <= size && items.get(i) != null)
         {
-            ItemStack itemstack;
+            ItemStack itemStack;
             if (items.get(i).count <= j)
             {
-                itemstack = items.get(i);
+                itemStack = items.get(i);
                 items.set(i, null);
-                return itemstack;
+                return itemStack;
             }
             else
             {
-                itemstack = items.get(i).a(j);
+                itemStack = items.get(i).a(j);
                 if (items.get(i).count == 0)
                 {
                     items.set(i, null);
                 }
-                return itemstack;
+                return itemStack;
             }
         }
         return null;
@@ -184,29 +184,29 @@ public class MyPetCustomInventory implements IInventory
 
     public NBTTagCompound save(NBTTagCompound nbtTagCompound)
     {
-        NBTTagList Items = new NBTTagList();
+        NBTTagList items = new NBTTagList();
         for (int i = 0 ; i < this.items.size() ; i++)
         {
             ItemStack itemStack = this.items.get(i);
             if (itemStack != null)
             {
-                NBTTagCompound Item = new NBTTagCompound();
-                Item.setByte("Slot", (byte) i);
-                itemStack.save(Item);
-                Items.add(Item);
+                NBTTagCompound item = new NBTTagCompound();
+                item.setByte("Slot", (byte) i);
+                itemStack.save(item);
+                items.add(item);
             }
         }
-        nbtTagCompound.set("Items", Items);
+        nbtTagCompound.set("Items", items);
         return nbtTagCompound;
     }
 
     public void load(NBTTagCompound nbtTagCompound)
     {
-        NBTTagList Items = nbtTagCompound.getList("Items");
+        NBTTagList items = nbtTagCompound.getList("Items");
 
-        for (int i = 0 ; i < Items.size() ; i++)
+        for (int i = 0 ; i < items.size() ; i++)
         {
-            NBTTagCompound Item = (NBTTagCompound) Items.get(i);
+            NBTTagCompound Item = (NBTTagCompound) items.get(i);
 
             ItemStack itemStack = ItemStack.a(Item);
             setItem(Item.getByte("Slot"), itemStack);
@@ -233,10 +233,10 @@ public class MyPetCustomInventory implements IInventory
         Player player = MyPetUtil.getServer().getPlayer(who.getName());
         if (MyPetList.hasMyPet(player))
         {
-            if (Inventory.PetChestOpened.contains(player.getPlayer()))
+            if (Inventory.openChests.contains(player.getPlayer()))
             {
                 MyPetList.getMyPet(player).setSitting(false);
-                Inventory.PetChestOpened.remove(player.getPlayer());
+                Inventory.openChests.remove(player.getPlayer());
             }
         }
     }

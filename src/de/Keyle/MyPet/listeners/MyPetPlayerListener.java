@@ -41,12 +41,12 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.Item && MyPetList.hasMyPet(event.getPlayer()))
+        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.item && MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-            if (MPet.Status == PetState.Here && !MPet.isSitting())
+            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            if (myPet.status == PetState.Here && !myPet.isSitting())
             {
-                if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+                if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
                 {
                     Block block = event.getPlayer().getTargetBlock(null, 100);
                     if (block != null && block.getType() != Material.AIR)
@@ -59,8 +59,8 @@ public class MyPetPlayerListener implements Listener
                                 break;
                             }
                         }
-                        ((Control) MPet.getSkillSystem().getSkill("Control")).setMoveTo(block.getLocation());
-                        MPet.ResetSitTimer();
+                        ((Control) myPet.getSkillSystem().getSkill("Control")).setMoveTo(block.getLocation());
+                        myPet.resetSitTimer();
                     }
                 }
             }
@@ -70,16 +70,16 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onPlayerInteractEntity(final PlayerInteractEntityEvent event)
     {
-        if (event.isCancelled() || event.getPlayer().getItemInHand().getType() != MyPetConfig.LeashItem || !(event.getRightClicked() instanceof LivingEntity))
+        if (event.isCancelled() || event.getPlayer().getItemInHand().getType() != MyPetConfig.leashItem || !(event.getRightClicked() instanceof LivingEntity))
         {
             return;
         }
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-            if (event.getRightClicked() != MPet.getPet())
+            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            if (event.getRightClicked() != myPet.getPet())
             {
-                MPet.getPet().getHandle().Goaltarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
+                myPet.getPet().getHandle().goalTarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
             }
         }
     }
@@ -100,18 +100,18 @@ public class MyPetPlayerListener implements Listener
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
                 MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-                if (MPet.Status == PetState.Dead)
+                if (MPet.status == PetState.Dead)
                 {
-                    event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
+                    event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.petName).replace("%time%", "" + MPet.respawnTime)));
                 }
                 else if (MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) < 75 && MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
                 {
-                    MPet.ResetSitTimer();
+                    MPet.resetSitTimer();
                     MPet.createPet();
                 }
                 else
                 {
-                    MPet.Status = PetState.Despawned;
+                    MPet.status = PetState.Despawned;
                 }
             }
             MyPetUtil.getDebugLogger().info("-------------------------------------------------------------");
@@ -120,9 +120,9 @@ public class MyPetPlayerListener implements Listener
         {
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
+                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
 
-                MPet.removePet();
+                myPet.removePet();
                 MyPetList.setMyPetActive(event.getPlayer(), false);
             }
         }
@@ -133,8 +133,8 @@ public class MyPetPlayerListener implements Listener
     {
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-            MPet.removePet();
+            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            myPet.removePet();
             MyPetPlugin.getPlugin().savePets(false);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
         }
@@ -151,22 +151,22 @@ public class MyPetPlayerListener implements Listener
             }
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-                if (MPet.Status == PetState.Here)
+                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+                if (myPet.status == PetState.Here)
                 {
-                    MPet.ResetSitTimer();
-                    if (MPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) > 75)
+                    myPet.resetSitTimer();
+                    if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
                     {
-                        if (MPet.isSitting())
+                        if (myPet.isSitting())
                         {
-                            MPet.removePet();
+                            myPet.removePet();
                         }
                         else
                         {
-                            MPet.removePet();
-                            MPet.setLocation(event.getPlayer().getLocation());
-                            MPet.createPet();
-                            MPet.setSitting(false);
+                            myPet.removePet();
+                            myPet.setLocation(event.getPlayer().getLocation());
+                            myPet.createPet();
+                            myPet.setSitting(false);
                         }
                     }
                 }

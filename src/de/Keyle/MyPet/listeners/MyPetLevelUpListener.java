@@ -35,32 +35,32 @@ public class MyPetLevelUpListener implements Listener
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent eventMyPet)
     {
-        MyPet MPet = eventMyPet.getPet();
+        MyPet myPet = eventMyPet.getPet();
         if (!eventMyPet.isQuiet())
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", MPet.Name).replace("%lvl%", "" + eventMyPet.getLevel()));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + eventMyPet.getLevel()));
         }
         int lvl = eventMyPet.getLevel();
-        MyPetSkillTree st = MPet.getSkillTree();
-        if (st.hasLevel(lvl))
+        MyPetSkillTree skillTree = myPet.getSkillTree();
+        if (skillTree.hasLevel(lvl))
         {
-            List<MyPetSkillTreeSkill> skillList = st.getLevel(lvl).getSkills();
+            List<MyPetSkillTreeSkill> skillList = skillTree.getLevel(lvl).getSkills();
             for (MyPetSkillTreeSkill skill : skillList)
             {
-                if (MPet.getSkillSystem().hasSkill(skill.getName()))
+                if (myPet.getSkillSystem().hasSkill(skill.getName()))
                 {
                     if (eventMyPet.isQuiet())
                     {
-                        MPet.getSkillSystem().getSkill(skill.getName()).setLevel(MPet.getSkillSystem().getSkill(skill.getName()).getLevel() + 1);
+                        myPet.getSkillSystem().getSkill(skill.getName()).setLevel(myPet.getSkillSystem().getSkill(skill.getName()).getLevel() + 1);
                     }
                     else
                     {
-                        MPet.getSkillSystem().getSkill(skill.getName()).upgrade();
+                        myPet.getSkillSystem().getSkill(skill.getName()).upgrade();
                     }
                 }
             }
         }
 
-        MPet.setHealth(MPet.getMaxHealth());
+        myPet.setHealth(myPet.getMaxHealth());
     }
 }

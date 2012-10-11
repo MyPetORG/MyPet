@@ -36,28 +36,28 @@ public class CommandBehavior implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet MPet = MyPetList.getMyPet(owner);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (MPet.Status == PetState.Despawned)
+                if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MPet.getSkillSystem().hasSkill("Behavior"))
+                else if (myPet.getSkillSystem().hasSkill("Behavior"))
                 {
-                    Behavior Skill = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
+                    Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
                     if (args.length == 1)
                     {
                         if (args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Fri"))
                         {
-                            Skill.activateBehavior(Behavior.BehaviorState.Friendly);
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
                         }
                         else if (args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Agg"))
                         {
-                            Skill.activateBehavior(Behavior.BehaviorState.Aggressive);
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
                         }
                         /*
                         else if (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Rai"))
@@ -67,12 +67,12 @@ public class CommandBehavior implements CommandExecutor
                         */
                         else
                         {
-                            Skill.activateBehavior(Behavior.BehaviorState.Normal);
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
                         }
                     }
                     else
                     {
-                        Skill.activate();
+                        behaviorSkill.activate();
                     }
                 }
                 return true;

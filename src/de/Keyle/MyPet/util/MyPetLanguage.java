@@ -26,11 +26,11 @@ import java.util.Map;
 
 public class MyPetLanguage
 {
-    private final YamlConfiguration MPC;
+    private final YamlConfiguration yamlConfiguration;
 
-    public MyPetLanguage(YamlConfiguration MPC)
+    public MyPetLanguage(YamlConfiguration yamlConfiguration)
     {
-        this.MPC = MPC;
+        this.yamlConfiguration = yamlConfiguration;
     }
 
     private static final Map<String, String> LV = new HashMap<String, String>();
@@ -46,13 +46,13 @@ public class MyPetLanguage
 
     public void addString(String name, String node, String def)
     {
-        if (MPC.getConfig().contains(node))
+        if (yamlConfiguration.getConfig().contains(node))
         {
-            LV.put(name, MPC.getConfig().getString(node, def));
+            LV.put(name, yamlConfiguration.getConfig().getString(node, def));
         }
         else
         {
-            MPC.getConfig().set(node, def);
+            yamlConfiguration.getConfig().set(node, def);
             LV.put(name, def);
         }
     }
@@ -123,6 +123,6 @@ public class MyPetLanguage
         addString("PigZombie", "MyPet.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
         addString("Silverfish", "MyPet.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
-        MPC.saveConfig();
+        yamlConfiguration.saveConfig();
     }
 }

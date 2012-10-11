@@ -38,21 +38,21 @@ public class CommandPickup implements CommandExecutor
             Player owner = (Player) sender;
             if (MyPetList.hasMyPet(owner))
             {
-                MyPet MPet = MyPetList.getMyPet(owner);
+                MyPet myPet = MyPetList.getMyPet(owner);
 
-                if (MPet.Status == PetState.Despawned)
+                if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (MPet.Status == PetState.Dead)
+                else if (myPet.status == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;
                 }
-                if (MPet.getSkillSystem().hasSkill("Pickup"))
+                if (myPet.getSkillSystem().hasSkill("Pickup"))
                 {
-                    MPet.getSkillSystem().getSkill("Pickup").activate();
+                    myPet.getSkillSystem().getSkill("Pickup").activate();
                 }
                 return true;
             }

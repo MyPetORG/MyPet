@@ -59,13 +59,13 @@ public class CommandInfo implements CommandExecutor
                 {
                     msg = "" + ChatColor.RED + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
                 }
-                player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", MPet.Name).replace("%hp%", msg));
-                if (MyPetConfig.LevelSystem)
+                player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", MPet.petName).replace("%hp%", msg));
+                if (MyPetConfig.levelSystem)
                 {
                     int lvl = MPet.getExperience().getLevel();
-                    double EXP = MPet.getExperience().getCurrentExp();
+                    double exp = MPet.getExperience().getCurrentExp();
                     double reqEXP = MPet.getExperience().getRequiredExp();
-                    player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", MPet.Name).replace("%exp%", String.format("%1.2f", EXP)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", EXP * 100 / reqEXP)));
+                    player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", MPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
                 }
                 if (args != null && args.length > 0)
                 {

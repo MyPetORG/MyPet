@@ -30,17 +30,17 @@ public class MyPetPlayer
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
-    private String name;
+    private String playerName;
     private UUID entityUUID;
 
-    public MyPetPlayer(String name)
+    public MyPetPlayer(String playerName)
     {
-        this.name = name;
+        this.playerName = playerName;
     }
 
-    public MyPetPlayer(String name, UUID entityUUID)
+    public MyPetPlayer(String playerName, UUID entityUUID)
     {
-        this.name = name;
+        this.playerName = playerName;
         this.entityUUID = entityUUID;
     }
 
@@ -51,7 +51,7 @@ public class MyPetPlayer
 
     public String getName()
     {
-        return name;
+        return playerName;
     }
 
     public UUID getEntityUUID()
@@ -72,7 +72,7 @@ public class MyPetPlayer
         }
         else
         {
-            return MyPetUtil.getServer().getPlayer(name);
+            return MyPetUtil.getServer().getPlayer(playerName);
         }
     }
 
@@ -143,11 +143,11 @@ public class MyPetPlayer
         if (obj instanceof Player)
         {
             Player player = (Player) obj;
-            return (entityUUID == null || entityUUID.equals(player.getUniqueId())) && name.equals(player.getName());
+            return (entityUUID == null || entityUUID.equals(player.getUniqueId())) && playerName.equals(player.getName());
         }
         if (obj instanceof OfflinePlayer)
         {
-            return ((OfflinePlayer) obj).getName().equals(name);
+            return ((OfflinePlayer) obj).getName().equals(playerName);
         }
         if (obj instanceof MyPetPlayer)
         {
@@ -159,6 +159,6 @@ public class MyPetPlayer
     @Override
     public String toString()
     {
-        return "MyPetPlayer{name=" + name + ", UUID=" + (entityUUID != null ? entityUUID.toString() : "") + "}";
+        return "MyPetPlayer{name=" + playerName + ", UUID=" + (entityUUID != null ? entityUUID.toString() : "") + "}";
     }
 }

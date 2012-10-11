@@ -27,7 +27,7 @@ import org.bukkit.Material;
 
 public class Control extends MyPetGenericSkill
 {
-    public static Material Item = Material.STRING;
+    public static Material item = Material.STRING;
     private Location moveTo;
 
     public Control()
@@ -38,8 +38,8 @@ public class Control extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        Level = 1;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", MPet.Name).replace("%item%", Item.name()));
+        level = 1;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", item.name()));
     }
 
     public Location getLocation()

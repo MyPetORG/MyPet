@@ -28,21 +28,21 @@ import java.util.Collection;
 
 public class InactiveMyPet
 {
-    private String Name = "Wolf";
-    private final MyPetPlayer Owner;
-    private int Health;
-    private int RespawnTime;
+    private String petName = "Wolf";
+    private final MyPetPlayer petOwner;
+    private int health;
+    private int respawnTime;
     private boolean isSitting;
-    private Location Location;
-    private double Exp;
-    private MyPetType Type = MyPetType.Wolf;
+    private Location location;
+    private double exp;
+    private MyPetType petType = MyPetType.Wolf;
 
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
     private NBTTagCompound NBTextendetInfo;
 
-    public InactiveMyPet(MyPetPlayer Owner)
+    public InactiveMyPet(MyPetPlayer petOwner)
     {
-        this.Owner = Owner;
+        this.petOwner = petOwner;
     }
 
     public void setSkills(Collection<MyPetGenericSkill> skills)
@@ -60,9 +60,9 @@ public class InactiveMyPet
         }
     }
 
-    public void setSkills(NBTTagCompound Skills)
+    public void setSkills(NBTTagCompound skills)
     {
-        NBTSkills = Skills;
+        NBTSkills = skills;
     }
 
     public void setInfo(NBTTagCompound info)
@@ -80,64 +80,64 @@ public class InactiveMyPet
         return NBTSkills;
     }
 
-    public void setType(MyPetType type)
+    public void setPetType(MyPetType petType)
     {
-        Type = type;
+        this.petType = petType;
     }
 
-    public MyPetType getType()
+    public MyPetType getPetType()
     {
-        return Type;
+        return petType;
     }
 
-    public void setHealth(int Health)
+    public void setHealth(int health)
     {
-        this.Health = Health;
+        this.health = health;
     }
 
     public int getHealth()
     {
-        return Health;
+        return health;
     }
 
     public void setExp(double Exp)
     {
-        this.Exp = Exp;
+        this.exp = Exp;
     }
 
     public double getExp()
     {
-        return Exp;
+        return exp;
     }
 
-    public void setName(String Name)
+    public void setPetName(String petName)
     {
-        this.Name = Name;
+        this.petName = petName;
     }
 
-    public String getName()
+    public String getPetName()
     {
-        return Name;
+        return petName;
     }
 
-    public void setRespawnTime(int RespawnTime)
+    public void setRespawnTime(int respawnTime)
     {
-        this.RespawnTime = RespawnTime;
+        this.respawnTime = respawnTime;
     }
 
     public int getRespawnTime()
     {
-        return RespawnTime;
+        return respawnTime;
     }
 
     public Location getLocation()
     {
-        return Location;
+        return location;
     }
 
     public void setLocation(Location Location)
     {
-        this.Location = Location;
+        this.location = Location;
     }
 
     public boolean isSitting()
@@ -150,14 +150,14 @@ public class InactiveMyPet
         this.isSitting = isSitting;
     }
 
-    public MyPetPlayer getOwner()
+    public MyPetPlayer getPetOwner()
     {
-        return Owner;
+        return petOwner;
     }
 
     @Override
     public String toString()
     {
-        return "InactiveMyPet{type=" + getType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
+        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getPetOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
     }
 }

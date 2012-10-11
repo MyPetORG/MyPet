@@ -29,44 +29,44 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityMyPet
 {
-    public EntityMyWolf(World world, MyPet MPet)
+    public EntityMyWolf(World world, MyPet myPet)
     {
-        super(world, MPet);
+        super(world, myPet);
         this.texture = "/mob/wolf.png";
         this.a(0.6F, 0.8F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.3F, true));
-        this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, Control));
+        this.goalSelector.a(5, controlPathfinderGoal);
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, controlPathfinderGoal));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(MPet));
+        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinderGoal, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        if (MPet != null)
+        if (myPet != null)
         {
-            this.MPet = MPet;
+            this.myPet = myPet;
             isMyPet = true;
             if (!isTamed())
             {
                 this.setTamed(true);
                 this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
+                this.setSitting(myPet.isSitting());
+                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+                this.setOwnerName(myPet.getOwner().getName());
                 this.world.broadcastEntityEffect(this, (byte) 7); //Hearths effect
             }
         }
@@ -74,7 +74,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyWolf.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyWolf.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -87,21 +87,21 @@ public class EntityMyWolf extends EntityMyPet
     {
         super.c(entityhuman);
 
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemstack != null && this.b(itemstack))
+        if (itemStack != null && this.b(itemStack))
         {
-            ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
+            ItemFood itemfood = (ItemFood) Item.byId[itemStack.id];
 
             if (getHealth() < getMaxHealth())
             {
                 //don't remove item in creative gamemode
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
-                    --itemstack.count;
+                    --itemStack.count;
                 }
                 this.heal(itemfood.getNutrition(), RegainReason.EATING);
-                if (itemstack.count <= 0)
+                if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
@@ -125,7 +125,7 @@ public class EntityMyWolf extends EntityMyPet
      */
     public boolean k(Entity entity)
     {
-        int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 4 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }

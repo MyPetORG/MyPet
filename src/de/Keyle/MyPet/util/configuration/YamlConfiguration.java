@@ -26,39 +26,39 @@ import java.io.IOException;
 
 public class YamlConfiguration
 {
-    public File ConfigFile;
-    private FileConfiguration Config;
+    public File yamlFile;
+    private FileConfiguration config;
 
-    public YamlConfiguration(String Path)
+    public YamlConfiguration(String path)
     {
-        this(new File(Path));
+        this(new File(path));
     }
 
-    public YamlConfiguration(File f)
+    public YamlConfiguration(File file)
     {
-        ConfigFile = f;
-        Config = new org.bukkit.configuration.file.YamlConfiguration();
+        yamlFile = file;
+        config = new org.bukkit.configuration.file.YamlConfiguration();
         try
         {
-            Config.load(ConfigFile);
+            config.load(yamlFile);
         }
         catch (Exception ignored)
         {
         }
-        f.setWritable(true);
-        f.setReadable(true);
+        file.setWritable(true);
+        file.setReadable(true);
     }
 
     public FileConfiguration getConfig()
     {
-        return Config;
+        return config;
     }
 
     public boolean saveConfig()
     {
         try
         {
-            Config.save(ConfigFile);
+            config.save(yamlFile);
             return true;
         }
         catch (IOException e)
@@ -70,6 +70,6 @@ public class YamlConfiguration
 
     public void clearConfig()
     {
-        Config = new org.bukkit.configuration.file.YamlConfiguration();
+        config = new org.bukkit.configuration.file.YamlConfiguration();
     }
 }

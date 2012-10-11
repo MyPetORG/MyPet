@@ -28,7 +28,7 @@ public class MyPetSpoutEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet pet;
+    private final MyPet myPet;
     private MyPetSpoutEventReason eventReason = MyPetSpoutEventReason.Nothing;
 
     public enum MyPetSpoutEventReason
@@ -36,20 +36,20 @@ public class MyPetSpoutEvent extends Event
         Nothing, Name, Call, SendAway
     }
 
-    public MyPetSpoutEvent(MyPet pet, MyPetSpoutEventReason eventReason)
+    public MyPetSpoutEvent(MyPet myPet, MyPetSpoutEventReason eventReason)
     {
-        this.pet = pet;
+        this.myPet = myPet;
         this.eventReason = eventReason;
     }
 
     public Player getOwner()
     {
-        return pet.getOwner().getPlayer();
+        return myPet.getOwner().getPlayer();
     }
 
     public MyPet getPet()
     {
-        return pet;
+        return myPet;
     }
 
     public MyPetSpoutEventReason getEventReason()

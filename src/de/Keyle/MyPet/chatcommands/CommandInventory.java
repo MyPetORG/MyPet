@@ -43,25 +43,25 @@ public class CommandInventory implements CommandExecutor
             {
                 if (MyPetList.hasMyPet(player))
                 {
-                    MyPet MPet = MyPetList.getMyPet(player);
-                    if (MPet.Status == PetState.Despawned)
+                    MyPet myPet = MyPetList.getMyPet(player);
+                    if (myPet.status == PetState.Despawned)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                         return true;
                     }
-                    if (MPet.Status == PetState.Dead)
+                    if (myPet.status == PetState.Dead)
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                         return true;
                     }
                     if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin"))
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CreativeInventory")).replace("%petname%", MPet.Name));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CreativeInventory")).replace("%petname%", myPet.petName));
                         return true;
                     }
-                    if (MPet.getSkillSystem().hasSkill("Inventory"))
+                    if (myPet.getSkillSystem().hasSkill("Inventory"))
                     {
-                        MPet.getSkillSystem().getSkill("Inventory").activate();
+                        myPet.getSkillSystem().getSkill("Inventory").activate();
                     }
                 }
                 else

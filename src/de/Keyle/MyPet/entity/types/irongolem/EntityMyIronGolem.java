@@ -57,7 +57,7 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         if (MPet != null)
         {
-            this.MPet = MPet;
+            this.myPet = MPet;
             isMyPet = true;
             if (!isTamed())
             {
@@ -73,7 +73,7 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyIronGolem.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyIronGolem.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -117,7 +117,7 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public boolean k(Entity entity)
     {
-        int damage = 2 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         this.e = 10;
         this.world.broadcastEntityEffect(this, (byte) 4);

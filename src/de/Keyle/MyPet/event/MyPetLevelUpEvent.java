@@ -28,37 +28,37 @@ public class MyPetLevelUpEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet pet;
+    private final MyPet myPet;
     private final int Level;
-    private final boolean Quiet;
+    private final boolean beQuiet;
 
-    public MyPetLevelUpEvent(MyPet pet, int Level)
+    public MyPetLevelUpEvent(MyPet myPet, int Level)
     {
-        this.pet = pet;
+        this.myPet = myPet;
         this.Level = Level;
-        this.Quiet = false;
+        this.beQuiet = false;
     }
 
-    public MyPetLevelUpEvent(MyPet pet, int Level, boolean Quiet)
+    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet)
     {
-        this.pet = pet;
-        this.Level = Level;
-        this.Quiet = Quiet;
+        this.myPet = myPet;
+        this.Level = level;
+        this.beQuiet = beQuiet;
     }
 
     public Player getOwner()
     {
-        return pet.getOwner().getPlayer();
+        return myPet.getOwner().getPlayer();
     }
 
     public boolean isQuiet()
     {
-        return Quiet;
+        return beQuiet;
     }
 
     public MyPet getPet()
     {
-        return pet;
+        return myPet;
     }
 
     public int getLevel()

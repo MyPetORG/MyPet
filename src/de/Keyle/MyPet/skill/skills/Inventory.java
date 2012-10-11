@@ -37,7 +37,7 @@ import java.util.List;
 
 public class Inventory extends MyPetGenericSkill
 {
-    public static final List<Player> PetChestOpened = new ArrayList<Player>();
+    public static final List<Player> openChests = new ArrayList<Player>();
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
     public static boolean creative = true;
 
@@ -49,50 +49,50 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (MPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative && !MyPetPermissions.has(MPet.getOwner().getPlayer(), "MyPet.admin"))
+        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin"))
         {
-            MPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
+            myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
         }
-        else if (Level > 0)
+        else if (level > 0)
         {
-            if (MPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && MPet.getLocation().getBlock().getType() != Material.WATER)
+            if (myPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && myPet.getLocation().getBlock().getType() != Material.WATER)
             {
-                inv.setName(MPet.Name);
-                OpenInventory(MPet.getOwner().getPlayer());
-                if (!MPet.isSitting())
+                inv.setName(myPet.petName);
+                OpenInventory(myPet.getOwner().getPlayer());
+                if (!myPet.isSitting())
                 {
-                    PetChestOpened.add(MPet.getOwner().getPlayer());
+                    openChests.add(myPet.getOwner().getPlayer());
                 }
-                MPet.getPet().setSitting(true);
+                myPet.getPet().setSitting(true);
             }
             else
             {
-                MPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventorySwimming"));
+                myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventorySwimming"));
             }
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%petname%", MPet.Name));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%petname%", myPet.petName));
         }
     }
 
     @Override
     public void setLevel(int level)
     {
-        Level = level > 6 ? 6 : level;
-        inv.setSize(Level * 9);
+        this.level = level > 6 ? 6 : level;
+        inv.setSize(this.level * 9);
     }
 
     @Override
     public void upgrade()
     {
-        if (Level >= 6)
+        if (level >= 6)
         {
             return;
         }
-        Level++;
-        inv.setSize(Level * 9);
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", MPet.Name).replace("%size%", "" + inv.getSize()));
+        level++;
+        inv.setSize(level * 9);
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
     }
 
     public void OpenInventory(Player p)
@@ -110,15 +110,15 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        this.MPet = MPet;
-        inv.setName(MPet.Name);
+        this.myPet = myPet;
+        inv.setName(myPet.petName);
     }
 }

@@ -38,10 +38,10 @@ public class MyPetVehicleListener implements Listener
             Player player = (Player) event.getEntered();
             if (MyPetList.hasMyPet(player))
             {
-                MyPet MPet = MyPetList.getMyPet(player);
-                if (MPet.Status == PetState.Here && !MPet.isSitting())
+                MyPet myPet = MyPetList.getMyPet(player);
+                if (myPet.status == PetState.Here && !myPet.isSitting())
                 {
-                    MPet.setSitting(true);
+                    myPet.setSitting(true);
                 }
             }
         }

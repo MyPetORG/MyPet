@@ -31,13 +31,13 @@ public class MyPetWorldListener implements Listener
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event)
     {
-        for (Entity e : event.getChunk().getEntities())
+        for (Entity entity : event.getChunk().getEntities())
         {
-            if (e instanceof CraftMyPet)
+            if (entity instanceof CraftMyPet)
             {
-                if (MyPetList.isMyPet(e.getEntityId()))
+                if (MyPetList.isMyPet(entity.getEntityId()))
                 {
-                    MyPetList.getMyPet(e.getEntityId()).removePet();
+                    MyPetList.getMyPet(entity.getEntityId()).removePet();
                 }
             }
         }

@@ -30,17 +30,17 @@ import org.bukkit.Location;
 
 public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
-    private MyPet MPet;
+    private MyPet myPet;
     private float speed;
     Location moveTo = null;
-    private int TimeToMove = 0;
+    private int timeToMove = 0;
     private Navigation nav;
 
-    public PathfinderGoalControl(MyPet MPet, float f)
+    public PathfinderGoalControl(MyPet myPet, float f)
     {
-        this.MPet = MPet;
+        this.myPet = myPet;
         speed = f;
-        nav = this.MPet.getPet().getHandle().getNavigation();
+        nav = this.myPet.getPet().getHandle().getNavigation();
     }
 
     /**
@@ -49,13 +49,13 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     public boolean a()
     {
         MyPetUtil.getLogger().info("a");
-        if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+        if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
         {
-            Control control = (Control) MPet.getSkillSystem().getSkill("Control");
-            if (control.getLocation(false) != null)
+            Control controlSkill = (Control) myPet.getSkillSystem().getSkill("Control");
+            if (controlSkill.getLocation(false) != null)
             {
-                moveTo = control.getLocation();
-                TimeToMove = (int) MyPetUtil.getDistance2D(MPet.getLocation(), moveTo) / 3;
+                moveTo = controlSkill.getLocation();
+                timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
             }
         }
         return moveTo != null;
@@ -84,17 +84,17 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     public boolean b()
     {
         MyPetUtil.getLogger().info("b");
-        Control control = (Control) MPet.getSkillSystem().getSkill("Control");
+        Control control = (Control) myPet.getSkillSystem().getSkill("Control");
         if (control.getLocation(false) != null)
         {
             moveTo = control.getLocation();
-            TimeToMove = (int) MyPetUtil.getDistance2D(MPet.getLocation(), moveTo) / 3;
+            timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
             {
                 moveTo = null;
             }
         }
-        return moveTo != null && !this.MPet.isSitting();
+        return moveTo != null && !this.myPet.isSitting();
     }
 
     /**
@@ -109,8 +109,8 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 
     public void schedule()
     {
-        TimeToMove--;
-        if (TimeToMove <= 0)
+        timeToMove--;
+        if (timeToMove <= 0)
         {
             moveTo = null;
         }

@@ -27,8 +27,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 public class HPregeneration extends MyPetGenericSkill
 {
-    public static int HealtregenTime = 60;
-    private int timeCounter = HealtregenTime - Level;
+    public static int healtregenTime = 60;
+    private int timeCounter = healtregenTime - level;
 
     public HPregeneration()
     {
@@ -38,19 +38,19 @@ public class HPregeneration extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        Level++;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", MPet.Name).replace("%sec%", "" + (HealtregenTime - Level)));
+        level++;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (healtregenTime - level)));
     }
 
     public void schedule()
     {
-        if (Level > 0 && MPet.Status == PetState.Here)
+        if (level > 0 && myPet.status == PetState.Here)
         {
             timeCounter--;
             if (timeCounter <= 0)
             {
-                MPet.getPet().getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
-                timeCounter = HealtregenTime - Level;
+                myPet.getPet().getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
+                timeCounter = healtregenTime - level;
             }
         }
     }

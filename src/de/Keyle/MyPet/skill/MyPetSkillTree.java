@@ -26,18 +26,18 @@ import java.util.TreeMap;
 
 public class MyPetSkillTree
 {
-    private String Name;
+    private String skillTreeName;
 
     private SortedMap<Integer, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Integer, MyPetSkillTreeLevel>();
 
     public MyPetSkillTree(String Name)
     {
-        this.Name = Name;
+        this.skillTreeName = Name;
     }
 
     public String getName()
     {
-        return Name;
+        return skillTreeName;
     }
 
     public boolean hasLevel(int level)
@@ -70,19 +70,10 @@ public class MyPetSkillTree
         addLevel(level).addSkill(skill);
     }
 
-    public void addSkillToLevel(int level, List<MyPetSkillTreeSkill> skills)
+    public void addSkillToLevel(int level, List<MyPetSkillTreeSkill> skillList)
     {
         MyPetSkillTreeLevel myPetSkillTreeLevel = addLevel(level);
-        for (MyPetSkillTreeSkill skill : skills)
-        {
-            myPetSkillTreeLevel.addSkill(skill);
-        }
-    }
-
-    public void addSkillToLevel(int level, MyPetSkillTreeSkill[] skills)
-    {
-        MyPetSkillTreeLevel myPetSkillTreeLevel = addLevel(level);
-        for (MyPetSkillTreeSkill skill : skills)
+        for (MyPetSkillTreeSkill skill : skillList)
         {
             myPetSkillTreeLevel.addSkill(skill);
         }

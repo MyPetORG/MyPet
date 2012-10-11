@@ -27,7 +27,7 @@ import java.util.List;
 
 public class MyPetTimer
 {
-    private int Timer = -1;
+    private int timer = -1;
 
     private static boolean resetTimer = false;
 
@@ -35,10 +35,10 @@ public class MyPetTimer
 
     public void stopTimer()
     {
-        if (Timer != -1)
+        if (timer != -1)
         {
-            MyPetPlugin.getPlugin().getServer().getScheduler().cancelTask(Timer);
-            Timer = -1;
+            MyPetPlugin.getPlugin().getServer().getScheduler().cancelTask(timer);
+            timer = -1;
         }
     }
 
@@ -46,9 +46,9 @@ public class MyPetTimer
     {
         stopTimer();
 
-        Timer = MyPetPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
+        timer = MyPetPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
         {
-            int AutoSaveTimer = MyPetConfig.AutoSaveTime;
+            int autoSaveTimer = MyPetConfig.autoSaveTime;
 
             public void run()
             {
@@ -60,15 +60,15 @@ public class MyPetTimer
                 {
                     Task.schedule();
                 }
-                if (resetTimer && MyPetConfig.AutoSaveTime > 0)
+                if (resetTimer && MyPetConfig.autoSaveTime > 0)
                 {
-                    AutoSaveTimer = MyPetConfig.AutoSaveTime;
+                    autoSaveTimer = MyPetConfig.autoSaveTime;
                     resetTimer = false;
                 }
-                if (MyPetConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
+                if (MyPetConfig.autoSaveTime > 0 && autoSaveTimer-- < 0)
                 {
                     MyPetPlugin.getPlugin().savePets(false);
-                    AutoSaveTimer = MyPetConfig.AutoSaveTime;
+                    autoSaveTimer = MyPetConfig.autoSaveTime;
                 }
             }
         }, 0L, 20L);

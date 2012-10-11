@@ -35,10 +35,10 @@ public class CommandName implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                if (!MyPetPermissions.has(owner, "MyPet.user.setname"))
+                if (!MyPetPermissions.has(petOwner, "MyPet.user.setname"))
                 {
                     return true;
                 }
@@ -52,8 +52,8 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyPet MPet = MyPetList.getMyPet(owner);
-                MPet.setName(name);
+                MyPet MPet = MyPetList.getMyPet(petOwner);
+                MPet.setPetName(name);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
                 return true;
             }

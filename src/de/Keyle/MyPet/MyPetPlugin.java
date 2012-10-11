@@ -86,7 +86,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         getTimer().stopTimer();
         MyPetList.clearList();
-        Inventory.PetChestOpened.clear();
+        Inventory.openChests.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
         debugLogger.info("MyPet disabled!");
         MyPetUtil.getLogger().info("Disabled");
@@ -109,19 +109,19 @@ public class MyPetPlugin extends JavaPlugin
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
         }
 
-        MyPetConfig.Config = this.getConfig();
+        MyPetConfig.config = this.getConfig();
         MyPetConfig.setDefault();
         MyPetConfig.loadConfiguration();
 
-        debugLogger = new DebugLogger(MyPetConfig.DebugLogger);
+        debugLogger = new DebugLogger(MyPetConfig.debugLogger);
         debugLogger.info("----------- loading MyPet ... -----------");
         debugLogger.info("MyPet " + getDescription().getVersion());
         debugLogger.info("Bukkit " + getServer().getVersion());
 
         MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
-        for (EntityType ET : MyPetExperience.MobEXP.keySet())
+        for (EntityType ET : MyPetExperience.mobExp.keySet())
         {
-            debugLogger.info("   " + MyPetExperience.MobEXP.get(ET).toString());
+            debugLogger.info("   " + MyPetExperience.mobExp.get(ET).toString());
         }
         MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
 
@@ -260,7 +260,7 @@ public class MyPetPlugin extends JavaPlugin
         language.load();
 
 
-        if (MyPetConfig.LevelSystem)
+        if (MyPetConfig.levelSystem)
         {
             if (MyPetJSexp.setScriptPath(MyPetPlugin.plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
@@ -342,19 +342,19 @@ public class MyPetPlugin extends JavaPlugin
                 {
                     MyPetList.setMyPetActive(p, true);
 
-                    MyPet MPet = MyPetList.getMyPet(p);
-                    if (MPet.Status == PetState.Dead)
+                    MyPet myPet = MyPetList.getMyPet(p);
+                    if (myPet.status == PetState.Dead)
                     {
-                        p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime)));
+                        p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                     }
-                    else if (MyPetUtil.getDistance2D(MPet.getLocation(), p.getLocation()) < 75)
+                    else if (MyPetUtil.getDistance2D(myPet.getLocation(), p.getLocation()) < 75)
                     {
-                        MPet.ResetSitTimer();
-                        MPet.createPet();
+                        myPet.resetSitTimer();
+                        myPet.createPet();
                     }
                     else
                     {
-                        MPet.Status = PetState.Despawned;
+                        myPet.status = PetState.Despawned;
                     }
                 }
             }
@@ -368,43 +368,43 @@ public class MyPetPlugin extends JavaPlugin
 
         NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
         nbtConfiguration.load();
-        NBTTagList Wolves = nbtConfiguration.getNBTTagCompound().getList("Pets");
+        NBTTagList petList = nbtConfiguration.getNBTTagCompound().getList("Pets");
         debugLogger.info("loading Pets: -----------------------------");
-        for (int i = 0 ; i < Wolves.size() ; i++)
+        for (int i = 0 ; i < petList.size() ; i++)
         {
-            NBTTagCompound myPetNBT = (NBTTagCompound) Wolves.get(i);
+            NBTTagCompound myPetNBT = (NBTTagCompound) petList.get(i);
             NBTTagCompound locationNBT = myPetNBT.getCompound("Location");
 
-            double PetX = locationNBT.getDouble("X");
-            double PetY = locationNBT.getDouble("Y");
-            double PetZ = locationNBT.getDouble("Z");
-            String PetWorld = locationNBT.getString("World");
-            double PetExp = myPetNBT.getDouble("Exp");
-            int PetHealthNow = myPetNBT.getInt("Health");
-            int PetRespawnTime = myPetNBT.getInt("Respawntime");
-            String PetName = myPetNBT.getString("Name");
-            String Owner = myPetNBT.getString("Owner");
-            String PetType;
+            double petX = locationNBT.getDouble("X");
+            double petY = locationNBT.getDouble("Y");
+            double petZ = locationNBT.getDouble("Z");
+            String petWorld = locationNBT.getString("World");
+            double petExp = myPetNBT.getDouble("Exp");
+            int petHealthNow = myPetNBT.getInt("Health");
+            int petRespawnTime = myPetNBT.getInt("Respawntime");
+            String petName = myPetNBT.getString("petName");
+            String petOwner = myPetNBT.getString("Owner");
+            String petType;
             if (myPetNBT.hasKey("Type"))
             {
-                PetType = myPetNBT.getString("Type");
+                petType = myPetNBT.getString("Type");
             }
             else
             {
-                PetType = "Wolf";
+                petType = "Wolf";
             }
-            boolean PetSitting = myPetNBT.getBoolean("Sitting");
+            boolean petSitting = myPetNBT.getBoolean("Sitting");
 
-            InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(Owner));
+            InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
-            IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(PetWorld) != null ? MyPetUtil.getServer().getWorld(PetWorld) : MyPetUtil.getServer().getWorlds().get(0), PetX, PetY, PetZ));
-            IMPet.setHealth(PetHealthNow);
-            IMPet.setRespawnTime(PetRespawnTime);
-            IMPet.setName(PetName);
-            IMPet.setSitting(PetSitting);
-            IMPet.setExp(PetExp);
+            IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ));
+            IMPet.setHealth(petHealthNow);
+            IMPet.setRespawnTime(petRespawnTime);
+            IMPet.setPetName(petName);
+            IMPet.setSitting(petSitting);
+            IMPet.setExp(petExp);
             IMPet.setSkills(myPetNBT.getCompound("Skills"));
-            IMPet.setType(MyPetType.valueOf(PetType));
+            IMPet.setPetType(MyPetType.valueOf(petType));
             IMPet.setInfo(myPetNBT.getCompound("Info"));
 
             MyPetList.addInactiveMyPet(IMPet);
@@ -424,31 +424,31 @@ public class MyPetPlugin extends JavaPlugin
         NBTConfiguration nbtConfiguration = new NBTConfiguration(NBTPetFile);
         NBTTagList petNBTlist = new NBTTagList();
 
-        for (MyPet MPet : MyPetList.getMyPetList())
+        for (MyPet myPet : MyPetList.getMyPetList())
         {
             NBTTagCompound petNBT = new NBTTagCompound();
             NBTTagCompound locationNBT = new NBTTagCompound("Location");
 
-            locationNBT.setDouble("X", MPet.getLocation().getX());
-            locationNBT.setDouble("Y", MPet.getLocation().getY());
-            locationNBT.setDouble("Z", MPet.getLocation().getZ());
-            locationNBT.setString("World", MPet.getLocation().getWorld().getName());
+            locationNBT.setDouble("X", myPet.getLocation().getX());
+            locationNBT.setDouble("Y", myPet.getLocation().getY());
+            locationNBT.setDouble("Z", myPet.getLocation().getZ());
+            locationNBT.setString("World", myPet.getLocation().getWorld().getName());
 
-            petNBT.setString("Type", MPet.getPetType().getTypeName());
-            petNBT.setString("Owner", MPet.getOwner().getName());
+            petNBT.setString("Type", myPet.getPetType().getTypeName());
+            petNBT.setString("Owner", myPet.getOwner().getName());
             petNBT.setCompound("Location", locationNBT);
-            petNBT.setInt("Health", MPet.getHealth());
-            petNBT.setInt("Respawntime", MPet.RespawnTime);
-            petNBT.setString("Name", MPet.Name);
-            petNBT.setBoolean("Sitting", MPet.isSitting());
-            petNBT.setDouble("Exp", MPet.getExperience().getExp());
-            petNBT.setCompound("Info", MPet.getExtendedInfo());
+            petNBT.setInt("Health", myPet.getHealth());
+            petNBT.setInt("Respawntime", myPet.respawnTime);
+            petNBT.setString("petName", myPet.petName);
+            petNBT.setBoolean("Sitting", myPet.isSitting());
+            petNBT.setDouble("Exp", myPet.getExperience().getExp());
+            petNBT.setCompound("Info", myPet.getExtendedInfo());
 
             NBTTagCompound skillsNBT = new NBTTagCompound("Skills");
-            Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
-            if (skills.size() > 0)
+            Collection<MyPetGenericSkill> skillList = myPet.getSkillSystem().getSkills();
+            if (skillList.size() > 0)
             {
-                for (MyPetGenericSkill skill : skills)
+                for (MyPetGenericSkill skill : skillList)
                 {
                     NBTTagCompound s = skill.save();
                     if (s != null)
@@ -461,26 +461,26 @@ public class MyPetPlugin extends JavaPlugin
             petNBTlist.add(petNBT);
             petCount++;
         }
-        for (InactiveMyPet IMPet : MyPetList.getInactiveMyPetList())
+        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPetList())
         {
             NBTTagCompound petNBT = new NBTTagCompound();
             NBTTagCompound locationNBT = new NBTTagCompound("Location");
 
-            locationNBT.setDouble("X", IMPet.getLocation().getX());
-            locationNBT.setDouble("Y", IMPet.getLocation().getY());
-            locationNBT.setDouble("Z", IMPet.getLocation().getZ());
-            locationNBT.setString("World", IMPet.getLocation().getWorld().getName());
+            locationNBT.setDouble("X", inactiveMyPet.getLocation().getX());
+            locationNBT.setDouble("Y", inactiveMyPet.getLocation().getY());
+            locationNBT.setDouble("Z", inactiveMyPet.getLocation().getZ());
+            locationNBT.setString("World", inactiveMyPet.getLocation().getWorld().getName());
 
-            petNBT.setString("Type", IMPet.getType().getTypeName());
-            petNBT.setString("Owner", IMPet.getOwner().getName());
+            petNBT.setString("Type", inactiveMyPet.getPetType().getTypeName());
+            petNBT.setString("Owner", inactiveMyPet.getPetOwner().getName());
             petNBT.setCompound("Location", locationNBT);
-            petNBT.setInt("Health", IMPet.getHealth());
-            petNBT.setInt("Respawntime", IMPet.getRespawnTime());
-            petNBT.setString("Name", IMPet.getName());
-            petNBT.setBoolean("Sitting", IMPet.isSitting());
-            petNBT.setDouble("Exp", IMPet.getExp());
+            petNBT.setInt("Health", inactiveMyPet.getHealth());
+            petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
+            petNBT.setString("petName", inactiveMyPet.getPetName());
+            petNBT.setBoolean("Sitting", inactiveMyPet.isSitting());
+            petNBT.setDouble("Exp", inactiveMyPet.getExp());
 
-            petNBT.set("Skills", IMPet.getSkills());
+            petNBT.set("Skills", inactiveMyPet.getSkills());
             petNBTlist.add(petNBT);
             petCount++;
         }

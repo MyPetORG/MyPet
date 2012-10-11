@@ -54,26 +54,26 @@ public class EntityMyCaveSpider extends EntityMyPet
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        if (MPet != null)
+        if (myPet != null)
         {
-            this.MPet = MPet;
+            this.myPet = myPet;
             isMyPet = true;
             if (!isTamed())
             {
                 this.setTamed(true);
                 this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
+                this.setSitting(myPet.isSitting());
+                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+                this.setOwnerName(myPet.getOwner().getName());
             }
         }
     }
 
     public int getMaxHealth()
     {
-        return MyCaveSpider.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyCaveSpider.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -86,18 +86,18 @@ public class EntityMyCaveSpider extends EntityMyPet
     {
         super.c(entityhuman);
 
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemstack != null && itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId())
+        if (itemStack != null && itemStack.id == org.bukkit.Material.ROTTEN_FLESH.getId())
         {
             if (getHealth() < getMaxHealth())
             {
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
-                    --itemstack.count;
+                    --itemStack.count;
                 }
                 this.heal(3, RegainReason.EATING);
-                if (itemstack.count <= 0)
+                if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
@@ -117,7 +117,7 @@ public class EntityMyCaveSpider extends EntityMyPet
 
     public boolean k(Entity entity)
     {
-        int damage = 2 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }

@@ -31,19 +31,19 @@ import org.bukkit.entity.Player;
 
 public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 {
-    private MyPet MPet;
-    private EntityMyPet pet;
+    private MyPet myPet;
+    private EntityMyPet petEntity;
     private EntityLiving target;
     private float range;
-    private PathfinderGoalControl control;
+    private PathfinderGoalControl controlPathfinderGoal;
 
-    public PathfinderGoalControlTarget(MyPet MPet, PathfinderGoalControl control, float range)
+    public PathfinderGoalControlTarget(MyPet myPet, PathfinderGoalControl controlPathfinderGoal, float range)
     {
-        super(MPet.getPet().getHandle(), 32.0F, false);
-        this.pet = MPet.getPet().getHandle();
-        this.MPet = MPet;
+        super(myPet.getPet().getHandle(), 32.0F, false);
+        this.petEntity = myPet.getPet().getHandle();
+        this.myPet = myPet;
         this.range = range;
-        this.control = control;
+        this.controlPathfinderGoal = controlPathfinderGoal;
     }
 
     /**
@@ -51,54 +51,54 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
      */
     public boolean a()
     {
-        if (control.moveTo != null && !pet.isSitting())
+        if (controlPathfinderGoal.moveTo != null && !petEntity.isSitting())
         {
-            if (MPet.getSkillSystem().hasSkill("Behavior"))
+            if (myPet.getSkillSystem().hasSkill("Behavior"))
             {
-                Behavior behavior = (Behavior) MPet.getSkillSystem().getSkill("Behavior");
-                if (behavior.getLevel() > 0)
+                Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                if (behaviorSkill.getLevel() > 0)
                 {
-                    if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
+                    if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                     {
                         return false;
                     }
                 }
             }
 
-            for (Object aList : this.pet.world.a(EntityLiving.class, this.pet.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
+            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
             {
-                Entity entity = (Entity) aList;
-                EntityLiving entityliving = (EntityLiving) entity;
+                Entity entity = (Entity) entityObj;
+                EntityLiving entityLiving = (EntityLiving) entity;
 
-                if (pet.at().canSee(entityliving) && entityliving != pet)
+                if (petEntity.at().canSee(entityLiving) && entityLiving != petEntity)
                 {
-                    if (entityliving instanceof EntityPlayer)
+                    if (entityLiving instanceof EntityPlayer)
                     {
-                        String playerName = ((EntityPlayer) entityliving).name;
+                        String playerName = ((EntityPlayer) entityLiving).name;
                         if (!MyPetUtil.getOfflinePlayer(playerName).isOnline())
                         {
                             continue;
                         }
-                        Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
+                        Player targetPlayer = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
 
-                        if (MPet.getOwner().equals(target))
+                        if (myPet.getOwner().equals(targetPlayer))
                         {
                             continue;
                         }
-                        if (!MyPetUtil.canHurtFactions(MPet.getOwner().getPlayer(), target))
+                        if (!MyPetUtil.canHurtFactions(myPet.getOwner().getPlayer(), targetPlayer))
                         {
                             continue;
                         }
-                        if (!MyPetUtil.canHurtTowny(MPet.getOwner().getPlayer(), target))
+                        if (!MyPetUtil.canHurtTowny(myPet.getOwner().getPlayer(), targetPlayer))
                         {
                             continue;
                         }
-                        if (!MyPetUtil.canHurtWorldGuard(target))
+                        if (!MyPetUtil.canHurtWorldGuard(targetPlayer))
                         {
                             continue;
                         }
                     }
-                    this.target = entityliving;
+                    this.target = entityLiving;
                     return true;
                 }
             }
@@ -108,7 +108,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
     public void e()
     {
-        pet.b(this.target);
+        petEntity.b(this.target);
         super.e();
     }
 }

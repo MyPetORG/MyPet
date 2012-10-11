@@ -31,10 +31,10 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     protected boolean g;
     protected float j;
     protected float i;
-    public EntityLiving Goaltarget = null;
+    public EntityLiving goalTarget = null;
 
     protected boolean isMyPet = false;
-    protected MyPet MPet;
+    protected MyPet myPet;
 
     // This Constructor should be never called!!!
     public EntityMyPet(World world)
@@ -43,11 +43,11 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         MyPetUtil.getLogger().severe("Don't try to get a MyPet this way!");
     }
 
-    public EntityMyPet(World world, MyPet MPet)
+    public EntityMyPet(World world, MyPet myPet)
     {
         super(world);
-        setMyPet(MPet);
-        MPet.Pet = (CraftMyPet) this.getBukkitEntity();
+        setMyPet(myPet);
+        myPet.craftPet = (CraftMyPet) this.getBukkitEntity();
     }
 
     public boolean isMyPet()
@@ -67,13 +67,13 @@ public abstract class EntityMyPet extends EntityTameableAnimal
      */
     public boolean c(EntityHuman entityhuman)
     {
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
         {
-            if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+            if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
             {
-                if (itemstack.id == Control.Item.getId())
+                if (itemStack.id == Control.item.getId())
                 {
                     return true;
                 }
@@ -87,7 +87,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
      */
     public boolean k(Entity entity)
     {
-        int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 4 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
@@ -116,7 +116,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     public MyPet getMyPet()
     {
-        return MPet;
+        return myPet;
     }
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------

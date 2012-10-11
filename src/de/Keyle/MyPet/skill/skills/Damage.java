@@ -33,7 +33,7 @@ public class Damage extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        Level++;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%petname%", MPet.Name).replace("%dmg%", "" + Level));
+        level++;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + level));
     }
 }

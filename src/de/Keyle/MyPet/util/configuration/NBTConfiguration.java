@@ -29,14 +29,14 @@ public class NBTConfiguration
     private File NBTFile;
     private NBTTagCompound nbtTagCompound = new NBTTagCompound();
 
-    public NBTConfiguration(String Path)
+    public NBTConfiguration(String path)
     {
-        this(new File(Path));
+        this(new File(path));
     }
 
-    public NBTConfiguration(File f)
+    public NBTConfiguration(File file)
     {
-        NBTFile = f;
+        NBTFile = file;
         if (!NBTFile.exists())
         {
             try
@@ -48,8 +48,8 @@ public class NBTConfiguration
                 e.printStackTrace();
             }
         }
-        f.setWritable(true);
-        f.setReadable(true);
+        file.setWritable(true);
+        file.setReadable(true);
     }
 
     public NBTTagCompound getNBTTagCompound()
@@ -61,9 +61,9 @@ public class NBTConfiguration
     {
         try
         {
-            DataOutputStream F_Out = new DataOutputStream(new FileOutputStream(NBTFile));
-            NBTBase.a(nbtTagCompound, F_Out);
-            F_Out.close();
+            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(NBTFile));
+            NBTBase.a(nbtTagCompound, outputStream);
+            outputStream.close();
             return true;
         }
         catch (IOException e)
@@ -77,18 +77,18 @@ public class NBTConfiguration
     {
         try
         {
-            FileInputStream fi = new FileInputStream(NBTFile);
-            fi.read();
+            FileInputStream inputStream = new FileInputStream(NBTFile);
+            inputStream.read();
 
-            if (fi.read() != -1)
+            if (inputStream.read() != -1)
             {
-                fi.close();
-                fi = new FileInputStream(NBTFile);
-                DataInputStream F_In = new DataInputStream(fi);
+                inputStream.close();
+                inputStream = new FileInputStream(NBTFile);
+                DataInputStream F_In = new DataInputStream(inputStream);
                 nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
                 F_In.close();
             }
-            fi.close();
+            inputStream.close();
         }
         catch (IOException e)
         {

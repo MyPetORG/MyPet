@@ -38,60 +38,60 @@ public class MyPetList
 
     // Active -------------------------------------------------------------------
 
-    public static MyPet getMyPet(InactiveMyPet IMPet)
+    public static MyPet getMyPet(InactiveMyPet inactiveMyPet)
     {
-        if (IMPet.getOwner().isOnline())
+        if (inactiveMyPet.getPetOwner().isOnline())
         {
-            MyPet AMPet = IMPet.getType().getNewMyPetInstance(IMPet.getOwner());
-            AMPet.setHealth(IMPet.getHealth());
-            AMPet.setLocation(IMPet.getLocation());
-            AMPet.Name = IMPet.getName();
-            AMPet.RespawnTime = IMPet.getRespawnTime();
-            AMPet.setExtendedInfo(IMPet.getInfo());
+            MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getPetOwner());
+            activeMyPet.setHealth(inactiveMyPet.getHealth());
+            activeMyPet.setLocation(inactiveMyPet.getLocation());
+            activeMyPet.petName = inactiveMyPet.getPetName();
+            activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
+            activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
 
-            if (AMPet.RespawnTime > 0)
+            if (activeMyPet.respawnTime > 0)
             {
-                AMPet.Status = PetState.Dead;
+                activeMyPet.status = PetState.Dead;
             }
             else
             {
-                AMPet.Status = PetState.Despawned;
+                activeMyPet.status = PetState.Despawned;
             }
 
-            AMPet.getExperience().setExp(IMPet.getExp());
-            Collection<MyPetGenericSkill> skills = AMPet.getSkillSystem().getSkills();
+            activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
+            Collection<MyPetGenericSkill> skills = activeMyPet.getSkillSystem().getSkills();
             if (skills.size() > 0)
             {
                 for (MyPetGenericSkill skill : skills)
                 {
-                    if (IMPet.getSkills().hasKey(skill.getName()))
+                    if (inactiveMyPet.getSkills().hasKey(skill.getName()))
                     {
-                        skill.load(IMPet.getSkills().getCompound(skill.getName()));
+                        skill.load(inactiveMyPet.getSkills().getCompound(skill.getName()));
                     }
                 }
             }
-            return AMPet;
+            return activeMyPet;
         }
         return null;
     }
 
-    public static void addMyPet(MyPet MP)
+    public static void addMyPet(MyPet myPet)
     {
-        mActivePets.put(MP.getOwner(), MP);
-        lActivePets.add(MP);
+        mActivePets.put(myPet.getOwner(), myPet);
+        lActivePets.add(myPet);
     }
 
-    public static void removeMyPet(MyPet MP)
+    public static void removeMyPet(MyPet myPet)
     {
-        lActivePets.remove(MP);
-        mActivePets.remove(MP.getOwner());
+        lActivePets.remove(myPet);
+        mActivePets.remove(myPet.getOwner());
     }
 
-    public static MyPet getMyPet(int EntityID)
+    public static MyPet getMyPet(int entityID)
     {
         for (MyPet pet : lActivePets)
         {
-            if (pet.Status == PetState.Here && pet.getPet().getEntityId() == EntityID)
+            if (pet.status == PetState.Here && pet.getPet().getEntityId() == entityID)
             {
                 return pet;
             }
@@ -147,9 +147,9 @@ public class MyPetList
         return MyPetPlayer.isMyPetPlayer(name) && mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
-    public static boolean isMyPet(int EnityID)
+    public static boolean isMyPet(int enityID)
     {
-        return getMyPet(EnityID) != null;
+        return getMyPet(enityID) != null;
     }
 
     // Inactive -----------------------------------------------------------------
@@ -181,19 +181,19 @@ public class MyPetList
         return MyPetPlayer.isMyPetPlayer(name) && mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
-    public static InactiveMyPet getInactiveMyPet(MyPet AMPet)
+    public static InactiveMyPet getInactiveMyPet(MyPet activeMyPet)
     {
-        InactiveMyPet IAMPet = new InactiveMyPet(AMPet.getOwner());
-        IAMPet.setName(AMPet.Name);
-        IAMPet.setExp(AMPet.getExperience().getExp());
-        IAMPet.setHealth(AMPet.getHealth());
-        IAMPet.setLocation(AMPet.getLocation());
-        IAMPet.setRespawnTime(AMPet.RespawnTime);
-        IAMPet.setSitting(IAMPet.isSitting());
-        IAMPet.setSkills(AMPet.getSkillSystem().getSkills());
-        IAMPet.setInfo(AMPet.getExtendedInfo());
+        InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
+        inactiveMyPet.setPetName(activeMyPet.petName);
+        inactiveMyPet.setExp(activeMyPet.getExperience().getExp());
+        inactiveMyPet.setHealth(activeMyPet.getHealth());
+        inactiveMyPet.setLocation(activeMyPet.getLocation());
+        inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
+        inactiveMyPet.setSitting(inactiveMyPet.isSitting());
+        inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());
+        inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
 
-        return IAMPet;
+        return inactiveMyPet;
     }
 
     public static InactiveMyPet getInactiveMyPet(Player owner)
@@ -217,16 +217,16 @@ public class MyPetList
         return null;
     }
 
-    public static void removeInactiveMyPet(InactiveMyPet IMPet)
+    public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
-        mInctivePets.remove(IMPet.getOwner());
-        lInactivePets.remove(IMPet);
+        mInctivePets.remove(inactiveMyPet.getPetOwner());
+        lInactivePets.remove(inactiveMyPet);
     }
 
-    public static void addInactiveMyPet(InactiveMyPet IMPet)
+    public static void addInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
-        mInctivePets.put(IMPet.getOwner(), IMPet);
-        lInactivePets.add(IMPet);
+        mInctivePets.put(inactiveMyPet.getPetOwner(), inactiveMyPet);
+        lInactivePets.add(inactiveMyPet);
     }
 
     // All ----------------------------------------------------------------------
@@ -240,12 +240,12 @@ public class MyPetList
             {
                 if (myPetPlayer.equals(Owner) && mInctivePets.containsKey(myPetPlayer) && myPetPlayer.isOnline())
                 {
-                    InactiveMyPet IMPet = mInctivePets.get(myPetPlayer);
-                    MyPet AMPet = getMyPet(IMPet);
-                    addMyPet(AMPet);
-                    removeInactiveMyPet(IMPet);
-                    MyPetUtil.getDebugLogger().info("   A: " + AMPet);
-                    MyPetUtil.getDebugLogger().info("   I: " + IMPet);
+                    InactiveMyPet inactiveMyPet = mInctivePets.get(myPetPlayer);
+                    MyPet activeMyPet = getMyPet(inactiveMyPet);
+                    addMyPet(activeMyPet);
+                    removeInactiveMyPet(inactiveMyPet);
+                    MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
+                    MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
                     return;
                 }
             }
@@ -256,13 +256,13 @@ public class MyPetList
             {
                 if (myPetPlayer.equals(Owner) && mActivePets.containsKey(myPetPlayer))
                 {
-                    MyPet AMPet = mActivePets.get(myPetPlayer);
-                    InactiveMyPet IMPet = getInactiveMyPet(AMPet);
-                    AMPet.removePet();
-                    removeMyPet(AMPet);
-                    addInactiveMyPet(IMPet);
-                    MyPetUtil.getDebugLogger().info("   I: " + IMPet);
-                    MyPetUtil.getDebugLogger().info("   A: " + AMPet);
+                    MyPet activeMyPet = mActivePets.get(myPetPlayer);
+                    InactiveMyPet inactiveMyPet = getInactiveMyPet(activeMyPet);
+                    activeMyPet.removePet();
+                    removeMyPet(activeMyPet);
+                    addInactiveMyPet(inactiveMyPet);
+                    MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
+                    MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
                     return;
                 }
             }
@@ -294,7 +294,7 @@ public class MyPetList
         }
         for (InactiveMyPet inactiveMyPet : lInactivePets)
         {
-            if (inactiveMyPet.getType() == myPetType)
+            if (inactiveMyPet.getPetType() == myPetType)
             {
                 counter++;
             }

@@ -47,16 +47,16 @@ public class CommandAdmin implements CommandExecutor
             {
                 return false;
             }
-            String Petowner = args[0];
-            String Change = args[1];
-            String Value = args[2];
+            String petOwner = args[0];
+            String change = args[1];
+            String value = args[2];
 
-            if (!MyPetList.hasMyPet(Petowner) && !MyPetList.hasInactiveMyPet(Petowner))
+            if (!MyPetList.hasMyPet(petOwner) && !MyPetList.hasInactiveMyPet(petOwner))
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", Petowner)));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
                 return true;
             }
-            if (Change.equalsIgnoreCase("name"))
+            if (change.equalsIgnoreCase("name"))
             {
                 String name = "";
                 for (int i = 2 ; i < args.length ; i++)
@@ -64,24 +64,24 @@ public class CommandAdmin implements CommandExecutor
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MyPetList.hasMyPet(Petowner))
+                if (MyPetList.hasMyPet(petOwner))
                 {
-                    MyPetList.getMyPet(Petowner).Name = name;
+                    MyPetList.getMyPet(petOwner).petName = name;
                 }
                 else
                 {
-                    MyPetList.getInactiveMyPet(Petowner).setName(name);
+                    MyPetList.getInactiveMyPet(petOwner).setPetName(name);
                 }
             }
-            else if (Change.equalsIgnoreCase("exp"))
+            else if (change.equalsIgnoreCase("exp"))
             {
-                if (MyPetUtil.isInt(Value))
+                if (MyPetUtil.isInt(value))
                 {
-                    int Exp = Integer.parseInt(Value);
+                    int Exp = Integer.parseInt(value);
                     Exp = Exp < 0 ? 0 : Exp;
-                    if (MyPetList.hasMyPet(Petowner))
+                    if (MyPetList.hasMyPet(petOwner))
                     {
-                        MyPet MPet = MyPetList.getMyPet(Petowner);
+                        MyPet MPet = MyPetList.getMyPet(petOwner);
 
                         Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
                         if (skills.size() > 0)
@@ -96,7 +96,7 @@ public class CommandAdmin implements CommandExecutor
                     }
                     else
                     {
-                        MyPetList.getInactiveMyPet(Petowner).setExp(Exp);
+                        MyPetList.getInactiveMyPet(petOwner).setExp(Exp);
                     }
                 }
             }

@@ -77,11 +77,11 @@ public enum MyPetType
 
     public static MyPetType getMyPetTypeByEntityType(EntityType type)
     {
-        for (MyPetType MPT : MyPetType.values())
+        for (MyPetType myPetType : MyPetType.values())
         {
-            if (MPT.entityType == type)
+            if (myPetType.entityType == type)
             {
-                return MPT;
+                return myPetType;
             }
         }
         return null;
@@ -121,7 +121,7 @@ public enum MyPetType
 
     public EntityMyPet getNewEntityInstance(World world, MyPet myPet)
     {
-        EntityMyPet pet = null;
+        EntityMyPet petEntity = null;
 
         try
         {
@@ -129,7 +129,7 @@ public enum MyPetType
             Object obj = ctor.newInstance(world, myPet);
             if (obj instanceof EntityMyPet)
             {
-                pet = (EntityMyPet) obj;
+                petEntity = (EntityMyPet) obj;
             }
         }
         catch (Exception e)
@@ -138,7 +138,7 @@ public enum MyPetType
             MyPetUtil.getDebugLogger().warning(entityClass.getName() + " is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
-        return pet;
+        return petEntity;
     }
 
     public MyPet getNewMyPetInstance(MyPetPlayer owner)

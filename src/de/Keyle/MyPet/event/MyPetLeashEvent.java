@@ -28,21 +28,21 @@ public class MyPetLeashEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet pet;
+    private final MyPet myPet;
 
-    public MyPetLeashEvent(MyPet pet)
+    public MyPetLeashEvent(MyPet myPet)
     {
-        this.pet = pet;
+        this.myPet = myPet;
     }
 
     public Player getLeasher()
     {
-        return pet.getOwner().getPlayer();
+        return myPet.getOwner().getPlayer();
     }
 
     public MyPet getPet()
     {
-        return pet;
+        return myPet;
     }
 
     public HandlerList getHandlers()

@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 public class DebugLogger
 {
-    private final Logger DebugLogger = Logger.getLogger("MyPet");
+    private final Logger debugLogger = Logger.getLogger("MyPet");
     private boolean enabled = false;
 
     public DebugLogger(boolean enabled)
@@ -44,10 +44,10 @@ public class DebugLogger
         {
             try
             {
-                Handler file_handler = new FileHandler(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "MyPet.log");
-                DebugLogger.setUseParentHandlers(false);
-                file_handler.setFormatter(new LogFormat());
-                DebugLogger.addHandler(file_handler);
+                Handler fileHandler = new FileHandler(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "MyPet.log");
+                debugLogger.setUseParentHandlers(false);
+                fileHandler.setFormatter(new LogFormat());
+                debugLogger.addHandler(fileHandler);
                 return true;
             }
             catch (IOException e)
@@ -63,7 +63,7 @@ public class DebugLogger
     {
         if (enabled)
         {
-            DebugLogger.info(text);
+            debugLogger.info(text);
         }
     }
 
@@ -71,7 +71,7 @@ public class DebugLogger
     {
         if (enabled)
         {
-            DebugLogger.warning(text);
+            debugLogger.warning(text);
         }
     }
 
@@ -79,7 +79,7 @@ public class DebugLogger
     {
         if (enabled)
         {
-            DebugLogger.severe(text);
+            debugLogger.severe(text);
         }
     }
 }

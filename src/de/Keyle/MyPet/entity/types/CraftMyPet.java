@@ -32,11 +32,11 @@ import org.bukkit.entity.Player;
 
 public abstract class CraftMyPet extends CraftTameableAnimal
 {
-    protected AnimalTamer owner;
+    protected AnimalTamer petOwner;
 
-    public CraftMyPet(CraftServer server, EntityMyPet pet)
+    public CraftMyPet(CraftServer server, EntityMyPet petEntity)
     {
-        super(server, pet);
+        super(server, petEntity);
     }
 
     public void setTarget(LivingEntity target)
@@ -48,12 +48,12 @@ public abstract class CraftMyPet extends CraftTameableAnimal
         }
         else if (target instanceof CraftLivingEntity)
         {
-            if (!getHandle().isMyPet || !getHandle().MPet.getSkillSystem().hasSkill("Behavior"))
+            if (!getHandle().isMyPet || !getHandle().myPet.getSkillSystem().hasSkill("Behavior"))
             {
                 return;
             }
-            Behavior behavior = (Behavior) getHandle().MPet.getSkillSystem().getSkill("Behavior");
-            if (behavior.getLevel() <= 0 || behavior.getBehavior() != Behavior.BehaviorState.Friendly)
+            Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkillSystem().getSkill("Behavior");
+            if (behaviorSkill.getLevel() <= 0 || behaviorSkill.getBehavior() != Behavior.BehaviorState.Friendly)
             {
                 return;
             }
@@ -85,28 +85,28 @@ public abstract class CraftMyPet extends CraftTameableAnimal
 
     public AnimalTamer getOwner()
     {
-        if (owner == null && !("").equals(getOwnerName()))
+        if (petOwner == null && !("").equals(getOwnerName()))
         {
-            owner = getServer().getPlayer(getOwnerName());
+            petOwner = getServer().getPlayer(getOwnerName());
 
-            if (owner == null)
+            if (petOwner == null)
             {
-                owner = getServer().getOfflinePlayer(getOwnerName());
+                petOwner = getServer().getOfflinePlayer(getOwnerName());
             }
         }
-        return owner;
+        return petOwner;
     }
 
     public void setOwner(AnimalTamer tamer)
     {
-        owner = tamer;
-        if (owner != null)
+        petOwner = tamer;
+        if (petOwner != null)
         {
             setTamed(true);
             setPath(null);
-            if (owner instanceof Player)
+            if (petOwner instanceof Player)
             {
-                setOwnerName(((Player) owner).getName());
+                setOwnerName(((Player) petOwner).getName());
             }
             else
             {

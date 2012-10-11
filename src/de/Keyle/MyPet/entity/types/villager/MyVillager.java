@@ -31,10 +31,10 @@ public class MyVillager extends MyPet
 
     int profession = 0;
 
-    public MyVillager(MyPetPlayer Owner)
+    public MyVillager(MyPetPlayer petOwner)
     {
-        super(Owner);
-        this.Name = "Villager";
+        super(petOwner);
+        this.petName = "Villager";
     }
 
     public int getMaxHealth()
@@ -45,9 +45,9 @@ public class MyVillager extends MyPet
     public void setProfession(int color)
     {
         this.profession = color;
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            ((EntityMyOcelot) Pet.getHandle()).setCatType(color);
+            ((EntityMyOcelot) craftPet.getHandle()).setCatType(color);
         }
     }
 
@@ -79,7 +79,7 @@ public class MyVillager extends MyPet
     @Override
     public String toString()
     {
-        return "MyVillager{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyVillager{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 
     public static void setStartHP(int hp)

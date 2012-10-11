@@ -30,10 +30,10 @@ public class MySheep extends MyPet
 
     int color = 0;
 
-    public MySheep(MyPetPlayer Owner)
+    public MySheep(MyPetPlayer petOwner)
     {
-        super(Owner);
-        this.Name = "Sheep";
+        super(petOwner);
+        this.petName = "Sheep";
     }
 
     public int getMaxHealth()
@@ -44,7 +44,7 @@ public class MySheep extends MyPet
     public void setColor(int color)
     {
         this.color = color;
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
             //((EntityMySheep) Pet.getHandle()).setColor(color);
         }
@@ -81,7 +81,7 @@ public class MySheep extends MyPet
     @Override
     public String toString()
     {
-        return "MySheep{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MySheep{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 
     public static void setStartHP(int hp)

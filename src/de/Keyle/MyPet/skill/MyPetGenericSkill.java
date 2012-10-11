@@ -25,43 +25,43 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyPetGenericSkill implements Scheduler
 {
-    protected String Name;
-    protected int Level = 0;
-    protected MyPet MPet;
+    protected String skillName;
+    protected int level = 0;
+    protected MyPet myPet;
 
-    protected MyPetGenericSkill(String Name)
+    protected MyPetGenericSkill(String name)
     {
-        this.Name = Name;
+        this.skillName = name;
     }
 
     public String getName()
     {
-        return this.Name;
+        return this.skillName;
     }
 
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        this.MPet = MPet;
+        this.myPet = myPet;
     }
 
     public MyPet getMyPet()
     {
-        return MPet;
+        return myPet;
     }
 
     public int getLevel()
     {
-        return this.Level;
+        return this.level;
     }
 
     public void setLevel(int level)
     {
-        this.Level = level;
+        this.level = level;
     }
 
     public void upgrade()
     {
-        this.Level++;
+        this.level++;
     }
 
     public NBTTagCompound save()

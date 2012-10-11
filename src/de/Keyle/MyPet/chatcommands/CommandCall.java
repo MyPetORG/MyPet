@@ -37,43 +37,43 @@ public class CommandCall implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet MPet = MyPetList.getMyPet(owner);
-                if (MPet.Status == PetState.Here)
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                if (myPet.status == PetState.Here)
                 {
-                    if (MPet.getLocation().getWorld() != owner.getLocation().getWorld())
+                    if (myPet.getLocation().getWorld() != petOwner.getLocation().getWorld())
                     {
-                        MPet.removePet();
-                        MPet.setLocation(owner.getLocation());
-                        MPet.createPet();
-                        MPet.setSitting(false);
+                        myPet.removePet();
+                        myPet.setLocation(petOwner.getLocation());
+                        myPet.createPet();
+                        myPet.setSitting(false);
                     }
                     else
                     {
-                        if (MPet.getPet().isInsideVehicle())
+                        if (myPet.getPet().isInsideVehicle())
                         {
-                            MPet.getPet().leaveVehicle();
+                            myPet.getPet().leaveVehicle();
                         }
-                        MPet.getPet().teleport(owner);
+                        myPet.getPet().teleport(petOwner);
                     }
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                     return true;
                 }
-                else if (MPet.Status == PetState.Despawned)
+                else if (myPet.status == PetState.Despawned)
                 {
-                    MPet.setLocation(owner.getLocation());
-                    MPet.createPet();
-                    MPet.setSitting(false);
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", MPet.Name));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(MPet, MyPetSpoutEventReason.Call));
+                    myPet.setLocation(petOwner.getLocation());
+                    myPet.createPet();
+                    myPet.setSitting(false);
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                     return true;
                 }
-                else if (MPet.Status == PetState.Dead)
+                else if (myPet.status == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", MPet.Name).replace("%time%", "" + MPet.RespawnTime));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;
                 }
             }

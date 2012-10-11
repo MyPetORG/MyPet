@@ -30,10 +30,10 @@ public class MyOcelot extends MyPet
 
     private int color = 0;
 
-    public MyOcelot(MyPetPlayer Owner)
+    public MyOcelot(MyPetPlayer petOwner)
     {
-        super(Owner);
-        this.Name = "Ocelot";
+        super(petOwner);
+        this.petName = "Ocelot";
     }
 
     public int getMaxHealth()
@@ -44,9 +44,9 @@ public class MyOcelot extends MyPet
     public void setColor(int color)
     {
         this.color = color;
-        if (Status == PetState.Here)
+        if (status == PetState.Here)
         {
-            ((EntityMyOcelot) Pet.getHandle()).setCatType(color);
+            ((EntityMyOcelot) craftPet.getHandle()).setCatType(color);
         }
     }
 
@@ -78,7 +78,7 @@ public class MyOcelot extends MyPet
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 
     public static void setStartHP(int hp)

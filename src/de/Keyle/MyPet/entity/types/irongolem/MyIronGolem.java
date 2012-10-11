@@ -27,10 +27,10 @@ public class MyIronGolem extends MyPet
 {
     private static int startHP = 10;
 
-    public MyIronGolem(MyPetPlayer Owner)
+    public MyIronGolem(MyPetPlayer petOwner)
     {
-        super(Owner);
-        this.Name = "Iron Golem";
+        super(petOwner);
+        this.petName = "Iron Golem";
     }
 
     public int getMaxHealth()
@@ -47,7 +47,7 @@ public class MyIronGolem extends MyPet
     @Override
     public String toString()
     {
-        return "MyIronGolem{owner=" + getOwner().getName() + ", name=" + Name + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + Status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyIronGolem{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 
     public static void setStartHP(int hp)

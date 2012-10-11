@@ -31,16 +31,16 @@ public class MyPetJSexp
 {
     public static String expScript = null;
     private int lvl = 1;
-    private MyPet MPet;
+    private MyPet myPet;
     private double lastExp = 0;
     private double requiredExp = 0;
     private double currentExp = 0;
-    private MyPetExperience MPetExperience;
+    private MyPetExperience myPetExperience;
 
-    public MyPetJSexp(MyPet MPet, MyPetExperience MPetExperience)
+    public MyPetJSexp(MyPet myPet, MyPetExperience myPetExperience)
     {
-        this.MPet = MPet;
-        this.MPetExperience = MPetExperience;
+        this.myPet = myPet;
+        this.myPetExperience = myPetExperience;
     }
 
     public boolean isUsable()
@@ -50,7 +50,7 @@ public class MyPetJSexp
 
     public int getLvl()
     {
-        if (lastExp != MPetExperience.getExp())
+        if (lastExp != myPetExperience.getExp())
         {
             update();
         }
@@ -59,7 +59,7 @@ public class MyPetJSexp
 
     public double getRequiredExp()
     {
-        if (lastExp != MPetExperience.getExp())
+        if (lastExp != myPetExperience.getExp())
         {
             update();
         }
@@ -68,7 +68,7 @@ public class MyPetJSexp
 
     public double getCurrentExp()
     {
-        if (lastExp != MPetExperience.getExp())
+        if (lastExp != myPetExperience.getExp())
         {
             update();
         }
@@ -127,10 +127,10 @@ public class MyPetJSexp
             engine.put("requiredExp", 0);
             engine.put("currentExp", 0);
 
-            engine.put("type", MPet.getPetType().getTypeName());
-            engine.put("exp", MPetExperience.getExp());
-            engine.put("name", MPet.Name);
-            engine.put("player", MPet.getOwner().getName());
+            engine.put("type", myPet.getPetType().getTypeName());
+            engine.put("exp", myPetExperience.getExp());
+            engine.put("name", myPet.petName);
+            engine.put("player", myPet.getOwner().getName());
 
             engine.eval(expScript);
 

@@ -26,7 +26,7 @@ import net.minecraft.server.NBTTagCompound;
 
 public class Behavior extends MyPetGenericSkill
 {
-    private BehaviorState Behavior = BehaviorState.Normal;
+    private BehaviorState behavior = BehaviorState.Normal;
 
     public static enum BehaviorState
     {
@@ -40,80 +40,80 @@ public class Behavior extends MyPetGenericSkill
 
     public void setBehavior(BehaviorState behaviorState)
     {
-        Behavior = behaviorState;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
-        if (Behavior == BehaviorState.Friendly)
+        behavior = behaviorState;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", behavior.name()));
+        if (behavior == BehaviorState.Friendly)
         {
-            MPet.getPet().setTarget(null);
+            myPet.getPet().setTarget(null);
         }
     }
 
     public void activateBehavior(BehaviorState behaviorState)
     {
-        if (Level > 0)
+        if (level > 0)
         {
-            Behavior = behaviorState;
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
-            if (Behavior == BehaviorState.Friendly)
+            behavior = behaviorState;
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", behavior.name()));
+            if (behavior == BehaviorState.Friendly)
             {
-                MPet.getPet().setTarget(null);
+                myPet.getPet().setTarget(null);
             }
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
         }
     }
 
     public BehaviorState getBehavior()
     {
-        return Behavior;
+        return behavior;
     }
 
     @Override
     public void upgrade()
     {
-        Level = 1;
-        MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
+        level = 1;
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
     }
 
     @Override
     public void activate()
     {
-        if (Level > 0)
+        if (level > 0)
         {
-            if (Behavior == BehaviorState.Normal)
+            if (behavior == BehaviorState.Normal)
             {
-                Behavior = BehaviorState.Friendly;
-                MPet.getPet().setTarget(null);
+                behavior = BehaviorState.Friendly;
+                myPet.getPet().setTarget(null);
             }
-            else if (Behavior == BehaviorState.Friendly)
+            else if (behavior == BehaviorState.Friendly)
             {
-                Behavior = BehaviorState.Aggressive;
+                behavior = BehaviorState.Aggressive;
             }
-            else if (Behavior == BehaviorState.Aggressive || Behavior == BehaviorState.Raid)
+            else if (behavior == BehaviorState.Aggressive || behavior == BehaviorState.Raid)
             {
-                Behavior = BehaviorState.Normal;
+                behavior = BehaviorState.Normal;
             }
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", MPet.Name).replace("%mode%", Behavior.name()));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", behavior.name()));
         }
         else
         {
-            MPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", MPet.Name).replace("%skill%", this.Name));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
         }
     }
 
     @Override
     public void load(NBTTagCompound nbtTagCompound)
     {
-        Behavior = BehaviorState.valueOf(nbtTagCompound.getString("Mode"));
+        behavior = BehaviorState.valueOf(nbtTagCompound.getString("Mode"));
     }
 
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(Name);
-        nbtTagCompound.setString("Mode", Behavior.name());
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        nbtTagCompound.setString("Mode", behavior.name());
         return nbtTagCompound;
     }
 }
