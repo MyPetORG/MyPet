@@ -79,7 +79,7 @@ public class MyPetPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        debugLogger.info(savePets() + " pet/pets saved.");
+        debugLogger.info(savePets(true) + " pet/pets saved.");
         for (MyPet MPet : MyPetList.getMyPetList())
         {
             MPet.removePet();
@@ -418,7 +418,7 @@ public class MyPetPlugin extends JavaPlugin
         return petCount;
     }
 
-    public int savePets()
+    public int savePets(boolean shutdown)
     {
         int petCount = 0;
         NBTConfiguration nbtConfiguration = new NBTConfiguration(NBTPetFile);
@@ -486,6 +486,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         String[] version = plugin.getDescription().getVersion().split(" \\(");
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
+        nbtConfiguration.getNBTTagCompound().setBoolean("CleanShutdown", shutdown);
         nbtConfiguration.getNBTTagCompound().set("Pets", petNBTlist);
         nbtConfiguration.save();
         return petCount;

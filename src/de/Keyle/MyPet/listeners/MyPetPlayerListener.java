@@ -135,7 +135,7 @@ public class MyPetPlayerListener implements Listener
         {
             MyPet MPet = MyPetList.getMyPet(event.getPlayer());
             MPet.removePet();
-            MyPetPlugin.getPlugin().savePets();
+            MyPetPlugin.getPlugin().savePets(false);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
         }
     }

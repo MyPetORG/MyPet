@@ -67,7 +67,7 @@ public class MyPetTimer
                 }
                 if (MyPetConfig.AutoSaveTime > 0 && AutoSaveTimer-- < 0)
                 {
-                    MyPetPlugin.getPlugin().savePets();
+                    MyPetPlugin.getPlugin().savePets(false);
                     AutoSaveTimer = MyPetConfig.AutoSaveTime;
                 }
             }

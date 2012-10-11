@@ -183,7 +183,7 @@ public class MyPetEntityListener implements Listener
                         event.getEntity().remove();
                         MyPetUtil.getDebugLogger().info("New Pet leashed:");
                         MyPetUtil.getDebugLogger().info("   " + MPet.toString());
-                        MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets() + " pet/pets saved.");
+                        MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
                         damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
                     }
                 }
