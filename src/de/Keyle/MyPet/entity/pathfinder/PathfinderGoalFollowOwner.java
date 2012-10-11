@@ -47,6 +47,9 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         this.a(3);
     }
 
+    /**
+     * Checks whether this pathfinder should be activated
+     */
     public boolean a()
     {
         EntityLiving entityliving = this.pet.getOwner();

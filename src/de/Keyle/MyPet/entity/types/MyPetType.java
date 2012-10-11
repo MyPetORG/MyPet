@@ -64,15 +64,15 @@ public enum MyPetType
 
     private EntityType entityType;
     private String typeName;
-    private Class<? extends EntityMyPet> entityClazz;
-    private Class<? extends MyPet> myPetClazz;
+    private Class<? extends EntityMyPet> entityClass;
+    private Class<? extends MyPet> myPetClass;
 
-    private MyPetType(EntityType type, String name, Class<? extends EntityMyPet> entityClazz, Class<? extends MyPet> myPetClazz)
+    private MyPetType(EntityType type, String name, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass)
     {
         this.entityType = type;
         this.typeName = name;
-        this.entityClazz = entityClazz;
-        this.myPetClazz = myPetClazz;
+        this.entityClass = entityClass;
+        this.myPetClass = myPetClass;
     }
 
     public static MyPetType getMyPetTypeByEntityType(EntityType type)
@@ -106,12 +106,12 @@ public enum MyPetType
 
     public Class<? extends EntityMyPet> getEntityClass()
     {
-        return entityClazz;
+        return entityClass;
     }
 
     public Class<? extends MyPet> getMyPetClass()
     {
-        return myPetClazz;
+        return myPetClass;
     }
 
     public String getTypeName()
@@ -125,7 +125,7 @@ public enum MyPetType
 
         try
         {
-            Constructor ctor = entityClazz.getConstructor(World.class, MyPet.class);
+            Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
             Object obj = ctor.newInstance(world, myPet);
             if (obj instanceof EntityMyPet)
             {
@@ -134,8 +134,8 @@ public enum MyPetType
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(entityClazz.getName() + " is no valid MyPet(Entity)!");
-            MyPetUtil.getDebugLogger().warning(entityClazz.getName() + " is no valid MyPet(Entity)!");
+            MyPetUtil.getLogger().warning(entityClass.getName() + " is no valid MyPet(Entity)!");
+            MyPetUtil.getDebugLogger().warning(entityClass.getName() + " is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
         return pet;
@@ -147,7 +147,7 @@ public enum MyPetType
 
         try
         {
-            Constructor ctor = myPetClazz.getConstructor(MyPetPlayer.class);
+            Constructor<?> ctor = myPetClass.getConstructor(MyPetPlayer.class);
             Object obj = ctor.newInstance(owner);
             if (obj instanceof MyPet)
             {
@@ -156,8 +156,9 @@ public enum MyPetType
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(myPetClazz.getName() + "is no valid MyPet!");
-            MyPetUtil.getDebugLogger().warning(myPetClazz.getName() + "is no valid MyPet!");
+            e.printStackTrace();
+            MyPetUtil.getLogger().warning(myPetClass.getName() + " is no valid MyPet!");
+            MyPetUtil.getDebugLogger().warning(myPetClass.getName() + " is no valid MyPet!");
         }
         return pet;
     }

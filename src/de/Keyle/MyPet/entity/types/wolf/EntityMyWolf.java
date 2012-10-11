@@ -67,7 +67,7 @@ public class EntityMyWolf extends EntityMyPet
                 this.setSitting(MPet.isSitting());
                 this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
                 this.setOwnerName(MPet.getOwner().getName());
-                this.world.broadcastEntityEffect(this, (byte) 7);
+                this.world.broadcastEntityEffect(this, (byte) 7); //Hearths effect
             }
         }
     }
@@ -77,6 +77,12 @@ public class EntityMyWolf extends EntityMyPet
         return MyWolf.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         super.c(entityhuman);
@@ -89,6 +95,7 @@ public class EntityMyWolf extends EntityMyPet
 
             if (getHealth() < getMaxHealth())
             {
+                //don't remove item in creative gamemode
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
                     --itemstack.count;
@@ -104,6 +111,7 @@ public class EntityMyWolf extends EntityMyPet
         }
         else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
         {
+            //sit down
             this.d.a(!this.isSitting());
             this.bu = false;
             this.setPathEntity(null);
@@ -112,6 +120,9 @@ public class EntityMyWolf extends EntityMyPet
         return false;
     }
 
+    /**
+     * Is called when a MyPet attemps to do damge to another entity
+     */
     public boolean k(Entity entity)
     {
         int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
@@ -131,6 +142,9 @@ public class EntityMyWolf extends EntityMyPet
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected String aQ()
     {
         return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
@@ -150,21 +164,21 @@ public class EntityMyWolf extends EntityMyPet
 
     // Vanilla Methods
 
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     @Override
     protected String aR()
     {
         return "mob.wolf.hurt";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     @Override
     protected String aS()
     {
         return "mob.wolf.death";
-    }
-
-    @Override
-    protected float aP()
-    {
-        return 0.4F;
     }
 }

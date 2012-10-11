@@ -69,6 +69,12 @@ public class EntityMyPig extends EntityMyPet
         return MyPig.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         super.c(entityhuman);
@@ -135,26 +141,29 @@ public class EntityMyPig extends EntityMyPet
 
     // Vanilla Methods
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected String aQ()
     {
         return "mob.pig";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     @Override
     protected String aR()
     {
         return "mob.pig";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     @Override
     protected String aS()
     {
         return "mob.pigdeath";
-    }
-
-    @Override
-    protected float aP()
-    {
-        return 0.4F;
     }
 }

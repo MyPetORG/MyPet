@@ -43,9 +43,12 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         nav = this.MPet.getPet().getHandle().getNavigation();
     }
 
-    @Override
+    /**
+     * Checks whether this pathfinder should be activated
+     */
     public boolean a()
     {
+        MyPetUtil.getLogger().info("a");
         if (MPet.getSkillSystem().hasSkill("Control") && MPet.getSkillSystem().getSkill("Control").getLevel() > 0)
         {
             Control control = (Control) MPet.getSkillSystem().getSkill("Control");
@@ -58,8 +61,13 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         return moveTo != null;
     }
 
+    /**
+     * This method is called when this pathfinder is activated
+     */
     public void e()
     {
+        MyPetUtil.getLogger().info("e");
+        //nav.a -> move to the location (x,y,z) with given speed
         if (nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
         {
             MyPetPlugin.getPlugin().getTimer().addTask(this);
@@ -70,8 +78,12 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         }
     }
 
+    /**
+     * Checks whether this pathfinder should be stopped
+     */
     public boolean b()
     {
+        MyPetUtil.getLogger().info("b");
         Control control = (Control) MPet.getSkillSystem().getSkill("Control");
         if (control.getLocation(false) != null)
         {
@@ -85,8 +97,12 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         return moveTo != null && !this.MPet.isSitting();
     }
 
+    /**
+     * This method is called when this pathfinder is stopped
+     */
     public void d()
     {
+        MyPetUtil.getLogger().info("d");
         MyPetPlugin.getPlugin().getTimer().removeTask(this);
         moveTo = null;
     }

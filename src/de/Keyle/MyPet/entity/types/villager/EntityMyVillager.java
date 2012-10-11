@@ -93,6 +93,12 @@ public class EntityMyVillager extends EntityMyPet
         return MyVillager.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         super.c(entityhuman);
@@ -146,24 +152,28 @@ public class EntityMyVillager extends EntityMyPet
         this.datawatcher.a(16, (byte) 0);
     }
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected String aQ()
     {
         return "mob.villager.default";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     protected String aR()
     {
         return "mob.villager.defaulthurt";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     protected String aS()
     {
         return "mob.villager.defaultdeath";
-    }
-
-    protected float aP()
-    {
-        return 0.4F;
     }
 
     public int getProfession()

@@ -36,6 +36,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     protected boolean isMyPet = false;
     protected MyPet MPet;
 
+    // This Constructor should be never called!!!
     public EntityMyPet(World world)
     {
         super(world);
@@ -58,6 +59,12 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     public abstract int getMaxHealth();
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         ItemStack itemstack = entityhuman.inventory.getItemInHand();
@@ -75,6 +82,9 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return false;
     }
 
+    /**
+     * Is called when a MyPet attemps to do damge to another entity
+     */
     public boolean k(Entity entity)
     {
         int damage = 4 + (isMyPet && MPet.getSkillSystem().hasSkill("Damage") ? MPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
@@ -111,6 +121,9 @@ public abstract class EntityMyPet extends EntityTameableAnimal
 
     //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected abstract String aQ();
 
     public EntityAnimal createChild(EntityAnimal entityanimal)
@@ -151,18 +164,32 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return false;
     }
 
-
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     protected abstract String aR();
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     protected abstract String aS();
 
-    protected abstract float aP();
+    /**
+     * N.A.
+     */
+    public float aP()
+    {
+        return 0.4F;
+    }
 
     protected int getLootId()
     {
         return -1;
     }
 
+    /**
+     * N.A.
+     */
     public void d()
     {
         super.d();
@@ -175,6 +202,9 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         }
     }
 
+    /**
+     * N.A.
+     */
     public void h_()
     {
         super.h_();
@@ -200,6 +230,9 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return this.length * 0.8F;
     }
 
+    /**
+     * N.A.
+     */
     public int bf()
     {
         return this.isSitting() ? 20 : super.bf();
@@ -218,16 +251,25 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return super.damageEntity(damagesource, i);
     }
 
+    /**
+     * Checks weather an itemstack is eatable for the MyPet
+     */
     public boolean b(ItemStack itemstack)
     {
         return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).h());
     }
 
+    /**
+     * N.A.
+     */
     public int bl()
     {
         return 8;
     }
 
+    /**
+     * N.A.
+     */
     public void i(boolean flag)
     {
         this.b = flag;

@@ -93,6 +93,12 @@ public class EntityMyOcelot extends EntityMyPet
         return MyOcelot.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         super.c(entityhuman);
@@ -134,11 +140,6 @@ public class EntityMyOcelot extends EntityMyPet
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    protected String aQ()
-    {
-        return this.s() ? "mob.cat.purr" : (this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow");
-    }
-
     public void bd()
     {
     }
@@ -151,19 +152,28 @@ public class EntityMyOcelot extends EntityMyPet
         this.datawatcher.a(18, (byte) 0);
     }
 
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return this.s() ? "mob.cat.purr" : (this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow");
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     protected String aR()
     {
         return "mob.cat.hitt";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     protected String aS()
     {
         return "mob.cat.hitt";
-    }
-
-    protected float aP()
-    {
-        return 0.4F;
     }
 
     public int getCatType()

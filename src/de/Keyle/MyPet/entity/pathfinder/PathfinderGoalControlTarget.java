@@ -46,6 +46,9 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
         this.control = control;
     }
 
+    /**
+     * Checks whether this pathfinder should be activated
+     */
     public boolean a()
     {
         if (control.moveTo != null && !pet.isSitting())

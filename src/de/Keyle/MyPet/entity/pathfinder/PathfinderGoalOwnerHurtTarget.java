@@ -44,6 +44,9 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
         this.a(1);
     }
 
+    /**
+     * Checks whether this pathfinder goal should be activated
+     */
     public boolean a()
     {
         if (!this.pet.isTamed())

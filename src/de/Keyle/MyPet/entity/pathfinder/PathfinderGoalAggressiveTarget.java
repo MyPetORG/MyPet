@@ -44,6 +44,9 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
         this.range = range;
     }
 
+    /**
+     * Checks whether this pathfinder should be activated
+     */
     public boolean a()
     {
         if (MPet.getSkillSystem().hasSkill("Behavior"))

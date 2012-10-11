@@ -71,6 +71,12 @@ public class EntityMySheep extends EntityMyPet
         return MySheep.getStartHP() + (isTamed() && MPet.getSkillSystem().hasSkill("HP") ? MPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean c(EntityHuman entityhuman)
     {
         super.c(entityhuman);
@@ -145,17 +151,26 @@ public class EntityMySheep extends EntityMyPet
 
     // Vanilla Methods
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected String aQ()
     {
         return "mob.sheep";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     @Override
     protected String aR()
     {
         return "mob.sheep";
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     @Override
     protected String aS()
     {
@@ -172,11 +187,5 @@ public class EntityMySheep extends EntityMyPet
         byte b0 = this.datawatcher.getByte(16);
 
         this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
-    }
-
-    @Override
-    protected float aP()
-    {
-        return 0.4F;
     }
 }
