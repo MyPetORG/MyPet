@@ -74,6 +74,17 @@ public abstract class MyPet
         }
         if (this.skillTree == null)
         {
+            for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames("default"))
+            {
+                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                {
+                    this.skillTree = MyPetSkillTreeConfigLoader.getMobType("default").getSkillTree(skillTreeName);
+                    break;
+                }
+            }
+        }
+        if (this.skillTree == null)
+        {
             this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
         }
         skillSystem = new MyPetSkillSystem(this);
