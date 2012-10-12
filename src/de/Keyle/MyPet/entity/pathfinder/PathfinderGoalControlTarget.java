@@ -64,7 +64,6 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                     }
                 }
             }
-
             for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
             {
                 Entity entity = (Entity) entityObj;
@@ -74,30 +73,17 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                 {
                     if (entityLiving instanceof EntityPlayer)
                     {
-                        String playerName = ((EntityPlayer) entityLiving).name;
-                        if (!MyPetUtil.getOfflinePlayer(playerName).isOnline())
-                        {
-                            continue;
-                        }
-                        Player targetPlayer = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
-
+                        Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                         if (myPet.getOwner().equals(targetPlayer))
                         {
                             continue;
                         }
-                        if (!MyPetUtil.canHurtFactions(myPet.getOwner().getPlayer(), targetPlayer))
-                        {
-                            continue;
-                        }
-                        if (!MyPetUtil.canHurtTowny(myPet.getOwner().getPlayer(), targetPlayer))
-                        {
-                            continue;
-                        }
-                        if (!MyPetUtil.canHurtWorldGuard(targetPlayer))
+                        if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
                         {
                             continue;
                         }
                     }
+                    controlPathfinderGoal.stopControl();
                     this.target = entityLiving;
                     return true;
                 }

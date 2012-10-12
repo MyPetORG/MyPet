@@ -35,6 +35,8 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     Location moveTo = null;
     private int timeToMove = 0;
     private Navigation nav;
+    private boolean stopControl = false;
+
 
     public PathfinderGoalControl(MyPet myPet, float f)
     {
@@ -48,34 +50,16 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
      */
     public boolean a()
     {
-        MyPetUtil.getLogger().info("a");
+        if (stopControl)
+        {
+            stopControl = false;
+        }
         if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
         {
             Control controlSkill = (Control) myPet.getSkillSystem().getSkill("Control");
-            if (controlSkill.getLocation(false) != null)
-            {
-                moveTo = controlSkill.getLocation();
-                timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
-            }
+            return controlSkill.getLocation(false) != null;
         }
-        return moveTo != null;
-    }
-
-    /**
-     * This method is called when this pathfinder is activated
-     */
-    public void e()
-    {
-        MyPetUtil.getLogger().info("e");
-        //nav.a -> move to the location (x,y,z) with given speed
-        if (nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
-        {
-            MyPetPlugin.getPlugin().getTimer().addTask(this);
-        }
-        else
-        {
-            moveTo = null;
-        }
+        return false;
     }
 
     /**
@@ -83,36 +67,45 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
      */
     public boolean b()
     {
+        MyPetUtil.getLogger().info("t: " + timeToMove);
+        boolean stop = false;
         MyPetUtil.getLogger().info("b");
+
         Control control = (Control) myPet.getSkillSystem().getSkill("Control");
-        if (control.getLocation(false) != null)
+
+        if (control.getLocation(false) != null && moveTo != control.getLocation(false))
         {
+            MyPetUtil.getLogger().info("set t: " + timeToMove);
             moveTo = control.getLocation();
             timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
+            timeToMove = timeToMove < 3 ? 3 : timeToMove;
+            MyPetPlugin.getPlugin().getTimer().addTask(this);
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
             {
+                MyPetPlugin.getPlugin().getTimer().removeTask(this);
                 moveTo = null;
+                stop = true;
+                stopControl = false;
             }
         }
-        return moveTo != null && !this.myPet.isSitting();
+
+        if (this.myPet.isSitting() || moveTo != null && MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
+        {
+            moveTo = null;
+            MyPetPlugin.getPlugin().getTimer().removeTask(this);
+            stop = true;
+            stopControl = false;
+        }
+        return !stop;
     }
 
-    /**
-     * This method is called when this pathfinder is stopped
-     */
-    public void d()
+    public void stopControl()
     {
-        MyPetUtil.getLogger().info("d");
-        MyPetPlugin.getPlugin().getTimer().removeTask(this);
-        moveTo = null;
+        this.stopControl = true;
     }
 
     public void schedule()
     {
         timeToMove--;
-        if (timeToMove <= 0)
-        {
-            moveTo = null;
-        }
     }
 }

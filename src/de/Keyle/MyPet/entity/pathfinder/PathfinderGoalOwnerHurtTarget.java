@@ -79,30 +79,13 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 
                 if (this.target instanceof EntityPlayer)
                 {
-                    String playerName = ((EntityPlayer) this.target).name;
-                    if (!MyPetUtil.getOfflinePlayer(playerName).isOnline())
+                    Player targetPlayer = (Player) this.target.getBukkitEntity();
+                    if (myPet.getOwner().equals(targetPlayer))
                     {
                         this.target = null;
                         return false;
                     }
-                    Player target = MyPetUtil.getOfflinePlayer(playerName).getPlayer();
-
-                    if (myPet.getOwner().equals(target))
-                    {
-                        this.target = null;
-                        return false;
-                    }
-                    else if (!MyPetUtil.canHurtFactions(myPet.getOwner().getPlayer(), target))
-                    {
-                        this.target = null;
-                        return false;
-                    }
-                    else if (!MyPetUtil.canHurtTowny(myPet.getOwner().getPlayer(), target))
-                    {
-                        this.target = null;
-                        return false;
-                    }
-                    else if (!MyPetUtil.canHurtWorldGuard(target))
+                    else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
                     {
                         this.target = null;
                         return false;
