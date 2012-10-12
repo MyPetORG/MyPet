@@ -183,7 +183,12 @@ public class MyPetSkillTreeConfigLoader
 
     public static List<String> getSkillTreeNames(MyPetType myPetType)
     {
-        return skillTreeMobTypes.get(myPetType.getTypeName().toLowerCase()).getSkillTreeNames();
+        return getSkillTreeNames(myPetType.getTypeName());
+    }
+
+    public static List<String> getSkillTreeNames(String myPetTypeName)
+    {
+        return skillTreeMobTypes.get(myPetTypeName.toLowerCase()).getSkillTreeNames();
     }
 
     public static boolean containsSkillTree(String myPetTypeName, String name)

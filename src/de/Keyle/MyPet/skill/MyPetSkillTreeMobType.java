@@ -27,6 +27,7 @@ import java.util.Map;
 public class MyPetSkillTreeMobType
 {
     private Map<String, MyPetSkillTree> skillTrees = new HashMap<String, MyPetSkillTree>();
+    private List<String> skillTreeList = new ArrayList<String>();
     private String mobTypeName;
 
     private static Map<String, MyPetSkillTreeMobType> mobTypes = new HashMap<String, MyPetSkillTreeMobType>();
@@ -47,6 +48,7 @@ public class MyPetSkillTreeMobType
         if (!skillTrees.containsKey(skillTreeName))
         {
             skillTrees.put(skillTreeName, new MyPetSkillTree(skillTreeName));
+            skillTreeList.add(skillTreeName);
         }
     }
 
@@ -55,6 +57,7 @@ public class MyPetSkillTreeMobType
         if (!skillTrees.containsKey(skillTree.getName()))
         {
             skillTrees.put(skillTree.getName(), skillTree);
+            skillTreeList.add(skillTree.getName());
         }
     }
 
@@ -74,12 +77,7 @@ public class MyPetSkillTreeMobType
 
     public List<String> getSkillTreeNames()
     {
-        List<String> names = new ArrayList<String>();
-        for (String skillTreeName : skillTrees.keySet())
-        {
-            names.add(skillTreeName);
-        }
-        return names;
+        return skillTreeList;
     }
 
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
