@@ -30,6 +30,8 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -104,12 +106,19 @@ public class MyPetUtil
         }
     }
 
-    //TODO readd NPC check (update)
-    public static boolean canHurtCitizens(Player player)
+    public static boolean canHurt(Player petOwner, Player victim)
     {
-        //Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
-        //return plugin != null && net.citizensnpcs.api.CitizensManager.isNPC(player);
-        return false;
+        return canHurtCitizens(victim) && canHurtFactions(petOwner, victim) && canHurtTowny(petOwner, victim) && canHurtWorldGuard(victim) && victim.getGameMode() != GameMode.CREATIVE && victim.getWorld().getPVP();
+    }
+
+    public static boolean canHurtCitizens(Player victim)
+    {
+        if (victim.hasMetadata("NPC"))
+        {
+            NPC npc = CitizensAPI.getNPCRegistry().getNPC(victim);
+            return !npc.data().get("protected", true);
+        }
+        return true;
     }
 
     public static boolean canHurtWorldGuard(Player victim)

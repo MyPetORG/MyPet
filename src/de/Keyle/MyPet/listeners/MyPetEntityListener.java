@@ -92,19 +92,7 @@ public class MyPetEntityListener implements Listener
                     }
                     event.setCancelled(true);
                 }
-                if (!event.getEntity().getLocation().getWorld().getPVP())
-                {
-                    event.setCancelled(true);
-                }
-                if (!MyPetUtil.canHurtWorldGuard(myPet.getOwner().getPlayer()))
-                {
-                    event.setCancelled(true);
-                }
-                if (!MyPetUtil.canHurtFactions(damager, myPet.getOwner().getPlayer()))
-                {
-                    event.setCancelled(true);
-                }
-                if (!MyPetUtil.canHurtTowny(damager, myPet.getOwner().getPlayer()))
+                if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
                 {
                     event.setCancelled(true);
                 }
