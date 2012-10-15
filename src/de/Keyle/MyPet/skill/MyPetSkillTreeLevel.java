@@ -42,6 +42,11 @@ public class MyPetSkillTreeLevel
         skillList.add(skill);
     }
 
+    public void removeSkill(int index)
+    {
+        skillList.remove(index);
+    }
+
     public List<MyPetSkillTreeSkill> getSkills()
     {
         return skillList;

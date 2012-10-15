@@ -61,6 +61,38 @@ public class MyPetSkillTreeMobType
         }
     }
 
+    public void removeSkillTree(String skillTreeName)
+    {
+        if (skillTrees.containsKey(skillTreeName))
+        {
+            skillTrees.remove(skillTreeName);
+        }
+    }
+
+    public void moveSkillTreeUp(String skillTreeName)
+    {
+        int index = skillTreeList.indexOf(skillTreeName);
+        if (index != -1 && index > 0 && index < skillTreeList.size() - 1)
+        {
+            String skillTree = skillTreeList.get(index - 1);
+            skillTreeList.set(index - 1, skillTreeName);
+            skillTreeList.set(index, skillTree);
+
+        }
+    }
+
+    public void moveSkillTreeDown(String skillTreeName)
+    {
+        int index = skillTreeList.indexOf(skillTreeName);
+        if (index != -1 && index > 0 && index < skillTreeList.size() - 1)
+        {
+            String skillTree = skillTreeList.get(index + 1);
+            skillTreeList.set(index + 1, skillTreeName);
+            skillTreeList.set(index, skillTree);
+
+        }
+    }
+
     public MyPetSkillTree getSkillTree(String skillTreeName)
     {
         if (skillTrees.containsKey(skillTreeName))

@@ -65,6 +65,14 @@ public class MyPetSkillTree
         return skillsPerLevel.get(level);
     }
 
+    public void removeLevel(int level)
+    {
+        if (skillsPerLevel.containsKey(level))
+        {
+            skillsPerLevel.remove(level);
+        }
+    }
+
     public void addSkillToLevel(int level, MyPetSkillTreeSkill skill)
     {
         addLevel(level).addSkill(skill);

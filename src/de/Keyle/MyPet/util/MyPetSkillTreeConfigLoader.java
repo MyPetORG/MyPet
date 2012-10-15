@@ -203,6 +203,6 @@ public class MyPetSkillTreeConfigLoader
 
     public static MyPetSkillTreeMobType getMobType(String mobTypeName)
     {
-        return skillTreeMobTypes.get(mobTypeName);
+        return skillTreeMobTypes.get(mobTypeName.toLowerCase());
     }
 }
