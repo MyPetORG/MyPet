@@ -3,16 +3,10 @@ Author: Keyle
 
 This plugin allows you to take mobs on a leash.
 
-
-Forum Thread:	http://forums.bukkit.org/threads/16014/
 Bukkitdev:	    http://dev.bukkit.org/server-mods/mywolf/
 
 
-
-
 Copyright (C) 2011-2012 Keyle
-
-This file is part of MyPet
 
 MyPet is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,3 +20,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MyPet. If not, see http://www.gnu.org/licenses/.
+
+All Icons in resources are owned by the Oxygen Team (http://www.oxygen-icons.org).
+These Icons are under the terms of the GNU Lesser General Public License.

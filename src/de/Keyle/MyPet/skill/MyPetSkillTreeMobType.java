@@ -72,7 +72,7 @@ public class MyPetSkillTreeMobType
     public void moveSkillTreeUp(String skillTreeName)
     {
         int index = skillTreeList.indexOf(skillTreeName);
-        if (index != -1 && index > 0 && index < skillTreeList.size() - 1)
+        if (index != -1 && index > 0 && index < skillTreeList.size())
         {
             String skillTree = skillTreeList.get(index - 1);
             skillTreeList.set(index - 1, skillTreeName);
@@ -84,7 +84,7 @@ public class MyPetSkillTreeMobType
     public void moveSkillTreeDown(String skillTreeName)
     {
         int index = skillTreeList.indexOf(skillTreeName);
-        if (index != -1 && index > 0 && index < skillTreeList.size() - 1)
+        if (index != -1 && index > 0 && index < skillTreeList.size())
         {
             String skillTree = skillTreeList.get(index + 1);
             skillTreeList.set(index + 1, skillTreeName);
