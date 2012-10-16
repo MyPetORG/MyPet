@@ -26,6 +26,7 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 public class MyPig extends MyPet
 {
     private static int startHP = 10;
+    private boolean saddle = false;
 
     public MyPig(MyPetPlayer petOwner)
     {
@@ -47,7 +48,7 @@ public class MyPig extends MyPet
     @Override
     public String toString()
     {
-        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", saddle=" + hasSaddle() + "}";
     }
 
     public static void setStartHP(int hp)
@@ -58,5 +59,19 @@ public class MyPig extends MyPet
     public static int getStartHP()
     {
         return startHP;
+    }
+
+    public boolean hasSaddle()
+    {
+        return saddle;
+    }
+
+    public void setSaddle(boolean saddle)
+    {
+        this.saddle = saddle;
+        if (status == PetState.Here)
+        {
+            ((EntityMyPig) this.getPet().getHandle()).setSaddle(saddle);
+        }
     }
 }

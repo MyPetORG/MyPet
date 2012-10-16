@@ -53,20 +53,16 @@ public class EntityMyPig extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(myPet.isSitting());
-                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-                this.setOwnerName(myPet.getOwner().getName());
-            }
+            this.setSaddle(((MyPig) myPet).hasSaddle());
+            this.setPathEntity(null);
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
     public int getMaxHealth()
     {
-        return MyPig.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPig.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -98,11 +94,20 @@ public class EntityMyPig extends EntityMyPet
                 return true;
             }
         }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
+        else if (entityhuman == getOwner())
         {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
+            if (itemStack != null && itemStack.id == 329 && !((MyPig) myPet).hasSaddle())
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                ((MyPig) myPet).setSaddle(true);
+            }
         }
 
         return false;
@@ -110,7 +115,7 @@ public class EntityMyPig extends EntityMyPet
 
     public boolean k(Entity entity)
     {
-        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 1 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
@@ -125,21 +130,24 @@ public class EntityMyPig extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
+    // Vanilla Methods -----------------------------------------------------------------------------------------------------
 
-    @Override
-    protected void bd()
+    public boolean hasSaddle()
     {
-        this.datawatcher.watch(18, this.getHealth());
+        return (this.datawatcher.getByte(16) & 0x1) != 0;
     }
 
-    protected void a()
+    public void setSaddle(boolean saddle)
     {
-        super.a();
-        this.datawatcher.a(18, this.getHealth());
+        if (saddle)
+        {
+            this.datawatcher.watch(16, (byte) 1);
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) 0);
+        }
     }
-
-    // Vanilla Methods
 
     /**
      * Returns the default sound of the MyPet
