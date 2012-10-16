@@ -24,6 +24,10 @@ import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.sheep.MySheep;
+import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
@@ -153,9 +157,9 @@ public class MyPetEntityListener implements Listener
                     {
                         willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
                     }
-                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep || leashTarget instanceof Villager)
+                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep)// || leashTarget instanceof Villager)
                     {
-                        willBeLeashed = !((Ageable) leashTarget).isAdult();
+                        willBeLeashed = ((Ageable) leashTarget).isAdult();
                     }
 
                     if (willBeLeashed)
@@ -166,6 +170,23 @@ public class MyPetEntityListener implements Listener
                         MyPetList.addMyPet(myPet);
                         myPet.createPet(leashTarget.getLocation());
                         myPet.setSitting(sitting);
+                        if (leashTarget instanceof Ocelot)
+                        {
+                            ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());
+                        }
+                        else if (leashTarget instanceof Sheep)
+                        {
+                            ((MySheep) myPet).setColor(((Sheep) leashTarget).getColor().getData());
+                            ((MySheep) myPet).setSheared(((Sheep) leashTarget).isSheared());
+                        }
+                        else if (leashTarget instanceof Villager)
+                        {
+                            ((MyVillager) myPet).setProfession(((Villager) leashTarget).getProfession().getId());
+                        }
+                        else if (leashTarget instanceof Pig)
+                        {
+                            ((MyPig) myPet).setSaddle(((Pig) leashTarget).hasSaddle());
+                        }
                         event.getEntity().remove();
                         MyPetUtil.getDebugLogger().info("New Pet leashed:");
                         MyPetUtil.getDebugLogger().info("   " + myPet.toString());
