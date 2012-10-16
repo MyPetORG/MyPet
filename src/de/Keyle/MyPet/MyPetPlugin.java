@@ -349,7 +349,6 @@ public class MyPetPlugin extends JavaPlugin
                     }
                     else if (MyPetUtil.getDistance2D(myPet.getLocation(), p.getLocation()) < 75)
                     {
-                        myPet.resetSitTimer();
                         myPet.createPet();
                     }
                     else

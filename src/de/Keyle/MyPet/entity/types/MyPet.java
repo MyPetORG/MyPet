@@ -44,7 +44,6 @@ public abstract class MyPet
     protected int health;
     public int respawnTime = 0;
 
-    protected int SitTimer = MyPetConfig.sitdownTime;
     protected boolean isSitting = false;
 
     public PetState status = PetState.Despawned;
@@ -257,32 +256,11 @@ public abstract class MyPet
 
     public boolean isSitting()
     {
-        if (status == PetState.Here)
-        {
-            return craftPet.isSitting();
-        }
-        else
-        {
-            return isSitting;
-        }
+        return false;
     }
 
     public void setSitting(boolean sitting)
     {
-        if (status == PetState.Here)
-        {
-            craftPet.setSitting(sitting);
-            this.isSitting = sitting;
-        }
-        else
-        {
-            this.isSitting = sitting;
-        }
-    }
-
-    public void resetSitTimer()
-    {
-        SitTimer = MyPetConfig.sitdownTime;
     }
 
     public void scheduleTask()
@@ -295,15 +273,6 @@ public abstract class MyPet
                 {
                     skill.schedule();
                 }
-            }
-            if (status == PetState.Here)
-            {
-                if (MyPetConfig.sitdownTime > 0 && SitTimer <= 0)
-                {
-                    craftPet.setSitting(true);
-                    resetSitTimer();
-                }
-                SitTimer--;
             }
             else if (status == PetState.Dead)
             {

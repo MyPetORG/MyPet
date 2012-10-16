@@ -40,7 +40,7 @@ public class CraftMyOcelot extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + "}";
     }
 
     public EntityType getType()

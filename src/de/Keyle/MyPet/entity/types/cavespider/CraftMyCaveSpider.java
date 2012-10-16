@@ -40,7 +40,7 @@ public class CraftMyCaveSpider extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyCaveSpider{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyCaveSpider{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
 
     public EntityType getType()

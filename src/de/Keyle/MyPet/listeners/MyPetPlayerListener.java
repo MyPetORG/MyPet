@@ -60,7 +60,6 @@ public class MyPetPlayerListener implements Listener
                             }
                         }
                         ((Control) myPet.getSkillSystem().getSkill("Control")).setMoveTo(block.getLocation());
-                        myPet.resetSitTimer();
                     }
                 }
             }
@@ -106,7 +105,6 @@ public class MyPetPlayerListener implements Listener
                 }
                 else if (MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) < 75 && MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
                 {
-                    MPet.resetSitTimer();
                     MPet.createPet();
                 }
                 else
@@ -154,7 +152,6 @@ public class MyPetPlayerListener implements Listener
                 MyPet myPet = MyPetList.getMyPet(event.getPlayer());
                 if (myPet.status == PetState.Here)
                 {
-                    myPet.resetSitTimer();
                     if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
                     {
                         if (myPet.isSitting())

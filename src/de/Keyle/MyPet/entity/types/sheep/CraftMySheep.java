@@ -40,7 +40,7 @@ public class CraftMySheep extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMySheep{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMySheep{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
 
     public EntityType getType()

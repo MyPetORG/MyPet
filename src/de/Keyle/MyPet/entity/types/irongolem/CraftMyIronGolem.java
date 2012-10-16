@@ -40,7 +40,7 @@ public class CraftMyIronGolem extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyIronGolem{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyIronGolem{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
 
     public EntityType getType()

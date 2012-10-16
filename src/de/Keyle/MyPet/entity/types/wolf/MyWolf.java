@@ -21,11 +21,14 @@ package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyWolf extends MyPet
 {
     private static int startHP = 10;
+    private int SitTimer = MyPetConfig.sitdownTime;
+
 
     public MyWolf(MyPetPlayer petOwner)
     {
@@ -53,6 +56,31 @@ public class MyWolf extends MyPet
     public static void setStartHP(int hp)
     {
         startHP = hp;
+    }
+
+    public boolean isSitting()
+    {
+        if (status == PetState.Here)
+        {
+            return craftPet.isSitting();
+        }
+        else
+        {
+            return isSitting;
+        }
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        if (status == PetState.Here)
+        {
+            craftPet.setSitting(sitting);
+            this.isSitting = sitting;
+        }
+        else
+        {
+            this.isSitting = sitting;
+        }
     }
 
     public static int getStartHP()

@@ -81,6 +81,31 @@ public class MyOcelot extends MyPet
         return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
     }
 
+    public boolean isSitting()
+    {
+        if (status == PetState.Here)
+        {
+            return craftPet.isSitting();
+        }
+        else
+        {
+            return isSitting;
+        }
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        if (status == PetState.Here)
+        {
+            craftPet.setSitting(sitting);
+            this.isSitting = sitting;
+        }
+        else
+        {
+            this.isSitting = sitting;
+        }
+    }
+
     public static void setStartHP(int hp)
     {
         startHP = hp;

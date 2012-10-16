@@ -40,7 +40,7 @@ public class CraftMyChicken extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyChicken{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyChicken{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
 
     public EntityType getType()

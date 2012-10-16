@@ -61,7 +61,6 @@ public class MyPetEntityListener implements Listener
             {
                 Player damager = (Player) e.getDamager();
                 MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                myPet.resetSitTimer();
                 if (damager.getItemInHand().getType() == MyPetConfig.leashItem)
                 {
                     String msg;
@@ -264,7 +263,6 @@ public class MyPetEntityListener implements Listener
                 if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
                     MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                    myPet.resetSitTimer();
                     if (myPet.getSkillSystem().hasSkill("Behavior"))
                     {
                         Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");

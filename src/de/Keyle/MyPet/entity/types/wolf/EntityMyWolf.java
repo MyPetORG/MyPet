@@ -60,21 +60,19 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(myPet.isSitting());
-                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-                this.setOwnerName(myPet.getOwner().getName());
-                this.world.broadcastEntityEffect(this, (byte) 7); //Hearths effect
-            }
+
+            this.setTamed(true);
+            this.setPathEntity(null);
+            this.setSitting(myPet.isSitting());
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setOwnerName(myPet.getOwner().getName());
+            this.world.broadcastEntityEffect(this, (byte) 7); //Hearths effect
         }
     }
 
     public int getMaxHealth()
     {
-        return MyWolf.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyWolf.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**

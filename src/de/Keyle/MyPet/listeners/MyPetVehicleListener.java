@@ -39,9 +39,9 @@ public class MyPetVehicleListener implements Listener
             if (MyPetList.hasMyPet(player))
             {
                 MyPet myPet = MyPetList.getMyPet(player);
-                if (myPet.status == PetState.Here && !myPet.isSitting())
+                if (myPet.status == PetState.Here)
                 {
-                    myPet.setSitting(true);
+                    myPet.removePet();
                 }
             }
         }

@@ -70,7 +70,6 @@ public abstract class CraftMyPet extends CraftTameableAnimal
     public void setSitting(boolean sitting)
     {
         getHandle().setSitting(sitting);
-        setPath(null);
     }
 
     public boolean isTamed()
@@ -144,7 +143,7 @@ public abstract class CraftMyPet extends CraftTameableAnimal
     @Override
     public String toString()
     {
-        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",tame=" + isTamed() + ",sitting=" + isSitting() + "}";
+        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + "}";
     }
 
     public abstract EntityType getType();

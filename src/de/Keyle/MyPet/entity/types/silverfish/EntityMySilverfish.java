@@ -39,13 +39,12 @@ public class EntityMySilverfish extends EntityMyPet
         PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.d);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.35F, true));
-        this.goalSelector.a(5, controlPathfinderGoal);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.35F, 5.0F, 2.0F, controlPathfinderGoal));
-        this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, 0.4F));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, 0.35F, true));
+        this.goalSelector.a(4, controlPathfinderGoal);
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, 0.35F, 5.0F, 2.0F, controlPathfinderGoal));
+        this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
@@ -60,20 +59,16 @@ public class EntityMySilverfish extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(myPet.isSitting());
-                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-                this.setOwnerName(myPet.getOwner().getName());
-            }
+
+            this.setPathEntity(null);
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
     public int getMaxHealth()
     {
-        return MySilverfish.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MySilverfish.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**

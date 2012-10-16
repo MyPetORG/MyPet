@@ -41,6 +41,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     {
         super(world);
         MyPetUtil.getLogger().severe("Don't try to get a MyPet this way!");
+        MyPetUtil.getDebugLogger().severe("Default Entity constructor called!!!");
     }
 
     public EntityMyPet(World world, MyPet myPet)
@@ -87,7 +88,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
      */
     public boolean k(Entity entity)
     {
-        int damage = 4 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = 4 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
@@ -104,6 +105,17 @@ public abstract class EntityMyPet extends EntityTameableAnimal
             i = this.getMaxHealth();
         }
         this.health = i;
+    }
+
+    @Override
+    public boolean isTamed()
+    {
+        return true;
+    }
+
+    @Override
+    public void setTamed(boolean flag)
+    {
     }
 
     public void setSitting(boolean flag)
@@ -136,11 +148,16 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         return false;
     }
 
+    /**
+     * saves info about this entity to a NBTTagCompound
+     */
     public void a(NBTTagCompound nbttagcompound)
     {
     }
 
-    protected abstract void bd();
+    protected void bd()
+    {
+    }
 
     //Vanilla Methods ------------------------------------------------------------------------------------------------------
 

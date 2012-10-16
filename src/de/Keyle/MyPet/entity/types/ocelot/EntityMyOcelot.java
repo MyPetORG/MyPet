@@ -61,18 +61,16 @@ public class EntityMyOcelot extends EntityMyPet
         {
             this.myPet = MPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
-                this.world.broadcastEntityEffect(this, (byte) 7);
-                this.e(true);
-                this.d.a(true);
-                this.setCatType(((MyOcelot) MPet).getColor());
-            }
+
+            this.setPathEntity(null);
+            this.setSitting(MPet.isSitting());
+            this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+            this.setOwnerName(MPet.getOwner().getName());
+            this.world.broadcastEntityEffect(this, (byte) 7);
+            this.e(true);
+            this.d.a(true);
+            this.setCatType(((MyOcelot) MPet).getColor());
+
         }
     }
 
@@ -90,7 +88,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyOcelot.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyOcelot.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**

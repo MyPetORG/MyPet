@@ -38,13 +38,12 @@ public class EntityMyIronGolem extends EntityMyPet
 
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.25F);
 
-        this.goalSelector.a(2, this.d);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.25F, true));
-        this.goalSelector.a(5, Control);
-        this.goalSelector.a(7, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, 0.2F, 5.0F, 2.0F, Control));
-        this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(1, new PathfinderGoalLeapAtTarget(this, 0.4F));
+        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 0.25F, true));
+        this.goalSelector.a(3, Control);
+        this.goalSelector.a(4, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, 0.2F, 5.0F, 2.0F, Control));
+        this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
@@ -59,21 +58,17 @@ public class EntityMyIronGolem extends EntityMyPet
         {
             this.myPet = MPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
-                this.world.broadcastEntityEffect(this, (byte) 7);
-            }
+
+            this.setPathEntity(null);
+            this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+            this.setOwnerName(MPet.getOwner().getName());
+            this.world.broadcastEntityEffect(this, (byte) 7);
         }
     }
 
     public int getMaxHealth()
     {
-        return MyIronGolem.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyIronGolem.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**

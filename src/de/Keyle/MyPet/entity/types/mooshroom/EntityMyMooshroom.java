@@ -38,12 +38,11 @@ public class EntityMyMooshroom extends EntityMyPet
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.38F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.d);
-        this.goalSelector.a(3, Control);
-        this.goalSelector.a(4, new PathfinderGoalPanic(this, 0.38F));
-        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, Control));
-        this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(2, Control);
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, 0.38F));
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, Control));
+        this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
     }
 
     @Override
@@ -53,20 +52,16 @@ public class EntityMyMooshroom extends EntityMyPet
         {
             this.myPet = MPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(MPet.isSitting());
-                this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-                this.setOwnerName(MPet.getOwner().getName());
-            }
+
+            this.setPathEntity(null);
+            this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+            this.setOwnerName(MPet.getOwner().getName());
         }
     }
 
     public int getMaxHealth()
     {
-        return MyMooshroom.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyMooshroom.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
