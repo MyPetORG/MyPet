@@ -44,11 +44,8 @@ public class MyPetConfig
     public static Material leashItem = Material.STRING;
     public static int respawnTimeFactor = 5;
     public static int respawnTimeFixed = 0;
-    public static int sitdownTime = 15;
     public static int autoSaveTime = 60;
     public static boolean levelSystem = true;
-    //public static boolean HeroesSkill = true;
-    //public static Heroes HeroesPlugin = null;
     public static boolean sendMetrics = true;
     public static boolean useTowny = true;
     public static boolean useFactions = true;
@@ -68,7 +65,6 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Inventory.Creative", true);
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
-        setProperty("MyPet.SitdownTime", 60);
         setProperty("MyPet.StartHP.Wolf", 20);
         setProperty("MyPet.StartHP.Chicken", 4);
         setProperty("MyPet.StartHP.Cow", 10);
@@ -109,8 +105,6 @@ public class MyPetConfig
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
         levelSystem = config.getBoolean("MyPet.LevelSystem", true);
-        //HeroesSkill = config.getBoolean("MyPet.HeroesSkill", false);
-        sitdownTime = config.getInt("MyPet.SitdownTime", 60);
         superperms = config.getBoolean("MyPet.SuperPerms", false);
         sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
         debugLogger = config.getBoolean("MyPet.DebugLogger", false);

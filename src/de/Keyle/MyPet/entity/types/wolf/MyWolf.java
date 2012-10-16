@@ -21,14 +21,11 @@ package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyWolf extends MyPet
 {
     private static int startHP = 10;
-    private int SitTimer = MyPetConfig.sitdownTime;
-
 
     public MyWolf(MyPetPlayer petOwner)
     {
