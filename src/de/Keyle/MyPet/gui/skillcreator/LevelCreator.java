@@ -51,8 +51,6 @@ public class LevelCreator
     private JButton backButton;
     private JLabel mobTypeLabel;
     private JFrame levelCreatorFrame;
-    private JFrame parentFrame;
-    private JButton saveButton;
 
     DefaultTreeModel skillTreeTreeModel;
     DefaultComboBoxModel inheritanceComboBoxModel;
@@ -62,8 +60,6 @@ public class LevelCreator
 
     public LevelCreator(final JFrame parentFrame, final JButton saveButton)
     {
-        this.parentFrame = parentFrame;
-        this.saveButton = saveButton;
         addLevelButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
