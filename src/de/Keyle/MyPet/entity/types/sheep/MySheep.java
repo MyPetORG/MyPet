@@ -29,6 +29,7 @@ public class MySheep extends MyPet
     private static int startHP = 10;
 
     int color = 0;
+    boolean sheared = false;
 
     public MySheep(MyPetPlayer petOwner)
     {
@@ -46,7 +47,7 @@ public class MySheep extends MyPet
         this.color = color;
         if (status == PetState.Here)
         {
-            //((EntityMySheep) Pet.getHandle()).setColor(color);
+            ((EntityMySheep) this.getPet().getHandle()).setColor(color);
         }
     }
 
@@ -55,11 +56,30 @@ public class MySheep extends MyPet
         return color;
     }
 
+    public void setSheared(boolean sheared)
+    {
+        this.sheared = sheared;
+        if (status == PetState.Here)
+        {
+            ((EntityMySheep) this.getPet().getHandle()).setSheared(sheared);
+        }
+    }
+
+    public boolean isSheared()
+    {
+        if (sheared != ((EntityMySheep) this.getPet().getHandle()).isSheared())
+        {
+            sheared = !sheared;
+        }
+        return sheared;
+    }
+
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
         info.setInt("Color", color);
+        info.setBoolean("Sheared", sheared);
         return info;
     }
 
@@ -69,6 +89,10 @@ public class MySheep extends MyPet
         if (info.hasKey("Color"))
         {
             setColor(info.getInt("Color"));
+        }
+        if (info.hasKey("Sheared"))
+        {
+            setSheared(info.getBoolean("Sheared"));
         }
     }
 
@@ -81,7 +105,7 @@ public class MySheep extends MyPet
     @Override
     public String toString()
     {
-        return "MySheep{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MySheep{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", color=" + getColor() + ", sheared=" + isSheared() + "}";
     }
 
     public static void setStartHP(int hp)

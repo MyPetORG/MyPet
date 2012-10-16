@@ -37,14 +37,16 @@ public class EntityMySheep extends EntityMyPet
         this.getNavigation().a(true);
 
         PathfinderGoalControl Control = new PathfinderGoalControl(myPet, 0.38F);
+        PathfinderGoalEatTile eatGoalFinder = new PathfinderGoalEatTile(this);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.d);
         this.goalSelector.a(3, Control);
         this.goalSelector.a(4, new PathfinderGoalPanic(this, 0.38F));
         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
-        this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(6, eatGoalFinder);
+        this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
     }
 
     @Override
@@ -54,21 +56,30 @@ public class EntityMySheep extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
-            if (!isTamed())
-            {
-                this.setTamed(true);
-                this.setPathEntity(null);
-                this.setSitting(myPet.isSitting());
-                this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-                this.setOwnerName(myPet.getOwner().getName());
-                //this.setColor(((MySheep) myPet).getColor());
-            }
+            this.setPathEntity(null);
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setOwnerName(myPet.getOwner().getName());
+            this.setColor(((MySheep) myPet).getColor());
+            this.setSheared(((MySheep) myPet).isSheared());
         }
+    }
+
+    @Override
+    public void setSitting(boolean flag)
+    {
+        //Sheeps can't sit down
+    }
+
+    @Override
+    public boolean isSitting()
+    {
+        //Sheeps can't sit down
+        return false;
     }
 
     public int getMaxHealth()
     {
-        return MySheep.getStartHP() + (isTamed() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MySheep.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     /**
@@ -100,24 +111,52 @@ public class EntityMySheep extends EntityMyPet
                 return true;
             }
         }
-        else if (itemStack != null && itemStack.id == 351)
+        else if (entityhuman == getOwner())
         {
-            if (itemStack.getData() <= 15)
+            if (itemStack != null && itemStack.id == 351)
             {
-                ((MySheep) myPet).setColor(15 - itemStack.getData());
-                return true;
+                if (itemStack.getData() <= 15)
+                {
+                    ((MySheep) myPet).setColor(15 - itemStack.getData());
+                    return true;
+
+                }
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
+            else if (itemStack != null && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
+            {
+                if (!this.world.isStatic)
+                {
+                    ((MySheep) myPet).setSheared(true);
+                    int i = 1 + this.random.nextInt(3);
+
+                    for (int j = 0 ; j < i ; ++j)
+                    {
+                        EntityItem entityitem = this.a(new ItemStack(Block.WOOL.id, 1, ((MySheep) myPet).getColor()), 1.0F);
+
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    }
+                }
+
+                itemStack.damage(1, entityhuman);
+            }
         }
 
         return false;
     }
 
+    /**
+     * Called when the sheeps eat grass
+     */
+    public void aA()
+    {
+        ((MySheep) myPet).setSheared(false);
+    }
+
+    /**
+     * Called when MyPet will do damage to another entity
+     */
     public boolean k(Entity entity)
     {
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
@@ -135,21 +174,7 @@ public class EntityMySheep extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    @Override
-    protected void bd()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(18, this.getHealth());
-    }
-
-    // Vanilla Methods
+    // Vanilla Methods -----------------------------------------------------------------------------------------------------
 
     /**
      * Returns the default sound of the MyPet
@@ -187,5 +212,24 @@ public class EntityMySheep extends EntityMyPet
         byte b0 = this.datawatcher.getByte(16);
 
         this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
+    }
+
+    public boolean isSheared()
+    {
+        return (this.datawatcher.getByte(16) & 16) != 0;
+    }
+
+    public void setSheared(boolean sheared)
+    {
+
+        byte b0 = this.datawatcher.getByte(16);
+        if (sheared)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 16));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & -17));
+        }
     }
 }
