@@ -53,6 +53,7 @@ public class MyPetConfig
     public static boolean useTowny = true;
     public static boolean useFactions = true;
     public static boolean useWorldGuard = true;
+    public static boolean useCitizens = true;
 
     public static boolean superperms = false;
     public static boolean debugLogger = false;
@@ -85,6 +86,7 @@ public class MyPetConfig
         setProperty("MyPet.Support.Towny", true);
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
+        setProperty("MyPet.Support.Citizens", true);
 
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
@@ -115,6 +117,7 @@ public class MyPetConfig
         useTowny = config.getBoolean("MyPet.Support.Towny", true);
         useFactions = config.getBoolean("MyPet.Support.Factions", true);
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
+        useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
 
         MyWolf.setStartHP(config.getInt("MyPet.StartHP.Wolf", 20));
         MyVillager.setStartHP(config.getInt("MyPet.StartHP.Villager", 20));

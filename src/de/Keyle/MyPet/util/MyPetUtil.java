@@ -113,10 +113,13 @@ public class MyPetUtil
 
     public static boolean canHurtCitizens(Player victim)
     {
-        if (victim.hasMetadata("NPC"))
+        if (MyPetConfig.useCitizens && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
         {
-            NPC npc = CitizensAPI.getNPCRegistry().getNPC(victim);
-            return !npc.data().get("protected", true);
+            if (victim.hasMetadata("NPC"))
+            {
+                NPC npc = CitizensAPI.getNPCRegistry().getNPC(victim);
+                return !npc.data().get("protected", true);
+            }
         }
         return true;
     }
