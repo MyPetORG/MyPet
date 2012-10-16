@@ -33,6 +33,7 @@ public class EntityMyVillager extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/villager/villager.png";
+        this.bw = 0.5F;
         this.a(0.6F, 0.8F);
         this.getNavigation().a(true);
 
@@ -66,7 +67,6 @@ public class EntityMyVillager extends EntityMyPet
             this.setOwnerName(myPet.getOwner().getName());
             this.world.broadcastEntityEffect(this, (byte) 7);
             this.e(true);
-            this.d.a(true);
             this.setProfession(((MyVillager) myPet).getProfession());
         }
     }
@@ -135,17 +135,7 @@ public class EntityMyVillager extends EntityMyPet
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    public void bd()
-    {
-    }
-
     // Vanilla Methods
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0);
-    }
 
     /**
      * Returns the default sound of the MyPet
@@ -179,10 +169,5 @@ public class EntityMyVillager extends EntityMyPet
     public void setProfession(int i)
     {
         this.datawatcher.watch(16, (byte) i);
-    }
-
-    public String getLocalizedName()
-    {
-        return this.isTamed() ? "entity.Cat.name" : super.getLocalizedName();
     }
 }

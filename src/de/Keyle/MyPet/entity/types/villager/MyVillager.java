@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
 
@@ -42,12 +41,12 @@ public class MyVillager extends MyPet
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
-    public void setProfession(int color)
+    public void setProfession(int profession)
     {
-        this.profession = color;
+        this.profession = profession;
         if (status == PetState.Here)
         {
-            ((EntityMyOcelot) craftPet.getHandle()).setCatType(color);
+            ((EntityMyVillager) craftPet.getHandle()).setProfession(profession);
         }
     }
 
