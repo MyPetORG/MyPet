@@ -69,7 +69,7 @@ public class EntityMyOcelot extends EntityMyPet
             this.world.broadcastEntityEffect(this, (byte) 7);
             this.e(true);
             this.d.a(true);
-            this.setCatType(((MyOcelot) MPet).getColor());
+            this.setCatType(((MyOcelot) MPet).getCatType());
 
         }
     }
@@ -136,10 +136,6 @@ public class EntityMyOcelot extends EntityMyPet
         int damage = 3 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    public void bd()
-    {
     }
 
     // Vanilla Methods

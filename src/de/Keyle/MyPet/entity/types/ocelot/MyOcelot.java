@@ -28,7 +28,7 @@ public class MyOcelot extends MyPet
 {
     private static int startHP = 10;
 
-    private int color = 0;
+    private int catType = 0;
 
     public MyOcelot(MyPetPlayer petOwner)
     {
@@ -41,32 +41,32 @@ public class MyOcelot extends MyPet
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
-    public void setColor(int color)
+    public void setCatType(int catType)
     {
-        this.color = color;
+        this.catType = catType;
         if (status == PetState.Here)
         {
-            ((EntityMyOcelot) craftPet.getHandle()).setCatType(color);
+            ((EntityMyOcelot) craftPet.getHandle()).setCatType(catType);
         }
     }
 
-    public int getColor()
+    public int getCatType()
     {
-        return color;
+        return catType;
     }
 
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("Color", color);
+        info.setInt("catType", catType);
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setColor(info.getInt("Color"));
+        setCatType(info.getInt("catType"));
     }
 
     @Override
