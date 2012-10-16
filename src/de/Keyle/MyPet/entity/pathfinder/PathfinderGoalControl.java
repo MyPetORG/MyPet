@@ -67,15 +67,11 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
      */
     public boolean b()
     {
-        MyPetUtil.getLogger().info("t: " + timeToMove);
         boolean stop = false;
-        MyPetUtil.getLogger().info("b");
-
         Control control = (Control) myPet.getSkillSystem().getSkill("Control");
 
         if (control.getLocation(false) != null && moveTo != control.getLocation(false))
         {
-            MyPetUtil.getLogger().info("set t: " + timeToMove);
             moveTo = control.getLocation();
             timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
             timeToMove = timeToMove < 3 ? 3 : timeToMove;
