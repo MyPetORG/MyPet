@@ -253,6 +253,7 @@ public class SkilltreeCreator
                     "   craftbukkit-1.3.1-R1.0.jar\n" +
                     "   craftbukkit-1.3.1-R2.0.jar\n" +
                     "   craftbukkit-1.3.2-R1.0.jar\n" +
+                    "   craftbukkit-1.3.2-R2.0.jar\n" +
                     "\nIn one of these folders:" +
                     "\n   " + bukkitFile.getAbsolutePath() +
                     "\n   " + bukkitFile.getParent(), "Create new Skilltree", JOptionPane.ERROR_MESSAGE);

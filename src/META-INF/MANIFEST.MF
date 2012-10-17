@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator
-Class-Path: ../craftbukkit-1.3.2-R1.0.jar ./craftbukkit-1.3.2-R1.0.jar ../craftbukkit-1.3.1-R1.0.jar ./craftbukkit-1.3.1-R1.0.jar ../craftbukkit-1.3.1-R2.0.jar ./craftbukkit-1.3.1-R2.0.jar ../craftbukkit.jar ./craftbukkit.jar
+Class-Path: ../craftbukkit-1.3.2-R1.0.jar ./craftbukkit-1.3.2-R1.0.jar ../craftbukkit-1.3.2-R2.0.jar ./craftbukkit-1.3.2-R2.0.jar ../craftbukkit-1.3.1-R1.0.jar ./craftbukkit-1.3.1-R1.0.jar ../craftbukkit-1.3.1-R2.0.jar ./craftbukkit-1.3.1-R2.0.jar ../craftbukkit.jar ./craftbukkit.jar
 
