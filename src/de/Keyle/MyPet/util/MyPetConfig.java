@@ -73,6 +73,7 @@ public class MyPetConfig
         setProperty("MyPet.StartHP.IronGolem", 15);
         setProperty("MyPet.StartHP.Silverfish", 8);
         setProperty("MyPet.StartHP.Pig", 10);
+        setProperty("MyPet.StartHP.PigZombie", 10);
         setProperty("MyPet.StartHP.Sheep", 8);
         setProperty("MyPet.SuperPerms", false);
         setProperty("MyPet.LevelSystem", true);
@@ -122,6 +123,7 @@ public class MyPetConfig
         MyCow.setStartHP(config.getInt("MyPet.StartHP.Cow", 10));
         MyMooshroom.setStartHP(config.getInt("MyPet.StartHP.Mooshroom", 10));
         MyPig.setStartHP(config.getInt("MyPet.StartHP.Pig", 10));
+        MyPig.setStartHP(config.getInt("MyPet.StartHP.PigZombie", 20));
         MySheep.setStartHP(config.getInt("MyPet.StartHP.Sheep", 8));
         MyCaveSpider.setStartHP(config.getInt("MyPet.StartHP.CaveSpider", 12));
 

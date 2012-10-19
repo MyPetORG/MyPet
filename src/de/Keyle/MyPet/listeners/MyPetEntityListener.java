@@ -153,7 +153,7 @@ public class MyPetEntityListener implements Listener
 
                         willBeLeashed = targetIronGolem.isPlayerCreated();
                     }
-                    else if (leashTarget instanceof Silverfish)//) || leashTarget instanceof CaveSpider)
+                    else if (leashTarget instanceof Silverfish || leashTarget instanceof PigZombie)//) || leashTarget instanceof CaveSpider)
                     {
                         willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
                     }
@@ -164,6 +164,7 @@ public class MyPetEntityListener implements Listener
 
                     if (willBeLeashed)
                     {
+                        MyPetUtil.getLogger().info("" + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                         event.setCancelled(true);
                         MyPet myPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));

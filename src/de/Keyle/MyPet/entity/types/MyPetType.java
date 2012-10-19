@@ -33,6 +33,8 @@ import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
+import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
@@ -57,6 +59,7 @@ public enum MyPetType
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
+    PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
     CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
