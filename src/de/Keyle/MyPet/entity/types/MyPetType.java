@@ -45,6 +45,8 @@ import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
+import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.World;
@@ -66,7 +68,8 @@ public enum MyPetType
     PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
     Slime(EntityType.SLIME, "Slime", EntityMySlime.class, MySlime.class),
-    Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class);
+    Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
+    Zombie(EntityType.ZOMBIE, "Zombie", EntityMyZombie.class, MyZombie.class);
 
     private EntityType entityType;
     private String typeName;

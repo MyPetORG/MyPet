@@ -39,6 +39,7 @@ import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
@@ -226,6 +227,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityPigZombie.class, "PigZombie", 57);
             a.invoke(a, EntityMySlime.class, "Slime", 55);
             a.invoke(a, EntitySlime.class, "Slime", 55);
+            a.invoke(a, EntityMyZombie.class, "Zombie", 54);
+            a.invoke(a, EntityZombie.class, "Zombie", 54);
             //TODO Creeper
 
             debugLogger.info("registered MyPet entities.");

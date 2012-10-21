@@ -39,6 +39,7 @@
                 <item value="Sheep"/>
                 <item value="Silverfish"/>
                 <item value="Villager"/>
+                <item value="Zombie"/>
               </model>
             </properties>
           </component>
