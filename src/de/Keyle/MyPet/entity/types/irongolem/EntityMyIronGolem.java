@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types.irongolem;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -61,8 +62,6 @@ public class EntityMyIronGolem extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-            this.setOwnerName(MPet.getOwner().getName());
-            this.world.broadcastEntityEffect(this, (byte) 7);
         }
     }
 
@@ -96,15 +95,9 @@ public class EntityMyIronGolem extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
         }
 
         return false;
@@ -144,9 +137,24 @@ public class EntityMyIronGolem extends EntityMyPet
     {
     }
 
+    public void f(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
+        }
+    }
+
     protected void a()
     {
         super.a();
+        this.datawatcher.a(16, (byte) 0); // flower???
     }
 
     // Vanilla Methods

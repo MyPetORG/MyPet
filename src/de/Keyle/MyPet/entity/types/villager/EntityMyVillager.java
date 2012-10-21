@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -64,9 +65,6 @@ public class EntityMyVillager extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
-            this.world.broadcastEntityEffect(this, (byte) 7);
-            this.e(true);
             this.setProfession(((MyVillager) myPet).getProfession());
         }
     }
@@ -81,7 +79,7 @@ public class EntityMyVillager extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Changed Vanilla Methods ---------------------------------------------------------------------------------------
+    //Vanilla Methods ---------------------------------------------------------------------------------------
 
     public int getMaxHealth()
     {
@@ -115,16 +113,11 @@ public class EntityMyVillager extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
-        }
+
         return false;
     }
 
@@ -135,7 +128,13 @@ public class EntityMyVillager extends EntityMyPet
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 
-    // Vanilla Methods
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // profession
+        this.datawatcher.a(12, 0);        // age
+    }
+
 
     /**
      * Returns the default sound of the MyPet

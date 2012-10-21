@@ -28,11 +28,10 @@ import java.util.Collection;
 
 public class InactiveMyPet
 {
-    private String petName = "Wolf";
+    private String petName = "";
     private final MyPetPlayer petOwner;
     private int health;
     private int respawnTime;
-    private boolean isSitting;
     private Location location;
     private double exp;
     private MyPetType petType = MyPetType.Wolf;
@@ -140,16 +139,6 @@ public class InactiveMyPet
         this.location = Location;
     }
 
-    public boolean isSitting()
-    {
-        return isSitting;
-    }
-
-    public void setSitting(boolean isSitting)
-    {
-        this.isSitting = isSitting;
-    }
-
     public MyPetPlayer getPetOwner()
     {
         return petOwner;
@@ -158,6 +147,6 @@ public class InactiveMyPet
     @Override
     public String toString()
     {
-        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getPetOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", sitting=" + isSitting() + "}";
+        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getPetOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
     }
 }

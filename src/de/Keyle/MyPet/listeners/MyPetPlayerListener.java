@@ -44,7 +44,7 @@ public class MyPetPlayerListener implements Listener
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.item && MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.status == PetState.Here && !myPet.isSitting())
+            if (myPet.status == PetState.Here && myPet.getPet().canMove())
             {
                 if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
                 {
@@ -154,7 +154,7 @@ public class MyPetPlayerListener implements Listener
                 {
                     if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
                     {
-                        if (myPet.isSitting())
+                        if (!myPet.getPet().canMove())
                         {
                             myPet.removePet();
                         }
@@ -163,7 +163,6 @@ public class MyPetPlayerListener implements Listener
                             myPet.removePet();
                             myPet.setLocation(event.getPlayer().getLocation());
                             myPet.createPet();
-                            myPet.setSitting(false);
                         }
                     }
                 }

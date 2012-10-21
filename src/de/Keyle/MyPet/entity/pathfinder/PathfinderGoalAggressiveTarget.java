@@ -58,7 +58,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                 {
                     return false;
                 }
-                else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && !myPet.isSitting())
+                else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && myPet.getPet().canMove())
                 {
                     if (target == null || !target.isAlive())
                     {

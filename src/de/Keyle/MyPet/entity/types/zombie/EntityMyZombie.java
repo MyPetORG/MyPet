@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.zombie;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -59,9 +60,7 @@ public class EntityMyZombie extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
-            this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
@@ -95,7 +94,7 @@ public class EntityMyZombie extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }

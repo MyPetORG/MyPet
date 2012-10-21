@@ -48,7 +48,6 @@ public class CommandCall implements CommandExecutor
                         myPet.removePet();
                         myPet.setLocation(petOwner.getLocation());
                         myPet.createPet();
-                        myPet.setSitting(false);
                     }
                     else
                     {
@@ -66,7 +65,6 @@ public class CommandCall implements CommandExecutor
                 {
                     myPet.setLocation(petOwner.getLocation());
                     myPet.createPet();
-                    myPet.setSitting(false);
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
                     MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                     return true;

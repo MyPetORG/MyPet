@@ -55,7 +55,6 @@ public class EntityMyPig extends EntityMyPet
             this.setSaddle(((MyPig) myPet).hasSaddle());
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
@@ -89,7 +88,7 @@ public class EntityMyPig extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }
@@ -130,6 +129,13 @@ public class EntityMyPig extends EntityMyPet
     }
 
     // Vanilla Methods -----------------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // saddle
+        this.datawatcher.a(12, 0);        // age
+    }
 
     public boolean hasSaddle()
     {

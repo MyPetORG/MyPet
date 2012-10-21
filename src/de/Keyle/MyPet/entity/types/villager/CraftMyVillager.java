@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 
@@ -31,10 +30,14 @@ public class CraftMyVillager extends CraftMyPet
         super(server, villager);
     }
 
-    @Override
-    public EntityMyPet getHandle()
+    public int getProfession()
     {
-        return (EntityMyVillager) entity;
+        return ((EntityMyVillager) getHandle()).getProfession();
+    }
+
+    public void setProfession(int profession)
+    {
+        ((EntityMyVillager) getHandle()).setProfession(profession);
     }
 
     @Override

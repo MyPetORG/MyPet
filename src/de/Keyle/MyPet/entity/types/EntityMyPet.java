@@ -24,7 +24,7 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
 
-public abstract class EntityMyPet extends EntityTameableAnimal
+public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
     protected float e;
     protected boolean h;
@@ -70,7 +70,7 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (isMyPet() && entityhuman.name.equalsIgnoreCase(this.getOwnerName()))
+        if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
         {
             if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
             {
@@ -107,21 +107,14 @@ public abstract class EntityMyPet extends EntityTameableAnimal
         this.health = i;
     }
 
-    @Override
-    public boolean isTamed()
+    public boolean canMove()
     {
         return true;
     }
 
-    @Override
-    public void setTamed(boolean flag)
+    public EntityLiving getOwner()
     {
-    }
-
-    public void setSitting(boolean flag)
-    {
-        this.d.a(flag);
-        super.setSitting(flag);
+        return this.world.a(myPet.getOwner().getName());
     }
 
     public abstract org.bukkit.entity.Entity getBukkitEntity();
@@ -137,16 +130,6 @@ public abstract class EntityMyPet extends EntityTameableAnimal
      * Returns the default sound of the MyPet
      */
     protected abstract String aQ();
-
-    public EntityAnimal createChild(EntityAnimal entityanimal)
-    {
-        return null;
-    }
-
-    public boolean mate(EntityAnimal entityanimal)
-    {
-        return false;
-    }
 
     /**
      * saves info about this entity to a NBTTagCompound
@@ -252,14 +235,13 @@ public abstract class EntityMyPet extends EntityTameableAnimal
      */
     public int bf()
     {
-        return this.isSitting() ? 20 : super.bf();
+        return super.bf();
     }
 
     public boolean damageEntity(DamageSource damagesource, int i)
     {
         Entity entity = damagesource.getEntity();
 
-        this.d.a(false);
         if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
         {
             i = (i + 1) / 2;
@@ -290,5 +272,17 @@ public abstract class EntityMyPet extends EntityTameableAnimal
     public void i(boolean flag)
     {
         this.b = flag;
+    }
+
+    protected void tamedEffect(boolean tamed)
+    {
+        String str = tamed ? "heart" : "smoke";
+        for (int i = 0 ; i < 7 ; i++)
+        {
+            double d1 = this.random.nextGaussian() * 0.02D;
+            double d2 = this.random.nextGaussian() * 0.02D;
+            double d3 = this.random.nextGaussian() * 0.02D;
+            this.world.a(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
+        }
     }
 }

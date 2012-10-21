@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types.wolf;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.NBTTagCompound;
 
 public class MyWolf extends MyPet
 {
@@ -59,7 +60,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            return craftPet.isSitting();
+            return ((CraftMyWolf) craftPet).isSitting();
         }
         else
         {
@@ -71,12 +72,29 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            craftPet.setSitting(sitting);
+            ((CraftMyWolf) craftPet).setSitting(sitting);
             this.isSitting = sitting;
         }
         else
         {
             this.isSitting = sitting;
+        }
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("sitting", isSitting());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        if (info.hasKey("sitting"))
+        {
+            setSitting(info.getBoolean("sitting"));
         }
     }
 

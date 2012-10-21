@@ -57,23 +57,9 @@ public class EntityMySheep extends EntityMyPet
             isMyPet = true;
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
             this.setColor(((MySheep) myPet).getColor());
             this.setSheared(((MySheep) myPet).isSheared());
         }
-    }
-
-    @Override
-    public void setSitting(boolean flag)
-    {
-        //Sheeps can't sit down
-    }
-
-    @Override
-    public boolean isSitting()
-    {
-        //Sheeps can't sit down
-        return false;
     }
 
     public int getMaxHealth()
@@ -106,7 +92,7 @@ public class EntityMySheep extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }
@@ -175,6 +161,14 @@ public class EntityMySheep extends EntityMyPet
 
     // Vanilla Methods -----------------------------------------------------------------------------------------------------
 
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // color/sheared
+        this.datawatcher.a(12, 0);        // age
+    }
+
     /**
      * Returns the default sound of the MyPet
      */
@@ -230,5 +224,15 @@ public class EntityMySheep extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) (b0 & -17));
         }
+    }
+
+    public int getAge()
+    {
+        return this.datawatcher.getInt(12);
+    }
+
+    public void setAge(int i)
+    {
+        this.datawatcher.watch(12, i);
     }
 }

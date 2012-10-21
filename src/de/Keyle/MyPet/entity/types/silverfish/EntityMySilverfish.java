@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.silverfish;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -62,7 +63,6 @@ public class EntityMySilverfish extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
@@ -96,15 +96,9 @@ public class EntityMySilverfish extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
         }
 
         return false;

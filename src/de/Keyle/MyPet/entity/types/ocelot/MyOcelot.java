@@ -41,6 +41,23 @@ public class MyOcelot extends MyPet
         return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
+    public boolean isSitting()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyOcelot) craftPet).isSitting();
+        }
+        else
+        {
+            return isSitting;
+        }
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        ((CraftMyOcelot) craftPet).setSitting(sitting);
+    }
+
     public void setCatType(int catType)
     {
         this.catType = catType;
@@ -60,6 +77,7 @@ public class MyOcelot extends MyPet
     {
         NBTTagCompound info = new NBTTagCompound("Info");
         info.setInt("catType", catType);
+        info.setBoolean("sitting", isSitting());
         return info;
     }
 
@@ -67,6 +85,10 @@ public class MyOcelot extends MyPet
     public void setExtendedInfo(NBTTagCompound info)
     {
         setCatType(info.getInt("catType"));
+        if (info.hasKey("sitting"))
+        {
+            setSitting(info.getBoolean("sitting"));
+        }
     }
 
     @Override
@@ -78,32 +100,7 @@ public class MyOcelot extends MyPet
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
-    }
-
-    public boolean isSitting()
-    {
-        if (status == PetState.Here)
-        {
-            return craftPet.isSitting();
-        }
-        else
-        {
-            return isSitting;
-        }
-    }
-
-    public void setSitting(boolean sitting)
-    {
-        if (status == PetState.Here)
-        {
-            craftPet.setSitting(sitting);
-            this.isSitting = sitting;
-        }
-        else
-        {
-            this.isSitting = sitting;
-        }
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + "}";
     }
 
     public static void setStartHP(int hp)

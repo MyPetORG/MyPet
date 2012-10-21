@@ -30,7 +30,7 @@ public class MyZombie extends MyPet
     public MyZombie(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "PigZombie";
+        this.petName = "Zombie";
     }
 
     public int getMaxHealth()

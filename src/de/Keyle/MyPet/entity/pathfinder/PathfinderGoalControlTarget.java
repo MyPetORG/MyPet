@@ -51,7 +51,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
      */
     public boolean a()
     {
-        if (controlPathfinderGoal.moveTo != null && !petEntity.isSitting())
+        if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
         {
             if (myPet.getSkillSystem().hasSkill("Behavior"))
             {

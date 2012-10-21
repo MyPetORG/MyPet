@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.pigzombie;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -61,7 +62,6 @@ public class EntityMyPigZombie extends EntityMyPet
             isMyPet = true;
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
@@ -95,22 +95,8 @@ public class EntityMyPigZombie extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
-            }
-        }
-        else if (entityhuman == getOwner())
-        {
-            if (itemStack != null && itemStack.id == -2)
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
             }
         }
 

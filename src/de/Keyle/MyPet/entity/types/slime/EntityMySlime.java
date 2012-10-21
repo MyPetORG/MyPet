@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.slime;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -62,7 +63,7 @@ public class EntityMySlime extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
+            setSize(1);
         }
     }
 
@@ -96,15 +97,9 @@ public class EntityMySlime extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
         }
 
         return false;
@@ -129,11 +124,17 @@ public class EntityMySlime extends EntityMyPet
 
     // Vanilla Methods -----------------------------------------------------------------------------------------------------
 
-    @Override
+    public void setSize(int i)
+    {
+        this.datawatcher.watch(16, (byte) i);
+        a(0.6F * i, 0.6F * i);
+        this.aV = i;
+    }
+
     protected void a()
     {
-        this.datawatcher.a(16, (byte) 1);
-        super.a(); // TODO caused NPE because ID 16 is aleardy in use
+        super.a();
+        this.datawatcher.a(16, (byte) 1); //size
     }
 
     /**

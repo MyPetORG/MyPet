@@ -189,7 +189,6 @@ public class MyPetList
         inactiveMyPet.setHealth(activeMyPet.getHealth());
         inactiveMyPet.setLocation(activeMyPet.getLocation());
         inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
-        inactiveMyPet.setSitting(inactiveMyPet.isSitting());
         inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());
         inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
 

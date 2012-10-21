@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 
@@ -31,10 +30,14 @@ public class CraftMyWolf extends CraftMyPet
         super(server, wolf);
     }
 
-    @Override
-    public EntityMyPet getHandle()
+    public boolean isSitting()
     {
-        return (EntityMyWolf) entity;
+        return ((EntityMyWolf) getHandle()).isSitting();
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        ((EntityMyWolf) getHandle()).setSitting(sitting);
     }
 
     @Override

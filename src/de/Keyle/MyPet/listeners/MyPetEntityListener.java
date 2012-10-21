@@ -92,10 +92,6 @@ public class MyPetEntityListener implements Listener
                             damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
                         }
 
-                        if (myPet.getPet().isSitting())
-                        {
-                            myPet.getPet().setSitting(true);
-                        }
                         event.setCancelled(true);
                     }
                     if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
@@ -156,7 +152,7 @@ public class MyPetEntityListener implements Listener
 
                             willBeLeashed = targetIronGolem.isPlayerCreated();
                         }
-                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie)// || leashTarget instanceof Slime || leashTarget instanceof CaveSpider)
+                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Slime)// || leashTarget instanceof CaveSpider)
                         {
                             willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
                         }
@@ -173,7 +169,6 @@ public class MyPetEntityListener implements Listener
                             MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
                             MyPetList.addMyPet(myPet);
                             myPet.createPet(leashTarget.getLocation());
-                            myPet.setSitting(sitting);
                             if (leashTarget instanceof Ocelot)
                             {
                                 ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());

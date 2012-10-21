@@ -32,12 +32,8 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Inventory extends MyPetGenericSkill
 {
-    public static final List<Player> openChests = new ArrayList<Player>();
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
     public static boolean creative = true;
 
@@ -59,11 +55,6 @@ public class Inventory extends MyPetGenericSkill
             {
                 inv.setName(myPet.petName);
                 OpenInventory(myPet.getOwner().getPlayer());
-                if (!myPet.isSitting())
-                {
-                    openChests.add(myPet.getOwner().getPlayer());
-                }
-                myPet.getPet().setSitting(true);
             }
             else
             {

@@ -19,12 +19,10 @@
 
 package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.skill.skills.Inventory;
 import net.minecraft.server.*;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.ArrayList;
@@ -230,15 +228,6 @@ public class MyPetCustomInventory implements IInventory
     public void onClose(CraftHumanEntity who)
     {
         this.transaction.remove(who);
-        Player player = MyPetUtil.getServer().getPlayer(who.getName());
-        if (MyPetList.hasMyPet(player))
-        {
-            if (Inventory.openChests.contains(player.getPlayer()))
-            {
-                MyPetList.getMyPet(player).setSitting(false);
-                Inventory.openChests.remove(player.getPlayer());
-            }
-        }
     }
 
     public List<HumanEntity> getViewers()

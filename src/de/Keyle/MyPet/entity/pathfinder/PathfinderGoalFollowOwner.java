@@ -58,7 +58,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.isSitting())
+        else if (!this.petEntity.canMove())
         {
             return false;
         }
@@ -79,7 +79,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
     public boolean b()
     {
-        return controlPathfinderGoal.moveTo == null && !this.nav.f() && this.petEntity.e(this.petOwner) > (double) (this.b * this.b) && !this.petEntity.isSitting();
+        return controlPathfinderGoal.moveTo == null && !this.nav.f() && this.petEntity.e(this.petOwner) > (double) (this.b * this.b) && this.petEntity.canMove();
     }
 
     public void e()
@@ -100,7 +100,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     {
         this.petEntity.getControllerLook().a(this.petOwner, 10.0F, (float) this.petEntity.bf());
 
-        if (!this.petEntity.isSitting())
+        if (this.petEntity.canMove())
         {
             if (--this.h <= 0)
             {

@@ -25,14 +25,13 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
 public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 {
 
-    EntityTameableAnimal petEntity;
+    EntityMyPet petEntity;
     EntityLiving target;
     MyPet myPet;
 
@@ -49,51 +48,35 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
      */
     public boolean a()
     {
-        if (!this.petEntity.isTamed())
+        if (myPet.getSkillSystem().hasSkill("Behavior"))
         {
-            return false;
-        }
-        else
-        {
-            EntityLiving petOwner = this.petEntity.getOwner();
-
-            if (petOwner == null)
+            Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+            if (behaviorSkill.getLevel() > 0)
             {
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                {
+                    return false;
+                }
+            }
+        }
+        this.target = this.petEntity.goalTarget;
+        this.petEntity.goalTarget = null;
+
+        if (this.target instanceof EntityPlayer)
+        {
+            Player targetPlayer = (Player) this.target.getBukkitEntity();
+            if (myPet.getOwner().equals(targetPlayer))
+            {
+                this.target = null;
                 return false;
             }
-            else
+            else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
-                if (myPet.getSkillSystem().hasSkill("Behavior"))
-                {
-                    Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
-                    if (behaviorSkill.getLevel() > 0)
-                    {
-                        if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-                        {
-                            return false;
-                        }
-                    }
-                }
-                this.target = ((EntityMyPet) this.petEntity).goalTarget;
-                ((EntityMyPet) this.petEntity).goalTarget = null;
-
-                if (this.target instanceof EntityPlayer)
-                {
-                    Player targetPlayer = (Player) this.target.getBukkitEntity();
-                    if (myPet.getOwner().equals(targetPlayer))
-                    {
-                        this.target = null;
-                        return false;
-                    }
-                    else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
-                    {
-                        this.target = null;
-                        return false;
-                    }
-                }
-                return true;
+                this.target = null;
+                return false;
             }
         }
+        return true;
     }
 
     public void e()

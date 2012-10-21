@@ -89,7 +89,6 @@ public class MyPetPlugin extends JavaPlugin
         }
         getTimer().stopTimer();
         MyPetList.clearList();
-        Inventory.openChests.clear();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
         debugLogger.info("MyPet disabled!");
         MyPetUtil.getLogger().info("Disabled");
@@ -401,7 +400,6 @@ public class MyPetPlugin extends JavaPlugin
             {
                 petType = "Wolf";
             }
-            boolean petSitting = myPetNBT.getBoolean("Sitting");
 
             InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
@@ -409,7 +407,6 @@ public class MyPetPlugin extends JavaPlugin
             IMPet.setHealth(petHealthNow);
             IMPet.setRespawnTime(petRespawnTime);
             IMPet.setPetName(petName);
-            IMPet.setSitting(petSitting);
             IMPet.setExp(petExp);
             IMPet.setSkills(myPetNBT.getCompound("Skills"));
             IMPet.setPetType(MyPetType.valueOf(petType));
@@ -448,7 +445,6 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Health", myPet.getHealth());
             petNBT.setInt("Respawntime", myPet.respawnTime);
             petNBT.setString("petName", myPet.petName);
-            petNBT.setBoolean("Sitting", myPet.isSitting());
             petNBT.setDouble("Exp", myPet.getExperience().getExp());
             petNBT.setCompound("Info", myPet.getExtendedInfo());
 
@@ -485,7 +481,6 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Health", inactiveMyPet.getHealth());
             petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
             petNBT.setString("petName", inactiveMyPet.getPetName());
-            petNBT.setBoolean("Sitting", inactiveMyPet.isSitting());
             petNBT.setDouble("Exp", inactiveMyPet.getExp());
 
             petNBT.set("Skills", inactiveMyPet.getSkills());

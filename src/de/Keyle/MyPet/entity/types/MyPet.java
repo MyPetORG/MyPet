@@ -100,7 +100,6 @@ public abstract class MyPet
     {
         if (status == PetState.Here)
         {
-            isSitting = craftPet.isSitting();
             health = craftPet.getHealth();
             petLocation = craftPet.getLocation();
             if (petLocation == null && getOwner().isOnline())
@@ -124,10 +123,11 @@ public abstract class MyPet
         }
     }
 
-    public void createPet()
+    public boolean createPet()
     {
         if (status == PetState.Here || getOwner() == null)
         {
+            return false;
         }
         else
         {
@@ -142,19 +142,24 @@ public abstract class MyPet
                 }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
-                    return;
+                    return false;
                 }
                 craftPet = (CraftMyPet) petEntity.getBukkitEntity();
-                craftPet.setSitting(isSitting);
                 status = PetState.Here;
             }
+            else
+            {
+                return false;
+            }
         }
+        return true;
     }
 
-    public void createPet(Location loc)
+    public boolean createPet(Location loc)
     {
         if (status == PetState.Here || getOwner() == null)
         {
+            return false;
         }
         else
         {
@@ -170,13 +175,17 @@ public abstract class MyPet
                 }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
-                    return;
+                    return false;
                 }
                 craftPet = (CraftMyPet) petEntity.getBukkitEntity();
-                craftPet.setSitting(isSitting);
                 status = PetState.Here;
             }
+            else
+            {
+                return false;
+            }
         }
+        return true;
     }
 
     public CraftMyPet getPet()
@@ -254,15 +263,6 @@ public abstract class MyPet
         }
     }
 
-    public boolean isSitting()
-    {
-        return false;
-    }
-
-    public void setSitting(boolean sitting)
-    {
-    }
-
     public void scheduleTask()
     {
         if (status != PetState.Despawned && getOwner() != null)
@@ -274,7 +274,7 @@ public abstract class MyPet
                     skill.schedule();
                 }
             }
-            else if (status == PetState.Dead)
+            if (status == PetState.Dead)
             {
                 respawnTime--;
                 if (respawnTime <= 0)

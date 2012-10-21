@@ -21,7 +21,9 @@ package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -29,6 +31,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyOcelot extends EntityMyPet
 {
+    private PathfinderGoalSit sitPathfinderGoal;
+
     public EntityMyOcelot(World world, MyPet MPet)
     {
         super(world, MPet);
@@ -37,10 +41,14 @@ public class EntityMyOcelot extends EntityMyPet
         this.bw = 0.3F;
         this.getNavigation().a(true);
 
+        if (this.sitPathfinderGoal == null)
+        {
+            this.sitPathfinderGoal = new PathfinderGoalSit(this);
+        }
         PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.d);
+        this.goalSelector.a(2, this.sitPathfinderGoal);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.6F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.bw + 0.3F, true));
         this.goalSelector.a(5, Control);
@@ -63,12 +71,7 @@ public class EntityMyOcelot extends EntityMyPet
             isMyPet = true;
 
             this.setPathEntity(null);
-            this.setSitting(MPet.isSitting());
             this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-            this.setOwnerName(MPet.getOwner().getName());
-            this.world.broadcastEntityEffect(this, (byte) 7);
-            this.e(true);
-            this.d.a(true);
             this.setCatType(((MyOcelot) MPet).getCatType());
 
         }
@@ -118,17 +121,44 @@ public class EntityMyOcelot extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
+        else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
-            this.d.a(!this.isSitting());
+            this.sitPathfinderGoal.toogleSitting();
             this.bu = false;
             this.setPathEntity(null);
         }
         return false;
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        if (this.sitPathfinderGoal == null)
+        {
+            this.sitPathfinderGoal = new PathfinderGoalSit(this);
+        }
+        this.sitPathfinderGoal.setSitting(sitting);
+    }
+
+    public boolean isSitting()
+    {
+        return this.sitPathfinderGoal.isSitting();
+    }
+
+    public void applySitting(boolean sitting)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (sitting)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
+        }
     }
 
     public boolean k(Entity entity)
@@ -143,7 +173,9 @@ public class EntityMyOcelot extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(18, (byte) 0);
+        this.datawatcher.a(16, (byte) 0); // tamed/sitting
+        this.datawatcher.a(18, (byte) 0); // cat type
+        this.datawatcher.a(12, 0);        // age
     }
 
     /**
@@ -151,7 +183,7 @@ public class EntityMyOcelot extends EntityMyPet
      */
     protected String aQ()
     {
-        return this.s() ? "mob.cat.purr" : (this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow");
+        return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
     /**
@@ -178,10 +210,5 @@ public class EntityMyOcelot extends EntityMyPet
     public void setCatType(int i)
     {
         this.datawatcher.watch(18, (byte) i);
-    }
-
-    public String getLocalizedName()
-    {
-        return this.isTamed() ? "entity.Cat.name" : super.getLocalizedName();
     }
 }

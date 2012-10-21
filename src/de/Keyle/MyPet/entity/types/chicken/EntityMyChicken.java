@@ -55,7 +55,6 @@ public class EntityMyChicken extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
         }
     }
 
@@ -89,15 +88,9 @@ public class EntityMyChicken extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
         }
 
         return false;
@@ -158,16 +151,10 @@ public class EntityMyChicken extends EntityMyPet
         this.b += this.i * 2.0F;
     }
 
-    @Override
-    protected void bd()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
     protected void a()
     {
         super.a();
-        this.datawatcher.a(18, this.getHealth());
+        this.datawatcher.a(12, 0); // age
     }
 
     // Vanilla Methods

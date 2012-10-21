@@ -55,7 +55,6 @@ public class EntityMyMooshroom extends EntityMyPet
 
             this.setPathEntity(null);
             this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
-            this.setOwnerName(MPet.getOwner().getName());
         }
     }
 
@@ -89,15 +88,9 @@ public class EntityMyMooshroom extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
-        {
-            this.d.a(!this.isSitting());
-            this.bu = false;
-            this.setPathEntity(null);
         }
 
         return false;

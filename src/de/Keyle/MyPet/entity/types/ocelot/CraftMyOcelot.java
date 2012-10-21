@@ -20,9 +20,9 @@
 package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ocelot.Type;
 
 public class CraftMyOcelot extends CraftMyPet
 {
@@ -31,16 +31,30 @@ public class CraftMyOcelot extends CraftMyPet
         super(server, ocelot);
     }
 
-    @Override
-    public EntityMyPet getHandle()
+    public boolean isSitting()
     {
-        return (EntityMyOcelot) entity;
+        return ((EntityMyOcelot) getHandle()).isSitting();
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        ((EntityMyOcelot) getHandle()).setSitting(sitting);
+    }
+
+    public Type getCatType()
+    {
+        return Type.getType(((EntityMyOcelot) getHandle()).getCatType());
+    }
+
+    public void setCatType(int catTypeID)
+    {
+        ((EntityMyOcelot) getHandle()).setCatType(catTypeID);
     }
 
     @Override
     public String toString()
     {
-        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + "}";
+        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",catType=" + getCatType() + "}";
     }
 
     public EntityType getType()

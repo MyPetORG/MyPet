@@ -21,16 +21,14 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.skills.Behavior;
 import net.minecraft.server.EntityCreature;
-import net.minecraft.server.PathEntity;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftCreature;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftTameableAnimal;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
-public abstract class CraftMyPet extends CraftTameableAnimal
+public abstract class CraftMyPet extends CraftCreature
 {
     protected AnimalTamer petOwner;
 
@@ -62,26 +60,6 @@ public abstract class CraftMyPet extends CraftTameableAnimal
         }
     }
 
-    public boolean isSitting()
-    {
-        return getHandle().isSitting();
-    }
-
-    public void setSitting(boolean sitting)
-    {
-        getHandle().setSitting(sitting);
-    }
-
-    public boolean isTamed()
-    {
-        return getHandle().isTamed();
-    }
-
-    public void setTamed(boolean tame)
-    {
-        getHandle().setTamed(tame);
-    }
-
     public AnimalTamer getOwner()
     {
         if (petOwner == null && !("").equals(getOwnerName()))
@@ -96,42 +74,9 @@ public abstract class CraftMyPet extends CraftTameableAnimal
         return petOwner;
     }
 
-    public void setOwner(AnimalTamer tamer)
-    {
-        petOwner = tamer;
-        if (petOwner != null)
-        {
-            setTamed(true);
-            setPath(null);
-            if (petOwner instanceof Player)
-            {
-                setOwnerName(((Player) petOwner).getName());
-            }
-            else
-            {
-                setOwnerName("");
-            }
-        }
-        else
-        {
-            setTamed(false);
-            setOwnerName("");
-        }
-    }
-
     public String getOwnerName()
     {
-        return getHandle().getOwnerName();
-    }
-
-    public void setOwnerName(String ownerName)
-    {
-        getHandle().setOwnerName(ownerName);
-    }
-
-    private void setPath(PathEntity pathentity)
-    {
-        getHandle().setPathEntity(pathentity);
+        return getHandle().myPet.getOwner().getName();
     }
 
     @Override
@@ -140,10 +85,15 @@ public abstract class CraftMyPet extends CraftTameableAnimal
         return (EntityMyPet) entity;
     }
 
+    public boolean canMove()
+    {
+        return getHandle().canMove();
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + "}";
+        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
 
     public abstract EntityType getType();

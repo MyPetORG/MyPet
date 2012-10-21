@@ -21,7 +21,9 @@ package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -29,6 +31,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityMyPet
 {
+    private PathfinderGoalSit sitPathfinderGoal;
+
     public EntityMyWolf(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -36,10 +40,14 @@ public class EntityMyWolf extends EntityMyPet
         this.a(0.6F, 0.8F);
         this.getNavigation().a(true);
 
+        if (this.sitPathfinderGoal == null)
+        {
+            this.sitPathfinderGoal = new PathfinderGoalSit(this);
+        }
         PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.4F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.d);
+        this.goalSelector.a(2, this.sitPathfinderGoal);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.3F, true));
         this.goalSelector.a(5, controlPathfinderGoal);
@@ -61,12 +69,37 @@ public class EntityMyWolf extends EntityMyPet
             this.myPet = myPet;
             isMyPet = true;
 
-            this.setTamed(true);
             this.setPathEntity(null);
-            this.setSitting(myPet.isSitting());
+            this.setSitting(((MyWolf) myPet).isSitting());
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            this.setOwnerName(myPet.getOwner().getName());
-            this.world.broadcastEntityEffect(this, (byte) 7); //Hearths effect
+            setTamed(true);
+        }
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        if (this.sitPathfinderGoal == null)
+        {
+            this.sitPathfinderGoal = new PathfinderGoalSit(this);
+        }
+        this.sitPathfinderGoal.setSitting(sitting);
+    }
+
+    public boolean isSitting()
+    {
+        return this.sitPathfinderGoal.isSitting();
+    }
+
+    public void applySitting(boolean sitting)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (sitting)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
     }
 
@@ -103,14 +136,14 @@ public class EntityMyWolf extends EntityMyPet
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                this.e(true);
+                this.tamedEffect(true);
                 return true;
             }
         }
-        else if (entityhuman.name.equalsIgnoreCase(this.getOwnerName()) && !this.world.isStatic)
+        else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             //sit down
-            this.d.a(!this.isSitting());
+            this.sitPathfinderGoal.toogleSitting();
             this.bu = false;
             this.setPathEntity(null);
         }
@@ -138,7 +171,7 @@ public class EntityMyWolf extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
+    // Vanilla Methods -----------------------------------------------------------------------------------------------------
 
     /**
      * Returns the default sound of the MyPet
@@ -157,10 +190,33 @@ public class EntityMyWolf extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(18, this.getHealth());
+        this.datawatcher.a(16, (byte) 0);         // tamed/angry/sitting
+        this.datawatcher.a(18, this.getHealth()); // tail height
+        this.datawatcher.a(12, 0);                // age
     }
 
-    // Vanilla Methods
+    public void setTamed(boolean tamed)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (tamed)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x4));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
+        }
+    }
+
+    public int getAge()
+    {
+        return this.datawatcher.getInt(12);
+    }
+
+    public void setAge(int i)
+    {
+        this.datawatcher.watch(12, i);
+    }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
