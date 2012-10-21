@@ -39,6 +39,8 @@ import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
+import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
@@ -63,6 +65,7 @@ public enum MyPetType
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
     PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
+    Slime(EntityType.SLIME, "Slime", EntityMySlime.class, MySlime.class),
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class);
 
     private EntityType entityType;
