@@ -400,7 +400,7 @@ public class MyPetEntityListener implements Listener
                         }
                         else
                         {
-                            killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
+                            killer = MyPetUtil.setColors(MyPetLanguage.getString("PlayerWolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
                         }
                     }
                     else
