@@ -80,13 +80,13 @@ public class MyPetEntityListener implements Listener
                     {
                         msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
                     }
-                    damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% HP: %hp%").replace("%wolfname%", myPet.petName).replace("%hp%", msg));
+                    damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
                     if (MyPetConfig.levelSystem)
                     {
                         int lvl = myPet.getExperience().getLevel();
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%wolfname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%wolfname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
+                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
                     }
 
                     if (myPet.getPet().isSitting())
@@ -396,11 +396,11 @@ public class MyPetEntityListener implements Listener
                     {
                         if (MyPetList.isMyPet(w.getEntityId()))
                         {
-                            killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", MyPetList.getMyPet(w.getEntityId()).getOwner().getName()).replace("%wolfname%", MyPetList.getMyPet(w.getEntityId()).petName);
+                            killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", MyPetList.getMyPet(w.getEntityId()).getOwner().getName()).replace("%petname%", MyPetList.getMyPet(w.getEntityId()).petName);
                         }
                         else
                         {
-                            killer = MyPetUtil.setColors(MyPetLanguage.getString("OwnedWolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
+                            killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
                         }
                     }
                     else
@@ -438,7 +438,7 @@ public class MyPetEntityListener implements Listener
                 killer = MyPetUtil.setColors(MyPetLanguage.getString("kvoid"));
             }
 
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%wolfname%", myPet.petName) + killer);
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
         }
     }
 }
