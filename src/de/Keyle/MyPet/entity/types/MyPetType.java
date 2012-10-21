@@ -52,18 +52,18 @@ import java.lang.reflect.Constructor;
 
 public enum MyPetType
 {
-    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
-    IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
-    Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
+    CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
+    IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
+    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
+    Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
+    Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
     PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
-    Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
-    CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
-    Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class);
+    Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class);
 
     private EntityType entityType;
     private String typeName;
