@@ -201,34 +201,34 @@ public class MyPetPlugin extends JavaPlugin
             a.setAccessible(true);
 
             // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
-            a.invoke(a, EntityMyWolf.class, "Wolf", 95);
-            a.invoke(a, EntityWolf.class, "Wolf", 95);
-            a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
-            a.invoke(a, EntityOcelot.class, "Ozelot", 98);
-            a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
-            a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
+            a.invoke(a, EntityMyZombie.class, "Zombie", 54);
+            a.invoke(a, EntityZombie.class, "Zombie", 54);
+            a.invoke(a, EntityMySlime.class, "Slime", 55);
+            a.invoke(a, EntitySlime.class, "Slime", 55);
+            a.invoke(a, EntityMyPigZombie.class, "PigZombie", 57);
+            a.invoke(a, EntityPigZombie.class, "PigZombie", 57);
+            a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
+            a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
             a.invoke(a, EntityMySilverfish.class, "Silverfish", 60);
             a.invoke(a, EntitySilverfish.class, "Silverfish", 60);
-            a.invoke(a, EntityMyChicken.class, "Chicken", 93);
-            a.invoke(a, EntityChicken.class, "Chicken", 93);
-            a.invoke(a, EntityMyCow.class, "Cow", 92);
-            a.invoke(a, EntityCow.class, "Cow", 92);
-            a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
-            a.invoke(a, EntityMushroomCow.class, "MushroomCow", 96);
             a.invoke(a, EntityMyPig.class, "Pig", 90);
             a.invoke(a, EntityPig.class, "Pig", 90);
             a.invoke(a, EntityMySheep.class, "Sheep", 91);
             a.invoke(a, EntitySheep.class, "Sheep", 91);
+            a.invoke(a, EntityMyCow.class, "Cow", 92);
+            a.invoke(a, EntityCow.class, "Cow", 92);
+            a.invoke(a, EntityMyChicken.class, "Chicken", 93);
+            a.invoke(a, EntityChicken.class, "Chicken", 93);
+            a.invoke(a, EntityMyWolf.class, "Wolf", 95);
+            a.invoke(a, EntityWolf.class, "Wolf", 95);
+            a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
+            a.invoke(a, EntityMushroomCow.class, "MushroomCow", 96);
+            a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
+            a.invoke(a, EntityOcelot.class, "Ozelot", 98);
+            a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
+            a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
-            a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
-            a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
-            a.invoke(a, EntityMyPigZombie.class, "PigZombie", 57);
-            a.invoke(a, EntityPigZombie.class, "PigZombie", 57);
-            a.invoke(a, EntityMySlime.class, "Slime", 55);
-            a.invoke(a, EntitySlime.class, "Slime", 55);
-            a.invoke(a, EntityMyZombie.class, "Zombie", 54);
-            a.invoke(a, EntityZombie.class, "Zombie", 54);
             //TODO Creeper
 
             debugLogger.info("registered MyPet entities.");
