@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
@@ -53,149 +54,159 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDamage(final EntityDamageEvent event)
     {
-        if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
+        if (event.isCancelled())
         {
             return;
         }
-        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-
-        if (event.getEntity() instanceof CraftMyPet)
+        if (event instanceof EntityDamageByEntityEvent)
         {
-            if (e.getDamager() instanceof Player)
+            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+
+            if (event.getEntity() instanceof CraftMyPet)
             {
-                Player damager = (Player) e.getDamager();
-                MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                if (damager.getItemInHand().getType() == MyPetConfig.leashItem)
+                if (e.getDamager() instanceof Player)
                 {
-                    String msg;
-                    if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                    Player damager = (Player) e.getDamager();
+                    MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    if (damager.getItemInHand().getType() == MyPetConfig.leashItem)
                     {
-                        msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                        String msg;
+                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                        {
+                            msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                        }
+                        else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
+                        {
+                            msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                        }
+                        else
+                        {
+                            msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                        }
+                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
+                        if (MyPetConfig.levelSystem)
+                        {
+                            int lvl = myPet.getExperience().getLevel();
+                            double exp = myPet.getExperience().getCurrentExp();
+                            double reqEXP = myPet.getExperience().getRequiredExp();
+                            damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
+                        }
+
+                        if (myPet.getPet().isSitting())
+                        {
+                            myPet.getPet().setSitting(true);
+                        }
+                        event.setCancelled(true);
                     }
-                    else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
+                    if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
                     {
-                        msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                        event.setCancelled(true);
                     }
-                    else
+                }
+            }
+            else if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
+            {
+                if (e.getDamager() instanceof Player)
+                {
+                    Player damager = (Player) e.getDamager();
+
+                    if (!MyPetList.hasMyPet(damager))
                     {
-                        msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
-                    }
-                    damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
-                    if (MyPetConfig.levelSystem)
-                    {
-                        int lvl = myPet.getExperience().getLevel();
-                        double exp = myPet.getExperience().getCurrentExp();
-                        double reqEXP = myPet.getExperience().getRequiredExp();
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
+                        if (!MyPetPermissions.has(damager, "MyPet.user.leash") || damager.getItemInHand().getType() != MyPetConfig.leashItem)
+                        {
+                            return;
+                        }
+                        Entity leashTarget = event.getEntity();
+                        boolean willBeLeashed = false;
+                        boolean sitting = false;
+
+                        if (leashTarget instanceof Wolf)
+                        {
+                            Wolf targetWolf = (Wolf) event.getEntity();
+
+                            String wolfOwner = ((CraftWolf) targetWolf).getHandle().getOwnerName();
+                            Player attacker = (Player) e.getDamager();
+
+                            boolean isTarmed = targetWolf.isTamed();
+                            sitting = ((Wolf) event.getEntity()).isSitting();
+
+                            if (isTarmed && wolfOwner.equals(attacker.getName()))
+                            {
+                                willBeLeashed = true;
+                            }
+                        }
+                        else if (leashTarget instanceof Ocelot)
+                        {
+                            Ocelot targetOcelot = (Ocelot) event.getEntity();
+
+                            String ocelotOwner = ((CraftOcelot) targetOcelot).getHandle().getOwnerName();
+                            Player attacker = (Player) e.getDamager();
+
+                            boolean isTarmed = targetOcelot.isTamed();
+                            sitting = ((Ocelot) event.getEntity()).isSitting();
+
+                            if (isTarmed && ocelotOwner.equals(attacker.getName()))
+                            {
+                                willBeLeashed = true;
+                            }
+                        }
+                        else if (leashTarget instanceof IronGolem)
+                        {
+                            IronGolem targetIronGolem = (IronGolem) event.getEntity();
+
+                            willBeLeashed = targetIronGolem.isPlayerCreated();
+                        }
+                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie)// || leashTarget instanceof Slime || leashTarget instanceof CaveSpider)
+                        {
+                            willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
+                        }
+                        else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep)// || leashTarget instanceof Villager)
+                        {
+                            willBeLeashed = ((Ageable) leashTarget).isAdult();
+                        }
+
+                        if (willBeLeashed)
+                        {
+                            MyPetUtil.getLogger().info("" + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
+                            event.setCancelled(true);
+                            MyPet myPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
+                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                            MyPetList.addMyPet(myPet);
+                            myPet.createPet(leashTarget.getLocation());
+                            myPet.setSitting(sitting);
+                            if (leashTarget instanceof Ocelot)
+                            {
+                                ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());
+                            }
+                            else if (leashTarget instanceof Sheep)
+                            {
+                                ((MySheep) myPet).setColor(((Sheep) leashTarget).getColor().getData());
+                                ((MySheep) myPet).setSheared(((Sheep) leashTarget).isSheared());
+                            }
+                            else if (leashTarget instanceof Villager)
+                            {
+                                ((MyVillager) myPet).setProfession(((Villager) leashTarget).getProfession().getId());
+                            }
+                            else if (leashTarget instanceof Pig)
+                            {
+                                ((MyPig) myPet).setSaddle(((Pig) leashTarget).hasSaddle());
+                            }
+                            event.getEntity().remove();
+                            MyPetUtil.getDebugLogger().info("New Pet leashed:");
+                            MyPetUtil.getDebugLogger().info("   " + myPet.toString());
+                            MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
+                            damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
+                        }
                     }
 
-                    if (myPet.getPet().isSitting())
-                    {
-                        myPet.getPet().setSitting(true);
-                    }
-                    event.setCancelled(true);
-                }
-                if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
-                {
-                    event.setCancelled(true);
                 }
             }
         }
-        else if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
+        else if (event.getCause() == DamageCause.FALL)
         {
-            if (e.getDamager() instanceof Player)
+            if (event.getEntity() instanceof CraftMyChicken)
             {
-                Player damager = (Player) e.getDamager();
-
-                if (!MyPetList.hasMyPet(damager))
-                {
-                    if (!MyPetPermissions.has(damager, "MyPet.user.leash") || damager.getItemInHand().getType() != MyPetConfig.leashItem)
-                    {
-                        return;
-                    }
-                    Entity leashTarget = event.getEntity();
-                    boolean willBeLeashed = false;
-                    boolean sitting = false;
-
-                    if (leashTarget instanceof Wolf)
-                    {
-                        Wolf targetWolf = (Wolf) event.getEntity();
-
-                        String wolfOwner = ((CraftWolf) targetWolf).getHandle().getOwnerName();
-                        Player attacker = (Player) e.getDamager();
-
-                        boolean isTarmed = targetWolf.isTamed();
-                        sitting = ((Wolf) event.getEntity()).isSitting();
-
-                        if (isTarmed && wolfOwner.equals(attacker.getName()))
-                        {
-                            willBeLeashed = true;
-                        }
-                    }
-                    else if (leashTarget instanceof Ocelot)
-                    {
-                        Ocelot targetOcelot = (Ocelot) event.getEntity();
-
-                        String ocelotOwner = ((CraftOcelot) targetOcelot).getHandle().getOwnerName();
-                        Player attacker = (Player) e.getDamager();
-
-                        boolean isTarmed = targetOcelot.isTamed();
-                        sitting = ((Ocelot) event.getEntity()).isSitting();
-
-                        if (isTarmed && ocelotOwner.equals(attacker.getName()))
-                        {
-                            willBeLeashed = true;
-                        }
-                    }
-                    else if (leashTarget instanceof IronGolem)
-                    {
-                        IronGolem targetIronGolem = (IronGolem) event.getEntity();
-
-                        willBeLeashed = targetIronGolem.isPlayerCreated();
-                    }
-                    else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie)// || leashTarget instanceof Slime || leashTarget instanceof CaveSpider)
-                    {
-                        willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
-                    }
-                    else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep)// || leashTarget instanceof Villager)
-                    {
-                        willBeLeashed = ((Ageable) leashTarget).isAdult();
-                    }
-
-                    if (willBeLeashed)
-                    {
-                        MyPetUtil.getLogger().info("" + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
-                        event.setCancelled(true);
-                        MyPet myPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
-                        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                        MyPetList.addMyPet(myPet);
-                        myPet.createPet(leashTarget.getLocation());
-                        myPet.setSitting(sitting);
-                        if (leashTarget instanceof Ocelot)
-                        {
-                            ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());
-                        }
-                        else if (leashTarget instanceof Sheep)
-                        {
-                            ((MySheep) myPet).setColor(((Sheep) leashTarget).getColor().getData());
-                            ((MySheep) myPet).setSheared(((Sheep) leashTarget).isSheared());
-                        }
-                        else if (leashTarget instanceof Villager)
-                        {
-                            ((MyVillager) myPet).setProfession(((Villager) leashTarget).getProfession().getId());
-                        }
-                        else if (leashTarget instanceof Pig)
-                        {
-                            ((MyPig) myPet).setSaddle(((Pig) leashTarget).hasSaddle());
-                        }
-                        event.getEntity().remove();
-                        MyPetUtil.getDebugLogger().info("New Pet leashed:");
-                        MyPetUtil.getDebugLogger().info("   " + myPet.toString());
-                        MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
-                        damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
-                    }
-                }
-
+                event.setCancelled(true);
             }
         }
     }
