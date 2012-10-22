@@ -36,7 +36,7 @@ public class EntityMyVillager extends EntityMyPet
         this.texture = "/mob/villager/villager.png";
         this.bw = 0.5F;
         this.a(0.6F, 0.8F);
-        this.getNavigation().a(true);
+        this.getNavigation().b(true);
 
         PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.4F);
 
@@ -76,12 +76,12 @@ public class EntityMyVillager extends EntityMyPet
 
     public int getProfession()
     {
-        return this.datawatcher.getByte(16);
+        return this.datawatcher.getInt(16);
     }
 
-    public void setProfession(int i)
+    public void setProfession(int profession)
     {
-        this.datawatcher.watch(16, (byte) i);
+        this.datawatcher.watch(16, profession);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class EntityMyVillager extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 0); // profession
-        this.datawatcher.a(12, 0);        // age
+        this.datawatcher.a(16, 0); // profession
+        this.datawatcher.a(12, 0); // age
     }
 
     /**
