@@ -72,6 +72,11 @@ public class EntityMySlime extends EntityMyPet
         return MySlime.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public int getSize()
+    {
+        return this.datawatcher.getByte(16);
+    }
+
     public void setSize(int i)
     {
         this.datawatcher.watch(16, (byte) i);
