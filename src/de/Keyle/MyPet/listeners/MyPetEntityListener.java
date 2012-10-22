@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
@@ -114,7 +115,6 @@ public class MyPetEntityListener implements Listener
                         }
                         Entity leashTarget = event.getEntity();
                         boolean willBeLeashed = false;
-                        boolean sitting = false;
 
                         if (leashTarget instanceof Wolf)
                         {
@@ -124,8 +124,6 @@ public class MyPetEntityListener implements Listener
                             Player attacker = (Player) e.getDamager();
 
                             boolean isTarmed = targetWolf.isTamed();
-                            sitting = ((Wolf) event.getEntity()).isSitting();
-
                             if (isTarmed && wolfOwner.equals(attacker.getName()))
                             {
                                 willBeLeashed = true;
@@ -139,8 +137,6 @@ public class MyPetEntityListener implements Listener
                             Player attacker = (Player) e.getDamager();
 
                             boolean isTarmed = targetOcelot.isTamed();
-                            sitting = ((Ocelot) event.getEntity()).isSitting();
-
                             if (isTarmed && ocelotOwner.equals(attacker.getName()))
                             {
                                 willBeLeashed = true;
@@ -152,18 +148,17 @@ public class MyPetEntityListener implements Listener
 
                             willBeLeashed = targetIronGolem.isPlayerCreated();
                         }
-                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Slime)// || leashTarget instanceof CaveSpider)
+                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Slime || leashTarget instanceof Spider)
                         {
                             willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
                         }
-                        else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep)// || leashTarget instanceof Villager)
+                        else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep || leashTarget instanceof Villager)
                         {
                             willBeLeashed = ((Ageable) leashTarget).isAdult();
                         }
 
                         if (willBeLeashed)
                         {
-                            MyPetUtil.getLogger().info("" + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                             event.setCancelled(true);
                             MyPet myPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
                             MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
@@ -172,6 +167,11 @@ public class MyPetEntityListener implements Listener
                             if (leashTarget instanceof Ocelot)
                             {
                                 ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());
+                                ((MyOcelot) myPet).setSitting(((Ocelot) leashTarget).isSitting());
+                            }
+                            else if (leashTarget instanceof Wolf)
+                            {
+                                ((MyWolf) myPet).setSitting(((Wolf) leashTarget).isSitting());
                             }
                             else if (leashTarget instanceof Sheep)
                             {

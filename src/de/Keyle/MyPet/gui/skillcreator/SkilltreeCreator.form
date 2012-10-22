@@ -35,10 +35,12 @@
                 <item value="Ocelot"/>
                 <item value="Pig"/>
                 <item value="PigZombie"/>
-                <item value="Wolf"/>
                 <item value="Sheep"/>
                 <item value="Silverfish"/>
+                <item value="Slime"/>
+                <item value="Spider"/>
                 <item value="Villager"/>
+                <item value="Wolf"/>
                 <item value="Zombie"/>
               </model>
             </properties>
