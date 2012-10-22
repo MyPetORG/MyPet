@@ -71,6 +71,56 @@ public class EntityMySilverfish extends EntityMyPet
         return MySilverfish.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMySilverfish(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(18, this.getHealth());
+    }
+
+    @Override
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.silverfish.step", 1.0F, 1.0F);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.silverfish.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.silverfish.hit";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.silverfish.kill";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -100,7 +150,6 @@ public class EntityMySilverfish extends EntityMyPet
                 return true;
             }
         }
-
         return false;
     }
 
@@ -109,63 +158,5 @@ public class EntityMySilverfish extends EntityMyPet
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMySilverfish(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    @Override
-    protected void bd()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(18, this.getHealth());
-    }
-
-    // Vanilla Methods
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.silverfish.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.silverfish.hit";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.silverfish.kill";
-    }
-
-    @Override
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.silverfish.step", 1.0F, 1.0F);
     }
 }

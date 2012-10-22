@@ -71,6 +71,69 @@ public class EntityMyCaveSpider extends EntityMyPet
         return MyCaveSpider.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public EnumMonsterType getMonsterType()
+    {
+        return EnumMonsterType.ARTHROPOD;
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyCaveSpider(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // N/A
+    }
+
+    public void a(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+        if (flag)
+        {
+            b0 = (byte) (b0 | 1);
+        }
+        else
+        {
+            b0 &= -2;
+        }
+        this.datawatcher.watch(16, b0);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.spider";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.spider";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.spiderdeath";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -100,7 +163,6 @@ public class EntityMyCaveSpider extends EntityMyPet
                 return true;
             }
         }
-
         return false;
     }
 
@@ -109,72 +171,5 @@ public class EntityMyCaveSpider extends EntityMyPet
         int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyCaveSpider(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // N/A
-    }
-
-    // Vanilla Methods
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.spider";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.spider";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.spiderdeath";
-    }
-
-    public EnumMonsterType getMonsterType()
-    {
-        return EnumMonsterType.ARTHROPOD;
-    }
-
-    public void a(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        if (flag)
-        {
-            b0 = (byte) (b0 | 1);
-        }
-        else
-        {
-            b0 &= -2;
-        }
-
-        this.datawatcher.watch(16, b0);
     }
 }

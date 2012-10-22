@@ -67,6 +67,100 @@ public class EntityMySheep extends EntityMyPet
         return MySheep.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public int getColor()
+    {
+        return this.datawatcher.getByte(16) & 15;
+    }
+
+    public void setColor(int i)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
+    }
+
+    public boolean isSheared()
+    {
+        return (this.datawatcher.getByte(16) & 16) != 0;
+    }
+
+    public void setSheared(boolean sheared)
+    {
+
+        byte b0 = this.datawatcher.getByte(16);
+        if (sheared)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 16));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & -17));
+        }
+    }
+
+    public int getAge()
+    {
+        return this.datawatcher.getInt(12);
+    }
+
+    public void setAge(int i)
+    {
+        this.datawatcher.watch(12, i);
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMySheep(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // color/sheared
+        this.datawatcher.a(12, 0);        // age
+    }
+
+    /**
+     * Called when the sheeps eat grass
+     */
+    public void aA()
+    {
+        ((MySheep) myPet).setSheared(false);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.sheep";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.sheep";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.sheep";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -123,20 +217,10 @@ public class EntityMySheep extends EntityMyPet
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     }
                 }
-
                 itemStack.damage(1, entityhuman);
             }
         }
-
         return false;
-    }
-
-    /**
-     * Called when the sheeps eat grass
-     */
-    public void aA()
-    {
-        ((MySheep) myPet).setSheared(false);
     }
 
     /**
@@ -147,92 +231,5 @@ public class EntityMySheep extends EntityMyPet
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMySheep(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    // Vanilla Methods -----------------------------------------------------------------------------------------------------
-
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // color/sheared
-        this.datawatcher.a(12, 0);        // age
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.sheep";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.sheep";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.sheep";
-    }
-
-    public int getColor()
-    {
-        return this.datawatcher.getByte(16) & 15;
-    }
-
-    public void setColor(int i)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
-    }
-
-    public boolean isSheared()
-    {
-        return (this.datawatcher.getByte(16) & 16) != 0;
-    }
-
-    public void setSheared(boolean sheared)
-    {
-
-        byte b0 = this.datawatcher.getByte(16);
-        if (sheared)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 16));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & -17));
-        }
-    }
-
-    public int getAge()
-    {
-        return this.datawatcher.getInt(12);
-    }
-
-    public void setAge(int i)
-    {
-        this.datawatcher.watch(12, i);
     }
 }

@@ -70,6 +70,44 @@ public class EntityMyPigZombie extends EntityMyPet
         return MyPigZombie.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyPigZombie(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.zombiepig.zpig";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.zombiepig.zpighurt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.zombiepig.zpigdeath";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -99,7 +137,6 @@ public class EntityMyPigZombie extends EntityMyPet
                 return true;
             }
         }
-
         return false;
     }
 
@@ -108,43 +145,5 @@ public class EntityMyPigZombie extends EntityMyPet
         int damage = 5 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyPigZombie(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    // Vanilla Methods -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.zombiepig.zpig";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.zombiepig.zpighurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.zombiepig.zpigdeath";
     }
 }

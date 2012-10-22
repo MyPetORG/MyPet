@@ -70,6 +70,56 @@ public class EntityMyIronGolem extends EntityMyPet
         return MyIronGolem.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyIronGolem(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // flower???
+    }
+
+    @Override
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.irongolem.walk", 1.0F, 1.0F);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "none";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.irongolem.hit";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.irongolem.death";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -99,8 +149,21 @@ public class EntityMyIronGolem extends EntityMyPet
                 return true;
             }
         }
-
         return false;
+    }
+
+    public void f(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
+        }
     }
 
     public boolean k(Entity entity)
@@ -118,76 +181,5 @@ public class EntityMyIronGolem extends EntityMyPet
 
         this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
         return flag;
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyIronGolem(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    //Changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    @Override
-    protected void bd()
-    {
-    }
-
-    public void f(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
-        }
-    }
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // flower???
-    }
-
-    // Vanilla Methods
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "none";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.irongolem.hit";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.irongolem.death";
-    }
-
-    @Override
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.irongolem.walk", 1.0F, 1.0F);
     }
 }

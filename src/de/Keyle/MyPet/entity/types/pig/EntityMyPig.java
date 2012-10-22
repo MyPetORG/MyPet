@@ -63,6 +63,68 @@ public class EntityMyPig extends EntityMyPet
         return MyPig.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public boolean hasSaddle()
+    {
+        return (this.datawatcher.getByte(16) & 0x1) != 0;
+    }
+
+    public void setSaddle(boolean saddle)
+    {
+        if (saddle)
+        {
+            this.datawatcher.watch(16, (byte) 1);
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) 0);
+        }
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyPig(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // saddle
+        this.datawatcher.a(12, 0);        // age
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.pig";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.pig";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.pigdeath";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -107,7 +169,6 @@ public class EntityMyPig extends EntityMyPet
                 ((MyPig) myPet).setSaddle(true);
             }
         }
-
         return false;
     }
 
@@ -116,67 +177,5 @@ public class EntityMyPig extends EntityMyPet
         int damage = 1 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyPig(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    // Vanilla Methods -----------------------------------------------------------------------------------------------------
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // saddle
-        this.datawatcher.a(12, 0);        // age
-    }
-
-    public boolean hasSaddle()
-    {
-        return (this.datawatcher.getByte(16) & 0x1) != 0;
-    }
-
-    public void setSaddle(boolean saddle)
-    {
-        if (saddle)
-        {
-            this.datawatcher.watch(16, (byte) 1);
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) 0);
-        }
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.pig";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.pig";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.pigdeath";
     }
 }

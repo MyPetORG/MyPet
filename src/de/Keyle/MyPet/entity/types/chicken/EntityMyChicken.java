@@ -28,6 +28,13 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyChicken extends EntityMyPet
 {
+    // Variables for flying of the chicken
+    public float b = 0.0F;
+    public float c = 0.0F;
+    public float g;
+    public float h;
+    public float i = 1.0F;
+
     public EntityMyChicken(World world, MyPet MPet)
     {
         super(world, MPet);
@@ -63,6 +70,50 @@ public class EntityMyChicken extends EntityMyPet
         return MyChicken.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyChicken(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(12, 0); // age
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.chicken";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.chickenhurt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.chickenhurt";
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -92,34 +143,8 @@ public class EntityMyChicken extends EntityMyPet
                 return true;
             }
         }
-
         return false;
     }
-
-    public boolean k(Entity entity)
-    {
-        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyChicken(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    public float b = 0.0F;
-    public float c = 0.0F;
-    public float g;
-    public float h;
-    public float i = 1.0F;
 
     public void d()
     {
@@ -151,37 +176,10 @@ public class EntityMyChicken extends EntityMyPet
         this.b += this.i * 2.0F;
     }
 
-    protected void a()
+    public boolean k(Entity entity)
     {
-        super.a();
-        this.datawatcher.a(12, 0); // age
-    }
+        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
-    // Vanilla Methods
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.chicken";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.chickenhurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.chickenhurt";
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 }

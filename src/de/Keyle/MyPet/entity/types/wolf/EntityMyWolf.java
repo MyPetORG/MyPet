@@ -108,6 +108,81 @@ public class EntityMyWolf extends EntityMyPet
         return MyWolf.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public void setTamed(boolean tamed)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (tamed)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x4));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
+        }
+    }
+
+    public int getAge()
+    {
+        return this.datawatcher.getInt(12);
+    }
+
+    public void setAge(int age)
+    {
+        this.datawatcher.watch(12, age);
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        this.datawatcher.a(16, (byte) 0);         // tamed/angry/sitting
+        this.datawatcher.a(18, this.getHealth()); // tail height
+        this.datawatcher.a(12, 0);                // age
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aR()
+    {
+        return "mob.wolf.hurt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String aS()
+    {
+        return "mob.wolf.death";
+    }
+
+    @Override
+    protected void bd()
+    {
+        this.datawatcher.watch(18, this.getHealth()); // update tail height
+    }
+
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -142,12 +217,10 @@ public class EntityMyWolf extends EntityMyPet
         }
         else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
-            //sit down
             this.sitPathfinderGoal.toogleSitting();
             this.bu = false;
             this.setPathEntity(null);
         }
-
         return false;
     }
 
@@ -159,80 +232,5 @@ public class EntityMyWolf extends EntityMyPet
         int damage = 4 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
-    // Vanilla Methods -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
-    }
-
-    @Override
-    protected void bd()
-    {
-        this.datawatcher.watch(18, this.getHealth());
-    }
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0);         // tamed/angry/sitting
-        this.datawatcher.a(18, this.getHealth()); // tail height
-        this.datawatcher.a(12, 0);                // age
-    }
-
-    public void setTamed(boolean tamed)
-    {
-        int i = this.datawatcher.getByte(16);
-        if (tamed)
-        {
-            this.datawatcher.watch(16, (byte) (i | 0x4));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
-        }
-    }
-
-    public int getAge()
-    {
-        return this.datawatcher.getInt(12);
-    }
-
-    public void setAge(int i)
-    {
-        this.datawatcher.watch(12, i);
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aR()
-    {
-        return "mob.wolf.hurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aS()
-    {
-        return "mob.wolf.death";
     }
 }

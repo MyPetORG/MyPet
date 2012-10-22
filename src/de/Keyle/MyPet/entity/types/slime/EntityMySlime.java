@@ -72,44 +72,11 @@ public class EntityMySlime extends EntityMyPet
         return MySlime.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
+    public void setSize(int i)
     {
-        super.c(entityhuman);
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (itemStack != null && itemStack.id == org.bukkit.Material.SUGAR.getId())
-        {
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(1, RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean k(Entity entity)
-    {
-        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
+        this.datawatcher.watch(16, (byte) i);
+        a(0.6F * i, 0.6F * i);
+        this.aV = i;
     }
 
     @Override
@@ -122,14 +89,7 @@ public class EntityMySlime extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    // Vanilla Methods -----------------------------------------------------------------------------------------------------
-
-    public void setSize(int i)
-    {
-        this.datawatcher.watch(16, (byte) i);
-        a(0.6F * i, 0.6F * i);
-        this.aV = i;
-    }
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()
     {
@@ -161,5 +121,44 @@ public class EntityMySlime extends EntityMyPet
     protected String aS()
     {
         return "mob.slime";
+    }
+
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean c(EntityHuman entityhuman)
+    {
+        super.c(entityhuman);
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (itemStack != null && itemStack.id == org.bukkit.Material.SUGAR.getId())
+        {
+            if (getHealth() < getMaxHealth())
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                this.heal(1, RegainReason.EATING);
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                this.tamedEffect(true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean k(Entity entity)
+    {
+        int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 }

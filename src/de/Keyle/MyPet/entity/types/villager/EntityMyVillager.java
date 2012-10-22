@@ -69,6 +69,21 @@ public class EntityMyVillager extends EntityMyPet
         }
     }
 
+    public int getMaxHealth()
+    {
+        return MyVillager.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    public int getProfession()
+    {
+        return this.datawatcher.getByte(16);
+    }
+
+    public void setProfession(int i)
+    {
+        this.datawatcher.watch(16, (byte) i);
+    }
+
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
@@ -79,11 +94,37 @@ public class EntityMyVillager extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Vanilla Methods ---------------------------------------------------------------------------------------
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public int getMaxHealth()
+    protected void a()
     {
-        return MyVillager.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // profession
+        this.datawatcher.a(12, 0);        // age
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return "mob.villager.default";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected String aR()
+    {
+        return "mob.villager.defaulthurt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected String aS()
+    {
+        return "mob.villager.defaultdeath";
     }
 
     /**
@@ -117,7 +158,6 @@ public class EntityMyVillager extends EntityMyPet
                 return true;
             }
         }
-
         return false;
     }
 
@@ -126,47 +166,5 @@ public class EntityMyVillager extends EntityMyPet
         int damage = 3 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // profession
-        this.datawatcher.a(12, 0);        // age
-    }
-
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return "mob.villager.default";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected String aR()
-    {
-        return "mob.villager.defaulthurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected String aS()
-    {
-        return "mob.villager.defaultdeath";
-    }
-
-    public int getProfession()
-    {
-        return this.datawatcher.getByte(16);
-    }
-
-    public void setProfession(int i)
-    {
-        this.datawatcher.watch(16, (byte) i);
     }
 }

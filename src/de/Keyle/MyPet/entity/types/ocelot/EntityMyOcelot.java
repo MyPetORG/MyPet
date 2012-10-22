@@ -77,6 +77,48 @@ public class EntityMyOcelot extends EntityMyPet
         }
     }
 
+    public int getMaxHealth()
+    {
+        return MyOcelot.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        if (this.sitPathfinderGoal == null)
+        {
+            this.sitPathfinderGoal = new PathfinderGoalSit(this);
+        }
+        this.sitPathfinderGoal.setSitting(sitting);
+    }
+
+    public boolean isSitting()
+    {
+        return this.sitPathfinderGoal.isSitting();
+    }
+
+    public void applySitting(boolean sitting)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (sitting)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
+        }
+    }
+
+    public int getCatType()
+    {
+        return this.datawatcher.getByte(18);
+    }
+
+    public void setCatType(int i)
+    {
+        this.datawatcher.watch(18, (byte) i);
+    }
+
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
@@ -87,11 +129,38 @@ public class EntityMyOcelot extends EntityMyPet
         return this.bukkitEntity;
     }
 
-    //Changed Vanilla Methods ---------------------------------------------------------------------------------------
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public int getMaxHealth()
+    protected void a()
     {
-        return MyOcelot.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        super.a();
+        this.datawatcher.a(16, (byte) 0); // tamed/sitting
+        this.datawatcher.a(18, (byte) 0); // cat type
+        this.datawatcher.a(12, 0);        // age
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aQ()
+    {
+        return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected String aR()
+    {
+        return "mob.cat.hitt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected String aS()
+    {
+        return "mob.cat.hitt";
     }
 
     /**
@@ -134,81 +203,10 @@ public class EntityMyOcelot extends EntityMyPet
         return false;
     }
 
-    public void setSitting(boolean sitting)
-    {
-        if (this.sitPathfinderGoal == null)
-        {
-            this.sitPathfinderGoal = new PathfinderGoalSit(this);
-        }
-        this.sitPathfinderGoal.setSitting(sitting);
-    }
-
-    public boolean isSitting()
-    {
-        return this.sitPathfinderGoal.isSitting();
-    }
-
-    public void applySitting(boolean sitting)
-    {
-        int i = this.datawatcher.getByte(16);
-        if (sitting)
-        {
-            this.datawatcher.watch(16, (byte) (i | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
-        }
-    }
-
     public boolean k(Entity entity)
     {
         int damage = 3 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    // Vanilla Methods
-
-    protected void a()
-    {
-        super.a();
-        this.datawatcher.a(16, (byte) 0); // tamed/sitting
-        this.datawatcher.a(18, (byte) 0); // cat type
-        this.datawatcher.a(12, 0);        // age
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aQ()
-    {
-        return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected String aR()
-    {
-        return "mob.cat.hitt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected String aS()
-    {
-        return "mob.cat.hitt";
-    }
-
-    public int getCatType()
-    {
-        return this.datawatcher.getByte(18);
-    }
-
-    public void setCatType(int i)
-    {
-        this.datawatcher.watch(18, (byte) i);
     }
 }
