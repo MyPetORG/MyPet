@@ -22,10 +22,12 @@ package de.Keyle.MyPet.entity.types.slime;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.NBTTagCompound;
 
 public class MySlime extends MyPet
 {
     private static int startHP = 10;
+    private int size = 1;
 
     public MySlime(MyPetPlayer petOwner)
     {
@@ -48,6 +50,37 @@ public class MySlime extends MyPet
     public String toString()
     {
         return "MySlime{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+    }
+
+    public int getSize()
+    {
+        return size;
+    }
+
+    public void setSize(int size)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMySlime) craftPet).setSize(size);
+        }
+        this.size = size;
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setInt("size", getSize());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        if (info.hasKey("size"))
+        {
+            setSize(info.getInt("size"));
+        }
     }
 
     public static void setStartHP(int hp)

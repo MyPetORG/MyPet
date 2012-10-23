@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.entity.types.slime;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 
@@ -31,16 +30,20 @@ public class CraftMySlime extends CraftMyPet
         super(server, slime);
     }
 
-    @Override
-    public EntityMyPet getHandle()
+    public int getSize()
     {
-        return (EntityMySlime) entity;
+        return ((EntityMySlime) getHandle()).getSize();
+    }
+
+    public void setSize(int size)
+    {
+        ((EntityMySlime) getHandle()).setSize(size);
     }
 
     @Override
     public String toString()
     {
-        return "CraftMySlime{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMySlime{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",size=" + getSize() + "}";
     }
 
     public EntityType getType()

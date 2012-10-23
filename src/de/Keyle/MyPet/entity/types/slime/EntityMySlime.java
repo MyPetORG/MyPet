@@ -63,7 +63,7 @@ public class EntityMySlime extends EntityMyPet
             isMyPet = true;
 
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            setSize(1);
+            setSize(((MySlime)myPet).getSize());
         }
     }
 

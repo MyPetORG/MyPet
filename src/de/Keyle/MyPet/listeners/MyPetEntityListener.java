@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
+import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
@@ -185,6 +186,10 @@ public class MyPetEntityListener implements Listener
                             else if (leashTarget instanceof Pig)
                             {
                                 ((MyPig) myPet).setSaddle(((Pig) leashTarget).hasSaddle());
+                            }
+                            else if (leashTarget instanceof Slime)
+                            {
+                                ((MySlime) myPet).setSize(((Slime) leashTarget).getSize());
                             }
                             event.getEntity().remove();
                             MyPetUtil.getDebugLogger().info("New Pet leashed:");
