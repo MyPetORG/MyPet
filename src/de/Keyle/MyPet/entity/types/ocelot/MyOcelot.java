@@ -27,7 +27,7 @@ import net.minecraft.server.NBTTagCompound;
 public class MyOcelot extends MyPet
 {
     private static int startHP = 10;
-
+    private boolean isSitting = false;
     private int catType = 0;
 
     public MyOcelot(MyPetPlayer petOwner)
@@ -56,6 +56,7 @@ public class MyOcelot extends MyPet
     public void setSitting(boolean sitting)
     {
         ((CraftMyOcelot) craftPet).setSitting(sitting);
+        this.isSitting = sitting;
     }
 
     public void setCatType(int catType)

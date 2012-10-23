@@ -27,6 +27,7 @@ import net.minecraft.server.NBTTagCompound;
 public class MyWolf extends MyPet
 {
     private static int startHP = 10;
+    private boolean isSitting = false;
 
     public MyWolf(MyPetPlayer petOwner)
     {

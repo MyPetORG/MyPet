@@ -44,8 +44,6 @@ public abstract class MyPet
     protected int health;
     public int respawnTime = 0;
 
-    protected boolean isSitting = false;
-
     public PetState status = PetState.Despawned;
 
     protected Location petLocation;
