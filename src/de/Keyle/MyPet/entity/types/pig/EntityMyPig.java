@@ -52,8 +52,8 @@ public class EntityMyPig extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
+
             this.setSaddle(((MyPig) myPet).hasSaddle());
-            this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
         }
     }

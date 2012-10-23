@@ -69,7 +69,6 @@ public class EntityMyWolf extends EntityMyPet
             this.myPet = myPet;
             isMyPet = true;
 
-            this.setPathEntity(null);
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             setTamed(true);

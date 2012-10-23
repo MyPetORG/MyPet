@@ -60,6 +60,7 @@ public class EntityMyZombie extends EntityMyPet
         {
             this.myPet = myPet;
             isMyPet = true;
+
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
         }
     }

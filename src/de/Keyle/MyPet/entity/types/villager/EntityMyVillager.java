@@ -63,7 +63,6 @@ public class EntityMyVillager extends EntityMyPet
             this.myPet = myPet;
             isMyPet = true;
 
-            this.setPathEntity(null);
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             this.setProfession(((MyVillager) myPet).getProfession());
         }

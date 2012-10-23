@@ -69,7 +69,6 @@ public class EntityMyOcelot extends EntityMyPet
             this.myPet = MPet;
             isMyPet = true;
 
-            this.setPathEntity(null);
             this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
             this.setCatType(((MyOcelot) MPet).getCatType());
 
