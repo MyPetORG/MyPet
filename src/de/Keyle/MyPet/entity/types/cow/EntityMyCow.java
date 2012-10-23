@@ -136,6 +136,18 @@ public class EntityMyCow extends EntityMyPet
                 return true;
             }
         }
+        else if (entityhuman == getOwner())
+        {
+            if (itemStack != null && itemStack.id == Item.BUCKET.id)
+            {
+                if (!this.world.isStatic)
+                {
+                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1,0);
+
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                }
+            }
+        }
         return false;
     }
 
