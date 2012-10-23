@@ -33,16 +33,15 @@ public class EntityMySheep extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/sheep.png";
         this.a(0.9F, 1.3F);
-        this.bw = 0.25F;
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, 0.38F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
         PathfinderGoalEatTile eatGoalFinder = new PathfinderGoalEatTile(this);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, Control);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, 0.38F));
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.bw, 5.0F, 2.0F, Control));
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
         this.goalSelector.a(5, eatGoalFinder);
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));

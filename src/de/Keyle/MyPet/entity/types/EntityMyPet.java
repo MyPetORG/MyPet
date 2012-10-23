@@ -32,6 +32,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected float j;
     protected float i;
     public EntityLiving goalTarget = null;
+    protected float walkSpeed = 0.3F;
 
     protected boolean isMyPet = false;
     protected MyPet myPet;

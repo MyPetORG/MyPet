@@ -37,13 +37,13 @@ public class EntityMyZombie extends EntityMyPet
         this.a(0.9F, 0.9F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.38F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, 0.6F));
-        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, 0.5F + 0.3F, true));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
         this.goalSelector.a(4, controlPathfinderGoal);
-        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, 0.5F, 10.0F, 5.0F, controlPathfinderGoal));
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, controlPathfinderGoal));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));

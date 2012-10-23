@@ -44,14 +44,14 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.sitPathfinderGoal = new PathfinderGoalSit(this);
         }
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.4F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.sitPathfinderGoal);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, 0.3F, true));
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
         this.goalSelector.a(5, controlPathfinderGoal);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, controlPathfinderGoal));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinderGoal));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));

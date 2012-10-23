@@ -36,13 +36,14 @@ public class EntityMyIronGolem extends EntityMyPet
         this.texture = "/mob/villager_golem.png";
         this.a(1.4F, 2.9F);
         this.getNavigation().a(true);
+        this.walkSpeed = 0.25F;
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, 0.25F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed+0.1F);
 
-        this.goalSelector.a(1, new PathfinderGoalLeapAtTarget(this, 0.4F));
-        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 0.25F, true));
+        this.goalSelector.a(1, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
         this.goalSelector.a(3, Control);
-        this.goalSelector.a(4, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, 0.2F, 5.0F, 2.0F, Control));
+        this.goalSelector.a(4, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));

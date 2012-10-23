@@ -35,12 +35,12 @@ public class EntityMyPig extends EntityMyPet
         this.a(0.9F, 0.9F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, 0.38F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, controlPathfinderGoal);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, 0.38F));
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, 0.3F, 5.0F, 2.0F, controlPathfinderGoal));
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinderGoal));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
     }
