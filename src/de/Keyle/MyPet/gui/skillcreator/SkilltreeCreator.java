@@ -42,7 +42,9 @@ public class SkilltreeCreator
 
     private static LevelCreator levelCreator;
     private static SkilltreeCreator skilltreeCreator;
+    private static BukkitDownloader bukkitDownloader;
     private static JFrame levelCreatorFrame;
+    private static JFrame bukkitDownloaderFrame;
     private static JFrame skilltreeCreatorFrame;
 
     public SkilltreeCreator()
@@ -232,7 +234,6 @@ public class SkilltreeCreator
                         saveButton.setEnabled(true);
                 }
             }
-
         });
     }
 
@@ -248,16 +249,29 @@ public class SkilltreeCreator
         }
         catch (ClassNotFoundException e)
         {
-            JOptionPane.showMessageDialog(null, "Can't find one of these files:\n" +
-                    "   craftbukkit.jar\n" +
-                    "   craftbukkit-1.3.1-R1.0.jar\n" +
-                    "   craftbukkit-1.3.1-R2.0.jar\n" +
-                    "   craftbukkit-1.3.2-R1.0.jar\n" +
-                    "   craftbukkit-1.3.2-R2.0.jar\n" +
-                    "\nIn one of these folders:" +
+            String[] buttons = {"Cancel", "Download CraftBukkit"};
+            int result = JOptionPane.showOptionDialog(null, "Can't find a CraftBukkit executable\n" +
+                    "\nin one of these folders:" +
                     "\n   " + bukkitFile.getAbsolutePath() +
-                    "\n   " + bukkitFile.getParent(), "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+                    "\n   " + bukkitFile.getParent(), "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
+
+            if (result == 0)
+            {
+                System.exit(0);
+            }
+            else if (result == 1)
+            {
+                bukkitDownloader = new BukkitDownloader();
+                bukkitDownloaderFrame = new JFrame("Bukkit Downloader");
+                bukkitDownloaderFrame.setContentPane(bukkitDownloader.downloaderPanel);
+                bukkitDownloaderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                bukkitDownloaderFrame.pack();
+                bukkitDownloaderFrame.setVisible(true);
+                bukkitDownloaderFrame.setLocationRelativeTo(null);
+
+                bukkitDownloader.startDownload();
+            }
+            return;
         }
         MyPetSkillTreeConfig.setConfigPath(bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "skilltrees");
         MyPetSkillTreeConfig.loadSkillTrees();
