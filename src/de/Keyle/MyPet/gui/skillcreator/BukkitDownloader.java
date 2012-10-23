@@ -95,6 +95,11 @@ public class BukkitDownloader
 
             URL url = new URL(downloadAddress);
             int size = url.openConnection().getContentLength();
+            if(size == -1)
+            {
+                JOptionPane.showMessageDialog(null, "Can't download CraftBukkit!", "Downloading CraftBukkit", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
             progressLabel.setText("Downloaded: 0/" + String.format ( "%.2f", size/1024F/1024F) + "MiB");
             InputStream reader = url.openStream();
 
