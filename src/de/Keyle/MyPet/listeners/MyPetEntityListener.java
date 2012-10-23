@@ -155,7 +155,7 @@ public class MyPetEntityListener implements Listener
                         }
                         else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep || leashTarget instanceof Villager)
                         {
-                            willBeLeashed = ((Ageable) leashTarget).isAdult();
+                            willBeLeashed = !((Ageable) leashTarget).isAdult();
                         }
 
                         if (willBeLeashed)
