@@ -50,11 +50,27 @@ commands:
     usage: '/<command> [SkillTreeName]'
 
 permissions:
+  MyPet.user.leash.*:
+    description: player cann leash all MyPet types
+    children:
+      MyPet.user.leash.cavespider: true
+      MyPet.user.leash.chicken: true
+      MyPet.user.leash.cow: true
+      MyPet.user.leash.mooshroomcow: true
+      MyPet.user.leash.silverfish: true
+      MyPet.user.leash.ocelot: true
+      MyPet.user.leash.pig: true
+      MyPet.user.leash.pigzombie: true
+      MyPet.user.leash.sheep: true
+      MyPet.user.leash.slime: true
+      MyPet.user.leash.spider: true
+      MyPet.user.leash.villager: true
+      MyPet.user.leash.wolf: true
+      MyPet.user.leash.zombie: true
   MyPet.*:
     description: Gives access to ALL MyPet commands
     children:
       MyPet.admin: true
-      MyPet.user.leash: true
       MyPet.user.stop: true
       MyPet.user.setname: true
       MyPet.user.release: true
