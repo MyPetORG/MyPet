@@ -53,7 +53,7 @@ public class MyPetConfig
     public static boolean useCitizens = true;
 
     public static boolean superperms = false;
-    public static boolean debugLogger = false;
+    public static boolean debugLogger = true;
 
     public static void setDefault()
     {
@@ -78,7 +78,7 @@ public class MyPetConfig
         setProperty("MyPet.SuperPerms", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.SendMetrics", true);
-        setProperty("MyPet.DebugLogger", false);
+        setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Support.Towny", true);
         setProperty("MyPet.Support.Factions", true);
