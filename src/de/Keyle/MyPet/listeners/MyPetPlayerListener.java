@@ -22,6 +22,8 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Material;
@@ -132,6 +134,17 @@ public class MyPetPlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            if (myPet.getSkillSystem().hasSkill("Behavior"))
+            {
+                Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                if (behavior.getLevel() > 0)
+                {
+                    if (behavior.getBehavior() == BehaviorState.Aggressive)
+                    {
+                        behavior.setBehavior(BehaviorState.Normal);
+                    }
+                }
+            }
             myPet.removePet();
             MyPetPlugin.getPlugin().savePets(false);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
