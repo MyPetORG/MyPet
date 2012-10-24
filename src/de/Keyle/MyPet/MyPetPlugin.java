@@ -206,8 +206,8 @@ public class MyPetPlugin extends JavaPlugin
             a.setAccessible(true);
 
             // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
-            a.invoke(a, EntitySpider.class, "Spider", 52);
             a.invoke(a, EntityMySpider.class, "Spider", 52);
+            a.invoke(a, EntitySpider.class, "Spider", 52);
             a.invoke(a, EntityMyZombie.class, "Zombie", 54);
             a.invoke(a, EntityZombie.class, "Zombie", 54);
             a.invoke(a, EntityMySlime.class, "Slime", 55);
