@@ -62,27 +62,30 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
                 {
                     if (target == null || !target.isAlive())
                     {
-                        for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
+                        for (float range = 1.F ; range <= this.range ; range++)
                         {
-                            Entity entity = (Entity) entityObj;
-                            EntityLiving entityLiving = (EntityLiving) entity;
-
-                            if (petEntity.at().canSee(entityLiving) && entityLiving != petEntity)
+                            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                             {
-                                if (entityLiving instanceof EntityPlayer)
+                                Entity entity = (Entity) entityObj;
+                                EntityLiving entityLiving = (EntityLiving) entity;
+
+                                if (petEntity.at().canSee(entityLiving) && entityLiving != petEntity)
                                 {
-                                    Player targetPlayer = (Player) entityLiving.getBukkitEntity();
-                                    if (myPet.getOwner().equals(targetPlayer))
+                                    if (entityLiving instanceof EntityPlayer)
                                     {
-                                        continue;
+                                        Player targetPlayer = (Player) entityLiving.getBukkitEntity();
+                                        if (myPet.getOwner().equals(targetPlayer))
+                                        {
+                                            continue;
+                                        }
+                                        if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+                                        {
+                                            continue;
+                                        }
                                     }
-                                    if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
-                                    {
-                                        continue;
-                                    }
+                                    this.target = entityLiving;
+                                    return true;
                                 }
-                                this.target = entityLiving;
-                                return true;
                             }
                         }
                         return false;
