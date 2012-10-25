@@ -111,7 +111,7 @@ public abstract class MyPet
 
     protected void respawnPet()
     {
-        if (status != PetState.Here)
+        if (status != PetState.Here && getOwner().isOnline())
         {
             petLocation = getOwner().getPlayer().getLocation();
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
@@ -123,11 +123,7 @@ public abstract class MyPet
 
     public boolean createPet()
     {
-        if (status == PetState.Here || getOwner() == null)
-        {
-            return false;
-        }
-        else
+        if (status != PetState.Here && getOwner().isOnline())
         {
             if (respawnTime <= 0)
             {
@@ -144,22 +140,15 @@ public abstract class MyPet
                 }
                 craftPet = (CraftMyPet) petEntity.getBukkitEntity();
                 status = PetState.Here;
-            }
-            else
-            {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public boolean createPet(Location loc)
     {
-        if (status == PetState.Here || getOwner() == null)
-        {
-            return false;
-        }
-        else
+        if (status != PetState.Here && getOwner().isOnline())
         {
             if (respawnTime <= 0)
             {
@@ -177,13 +166,10 @@ public abstract class MyPet
                 }
                 craftPet = (CraftMyPet) petEntity.getBukkitEntity();
                 status = PetState.Here;
-            }
-            else
-            {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public CraftMyPet getPet()
@@ -263,7 +249,7 @@ public abstract class MyPet
 
     public void scheduleTask()
     {
-        if (status != PetState.Despawned && getOwner() != null)
+        if (status != PetState.Despawned && getOwner().isOnline())
         {
             if (skillSystem.getSkills().size() > 0)
             {
