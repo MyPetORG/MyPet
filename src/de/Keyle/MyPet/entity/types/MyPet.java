@@ -19,6 +19,21 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
+import de.Keyle.MyPet.entity.types.chicken.MyChicken;
+import de.Keyle.MyPet.entity.types.cow.MyCow;
+import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
+import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
+import de.Keyle.MyPet.entity.types.sheep.MySheep;
+import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.slime.MySlime;
+import de.Keyle.MyPet.entity.types.spider.MySpider;
+import de.Keyle.MyPet.entity.types.villager.MyVillager;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -31,8 +46,32 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class MyPet
 {
+    private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
+    static
+    {
+        startHP.put(MyCaveSpider.class, 10);
+        startHP.put(MyChicken.class, 10);
+        startHP.put(MyCow.class, 10);
+        startHP.put(MyIronGolem.class, 10);
+        startHP.put(MyMooshroom.class, 10);
+        startHP.put(MyOcelot.class, 10);
+        startHP.put(MyPig.class, 10);
+        startHP.put(MyPigZombie.class, 10);
+        startHP.put(MySheep.class, 10);
+        startHP.put(MySilverfish.class, 10);
+        startHP.put(MySlime.class, 10);
+        startHP.put(MySpider.class, 10);
+        startHP.put(MyVillager.class, 10);
+        startHP.put(MyWolf.class, 10);
+        startHP.put(MyZombie.class, 10);
+    }
+
+
     public static enum PetState
     {
         Dead, Despawned, Here
@@ -52,12 +91,11 @@ public abstract class MyPet
     protected MyPetSkillSystem skillSystem;
     protected MyPetExperience experience;
 
-    protected static int startHP = 10;
+    //protected static int startHP = 10;
 
     public MyPet(MyPetPlayer Owner)
     {
         this.petOwner = Owner;
-
         if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
         {
             for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()))
@@ -208,7 +246,7 @@ public abstract class MyPet
 
     public int getMaxHealth()
     {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+        return getStartHP(this.getClass()) + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public MyPetSkillSystem getSkillSystem()
@@ -282,14 +320,21 @@ public abstract class MyPet
         }
     }
 
-    public static int getStartHP()
+    public static int getStartHP(Class<? extends MyPet> myPetClass)
     {
-        return startHP;
+        if(startHP.containsKey(myPetClass))
+        {
+            return startHP.get(myPetClass);
+        }
+        return 1;
     }
 
-    public static void setStartHP(int hp)
+    public static void setStartHP(Class<? extends MyPet> myPetClass, int hp)
     {
-        startHP = hp;
+        if(startHP.containsKey(myPetClass))
+        {
+            startHP.put(myPetClass, hp);
+        }
     }
 
     public abstract MyPetType getPetType();

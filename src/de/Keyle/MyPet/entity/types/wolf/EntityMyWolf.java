@@ -104,7 +104,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyWolf.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public void setTamed(boolean tamed)

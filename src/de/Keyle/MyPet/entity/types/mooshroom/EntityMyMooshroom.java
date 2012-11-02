@@ -59,7 +59,7 @@ public class EntityMyMooshroom extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyMooshroom.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyMooshroom.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     @Override

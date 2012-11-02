@@ -26,7 +26,6 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyOcelot extends MyPet
 {
-    private static int startHP = 10;
     private boolean isSitting = false;
     private int catType = 0;
 
@@ -34,11 +33,6 @@ public class MyOcelot extends MyPet
     {
         super(petOwner);
         this.petName = "Ocelot";
-    }
-
-    public int getMaxHealth()
-    {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public boolean isSitting()
@@ -102,15 +96,5 @@ public class MyOcelot extends MyPet
     public String toString()
     {
         return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + "}";
-    }
-
-    public static void setStartHP(int hp)
-    {
-        startHP = hp;
-    }
-
-    public static int getStartHP()
-    {
-        return startHP;
     }
 }

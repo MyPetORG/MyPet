@@ -26,18 +26,12 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyWolf extends MyPet
 {
-    private static int startHP = 10;
     private boolean isSitting = false;
 
     public MyWolf(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Wolf";
-    }
-
-    public int getMaxHealth()
-    {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     @Override
@@ -50,11 +44,6 @@ public class MyWolf extends MyPet
     public String toString()
     {
         return "MyWolf{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
-    }
-
-    public static void setStartHP(int hp)
-    {
-        startHP = hp;
     }
 
     public boolean isSitting()
@@ -97,10 +86,5 @@ public class MyWolf extends MyPet
         {
             setSitting(info.getBoolean("sitting"));
         }
-    }
-
-    public static int getStartHP()
-    {
-        return startHP;
     }
 }

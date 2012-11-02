@@ -67,7 +67,7 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyIronGolem.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyIronGolem.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     @Override

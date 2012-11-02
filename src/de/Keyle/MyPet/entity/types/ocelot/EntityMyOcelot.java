@@ -77,7 +77,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyOcelot.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyOcelot.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public void setSitting(boolean sitting)

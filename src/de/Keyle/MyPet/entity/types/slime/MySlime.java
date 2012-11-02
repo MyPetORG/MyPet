@@ -26,18 +26,12 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MySlime extends MyPet
 {
-    private static int startHP = 10;
     private int size = 1;
 
     public MySlime(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Slime";
-    }
-
-    public int getMaxHealth()
-    {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     @Override
@@ -81,15 +75,5 @@ public class MySlime extends MyPet
         {
             setSize(info.getInt("size"));
         }
-    }
-
-    public static void setStartHP(int hp)
-    {
-        startHP = hp;
-    }
-
-    public static int getStartHP()
-    {
-        return startHP;
     }
 }

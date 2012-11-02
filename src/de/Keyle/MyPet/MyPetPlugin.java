@@ -253,20 +253,7 @@ public class MyPetPlugin extends JavaPlugin
         debugLogger.info("Pet start HP: ---------------");
         for (MyPetType myPetType : MyPetType.values())
         {
-            try
-            {
-                for (Method f : myPetType.getMyPetClass().getDeclaredMethods())
-                {
-                    if (f.getName().equals("getStartHP"))
-                    {
-                        f.setAccessible(true);
-                        debugLogger.info("   " + myPetType.getTypeName() + ": " + f.invoke(null).toString());
-                    }
-                }
-            }
-            catch (Exception ignored)
-            {
-            }
+            debugLogger.info("   " + myPetType.getTypeName() + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
         }
         debugLogger.info("----------------------------");
 

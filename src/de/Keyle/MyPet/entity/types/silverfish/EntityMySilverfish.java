@@ -68,7 +68,7 @@ public class EntityMySilverfish extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MySilverfish.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MySilverfish.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     @Override

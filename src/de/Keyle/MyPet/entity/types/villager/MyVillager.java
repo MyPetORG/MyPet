@@ -26,19 +26,12 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyVillager extends MyPet
 {
-    private static int startHP = 10;
-
     int profession = 0;
 
     public MyVillager(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Villager";
-    }
-
-    public int getMaxHealth()
-    {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     public void setProfession(int profession)
@@ -79,15 +72,5 @@ public class MyVillager extends MyPet
     public String toString()
     {
         return "MyVillager{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
-    }
-
-    public static void setStartHP(int hp)
-    {
-        startHP = hp;
-    }
-
-    public static int getStartHP()
-    {
-        return startHP;
     }
 }

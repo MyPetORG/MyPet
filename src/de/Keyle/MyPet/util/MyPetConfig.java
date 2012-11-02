@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
@@ -27,10 +28,14 @@ import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.slime.MySlime;
+import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import org.bukkit.Material;
@@ -57,24 +62,8 @@ public class MyPetConfig
 
     public static void setDefault()
     {
-        setProperty("MyPet.Leash.Item", 287);
-        setProperty("MyPet.Skill.Control.Item", 287);
-        setProperty("MyPet.Skill.Pickup.RangePerLvl", 1);
-        setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
-        setProperty("MyPet.Skill.HPregeneration.Time", 60);
-        setProperty("MyPet.Skill.Inventory.Creative", true);
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
-        setProperty("MyPet.StartHP.Wolf", 20);
-        setProperty("MyPet.StartHP.Chicken", 4);
-        setProperty("MyPet.StartHP.Cow", 10);
-        setProperty("MyPet.StartHP.Mooshroom", 10);
-        setProperty("MyPet.StartHP.Ocelot", 15);
-        setProperty("MyPet.StartHP.IronGolem", 15);
-        setProperty("MyPet.StartHP.Silverfish", 8);
-        setProperty("MyPet.StartHP.Pig", 10);
-        setProperty("MyPet.StartHP.PigZombie", 10);
-        setProperty("MyPet.StartHP.Sheep", 8);
         setProperty("MyPet.SuperPerms", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.SendMetrics", true);
@@ -84,6 +73,29 @@ public class MyPetConfig
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
         setProperty("MyPet.Support.Citizens", true);
+
+        setProperty("MyPet.Leash.Item", 287);
+        setProperty("MyPet.Skill.Control.Item", 287);
+        setProperty("MyPet.Skill.Pickup.RangePerLvl", 1);
+        setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
+        setProperty("MyPet.Skill.HPregeneration.Time", 60);
+        setProperty("MyPet.Skill.Inventory.Creative", true);
+
+        setProperty("MyPet.StartHP.CaveSpider", 20);
+        setProperty("MyPet.StartHP.Chicken", 20);
+        setProperty("MyPet.StartHP.Cow", 20);
+        setProperty("MyPet.StartHP.IronGolem", 20);
+        setProperty("MyPet.StartHP.Mooshroom", 20);
+        setProperty("MyPet.StartHP.Ocelot", 20);
+        setProperty("MyPet.StartHP.Pig", 20);
+        setProperty("MyPet.StartHP.PigZombie", 20);
+        setProperty("MyPet.StartHP.Sheep", 20);
+        setProperty("MyPet.StartHP.Silverfish", 20);
+        setProperty("MyPet.StartHP.Slime", 20);
+        setProperty("MyPet.StartHP.Spider", 20);
+        setProperty("MyPet.StartHP.Villager", 20);
+        setProperty("MyPet.StartHP.Wolf", 20);
+        setProperty("MyPet.StartHP.Zombie", 20);
 
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
@@ -114,18 +126,21 @@ public class MyPetConfig
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
 
-        MyWolf.setStartHP(config.getInt("MyPet.StartHP.Wolf", 20));
-        MyVillager.setStartHP(config.getInt("MyPet.StartHP.Villager", 20));
-        MySilverfish.setStartHP(config.getInt("MyPet.StartHP.Silverfish", 8));
-        MyOcelot.setStartHP(config.getInt("MyPet.StartHP.Ocelot", 15));
-        MyIronGolem.setStartHP(config.getInt("MyPet.StartHP.IronGolem", 20));
-        MyChicken.setStartHP(config.getInt("MyPet.StartHP.Chicken", 4));
-        MyCow.setStartHP(config.getInt("MyPet.StartHP.Cow", 10));
-        MyMooshroom.setStartHP(config.getInt("MyPet.StartHP.Mooshroom", 10));
-        MyPig.setStartHP(config.getInt("MyPet.StartHP.Pig", 10));
-        MyPig.setStartHP(config.getInt("MyPet.StartHP.PigZombie", 20));
-        MySheep.setStartHP(config.getInt("MyPet.StartHP.Sheep", 8));
-        MyCaveSpider.setStartHP(config.getInt("MyPet.StartHP.CaveSpider", 12));
+        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.StartHP.CaveSpider", 20));
+        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.StartHP.Chicken", 20));
+        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.StartHP.Cow", 20));
+        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.StartHP.IronGolem", 20));
+        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.StartHP.Mooshroom", 20));
+        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.StartHP.Ocelot", 20));
+        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.StartHP.Pig", 20));
+        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.StartHP.PigZombie", 20));
+        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.StartHP.Sheep", 20));
+        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.StartHP.Silverfish", 20));
+        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.StartHP.Slime", 20));
+        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.StartHP.Spider", 20));
+        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.StartHP.Villager", 20));
+        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.StartHP.Wolf", 20));
+        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.StartHP.Zombie", 20));
 
         if (config.getStringList("MyPet.exp") != null)
         {

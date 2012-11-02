@@ -67,7 +67,7 @@ public class EntityMyZombie extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyZombie.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     @Override

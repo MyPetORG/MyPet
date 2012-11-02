@@ -70,7 +70,7 @@ public class EntityMyVillager extends EntityMyPet
 
     public int getMaxHealth()
     {
-        return MyVillager.getStartHP() + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+        return MyPet.getStartHP(MyVillager.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
     public int getProfession()

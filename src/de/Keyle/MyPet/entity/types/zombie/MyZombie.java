@@ -25,17 +25,10 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyZombie extends MyPet
 {
-    private static int startHP = 10;
-
     public MyZombie(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Zombie";
-    }
-
-    public int getMaxHealth()
-    {
-        return startHP + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
     @Override
@@ -48,15 +41,5 @@ public class MyZombie extends MyPet
     public String toString()
     {
         return "MyZombie{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
-    }
-
-    public static void setStartHP(int hp)
-    {
-        startHP = hp;
-    }
-
-    public static int getStartHP()
-    {
-        return startHP;
     }
 }

@@ -99,6 +99,18 @@ public enum MyPetType
         return null;
     }
 
+    public static MyPetType getMyPetTypeByName(String name)
+    {
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            if (myPetType.typeName.equalsIgnoreCase(name))
+            {
+                return myPetType;
+            }
+        }
+        return null;
+    }
+
     public static boolean isLeashableEntityType(EntityType type)
     {
         for (MyPetType MPT : MyPetType.values())
