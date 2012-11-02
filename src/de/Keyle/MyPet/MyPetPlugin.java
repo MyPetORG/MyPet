@@ -70,6 +70,7 @@ public class MyPetPlugin extends JavaPlugin
     private final MyPetTimer timer = new MyPetTimer();
     private File NBTPetFile;
     private DebugLogger debugLogger;
+    private boolean isReady = false;
 
     public static MyPetPlugin getPlugin()
     {
@@ -83,10 +84,13 @@ public class MyPetPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        debugLogger.info(savePets(true) + " pet/pets saved.");
-        for (MyPet MPet : MyPetList.getMyPetList())
+        if(isReady)
         {
-            MPet.removePet();
+            debugLogger.info(savePets(true) + " pet/pets saved.");
+            for (MyPet MPet : MyPetList.getMyPetList())
+            {
+                MPet.removePet();
+            }
         }
         getTimer().stopTimer();
         MyPetList.clearList();
@@ -108,13 +112,15 @@ public class MyPetPlugin extends JavaPlugin
 
         if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
         {
-            String mwv = getDescription().getVersion();
-            mwv = getDescription().getVersion().substring(mwv.indexOf('(') + 1, mwv.indexOf(')'));
+            String mpv = getDescription().getVersion();
+            mpv = getDescription().getVersion().substring(mpv.indexOf('(') + 1, mpv.indexOf(')'));
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
-            MyPetUtil.getLogger().warning("This version of MyPet should only work with:");
-            MyPetUtil.getLogger().warning("   Minecraft " + mwv);
-            MyPetUtil.getLogger().warning("Expect bugs and errors!");
+            MyPetUtil.getLogger().warning("This version of MyPet only work with:");
+            MyPetUtil.getLogger().warning("   Minecraft " + mpv);
+            MyPetUtil.getLogger().warning("MyPet disabled!");
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
+            this.setEnabled(false);
+            return;
         }
 
         MyPetConfig.config = this.getConfig();
@@ -361,6 +367,7 @@ public class MyPetPlugin extends JavaPlugin
                 }
             }
         }
+        this.isReady = true;
         debugLogger.info("----------- MyPet ready -----------");
     }
 
