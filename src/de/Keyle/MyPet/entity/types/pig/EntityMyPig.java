@@ -35,11 +35,11 @@ public class EntityMyPig extends EntityMyPet
         this.a(0.9F, 0.9F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, controlPathfinderGoal);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinderGoal));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
@@ -99,30 +99,35 @@ public class EntityMyPig extends EntityMyPet
         this.datawatcher.a(12, 0);        // age
     }
 
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.pig.step", 0.15F, 1.0F);
+    }
+
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.pig";
+        return "mob.pig.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.pig";
+        return "mob.pig.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.pigdeath";
+        return "mob.pig.death";
     }
 
     /**
@@ -172,7 +177,7 @@ public class EntityMyPig extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 1 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.pathfinder;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import net.minecraft.server.EntityLiving;
 import net.minecraft.server.PathfinderGoal;
 
 public class PathfinderGoalSit extends PathfinderGoal
@@ -50,21 +49,10 @@ public class PathfinderGoalSit extends PathfinderGoal
         {
             return false;
         }
-
-        EntityLiving localEntityLiving = this.entityMyPet.getOwner();
-        if (localEntityLiving == null)
-        {
-            return true;
-        }
-
-        if ((this.entityMyPet.e(localEntityLiving) < 144.0D) && (localEntityLiving.av() != null))
-        {
-            return false;
-        }
         return this.sitting;
     }
 
-    public void e()
+    public void c()
     {
         this.entityMyPet.getNavigation().g();
         if (this.entityMyPet instanceof EntityMyOcelot)
@@ -77,7 +65,7 @@ public class PathfinderGoalSit extends PathfinderGoal
         }
     }
 
-    public void c()
+    public void d()
     {
 
         if (this.entityMyPet instanceof EntityMyOcelot)

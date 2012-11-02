@@ -69,7 +69,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                 Entity entity = (Entity) entityObj;
                 EntityLiving entityLiving = (EntityLiving) entity;
 
-                if (petEntity.at().canSee(entityLiving) && entityLiving != petEntity)
+                if (petEntity.az().canSee(entityLiving) && entityLiving != petEntity)
                 {
                     if (entityLiving instanceof EntityPlayer)
                     {

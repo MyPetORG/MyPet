@@ -44,11 +44,11 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.sitPathfinderGoal = new PathfinderGoalSit(this);
         }
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.sitPathfinderGoal);
-        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
         this.goalSelector.a(5, controlPathfinderGoal);
         this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinderGoal));
@@ -130,6 +130,16 @@ public class EntityMyWolf extends EntityMyPet
         this.datawatcher.watch(12, age);
     }
 
+    public int getCollarColor()
+    {
+        return this.datawatcher.getByte(20) & 0xF;
+    }
+
+    public void setCollarColor(int i)
+    {
+        this.datawatcher.watch(20, (byte) (i & 0xF));
+    }
+
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
@@ -145,15 +155,24 @@ public class EntityMyWolf extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 0);         // tamed/angry/sitting
-        this.datawatcher.a(18, this.getHealth()); // tail height
-        this.datawatcher.a(12, 0);                // age
+        this.datawatcher.a(16, new Byte((byte) 0));               // tamed/angry/sitting
+        this.datawatcher.a(17, "");                               // wolf owner name
+        this.datawatcher.a(18, this.getHealth());                 // tail height
+        this.datawatcher.a(12, new Integer(0));                   // age
+        this.datawatcher.a(19, new Byte((byte) 0));
+        this.datawatcher.a(20, new Byte((byte)BlockCloth.e_(1))); // collar color
+    }
+
+    @Override
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.wolf.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
         return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
@@ -162,7 +181,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
         return "mob.wolf.hurt";
     }
@@ -171,13 +190,13 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bd()
+    protected void bj()
     {
         this.datawatcher.watch(18, this.getHealth()); // update tail height
     }
@@ -194,7 +213,7 @@ public class EntityMyWolf extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemStack != null && this.b(itemStack))
+        if (itemStack != null && this.c(itemStack))
         {
             ItemFood itemfood = (ItemFood) Item.byId[itemStack.id];
 
@@ -217,7 +236,7 @@ public class EntityMyWolf extends EntityMyPet
         else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinderGoal.toogleSitting();
-            this.bu = false;
+            this.bG = false;
             this.setPathEntity(null);
         }
         return false;
@@ -226,7 +245,7 @@ public class EntityMyWolf extends EntityMyPet
     /**
      * Is called when a MyPet attemps to do damge to another entity
      */
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 4 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

@@ -30,28 +30,28 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMySpider extends EntityMyPet
 {
-    public EntityMySpider(World world, MyPet MPet)
+    public EntityMySpider(World world, MyPet myPet)
     {
-        super(world, MPet);
+        super(world, myPet);
         this.texture = "/mob/spider.png";
-        this.a(0.7F, 0.5F);
+        this.a(1.4F, 0.9F);
         this.getNavigation().a(true);
         this.walkSpeed = 0.4F;
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
-        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed + 0.1F, true));
         this.goalSelector.a(4, Control);
         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(MPet));
+        this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, Control, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
     @Override
@@ -94,44 +94,36 @@ public class EntityMySpider extends EntityMyPet
         this.datawatcher.a(16, (byte) 0); // N/A
     }
 
-    public void a(boolean flag)
+    @Override
+    protected void a(int i, int j, int k, int l)
     {
-        byte b0 = this.datawatcher.getByte(16);
-        if (flag)
-        {
-            b0 = (byte) (b0 | 1);
-        }
-        else
-        {
-            b0 &= -2;
-        }
-        this.datawatcher.watch(16, b0);
+        this.world.makeSound(this, "mob.spider.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.spider";
+        return "mob.spider.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.spider";
+        return "mob.spider.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.spiderdeath";
+        return "mob.spider.death";
     }
 
     /**
@@ -166,7 +158,31 @@ public class EntityMySpider extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public void f(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        if (flag)
+        {
+            b0 = (byte) (b0 | 0x1);
+        }
+        else
+        {
+            b0 = (byte) (b0 & 0xFFFFFFFE);
+        }
+        this.datawatcher.watch(16, b0);
+    }
+
+    public void j_()
+    {
+        super.j_();
+        if (!this.world.isStatic)
+        {
+            f(this.positionChanged);
+        }
+    }
+
+    public boolean l(Entity entity)
     {
         int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

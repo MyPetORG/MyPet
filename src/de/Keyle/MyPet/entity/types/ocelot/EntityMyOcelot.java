@@ -140,7 +140,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
         return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
@@ -148,7 +148,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aR()
+    protected String aX()
     {
         return "mob.cat.hitt";
     }
@@ -156,7 +156,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aS()
+    protected String aY()
     {
         return "mob.cat.hitt";
     }
@@ -195,13 +195,13 @@ public class EntityMyOcelot extends EntityMyPet
         else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinderGoal.toogleSitting();
-            this.bu = false;
+            this.bG = false;
             this.setPathEntity(null);
         }
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 3 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

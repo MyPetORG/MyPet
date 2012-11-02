@@ -35,11 +35,11 @@ public class EntityMyMooshroom extends EntityMyPet
         this.a(0.9F, 1.3F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, Control);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
@@ -80,30 +80,35 @@ public class EntityMyMooshroom extends EntityMyPet
         this.datawatcher.a(18, this.getHealth());
     }
 
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.cow.step", 0.15F, 1.0F);
+    }
+
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.cow";
+        return "mob.cow.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.cowhurt";
+        return "mob.cow.hurt";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.cowhurt";
+        return "mob.cow.hurt";
     }
 
     /**
@@ -138,7 +143,7 @@ public class EntityMyMooshroom extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

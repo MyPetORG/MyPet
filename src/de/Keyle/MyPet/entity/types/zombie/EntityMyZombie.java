@@ -37,10 +37,10 @@ public class EntityMyZombie extends EntityMyPet
         this.a(0.9F, 0.9F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
         this.goalSelector.a(4, controlPathfinderGoal);
         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, controlPathfinderGoal));
@@ -82,30 +82,43 @@ public class EntityMyZombie extends EntityMyPet
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
+    protected void a()
+    {
+        super.a();
+        getDataWatcher().a(12, Byte.valueOf((byte) 0)); // is baby
+        getDataWatcher().a(13, Byte.valueOf((byte) 0)); // is villager
+        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // equipment
+    }
+
+    protected void a(int i, int j, int k, int l)
+    {
+        this.world.makeSound(this, "mob.zombie.step", 0.15F, 1.0F);
+    }
+
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.zombie";
+        return "mob.zombie.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.zombiehurt";
+        return "mob.zombie.hurt";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.zombiedeath";
+        return "mob.zombie.death";
     }
 
     /**
@@ -154,7 +167,7 @@ public class EntityMyZombie extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 4 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

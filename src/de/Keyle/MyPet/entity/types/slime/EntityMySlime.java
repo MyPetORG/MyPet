@@ -105,7 +105,7 @@ public class EntityMySlime extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
         return "";
     }
@@ -114,18 +114,18 @@ public class EntityMySlime extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.slime";
+        return "mob.slime." + (getSize() > 1 ? "big" : "small");
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.slime";
+        return "mob.slime." + (getSize() > 1 ? "big" : "small");
     }
 
     /**
@@ -160,7 +160,7 @@ public class EntityMySlime extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

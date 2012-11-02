@@ -87,7 +87,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Is called when a MyPet attemps to do damge to another entity
      */
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 4 + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
@@ -130,7 +130,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Returns the default sound of the MyPet
      */
-    protected abstract String aQ();
+    protected abstract String aW();
 
     /**
      * saves info about this entity to a NBTTagCompound
@@ -139,28 +139,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
     }
 
-    protected void bd()
-    {
-    }
-
     //Vanilla Methods ------------------------------------------------------------------------------------------------------
 
-    public boolean aV()
+    protected void a(int i, int j, int k, int l)
     {
-        return true;
     }
 
-    protected void a()
-    {
-        super.a();
-    }
-
-    protected boolean e_()
-    {
-        return false;
-    }
-
-    protected boolean ba()
+    protected boolean bg()
     {
         return false;
     }
@@ -168,17 +153,17 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected abstract String aR();
+    protected abstract String aX();
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected abstract String aS();
+    protected abstract String aY();
 
     /**
      * N.A.
      */
-    public float aP()
+    public float aV()
     {
         return 0.4F;
     }
@@ -191,9 +176,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * N.A.
      */
-    public void d()
+    public void c()
     {
-        super.d();
+        super.c();
         if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
         {
             this.g = true;
@@ -206,9 +191,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * N.A.
      */
-    public void h_()
+    public void j_()
     {
-        super.h_();
+        super.j_();
         if (this.b)
         {
             this.e += (1.0F - this.e) * 0.4F;
@@ -231,14 +216,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return this.length * 0.8F;
     }
 
-    /**
-     * N.A.
-     */
-    public int bf()
-    {
-        return super.bf();
-    }
-
     public boolean damageEntity(DamageSource damagesource, int i)
     {
         Entity entity = damagesource.getEntity();
@@ -254,25 +231,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Checks weather an itemstack is eatable for the MyPet
      */
-    public boolean b(ItemStack itemstack)
+    public boolean c(ItemStack itemstack)
     {
-        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).h());
-    }
-
-    /**
-     * N.A.
-     */
-    public int bl()
-    {
-        return 8;
-    }
-
-    /**
-     * N.A.
-     */
-    public void i(boolean flag)
-    {
-        this.b = flag;
+        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
     }
 
     protected void tamedEffect(boolean tamed)
@@ -283,7 +244,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             double d1 = this.random.nextGaussian() * 0.02D;
             double d2 = this.random.nextGaussian() * 0.02D;
             double d3 = this.random.nextGaussian() * 0.02D;
-            this.world.a(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
+            this.world.addParticle(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
         }
     }
 }

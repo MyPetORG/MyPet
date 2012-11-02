@@ -83,27 +83,27 @@ public class EntityMyCow extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.cow";
+        return "mob.cow.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.cowhurt";
+        return "mob.cow.hurt";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.cowhurt";
+        return "mob.cow.hurt";
     }
 
     /**
@@ -150,7 +150,7 @@ public class EntityMyCow extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 1 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

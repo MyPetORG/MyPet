@@ -97,7 +97,7 @@ public class EntityMyIronGolem extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
         return "none";
     }
@@ -106,7 +106,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
         return "mob.irongolem.hit";
     }
@@ -115,7 +115,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
         return "mob.irongolem.death";
     }
@@ -152,7 +152,7 @@ public class EntityMyIronGolem extends EntityMyPet
         return false;
     }
 
-    public void f(boolean flag)
+    public void setPlayerCreated(boolean flag)
     {
         byte b0 = this.datawatcher.getByte(16);
 
@@ -166,7 +166,7 @@ public class EntityMyIronGolem extends EntityMyPet
         }
     }
 
-    public boolean k(Entity entity)
+    public boolean l(Entity entity)
     {
         int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

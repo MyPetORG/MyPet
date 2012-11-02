@@ -94,44 +94,30 @@ public class EntityMyCaveSpider extends EntityMyPet
         this.datawatcher.a(16, (byte) 0); // N/A
     }
 
-    public void a(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-        if (flag)
-        {
-            b0 = (byte) (b0 | 1);
-        }
-        else
-        {
-            b0 &= -2;
-        }
-        this.datawatcher.watch(16, b0);
-    }
-
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aQ()
+    protected String aW()
     {
-        return "mob.spider";
+        return "mob.spider.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aR()
+    protected String aX()
     {
-        return "mob.spider";
+        return "mob.spider.say";
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aS()
+    protected String aY()
     {
-        return "mob.spiderdeath";
+        return "mob.spider.death";
     }
 
     /**
@@ -166,7 +152,31 @@ public class EntityMyCaveSpider extends EntityMyPet
         return false;
     }
 
-    public boolean k(Entity entity)
+    public void f(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        if (flag)
+        {
+            b0 = (byte) (b0 | 0x1);
+        }
+        else
+        {
+            b0 = (byte) (b0 & 0xFFFFFFFE);
+        }
+        this.datawatcher.watch(16, b0);
+    }
+
+    public void j_()
+    {
+        super.j_();
+        if (!this.world.isStatic)
+        {
+            f(this.positionChanged);
+        }
+    }
+
+    public boolean l(Entity entity)
     {
         int damage = 2 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
