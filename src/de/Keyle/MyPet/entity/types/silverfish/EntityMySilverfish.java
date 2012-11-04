@@ -86,7 +86,6 @@ public class EntityMySilverfish extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(18, this.getHealth());
     }
 
     @Override

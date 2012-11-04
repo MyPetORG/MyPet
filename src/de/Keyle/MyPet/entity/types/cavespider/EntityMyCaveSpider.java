@@ -91,7 +91,7 @@ public class EntityMyCaveSpider extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 0); // N/A
+        this.datawatcher.a(16, new Byte((byte) 0)); // N/A
     }
 
     /**

@@ -77,7 +77,7 @@ public class EntityMyMooshroom extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(18, this.getHealth());
+        this.datawatcher.a(12, new Integer(0));
     }
 
     protected void a(int i, int j, int k, int l)

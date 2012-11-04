@@ -77,7 +77,7 @@ public class EntityMyCow extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(12, 0); // age
+        this.datawatcher.a(12, new Integer(0)); // age
     }
 
     /**

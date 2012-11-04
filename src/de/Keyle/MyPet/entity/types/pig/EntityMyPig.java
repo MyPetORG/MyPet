@@ -95,8 +95,8 @@ public class EntityMyPig extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 0); // saddle
-        this.datawatcher.a(12, 0);        // age
+        this.datawatcher.a(16, new Byte((byte) 0)); // saddle
+        this.datawatcher.a(12, new Integer(0));        // age
     }
 
     protected void a(int i, int j, int k, int l)

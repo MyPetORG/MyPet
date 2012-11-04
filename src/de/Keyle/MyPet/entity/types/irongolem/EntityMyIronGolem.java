@@ -85,7 +85,7 @@ public class EntityMyIronGolem extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 0); // flower???
+        this.datawatcher.a(16, new Byte((byte) 0)); // flower???
     }
 
     @Override
