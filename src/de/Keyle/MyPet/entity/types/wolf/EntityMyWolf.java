@@ -107,6 +107,12 @@ public class EntityMyWolf extends EntityMyPet
         return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
+    public void setHealth(int i)
+    {
+        super.setHealth(i);
+        this.bj();
+    }
+
     public void setTamed(boolean tamed)
     {
         int i = this.datawatcher.getByte(16);
@@ -198,7 +204,7 @@ public class EntityMyWolf extends EntityMyPet
     @Override
     protected void bj()
     {
-        this.datawatcher.watch(18, this.getHealth()); // update tail height
+        this.datawatcher.watch(18, (int)(25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
     }
 
     /**
