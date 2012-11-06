@@ -27,6 +27,7 @@ import net.minecraft.server.NBTTagCompound;
 public class MyWolf extends MyPet
 {
     private boolean isSitting = false;
+    private int collarColor = 0;
 
     public MyWolf(MyPetPlayer petOwner)
     {
@@ -71,11 +72,37 @@ public class MyWolf extends MyPet
         }
     }
 
+    public int getCollarColor()
+    {
+        if (status == PetState.Here)
+        {
+            return ((EntityMyWolf) craftPet.getHandle()).getCollarColor();
+        }
+        else
+        {
+            return collarColor;
+        }
+    }
+
+    public void setCollarColor(int color)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyWolf) craftPet.getHandle()).setCollarColor(color);
+            this.collarColor = color;
+        }
+        else
+        {
+            this.collarColor = color;
+        }
+    }
+
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
         info.setBoolean("sitting", isSitting());
+        info.setInt("collar", getCollarColor());
         return info;
     }
 
@@ -85,6 +112,10 @@ public class MyWolf extends MyPet
         if (info.hasKey("sitting"))
         {
             setSitting(info.getBoolean("sitting"));
+        }
+        if (info.hasKey("collar"))
+        {
+            setCollarColor(info.getInt("collar"));
         }
     }
 }

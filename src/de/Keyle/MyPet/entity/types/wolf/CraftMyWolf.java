@@ -40,10 +40,20 @@ public class CraftMyWolf extends CraftMyPet
         ((EntityMyWolf) getHandle()).setSitting(sitting);
     }
 
+    public int getCollarColor()
+    {
+        return ((MyWolf) getHandle().getMyPet()).getCollarColor();
+    }
+
+    public void setCollarColor(int color)
+    {
+        ((MyWolf) getHandle().getMyPet()).setCollarColor(color);
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + "}";
+        return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",color=" + getCollarColor() + "}";
     }
 
     public EntityType getType()

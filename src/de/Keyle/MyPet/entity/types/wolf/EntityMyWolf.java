@@ -70,6 +70,7 @@ public class EntityMyWolf extends EntityMyPet
             isMyPet = true;
 
             this.setSitting(((MyWolf) myPet).isSitting());
+            this.setCollarColor(((MyWolf) myPet).getCollarColor());
             this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             setTamed(true);
         }
