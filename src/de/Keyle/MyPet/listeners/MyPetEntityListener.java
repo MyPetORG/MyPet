@@ -174,6 +174,7 @@ public class MyPetEntityListener implements Listener
                             else if (leashTarget instanceof Wolf)
                             {
                                 ((MyWolf) myPet).setSitting(((Wolf) leashTarget).isSitting());
+                                ((MyWolf) myPet).setCollarColor(((CraftWolf) leashTarget).getHandle().getCollarColor());
                             }
                             else if (leashTarget instanceof Sheep)
                             {
