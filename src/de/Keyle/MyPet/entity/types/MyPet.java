@@ -54,23 +54,22 @@ public abstract class MyPet
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     static
     {
-        startHP.put(MyCaveSpider.class, 10);
-        startHP.put(MyChicken.class, 10);
-        startHP.put(MyCow.class, 10);
-        startHP.put(MyIronGolem.class, 10);
-        startHP.put(MyMooshroom.class, 10);
-        startHP.put(MyOcelot.class, 10);
-        startHP.put(MyPig.class, 10);
-        startHP.put(MyPigZombie.class, 10);
-        startHP.put(MySheep.class, 10);
-        startHP.put(MySilverfish.class, 10);
-        startHP.put(MySlime.class, 10);
-        startHP.put(MySpider.class, 10);
-        startHP.put(MyVillager.class, 10);
-        startHP.put(MyWolf.class, 10);
-        startHP.put(MyZombie.class, 10);
+        startHP.put(MyCaveSpider.class, 20);
+        startHP.put(MyChicken.class, 20);
+        startHP.put(MyCow.class, 20);
+        startHP.put(MyIronGolem.class, 20);
+        startHP.put(MyMooshroom.class, 20);
+        startHP.put(MyOcelot.class, 20);
+        startHP.put(MyPig.class, 20);
+        startHP.put(MyPigZombie.class, 20);
+        startHP.put(MySheep.class, 20);
+        startHP.put(MySilverfish.class, 20);
+        startHP.put(MySlime.class, 20);
+        startHP.put(MySpider.class, 20);
+        startHP.put(MyVillager.class, 20);
+        startHP.put(MyWolf.class, 20);
+        startHP.put(MyZombie.class, 20);
     }
-
 
     public static enum PetState
     {
@@ -90,8 +89,6 @@ public abstract class MyPet
     protected MyPetSkillTree skillTree = null;
     protected MyPetSkillSystem skillSystem;
     protected MyPetExperience experience;
-
-    //protected static int startHP = 10;
 
     public MyPet(MyPetPlayer Owner)
     {
