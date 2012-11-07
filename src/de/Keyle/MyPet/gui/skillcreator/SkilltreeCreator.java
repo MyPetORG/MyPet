@@ -245,6 +245,14 @@ public class SkilltreeCreator
 
         try
         {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception ignored)
+        {
+        }
+
+        try
+        {
             Class.forName("org.bukkit.configuration.file.FileConfiguration");
         }
         catch (ClassNotFoundException e)
