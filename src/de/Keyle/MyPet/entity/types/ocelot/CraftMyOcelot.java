@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Ocelot.Type;
 
 public class CraftMyOcelot extends CraftMyPet
@@ -55,10 +54,5 @@ public class CraftMyOcelot extends CraftMyPet
     public String toString()
     {
         return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",catType=" + getCatType() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }

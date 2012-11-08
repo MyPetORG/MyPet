@@ -20,9 +20,7 @@
 package de.Keyle.MyPet.entity.types.cow;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 
 public class CraftMyCow extends CraftMyPet
 {
@@ -32,19 +30,8 @@ public class CraftMyCow extends CraftMyPet
     }
 
     @Override
-    public EntityMyPet getHandle()
-    {
-        return (EntityMyCow) entity;
-    }
-
-    @Override
     public String toString()
     {
         return "CraftMyCow{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }

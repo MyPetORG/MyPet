@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.entity.types.spider;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.EntityMyPet;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.EntityType;
 
@@ -29,12 +28,6 @@ public class CraftMySpider extends CraftMyPet
     public CraftMySpider(CraftServer server, EntityMySpider entityMySpider)
     {
         super(server, entityMySpider);
-    }
-
-    @Override
-    public EntityMyPet getHandle()
-    {
-        return (EntityMySpider) entity;
     }
 
     @Override

@@ -85,6 +85,12 @@ public abstract class CraftMyPet extends CraftCreature
         return (EntityMyPet) entity;
     }
 
+    @Override
+    public EntityType getType()
+    {
+        return EntityType.UNKNOWN;
+    }
+
     public boolean canMove()
     {
         return getHandle().canMove();
@@ -95,6 +101,4 @@ public abstract class CraftMyPet extends CraftCreature
     {
         return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
     }
-
-    public abstract EntityType getType();
 }

@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 
 public class CraftMyWolf extends CraftMyPet
 {
@@ -54,10 +53,5 @@ public class CraftMyWolf extends CraftMyPet
     public String toString()
     {
         return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",color=" + getCollarColor() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }

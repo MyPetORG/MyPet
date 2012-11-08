@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types.skeleton;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import net.minecraft.server.ItemStack;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 
 public class CraftMySkeleton extends CraftMyPet
 {
@@ -45,10 +44,5 @@ public class CraftMySkeleton extends CraftMyPet
     public String toString()
     {
         return "CraftMySkeleton{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }

@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 
 public class CraftMyVillager extends CraftMyPet
 {
@@ -44,10 +43,5 @@ public class CraftMyVillager extends CraftMyPet
     public String toString()
     {
         return "CraftMyVillager{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }

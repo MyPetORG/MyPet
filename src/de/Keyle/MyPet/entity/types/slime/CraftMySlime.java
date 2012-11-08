@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.slime;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.entity.EntityType;
 
 public class CraftMySlime extends CraftMyPet
 {
@@ -44,10 +43,5 @@ public class CraftMySlime extends CraftMyPet
     public String toString()
     {
         return "CraftMySlime{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",size=" + getSize() + "}";
-    }
-
-    public EntityType getType()
-    {
-        return EntityType.UNKNOWN;
     }
 }
