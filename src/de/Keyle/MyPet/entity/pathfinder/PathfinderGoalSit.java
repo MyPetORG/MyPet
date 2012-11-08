@@ -24,12 +24,12 @@ import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import net.minecraft.server.PathfinderGoal;
 
-public class sitPathfinder extends PathfinderGoal
+public class PathfinderGoalSit extends PathfinderGoal
 {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
 
-    public sitPathfinder(EntityMyPet entityMyPet)
+    public PathfinderGoalSit(EntityMyPet entityMyPet)
     {
         this.entityMyPet = entityMyPet;
         a(5);

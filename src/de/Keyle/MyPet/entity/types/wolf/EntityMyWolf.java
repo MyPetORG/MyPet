@@ -23,7 +23,7 @@ import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
-import de.Keyle.MyPet.entity.pathfinder.sitPathfinder;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -31,7 +31,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityMyPet
 {
-    private sitPathfinder sitPathfinder;
+    private PathfinderGoalSit sitPathfinder;
 
     public EntityMyWolf(World world, MyPet myPet)
     {
@@ -42,7 +42,7 @@ public class EntityMyWolf extends EntityMyPet
 
         if (this.sitPathfinder == null)
         {
-            this.sitPathfinder = new sitPathfinder(this);
+            this.sitPathfinder = new PathfinderGoalSit(this);
         }
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
@@ -77,7 +77,7 @@ public class EntityMyWolf extends EntityMyPet
     {
         if (this.sitPathfinder == null)
         {
-            this.sitPathfinder = new sitPathfinder(this);
+            this.sitPathfinder = new PathfinderGoalSit(this);
         }
         this.sitPathfinder.setSitting(sitting);
     }

@@ -23,6 +23,7 @@ import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -30,7 +31,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyOcelot extends EntityMyPet
 {
-    private de.Keyle.MyPet.entity.pathfinder.sitPathfinder sitSitPathfinder;
+    private PathfinderGoalSit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
     {
@@ -39,14 +40,14 @@ public class EntityMyOcelot extends EntityMyPet
         this.a(0.6F, 0.8F);
         this.getNavigation().a(true);
 
-        if (this.sitSitPathfinder == null)
+        if (this.sitPathfinder == null)
         {
-            this.sitSitPathfinder = new de.Keyle.MyPet.entity.pathfinder.sitPathfinder(this);
+            this.sitPathfinder = new PathfinderGoalSit(this);
         }
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.sitSitPathfinder);
+        this.goalSelector.a(2, this.sitPathfinder);
         this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
         this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
         this.goalSelector.a(5, controlPathfinder);
@@ -80,16 +81,16 @@ public class EntityMyOcelot extends EntityMyPet
 
     public void setSitting(boolean sitting)
     {
-        if (this.sitSitPathfinder == null)
+        if (this.sitPathfinder == null)
         {
-            this.sitSitPathfinder = new de.Keyle.MyPet.entity.pathfinder.sitPathfinder(this);
+            this.sitPathfinder = new PathfinderGoalSit(this);
         }
-        this.sitSitPathfinder.setSitting(sitting);
+        this.sitPathfinder.setSitting(sitting);
     }
 
     public boolean isSitting()
     {
-        return this.sitSitPathfinder.isSitting();
+        return this.sitPathfinder.isSitting();
     }
 
     public void applySitting(boolean sitting)
@@ -193,7 +194,7 @@ public class EntityMyOcelot extends EntityMyPet
         }
         else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
-            this.sitSitPathfinder.toogleSitting();
+            this.sitPathfinder.toogleSitting();
             this.bG = false;
             this.setPathEntity(null);
         }
