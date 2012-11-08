@@ -45,16 +45,13 @@ public class EntityMyPig extends EntityMyPet
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
             this.setSaddle(((MyPig) myPet).hasSaddle());
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
         }
     }
 

@@ -47,15 +47,12 @@ public class EntityMySheep extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             this.setColor(((MySheep) myPet).getColor());
             this.setSheared(((MySheep) myPet).isSheared());
         }

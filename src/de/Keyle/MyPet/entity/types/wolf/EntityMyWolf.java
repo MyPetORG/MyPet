@@ -61,18 +61,15 @@ public class EntityMyWolf extends EntityMyPet
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setCollarColor(((MyWolf) myPet).getCollarColor());
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-            setTamed(true);
+            this.setTamed(true);
         }
     }
 

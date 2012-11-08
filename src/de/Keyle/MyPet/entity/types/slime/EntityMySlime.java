@@ -54,15 +54,12 @@ public class EntityMySlime extends EntityMyPet
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             setSize(((MySlime)myPet).getSize());
         }
     }

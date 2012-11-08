@@ -65,10 +65,9 @@ public class EntityMyOcelot extends EntityMyPet
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setSitting(((MyOcelot) myPet).isSitting());
             this.setCatType(((MyOcelot) myPet).getCatType());
 
         }

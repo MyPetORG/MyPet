@@ -55,15 +55,12 @@ public class EntityMyVillager extends EntityMyPet
 
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
-            this.myPet = myPet;
-            isMyPet = true;
+            super.setMyPet(myPet);
 
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
             this.setProfession(((MyVillager) myPet).getProfession());
         }
     }

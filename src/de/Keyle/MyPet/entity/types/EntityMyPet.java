@@ -57,7 +57,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return isMyPet;
     }
 
-    public abstract void setMyPet(MyPet myPet);
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            this.myPet = myPet;
+            isMyPet = true;
+
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+        }
+    }
 
     public abstract int getMaxHealth();
 

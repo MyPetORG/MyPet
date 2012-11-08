@@ -54,18 +54,6 @@ public class EntityMySilverfish extends EntityMyPet
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
-    @Override
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            this.myPet = myPet;
-            isMyPet = true;
-
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
-        }
-    }
-
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MySilverfish.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
