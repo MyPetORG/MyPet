@@ -36,6 +36,7 @@ import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
+import de.Keyle.MyPet.entity.types.skeleton.EntityMySkeleton;
 import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
 import de.Keyle.MyPet.entity.types.spider.EntityMySpider;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
@@ -212,6 +213,8 @@ public class MyPetPlugin extends JavaPlugin
             a.setAccessible(true);
 
             // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
+            a.invoke(a, EntityMySkeleton.class, "Skeleton", 51);
+            a.invoke(a, EntitySkeleton.class, "Skeleton", 51);
             a.invoke(a, EntityMySpider.class, "Spider", 52);
             a.invoke(a, EntitySpider.class, "Spider", 52);
             a.invoke(a, EntityMyZombie.class, "Zombie", 54);

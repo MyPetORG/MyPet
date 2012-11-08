@@ -62,6 +62,7 @@ permissions:
       MyPet.user.leash.pig: true
       MyPet.user.leash.pigzombie: true
       MyPet.user.leash.sheep: true
+      MyPet.user.leash.skeleton: true
       MyPet.user.leash.slime: true
       MyPet.user.leash.spider: true
       MyPet.user.leash.villager: true

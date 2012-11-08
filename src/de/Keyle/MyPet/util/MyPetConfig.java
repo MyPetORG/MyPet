@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
@@ -91,6 +92,7 @@ public class MyPetConfig
         setProperty("MyPet.StartHP.PigZombie", 20);
         setProperty("MyPet.StartHP.Sheep", 20);
         setProperty("MyPet.StartHP.Silverfish", 20);
+        setProperty("MyPet.StartHP.Skeleton", 20);
         setProperty("MyPet.StartHP.Slime", 20);
         setProperty("MyPet.StartHP.Spider", 20);
         setProperty("MyPet.StartHP.Villager", 20);
@@ -136,6 +138,7 @@ public class MyPetConfig
         MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.StartHP.PigZombie", 20));
         MyPet.setStartHP(MySheep.class, config.getInt("MyPet.StartHP.Sheep", 20));
         MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.StartHP.Silverfish", 20));
+        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.StartHP.Skeleton", 20));
         MyPet.setStartHP(MySlime.class, config.getInt("MyPet.StartHP.Slime", 20));
         MyPet.setStartHP(MySpider.class, config.getInt("MyPet.StartHP.Spider", 20));
         MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.StartHP.Villager", 20));
