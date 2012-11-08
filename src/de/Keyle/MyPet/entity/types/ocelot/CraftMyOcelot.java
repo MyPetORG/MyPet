@@ -26,9 +26,9 @@ import org.bukkit.entity.Ocelot.Type;
 
 public class CraftMyOcelot extends CraftMyPet
 {
-    public CraftMyOcelot(CraftServer server, EntityMyOcelot ocelot)
+    public CraftMyOcelot(CraftServer server, EntityMyOcelot entityMyOcelot)
     {
-        super(server, ocelot);
+        super(server, entityMyOcelot);
     }
 
     public boolean isSitting()

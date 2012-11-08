@@ -25,9 +25,9 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 
 public class MyCow extends MyPet
 {
-    public MyCow(MyPetPlayer PetOwner)
+    public MyCow(MyPetPlayer petOwner)
     {
-        super(PetOwner);
+        super(petOwner);
         this.petName = "Cow";
     }
 

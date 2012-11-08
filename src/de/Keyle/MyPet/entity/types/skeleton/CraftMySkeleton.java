@@ -26,9 +26,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMySkeleton extends CraftMyPet
 {
-    public CraftMySkeleton(CraftServer server, EntityMySkeleton skeleton)
+    public CraftMySkeleton(CraftServer server, EntityMySkeleton entityMySkeleton)
     {
-        super(server, skeleton);
+        super(server, entityMySkeleton);
     }
 
     public ItemStack[] getEquipment()

@@ -34,23 +34,23 @@ public class EntityMySlime extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/slime.png";
-        this.a(0.3F, 0.7F);
+        this.a(0.6F, 0.6F);
         this.getNavigation().a(true);
         this.walkSpeed = 0.25F;
 
-        PathfinderGoalControl controlPathfinderGoal = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
         this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
-        this.goalSelector.a(4, controlPathfinderGoal);
-        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinderGoal));
+        this.goalSelector.a(4, controlPathfinder);
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinderGoal, 1));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
@@ -77,11 +77,11 @@ public class EntityMySlime extends EntityMyPet
         return this.datawatcher.getByte(16);
     }
 
-    public void setSize(int i)
+    public void setSize(int size)
     {
-        this.datawatcher.watch(16, (byte) i);
-        a(0.6F * i, 0.6F * i);
-        this.aV = i;
+        this.datawatcher.watch(16, (byte) size);
+        a(0.6F * size, 0.6F * size);
+        this.aV = size;
     }
 
     @Override

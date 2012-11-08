@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMySlime extends CraftMyPet
 {
-    public CraftMySlime(CraftServer server, EntityMySlime slime)
+    public CraftMySlime(CraftServer server, EntityMySlime entityMySlime)
     {
-        super(server, slime);
+        super(server, entityMySlime);
     }
 
     public int getSize()

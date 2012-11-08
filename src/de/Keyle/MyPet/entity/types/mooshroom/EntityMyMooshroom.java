@@ -28,32 +28,32 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyMooshroom extends EntityMyPet
 {
-    public EntityMyMooshroom(World world, MyPet MPet)
+    public EntityMyMooshroom(World world, MyPet myPet)
     {
-        super(world, MPet);
+        super(world, myPet);
         this.texture = "/mob/redcow.png";
         this.a(0.9F, 1.3F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed + 0.1F);
+        PathfinderGoalControl controlPathFinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, Control);
+        this.goalSelector.a(2, controlPathFinder);
         this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathFinder));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        if (MPet != null)
+        if (myPet != null)
         {
-            this.myPet = MPet;
+            this.myPet = myPet;
             isMyPet = true;
 
-            this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
         }
     }
 

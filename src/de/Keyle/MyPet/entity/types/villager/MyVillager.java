@@ -39,7 +39,7 @@ public class MyVillager extends MyPet
         this.profession = profession;
         if (status == PetState.Here)
         {
-            ((EntityMyVillager) craftPet.getHandle()).setProfession(profession);
+            ((EntityMyVillager) craftMyPet.getHandle()).setProfession(profession);
         }
     }
 

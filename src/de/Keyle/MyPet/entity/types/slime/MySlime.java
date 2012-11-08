@@ -55,7 +55,7 @@ public class MySlime extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySlime) craftPet).setSize(size);
+            ((CraftMySlime) craftMyPet).setSize(size);
         }
         this.size = size;
     }

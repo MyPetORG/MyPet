@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMyVillager extends CraftMyPet
 {
-    public CraftMyVillager(CraftServer server, EntityMyVillager villager)
+    public CraftMyVillager(CraftServer server, EntityMyVillager entityMyVillager)
     {
-        super(server, villager);
+        super(server, entityMyVillager);
     }
 
     public int getProfession()

@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMyPig extends CraftMyPet
 {
-    public CraftMyPig(CraftServer server, EntityMyPig pig)
+    public CraftMyPig(CraftServer server, EntityMyPig entityMyPig)
     {
-        super(server, pig);
+        super(server, entityMyPig);
     }
 
     public boolean hasSaddle()

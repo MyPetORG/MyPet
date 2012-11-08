@@ -76,7 +76,7 @@ public abstract class MyPet
         Dead, Despawned, Here
     }
 
-    protected CraftMyPet craftPet;
+    protected CraftMyPet craftMyPet;
     public String petName = "Pet";
     protected final MyPetPlayer petOwner;
     protected int health;
@@ -123,9 +123,9 @@ public abstract class MyPet
         experience = new MyPetExperience(this);
     }
 
-    public void setPetName(String Name)
+    public void setPetName(String newName)
     {
-        this.petName = Name;
+        this.petName = newName;
         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
     }
 
@@ -133,14 +133,14 @@ public abstract class MyPet
     {
         if (status == PetState.Here)
         {
-            health = craftPet.getHealth();
-            petLocation = craftPet.getLocation();
+            health = craftMyPet.getHealth();
+            petLocation = craftMyPet.getLocation();
             if (petLocation == null && getOwner().isOnline())
             {
                 petLocation = getOwner().getPlayer().getLocation();
             }
             status = PetState.Despawned;
-            craftPet.remove();
+            craftMyPet.remove();
         }
     }
 
@@ -173,7 +173,7 @@ public abstract class MyPet
                 {
                     return false;
                 }
-                craftPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 status = PetState.Here;
                 return true;
             }
@@ -199,7 +199,7 @@ public abstract class MyPet
                 {
                     return false;
                 }
-                craftPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 status = PetState.Here;
                 return true;
             }
@@ -209,7 +209,7 @@ public abstract class MyPet
 
     public CraftMyPet getPet()
     {
-        return craftPet;
+        return craftMyPet;
     }
 
     public void setHealth(int d)
@@ -224,7 +224,7 @@ public abstract class MyPet
         }
         if (status == PetState.Here)
         {
-            craftPet.setHealth(health);
+            craftMyPet.setHealth(health);
         }
     }
 
@@ -233,7 +233,7 @@ public abstract class MyPet
 
         if (status == PetState.Here)
         {
-            return craftPet.getHealth();
+            return craftMyPet.getHealth();
         }
         else
         {
@@ -265,7 +265,7 @@ public abstract class MyPet
     {
         if (status == PetState.Here)
         {
-            return craftPet.getLocation();
+            return craftMyPet.getLocation();
         }
         else
         {
@@ -278,7 +278,7 @@ public abstract class MyPet
         this.petLocation = loc;
         if (status == PetState.Here)
         {
-            craftPet.teleport(loc);
+            craftMyPet.teleport(loc);
         }
     }
 

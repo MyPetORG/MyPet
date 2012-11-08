@@ -38,19 +38,19 @@ public class EntityMySpider extends EntityMyPet
         this.getNavigation().a(true);
         this.walkSpeed = 0.4F;
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed + 0.1F, true));
-        this.goalSelector.a(4, Control);
-        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
+        this.goalSelector.a(4, controlPathfinder);
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
         this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, Control, 1));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 

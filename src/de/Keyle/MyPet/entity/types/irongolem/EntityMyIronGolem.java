@@ -30,38 +30,38 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyIronGolem extends EntityMyPet
 {
-    public EntityMyIronGolem(World world, MyPet MPet)
+    public EntityMyIronGolem(World world, MyPet myPet)
     {
-        super(world, MPet);
+        super(world, myPet);
         this.texture = "/mob/villager_golem.png";
         this.a(1.4F, 2.9F);
         this.getNavigation().a(true);
         this.walkSpeed = 0.25F;
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(MPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
         this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
-        this.goalSelector.a(3, Control);
-        this.goalSelector.a(4, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
+        this.goalSelector.a(3, controlPathfinder);
+        this.goalSelector.a(4, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
         this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(MPet));
+        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(myPet));
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(MPet, Control, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(MPet, 10));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
     }
 
     @Override
-    public void setMyPet(MyPet MPet)
+    public void setMyPet(MyPet myPet)
     {
-        if (MPet != null)
+        if (myPet != null)
         {
-            this.myPet = MPet;
+            this.myPet = myPet;
             isMyPet = true;
 
-            this.setHealth(MPet.getHealth() >= getMaxHealth() ? getMaxHealth() : MPet.getHealth());
+            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
         }
     }
 

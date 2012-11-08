@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMyWolf extends CraftMyPet
 {
-    public CraftMyWolf(CraftServer server, EntityMyWolf wolf)
+    public CraftMyWolf(CraftServer server, EntityMyWolf entityMyWolf)
     {
-        super(server, wolf);
+        super(server, entityMyWolf);
     }
 
     public boolean isSitting()

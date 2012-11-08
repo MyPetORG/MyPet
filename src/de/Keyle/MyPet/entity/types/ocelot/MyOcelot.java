@@ -39,7 +39,7 @@ public class MyOcelot extends MyPet
     {
         if (status == PetState.Here)
         {
-            return ((CraftMyOcelot) craftPet).isSitting();
+            return ((CraftMyOcelot) craftMyPet).isSitting();
         }
         else
         {
@@ -49,7 +49,7 @@ public class MyOcelot extends MyPet
 
     public void setSitting(boolean sitting)
     {
-        ((CraftMyOcelot) craftPet).setSitting(sitting);
+        ((CraftMyOcelot) craftMyPet).setSitting(sitting);
         this.isSitting = sitting;
     }
 
@@ -58,7 +58,7 @@ public class MyOcelot extends MyPet
         this.catType = catType;
         if (status == PetState.Here)
         {
-            ((EntityMyOcelot) craftPet.getHandle()).setCatType(catType);
+            ((EntityMyOcelot) craftMyPet.getHandle()).setCatType(catType);
         }
     }
 

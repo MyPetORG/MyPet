@@ -49,7 +49,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         super(world);
         setMyPet(myPet);
-        myPet.craftPet = (CraftMyPet) this.getBukkitEntity();
+        myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
     }
 
     public boolean isMyPet()
@@ -57,7 +57,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return isMyPet;
     }
 
-    public abstract void setMyPet(MyPet MPet);
+    public abstract void setMyPet(MyPet myPet);
 
     public abstract int getMaxHealth();
 

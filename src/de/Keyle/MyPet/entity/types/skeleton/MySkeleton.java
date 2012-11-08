@@ -38,7 +38,7 @@ public class MySkeleton extends MyPet
         //this.equipment = equipment;
         if (status == PetState.Here)
         {
-            craftPet.getHandle().setEquipment(slot, item);
+            craftMyPet.getHandle().setEquipment(slot, item);
         }
     }
 
@@ -46,7 +46,7 @@ public class MySkeleton extends MyPet
     {
         if (status == PetState.Here)
         {
-            return craftPet.getHandle().getEquipment();
+            return craftMyPet.getHandle().getEquipment();
         }
         return new ItemStack[0];
     }

@@ -32,9 +32,9 @@ public abstract class CraftMyPet extends CraftCreature
 {
     protected AnimalTamer petOwner;
 
-    public CraftMyPet(CraftServer server, EntityMyPet petEntity)
+    public CraftMyPet(CraftServer server, EntityMyPet entityMyPet)
     {
-        super(server, petEntity);
+        super(server, entityMyPet);
     }
 
     public void setTarget(LivingEntity target)

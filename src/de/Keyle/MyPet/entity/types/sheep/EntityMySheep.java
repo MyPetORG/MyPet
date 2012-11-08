@@ -35,14 +35,14 @@ public class EntityMySheep extends EntityMyPet
         this.a(0.9F, 1.3F);
         this.getNavigation().a(true);
 
-        PathfinderGoalControl Control = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
-        PathfinderGoalEatTile eatGoalFinder = new PathfinderGoalEatTile(this);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
+        PathfinderGoalEatTile eatGrassPathfinder = new PathfinderGoalEatTile(this);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, Control);
+        this.goalSelector.a(2, controlPathfinder);
         this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, Control));
-        this.goalSelector.a(5, eatGoalFinder);
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
+        this.goalSelector.a(5, eatGrassPathfinder);
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
     }
@@ -71,11 +71,11 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getByte(16) & 15;
     }
 
-    public void setColor(int i)
+    public void setColor(int color)
     {
         byte b0 = this.datawatcher.getByte(16);
 
-        this.datawatcher.watch(16, (byte) (b0 & 240 | i & 15));
+        this.datawatcher.watch(16, (byte) (b0 & 240 | color & 15));
     }
 
     public boolean isSheared()
@@ -102,9 +102,9 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getInt(12);
     }
 
-    public void setAge(int i)
+    public void setAge(int age)
     {
-        this.datawatcher.watch(12, i);
+        this.datawatcher.watch(12, age);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class EntityMySheep extends EntityMyPet
     {
         super.a();
         this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
-        this.datawatcher.a(12, new Integer(0));        // age
+        this.datawatcher.a(12, new Integer(0));     // age
     }
 
     protected void a(int i, int j, int k, int l)

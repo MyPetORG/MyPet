@@ -26,9 +26,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMyCow extends CraftMyPet
 {
-    public CraftMyCow(CraftServer server, EntityMyCow cow)
+    public CraftMyCow(CraftServer server, EntityMyCow entityMyCow)
     {
-        super(server, cow);
+        super(server, entityMyCow);
     }
 
     @Override

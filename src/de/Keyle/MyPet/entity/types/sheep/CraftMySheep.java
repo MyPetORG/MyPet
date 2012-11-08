@@ -25,9 +25,9 @@ import org.bukkit.entity.EntityType;
 
 public class CraftMySheep extends CraftMyPet
 {
-    public CraftMySheep(CraftServer server, EntityMySheep sheep)
+    public CraftMySheep(CraftServer server, EntityMySheep entityMySheep)
     {
-        super(server, sheep);
+        super(server, entityMySheep);
     }
 
     public int getColor()
