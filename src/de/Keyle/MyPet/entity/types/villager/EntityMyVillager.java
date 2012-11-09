@@ -35,7 +35,6 @@ public class EntityMyVillager extends EntityMyPet
         this.texture = "/mob/villager/villager.png";
         this.bw = 0.5F;
         this.a(0.6F, 0.8F);
-        this.getNavigation().b(true);
 
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 

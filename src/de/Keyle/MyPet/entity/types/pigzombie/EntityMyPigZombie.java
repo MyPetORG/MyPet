@@ -35,7 +35,6 @@ public class EntityMyPigZombie extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/pigzombie.png";
         this.a(0.9F, 0.9F);
-        this.getNavigation().a(true);
 
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
 

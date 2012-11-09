@@ -34,7 +34,6 @@ public class EntityMySlime extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/slime.png";
         this.a(0.6F, 0.6F);
-        this.getNavigation().a(true);
         this.walkSpeed = 0.25F;
 
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);

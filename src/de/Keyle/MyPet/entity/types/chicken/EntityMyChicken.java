@@ -40,7 +40,6 @@ public class EntityMyChicken extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/chicken.png";
         this.a(0.3F, 0.7F);
-        this.getNavigation().a(true);
 
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 

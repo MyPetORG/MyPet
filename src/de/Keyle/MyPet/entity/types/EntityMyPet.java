@@ -51,6 +51,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         super(world);
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
+        this.getNavigation().a(true);
     }
 
     public boolean isMyPet()
