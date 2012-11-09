@@ -23,6 +23,7 @@ import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
@@ -93,6 +94,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         return true;
     }
+
+    public abstract boolean canEat(ItemStack itemstack);
 
     public EntityLiving getOwner()
     {
@@ -178,6 +181,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      */
     public boolean c(EntityHuman entityhuman)
     {
+        super.c(entityhuman);
+
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
@@ -190,15 +195,24 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 }
             }
         }
+        if (itemStack != null && canEat(itemStack))
+        {
+            if (getHealth() < getMaxHealth())
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                this.heal(3, RegainReason.EATING);
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                this.tamedEffect(true);
+                return true;
+            }
+        }
         return false;
-    }
-
-    /**
-     * Checks weather an itemstack is eatable for the MyPet
-     */
-    public boolean c(ItemStack itemstack)
-    {
-        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
     }
 
     /**

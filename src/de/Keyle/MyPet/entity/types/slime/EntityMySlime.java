@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMySlime extends EntityMyPet
 {
@@ -67,6 +66,12 @@ public class EntityMySlime extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MySlime.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.SUGAR.getId();
     }
 
     public int getSize()
@@ -123,38 +128,6 @@ public class EntityMySlime extends EntityMyPet
     protected String aY()
     {
         return "mob.slime." + (getSize() > 1 ? "big" : "small");
-    }
-
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (itemStack != null && itemStack.id == org.bukkit.Material.SUGAR.getId())
-        {
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(1, RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean l(Entity entity)

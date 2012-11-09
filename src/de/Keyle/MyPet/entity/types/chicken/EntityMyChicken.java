@@ -58,6 +58,12 @@ public class EntityMyChicken extends EntityMyPet
     }
 
     @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.SEEDS.getId();
+    }
+
+    @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
         if (this.bukkitEntity == null)
@@ -104,38 +110,6 @@ public class EntityMyChicken extends EntityMyPet
     protected String aY()
     {
         return "mob.chicken.hurt";
-    }
-
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (itemStack != null && itemStack.id == org.bukkit.Material.WHEAT.getId())
-        {
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(1, RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     public void c()

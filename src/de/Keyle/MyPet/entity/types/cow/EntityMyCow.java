@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyCow extends EntityMyPet
 {
@@ -48,6 +47,12 @@ public class EntityMyCow extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyCow.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.WHEAT.getId();
     }
 
     @Override
@@ -106,24 +111,7 @@ public class EntityMyCow extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemStack != null && itemStack.id == org.bukkit.Material.WHEAT.getId())
-        {
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(1, RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        else if (entityhuman == getOwner())
+        if (entityhuman == getOwner())
         {
             if (itemStack != null && itemStack.id == Item.BUCKET.id)
             {

@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyVillager extends EntityMyPet
 {
@@ -68,6 +67,12 @@ public class EntityMyVillager extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyVillager.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.APPLE.getId();
     }
 
     public int getProfession()
@@ -121,40 +126,6 @@ public class EntityMyVillager extends EntityMyPet
     protected String aY()
     {
         return "mob.villager.defaultdeath";
-    }
-
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (itemStack != null && itemStack.id == org.bukkit.Material.APPLE.getId())
-        {
-            ItemFood itemfood = (ItemFood) Item.byId[itemStack.id];
-
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(itemfood.getNutrition(), RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean l(Entity entity)

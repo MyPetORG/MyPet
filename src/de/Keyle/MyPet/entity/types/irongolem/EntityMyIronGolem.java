@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyIronGolem extends EntityMyPet
 {
@@ -56,6 +55,12 @@ public class EntityMyIronGolem extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyIronGolem.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.IRON_INGOT.getId();
     }
 
     @Override
@@ -106,38 +111,6 @@ public class EntityMyIronGolem extends EntityMyPet
     protected String aY()
     {
         return "mob.irongolem.death";
-    }
-
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
-
-        if (itemstack != null && itemstack.id == org.bukkit.Material.IRON_INGOT.getId())
-        {
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemstack.count;
-                }
-                this.heal(10, RegainReason.EATING);
-                if (itemstack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     public void setPlayerCreated(boolean flag)

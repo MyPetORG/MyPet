@@ -27,7 +27,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyOcelot extends EntityMyPet
 {
@@ -76,6 +75,12 @@ public class EntityMyOcelot extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyOcelot.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.RAW_FISH.getId();
     }
 
     public void setSitting(boolean sitting)
@@ -170,28 +175,7 @@ public class EntityMyOcelot extends EntityMyPet
     {
         super.c(entityhuman);
 
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
-
-        if (itemstack != null && itemstack.id == org.bukkit.Material.RAW_FISH.getId())
-        {
-            ItemFood itemfood = (ItemFood) Item.byId[itemstack.id];
-
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemstack.count;
-                }
-                this.heal(itemfood.getNutrition(), RegainReason.EATING);
-                if (itemstack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
             this.bG = false;

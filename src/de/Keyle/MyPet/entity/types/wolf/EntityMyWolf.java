@@ -27,7 +27,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyWolf extends EntityMyPet
 {
@@ -103,6 +102,12 @@ public class EntityMyWolf extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
     }
 
     public void setHealth(int i)
@@ -215,29 +220,7 @@ public class EntityMyWolf extends EntityMyPet
     {
         super.c(entityhuman);
 
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (itemStack != null && this.c(itemStack))
-        {
-            ItemFood itemfood = (ItemFood) Item.byId[itemStack.id];
-
-            if (getHealth() < getMaxHealth())
-            {
-                //don't remove item in creative gamemode
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                this.heal(itemfood.getNutrition(), RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                this.tamedEffect(true);
-                return true;
-            }
-        }
-        else if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
             this.bG = false;
