@@ -145,22 +145,22 @@ public class MyPetConfig
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
 
-        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.StartHP.CaveSpider", 20));
-        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.StartHP.Chicken", 20));
-        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.StartHP.Cow", 20));
-        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.StartHP.IronGolem", 20));
-        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.StartHP.Mooshroom", 20));
-        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.StartHP.Ocelot", 20));
-        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.StartHP.Pig", 20));
-        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.StartHP.PigZombie", 20));
-        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.StartHP.Sheep", 20));
-        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.StartHP.Silverfish", 20));
-        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.StartHP.Skeleton", 20));
-        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.StartHP.Slime", 20));
-        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.StartHP.Spider", 20));
-        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.StartHP.Villager", 20));
-        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.StartHP.Wolf", 20));
-        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.StartHP.Zombie", 20));
+        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.Start.HP.CaveSpider", 20));
+        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.Start.HP.Chicken", 20));
+        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.Start.HP.Cow", 20));
+        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.Star.tHP.IronGolem", 20));
+        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.Start.HP.Mooshroom", 20));
+        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.Start.HP.Ocelot", 20));
+        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.Start.HP.Pig", 20));
+        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.Start.HP.PigZombie", 20));
+        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.Start.HP.Sheep", 20));
+        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.Start.HP.Silverfish", 20));
+        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.Start.HP.Skeleton", 20));
+        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.Start.HP.Slime", 20));
+        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.Start.HP.Spider", 20));
+        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.Start.HP.Villager", 20));
+        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.Start.HP.Wolf", 20));
+        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.Start.HP.Zombie", 20));
 
         MyPet.setStartDamage(MyCaveSpider.class, config.getInt("MyPet.Start.damage.CaveSpider", 4));
         MyPet.setStartDamage(MyChicken.class, config.getInt("MyPet.Start.damage.Chicken", 4));
