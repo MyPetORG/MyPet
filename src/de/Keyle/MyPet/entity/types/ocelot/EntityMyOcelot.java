@@ -61,7 +61,6 @@ public class EntityMyOcelot extends EntityMyPet
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
     }
 
-    @Override
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
@@ -203,7 +202,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     public boolean l(Entity entity)
     {
-        int damage = 3 + (isMyPet && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }

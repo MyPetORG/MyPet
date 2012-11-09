@@ -52,6 +52,7 @@ import java.util.Map;
 public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
+    private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
     static
     {
         startHP.put(MyCaveSpider.class, 20);
@@ -69,6 +70,22 @@ public abstract class MyPet
         startHP.put(MyVillager.class, 20);
         startHP.put(MyWolf.class, 20);
         startHP.put(MyZombie.class, 20);
+
+        startDamage.put(MyCaveSpider.class, 4);
+        startDamage.put(MyChicken.class, 4);
+        startDamage.put(MyCow.class, 4);
+        startDamage.put(MyIronGolem.class, 4);
+        startDamage.put(MyMooshroom.class, 4);
+        startDamage.put(MyOcelot.class, 4);
+        startDamage.put(MyPig.class, 4);
+        startDamage.put(MyPigZombie.class, 4);
+        startDamage.put(MySheep.class, 4);
+        startDamage.put(MySilverfish.class, 4);
+        startDamage.put(MySlime.class, 4);
+        startDamage.put(MySpider.class, 4);
+        startDamage.put(MyVillager.class, 4);
+        startDamage.put(MyWolf.class, 4);
+        startDamage.put(MyZombie.class, 4);
     }
 
     public static enum PetState
@@ -331,6 +348,23 @@ public abstract class MyPet
         if(startHP.containsKey(myPetClass))
         {
             startHP.put(myPetClass, hp);
+        }
+    }
+
+    public static int getStartDamage(Class<? extends MyPet> myPetClass)
+    {
+        if(startDamage.containsKey(myPetClass))
+        {
+            return startDamage.get(myPetClass);
+        }
+        return 1;
+    }
+
+    public static void setStartDamage(Class<? extends MyPet> myPetClass, int damage)
+    {
+        if(startDamage.containsKey(myPetClass))
+        {
+            startDamage.put(myPetClass, damage);
         }
     }
 
