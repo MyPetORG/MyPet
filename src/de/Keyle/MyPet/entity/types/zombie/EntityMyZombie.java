@@ -53,6 +53,26 @@ public class EntityMyZombie extends EntityMyPet
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
     }
 
+    public boolean isBaby()
+    {
+        return getDataWatcher().getByte(12) == 1;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        getDataWatcher().watch(12, (byte) 1);
+    }
+
+    public boolean isVillager()
+    {
+        return getDataWatcher().getByte(13) == 1;
+    }
+
+    public void setVillager(boolean flag)
+    {
+        getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
+    }
+
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
@@ -75,7 +95,6 @@ public class EntityMyZombie extends EntityMyPet
         super.a();
         getDataWatcher().a(12, Byte.valueOf((byte) 0)); // is baby
         getDataWatcher().a(13, Byte.valueOf((byte) 0)); // is villager
-        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // equipment
     }
 
     protected void a(int i, int j, int k, int l)
