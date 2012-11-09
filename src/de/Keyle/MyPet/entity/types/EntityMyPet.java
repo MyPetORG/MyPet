@@ -68,7 +68,107 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
+    public MyPet getMyPet()
+    {
+        return myPet;
+    }
+
+    public void setHealth(int i)
+    {
+        if (i > this.getMaxHealth())
+        {
+            i = this.getMaxHealth();
+        }
+        this.health = i;
+    }
+
     public abstract int getMaxHealth();
+
+    public void setLocation(Location loc)
+    {
+        this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
+    }
+
+    public boolean canMove()
+    {
+        return true;
+    }
+
+    public EntityLiving getOwner()
+    {
+        return this.world.a(myPet.getOwner().getName());
+    }
+
+    public boolean damageEntity(DamageSource damagesource, int i)
+    {
+        Entity entity = damagesource.getEntity();
+
+        if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
+        {
+            i = (i + 1) / 2;
+        }
+
+        return super.damageEntity(damagesource, i);
+    }
+
+    protected void tamedEffect(boolean tamed)
+    {
+        String str = tamed ? "heart" : "smoke";
+        for (int i = 0 ; i < 7 ; i++)
+        {
+            double d1 = this.random.nextGaussian() * 0.02D;
+            double d2 = this.random.nextGaussian() * 0.02D;
+            double d3 = this.random.nextGaussian() * 0.02D;
+            this.world.addParticle(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
+        }
+    }
+
+    public abstract org.bukkit.entity.Entity getBukkitEntity();
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected abstract String aW();
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected abstract String aX();
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected abstract String aY();
+
+    /**
+     * N.A.
+     */
+    public float aV()
+    {
+        return 0.4F;
+    }
+
+    protected boolean bg()
+    {
+        return false;
+    }
+
+    /**
+     * N.A.
+     */
+    public void c()
+    {
+        super.c();
+        if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
+        {
+            this.g = true;
+            this.j = 0.0F;
+            this.i = 0.0F;
+            this.world.broadcastEntityEffect(this, (byte) 8);
+        }
+    }
 
     /**
      * Is called when player rightclicks this MyPet
@@ -94,107 +194,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     }
 
     /**
-     * Is called when a MyPet attemps to do damge to another entity
+     * Checks weather an itemstack is eatable for the MyPet
      */
-    public boolean l(Entity entity)
+    public boolean c(ItemStack itemstack)
     {
-        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
-
-    public void setLocation(Location loc)
-    {
-        this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
-    }
-
-    public void setHealth(int i)
-    {
-        if (i > this.getMaxHealth())
-        {
-            i = this.getMaxHealth();
-        }
-        this.health = i;
-    }
-
-    public boolean canMove()
-    {
-        return true;
-    }
-
-    public EntityLiving getOwner()
-    {
-        return this.world.a(myPet.getOwner().getName());
-    }
-
-    public abstract org.bukkit.entity.Entity getBukkitEntity();
-
-    public MyPet getMyPet()
-    {
-        return myPet;
-    }
-
-    //Unused changed Vanilla Methods ---------------------------------------------------------------------------------------
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected abstract String aW();
-
-    /**
-     * saves info about this entity to a NBTTagCompound
-     */
-    public void a(NBTTagCompound nbttagcompound)
-    {
-    }
-
-    //Vanilla Methods ------------------------------------------------------------------------------------------------------
-
-    protected void a(int i, int j, int k, int l)
-    {
-    }
-
-    protected boolean bg()
-    {
-        return false;
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected abstract String aX();
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected abstract String aY();
-
-    /**
-     * N.A.
-     */
-    public float aV()
-    {
-        return 0.4F;
-    }
-
-    protected int getLootId()
-    {
-        return -1;
-    }
-
-    /**
-     * N.A.
-     */
-    public void c()
-    {
-        super.c();
-        if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
-        {
-            this.g = true;
-            this.j = 0.0F;
-            this.i = 0.0F;
-            this.world.broadcastEntityEffect(this, (byte) 8);
-        }
+        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
     }
 
     /**
@@ -220,40 +224,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
-    public float getHeadHeight()
-    {
-        return this.length * 0.8F;
-    }
-
-    public boolean damageEntity(DamageSource damagesource, int i)
-    {
-        Entity entity = damagesource.getEntity();
-
-        if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow))
-        {
-            i = (i + 1) / 2;
-        }
-
-        return super.damageEntity(damagesource, i);
-    }
-
     /**
-     * Checks weather an itemstack is eatable for the MyPet
+     * Is called when a MyPet attemps to do damge to another entity
      */
-    public boolean c(ItemStack itemstack)
+    public boolean l(Entity entity)
     {
-        return itemstack != null && (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
-    }
+        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
-    protected void tamedEffect(boolean tamed)
-    {
-        String str = tamed ? "heart" : "smoke";
-        for (int i = 0 ; i < 7 ; i++)
-        {
-            double d1 = this.random.nextGaussian() * 0.02D;
-            double d2 = this.random.nextGaussian() * 0.02D;
-            double d3 = this.random.nextGaussian() * 0.02D;
-            this.world.addParticle(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
-        }
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 }
