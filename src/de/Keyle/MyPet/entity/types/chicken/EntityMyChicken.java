@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyChicken extends EntityMyPet
 {

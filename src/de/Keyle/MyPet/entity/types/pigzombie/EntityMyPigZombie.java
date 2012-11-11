@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 public class EntityMyPigZombie extends EntityMyPet
 {
