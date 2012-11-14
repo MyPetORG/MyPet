@@ -74,13 +74,13 @@ public class EntityMyMooshroom extends EntityMyPet
 
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.cow.step", 0.15F, 1.0F);
+        makeSound("mob.cow.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.cow.say";
     }
@@ -89,7 +89,7 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.cow.hurt";
     }
@@ -98,12 +98,12 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.cow.hurt";
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

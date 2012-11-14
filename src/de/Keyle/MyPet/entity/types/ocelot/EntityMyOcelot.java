@@ -67,7 +67,6 @@ public class EntityMyOcelot extends EntityMyPet
 
             this.setSitting(((MyOcelot) myPet).isSitting());
             this.setCatType(((MyOcelot) myPet).getCatType());
-
         }
     }
 
@@ -141,9 +140,28 @@ public class EntityMyOcelot extends EntityMyPet
     }
 
     /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean a(EntityHuman entityhuman)
+    {
+        super.a(entityhuman);
+
+        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        {
+            this.sitPathfinder.toogleSitting();
+            this.bE = false;
+            this.setPathEntity(null);
+        }
+        return false;
+    }
+
+    /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
@@ -151,7 +169,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aX()
+    protected String aZ()
     {
         return "mob.cat.hitt";
     }
@@ -159,31 +177,12 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aY()
+    protected String ba()
     {
         return "mob.cat.hitt";
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
-        {
-            this.sitPathfinder.toogleSitting();
-            this.bG = false;
-            this.setPathEntity(null);
-        }
-        return false;
-    }
-
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

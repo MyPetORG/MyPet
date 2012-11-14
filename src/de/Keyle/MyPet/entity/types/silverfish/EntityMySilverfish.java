@@ -83,13 +83,13 @@ public class EntityMySilverfish extends EntityMyPet
     @Override
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.silverfish.step", 1.0F, 1.0F);
+        makeSound("mob.silverfish.step", 1.0F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.silverfish.say";
     }
@@ -98,7 +98,7 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.silverfish.hit";
     }
@@ -107,12 +107,12 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.silverfish.kill";
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

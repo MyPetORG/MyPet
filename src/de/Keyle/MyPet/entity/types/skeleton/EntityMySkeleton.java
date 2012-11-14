@@ -98,13 +98,13 @@ public class EntityMySkeleton extends EntityMyPet
 
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.skeleton.step", 0.15F, 1.0F);
+        makeSound("mob.skeleton.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.skeleton.say";
     }
@@ -112,7 +112,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aX()
+    protected String aZ()
     {
         return "mob.skeleton.hurt";
     }
@@ -120,12 +120,12 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aY()
+    protected String ba()
     {
         return "mob.skeleton.death";
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

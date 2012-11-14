@@ -127,54 +127,15 @@ public class EntityMySheep extends EntityMyPet
         this.datawatcher.a(12, new Integer(0));     // age
     }
 
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.sheep.step", 0.15F, 1.0F);
-    }
-
-    /**
-     * Called when the sheeps eat grass
-     */
-    public void aG()
-    {
-        ((MySheep) myPet).setSheared(false);
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aW()
-    {
-        return "mob.sheep.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aX()
-    {
-        return "mob.sheep.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aY()
-    {
-        return "mob.sheep.say";
-    }
-
     /**
      * Is called when player rightclicks this MyPet
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean c(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
-        super.c(entityhuman);
+        super.a(entityhuman);
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
@@ -203,6 +164,7 @@ public class EntityMySheep extends EntityMyPet
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        makeSound("mob.sheep.shear", 1.0F, 1.0F);
                     }
                 }
                 itemStack.damage(1, entityhuman);
@@ -211,10 +173,49 @@ public class EntityMySheep extends EntityMyPet
         return false;
     }
 
+    protected void a(int i, int j, int k, int l)
+    {
+        makeSound("mob.sheep.step", 0.15F, 1.0F);
+    }
+
+    /**
+     * Called when the sheeps eat grass
+     */
+    public void aH()
+    {
+        ((MySheep) myPet).setSheared(false);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aY()
+    {
+        return "mob.sheep.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aZ()
+    {
+        return "mob.sheep.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String ba()
+    {
+        return "mob.sheep.say";
+    }
+
     /**
      * Called when MyPet will do damage to another entity
      */
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

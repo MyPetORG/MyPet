@@ -89,13 +89,13 @@ public class EntityMySpider extends EntityMyPet
     @Override
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.spider.step", 0.15F, 1.0F);
+        makeSound("mob.spider.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.spider.say";
     }
@@ -104,7 +104,7 @@ public class EntityMySpider extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.spider.say";
     }
@@ -113,7 +113,7 @@ public class EntityMySpider extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.spider.death";
     }
@@ -142,7 +142,7 @@ public class EntityMySpider extends EntityMyPet
         }
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

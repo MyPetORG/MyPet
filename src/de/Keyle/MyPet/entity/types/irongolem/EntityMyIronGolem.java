@@ -62,6 +62,20 @@ public class EntityMyIronGolem extends EntityMyPet
         return itemstack.id == org.bukkit.Material.IRON_INGOT.getId();
     }
 
+    public void setPlayerCreated(boolean flag)
+    {
+        byte b0 = this.datawatcher.getByte(16);
+
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
+        }
+    }
+
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
@@ -83,13 +97,13 @@ public class EntityMyIronGolem extends EntityMyPet
     @Override
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.irongolem.walk", 1.0F, 1.0F);
+        makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "none";
     }
@@ -98,7 +112,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.irongolem.hit";
     }
@@ -107,26 +121,12 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.irongolem.death";
     }
 
-    public void setPlayerCreated(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
-        }
-    }
-
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

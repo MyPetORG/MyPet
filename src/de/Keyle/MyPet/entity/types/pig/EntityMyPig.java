@@ -101,46 +101,15 @@ public class EntityMyPig extends EntityMyPet
         this.datawatcher.a(12, new Integer(0));        // age
     }
 
-    protected void a(int i, int j, int k, int l)
-    {
-        this.world.makeSound(this, "mob.pig.step", 0.15F, 1.0F);
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aW()
-    {
-        return "mob.pig.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aX()
-    {
-        return "mob.pig.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aY()
-    {
-        return "mob.pig.death";
-    }
-
     /**
      * Is called when player rightclicks this MyPet
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean c(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
-        super.c(entityhuman);
+        super.a(entityhuman);
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
@@ -162,7 +131,38 @@ public class EntityMyPig extends EntityMyPet
         return false;
     }
 
-    public boolean l(Entity entity)
+    protected void a(int i, int j, int k, int l)
+    {
+        makeSound("mob.pig.step", 0.15F, 1.0F);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aY()
+    {
+        return "mob.pig.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aZ()
+    {
+        return "mob.pig.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String ba()
+    {
+        return "mob.pig.death";
+    }
+
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

@@ -106,7 +106,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.villager.default";
     }
@@ -114,7 +114,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aX()
+    protected String aZ()
     {
         return "mob.villager.defaulthurt";
     }
@@ -122,12 +122,12 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aY()
+    protected String ba()
     {
         return "mob.villager.defaultdeath";
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

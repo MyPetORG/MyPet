@@ -36,11 +36,11 @@ public class EntityMyCaveSpider extends EntityMyPet
         this.a(0.7F, 0.5F);
         this.walkSpeed = 0.4F;
 
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
-        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed + 0.1F, true));
         this.goalSelector.a(4, controlPathfinder);
         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
@@ -86,10 +86,15 @@ public class EntityMyCaveSpider extends EntityMyPet
         this.datawatcher.a(16, new Byte((byte) 0)); // N/A
     }
 
+    protected void a(int i, int j, int k, int l)
+    {
+        makeSound("mob.spider.step", 0.15F, 1.0F);
+    }
+
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return "mob.spider.say";
     }
@@ -98,7 +103,7 @@ public class EntityMyCaveSpider extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.spider.say";
     }
@@ -107,7 +112,7 @@ public class EntityMyCaveSpider extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.spider.death";
     }
@@ -136,7 +141,7 @@ public class EntityMyCaveSpider extends EntityMyPet
         }
     }
 
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

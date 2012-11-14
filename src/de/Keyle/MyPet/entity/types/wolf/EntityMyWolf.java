@@ -112,7 +112,7 @@ public class EntityMyWolf extends EntityMyPet
     public void setHealth(int i)
     {
         super.setHealth(i);
-        this.bj();
+        this.bm();
     }
 
     public void setTamed(boolean tamed)
@@ -171,16 +171,35 @@ public class EntityMyWolf extends EntityMyPet
         this.datawatcher.a(20, new Byte((byte)BlockCloth.e_(1))); // collar color
     }
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean a(EntityHuman entityhuman)
+    {
+        super.a(entityhuman);
+
+        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        {
+            this.sitPathfinder.toogleSitting();
+            this.bE = false;
+            this.setPathEntity(null);
+        }
+        return false;
+    }
+
     @Override
     protected void a(int i, int j, int k, int l)
     {
-        this.world.makeSound(this, "mob.wolf.step", 0.15F, 1.0F);
+        makeSound("mob.wolf.step", 0.15F, 1.0F);
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aW()
+    protected String aY()
     {
         return (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
@@ -189,7 +208,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aX()
+    protected String aZ()
     {
         return "mob.wolf.hurt";
     }
@@ -198,40 +217,21 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aY()
+    protected String ba()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bj()
+    protected void bm()
     {
         this.datawatcher.watch(18, (int)(25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
     }
 
     /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
-    public boolean c(EntityHuman entityhuman)
-    {
-        super.c(entityhuman);
-
-        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
-        {
-            this.sitPathfinder.toogleSitting();
-            this.bG = false;
-            this.setPathEntity(null);
-        }
-        return false;
-    }
-
-    /**
      * Is called when a MyPet attemps to do damge to another entity
      */
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

@@ -33,11 +33,11 @@ public class EntityMyCow extends EntityMyPet
         this.texture = "/mob/cow.png";
         this.a(0.9F, 1.3F);
 
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, controlPathfinder);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed+0.1F));
+        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
         this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
@@ -73,40 +73,14 @@ public class EntityMyCow extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String aW()
-    {
-        return "mob.cow.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String aX()
-    {
-        return "mob.cow.hurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String aY()
-    {
-        return "mob.cow.hurt";
-    }
-
-    /**
      * Is called when player rightclicks this MyPet
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean c(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
-        super.c(entityhuman);
+        super.a(entityhuman);
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
@@ -116,7 +90,7 @@ public class EntityMyCow extends EntityMyPet
             {
                 if (!this.world.isStatic)
                 {
-                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1,0);
+                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
 
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
                 }
@@ -125,7 +99,38 @@ public class EntityMyCow extends EntityMyPet
         return false;
     }
 
-    public boolean l(Entity entity)
+    protected void a(int i, int j, int k, int l)
+    {
+        makeSound("mob.cow.step", 0.15F, 1.0F);
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String aY()
+    {
+        return "mob.cow.say";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String aZ()
+    {
+        return "mob.cow.hurt";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String ba()
+    {
+        return "mob.cow.hurt";
+    }
+
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 

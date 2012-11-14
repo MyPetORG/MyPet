@@ -132,55 +132,12 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected abstract String aW();
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected abstract String aX();
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected abstract String aY();
-
-    /**
-     * N.A.
-     */
-    public float aV()
-    {
-        return 0.4F;
-    }
-
-    protected boolean bg()
-    {
-        return false;
-    }
-
-    /**
-     * N.A.
-     */
-    public void c()
-    {
-        super.c();
-        if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
-        {
-            this.g = true;
-            this.j = 0.0F;
-            this.i = 0.0F;
-            this.world.broadcastEntityEffect(this, (byte) 8);
-        }
-    }
-
-    /**
      * Is called when player rightclicks this MyPet
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean c(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         super.c(entityhuman);
 
@@ -217,6 +174,49 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     }
 
     /**
+     * Returns the default sound of the MyPet
+     */
+    protected abstract String aY();
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected abstract String aZ();
+
+    /**
+     * N.A.
+     */
+    public float aV()
+    {
+        return 0.4F;
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected abstract String ba();
+
+    protected boolean bj()
+    {
+        return false;
+    }
+
+    /**
+     * N.A.
+     */
+    public void c()
+    {
+        super.c();
+        if (!this.world.isStatic && this.h && !this.g && !this.H() && this.onGround)
+        {
+            this.g = true;
+            this.j = 0.0F;
+            this.i = 0.0F;
+            this.world.broadcastEntityEffect(this, (byte) 8);
+        }
+    }
+
+    /**
      * N.A.
      */
     public void j_()
@@ -242,7 +242,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Is called when a MyPet attemps to do damge to another entity
      */
-    public boolean l(Entity entity)
+    public boolean m(Entity entity)
     {
         int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
 
