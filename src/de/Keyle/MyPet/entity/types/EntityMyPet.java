@@ -196,6 +196,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      */
     protected abstract String ba();
 
+    /**
+     * Set weather the "new" AI is used
+     */
+    public boolean be()
+    {
+        return true;
+    }
+
     protected boolean bj()
     {
         return false;

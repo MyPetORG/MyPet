@@ -211,7 +211,7 @@ public class MyPetCustomInventory implements IInventory
         }
     }
 
-    public boolean a(EntityHuman entityHuman)
+    public boolean a_(EntityHuman entityHuman)
     {
         return true;
     }

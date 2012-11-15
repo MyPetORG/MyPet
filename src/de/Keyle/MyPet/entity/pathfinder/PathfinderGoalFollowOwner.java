@@ -82,23 +82,23 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         return controlPathfinderGoal.moveTo == null && !this.nav.f() && this.petEntity.e(this.petOwner) > (double) (this.b * this.b) && this.petEntity.canMove();
     }
 
-    public void e()
+    public void c()
     {
         this.h = 0;
         this.i = this.nav.a();
         this.nav.a(false);
     }
 
-    public void c()
+    public void d()
     {
         this.petOwner = null;
         this.nav.f();
         this.nav.a(this.i);
     }
 
-    public void d()
+    public void e()
     {
-        this.petEntity.getControllerLook().a(this.petOwner, 10.0F, (float) this.petEntity.bm());
+        this.petEntity.getControllerLook().a(this.petOwner, 10.0F,(float) this.petEntity.bp());
 
         if (this.petEntity.canMove())
         {

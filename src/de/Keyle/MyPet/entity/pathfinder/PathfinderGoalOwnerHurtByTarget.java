@@ -42,7 +42,7 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoalTarget
         {
             return false;
         }
-        this.b = localEntityLiving.aB();
+        this.b = localEntityLiving.aC();
         return a(this.b, false);
     }
 
