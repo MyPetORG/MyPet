@@ -22,13 +22,15 @@ package de.Keyle.MyPet.entity.pathfinder;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.EntityTameableAnimal;
+import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
+public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
 {
 
     EntityMyPet petEntity;
@@ -37,7 +39,6 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
 
     public PathfinderGoalOwnerHurtTarget(MyPet myPet)
     {
-        super(myPet.getPet().getHandle(), 32.0F, false);
         this.petEntity = myPet.getPet().getHandle();
         this.myPet = myPet;
         this.a(1);
@@ -48,6 +49,10 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
      */
     public boolean a()
     {
+        if(this.petEntity.goalTarget == null)
+        {
+            return false;
+        }
         if (myPet.getSkillSystem().hasSkill("Behavior"))
         {
             Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
@@ -57,31 +62,43 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoalTarget
                 {
                     return false;
                 }
+                if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                {
+                    if(this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal)this.petEntity.goalTarget).isTamed())
+                    {
+                        return false;
+                    }
+                    if(this.petEntity.goalTarget instanceof EntityMyPet)
+                    {
+                        return false;
+                    }
+                    if(this.petEntity.goalTarget instanceof EntityPlayer)
+                    {
+                        return false;
+                    }
+                }
             }
         }
-        this.target = this.petEntity.goalTarget;
-        this.petEntity.goalTarget = null;
-
         if (this.target instanceof EntityPlayer)
         {
-            Player targetPlayer = (Player) this.target.getBukkitEntity();
+            Player targetPlayer = (Player) this.petEntity.goalTarget.getBukkitEntity();
             if (myPet.getOwner().equals(targetPlayer))
             {
-                this.target = null;
                 return false;
             }
             else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
-                this.target = null;
                 return false;
             }
         }
+        this.target = this.petEntity.goalTarget;
+        this.petEntity.goalTarget = null;
         return true;
     }
 
     public void c()
     {
-        this.d.b(this.target);
+        petEntity.b(this.target);
         super.c();
     }
 }

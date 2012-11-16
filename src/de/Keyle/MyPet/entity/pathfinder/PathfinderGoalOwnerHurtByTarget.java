@@ -20,18 +20,26 @@
 package de.Keyle.MyPet.entity.pathfinder;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
+import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.EntityTameableAnimal;
+import net.minecraft.server.PathfinderGoal;
+import org.bukkit.entity.Player;
 
-public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoalTarget
+public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
 {
-    EntityMyPet entityMyPet;
-    EntityLiving b;
+    private EntityMyPet entityMyPet;
+    private EntityLiving lastDamager;
+    private MyPet myPet;
 
     public PathfinderGoalOwnerHurtByTarget(EntityMyPet entityMyPet)
     {
-        super(entityMyPet, 32.0F, false);
         this.entityMyPet = entityMyPet;
+        myPet = entityMyPet.getMyPet();
         a(1);
     }
 
@@ -42,13 +50,47 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoalTarget
         {
             return false;
         }
-        this.b = localEntityLiving.aC();
-        return a(this.b, false);
+        this.lastDamager = localEntityLiving.aC();
+        if (lastDamager instanceof EntityPlayer)
+        {
+            Player targetPlayer = (Player) lastDamager.getBukkitEntity();
+            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+            {
+                return false;
+            }
+        }
+        if (myPet.getSkillSystem().hasSkill("Behavior"))
+        {
+            Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+            if (behaviorSkill.getLevel() > 0)
+            {
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                {
+                    return false;
+                }
+                if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                {
+                    if(lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal)lastDamager).isTamed())
+                    {
+                        return false;
+                    }
+                    if(lastDamager instanceof EntityMyPet)
+                    {
+                        return false;
+                    }
+                    if(lastDamager instanceof EntityPlayer)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void c()
     {
-        this.d.b(this.b);
+        entityMyPet.b(this.lastDamager);
         super.c();
     }
 }

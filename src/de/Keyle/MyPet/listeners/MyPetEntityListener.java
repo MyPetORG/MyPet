@@ -313,7 +313,15 @@ public class MyPetEntityListener implements Listener
                             }
                             else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
                             {
-                                if (event.getTarget() instanceof Player || (event.getTarget() instanceof Tameable && ((Wolf) event.getTarget()).isTamed()))
+                                if (event.getTarget() instanceof Player)
+                                {
+                                    event.setCancelled(true);
+                                }
+                                else if(event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
+                                {
+                                    event.setCancelled(true);
+                                }
+                                else if(event.getTarget() instanceof CraftMyPet)
                                 {
                                     event.setCancelled(true);
                                 }

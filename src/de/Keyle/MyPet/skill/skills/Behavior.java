@@ -91,7 +91,7 @@ public class Behavior extends MyPetGenericSkill
             {
                 behavior = BehaviorState.Aggressive;
             }
-            else if (behavior == BehaviorState.Aggressive || behavior == BehaviorState.Raid)
+            else
             {
                 behavior = BehaviorState.Normal;
             }

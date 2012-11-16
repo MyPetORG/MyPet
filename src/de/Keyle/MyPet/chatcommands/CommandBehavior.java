@@ -64,12 +64,10 @@ public class CommandBehavior implements CommandExecutor
                         {
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
                         }
-                        /*
                         else if (args[0].equalsIgnoreCase("raid"))
                         {
-                            Skill.activateBehavior(Behavior.BehaviorState.Raid);
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
                         }
-                        */
                         else if (args[0].equalsIgnoreCase("normal"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);

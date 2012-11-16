@@ -22,14 +22,12 @@ package de.Keyle.MyPet.entity.pathfinder;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.*;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalControlTarget extends PathfinderGoalTarget
+public class PathfinderGoalControlTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -39,7 +37,6 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
 
     public PathfinderGoalControlTarget(MyPet myPet, PathfinderGoalControl controlPathfinderGoal, float range)
     {
-        super(myPet.getPet().getHandle(), 32.0F, false);
         this.petEntity = myPet.getPet().getHandle();
         this.myPet = myPet;
         this.range = range;
@@ -53,9 +50,10 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
     {
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
         {
+            Behavior behaviorSkill = null;
             if (myPet.getSkillSystem().hasSkill("Behavior"))
             {
-                Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
                 if (behaviorSkill.getLevel() > 0)
                 {
                     if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
@@ -66,8 +64,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
             }
             for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
             {
-                Entity entity = (Entity) entityObj;
-                EntityLiving entityLiving = (EntityLiving) entity;
+                EntityLiving entityLiving = (EntityLiving) entityObj;
 
                 if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity)
                 {
@@ -81,6 +78,24 @@ public class PathfinderGoalControlTarget extends PathfinderGoalTarget
                         if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
                         {
                             continue;
+                        }
+                    }
+                    if(behaviorSkill != null)
+                    {
+                        if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                        {
+                            if(entityLiving instanceof EntityTameableAnimal)
+                            {
+                                continue;
+                            }
+                            if(entityLiving instanceof EntityMyPet)
+                            {
+                                continue;
+                            }
+                            if(entityLiving instanceof EntityPlayer)
+                            {
+                                continue;
+                            }
                         }
                     }
                     controlPathfinderGoal.stopControl();
