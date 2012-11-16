@@ -185,7 +185,6 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.sitPathfinder.toogleSitting();
             this.bE = false;
-            this.setPathEntity(null);
         }
         return false;
     }

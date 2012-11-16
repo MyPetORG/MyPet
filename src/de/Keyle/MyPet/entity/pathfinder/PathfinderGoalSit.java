@@ -63,6 +63,7 @@ public class PathfinderGoalSit extends PathfinderGoal
         {
             ((EntityMyWolf) this.entityMyPet).applySitting(true);
         }
+        entityMyPet.setTarget(null);
     }
 
     public void d()
