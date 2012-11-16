@@ -52,11 +52,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
             Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
             if (behavior.getLevel() > 0)
             {
-                if (behavior.getBehavior() == Behavior.BehaviorState.Friendly)
-                {
-                    return false;
-                }
-                else if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && myPet.getPet().canMove())
+                if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && myPet.getPet().canMove())
                 {
                     if (target == null || !target.isAlive())
                     {
