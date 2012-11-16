@@ -24,7 +24,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.*;
+import net.minecraft.server.Entity;
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
@@ -52,7 +55,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
             Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
             if (behavior.getLevel() > 0)
             {
-                if (behavior.getBehavior() == Behavior.BehaviorState.Aggressive && myPet.getPet().canMove())
+                if (behavior.getBehavior() == BehaviorState.Aggressive && myPet.getPet().canMove())
                 {
                     if (target == null || !target.isAlive())
                     {
@@ -65,11 +68,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
                                 if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity)
                                 {
-                                    if(behavior.getBehavior() == BehaviorState.Farm && !(entityLiving instanceof EntityMonster))
-                                    {
-                                        continue;
-                                    }
-                                    else if (entityLiving instanceof EntityPlayer)
+                                    if (entityLiving instanceof EntityPlayer)
                                     {
                                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                                         if (myPet.getOwner().equals(targetPlayer))
