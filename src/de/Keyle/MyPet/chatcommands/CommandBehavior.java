@@ -52,27 +52,32 @@ public class CommandBehavior implements CommandExecutor
                     Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
                     if (args.length == 1)
                     {
-                        if (args[0].equalsIgnoreCase("Friendly") || args[0].equalsIgnoreCase("Fri"))
+                        if (args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
                         }
-                        else if (args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Agg"))
+                        else if (args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("aggro"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
                         }
-                        else if (args[0].equalsIgnoreCase("Farm"))
+                        else if (args[0].equalsIgnoreCase("farm"))
                         {
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
                         }
                         /*
-                        else if (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Rai"))
+                        else if (args[0].equalsIgnoreCase("raid"))
                         {
                             Skill.activateBehavior(Behavior.BehaviorState.Raid);
                         }
                         */
-                        else
+                        else if (args[0].equalsIgnoreCase("normal"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
+                        }
+                        else
+                        {
+                            behaviorSkill.activate();
+                            return false;
                         }
                     }
                     else
