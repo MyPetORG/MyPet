@@ -22,6 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -58,6 +59,10 @@ public class CommandBehavior implements CommandExecutor
                         else if (args[0].equalsIgnoreCase("Aggressive") || args[0].equalsIgnoreCase("Agg"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
+                        }
+                        else if (args[0].equalsIgnoreCase("Farm"))
+                        {
+                            behaviorSkill.activateBehavior(BehaviorState.Farm);
                         }
                         /*
                         else if (args[0].equalsIgnoreCase("Raid") || args[0].equalsIgnoreCase("Rai"))

@@ -30,7 +30,7 @@ public class Behavior extends MyPetGenericSkill
 
     public static enum BehaviorState
     {
-        Normal, Friendly, Aggressive, Raid
+        Normal, Friendly, Aggressive, Raid, Farm
     }
 
     public Behavior()

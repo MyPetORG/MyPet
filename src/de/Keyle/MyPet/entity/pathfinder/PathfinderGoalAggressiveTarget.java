@@ -22,11 +22,9 @@ package de.Keyle.MyPet.entity.pathfinder;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.*;
 import org.bukkit.entity.Player;
 
 public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
@@ -71,7 +69,11 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
                                 if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity)
                                 {
-                                    if (entityLiving instanceof EntityPlayer)
+                                    if(behavior.getBehavior() == BehaviorState.Farm && !(entityLiving instanceof EntityMonster))
+                                    {
+                                        continue;
+                                    }
+                                    else if (entityLiving instanceof EntityPlayer)
                                     {
                                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                                         if (myPet.getOwner().equals(targetPlayer))
