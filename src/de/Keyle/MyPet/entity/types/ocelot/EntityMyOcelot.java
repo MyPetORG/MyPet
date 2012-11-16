@@ -81,6 +81,11 @@ public class EntityMyOcelot extends EntityMyPet
         return itemstack.id == org.bukkit.Material.RAW_FISH.getId();
     }
 
+    public boolean canMove()
+    {
+        return !isSitting();
+    }
+
     public void setSitting(boolean sitting)
     {
         if (this.sitPathfinder == null)

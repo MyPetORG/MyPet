@@ -71,6 +71,11 @@ public class EntityMyWolf extends EntityMyPet
         }
     }
 
+    public boolean canMove()
+    {
+        return !isSitting();
+    }
+
     public void setSitting(boolean sitting)
     {
         if (this.sitPathfinder == null)
