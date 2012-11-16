@@ -20,10 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetConfig;
-import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,39 +35,46 @@ public class CommandInfo implements CommandExecutor
         {
             Player player = (Player) sender;
             String playerName = sender.getName();
-            if (args != null && args.length > 0)
+            if (args != null && args.length > 0 && MyPetPermissions.has(player, "MyPet.admin"))
             {
                 playerName = args[0];
             }
 
             if (MyPetList.hasMyPet(playerName))
             {
-                MyPet MPet = MyPetList.getMyPet(playerName);
+                MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
-                if (MPet.getHealth() > MPet.getMaxHealth() / 3 * 2)
+                if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
                 {
-                    msg = "" + ChatColor.GREEN + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                 }
-                else if (MPet.getHealth() > MPet.getMaxHealth() / 3)
+                else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
                 {
-                    msg = "" + ChatColor.YELLOW + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                 }
                 else
                 {
-                    msg = "" + ChatColor.RED + MPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + MPet.getMaxHealth() + ChatColor.WHITE;
+                    msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                 }
-                player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", MPet.petName).replace("%hp%", msg));
+                player.sendMessage(MyPetUtil.setColors("%aqua%%petname%").replace("%petname%", myPet.petName));
+                player.sendMessage(MyPetUtil.setColors("   HP:       %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
+                if (MyPetConfig.hungerSystem)
+                {
+                    player.sendMessage(MyPetUtil.setColors("   Hunger: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()));
+                }
                 if (MyPetConfig.levelSystem)
                 {
-                    int lvl = MPet.getExperience().getLevel();
-                    double exp = MPet.getExperience().getCurrentExp();
-                    double reqEXP = MPet.getExperience().getRequiredExp();
-                    player.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", MPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
+                    int lvl = myPet.getExperience().getLevel();
+                    double exp = myPet.getExperience().getCurrentExp();
+                    double reqEXP = myPet.getExperience().getRequiredExp();
+                    player.sendMessage(MyPetUtil.setColors("   Level:    %lvl%").replace("%lvl%", "" + lvl));
+                    player.sendMessage(MyPetUtil.setColors("   EXP:      %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)));
                 }
-                if (args != null && args.length > 0)
+                if (!playerName.equalsIgnoreCase(sender.getName()))
                 {
-                    player.sendMessage(MyPetUtil.setColors("Owner: %Owner%").replace("%Owner%", playerName));
+                    player.sendMessage(MyPetUtil.setColors("   Owner:   %owner%").replace("%owner%", playerName));
                 }
+                player.sendMessage("");
                 return true;
             }
             else

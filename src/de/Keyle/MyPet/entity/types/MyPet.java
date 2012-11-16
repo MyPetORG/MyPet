@@ -98,6 +98,8 @@ public abstract class MyPet
     protected final MyPetPlayer petOwner;
     protected int health;
     public int respawnTime = 0;
+    public int hungerTime = 0;
+    protected int hunger = 100;
 
     public PetState status = PetState.Despawned;
 
@@ -138,6 +140,7 @@ public abstract class MyPet
         }
         skillSystem = new MyPetSkillSystem(this);
         experience = new MyPetExperience(this);
+        hungerTime = MyPetConfig.hungerSystemTime;
     }
 
     public void setPetName(String newName)
@@ -169,7 +172,14 @@ public abstract class MyPet
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
             createPet();
             respawnTime = 0;
-            health = getMaxHealth();
+            if(MyPetConfig.hungerSystem)
+            {
+                setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
+            }
+            else
+            {
+                setHealth(getMaxHealth());
+            }
         }
     }
 
@@ -263,6 +273,28 @@ public abstract class MyPet
         return getStartHP(this.getClass()) + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
     }
 
+    public int getHungerValue()
+    {
+        return hunger;
+    }
+
+    public void setHungerValue(int value)
+    {
+        if(value > 100)
+        {
+            hunger = 100;
+        }
+        else if(value < 1)
+        {
+            hunger = 1;
+        }
+        else
+        {
+            hunger = value;
+        }
+        hungerTime = MyPetConfig.hungerSystemTime;
+    }
+
     public MyPetSkillSystem getSkillSystem()
     {
         return skillSystem;
@@ -317,6 +349,11 @@ public abstract class MyPet
                 {
                     respawnPet();
                 }
+            }
+            if(MyPetConfig.hungerSystem && hunger > 1 && hungerTime-- <= 0)
+            {
+                hunger--;
+                hungerTime = MyPetConfig.hungerSystemTime;
             }
         }
     }

@@ -31,6 +31,7 @@ public class InactiveMyPet
     private String petName = "";
     private final MyPetPlayer petOwner;
     private int health;
+    private int hunger;
     private int respawnTime;
     private Location location;
     private double exp;
@@ -87,6 +88,27 @@ public class InactiveMyPet
     public MyPetType getPetType()
     {
         return petType;
+    }
+
+    public int getHungerValue()
+    {
+        return hunger;
+    }
+
+    public void setHungerValue(int value)
+    {
+        if(value > 100)
+        {
+            hunger = 100;
+        }
+        else if(value < 1)
+        {
+            hunger = 1;
+        }
+        else
+        {
+            hunger = value;
+        }
     }
 
     public void setHealth(int health)

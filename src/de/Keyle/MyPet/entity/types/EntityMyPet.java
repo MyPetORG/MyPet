@@ -162,6 +162,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     --itemStack.count;
                 }
                 this.heal(3, RegainReason.EATING);
+                myPet.setHungerValue(myPet.getHungerValue()+3);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

@@ -75,24 +75,38 @@ public class MyPetEntityListener implements Listener
                         String msg;
                         if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
                         {
-                            msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
                         else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
                         {
-                            msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
                         else
                         {
-                            msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + ChatColor.YELLOW + myPet.getMaxHealth() + ChatColor.WHITE;
+                            msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% HP: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
-                        if (MyPetConfig.levelSystem)
+                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%").replace("%petname%", myPet.petName));
+                        damager.sendMessage(MyPetUtil.setColors("   HP:       %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
+                        if (!myPet.getOwner().equals(damager))
                         {
-                            int lvl = myPet.getExperience().getLevel();
-                            double exp = myPet.getExperience().getCurrentExp();
-                            double reqEXP = myPet.getExperience().getRequiredExp();
-                            damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white% (Lv%lvl%) (%proz%%) EXP:%exp%/%reqexp%").replace("%petname%", myPet.petName).replace("%exp%", String.format("%1.2f", exp)).replace("%lvl%", "" + lvl).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%proz%", String.format("%1.2f", exp * 100 / reqEXP)));
+                            damager.sendMessage(MyPetUtil.setColors("   Owner:    %Owner%").replace("%Owner%", myPet.getOwner().getName()));
                         }
+                        else
+                        {
+                            if (MyPetConfig.hungerSystem)
+                            {
+                                damager.sendMessage(MyPetUtil.setColors("   Hunger: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()));
+                            }
+                            if (MyPetConfig.levelSystem)
+                            {
+                                int lvl = myPet.getExperience().getLevel();
+                                double exp = myPet.getExperience().getCurrentExp();
+                                double reqEXP = myPet.getExperience().getRequiredExp();
+                                damager.sendMessage(MyPetUtil.setColors("   Level:    %lvl%").replace("%lvl%", "" + lvl));
+                                damager.sendMessage(MyPetUtil.setColors("   EXP:      %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)));
+                            }
+                        }
+                        damager.sendMessage("");
 
                         event.setCancelled(true);
                     }

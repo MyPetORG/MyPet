@@ -44,6 +44,7 @@ public class MyPetList
         {
             MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getPetOwner());
             activeMyPet.setHealth(inactiveMyPet.getHealth());
+            activeMyPet.setHungerValue(inactiveMyPet.getHungerValue());
             activeMyPet.setLocation(inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
@@ -187,6 +188,7 @@ public class MyPetList
         inactiveMyPet.setPetName(activeMyPet.petName);
         inactiveMyPet.setExp(activeMyPet.getExperience().getExp());
         inactiveMyPet.setHealth(activeMyPet.getHealth());
+        inactiveMyPet.setHungerValue(activeMyPet.getHungerValue());
         inactiveMyPet.setLocation(activeMyPet.getLocation());
         inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
         inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());

@@ -396,20 +396,22 @@ public class MyPetPlugin extends JavaPlugin
             int petRespawnTime = myPetNBT.getInt("Respawntime");
             String petName = myPetNBT.getString("petName");
             String petOwner = myPetNBT.getString("Owner");
-            String petType;
+            int petHunger = 100;
+            if(myPetNBT.hasKey("Hunger"))
+            {
+                petHunger = myPetNBT.getInt("Hunger");
+            }
+            String petType = "Wolf";
             if (myPetNBT.hasKey("Type"))
             {
                 petType = myPetNBT.getString("Type");
-            }
-            else
-            {
-                petType = "Wolf";
             }
 
             InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
             IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ));
             IMPet.setHealth(petHealthNow);
+            IMPet.setHungerValue(petHunger);
             IMPet.setRespawnTime(petRespawnTime);
             IMPet.setPetName(petName);
             IMPet.setExp(petExp);
@@ -449,6 +451,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setCompound("Location", locationNBT);
             petNBT.setInt("Health", myPet.getHealth());
             petNBT.setInt("Respawntime", myPet.respawnTime);
+            petNBT.setInt("Hunger", myPet.getHungerValue());
             petNBT.setString("petName", myPet.petName);
             petNBT.setDouble("Exp", myPet.getExperience().getExp());
             petNBT.setCompound("Info", myPet.getExtendedInfo());
@@ -484,6 +487,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setString("Owner", inactiveMyPet.getPetOwner().getName());
             petNBT.setCompound("Location", locationNBT);
             petNBT.setInt("Health", inactiveMyPet.getHealth());
+            petNBT.setInt("Hunger", inactiveMyPet.getHungerValue());
             petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
             petNBT.setString("petName", inactiveMyPet.getPetName());
             petNBT.setDouble("Exp", inactiveMyPet.getExp());
