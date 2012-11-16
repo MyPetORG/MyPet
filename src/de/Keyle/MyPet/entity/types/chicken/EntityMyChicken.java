@@ -33,12 +33,14 @@ public class EntityMyChicken extends EntityMyPet
     public float g;
     public float h;
     public float i = 1.0F;
+    private int nextEggTimer;
 
     public EntityMyChicken(World world, MyPet myPet)
     {
         super(world, myPet);
         this.texture = "/mob/chicken.png";
         this.a(0.3F, 0.7F);
+        nextEggTimer = (random.nextInt(6000) + 6000);
 
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
@@ -138,6 +140,13 @@ public class EntityMyChicken extends EntityMyPet
         }
 
         this.b += this.i * 2.0F;
+
+        if (!world.isStatic && --nextEggTimer <= 0)
+        {
+            world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+            b(Item.EGG.id, 1);
+            nextEggTimer = (random.nextInt(6000) + 6000);
+        }
     }
 
     public boolean m(Entity entity)
