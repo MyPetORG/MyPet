@@ -95,6 +95,7 @@ public class MyPetLanguage
         addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%petname%%white% pickup: disabled");
         addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%white% pickup: activated");
         addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%white% is now in %mode% mode.");
+        addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%white% has now a chance of %chance%% to poison enemies");
         addString("Creeper", "MyPet.Message.deathmessage.creeper", "was killed by a Creeper.");
         addString("Zombie", "MyPet.Message.deathmessage.zombie", "was killed by a Zombie.");
         addString("Unknow", "MyPet.Message.deathmessage.unknow", "was killed by an unknown source.");
