@@ -1,6 +1,6 @@
 name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
-version: 0.7.0 (1.4.4)
+version: 0.7.0 (1.4.4/1.4.5)
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Citizens, WorldGuard, Factions, Towny]
