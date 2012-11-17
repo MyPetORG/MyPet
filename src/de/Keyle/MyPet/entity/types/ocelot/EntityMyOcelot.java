@@ -57,6 +57,7 @@ public class EntityMyOcelot extends EntityMyPet
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
+        this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
     }
 
     public void setMyPet(MyPet myPet)

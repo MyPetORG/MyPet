@@ -19,9 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.irongolem;
 
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -49,6 +47,7 @@ public class EntityMyIronGolem extends EntityMyPet
         this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
         this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
         this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 10));
+        this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
     }
 
     public int getMaxHealth()
