@@ -231,14 +231,4 @@ public class EntityMyWolf extends EntityMyPet
     {
         this.datawatcher.watch(18, (int)(25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
     }
-
-    /**
-     * Is called when a MyPet attemps to do damge to another entity
-     */
-    public boolean m(Entity entity)
-    {
-        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
 }

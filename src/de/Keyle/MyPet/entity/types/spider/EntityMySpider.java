@@ -141,11 +141,4 @@ public class EntityMySpider extends EntityMyPet
             f(this.positionChanged);
         }
     }
-
-    public boolean m(Entity entity)
-    {
-        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
-    }
 }

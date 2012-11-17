@@ -128,17 +128,12 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public boolean m(Entity entity)
     {
-        int damage = MyPet.getStartDamage(this.myPet.getClass()) + (isMyPet() && myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
-
-        this.e = 10;
         this.world.broadcastEntityEffect(this, (byte) 4);
-        boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage + this.random.nextInt(15));
-
+        boolean flag = super.m(entity);
         if (flag)
         {
             entity.motY += 0.4000000059604645D;
         }
-
         this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
         return flag;
     }
