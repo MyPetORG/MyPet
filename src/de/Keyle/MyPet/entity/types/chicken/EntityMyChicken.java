@@ -60,8 +60,8 @@ public class EntityMyChicken extends EntityMyPet
             this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
             this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
             this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
-            this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
-            this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
+            this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 15));
+            this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 15));
         }
     }
 

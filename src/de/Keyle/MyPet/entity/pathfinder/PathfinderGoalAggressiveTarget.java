@@ -28,18 +28,21 @@ import net.minecraft.server.Entity;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PathfinderGoal;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class PathfinderGoalAggressiveTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
+    private EntityPlayer petOwnerEntity;
     private EntityLiving target;
     private float range;
 
     public PathfinderGoalAggressiveTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getPet().getHandle();
+        this.petOwnerEntity = ((CraftPlayer)myPet.getOwner().getPlayer()).getHandle();
         this.myPet = myPet;
         this.range = range;
     }
@@ -60,7 +63,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
                     {
                         for (float range = 1.F ; range <= this.range ; range++)
                         {
-                            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
+                            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                             {
                                 Entity entity = (Entity) entityObj;
                                 EntityLiving entityLiving = (EntityLiving) entity;

@@ -23,21 +23,21 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
-import net.minecraft.server.Entity;
-import net.minecraft.server.EntityLiving;
-import net.minecraft.server.EntityMonster;
-import net.minecraft.server.PathfinderGoal;
+import net.minecraft.server.*;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 public class PathfinderGoalFarmTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
+    private EntityPlayer petOwnerEntity;
     private EntityLiving target;
     private float range;
 
     public PathfinderGoalFarmTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getPet().getHandle();
+        this.petOwnerEntity = ((CraftPlayer)myPet.getOwner().getPlayer()).getHandle();
         this.myPet = myPet;
         this.range = range;
     }
@@ -58,7 +58,7 @@ public class PathfinderGoalFarmTarget extends PathfinderGoal
                     {
                         for (float range = 1.F ; range <= this.range ; range++)
                         {
-                            for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
+                            for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                             {
                                 Entity entity = (Entity) entityObj;
                                 EntityMonster entityLiving = (EntityMonster) entity;
