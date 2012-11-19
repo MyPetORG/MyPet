@@ -46,17 +46,19 @@ public abstract class CraftMyPet extends CraftCreature
         }
         else if (target instanceof CraftLivingEntity)
         {
-            if (!getHandle().isMyPet || !getHandle().myPet.getSkillSystem().hasSkill("Behavior"))
+            if (!getHandle().isMyPet)
             {
                 return;
             }
-            Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkillSystem().getSkill("Behavior");
-            if (behaviorSkill.getLevel() <= 0 || behaviorSkill.getBehavior() != Behavior.BehaviorState.Friendly)
+            if(getHandle().myPet.getSkillSystem().hasSkill("Behavior"))
             {
-                return;
+                Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkillSystem().getSkill("Behavior");
+                if (behaviorSkill.getLevel() > 0 && behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                {
+                    return;
+                }
             }
-            entity.target = ((CraftLivingEntity) target).getHandle();
-            entity.pathEntity = entity.world.findPath(entity, entity.target, 16.0F, true, false, false, true);
+            entity.setTarget(((CraftLivingEntity) target).getHandle());
         }
     }
 
