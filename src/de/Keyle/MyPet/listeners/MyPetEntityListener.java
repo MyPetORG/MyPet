@@ -350,7 +350,7 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = ((CraftMyPet)event.getEntity()).getMyPet();
-            String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknow"));
+            String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknown"));
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
@@ -371,7 +371,7 @@ public class MyPetEntityListener implements Listener
                     Wolf w = (Wolf) e.getDamager();
                     if (w.isTamed())
                     {
-                        killer = "Wolf (" + w.getOwner().getName() + ")";
+                        killer = "Wolf (" + w.getOwner().getName() + ')';
                     }
                     else
                     {
@@ -381,7 +381,7 @@ public class MyPetEntityListener implements Listener
                 else if(e.getDamager() instanceof CraftMyPet)
                 {
                     CraftMyPet craftMyPet = (CraftMyPet)e.getDamager();
-                    killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ")";
+                    killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ')';
                 }
                 else
                 {
@@ -390,31 +390,31 @@ public class MyPetEntityListener implements Listener
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.BLOCK_EXPLOSION))
             {
-                killer = MyPetUtil.setColors("Explosion");
+                killer = "Explosion";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.DROWNING))
             {
-                killer = MyPetUtil.setColors("Drowning");
+                killer = "Drowning";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FALL))
             {
-                killer = MyPetUtil.setColors("Fall");
+                killer = "Fall";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE))
             {
-                killer = MyPetUtil.setColors("Fire");
+                killer = "Fire";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LAVA))
             {
-                killer = MyPetUtil.setColors("Lava");
+                killer = "Lava";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LIGHTNING))
             {
-                killer = MyPetUtil.setColors("Lightning");
+                killer = "Lightning";
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.VOID))
             {
-                killer = MyPetUtil.setColors("The Void");
+                killer = "The Void";
             }
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
         }
