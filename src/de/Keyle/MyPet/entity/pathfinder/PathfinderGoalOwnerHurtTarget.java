@@ -49,7 +49,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
      */
     public boolean a()
     {
-        if(this.petEntity.goalTarget == null)
+        if (this.petEntity.goalTarget == null)
         {
             return false;
         }
@@ -62,17 +62,17 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
                 {
                     return false;
                 }
-                if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                if (behaviorSkill.getBehavior() == BehaviorState.Raid)
                 {
-                    if(this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal)this.petEntity.goalTarget).isTamed())
+                    if (this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.petEntity.goalTarget).isTamed())
                     {
                         return false;
                     }
-                    if(this.petEntity.goalTarget instanceof EntityMyPet)
+                    if (this.petEntity.goalTarget instanceof EntityMyPet)
                     {
                         return false;
                     }
-                    if(this.petEntity.goalTarget instanceof EntityPlayer)
+                    if (this.petEntity.goalTarget instanceof EntityPlayer)
                     {
                         return false;
                     }
@@ -96,9 +96,28 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
         return true;
     }
 
+    public boolean b()
+    {
+        EntityLiving entityliving = petEntity.aG();
+
+        if (entityliving == null)
+        {
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void c()
     {
         petEntity.b(this.target);
-        super.c();
+    }
+
+    public void d()
+    {
+        petEntity.b((EntityLiving) null);
     }
 }

@@ -27,10 +27,10 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
+public class PathfinderGoalAggressiveTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -39,7 +39,6 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
 
     public PathfinderGoalAggressiveTarget(MyPet myPet, float range)
     {
-        super(myPet.getPet().getHandle(), 32.0F, false);
         this.petEntity = myPet.getPet().getHandle();
         this.myPet = myPet;
         this.range = range;
@@ -94,9 +93,28 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoalTarget
         return false;
     }
 
+    public boolean b()
+    {
+        EntityLiving entityliving = petEntity.aG();
+
+        if (entityliving == null)
+        {
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void c()
     {
         petEntity.b(this.target);
-        super.c();
+    }
+
+    public void d()
+    {
+        petEntity.b((EntityLiving) null);
     }
 }

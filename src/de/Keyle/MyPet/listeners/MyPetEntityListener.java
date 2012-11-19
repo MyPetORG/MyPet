@@ -245,7 +245,7 @@ public class MyPetEntityListener implements Listener
                     MyPet myPet = MyPetList.getMyPet(damager);
                     if (myPet.status == PetState.Here && event.getEntity() != myPet.getPet())
                     {
-                        MyPetList.getMyPet(damager).getPet().getHandle().goalTarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        myPet.getPet().getHandle().goalTarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
 
                 }

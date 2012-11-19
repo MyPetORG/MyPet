@@ -32,25 +32,29 @@ import org.bukkit.entity.Player;
 
 public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
 {
-    private EntityMyPet entityMyPet;
+    private EntityMyPet petEntity;
     private EntityLiving lastDamager;
     private MyPet myPet;
 
     public PathfinderGoalOwnerHurtByTarget(EntityMyPet entityMyPet)
     {
-        this.entityMyPet = entityMyPet;
+        this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();
         a(1);
     }
 
     public boolean a()
     {
-        EntityLiving localEntityLiving = this.entityMyPet.getOwner();
+        EntityLiving localEntityLiving = this.petEntity.getOwner();
         if (localEntityLiving == null)
         {
             return false;
         }
         this.lastDamager = localEntityLiving.aC();
+        if(this.lastDamager == null || !lastDamager.isAlive())
+        {
+            return false;
+        }
         if (lastDamager instanceof EntityPlayer)
         {
             Player targetPlayer = (Player) lastDamager.getBukkitEntity();
@@ -88,9 +92,28 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
         return true;
     }
 
+    public boolean b()
+    {
+        EntityLiving entityliving = petEntity.aG();
+
+        if (entityliving == null)
+        {
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void c()
     {
-        entityMyPet.b(this.lastDamager);
-        super.c();
+        petEntity.b(this.lastDamager);
+    }
+
+    public void d()
+    {
+        petEntity.b((EntityLiving) null);
     }
 }

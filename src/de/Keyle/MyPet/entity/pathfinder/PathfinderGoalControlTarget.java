@@ -107,9 +107,28 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
         return false;
     }
 
+    public boolean b()
+    {
+        EntityLiving entityliving = petEntity.aG();
+
+        if (entityliving == null)
+        {
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void c()
     {
         petEntity.b(this.target);
-        super.c();
+    }
+
+    public void d()
+    {
+        petEntity.b((EntityLiving) null);
     }
 }

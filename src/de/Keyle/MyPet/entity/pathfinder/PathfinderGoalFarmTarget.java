@@ -26,9 +26,9 @@ import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityMonster;
-import net.minecraft.server.PathfinderGoalTarget;
+import net.minecraft.server.PathfinderGoal;
 
-public class PathfinderGoalFarmTarget extends PathfinderGoalTarget
+public class PathfinderGoalFarmTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -37,7 +37,6 @@ public class PathfinderGoalFarmTarget extends PathfinderGoalTarget
 
     public PathfinderGoalFarmTarget(MyPet myPet, float range)
     {
-        super(myPet.getPet().getHandle(), 32.0F, false);
         this.petEntity = myPet.getPet().getHandle();
         this.myPet = myPet;
         this.range = range;
@@ -80,9 +79,28 @@ public class PathfinderGoalFarmTarget extends PathfinderGoalTarget
         return false;
     }
 
+    public boolean b()
+    {
+        EntityLiving entityliving = petEntity.aG();
+
+        if (entityliving == null)
+        {
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
+            return false;
+        }
+        return true;
+    }
+
     public void c()
     {
         petEntity.b(this.target);
-        super.c();
+    }
+
+    public void d()
+    {
+        petEntity.b((EntityLiving) null);
     }
 }
