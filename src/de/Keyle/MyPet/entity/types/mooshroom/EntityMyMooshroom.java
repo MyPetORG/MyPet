@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.mooshroom;
 
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalControl;
+import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -33,14 +33,21 @@ public class EntityMyMooshroom extends EntityMyPet
         this.texture = "/mob/redcow.png";
         this.a(0.9F, 1.3F);
 
-        PathfinderGoalControl controlPathFinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, controlPathFinder);
-        this.goalSelector.a(3, new PathfinderGoalPanic(this, this.walkSpeed + 0.1F));
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathFinder));
-        this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
+        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
+        this.goalSelector.a(4, controlPathfinder);
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
+        this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
+        this.targetSelector.a(1, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget(this));
+        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(myPet));
+        this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
+        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
+        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
+        this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
     }
 
     public int getMaxHealth()
