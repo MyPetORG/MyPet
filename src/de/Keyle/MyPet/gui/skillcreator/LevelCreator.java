@@ -28,6 +28,7 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -37,6 +38,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LevelCreator
 {
@@ -50,8 +53,11 @@ public class LevelCreator
     private JPanel levelCreatorPanel;
     private JButton backButton;
     private JLabel mobTypeLabel;
+    private JTable skillCounterTabel;
+    private JLabel skilllevelLabel;
     private JFrame levelCreatorFrame;
 
+    DefaultTableModel skillCounterTabelModel;
     DefaultTreeModel skillTreeTreeModel;
     DefaultComboBoxModel inheritanceComboBoxModel;
 
@@ -99,6 +105,7 @@ public class LevelCreator
                         JOptionPane.showMessageDialog(null, response + " is not a number!", "Create new Level", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+                countSkillLevels();
             }
         });
         addSkillButton.addActionListener(new ActionListener()
@@ -134,6 +141,7 @@ public class LevelCreator
                     skillTreeTree.updateUI();
                     saveButton.setEnabled(true);
                 }
+                countSkillLevels();
             }
         });
         deleteLevelSkillButton.addActionListener(new ActionListener()
@@ -171,6 +179,7 @@ public class LevelCreator
                 addSkillButton.setEnabled(false);
                 deleteLevelSkillButton.setEnabled(false);
                 saveButton.setEnabled(true);
+                countSkillLevels();
             }
         });
         skillTreeTree.addTreeSelectionListener(new TreeSelectionListener()
@@ -181,16 +190,21 @@ public class LevelCreator
                 {
                     addSkillButton.setEnabled(false);
                     deleteLevelSkillButton.setEnabled(false);
+                    skillCounterTabelModel.getDataVector().removeAllElements();
+                    skillCounterTabel.updateUI();
+                    skilllevelLabel.setText("Skilllevels for level: -");
                 }
                 else if (e.getPath().getPath().length == 2)
                 {
                     addSkillButton.setEnabled(true);
                     deleteLevelSkillButton.setEnabled(true);
+                    countSkillLevels();
                 }
                 else if (e.getPath().getPath().length == 3)
                 {
                     addSkillButton.setEnabled(true);
                     deleteLevelSkillButton.setEnabled(true);
+                    countSkillLevels();
                 }
             }
 
@@ -231,6 +245,42 @@ public class LevelCreator
                 }
             }
         });
+    }
+
+    private void countSkillLevels()
+    {
+        int level = 0;
+        if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
+        {
+            level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
+        }
+
+        Map<String,Integer> skillCount = new HashMap<String,Integer>();
+        for(MyPetSkillTreeLevel skillTreeLevel : this.skillTree.getLevelList())
+        {
+            if(skillTreeLevel.getLevel() <= level)
+            {
+                for(MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
+                {
+                    if(skillCount.containsKey(skill.getName()))
+                    {
+                        skillCount.put(skill.getName(),skillCount.get(skill.getName())+1);
+                    }
+                    else
+                    {
+                        skillCount.put(skill.getName(),1);
+                    }
+                }
+            }
+        }
+        skillCounterTabelModel.getDataVector().removeAllElements();
+        for(String skillName : skillCount.keySet())
+        {
+            String[] row = {skillName, ""+skillCount.get(skillName)};
+            skillCounterTabelModel.addRow(row);
+        }
+        skilllevelLabel.setText("Skilllevels for level: " + level);
+        skillCounterTabel.updateUI();
     }
 
     public JPanel getMainPanel()
@@ -287,7 +337,7 @@ public class LevelCreator
         skillTreeNameLabel.setText("Skilltree: " + skillTree.getName());
         SortedDefaultMutableTreeNode rootNode = new SortedDefaultMutableTreeNode(skillTree.getName());
         skillTreeTreeModel.setRoot(rootNode);
-
+        int skillcount = 0;
         for (MyPetSkillTreeLevel level : skillTree.getLevelList())
         {
             DefaultMutableTreeNode levelNode = new DefaultMutableTreeNode(level.getLevel());
@@ -296,7 +346,20 @@ public class LevelCreator
             {
                 DefaultMutableTreeNode skillNode = new DefaultMutableTreeNode(skill.getName());
                 levelNode.add(skillNode);
+                skillcount++;
             }
+        }
+
+        if(skillcount <= 15)
+        {
+            for(int i = 0; i < skillTreeTree.getRowCount();i++)
+            {
+                skillTreeTree.expandRow(i);
+            }
+        }
+        else
+        {
+            skillTreeTree.expandRow(0);
         }
         skillTreeTree.updateUI();
         skillTreeTree.setSelectionPath(new TreePath(rootNode));
@@ -310,6 +373,19 @@ public class LevelCreator
 
         inheritanceComboBoxModel = new DefaultComboBoxModel();
         inheritanceComboBox = new JComboBox(inheritanceComboBoxModel);
+
+        String[] columnNames = {"Skill", "Level"};
+        String[][] data = new String[0][0];
+        skillCounterTabelModel = new DefaultTableModel(data, columnNames);
+        skillCounterTabel = new JTable(skillCounterTabelModel)
+        {
+            public boolean isCellEditable(int rowIndex, int colIndex)
+            {
+                return false;
+            }
+        };
+        skillCounterTabel.getColumnModel().getColumn(0).setPreferredWidth(160);
+        skillCounterTabel.getColumnModel().getColumn(1).setPreferredWidth(50);
     }
 
     private class SortedDefaultMutableTreeNode extends DefaultMutableTreeNode
