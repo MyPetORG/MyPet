@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
+import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
@@ -218,9 +219,16 @@ public class MyPetEntityListener implements Listener
                 }
             }
         }
-        else if (event.getCause() == DamageCause.FALL)
+        else if (event.getEntity() instanceof CraftMyChicken)
         {
-            if (event.getEntity() instanceof CraftMyChicken)
+            if (event.getCause() == DamageCause.FALL)
+            {
+                event.setCancelled(true);
+            }
+        }
+        else if(event.getEntity() instanceof CraftMyIronGolem)
+        {
+            if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.DROWNING)
             {
                 event.setCancelled(true);
             }
