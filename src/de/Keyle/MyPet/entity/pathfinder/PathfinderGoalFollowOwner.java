@@ -62,6 +62,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
+        else if (this.petEntity.aG() != null)
+        {
+            return false;
+        }
         else if (this.petEntity.e(entityLiving) < (double) (this.maxDistance * this.maxDistance))
         {
             return false;
