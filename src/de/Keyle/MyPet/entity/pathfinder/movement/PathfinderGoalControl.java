@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder;
+package de.Keyle.MyPet.entity.pathfinder.movement;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -32,7 +32,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
 {
     private MyPet myPet;
     private float speed;
-    Location moveTo = null;
+    public Location moveTo = null;
     private int timeToMove = 0;
     private Navigation nav;
     private boolean stopControl = false;

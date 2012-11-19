@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder;
+package de.Keyle.MyPet.entity.pathfinder.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -30,28 +30,38 @@ import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
+public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
 {
+    private EntityMyPet petEntity;
+    private EntityLiving lastDamager;
+    private MyPet myPet;
 
-    EntityMyPet petEntity;
-    EntityLiving target;
-    MyPet myPet;
-
-    public PathfinderGoalOwnerHurtTarget(MyPet myPet)
+    public PathfinderGoalOwnerHurtByTarget(EntityMyPet entityMyPet)
     {
-        this.petEntity = myPet.getPet().getHandle();
-        this.myPet = myPet;
-        this.a(1);
+        this.petEntity = entityMyPet;
+        myPet = entityMyPet.getMyPet();
+        a(1);
     }
 
-    /**
-     * Checks whether this pathfinder goal should be activated
-     */
     public boolean a()
     {
-        if (this.petEntity.goalTarget == null)
+        EntityLiving localEntityLiving = this.petEntity.getOwner();
+        if (localEntityLiving == null)
         {
             return false;
+        }
+        this.lastDamager = localEntityLiving.aC();
+        if(this.lastDamager == null || !lastDamager.isAlive())
+        {
+            return false;
+        }
+        if (lastDamager instanceof EntityPlayer)
+        {
+            Player targetPlayer = (Player) lastDamager.getBukkitEntity();
+            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+            {
+                return false;
+            }
         }
         if (myPet.getSkillSystem().hasSkill("Behavior"))
         {
@@ -62,37 +72,23 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
                 {
                     return false;
                 }
-                if (behaviorSkill.getBehavior() == BehaviorState.Raid)
+                if(behaviorSkill.getBehavior() == BehaviorState.Raid)
                 {
-                    if (this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.petEntity.goalTarget).isTamed())
+                    if(lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal)lastDamager).isTamed())
                     {
                         return false;
                     }
-                    if (this.petEntity.goalTarget instanceof EntityMyPet)
+                    if(lastDamager instanceof EntityMyPet)
                     {
                         return false;
                     }
-                    if (this.petEntity.goalTarget instanceof EntityPlayer)
+                    if(lastDamager instanceof EntityPlayer)
                     {
                         return false;
                     }
                 }
             }
         }
-        if (this.target instanceof EntityPlayer)
-        {
-            Player targetPlayer = (Player) this.petEntity.goalTarget.getBukkitEntity();
-            if (myPet.getOwner().equals(targetPlayer))
-            {
-                return false;
-            }
-            else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
-            {
-                return false;
-            }
-        }
-        this.target = this.petEntity.goalTarget;
-        this.petEntity.goalTarget = null;
         return true;
     }
 
@@ -113,7 +109,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
 
     public void c()
     {
-        petEntity.b(this.target);
+        petEntity.b(this.lastDamager);
     }
 
     public void d()

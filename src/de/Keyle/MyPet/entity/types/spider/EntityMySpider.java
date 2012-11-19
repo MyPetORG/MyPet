@@ -19,10 +19,13 @@
 
 package de.Keyle.MyPet.entity.types.spider;
 
-import de.Keyle.MyPet.entity.pathfinder.*;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
-import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalAggressiveTarget;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
