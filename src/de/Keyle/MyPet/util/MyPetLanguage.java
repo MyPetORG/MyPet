@@ -69,7 +69,7 @@ public class MyPetLanguage
         addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%white% has now a max health of %maxhealth%HP");
         addString("Msg_AddDemage", "MyPet.Message.adddemage", "%aqua%%petname%%white% has now %dmg% bonusdemage");
         addString("Msg_PetIsGone", "MyPet.Message.petisgone", "%aqua%%petname%%white% is %red%gone%white% and will never come back . . .");
-        addString("Msg_DeathMessage", "MyPet.Message.deathmessage.text", "%aqua%%petname%%white% ");
+        addString("Msg_DeathMessage", "MyPet.Message.deathmessage.text", "%aqua%%petname%%white% was killed by: ");
         addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%white% respawn in %gold%%time%%white% sec");
         addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%white% respawned");
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
@@ -96,33 +96,6 @@ public class MyPetLanguage
         addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%white% pickup: activated");
         addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%white% is now in %mode% mode.");
         addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%white% has now a chance of %chance%% to poison enemies");
-        addString("Creeper", "MyPet.Message.deathmessage.creeper", "was killed by a Creeper.");
-        addString("Zombie", "MyPet.Message.deathmessage.zombie", "was killed by a Zombie.");
-        addString("Unknow", "MyPet.Message.deathmessage.unknow", "was killed by an unknown source.");
-        addString("You", "MyPet.Message.deathmessage.you", "was killed by %red%YOU%white%.");
-        addString("Spider", "MyPet.Message.deathmessage.spider", "was killed by a Spider.");
-        addString("CaveSpider", "MyPet.Message.deathmessage.cavespider", "was killed by a Cave Spider.");
-        addString("Giant", "MyPet.Message.deathmessage.giant", "was killed by a Giant.");
-        addString("Slime", "MyPet.Message.deathmessage.slime", "was killed by a Slime.");
-        addString("MagmaCube", "MyPet.Message.deathmessage.magmacube", "was killed by a Magma Cube.");
-        addString("Ghast", "MyPet.Message.deathmessage.ghast", "was killed by a Ghast.");
-        addString("Blaze", "MyPet.Message.deathmessage.blace", "was killed by a Blaze.");
-        addString("EnderDragon", "MyPet.Message.deathmessage.enderdragon", "was killed by the Ender Dragon.");
-        addString("Wolf", "MyPet.Message.deathmessage.wolf", "was killed by a Wolf.");
-        addString("MyPet", "MyPet.Message.deathmessage.mypet", "was killed by %petname% of %player%.");
-        addString("OwnedPet", "MyPet.Message.deathmessage.mypet", "was killed by a pet of %player%.");
-        addString("Enderman", "MyPet.Message.deathmessage.enderman", "was killed by a Enderman.");
-        addString("Snowman", "MyPet.Message.deathmessage.snowman", "was killed by a Snowman.");
-        addString("Player", "MyPet.Message.deathmessage.player", "was killed by %player%.");
-        addString("Drowning", "MyPet.Message.deathmessage.drowning", "drowned.");
-        addString("Fall", "MyPet.Message.deathmessage.fall", "died by falling down.");
-        addString("Lightning", "MyPet.Message.deathmessage.lightning", "was killed by lightning.");
-        addString("kvoid", "MyPet.Message.deathmessage.fire", "was killed by the VOID.");
-        addString("Skeleton", "MyPet.Message.deathmessage.skeleton", "was killed by a Skeleton.");
-        addString("PlayerWolf", "MyPet.Message.deathmessage.playerwolf", "was killed by %player%'s Wolf.");
-        addString("Explosion", "MyPet.Message.deathmessage.explosion", "was killed by an explosion.");
-        addString("PigZombie", "MyPet.Message.deathmessage.pigzombie", "was killed by a PigZombie.");
-        addString("Silverfish", "MyPet.Message.deathmessage.silverfish", "was killed by a Silverfish.");
 
         yamlConfiguration.saveConfig();
     }

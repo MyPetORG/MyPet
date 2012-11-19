@@ -271,22 +271,19 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
-            if (MyPetList.isMyPet(event.getEntity().getEntityId()))
+            MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+            myPet.status = PetState.Dead;
+            myPet.respawnTime = MyPetConfig.respawnTimeFixed + (myPet.getExperience().getLevel() * MyPetConfig.respawnTimeFactor);
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
-                MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                myPet.status = PetState.Dead;
-                myPet.respawnTime = MyPetConfig.respawnTimeFixed + (myPet.getExperience().getLevel() * MyPetConfig.respawnTimeFactor);
-                if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+                if (!(e.getDamager() instanceof Player && myPet.getOwner() != e.getDamager()))
                 {
-                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                    if (!(e.getDamager() instanceof Player && myPet.getOwner() != e.getDamager()))
-                    {
-                        event.setDroppedExp(0);
-                    }
+                    event.setDroppedExp(0);
                 }
-                SendDeathMessage(event);
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
             }
+            SendDeathMessage(event);
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
         }
         if (MyPetConfig.levelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {
@@ -349,10 +346,11 @@ public class MyPetEntityListener implements Listener
 
     private void SendDeathMessage(final EntityDeathEvent event)
     {
-        MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-        String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknow"));
-        if (myPet != null)
+
+        if (event.getEntity() instanceof CraftMyPet)
         {
+            MyPet myPet = ((CraftMyPet)event.getEntity()).getMyPet();
+            String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknow"));
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
@@ -361,118 +359,63 @@ public class MyPetEntityListener implements Listener
                 {
                     if (e.getDamager() == myPet.getOwner())
                     {
-                        killer = MyPetUtil.setColors(MyPetLanguage.getString("You"));
+                        killer = "You";
                     }
                     else
                     {
-                        killer = MyPetUtil.setColors(MyPetLanguage.getString("Player")).replace("%player%", ((Player) e.getDamager()).getName());
+                        killer = ((Player) e.getDamager()).getName();
                     }
-                }
-                else if (e.getDamager().getType() == EntityType.ZOMBIE)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Zombie"));
-                }
-                else if (e.getDamager().getType() == EntityType.CREEPER)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Creeper"));
-                }
-                else if (e.getDamager().getType() == EntityType.SPIDER)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Spider"));
-                }
-                else if (e.getDamager().getType() == EntityType.SLIME)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Slime"));
-                }
-                else if (e.getDamager().getType() == EntityType.GIANT)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Giant"));
-                }
-                else if (e.getDamager().getType() == EntityType.SKELETON)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Skeleton"));
-                }
-                else if (e.getDamager().getType() == EntityType.CAVE_SPIDER)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("CaveSpider"));
-                }
-                else if (e.getDamager().getType() == EntityType.ENDERMAN)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Enderman"));
-                }
-                else if (e.getDamager().getType() == EntityType.PIG_ZOMBIE)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("PigZombie"));
-                }
-                else if (e.getDamager().getType() == EntityType.SILVERFISH)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Silverfish"));
-                }
-                else if (e.getDamager().getType() == EntityType.SNOWMAN)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Snowman"));
-                }
-                else if (e.getDamager().getType() == EntityType.ENDER_DRAGON)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("EnderDragon"));
-                }
-                else if (e.getDamager().getType() == EntityType.BLAZE)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("Blaze"));
-                }
-                else if (e.getDamager().getType() == EntityType.MAGMA_CUBE)
-                {
-                    killer = MyPetUtil.setColors(MyPetLanguage.getString("MagmaCube"));
                 }
                 else if (e.getDamager().getType() == EntityType.WOLF)
                 {
                     Wolf w = (Wolf) e.getDamager();
                     if (w.isTamed())
                     {
-                        if (MyPetList.isMyPet(w.getEntityId()))
-                        {
-                            killer = MyPetUtil.setColors(MyPetLanguage.getString("MyPet")).replace("%player%", MyPetList.getMyPet(w.getEntityId()).getOwner().getName()).replace("%petname%", MyPetList.getMyPet(w.getEntityId()).petName);
-                        }
-                        else
-                        {
-                            killer = MyPetUtil.setColors(MyPetLanguage.getString("PlayerWolf")).replace("%player%", ((CraftWolf) w).getHandle().getOwnerName());
-                        }
+                        killer = "Wolf (" + w.getOwner().getName() + ")";
                     }
                     else
                     {
-                        killer = MyPetUtil.setColors(MyPetLanguage.getString("Wolf"));
+                        killer = "Wolf";
                     }
+                }
+                else if(e.getDamager() instanceof CraftMyPet)
+                {
+                    CraftMyPet craftMyPet = (CraftMyPet)e.getDamager();
+                    killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ")";
+                }
+                else
+                {
+                    killer = e.getDamager().getType().getName();
                 }
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.BLOCK_EXPLOSION))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Explosion"));
+                killer = MyPetUtil.setColors("Explosion");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.DROWNING))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Drowning"));
+                killer = MyPetUtil.setColors("Drowning");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FALL))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Fall"));
+                killer = MyPetUtil.setColors("Fall");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Fire"));
+                killer = MyPetUtil.setColors("Fire");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LAVA))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Lava"));
+                killer = MyPetUtil.setColors("Lava");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LIGHTNING))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("Lightning"));
+                killer = MyPetUtil.setColors("Lightning");
             }
             else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.VOID))
             {
-                killer = MyPetUtil.setColors(MyPetLanguage.getString("kvoid"));
+                killer = MyPetUtil.setColors("The Void");
             }
-
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
         }
     }
