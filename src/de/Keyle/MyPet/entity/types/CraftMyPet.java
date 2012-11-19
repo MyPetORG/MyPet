@@ -79,6 +79,11 @@ public abstract class CraftMyPet extends CraftCreature
         return getHandle().myPet.getOwner().getName();
     }
 
+    public MyPet getMyPet()
+    {
+        return getHandle().getMyPet();
+    }
+
     @Override
     public EntityMyPet getHandle()
     {

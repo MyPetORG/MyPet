@@ -21,6 +21,8 @@ package de.Keyle.MyPet.entity.types.pig;
 
 import de.Keyle.MyPet.entity.pathfinder.*;
 import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget;
+import de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -36,18 +38,22 @@ public class EntityMyPig extends EntityMyPet
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-        this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
         this.goalSelector.a(4, controlPathfinder);
         this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
-        this.targetSelector.a(1, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtByTarget(this));
-        this.targetSelector.a(2, new de.Keyle.MyPet.entity.pathfinder.PathfinderGoalOwnerHurtTarget(myPet));
-        this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-        this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
-        this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
-        this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
+
+        if(MyPet.getStartDamage(MyPig.class) > 0)
+        {
+            this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+            this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
+            this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
+            this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
+            this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
+            this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
+            this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 13));
+            this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 10));
+        }
     }
 
     public void setMyPet(MyPet myPet)
