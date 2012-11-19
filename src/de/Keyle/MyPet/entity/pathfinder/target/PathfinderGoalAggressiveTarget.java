@@ -100,7 +100,11 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if (entityliving == null)
+        if(!petEntity.canMove())
+        {
+            return false;
+        }
+        else if (entityliving == null)
         {
             return false;
         }

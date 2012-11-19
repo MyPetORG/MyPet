@@ -49,7 +49,11 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
      */
     public boolean a()
     {
-        if (this.petEntity.goalTarget == null)
+        if(!petEntity.canMove())
+        {
+            return false;
+        }
+        else if (this.petEntity.goalTarget == null)
         {
             return false;
         }
@@ -100,7 +104,11 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if (entityliving == null)
+        if(!petEntity.canMove())
+        {
+            return false;
+        }
+        else if (entityliving == null)
         {
             return false;
         }
