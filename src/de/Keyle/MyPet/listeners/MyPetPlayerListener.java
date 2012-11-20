@@ -100,18 +100,18 @@ public class MyPetPlayerListener implements Listener
             MyPetUtil.getDebugLogger().info("has MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
             if (MyPetList.hasMyPet(event.getPlayer()))
             {
-                MyPet MPet = MyPetList.getMyPet(event.getPlayer());
-                if (MPet.status == PetState.Dead)
+                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+                if (myPet.status == PetState.Dead)
                 {
-                    event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", MPet.petName).replace("%time%", "" + MPet.respawnTime)));
+                    event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                 }
-                else if (MyPetUtil.getDistance2D(MPet.getLocation(), event.getPlayer().getLocation()) < 75 && MPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
+                else if (MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) < 75 && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
                 {
-                    MPet.createPet();
+                    myPet.createPet();
                 }
                 else
                 {
-                    MPet.status = PetState.Despawned;
+                    myPet.status = PetState.Despawned;
                 }
             }
             MyPetUtil.getDebugLogger().info("-------------------------------------------------------------");

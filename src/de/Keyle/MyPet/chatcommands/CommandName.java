@@ -52,8 +52,8 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyPet MPet = MyPetList.getMyPet(petOwner);
-                MPet.setPetName(name);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                myPet.setPetName(name);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
                 return true;
             }

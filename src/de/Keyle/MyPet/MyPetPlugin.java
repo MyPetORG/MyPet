@@ -88,9 +88,9 @@ public class MyPetPlugin extends JavaPlugin
         if(isReady)
         {
             debugLogger.info(savePets(true) + " pet/pets saved.");
-            for (MyPet MPet : MyPetList.getMyPetList())
+            for (MyPet myPet : MyPetList.getMyPetList())
             {
-                MPet.removePet();
+                myPet.removePet();
             }
         }
         getTimer().stopTimer();
@@ -407,21 +407,21 @@ public class MyPetPlugin extends JavaPlugin
                 petType = myPetNBT.getString("Type");
             }
 
-            InactiveMyPet IMPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
+            InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
-            IMPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ));
-            IMPet.setHealth(petHealthNow);
-            IMPet.setHungerValue(petHunger);
-            IMPet.setRespawnTime(petRespawnTime);
-            IMPet.setPetName(petName);
-            IMPet.setExp(petExp);
-            IMPet.setSkills(myPetNBT.getCompound("Skills"));
-            IMPet.setPetType(MyPetType.valueOf(petType));
-            IMPet.setInfo(myPetNBT.getCompound("Info"));
+            inactiveMyPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ));
+            inactiveMyPet.setHealth(petHealthNow);
+            inactiveMyPet.setHungerValue(petHunger);
+            inactiveMyPet.setRespawnTime(petRespawnTime);
+            inactiveMyPet.setPetName(petName);
+            inactiveMyPet.setExp(petExp);
+            inactiveMyPet.setSkills(myPetNBT.getCompound("Skills"));
+            inactiveMyPet.setPetType(MyPetType.valueOf(petType));
+            inactiveMyPet.setInfo(myPetNBT.getCompound("Info"));
 
-            MyPetList.addInactiveMyPet(IMPet);
+            MyPetList.addInactiveMyPet(inactiveMyPet);
 
-            debugLogger.info("   " + IMPet.toString());
+            debugLogger.info("   " + inactiveMyPet.toString());
 
             petCount++;
         }

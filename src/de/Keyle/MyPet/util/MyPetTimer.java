@@ -52,9 +52,9 @@ public class MyPetTimer
 
             public void run()
             {
-                for (MyPet MPet : MyPetList.getMyPetList())
+                for (MyPet myPet : MyPetList.getMyPetList())
                 {
-                    MPet.scheduleTask();
+                    myPet.scheduleTask();
                 }
                 for (Scheduler Task : tasksToSchedule)
                 {

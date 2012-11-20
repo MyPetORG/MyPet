@@ -73,10 +73,10 @@ public class CommandInventory implements CommandExecutor
             {
                 if (MyPetList.hasMyPet(args[0]))
                 {
-                    MyPet MPet = MyPetList.getMyPet(args[0]);
-                    if (MPet.getSkillSystem().getSkill("Inventory") != null && MPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+                    MyPet myPet = MyPetList.getMyPet(args[0]);
+                    if (myPet.getSkillSystem().getSkill("Inventory") != null && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
                     {
-                        ((Inventory) MPet.getSkillSystem().getSkill("Inventory")).OpenInventory(player);
+                        ((Inventory) myPet.getSkillSystem().getSkill("Inventory")).OpenInventory(player);
                     }
                 }
             }

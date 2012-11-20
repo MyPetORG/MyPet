@@ -81,9 +81,9 @@ public class CommandAdmin implements CommandExecutor
                     Exp = Exp < 0 ? 0 : Exp;
                     if (MyPetList.hasMyPet(petOwner))
                     {
-                        MyPet MPet = MyPetList.getMyPet(petOwner);
+                        MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                        Collection<MyPetGenericSkill> skills = MPet.getSkillSystem().getSkills();
+                        Collection<MyPetGenericSkill> skills = myPet.getSkillSystem().getSkills();
                         if (skills.size() > 0)
                         {
                             for (MyPetGenericSkill skill : skills)
@@ -91,8 +91,8 @@ public class CommandAdmin implements CommandExecutor
                                 skill.setLevel(0);
                             }
                         }
-                        MPet.getExperience().reset();
-                        MPet.getExperience().addExp(Exp);
+                        myPet.getExperience().reset();
+                        myPet.getExperience().addExp(Exp);
                     }
                     else
                     {
