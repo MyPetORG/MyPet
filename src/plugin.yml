@@ -41,7 +41,6 @@ commands:
     description: Shows the skill-levels of a online MyPet
     usage: '/<command> <Playername>'
   petadmin:
-    aliases: [peta, pa]
     description: Set the Exp or Name of a MyPet
     usage: '/<command> [PlayerName] name/exp [Value]'
   petskilltree:
@@ -51,7 +50,7 @@ commands:
 
 permissions:
   MyPet.user.leash.*:
-    description: player cann leash all MyPet types
+    description: Player can leash all MyPet-Types.
     children:
       MyPet.user.leash.cavespider: true
       MyPet.user.leash.chicken: true
@@ -69,19 +68,18 @@ permissions:
       MyPet.user.leash.wolf: true
       MyPet.user.leash.zombie: true
   MyPet.*:
-    description: Gives access to ALL MyPet commands
+    description: Gives access to ALL MyPet features.
     children:
       MyPet.admin: true
       MyPet.user.release: true
+      MyPet.user.leash.*: true
   MyPet.user.*:
-    description: Gives access to MyPet user commands
+    description: Gives access to MyPet features for normal user.
     children:
       MyPet.admin: false
-      MyPet.user.leash: true
+      MyPet.user.leash.*: true
       MyPet.user.release: true
-  MyPet.user.leash:
-    description: Allows a player to leash a MyPet.
   MyPet.user.release:
     description: Allows usage of /petrelease
   MyPet.admin:
-    description: Allows user to use some MyPet-admin functions.
+    description: Gives access to admin MyPet features.
