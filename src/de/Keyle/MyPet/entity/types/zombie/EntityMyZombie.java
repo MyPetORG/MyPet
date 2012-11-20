@@ -67,6 +67,7 @@ public class EntityMyZombie extends EntityMyPet
     public void setBaby(boolean flag)
     {
         getDataWatcher().watch(12, (byte) 1);
+        ((MyZombie)myPet).isBaby = flag;
     }
 
     public boolean isVillager()
@@ -77,6 +78,7 @@ public class EntityMyZombie extends EntityMyPet
     public void setVillager(boolean flag)
     {
         getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
+        ((MyZombie)myPet).isVillager = flag;
     }
 
     public int getMaxHealth()

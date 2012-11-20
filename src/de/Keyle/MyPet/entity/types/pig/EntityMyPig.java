@@ -86,9 +86,9 @@ public class EntityMyPig extends EntityMyPet
         return (this.datawatcher.getByte(16) & 0x1) != 0;
     }
 
-    public void setSaddle(boolean saddle)
+    public void setSaddle(boolean flag)
     {
-        if (saddle)
+        if (flag)
         {
             this.datawatcher.watch(16, (byte) 1);
         }
@@ -96,6 +96,25 @@ public class EntityMyPig extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) 0);
         }
+        ((MyPig) myPet).hasSaddle = flag;
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MyPig) myPet).isBaby = flag;
     }
 
     @Override

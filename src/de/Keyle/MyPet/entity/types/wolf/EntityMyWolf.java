@@ -19,14 +19,12 @@
 
 package de.Keyle.MyPet.entity.types.wolf;
 
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalSit;
+import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalSit;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -54,7 +52,7 @@ public class EntityMyWolf extends EntityMyPet
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyWolf.class) > 0)
+        if (MyPet.getStartDamage(MyWolf.class) > 0)
         {
             this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -109,6 +107,7 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
+        ((MyWolf) myPet).isSitting = sitting;
     }
 
     public int getMaxHealth()
@@ -128,10 +127,15 @@ public class EntityMyWolf extends EntityMyPet
         this.bm();
     }
 
-    public void setTamed(boolean tamed)
+    public boolean isTamed()
+    {
+        return (this.datawatcher.getByte(16) & 0x4) != 0;
+    }
+
+    public void setTamed(boolean flag)
     {
         int i = this.datawatcher.getByte(16);
-        if (tamed)
+        if (flag)
         {
             this.datawatcher.watch(16, (byte) (i | 0x4));
         }
@@ -139,16 +143,44 @@ public class EntityMyWolf extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
         }
+        ((MyWolf) myPet).isTamed = flag;
     }
 
-    public int getAge()
+    public boolean isAngry()
     {
-        return this.datawatcher.getInt(12);
+        return (this.datawatcher.getByte(16) & 0x2) != 0;
     }
 
-    public void setAge(int age)
+    public void setAngry(boolean flag)
     {
-        this.datawatcher.watch(12, age);
+        byte b0 = this.datawatcher.getByte(16);
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x2));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFD));
+        }
+        ((MyWolf) myPet).isAngry = flag;
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MyWolf) myPet).isBaby = flag;
     }
 
     public int getCollarColor()
@@ -156,9 +188,10 @@ public class EntityMyWolf extends EntityMyPet
         return this.datawatcher.getByte(20) & 0xF;
     }
 
-    public void setCollarColor(int i)
+    public void setCollarColor(int value)
     {
-        this.datawatcher.watch(20, (byte) (i & 0xF));
+        this.datawatcher.watch(20, (byte) (value & 0xF));
+        ((MyWolf) myPet).collarColor = value;
     }
 
     @Override
@@ -181,7 +214,7 @@ public class EntityMyWolf extends EntityMyPet
         this.datawatcher.a(18, new Integer(this.getHealth()));    // tail height
         this.datawatcher.a(12, new Integer(0));                   // age
         this.datawatcher.a(19, new Byte((byte) 0));
-        this.datawatcher.a(20, new Byte((byte)BlockCloth.e_(1))); // collar color
+        this.datawatcher.a(20, new Byte((byte) BlockCloth.e_(1))); // collar color
     }
 
     /**
@@ -237,6 +270,6 @@ public class EntityMyWolf extends EntityMyPet
     @Override
     protected void bm()
     {
-        this.datawatcher.watch(18, (int)(25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
+        this.datawatcher.watch(18, (int) (25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
     }
 }

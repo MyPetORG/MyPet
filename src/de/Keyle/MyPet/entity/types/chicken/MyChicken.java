@@ -22,13 +22,51 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.NBTTagCompound;
 
 public class MyChicken extends MyPet
 {
+    protected boolean isBaby = false;
+
     public MyChicken(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Chicken";
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyChicken) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyChicken) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("Baby", isBaby());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setBaby(info.getBoolean("Baby"));
     }
 
     @Override
@@ -40,6 +78,6 @@ public class MyChicken extends MyPet
     @Override
     public String toString()
     {
-        return "MyChicken{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyChicken{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", baby=" + isBaby() + "}";
     }
 }

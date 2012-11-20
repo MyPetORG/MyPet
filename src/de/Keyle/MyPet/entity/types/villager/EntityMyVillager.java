@@ -19,13 +19,11 @@
 
 package de.Keyle.MyPet.entity.types.villager;
 
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -87,9 +85,28 @@ public class EntityMyVillager extends EntityMyPet
         return this.datawatcher.getInt(16);
     }
 
-    public void setProfession(int profession)
+    public void setProfession(int value)
     {
-        this.datawatcher.watch(16, profession);
+        this.datawatcher.watch(16, value);
+        ((MyVillager) myPet).profession = value;
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MyVillager) myPet).isBaby = flag;
     }
 
     @Override

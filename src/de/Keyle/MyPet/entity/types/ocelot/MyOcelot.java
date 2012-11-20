@@ -26,8 +26,9 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyOcelot extends MyPet
 {
-    private boolean isSitting = false;
-    private int catType = 0;
+    protected boolean isSitting = false;
+    protected boolean isBaby = false;
+    protected int catType = 0;
 
     public MyOcelot(MyPetPlayer petOwner)
     {
@@ -47,43 +48,73 @@ public class MyOcelot extends MyPet
         }
     }
 
-    public void setSitting(boolean sitting)
+    public void setSitting(boolean flag)
     {
-        ((CraftMyOcelot) craftMyPet).setSitting(sitting);
-        this.isSitting = sitting;
-    }
-
-    public void setCatType(int catType)
-    {
-        this.catType = catType;
         if (status == PetState.Here)
         {
-            ((EntityMyOcelot) craftMyPet.getHandle()).setCatType(catType);
+            ((CraftMyOcelot) craftMyPet).setSitting(flag);
         }
+        this.isSitting = flag;
     }
 
     public int getCatType()
     {
-        return catType;
+        if (status == PetState.Here)
+        {
+            return ((CraftMyOcelot) getCraftPet()).getCatType().getId();
+        }
+        else
+        {
+            return catType;
+        }
+    }
+
+    public void setCatType(int value)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyOcelot) craftMyPet.getHandle()).setCatType(value);
+        }
+        this.catType = value;
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyOcelot) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyOcelot) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("catType", catType);
-        info.setBoolean("sitting", isSitting());
+        info.setInt("CatType", getCatType());
+        info.setBoolean("Sitting", isSitting());
+        info.setBoolean("Baby", isBaby());
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setCatType(info.getInt("catType"));
-        if (info.hasKey("sitting"))
-        {
-            setSitting(info.getBoolean("sitting"));
-        }
+        setCatType(info.getInt("CatType"));
+        setSitting(info.getBoolean("Sitting"));
+        setBaby(info.getBoolean("Baby"));
     }
 
     @Override
@@ -95,6 +126,6 @@ public class MyOcelot extends MyPet
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", cattype=" + getCatType() + ", baby=" + isBaby() + "}";
     }
 }

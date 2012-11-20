@@ -42,7 +42,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     {
         this.myPet = myPet;
         speed = f;
-        nav = this.myPet.getPet().getHandle().getNavigation();
+        nav = this.myPet.getCraftPet().getHandle().getNavigation();
     }
 
     /**
@@ -85,7 +85,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
             }
         }
 
-        if (!this.myPet.getPet().canMove() || moveTo != null && MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
+        if (!this.myPet.getCraftPet().canMove() || moveTo != null && MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
         {
             moveTo = null;
             MyPetPlugin.getPlugin().getTimer().removeTask(this);

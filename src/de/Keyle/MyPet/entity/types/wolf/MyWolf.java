@@ -26,8 +26,11 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyWolf extends MyPet
 {
-    private boolean isSitting = false;
-    private int collarColor = 0;
+    protected boolean isSitting = false;
+    protected boolean isBaby = false;
+    protected boolean isTamed = true;
+    protected boolean isAngry = false;
+    protected int collarColor = 0;
 
     public MyWolf(MyPetPlayer petOwner)
     {
@@ -44,14 +47,14 @@ public class MyWolf extends MyPet
     @Override
     public String toString()
     {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 
     public boolean isSitting()
     {
         if (status == PetState.Here)
         {
-            return ((CraftMyWolf) craftMyPet).isSitting();
+            return ((CraftMyWolf) getCraftPet()).isSitting();
         }
         else
         {
@@ -59,24 +62,20 @@ public class MyWolf extends MyPet
         }
     }
 
-    public void setSitting(boolean sitting)
+    public void setSitting(boolean flag)
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) craftMyPet).setSitting(sitting);
-            this.isSitting = sitting;
+            ((CraftMyWolf) getCraftPet()).setSitting(flag);
         }
-        else
-        {
-            this.isSitting = sitting;
-        }
+        this.isSitting = flag;
     }
 
     public int getCollarColor()
     {
         if (status == PetState.Here)
         {
-            return ((EntityMyWolf) craftMyPet.getHandle()).getCollarColor();
+            return ((CraftMyWolf) getCraftPet()).getCollarColor();
         }
         else
         {
@@ -84,38 +83,112 @@ public class MyWolf extends MyPet
         }
     }
 
-    public void setCollarColor(int color)
+    public void setCollarColor(int value)
     {
         if (status == PetState.Here)
         {
-            ((EntityMyWolf) craftMyPet.getHandle()).setCollarColor(color);
-            this.collarColor = color;
+            ((CraftMyWolf) getCraftPet()).setCollarColor(value);
+        }
+        this.collarColor = value;
+    }
+
+    public boolean isTamed()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyWolf) getCraftPet()).isTamed();
         }
         else
         {
-            this.collarColor = color;
+            return isTamed;
         }
+    }
+
+    public void setTamed(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyWolf) getCraftPet()).setTamed(flag);
+        }
+        this.isTamed = flag;
+    }
+
+    public boolean isAngry()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyWolf) getCraftPet()).isAngry();
+        }
+        else
+        {
+            return isAngry;
+        }
+    }
+
+    public void setAngry(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyWolf) getCraftPet()).setAngry(flag);
+        }
+        this.isAngry = flag;
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyWolf) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyWolf) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setBoolean("sitting", isSitting());
-        info.setInt("collar", getCollarColor());
+        info.setBoolean("Sitting", isSitting());
+        info.setBoolean("Baby", isBaby());
+        info.setBoolean("Tamed", isTamed());
+        info.setBoolean("Angry", isAngry());
+        info.setInt("CollarColor", getCollarColor());
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        if (info.hasKey("sitting"))
+        if (info.hasKey("Sitting"))
         {
-            setSitting(info.getBoolean("sitting"));
+            setSitting(info.getBoolean("Sitting"));
         }
-        if (info.hasKey("collar"))
+        if (info.hasKey("CollarColor"))
         {
-            setCollarColor(info.getInt("collar"));
+            setCollarColor(info.getInt("CollarColor"));
+        }
+        if (info.hasKey("Tamed"))
+        {
+            setTamed(info.getBoolean("Collar"));
+        }
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
+        if (info.hasKey("Angry"))
+        {
+            setAngry(info.getBoolean("Angry"));
         }
     }
 }

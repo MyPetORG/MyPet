@@ -19,13 +19,11 @@
 
 package de.Keyle.MyPet.entity.types.mooshroom;
 
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
@@ -68,6 +66,24 @@ public class EntityMyMooshroom extends EntityMyPet
     public boolean canEat(ItemStack itemstack)
     {
         return itemstack.id == org.bukkit.Material.RED_MUSHROOM.getId() || itemstack.id == org.bukkit.Material.BROWN_MUSHROOM.getId();
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MyMooshroom) myPet).isBaby = flag;
     }
 
     @Override

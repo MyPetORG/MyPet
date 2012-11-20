@@ -88,11 +88,11 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getByte(16) & 15;
     }
 
-    public void setColor(int color)
+    public void setColor(int value)
     {
         byte b0 = this.datawatcher.getByte(16);
-
-        this.datawatcher.watch(16, (byte) (b0 & 240 | color & 15));
+        this.datawatcher.watch(16, (byte) (b0 & 240 | value & 15));
+        ((MySheep) myPet).color = value;
     }
 
     public boolean isSheared()
@@ -100,11 +100,11 @@ public class EntityMySheep extends EntityMyPet
         return (this.datawatcher.getByte(16) & 16) != 0;
     }
 
-    public void setSheared(boolean sheared)
+    public void setSheared(boolean flag)
     {
 
         byte b0 = this.datawatcher.getByte(16);
-        if (sheared)
+        if (flag)
         {
             this.datawatcher.watch(16, (byte) (b0 | 16));
         }
@@ -112,16 +112,25 @@ public class EntityMySheep extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) (b0 & -17));
         }
+        ((MySheep) myPet).isSheared = flag;
     }
 
-    public int getAge()
+    public boolean isBaby()
     {
-        return this.datawatcher.getInt(12);
+        return this.datawatcher.getInt(12) < 0;
     }
 
-    public void setAge(int age)
+    public void setBaby(boolean flag)
     {
-        this.datawatcher.watch(12, age);
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MySheep) myPet).isBaby = flag;
     }
 
     @Override

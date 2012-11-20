@@ -39,7 +39,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
 
     public PathfinderGoalOwnerHurtTarget(MyPet myPet)
     {
-        this.petEntity = myPet.getPet().getHandle();
+        this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
         this.a(1);
     }

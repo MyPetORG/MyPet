@@ -46,7 +46,7 @@ public class MyPetPlayerListener implements Listener
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.item && MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.status == PetState.Here && myPet.getPet().canMove())
+            if (myPet.status == PetState.Here && myPet.getCraftPet().canMove())
             {
                 if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
                 {
@@ -78,9 +78,9 @@ public class MyPetPlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (event.getRightClicked() != myPet.getPet())
+            if (event.getRightClicked() != myPet.getCraftPet())
             {
-                myPet.getPet().getHandle().goalTarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
+                myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
             }
         }
     }
@@ -167,7 +167,7 @@ public class MyPetPlayerListener implements Listener
                 {
                     if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
                     {
-                        if (!myPet.getPet().canMove())
+                        if (!myPet.getCraftPet().canMove())
                         {
                             myPet.removePet();
                         }

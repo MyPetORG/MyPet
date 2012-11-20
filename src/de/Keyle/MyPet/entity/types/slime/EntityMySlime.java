@@ -86,11 +86,12 @@ public class EntityMySlime extends EntityMyPet
         return this.datawatcher.getByte(16);
     }
 
-    public void setSize(int size)
+    public void setSize(int value)
     {
-        this.datawatcher.watch(16, (byte) size);
-        a(0.6F * size, 0.6F * size);
-        this.aV = size;
+        this.datawatcher.watch(16, (byte) value);
+        a(0.6F * value, 0.6F * value);
+        this.aV = value;
+        ((MySlime) myPet).size = value;
     }
 
     @Override

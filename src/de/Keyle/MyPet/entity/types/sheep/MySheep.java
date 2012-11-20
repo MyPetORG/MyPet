@@ -26,8 +26,9 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MySheep extends MyPet
 {
-    int color = 0;
-    boolean sheared = false;
+    protected int color = 0;
+    protected boolean isSheared = false;
+    protected boolean isBaby = false;
 
     public MySheep(MyPetPlayer petOwner)
     {
@@ -35,58 +36,85 @@ public class MySheep extends MyPet
         this.petName = "Sheep";
     }
 
-    public void setColor(int color)
+    public void setColor(int value)
     {
-        this.color = color;
         if (status == PetState.Here)
         {
-            ((EntityMySheep) this.getPet().getHandle()).setColor(color);
+            ((CraftMySheep) getCraftPet()).setColor(value);
         }
+        this.color = value;
     }
 
     public int getColor()
     {
-        return color;
-    }
-
-    public void setSheared(boolean sheared)
-    {
-        this.sheared = sheared;
         if (status == PetState.Here)
         {
-            ((EntityMySheep) this.getPet().getHandle()).setSheared(sheared);
+            return ((CraftMySheep) getCraftPet()).getColor();
         }
+        else
+        {
+            return color;
+        }
+    }
+
+    public void setSheared(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMySheep) getCraftPet()).setSheared(flag);
+        }
+        this.isSheared = flag;
     }
 
     public boolean isSheared()
     {
-        if (sheared != ((EntityMySheep) this.getPet().getHandle()).isSheared())
+        if (status == PetState.Here)
         {
-            sheared = !sheared;
+            return ((CraftMySheep) getCraftPet()).isSheared();
         }
-        return sheared;
+        else
+        {
+            return isSheared;
+        }
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMySheep) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMySheep) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("Color", color);
-        info.setBoolean("Sheared", sheared);
+        info.setInt("Color", getColor());
+        info.setBoolean("Sheared", isSheared());
+        info.setBoolean("Baby", isBaby());
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        if (info.hasKey("Color"))
-        {
-            setColor(info.getInt("Color"));
-        }
-        if (info.hasKey("Sheared"))
-        {
-            setSheared(info.getBoolean("Sheared"));
-        }
+        setColor(info.getInt("Color"));
+        setSheared(info.getBoolean("Sheared"));
+        setBaby(info.getBoolean("Baby"));
     }
 
     @Override
@@ -98,6 +126,6 @@ public class MySheep extends MyPet
     @Override
     public String toString()
     {
-        return "MySheep{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", color=" + getColor() + ", sheared=" + isSheared() + "}";
+        return "MySheep{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", color=" + getColor() + ", sheared=" + isSheared() + ", baby=" + isBaby() + "}";
     }
 }

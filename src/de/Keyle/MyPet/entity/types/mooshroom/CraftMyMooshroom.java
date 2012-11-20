@@ -29,9 +29,19 @@ public class CraftMyMooshroom extends CraftMyPet
         super(server, entityMyMooshroom);
     }
 
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyMooshroom) getHandle()).setBaby(flag);
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMyMooshroom{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMyMooshroom{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ", baby=" + isBaby() + "}";
     }
 }

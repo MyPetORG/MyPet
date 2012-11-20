@@ -26,7 +26,8 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MyVillager extends MyPet
 {
-    int profession = 0;
+    protected int profession = 0;
+    protected boolean isBaby = false;
 
     public MyVillager(MyPetPlayer petOwner)
     {
@@ -34,25 +35,54 @@ public class MyVillager extends MyPet
         this.petName = "Villager";
     }
 
-    public void setProfession(int profession)
+    public void setProfession(int value)
     {
-        this.profession = profession;
         if (status == PetState.Here)
         {
-            ((EntityMyVillager) craftMyPet.getHandle()).setProfession(profession);
+            ((CraftMyVillager) getCraftPet()).setProfession(value);
         }
+        this.profession = value;
     }
 
     public int getProfession()
     {
-        return profession;
+        if (status == PetState.Here)
+        {
+            return ((CraftMyVillager) getCraftPet()).getProfession();
+        }
+        else
+        {
+            return profession;
+        }
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyVillager) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyVillager) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("Profession", profession);
+        info.setInt("Profession", getProfession());
+        info.setBoolean("Baby", isBaby());
         return info;
     }
 
@@ -60,6 +90,7 @@ public class MyVillager extends MyPet
     public void setExtendedInfo(NBTTagCompound info)
     {
         setProfession(info.getInt("Profession"));
+        setBaby(info.getBoolean("Baby"));
     }
 
     @Override
@@ -71,6 +102,6 @@ public class MyVillager extends MyPet
     @Override
     public String toString()
     {
-        return "MyVillager{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MyVillager{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", profession=" + getProfession() + ", baby=" + isBaby() + "}";
     }
 }

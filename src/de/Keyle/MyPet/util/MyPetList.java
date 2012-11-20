@@ -92,7 +92,7 @@ public class MyPetList
     {
         for (MyPet pet : lActivePets)
         {
-            if (pet.status == PetState.Here && pet.getPet().getEntityId() == entityID)
+            if (pet.status == PetState.Here && pet.getCraftPet().getEntityId() == entityID)
             {
                 return pet;
             }

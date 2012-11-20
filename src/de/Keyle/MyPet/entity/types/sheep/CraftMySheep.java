@@ -49,9 +49,19 @@ public class CraftMySheep extends CraftMyPet
         ((EntityMySheep) getHandle()).setSheared(sheared);
     }
 
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMySheep) getHandle()).setBaby(flag);
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMySheep{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",color=" + getColor() + ",sheared=" + isSheared() + "}";
+        return "CraftMySheep{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",color=" + getColor() + ",sheared=" + isSheared() + ",baby=" + isBaby() + "}";
     }
 }

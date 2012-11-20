@@ -38,7 +38,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
 
     public PathfinderGoalControlTarget(MyPet myPet, PathfinderGoalControl controlPathfinderGoal, float range)
     {
-        this.petEntity = myPet.getPet().getHandle();
+        this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
         this.range = range;
         this.controlPathfinderGoal = controlPathfinderGoal;

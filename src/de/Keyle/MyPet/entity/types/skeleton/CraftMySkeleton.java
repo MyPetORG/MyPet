@@ -30,12 +30,12 @@ public class CraftMySkeleton extends CraftMyPet
         super(server, entityMySkeleton);
     }
 
-    public ItemStack[] getEquipment()
+    protected ItemStack[] getEquipment()
     {
         return ((MySkeleton) getHandle().getMyPet()).getEquipment();
     }
 
-    public void setEquipment(int slot,ItemStack item)
+    protected void setEquipment(int slot,ItemStack item)
     {
         ((MySkeleton) getHandle().getMyPet()).setEquipment(slot,item);
     }

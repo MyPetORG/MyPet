@@ -234,7 +234,7 @@ public abstract class MyPet
         return false;
     }
 
-    public CraftMyPet getPet()
+    public CraftMyPet getCraftPet()
     {
         return craftMyPet;
     }

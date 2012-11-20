@@ -33,20 +33,20 @@ public class MySkeleton extends MyPet
         this.petName = "Skeleton";
     }
 
-    public void setEquipment(int slot,ItemStack item)
+    protected void setEquipment(int slot,ItemStack item)
     {
         //this.equipment = equipment;
         if (status == PetState.Here)
         {
-            craftMyPet.getHandle().setEquipment(slot, item);
+            getCraftPet().getHandle().setEquipment(slot, item);
         }
     }
 
-    public ItemStack[] getEquipment()
+    protected ItemStack[] getEquipment()
     {
         if (status == PetState.Here)
         {
-            return craftMyPet.getHandle().getEquipment();
+            return getCraftPet().getHandle().getEquipment();
         }
         return new ItemStack[0];
     }

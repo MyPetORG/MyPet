@@ -29,29 +29,59 @@ public class CraftMyWolf extends CraftMyPet
         super(server, entityMyWolf);
     }
 
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyWolf) getHandle()).setBaby(flag);
+    }
+
+    public boolean isTamed()
+    {
+        return ((EntityMyWolf) getHandle()).isTamed();
+    }
+
+    public void setTamed(boolean flag)
+    {
+        ((EntityMyWolf) getHandle()).setTamed(flag);
+    }
+
+    public boolean isAngry()
+    {
+        return ((EntityMyWolf) getHandle()).isAngry();
+    }
+
+    public void setAngry(boolean flag)
+    {
+        ((EntityMyWolf) getHandle()).setAngry(flag);
+    }
+
     public boolean isSitting()
     {
         return ((EntityMyWolf) getHandle()).isSitting();
     }
 
-    public void setSitting(boolean sitting)
+    public void setSitting(boolean flag)
     {
-        ((EntityMyWolf) getHandle()).setSitting(sitting);
+        ((EntityMyWolf) getHandle()).setSitting(flag);
     }
 
     public int getCollarColor()
     {
-        return ((MyWolf) getHandle().getMyPet()).getCollarColor();
+        return ((EntityMyWolf) getHandle()).getCollarColor();
     }
 
-    public void setCollarColor(int color)
+    public void setCollarColor(int value)
     {
-        ((MyWolf) getHandle().getMyPet()).setCollarColor(color);
+        ((EntityMyWolf) getHandle()).setCollarColor(value);
     }
 
     @Override
     public String toString()
     {
-        return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",color=" + getCollarColor() + "}";
+        return "CraftMyWolf{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",color=" + getCollarColor() + ", yngry=" + isAngry() + ", baby=" + isBaby() + "}";
     }
 }

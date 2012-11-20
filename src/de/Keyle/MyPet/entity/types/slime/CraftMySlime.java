@@ -34,9 +34,9 @@ public class CraftMySlime extends CraftMyPet
         return ((EntityMySlime) getHandle()).getSize();
     }
 
-    public void setSize(int size)
+    public void setSize(int value)
     {
-        ((EntityMySlime) getHandle()).setSize(size);
+        ((EntityMySlime) getHandle()).setSize(value);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class HPregeneration extends MyPetGenericSkill
             timeCounter--;
             if (timeCounter <= 0)
             {
-                myPet.getPet().getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
+                myPet.getCraftPet().getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = healtregenTime - level;
             }
         }

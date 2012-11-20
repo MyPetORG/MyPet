@@ -22,15 +22,54 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.NBTTagCompound;
 
 public class MyPig extends MyPet
 {
-    private boolean saddle = false;
+    protected boolean hasSaddle = false;
+    protected boolean isBaby = false;
 
     public MyPig(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Pig";
+    }
+
+    public boolean isBaby()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyPig) getCraftPet()).isBaby();
+        }
+        else
+        {
+            return isBaby;
+        }
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyPig) getCraftPet()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("Saddle", hasSaddle());
+        info.setBoolean("Baby", isBaby());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setSaddle(info.getBoolean("Sitting"));
+        setBaby(info.getBoolean("Baby"));
     }
 
     @Override
@@ -42,20 +81,27 @@ public class MyPig extends MyPet
     @Override
     public String toString()
     {
-        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", saddle=" + hasSaddle() + "}";
+        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
     }
 
     public boolean hasSaddle()
     {
-        return saddle;
+        if (status == PetState.Here)
+        {
+            return ((CraftMyPig) getCraftPet()).hasSaddle();
+        }
+        else
+        {
+            return hasSaddle;
+        }
     }
 
     public void setSaddle(boolean saddle)
     {
-        this.saddle = saddle;
         if (status == PetState.Here)
         {
-            ((EntityMyPig) this.getPet().getHandle()).setSaddle(saddle);
+            ((CraftMyPig) getCraftPet()).setSaddle(saddle);
         }
+        this.hasSaddle = saddle;
     }
 }

@@ -68,7 +68,7 @@ public class EntityMyIronGolem extends EntityMyPet
         return itemstack.id == org.bukkit.Material.IRON_INGOT.getId();
     }
 
-    public void setPlayerCreated(boolean flag)
+    protected void setPlayerCreated(boolean flag)
     {
         byte b0 = this.datawatcher.getByte(16);
 

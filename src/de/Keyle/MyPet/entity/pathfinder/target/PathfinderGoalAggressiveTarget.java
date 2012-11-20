@@ -41,7 +41,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
 
     public PathfinderGoalAggressiveTarget(MyPet myPet, float range)
     {
-        this.petEntity = myPet.getPet().getHandle();
+        this.petEntity = myPet.getCraftPet().getHandle();
         this.petOwnerEntity = ((CraftPlayer)myPet.getOwner().getPlayer()).getHandle();
         this.myPet = myPet;
         this.range = range;
@@ -57,7 +57,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
             Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
             if (behavior.getLevel() > 0)
             {
-                if (behavior.getBehavior() == BehaviorState.Aggressive && myPet.getPet().canMove())
+                if (behavior.getBehavior() == BehaviorState.Aggressive && myPet.getCraftPet().canMove())
                 {
                     if (target == null || !target.isAlive())
                     {

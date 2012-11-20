@@ -26,7 +26,7 @@ import net.minecraft.server.NBTTagCompound;
 
 public class MySlime extends MyPet
 {
-    private int size = 1;
+    protected int size = 1;
 
     public MySlime(MyPetPlayer petOwner)
     {
@@ -43,21 +43,28 @@ public class MySlime extends MyPet
     @Override
     public String toString()
     {
-        return "MySlime{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+        return "MySlime{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", size=" + getSize() + "}";
     }
 
     public int getSize()
     {
-        return size;
+        if (status == PetState.Here)
+        {
+            return ((CraftMySlime) getCraftPet()).getSize();
+        }
+        else
+        {
+            return size;
+        }
     }
 
-    public void setSize(int size)
+    public void setSize(int value)
     {
         if (status == PetState.Here)
         {
-            ((CraftMySlime) craftMyPet).setSize(size);
+            ((CraftMySlime) getCraftPet()).setSize(value);
         }
-        this.size = size;
+        this.size = value;
     }
 
     @Override
@@ -71,9 +78,6 @@ public class MySlime extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        if (info.hasKey("size"))
-        {
-            setSize(info.getInt("size"));
-        }
+        setSize(info.getInt("size"));
     }
 }

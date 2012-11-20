@@ -94,13 +94,13 @@ public class EntityMyOcelot extends EntityMyPet
         return !isSitting();
     }
 
-    public void setSitting(boolean sitting)
+    public void setSitting(boolean flag)
     {
         if (this.sitPathfinder == null)
         {
             this.sitPathfinder = new PathfinderGoalSit(this);
         }
-        this.sitPathfinder.setSitting(sitting);
+        this.sitPathfinder.setSitting(flag);
     }
 
     public boolean isSitting()
@@ -108,10 +108,10 @@ public class EntityMyOcelot extends EntityMyPet
         return this.sitPathfinder.isSitting();
     }
 
-    public void applySitting(boolean sitting)
+    public void applySitting(boolean flag)
     {
         int i = this.datawatcher.getByte(16);
-        if (sitting)
+        if (flag)
         {
             this.datawatcher.watch(16, (byte) (i | 0x1));
         }
@@ -119,6 +119,7 @@ public class EntityMyOcelot extends EntityMyPet
         {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
+        ((MyOcelot) myPet).isSitting = flag;
     }
 
     public int getCatType()
@@ -126,9 +127,28 @@ public class EntityMyOcelot extends EntityMyPet
         return this.datawatcher.getByte(18);
     }
 
-    public void setCatType(int i)
+    public void setCatType(int value)
     {
-        this.datawatcher.watch(18, (byte) i);
+        this.datawatcher.watch(18, (byte) value);
+        ((MyOcelot) myPet).catType = value;
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, -1);
+        }
+        else
+        {
+            this.datawatcher.watch(12, 0);
+        }
+        ((MyOcelot) myPet).isBaby = flag;
     }
 
     @Override

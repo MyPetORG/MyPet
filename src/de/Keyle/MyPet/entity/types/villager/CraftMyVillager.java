@@ -34,14 +34,24 @@ public class CraftMyVillager extends CraftMyPet
         return ((EntityMyVillager) getHandle()).getProfession();
     }
 
-    public void setProfession(int profession)
+    public void setProfession(int value)
     {
-        ((EntityMyVillager) getHandle()).setProfession(profession);
+        ((EntityMyVillager) getHandle()).setProfession(value);
+    }
+
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyVillager) getHandle()).setBaby(flag);
     }
 
     @Override
     public String toString()
     {
-        return "CraftMyVillager{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMyVillager{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ", profession=" + getProfession() + ", baby=" + isBaby() + "}";
     }
 }

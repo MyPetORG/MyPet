@@ -29,9 +29,19 @@ public class CraftMyChicken extends CraftMyPet
         super(server, entityMyChicken);
     }
 
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyChicken) getHandle()).setBaby(flag);
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMyChicken{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMyChicken{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ", baby=" + isBaby() + "}";
     }
 }

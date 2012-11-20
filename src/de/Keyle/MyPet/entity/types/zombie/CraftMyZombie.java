@@ -29,9 +29,29 @@ public class CraftMyZombie extends CraftMyPet
         super(server, entityMyZombie);
     }
 
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyZombie) getHandle()).setBaby(flag);
+    }
+
+    public boolean isVillager()
+    {
+        return ((EntityMyZombie) getHandle()).isVillager();
+    }
+
+    public void setVillager(boolean flag)
+    {
+        ((EntityMyZombie) getHandle()).setVillager(flag);
+    }
+
     @Override
     public String toString()
     {
-        return "CraftMyZombie{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMyZombie{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
     }
 }

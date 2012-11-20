@@ -44,7 +44,7 @@ public class Behavior extends MyPetGenericSkill
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", behavior.name()));
         if (behavior == BehaviorState.Friendly)
         {
-            myPet.getPet().setTarget(null);
+            myPet.getCraftPet().setTarget(null);
         }
     }
 
@@ -56,7 +56,7 @@ public class Behavior extends MyPetGenericSkill
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", behavior.name()));
             if (behavior == BehaviorState.Friendly)
             {
-                myPet.getPet().setTarget(null);
+                myPet.getCraftPet().setTarget(null);
             }
         }
         else
@@ -85,7 +85,7 @@ public class Behavior extends MyPetGenericSkill
             if (behavior == BehaviorState.Normal)
             {
                 behavior = BehaviorState.Friendly;
-                myPet.getPet().setTarget(null);
+                myPet.getCraftPet().setTarget(null);
             }
             else if (behavior == BehaviorState.Friendly)
             {

@@ -34,14 +34,24 @@ public class CraftMyPig extends CraftMyPet
         return ((EntityMyPig) getHandle()).hasSaddle();
     }
 
-    public void setSaddle(boolean saddle)
+    public void setSaddle(boolean flag)
     {
-        ((EntityMyPig) getHandle()).setSaddle(saddle);
+        ((EntityMyPig) getHandle()).setSaddle(flag);
+    }
+
+    public boolean isBaby()
+    {
+        return getHandle().isBaby();
+    }
+
+    public void setBaby(boolean flag)
+    {
+        ((EntityMyPig) getHandle()).setBaby(flag);
     }
 
     @Override
     public String toString()
     {
-        return "CraftMyPig{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",saddle=" + hasSaddle() + "}";
+        return "CraftMyPig{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
     }
 }
