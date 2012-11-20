@@ -23,7 +23,6 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityLiving;
 import org.bukkit.command.Command;
@@ -42,10 +41,6 @@ public class CommandStop implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (!MyPetPermissions.has(petOwner, "MyPet.user.stop"))
-                {
-                    return true;
-                }
                 if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
