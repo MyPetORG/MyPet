@@ -44,7 +44,7 @@ public class EntityMyCow extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyCow.class) > 0)
+        if (MyPet.getStartDamage(MyCow.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -122,19 +122,23 @@ public class EntityMyCow extends EntityMyPet
      */
     public boolean a(EntityHuman entityhuman)
     {
-        super.a(entityhuman);
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner())
+        if (entityhuman == getOwner() && itemStack != null)
         {
-            if (itemStack != null && itemStack.id == Item.BUCKET.id)
+            if (itemStack.id == Item.BUCKET.id)
             {
                 if (!this.world.isStatic)
                 {
                     ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
 
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                    return true;
                 }
             }
         }

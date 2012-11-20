@@ -46,7 +46,7 @@ public class EntityMySheep extends EntityMyPet
         this.goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(7, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MySheep.class) > 0)
+        if (MyPet.getStartDamage(MySheep.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -159,13 +159,16 @@ public class EntityMySheep extends EntityMyPet
      */
     public boolean a(EntityHuman entityhuman)
     {
-        super.a(entityhuman);
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner())
+        if (entityhuman == getOwner() && itemStack != null)
         {
-            if (itemStack != null && itemStack.id == 351)
+            if (itemStack.id == 351)
             {
                 if (itemStack.getData() <= 15)
                 {
@@ -174,7 +177,7 @@ public class EntityMySheep extends EntityMyPet
 
                 }
             }
-            else if (itemStack != null && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
+            else if (itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
             {
                 if (!this.world.isStatic)
                 {
@@ -188,8 +191,8 @@ public class EntityMySheep extends EntityMyPet
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        makeSound("mob.sheep.shear", 1.0F, 1.0F);
                     }
+                    makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 }
                 itemStack.damage(1, entityhuman);
             }

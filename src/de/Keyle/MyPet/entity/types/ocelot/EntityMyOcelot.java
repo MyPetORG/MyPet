@@ -43,7 +43,7 @@ public class EntityMyOcelot extends EntityMyPet
         {
             this.sitPathfinder = new PathfinderGoalSit(this);
         }
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.sitPathfinder);
@@ -52,10 +52,10 @@ public class EntityMyOcelot extends EntityMyPet
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyOcelot.class) > 0)
+        if (MyPet.getStartDamage(MyOcelot.class) > 0)
         {
-            this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed+0.1F));
-            this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed+0.1F, true));
+            this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+            this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed + 0.1F, true));
             this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
             this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
             this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
@@ -179,7 +179,10 @@ public class EntityMyOcelot extends EntityMyPet
      */
     public boolean a(EntityHuman entityhuman)
     {
-        super.a(entityhuman);
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
 
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {

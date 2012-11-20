@@ -139,9 +139,17 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      */
     public boolean a(EntityHuman entityhuman)
     {
-        super.c(entityhuman);
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (itemStack == null)
+        {
+            return false;
+        }
 
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
         {
@@ -153,7 +161,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 }
             }
         }
-        if (itemStack != null && canEat(itemStack))
+        if (canEat(itemStack))
         {
             if (getHealth() < getMaxHealth())
             {
@@ -162,7 +170,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     --itemStack.count;
                 }
                 this.heal(3, RegainReason.EATING);
-                myPet.setHungerValue(myPet.getHungerValue()+3);
+                myPet.setHungerValue(myPet.getHungerValue() + 3);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

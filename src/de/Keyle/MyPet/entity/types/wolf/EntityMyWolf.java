@@ -225,7 +225,10 @@ public class EntityMyWolf extends EntityMyPet
      */
     public boolean a(EntityHuman entityhuman)
     {
-        super.a(entityhuman);
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
 
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
