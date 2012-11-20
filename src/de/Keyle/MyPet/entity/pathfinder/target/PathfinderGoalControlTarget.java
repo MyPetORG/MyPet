@@ -25,7 +25,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.*;
+import net.minecraft.server.EntityLiving;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.EntityTameableAnimal;
+import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
 public class PathfinderGoalControlTarget extends PathfinderGoal

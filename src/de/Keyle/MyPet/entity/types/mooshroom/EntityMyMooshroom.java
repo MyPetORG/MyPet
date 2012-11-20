@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import net.minecraft.server.*;
 
 public class EntityMyMooshroom extends EntityMyPet
