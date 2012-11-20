@@ -110,6 +110,11 @@ public class MyPetPlugin extends JavaPlugin
         {
             delCraftBukkit.delete();
         }
+        MyPetConfig.config = this.getConfig();
+        MyPetConfig.setDefault();
+        MyPetConfig.loadConfiguration();
+
+        debugLogger = new DebugLogger(MyPetConfig.debugLogger);
 
         if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
         {
@@ -129,11 +134,6 @@ public class MyPetPlugin extends JavaPlugin
             return;
         }
 
-        MyPetConfig.config = this.getConfig();
-        MyPetConfig.setDefault();
-        MyPetConfig.loadConfiguration();
-
-        debugLogger = new DebugLogger(MyPetConfig.debugLogger);
         debugLogger.info("----------- loading MyPet ... -----------");
         debugLogger.info("MyPet " + getDescription().getVersion());
         debugLogger.info("Bukkit " + getServer().getVersion());
@@ -390,6 +390,10 @@ public class MyPetPlugin extends JavaPlugin
         NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
         nbtConfiguration.load();
         NBTTagList petList = nbtConfiguration.getNBTTagCompound().getList("Pets");
+        if (nbtConfiguration.getNBTTagCompound().hasKey("CleanShutdown"))
+        {
+            debugLogger.info("Clean shutdown: " + nbtConfiguration.getNBTTagCompound().getBoolean("CleanShutdown"));
+        }
         debugLogger.info("loading Pets: -----------------------------");
         for (int i = 0 ; i < petList.size() ; i++)
         {
