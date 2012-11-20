@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import net.minecraft.server.*;
 
 public class EntityMyZombie extends EntityMyPet
@@ -56,6 +57,17 @@ public class EntityMyZombie extends EntityMyPet
             this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
             this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 15));
             this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 15));
+        }
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setBaby(((MyZombie) myPet).isBaby());
+            this.setVillager(((MyZombie) myPet).isVillager());
         }
     }
 

@@ -73,7 +73,7 @@ public class EntityMyWolf extends EntityMyPet
 
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setCollarColor(((MyWolf) myPet).getCollarColor());
-            this.setTamed(true);
+            this.setTamed(((MyWolf) myPet).isTamed());
         }
     }
 

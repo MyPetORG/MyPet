@@ -74,6 +74,7 @@ public class EntityMyOcelot extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setSitting(((MyOcelot) myPet).isSitting());
+            this.setBaby(((MyOcelot) myPet).isBaby());
             this.setCatType(((MyOcelot) myPet).getCatType());
         }
     }

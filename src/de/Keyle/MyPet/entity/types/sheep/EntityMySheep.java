@@ -69,6 +69,7 @@ public class EntityMySheep extends EntityMyPet
 
             this.setColor(((MySheep) myPet).getColor());
             this.setSheared(((MySheep) myPet).isSheared());
+            this.setBaby(((MySheep) myPet).isBaby());
         }
     }
 

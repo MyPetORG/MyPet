@@ -66,6 +66,7 @@ public class EntityMyVillager extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setProfession(((MyVillager) myPet).getProfession());
+            this.setBaby(((MyVillager) myPet).isBaby());
         }
     }
 

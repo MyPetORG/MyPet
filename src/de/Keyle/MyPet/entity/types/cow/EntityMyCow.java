@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import net.minecraft.server.*;
 
 public class EntityMyCow extends EntityMyPet
@@ -54,6 +55,16 @@ public class EntityMyCow extends EntityMyPet
             this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
             this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 15));
             this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 15));
+        }
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setBaby(((MyCow) myPet).isBaby());
         }
     }
 

@@ -66,6 +66,7 @@ public class EntityMyPig extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setSaddle(((MyPig) myPet).hasSaddle());
+            this.setBaby(((MyPig) myPet).isBaby());
         }
     }
 
