@@ -403,7 +403,7 @@ public class MyPetPlugin extends JavaPlugin
             double petExp = myPetNBT.getDouble("Exp");
             int petHealthNow = myPetNBT.getInt("Health");
             int petRespawnTime = myPetNBT.getInt("Respawntime");
-            String petName = myPetNBT.getString("petName");
+            String petName = myPetNBT.getString("Name");
             String petOwner = myPetNBT.getString("Owner");
             int petHunger = 100;
             if (myPetNBT.hasKey("Hunger"))
@@ -461,7 +461,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Health", myPet.getHealth());
             petNBT.setInt("Respawntime", myPet.respawnTime);
             petNBT.setInt("Hunger", myPet.getHungerValue());
-            petNBT.setString("petName", myPet.petName);
+            petNBT.setString("Name", myPet.petName);
             petNBT.setDouble("Exp", myPet.getExperience().getExp());
             petNBT.setCompound("Info", myPet.getExtendedInfo());
 
@@ -498,7 +498,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Health", inactiveMyPet.getHealth());
             petNBT.setInt("Hunger", inactiveMyPet.getHungerValue());
             petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
-            petNBT.setString("petName", inactiveMyPet.getPetName());
+            petNBT.setString("Name", inactiveMyPet.getPetName());
             petNBT.setDouble("Exp", inactiveMyPet.getExp());
 
             petNBT.set("Skills", inactiveMyPet.getSkills());
