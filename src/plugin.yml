@@ -73,7 +73,6 @@ permissions:
     children:
       MyPet.admin: true
       MyPet.user.stop: true
-      MyPet.user.setname: true
       MyPet.user.release: true
   MyPet.user.*:
     description: Gives access to MyPet user commands
@@ -81,14 +80,11 @@ permissions:
       MyPet.admin: false
       MyPet.user.leash: true
       MyPet.user.stop: true
-      MyPet.user.setname: true
       MyPet.user.release: true
   MyPet.user.leash:
     description: Allows a player to leash a MyPet.
   MyPet.user.stop:
     description: Allows usage of /petstop
-  MyPet.user.setname:
-    description: Allows usage of /petname
   MyPet.user.release:
     description: Allows usage of /petrelease
   MyPet.admin:

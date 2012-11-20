@@ -22,7 +22,6 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,10 +37,6 @@ public class CommandName implements CommandExecutor
             Player petOwner = (Player) sender;
             if (MyPetList.hasMyPet(petOwner))
             {
-                if (!MyPetPermissions.has(petOwner, "MyPet.user.setname"))
-                {
-                    return true;
-                }
                 if (args.length < 1)
                 {
                     return false;
