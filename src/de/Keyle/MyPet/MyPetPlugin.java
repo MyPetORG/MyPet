@@ -85,7 +85,7 @@ public class MyPetPlugin extends JavaPlugin
 
     public void onDisable()
     {
-        if(isReady)
+        if (isReady)
         {
             debugLogger.info(savePets(true) + " pet/pets saved.");
             for (MyPet myPet : MyPetList.getMyPetList())
@@ -104,9 +104,9 @@ public class MyPetPlugin extends JavaPlugin
     {
         plugin = this;
 
-        new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees").mkdir();
+        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees\\").mkdirs();
         File delCraftBukkit = new File(getPlugin().getDataFolder().getPath() + File.separator + "craftbukkit.jar");
-        if(delCraftBukkit.exists())
+        if (delCraftBukkit.exists())
         {
             delCraftBukkit.delete();
         }
@@ -397,7 +397,7 @@ public class MyPetPlugin extends JavaPlugin
             String petName = myPetNBT.getString("petName");
             String petOwner = myPetNBT.getString("Owner");
             int petHunger = 100;
-            if(myPetNBT.hasKey("Hunger"))
+            if (myPetNBT.hasKey("Hunger"))
             {
                 petHunger = myPetNBT.getInt("Hunger");
             }
