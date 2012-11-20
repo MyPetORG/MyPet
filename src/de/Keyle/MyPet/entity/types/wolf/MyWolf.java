@@ -38,18 +38,6 @@ public class MyWolf extends MyPet
         this.petName = "Wolf";
     }
 
-    @Override
-    public MyPetType getPetType()
-    {
-        return MyPetType.Wolf;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
-    }
-
     public boolean isSitting()
     {
         if (status == PetState.Here)
@@ -190,5 +178,17 @@ public class MyWolf extends MyPet
         {
             setAngry(info.getBoolean("Angry"));
         }
+    }
+
+    @Override
+    public MyPetType getPetType()
+    {
+        return MyPetType.Wolf;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 }

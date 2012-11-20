@@ -34,18 +34,6 @@ public class MySlime extends MyPet
         this.petName = "Slime";
     }
 
-    @Override
-    public MyPetType getPetType()
-    {
-        return MyPetType.Slime;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MySlime{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", size=" + getSize() + "}";
-    }
-
     public int getSize()
     {
         if (status == PetState.Here)
@@ -79,5 +67,17 @@ public class MySlime extends MyPet
     public void setExtendedInfo(NBTTagCompound info)
     {
         setSize(info.getInt("size"));
+    }
+
+    @Override
+    public MyPetType getPetType()
+    {
+        return MyPetType.Slime;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "MySlime{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", size=" + getSize() + "}";
     }
 }

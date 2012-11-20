@@ -59,6 +59,17 @@ public class EntityMyZombie extends EntityMyPet
         }
     }
 
+    public int getMaxHealth()
+    {
+        return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId();
+    }
+
     public boolean isBaby()
     {
         return getDataWatcher().getByte(12) == 1;
@@ -79,17 +90,6 @@ public class EntityMyZombie extends EntityMyPet
     {
         getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
         ((MyZombie)myPet).isVillager = flag;
-    }
-
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId();
     }
 
     @Override

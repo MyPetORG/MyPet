@@ -35,6 +35,27 @@ public class MyPig extends MyPet
         this.petName = "Pig";
     }
 
+    public boolean hasSaddle()
+    {
+        if (status == PetState.Here)
+        {
+            return ((CraftMyPig) getCraftPet()).hasSaddle();
+        }
+        else
+        {
+            return hasSaddle;
+        }
+    }
+
+    public void setSaddle(boolean saddle)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMyPig) getCraftPet()).setSaddle(saddle);
+        }
+        this.hasSaddle = saddle;
+    }
+
     public boolean isBaby()
     {
         if (status == PetState.Here)
@@ -82,26 +103,5 @@ public class MyPig extends MyPet
     public String toString()
     {
         return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
-    }
-
-    public boolean hasSaddle()
-    {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyPig) getCraftPet()).hasSaddle();
-        }
-        else
-        {
-            return hasSaddle;
-        }
-    }
-
-    public void setSaddle(boolean saddle)
-    {
-        if (status == PetState.Here)
-        {
-            ((CraftMyPig) getCraftPet()).setSaddle(saddle);
-        }
-        this.hasSaddle = saddle;
     }
 }

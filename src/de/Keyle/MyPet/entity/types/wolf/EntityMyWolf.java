@@ -77,6 +77,23 @@ public class EntityMyWolf extends EntityMyPet
         }
     }
 
+    public int getMaxHealth()
+    {
+        return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
+    }
+
+    @Override
+    public boolean canEat(ItemStack itemstack)
+    {
+        return (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
+    }
+
+    public void setHealth(int i)
+    {
+        super.setHealth(i);
+        this.bm();
+    }
+
     public boolean canMove()
     {
         return !isSitting();
@@ -108,23 +125,6 @@ public class EntityMyWolf extends EntityMyPet
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
         ((MyWolf) myPet).isSitting = sitting;
-    }
-
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
-    }
-
-    public void setHealth(int i)
-    {
-        super.setHealth(i);
-        this.bm();
     }
 
     public boolean isTamed()
