@@ -120,6 +120,11 @@ public class MyPetPlugin extends JavaPlugin
             MyPetUtil.getLogger().warning("   Minecraft " + mpv);
             MyPetUtil.getLogger().warning("MyPet disabled!");
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
+            MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
+            MyPetUtil.getDebugLogger().warning("This version of MyPet only work with:");
+            MyPetUtil.getDebugLogger().warning("   Minecraft " + mpv);
+            MyPetUtil.getDebugLogger().warning("MyPet disabled!");
+            MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
             this.setEnabled(false);
             return;
         }
@@ -264,7 +269,11 @@ public class MyPetPlugin extends JavaPlugin
         {
             debugLogger.info("   " + myPetType.getTypeName() + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
         }
-        debugLogger.info("----------------------------");
+        debugLogger.info("Pet start damage: ----------");
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            debugLogger.info("   " + myPetType.getTypeName() + ": " + MyPet.getStartDamage(myPetType.getMyPetClass()));
+        }
 
         MyPetPermissions.setup();
 
