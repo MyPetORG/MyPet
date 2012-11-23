@@ -53,6 +53,7 @@ public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
+
     static
     {
         startHP.put(MyCaveSpider.class, 20);
@@ -172,7 +173,7 @@ public abstract class MyPet
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
             createPet();
             respawnTime = 0;
-            if(MyPetConfig.hungerSystem)
+            if (MyPetConfig.hungerSystem)
             {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
             }
@@ -280,11 +281,11 @@ public abstract class MyPet
 
     public void setHungerValue(int value)
     {
-        if(value > 100)
+        if (value > 100)
         {
             hunger = 100;
         }
-        else if(value < 1)
+        else if (value < 1)
         {
             hunger = 1;
         }
@@ -350,7 +351,7 @@ public abstract class MyPet
                     respawnPet();
                 }
             }
-            if(MyPetConfig.hungerSystem && hunger > 1 && hungerTime-- <= 0)
+            if (MyPetConfig.hungerSystem && hunger > 1 && hungerTime-- <= 0)
             {
                 hunger--;
                 hungerTime = MyPetConfig.hungerSystemTime;
@@ -373,7 +374,7 @@ public abstract class MyPet
 
     public static int getStartHP(Class<? extends MyPet> myPetClass)
     {
-        if(startHP.containsKey(myPetClass))
+        if (startHP.containsKey(myPetClass))
         {
             return startHP.get(myPetClass);
         }
@@ -382,7 +383,7 @@ public abstract class MyPet
 
     public static void setStartHP(Class<? extends MyPet> myPetClass, int hp)
     {
-        if(startHP.containsKey(myPetClass))
+        if (startHP.containsKey(myPetClass))
         {
             startHP.put(myPetClass, hp);
         }
@@ -390,7 +391,7 @@ public abstract class MyPet
 
     public static int getStartDamage(Class<? extends MyPet> myPetClass)
     {
-        if(startDamage.containsKey(myPetClass))
+        if (startDamage.containsKey(myPetClass))
         {
             return startDamage.get(myPetClass);
         }
@@ -399,10 +400,15 @@ public abstract class MyPet
 
     public static void setStartDamage(Class<? extends MyPet> myPetClass, int damage)
     {
-        if(startDamage.containsKey(myPetClass))
+        if (startDamage.containsKey(myPetClass))
         {
             startDamage.put(myPetClass, damage);
         }
+    }
+
+    public boolean isPassiv()
+    {
+        return getStartDamage(this.getClass()) == 0;
     }
 
     public abstract MyPetType getPetType();

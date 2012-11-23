@@ -48,6 +48,7 @@ public class MyPetConfig
     public static FileConfiguration config;
 
     public static Material leashItem = Material.STRING;
+    public static int passivePercentPerMonster = 25;
     public static int respawnTimeFactor = 5;
     public static int respawnTimeFixed = 0;
     public static int autoSaveTime = 60;
@@ -120,10 +121,11 @@ public class MyPetConfig
         setProperty("MyPet.pets.Wolf.damage", 4);
         setProperty("MyPet.pets.Zombie.damage", 4);
 
+        setProperty("MyPet.exp.passive.PercentPerMonster", 25);
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
-            setProperty("MyPet.exp." + entityType.getName() + ".min", MyPetExperience.mobExp.get(entityType).getMin());
-            setProperty("MyPet.exp." + entityType.getName() + ".max", MyPetExperience.mobExp.get(entityType).getMax());
+            setProperty("MyPet.exp.active." + entityType.getName() + ".min", MyPetExperience.mobExp.get(entityType).getMin());
+            setProperty("MyPet.exp.active." + entityType.getName() + ".max", MyPetExperience.mobExp.get(entityType).getMax());
         }
 
         MyPetPlugin.getPlugin().saveConfig();
@@ -138,6 +140,7 @@ public class MyPetConfig
         Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
         Inventory.creative = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
 
+        passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
         levelSystem = config.getBoolean("MyPet.LevelSystem", true);
@@ -185,7 +188,7 @@ public class MyPetConfig
         MyPet.setStartDamage(MyWolf.class, config.getInt("MyPet.pets.Wolf.damage", 4));
         MyPet.setStartDamage(MyZombie.class, config.getInt("MyPet.pets.Zombie.damage", 4));
 
-        if (config.getStringList("MyPet.exp") != null)
+        if (config.getStringList("MyPet.exp.active") != null)
         {
             int min;
             int max;
@@ -193,13 +196,13 @@ public class MyPetConfig
             {
                 min = 0;
                 max = 0;
-                if (config.contains("MyPet.exp." + entityType.getName() + ".max"))
+                if (config.contains("MyPet.exp.active." + entityType.getName() + ".max"))
                 {
-                    max = config.getInt("MyPet.exp." + entityType.getName() + ".max", 0);
+                    max = config.getInt("MyPet.exp.active." + entityType.getName() + ".max", 0);
                 }
-                if (config.contains("MyPet.exp." + entityType.getName() + ".min"))
+                if (config.contains("MyPet.exp.active." + entityType.getName() + ".min"))
                 {
-                    min = config.getInt("MyPet.exp." + entityType.getName() + ".min", 0);
+                    min = config.getInt("MyPet.exp.active." + entityType.getName() + ".min", 0);
                 }
                 if (min == max)
                 {

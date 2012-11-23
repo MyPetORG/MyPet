@@ -145,6 +145,28 @@ public class MyPetExperience
         return 0;
     }
 
+    public int addExp(EntityType type, int percent)
+    {
+        if (mobExp.containsKey(type))
+        {
+            double exp = mobExp.get(type).getRandomExp() / 100. * percent;
+            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled())
+            {
+                return 0;
+            }
+            int tmpLvl = getLevel();
+            this.exp = expEvent.getExp();
+            for (int i = tmpLvl ; i < getLevel() ; i++)
+            {
+                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1));
+            }
+            return (int) (expEvent.getNewExp() - expEvent.getOldExp());
+        }
+        return 0;
+    }
+
     public double getCurrentExp()
     {
         if (JSexp.isUsable())

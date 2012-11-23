@@ -226,7 +226,7 @@ public class MyPetEntityListener implements Listener
                 event.setCancelled(true);
             }
         }
-        else if(event.getEntity() instanceof CraftMyIronGolem)
+        else if (event.getEntity() instanceof CraftMyIronGolem)
         {
             if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.DROWNING)
             {
@@ -304,6 +304,18 @@ public class MyPetEntityListener implements Listener
                     event.setDroppedExp(myPet.getExperience().addExp(e.getEntity().getType()));
                 }
             }
+            else if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Player)
+            {
+                Player owner = (Player) ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
+                if (MyPetList.hasMyPet(owner))
+                {
+                    MyPet myPet = MyPetList.getMyPet(owner);
+                    if (myPet.isPassiv())
+                    {
+                        myPet.getExperience().addExp(event.getEntity().getType(), MyPetConfig.passivePercentPerMonster);
+                    }
+                }
+            }
         }
     }
 
@@ -336,11 +348,11 @@ public class MyPetEntityListener implements Listener
                                 {
                                     event.setCancelled(true);
                                 }
-                                else if(event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
+                                else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
                                 {
                                     event.setCancelled(true);
                                 }
-                                else if(event.getTarget() instanceof CraftMyPet)
+                                else if (event.getTarget() instanceof CraftMyPet)
                                 {
                                     event.setCancelled(true);
                                 }
@@ -357,7 +369,7 @@ public class MyPetEntityListener implements Listener
 
         if (event.getEntity() instanceof CraftMyPet)
         {
-            MyPet myPet = ((CraftMyPet)event.getEntity()).getMyPet();
+            MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
             String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknown"));
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
@@ -386,9 +398,9 @@ public class MyPetEntityListener implements Listener
                         killer = "Wolf";
                     }
                 }
-                else if(e.getDamager() instanceof CraftMyPet)
+                else if (e.getDamager() instanceof CraftMyPet)
                 {
-                    CraftMyPet craftMyPet = (CraftMyPet)e.getDamager();
+                    CraftMyPet craftMyPet = (CraftMyPet) e.getDamager();
                     killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ')';
                 }
                 else
