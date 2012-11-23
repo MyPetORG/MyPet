@@ -84,19 +84,19 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
                             continue;
                         }
                     }
-                    if(behaviorSkill != null)
+                    if (behaviorSkill != null)
                     {
-                        if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                        if (behaviorSkill.getBehavior() == BehaviorState.Raid)
                         {
-                            if(entityLiving instanceof EntityTameableAnimal)
+                            if (entityLiving instanceof EntityTameableAnimal)
                             {
                                 continue;
                             }
-                            if(entityLiving instanceof EntityMyPet)
+                            if (entityLiving instanceof EntityMyPet)
                             {
                                 continue;
                             }
-                            if(entityLiving instanceof EntityPlayer)
+                            if (entityLiving instanceof EntityPlayer)
                             {
                                 continue;
                             }
@@ -115,7 +115,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }

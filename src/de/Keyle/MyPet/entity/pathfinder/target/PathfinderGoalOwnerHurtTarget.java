@@ -49,7 +49,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
      */
     public boolean a()
     {
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }
@@ -104,7 +104,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }

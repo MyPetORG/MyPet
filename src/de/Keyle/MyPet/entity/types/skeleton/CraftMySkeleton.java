@@ -35,9 +35,9 @@ public class CraftMySkeleton extends CraftMyPet
         return ((MySkeleton) getHandle().getMyPet()).getEquipment();
     }
 
-    protected void setEquipment(int slot,ItemStack item)
+    protected void setEquipment(int slot, ItemStack item)
     {
-        ((MySkeleton) getHandle().getMyPet()).setEquipment(slot,item);
+        ((MySkeleton) getHandle().getMyPet()).setEquipment(slot, item);
     }
 
     @Override

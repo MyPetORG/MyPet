@@ -97,11 +97,11 @@ public class InactiveMyPet
 
     public void setHungerValue(int value)
     {
-        if(value > 100)
+        if (value > 100)
         {
             hunger = 100;
         }
-        else if(value < 1)
+        else if (value < 1)
         {
             hunger = 1;
         }

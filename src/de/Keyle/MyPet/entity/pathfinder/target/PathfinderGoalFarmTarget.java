@@ -37,7 +37,7 @@ public class PathfinderGoalFarmTarget extends PathfinderGoal
     public PathfinderGoalFarmTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
-        this.petOwnerEntity = ((CraftPlayer)myPet.getOwner().getPlayer()).getHandle();
+        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.myPet = myPet;
         this.range = range;
     }
@@ -83,7 +83,7 @@ public class PathfinderGoalFarmTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }

@@ -33,7 +33,7 @@ public class MySkeleton extends MyPet
         this.petName = "Skeleton";
     }
 
-    protected void setEquipment(int slot,ItemStack item)
+    protected void setEquipment(int slot, ItemStack item)
     {
         //this.equipment = equipment;
         if (status == PetState.Here)
@@ -55,7 +55,7 @@ public class MySkeleton extends MyPet
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-         /*
+        /*
         NBTTagList items = new NBTTagList();
         ItemStack[] equipment = getEquipment();
         for (int i = 0 ; i < equipment.length ; i++)

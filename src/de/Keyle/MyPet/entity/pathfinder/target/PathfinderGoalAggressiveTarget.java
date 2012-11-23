@@ -42,7 +42,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
     public PathfinderGoalAggressiveTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
-        this.petOwnerEntity = ((CraftPlayer)myPet.getOwner().getPlayer()).getHandle();
+        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.myPet = myPet;
         this.range = range;
     }
@@ -100,7 +100,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }

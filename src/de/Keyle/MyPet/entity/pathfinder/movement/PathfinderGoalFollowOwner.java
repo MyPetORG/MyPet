@@ -102,7 +102,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
     public void e()
     {
-        this.petEntity.getControllerLook().a(this.petOwner, 10.0F,(float) this.petEntity.bp());
+        this.petEntity.getControllerLook().a(this.petOwner, 10.0F, (float) this.petEntity.bp());
 
         if (this.petEntity.canMove())
         {

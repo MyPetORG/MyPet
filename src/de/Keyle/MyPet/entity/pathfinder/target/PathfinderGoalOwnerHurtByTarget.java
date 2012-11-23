@@ -45,7 +45,7 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
 
     public boolean a()
     {
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }
@@ -55,7 +55,7 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
             return false;
         }
         this.lastDamager = localEntityLiving.aC();
-        if(this.lastDamager == null || !lastDamager.isAlive())
+        if (this.lastDamager == null || !lastDamager.isAlive())
         {
             return false;
         }
@@ -76,17 +76,17 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
                 {
                     return false;
                 }
-                if(behaviorSkill.getBehavior() == BehaviorState.Raid)
+                if (behaviorSkill.getBehavior() == BehaviorState.Raid)
                 {
-                    if(lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal)lastDamager).isTamed())
+                    if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed())
                     {
                         return false;
                     }
-                    if(lastDamager instanceof EntityMyPet)
+                    if (lastDamager instanceof EntityMyPet)
                     {
                         return false;
                     }
-                    if(lastDamager instanceof EntityPlayer)
+                    if (lastDamager instanceof EntityPlayer)
                     {
                         return false;
                     }
@@ -100,7 +100,7 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
     {
         EntityLiving entityliving = petEntity.aG();
 
-        if(!petEntity.canMove())
+        if (!petEntity.canMove())
         {
             return false;
         }

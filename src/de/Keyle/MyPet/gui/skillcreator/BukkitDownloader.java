@@ -47,7 +47,7 @@ public class BukkitDownloader
         {
             public void actionPerformed(ActionEvent e)
             {
-                if(downloader != null)
+                if (downloader != null)
                 {
                     downloader.cancel(true);
                 }
@@ -95,12 +95,12 @@ public class BukkitDownloader
 
             URL url = new URL(downloadAddress);
             int size = url.openConnection().getContentLength();
-            if(size == -1)
+            if (size == -1)
             {
                 JOptionPane.showMessageDialog(null, "Can't download CraftBukkit!", "Downloading CraftBukkit", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             }
-            progressLabel.setText("Downloaded: 0/" + String.format ( "%.2f", size/1024F/1024F) + "MiB");
+            progressLabel.setText("Downloaded: 0/" + String.format("%.2f", size / 1024F / 1024F) + "MiB");
             InputStream reader = url.openStream();
 
             FileOutputStream writer = new FileOutputStream(bukkitPath.getAbsolutePath() + File.separator + "craftbukkit.jar");
@@ -113,9 +113,9 @@ public class BukkitDownloader
                 writer.write(buffer, 0, bytesRead);
                 buffer = new byte[153600];
                 totalBytesRead += bytesRead;
-                downloadProgressBar.setValue((int)((totalBytesRead/1024F/1024F)*100/(size/1024F/1024F)));
-                progressLabel.setText("Downloaded: " + String.format ( "%.2f", totalBytesRead/1024F/1024F) + "/" + String.format ( "%.2f", size/1024F/1024F) + "MiB");
-                if(isCancelled())
+                downloadProgressBar.setValue((int) ((totalBytesRead / 1024F / 1024F) * 100 / (size / 1024F / 1024F)));
+                progressLabel.setText("Downloaded: " + String.format("%.2f", totalBytesRead / 1024F / 1024F) + "/" + String.format("%.2f", size / 1024F / 1024F) + "MiB");
+                if (isCancelled())
                 {
                     writer.close();
                     reader.close();
