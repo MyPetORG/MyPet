@@ -240,8 +240,12 @@ public class LevelCreator
             {
                 if (e.getStateChange() == ItemEvent.SELECTED && inheritanceCheckBox.isSelected())
                 {
-                    skillTree.setInheritance(e.getItem().toString());
-                    saveButton.setEnabled(true);
+                    if (!skillTree.getInheritance().equals(e.getItem().toString()))
+                    {
+                        skillTree.setInheritance(e.getItem().toString());
+                        countSkillLevels();
+                        saveButton.setEnabled(true);
+                    }
                 }
             }
         });
@@ -255,28 +259,48 @@ public class LevelCreator
             level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
         }
 
-        Map<String,Integer> skillCount = new HashMap<String,Integer>();
-        for(MyPetSkillTreeLevel skillTreeLevel : this.skillTree.getLevelList())
+        Map<String, Integer> skillCount = new HashMap<String, Integer>();
+        for (MyPetSkillTreeLevel skillTreeLevel : this.skillTree.getLevelList())
         {
-            if(skillTreeLevel.getLevel() <= level)
+            if (skillTreeLevel.getLevel() <= level)
             {
-                for(MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
+                for (MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
                 {
-                    if(skillCount.containsKey(skill.getName()))
+                    if (skillCount.containsKey(skill.getName()))
                     {
-                        skillCount.put(skill.getName(),skillCount.get(skill.getName())+1);
+                        skillCount.put(skill.getName(), skillCount.get(skill.getName()) + 1);
                     }
                     else
                     {
-                        skillCount.put(skill.getName(),1);
+                        skillCount.put(skill.getName(), 1);
+                    }
+                }
+            }
+        }
+        if (skillTree.getInheritance() != null && skillTreeMobType.getSkillTree(skillTree.getInheritance()) != null)
+        {
+            for (MyPetSkillTreeLevel skillTreeLevel : this.skillTreeMobType.getSkillTree(skillTree.getInheritance()).getLevelList())
+            {
+                if (skillTreeLevel.getLevel() <= level)
+                {
+                    for (MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
+                    {
+                        if (skillCount.containsKey(skill.getName()))
+                        {
+                            skillCount.put(skill.getName(), skillCount.get(skill.getName()) + 1);
+                        }
+                        else
+                        {
+                            skillCount.put(skill.getName(), 1);
+                        }
                     }
                 }
             }
         }
         skillCounterTabelModel.getDataVector().removeAllElements();
-        for(String skillName : skillCount.keySet())
+        for (String skillName : skillCount.keySet())
         {
-            String[] row = {skillName, ""+skillCount.get(skillName)};
+            String[] row = {skillName, "" + skillCount.get(skillName)};
             skillCounterTabelModel.addRow(row);
         }
         skilllevelLabel.setText("Skilllevels for level: " + level);
@@ -350,9 +374,9 @@ public class LevelCreator
             }
         }
 
-        if(skillcount <= 15)
+        if (skillcount <= 15)
         {
-            for(int i = 0; i < skillTreeTree.getRowCount();i++)
+            for (int i = 0 ; i < skillTreeTree.getRowCount() ; i++)
             {
                 skillTreeTree.expandRow(i);
             }
