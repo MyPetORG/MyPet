@@ -50,6 +50,18 @@ public class MyPetPlayerListener implements Listener
             {
                 if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
                 {
+                    if (myPet.getSkillSystem().hasSkill("Behavior"))
+                    {
+                        Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                        if (behavior.getLevel() > 0)
+                        {
+                            if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
+                            {
+                                event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
+                                return;
+                            }
+                        }
+                    }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
                     if (block != null && block.getType() != Material.AIR)
                     {
