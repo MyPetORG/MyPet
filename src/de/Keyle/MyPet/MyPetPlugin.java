@@ -274,6 +274,11 @@ public class MyPetPlugin extends JavaPlugin
         {
             debugLogger.info("   " + myPetType.getTypeName() + ": " + MyPet.getStartDamage(myPetType.getMyPetClass()));
         }
+        debugLogger.info("Pet food items: ----------");
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            debugLogger.info("   " + myPetType.getTypeName() + ": " + MyPet.getFood(myPetType.getMyPetClass()));
+        }
 
         MyPetPermissions.setup();
 

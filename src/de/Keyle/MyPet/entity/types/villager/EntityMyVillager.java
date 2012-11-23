@@ -37,7 +37,7 @@ public class EntityMyVillager extends EntityMyPet
         this.bw = 0.5F;
         this.a(0.6F, 0.8F);
 
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(4, controlPathfinder);
@@ -45,7 +45,7 @@ public class EntityMyVillager extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyVillager.class) > 0)
+        if (MyPet.getStartDamage(MyVillager.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -73,12 +73,6 @@ public class EntityMyVillager extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyVillager.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.APPLE.getId();
     }
 
     public int getProfession()

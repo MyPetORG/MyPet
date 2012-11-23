@@ -93,6 +93,11 @@ public class MyPetUtil
         }
     }
 
+    public static boolean isValidMaterial(int itemid)
+    {
+        return Material.getMaterial(itemid) != null;
+    }
+
     public static boolean isInt(String number)
     {
         try

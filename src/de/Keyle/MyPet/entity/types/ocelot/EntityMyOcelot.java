@@ -82,12 +82,6 @@ public class EntityMyOcelot extends EntityMyPet
         return MyPet.getStartHP(MyOcelot.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.RAW_FISH.getId();
-    }
-
     public boolean canMove()
     {
         return !isSitting();

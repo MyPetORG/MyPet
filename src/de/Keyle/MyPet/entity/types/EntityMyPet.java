@@ -23,7 +23,10 @@ import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+
+import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
@@ -96,7 +99,18 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return true;
     }
 
-    public abstract boolean canEat(ItemStack itemstack);
+    public boolean canEat(ItemStack itemstack)
+    {
+        List<Material> foodList = MyPet.getFood(myPet.getClass());
+        for (Material foodItem : foodList)
+        {
+            if (itemstack.id == foodItem.getId())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public EntityLiving getOwner()
     {

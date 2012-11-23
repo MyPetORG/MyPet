@@ -73,13 +73,6 @@ public class EntityMyPig extends EntityMyPet
         return MyPet.getStartHP(MyPig.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.CARROT_ITEM.getId();
-
-    }
-
     public boolean hasSaddle()
     {
         return (this.datawatcher.getByte(16) & 0x1) != 0;

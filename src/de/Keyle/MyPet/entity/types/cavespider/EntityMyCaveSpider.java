@@ -45,7 +45,7 @@ public class EntityMyCaveSpider extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyCaveSpider.class) > 0)
+        if (MyPet.getStartDamage(MyCaveSpider.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -61,12 +61,6 @@ public class EntityMyCaveSpider extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyCaveSpider.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId();
     }
 
     public EnumMonsterType getMonsterType()

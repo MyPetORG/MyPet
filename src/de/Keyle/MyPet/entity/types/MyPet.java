@@ -43,16 +43,20 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
+    private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
 
     static
     {
@@ -403,6 +407,34 @@ public abstract class MyPet
         if (startDamage.containsKey(myPetClass))
         {
             startDamage.put(myPetClass, damage);
+        }
+    }
+
+    public static List<Material> getFood(Class<? extends MyPet> myPetClass)
+    {
+        List<Material> foodList = new ArrayList<Material>();
+        if (food.containsKey(myPetClass))
+        {
+            foodList.addAll(food.get(myPetClass));
+        }
+        return foodList;
+    }
+
+    public static void setFood(Class<? extends MyPet> myPetClass, Material foodToAdd)
+    {
+        if (food.containsKey(myPetClass))
+        {
+            List<Material> foodList = food.get(myPetClass);
+            if (!foodList.contains(foodToAdd))
+            {
+                foodList.add(foodToAdd);
+            }
+        }
+        else
+        {
+            List<Material> foodList = new ArrayList<Material>();
+            foodList.add(foodToAdd);
+            food.put(myPetClass, foodList);
         }
     }
 

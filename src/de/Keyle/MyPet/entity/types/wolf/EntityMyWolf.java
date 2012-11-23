@@ -82,12 +82,6 @@ public class EntityMyWolf extends EntityMyPet
         return MyPet.getStartHP(MyWolf.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return (Item.byId[itemstack.id] instanceof ItemFood && ((ItemFood) Item.byId[itemstack.id]).i());
-    }
-
     public void setHealth(int i)
     {
         super.setHealth(i);

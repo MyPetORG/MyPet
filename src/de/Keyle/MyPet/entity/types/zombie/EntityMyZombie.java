@@ -44,7 +44,7 @@ public class EntityMyZombie extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyZombie.class) > 0)
+        if (MyPet.getStartDamage(MyZombie.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -73,12 +73,6 @@ public class EntityMyZombie extends EntityMyPet
         return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
     }
 
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.ROTTEN_FLESH.getId();
-    }
-
     public boolean isBaby()
     {
         return getDataWatcher().getByte(12) == 1;
@@ -87,7 +81,7 @@ public class EntityMyZombie extends EntityMyPet
     public void setBaby(boolean flag)
     {
         getDataWatcher().watch(12, (byte) 1);
-        ((MyZombie)myPet).isBaby = flag;
+        ((MyZombie) myPet).isBaby = flag;
     }
 
     public boolean isVillager()
@@ -98,7 +92,7 @@ public class EntityMyZombie extends EntityMyPet
     public void setVillager(boolean flag)
     {
         getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
-        ((MyZombie)myPet).isVillager = flag;
+        ((MyZombie) myPet).isVillager = flag;
     }
 
     @Override

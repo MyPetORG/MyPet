@@ -37,7 +37,7 @@ public class EntityMySlime extends EntityMyPet
         this.a(0.6F, 0.6F);
         this.walkSpeed = 0.25F;
 
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(4, controlPathfinder);
@@ -45,7 +45,7 @@ public class EntityMySlime extends EntityMyPet
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MySlime.class) > 0)
+        if (MyPet.getStartDamage(MySlime.class) > 0)
         {
             this.goalSelector.a(2, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(3, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -64,19 +64,13 @@ public class EntityMySlime extends EntityMyPet
         {
             super.setMyPet(myPet);
 
-            setSize(((MySlime)myPet).getSize());
+            setSize(((MySlime) myPet).getSize());
         }
     }
 
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MySlime.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.SUGAR.getId();
     }
 
     public int getSize()

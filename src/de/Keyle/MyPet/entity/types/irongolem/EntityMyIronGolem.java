@@ -37,14 +37,14 @@ public class EntityMyIronGolem extends EntityMyPet
         this.a(1.4F, 2.9F);
         this.walkSpeed = 0.25F;
 
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed+0.1F);
+        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(3, controlPathfinder);
         this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
 
-        if(MyPet.getStartDamage(MyIronGolem.class) > 0)
+        if (MyPet.getStartDamage(MyIronGolem.class) > 0)
         {
             this.goalSelector.a(1, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
@@ -60,12 +60,6 @@ public class EntityMyIronGolem extends EntityMyPet
     public int getMaxHealth()
     {
         return MyPet.getStartHP(MyIronGolem.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
-    @Override
-    public boolean canEat(ItemStack itemstack)
-    {
-        return itemstack.id == org.bukkit.Material.IRON_INGOT.getId();
     }
 
     protected void setPlayerCreated(boolean flag)
