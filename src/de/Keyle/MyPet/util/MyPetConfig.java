@@ -53,6 +53,7 @@ public class MyPetConfig
     public static int respawnTimeFixed = 0;
     public static int autoSaveTime = 60;
     public static int hungerSystemTime = 60;
+    public static boolean ownerCanAttackPet = false;
     public static boolean levelSystem = true;
     public static boolean hungerSystem = true;
     public static boolean sendMetrics = true;
@@ -69,6 +70,7 @@ public class MyPetConfig
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
         setProperty("MyPet.SuperPerms", false);
+        setProperty("MyPet.OwnerCanAttackPet", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.HungerSystem.Active", true);
         setProperty("MyPet.HungerSystem.Time", 60);
@@ -161,6 +163,7 @@ public class MyPetConfig
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
         levelSystem = config.getBoolean("MyPet.LevelSystem", true);
+        ownerCanAttackPet = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         hungerSystem = config.getBoolean("MyPet.HungerSystem.Active", true);
         hungerSystemTime = config.getInt("MyPet.HungerSystem.Time", 60);
         superperms = config.getBoolean("MyPet.SuperPerms", false);

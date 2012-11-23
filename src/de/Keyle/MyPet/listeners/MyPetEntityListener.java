@@ -111,7 +111,11 @@ public class MyPetEntityListener implements Listener
 
                         event.setCancelled(true);
                     }
-                    if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
+                    else if (myPet.getOwner().equals(damager) && !MyPetConfig.ownerCanAttackPet)
+                    {
+                        event.setCancelled(true);
+                    }
+                    else if (!MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
                     }
