@@ -215,6 +215,7 @@ public class SkilltreeCreator
                         levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()));
                         levelCreatorFrame.setVisible(true);
                         skilltreeCreatorFrame.setEnabled(false);
+                        break;
                     case KeyEvent.VK_DELETE:
                         int index = skilltreeList.getSelectedIndex();
                         MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
@@ -232,6 +233,7 @@ public class SkilltreeCreator
                             deleteSkilltreeButton.setEnabled(false);
                         }
                         saveButton.setEnabled(true);
+                        break;
                 }
             }
         });
