@@ -81,6 +81,7 @@ public class MyPetConfig
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
         setProperty("MyPet.Support.Citizens", true);
+        setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
 
         setProperty("MyPet.Leash.Item", 287);
         setProperty("MyPet.Skill.Control.Item", 287);
@@ -89,62 +90,61 @@ public class MyPetConfig
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
         setProperty("MyPet.Skill.Inventory.Creative", true);
 
-        setProperty("MyPet.pets.CaveSpider.HP", 20);
-        setProperty("MyPet.pets.Chicken.HP", 20);
-        setProperty("MyPet.pets.Cow.HP", 20);
-        setProperty("MyPet.pets.IronGolem.HP", 20);
-        setProperty("MyPet.pets.Mooshroom.HP", 20);
-        setProperty("MyPet.pets.Ocelot.HP", 20);
-        setProperty("MyPet.pets.Pig.HP", 20);
-        setProperty("MyPet.pets.PigZombie.HP", 20);
-        setProperty("MyPet.pets.Sheep.HP", 20);
-        setProperty("MyPet.pets.Silverfish.HP", 20);
-        setProperty("MyPet.pets.Skeleton.HP", 20);
-        setProperty("MyPet.pets.Slime.HP", 20);
-        setProperty("MyPet.pets.Spider.HP", 20);
-        setProperty("MyPet.pets.Villager.HP", 20);
-        setProperty("MyPet.pets.Wolf.HP", 20);
-        setProperty("MyPet.pets.Zombie.HP", 20);
+        setProperty("MyPet.Pets.CaveSpider.HP", 20);
+        setProperty("MyPet.Pets.Chicken.HP", 20);
+        setProperty("MyPet.Pets.Cow.HP", 20);
+        setProperty("MyPet.Pets.IronGolem.HP", 20);
+        setProperty("MyPet.Pets.Mooshroom.HP", 20);
+        setProperty("MyPet.Pets.Ocelot.HP", 20);
+        setProperty("MyPet.Pets.Pig.HP", 20);
+        setProperty("MyPet.Pets.PigZombie.HP", 20);
+        setProperty("MyPet.Pets.Sheep.HP", 20);
+        setProperty("MyPet.Pets.Silverfish.HP", 20);
+        setProperty("MyPet.Pets.Skeleton.HP", 20);
+        setProperty("MyPet.Pets.Slime.HP", 20);
+        setProperty("MyPet.Pets.Spider.HP", 20);
+        setProperty("MyPet.Pets.Villager.HP", 20);
+        setProperty("MyPet.Pets.Wolf.HP", 20);
+        setProperty("MyPet.Pets.Zombie.HP", 20);
 
-        setProperty("MyPet.pets.CaveSpider.damage", 4);
-        setProperty("MyPet.pets.Chicken.damage", 4);
-        setProperty("MyPet.pets.Cow.damage", 4);
-        setProperty("MyPet.pets.IronGolem.damage", 4);
-        setProperty("MyPet.pets.Mooshroom.damage", 4);
-        setProperty("MyPet.pets.Ocelot.damage", 4);
-        setProperty("MyPet.pets.Pig.damage", 4);
-        setProperty("MyPet.pets.PigZombie.damage", 4);
-        setProperty("MyPet.pets.Sheep.damage", 4);
-        setProperty("MyPet.pets.Silverfish.damage", 4);
-        setProperty("MyPet.pets.Skeleton.damage", 4);
-        setProperty("MyPet.pets.Slime.damage", 4);
-        setProperty("MyPet.pets.Spider.damage", 4);
-        setProperty("MyPet.pets.Villager.damage", 4);
-        setProperty("MyPet.pets.Wolf.damage", 4);
-        setProperty("MyPet.pets.Zombie.damage", 4);
+        setProperty("MyPet.Pets.CaveSpider.Damage", 4);
+        setProperty("MyPet.Pets.Chicken.Damage", 4);
+        setProperty("MyPet.Pets.Cow.Damage", 4);
+        setProperty("MyPet.Pets.IronGolem.Damage", 4);
+        setProperty("MyPet.Pets.Mooshroom.Damage", 4);
+        setProperty("MyPet.Pets.Ocelot.Damage", 4);
+        setProperty("MyPet.Pets.Pig.Damage", 4);
+        setProperty("MyPet.Pets.PigZombie.Damage", 4);
+        setProperty("MyPet.Pets.Sheep.Damage", 4);
+        setProperty("MyPet.Pets.Silverfish.Damage", 4);
+        setProperty("MyPet.Pets.Skeleton.Damage", 4);
+        setProperty("MyPet.Pets.Slime.Damage", 4);
+        setProperty("MyPet.Pets.Spider.Damage", 4);
+        setProperty("MyPet.Pets.Villager.Damage", 4);
+        setProperty("MyPet.Pets.Wolf.Damage", 4);
+        setProperty("MyPet.Pets.Zombie.Damage", 4);
 
-        setProperty("MyPet.pets.CaveSpider.food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.pets.Chicken.food", Material.SEEDS.getId());
-        setProperty("MyPet.pets.Cow.food", Material.WHEAT.getId());
-        setProperty("MyPet.pets.IronGolem.food", Material.IRON_INGOT.getId());
-        setProperty("MyPet.pets.Mooshroom.food", Material.WHEAT.getId());
-        setProperty("MyPet.pets.Ocelot.food", Material.RAW_FISH.getId());
-        setProperty("MyPet.pets.Pig.food", Material.CARROT_ITEM.getId());
-        setProperty("MyPet.pets.PigZombie.food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.pets.Sheep.food", Material.WHEAT.getId());
-        setProperty("MyPet.pets.Silverfish.food", Material.SUGAR.getId());
-        setProperty("MyPet.pets.Skeleton.food", Material.BONE.getId());
-        setProperty("MyPet.pets.Slime.food", Material.SUGAR.getId());
-        setProperty("MyPet.pets.Spider.food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.pets.Villager.food", Material.APPLE.getId());
-        setProperty("MyPet.pets.Wolf.food", Material.RAW_BEEF.getId() + "," + Material.RAW_CHICKEN.getId());
-        setProperty("MyPet.pets.Zombie.food", Material.ROTTEN_FLESH.getId());
+        setProperty("MyPet.Pets.CaveSpider.Food", Material.ROTTEN_FLESH.getId());
+        setProperty("MyPet.Pets.Chicken.Food", Material.SEEDS.getId());
+        setProperty("MyPet.Pets.Cow.Food", Material.WHEAT.getId());
+        setProperty("MyPet.Pets.IronGolem.Food", Material.IRON_INGOT.getId());
+        setProperty("MyPet.Pets.Mooshroom.Food", Material.WHEAT.getId());
+        setProperty("MyPet.Pets.Ocelot.Food", Material.RAW_FISH.getId());
+        setProperty("MyPet.Pets.Pig.Food", Material.CARROT_ITEM.getId());
+        setProperty("MyPet.Pets.PigZombie.Food", Material.ROTTEN_FLESH.getId());
+        setProperty("MyPet.Pets.Sheep.Food", Material.WHEAT.getId());
+        setProperty("MyPet.Pets.Silverfish.Food", Material.SUGAR.getId());
+        setProperty("MyPet.Pets.Skeleton.Food", Material.BONE.getId());
+        setProperty("MyPet.Pets.Slime.Food", Material.SUGAR.getId());
+        setProperty("MyPet.Pets.Spider.Food", Material.ROTTEN_FLESH.getId());
+        setProperty("MyPet.Pets.Villager.Food", Material.APPLE.getId());
+        setProperty("MyPet.Pets.Wolf.Food", Material.RAW_BEEF.getId() + "," + Material.RAW_CHICKEN.getId());
+        setProperty("MyPet.Pets.Zombie.Food", Material.ROTTEN_FLESH.getId());
 
-        setProperty("MyPet.exp.passive.PercentPerMonster", 25);
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
-            setProperty("MyPet.exp.active." + entityType.getName() + ".min", MyPetExperience.mobExp.get(entityType).getMin());
-            setProperty("MyPet.exp.active." + entityType.getName() + ".max", MyPetExperience.mobExp.get(entityType).getMax());
+            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetExperience.mobExp.get(entityType).getMin());
+            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Max", MyPetExperience.mobExp.get(entityType).getMax());
         }
 
         MyPetPlugin.getPlugin().saveConfig();
@@ -174,56 +174,56 @@ public class MyPetConfig
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
 
-        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.pets.CaveSpider.HP", 20));
-        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.pets.Chicken.HP", 20));
-        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.pets.Cow.HP", 20));
-        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.pets.IronGolem.HP", 20));
-        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.pets.Mooshroom.HP", 20));
-        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.pets.Ocelot.HP", 20));
-        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.pets.Pig.HP", 20));
-        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.pets.PigZombie.HP", 20));
-        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.pets.Sheep.HP", 20));
-        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.pets.Silverfish.HP", 20));
-        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.pets.Skeleton.HP", 20));
-        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.pets.Slime.HP", 20));
-        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.pets.Spider.HP", 20));
-        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.pets.Villager.HP", 20));
-        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.pets.Wolf.HP", 20));
-        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.pets.Zombie.HP", 20));
+        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.Pets.CaveSpider.HP", 20));
+        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.Pets.Chicken.HP", 20));
+        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.Pets.Cow.HP", 20));
+        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.Pets.IronGolem.HP", 20));
+        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.Pets.Mooshroom.HP", 20));
+        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.Pets.Ocelot.HP", 20));
+        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.Pets.Pig.HP", 20));
+        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.Pets.PigZombie.HP", 20));
+        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.Pets.Sheep.HP", 20));
+        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.Pets.Silverfish.HP", 20));
+        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.Pets.Skeleton.HP", 20));
+        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.Pets.Slime.HP", 20));
+        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.Pets.Spider.HP", 20));
+        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.Pets.Villager.HP", 20));
+        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.Pets.Wolf.HP", 20));
+        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.Pets.Zombie.HP", 20));
 
-        MyPet.setStartDamage(MyCaveSpider.class, config.getInt("MyPet.pets.CaveSpider.damage", 4));
-        MyPet.setStartDamage(MyChicken.class, config.getInt("MyPet.pets.Chicken.damage", 4));
-        MyPet.setStartDamage(MyCow.class, config.getInt("MyPet.pets.Cow.damage", 4));
-        MyPet.setStartDamage(MyIronGolem.class, config.getInt("MyPet.pets.IronGolem.damage", 4));
-        MyPet.setStartDamage(MyMooshroom.class, config.getInt("MyPet.pets.Mooshroom.damage", 4));
-        MyPet.setStartDamage(MyOcelot.class, config.getInt("MyPet.pets.Ocelot.damage", 4));
-        MyPet.setStartDamage(MyPig.class, config.getInt("MyPet.pets.Pig.damage", 4));
-        MyPet.setStartDamage(MyPigZombie.class, config.getInt("MyPet.pets.PigZombie.damage", 4));
-        MyPet.setStartDamage(MySheep.class, config.getInt("MyPet.pets.Sheep.damage", 4));
-        MyPet.setStartDamage(MySilverfish.class, config.getInt("MyPet.pets.Silverfish.damage", 4));
-        MyPet.setStartDamage(MySkeleton.class, config.getInt("MyPet.pets.Skeleton.damage", 4));
-        MyPet.setStartDamage(MySlime.class, config.getInt("MyPet.pets.Slime.damage", 4));
-        MyPet.setStartDamage(MySpider.class, config.getInt("MyPet.pets.Spider.damage", 4));
-        MyPet.setStartDamage(MyVillager.class, config.getInt("MyPet.pets.Villager.damage", 4));
-        MyPet.setStartDamage(MyWolf.class, config.getInt("MyPet.pets.Wolf.damage", 4));
-        MyPet.setStartDamage(MyZombie.class, config.getInt("MyPet.pets.Zombie.damage", 4));
+        MyPet.setStartDamage(MyCaveSpider.class, config.getInt("MyPet.Pets.CaveSpider.Damage", 4));
+        MyPet.setStartDamage(MyChicken.class, config.getInt("MyPet.Pets.Chicken.Damage", 4));
+        MyPet.setStartDamage(MyCow.class, config.getInt("MyPet.Pets.Cow.Damage", 4));
+        MyPet.setStartDamage(MyIronGolem.class, config.getInt("MyPet.Pets.IronGolem.Damage", 4));
+        MyPet.setStartDamage(MyMooshroom.class, config.getInt("MyPet.Pets.Mooshroom.Damage", 4));
+        MyPet.setStartDamage(MyOcelot.class, config.getInt("MyPet.Pets.Ocelot.Damage", 4));
+        MyPet.setStartDamage(MyPig.class, config.getInt("MyPet.Pets.Pig.Damage", 4));
+        MyPet.setStartDamage(MyPigZombie.class, config.getInt("MyPet.Pets.PigZombie.Damage", 4));
+        MyPet.setStartDamage(MySheep.class, config.getInt("MyPet.Pets.Sheep.Damage", 4));
+        MyPet.setStartDamage(MySilverfish.class, config.getInt("MyPet.Pets.Silverfish.Damage", 4));
+        MyPet.setStartDamage(MySkeleton.class, config.getInt("MyPet.Pets.Skeleton.Damage", 4));
+        MyPet.setStartDamage(MySlime.class, config.getInt("MyPet.Pets.Slime.Damage", 4));
+        MyPet.setStartDamage(MySpider.class, config.getInt("MyPet.Pets.Spider.Damage", 4));
+        MyPet.setStartDamage(MyVillager.class, config.getInt("MyPet.Pets.Villager.Damage", 4));
+        MyPet.setStartDamage(MyWolf.class, config.getInt("MyPet.Pets.Wolf.Damage", 4));
+        MyPet.setStartDamage(MyZombie.class, config.getInt("MyPet.Pets.Zombie.Damage", 4));
 
-        seperateFood(MyCaveSpider.class, config.getString("MyPet.pets.CaveSpider.food", "367"));
-        seperateFood(MyChicken.class, config.getString("MyPet.pets.Chicken.food", "295"));
-        seperateFood(MyCow.class, config.getString("MyPet.pets.Cow.food", "296"));
-        seperateFood(MyIronGolem.class, config.getString("MyPet.pets.IronGolem.food", "265"));
-        seperateFood(MyMooshroom.class, config.getString("MyPet.pets.Mooshroom.food", "296"));
-        seperateFood(MyOcelot.class, config.getString("MyPet.pets.Ocelot.food", "249"));
-        seperateFood(MyPig.class, config.getString("MyPet.pets.Pig.food", "391"));
-        seperateFood(MyPigZombie.class, config.getString("MyPet.pets.PigZombie.food", "367"));
-        seperateFood(MySheep.class, config.getString("MyPet.pets.Sheep.food", "296"));
-        seperateFood(MySilverfish.class, config.getString("MyPet.pets.Silverfish.food", "353"));
-        seperateFood(MySkeleton.class, config.getString("MyPet.pets.Skeleton.food", "352"));
-        seperateFood(MySlime.class, config.getString("MyPet.pets.Slime.food", "353"));
-        seperateFood(MySpider.class, config.getString("MyPet.pets.Spider.food", "367"));
-        seperateFood(MyVillager.class, config.getString("MyPet.pets.Villager.food", "260"));
-        seperateFood(MyWolf.class, config.getString("MyPet.pets.Wolf.food", "363,365"));
-        seperateFood(MyZombie.class, config.getString("MyPet.pets.Zombie.food", "367"));
+        seperateFood(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.Food", "367"));
+        seperateFood(MyChicken.class, config.getString("MyPet.Pets.Chicken.Food", "295"));
+        seperateFood(MyCow.class, config.getString("MyPet.Pets.Cow.Food", "296"));
+        seperateFood(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.Food", "265"));
+        seperateFood(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.Food", "296"));
+        seperateFood(MyOcelot.class, config.getString("MyPet.Pets.Ocelot.Food", "249"));
+        seperateFood(MyPig.class, config.getString("MyPet.Pets.Pig.Food", "391"));
+        seperateFood(MyPigZombie.class, config.getString("MyPet.Pets.PigZombie.Food", "367"));
+        seperateFood(MySheep.class, config.getString("MyPet.Pets.Sheep.Food", "296"));
+        seperateFood(MySilverfish.class, config.getString("MyPet.Pets.Silverfish.Food", "353"));
+        seperateFood(MySkeleton.class, config.getString("MyPet.Pets.Skeleton.Food", "352"));
+        seperateFood(MySlime.class, config.getString("MyPet.Pets.Slime.Food", "353"));
+        seperateFood(MySpider.class, config.getString("MyPet.Pets.Spider.Food", "367"));
+        seperateFood(MyVillager.class, config.getString("MyPet.Pets.Villager.Food", "260"));
+        seperateFood(MyWolf.class, config.getString("MyPet.Pets.Wolf.Food", "363,365"));
+        seperateFood(MyZombie.class, config.getString("MyPet.Pets.Zombie.Food", "367"));
 
         if (config.getStringList("MyPet.exp.active") != null)
         {
@@ -233,13 +233,13 @@ public class MyPetConfig
             {
                 min = 0;
                 max = 0;
-                if (config.contains("MyPet.exp.active." + entityType.getName() + ".max"))
+                if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Max"))
                 {
-                    max = config.getInt("MyPet.exp.active." + entityType.getName() + ".max", 0);
+                    max = config.getInt("MyPet.Exp.Active." + entityType.getName() + ".Max", 0);
                 }
-                if (config.contains("MyPet.exp.active." + entityType.getName() + ".min"))
+                if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Min"))
                 {
-                    min = config.getInt("MyPet.exp.active." + entityType.getName() + ".min", 0);
+                    min = config.getInt("MyPet.Exp.Active." + entityType.getName() + ".Min", 0);
                 }
                 if (min == max)
                 {
