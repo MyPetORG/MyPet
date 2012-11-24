@@ -129,7 +129,7 @@ public class LevelCreator
                     return;
                 }
 
-                String[] skillNames = new String[]{"Behavior", "Control", "Damage", "HP", "HP-Regeneration", "Inventory", "Pickup", "Poison"};
+                String[] skillNames = new String[]{"Behavior", "Control", "Damage", "HP", "HPregeneration", "Inventory", "Pickup", "Poison"};
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null)
                 {
