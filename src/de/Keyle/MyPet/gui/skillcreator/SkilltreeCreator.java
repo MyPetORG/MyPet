@@ -335,5 +335,6 @@ public class SkilltreeCreator
     {
         skillTreeListModel = new DefaultListModel();
         skilltreeList = new JList(skillTreeListModel);
+        skilltreeList.setToolTipText("Doubleclick an item to edit a skilltree.");
     }
 }
