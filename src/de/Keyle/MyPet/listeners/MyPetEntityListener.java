@@ -94,6 +94,11 @@ public class MyPetEntityListener implements Listener
                         }
                         else
                         {
+                            if (!myPet.isPassiv())
+                            {
+                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+                                damager.sendMessage(MyPetUtil.setColors("   Damage: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
+                            }
                             if (MyPetConfig.hungerSystem)
                             {
                                 damager.sendMessage(MyPetUtil.setColors("   Hunger: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()));
