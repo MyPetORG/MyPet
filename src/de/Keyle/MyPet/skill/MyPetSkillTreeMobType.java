@@ -34,8 +34,8 @@ public class MyPetSkillTreeMobType
 
     public MyPetSkillTreeMobType(String mobTypeName)
     {
-        this.mobTypeName = mobTypeName;
-        mobTypes.put(mobTypeName, this);
+        this.mobTypeName = mobTypeName.toLowerCase();
+        mobTypes.put(this.mobTypeName, this);
     }
 
     public String getMobTypeName()
@@ -114,6 +114,11 @@ public class MyPetSkillTreeMobType
 
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
     {
-        return mobTypes.get(mobTypeName);
+        return mobTypes.get(mobTypeName.toLowerCase());
+    }
+
+    public static boolean hasMobType(String mobTypeName)
+    {
+        return mobTypes.containsKey(mobTypeName.toLowerCase());
     }
 }
