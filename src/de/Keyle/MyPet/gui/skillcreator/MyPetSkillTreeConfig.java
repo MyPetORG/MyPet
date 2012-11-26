@@ -165,22 +165,14 @@ public class MyPetSkillTreeConfig
 
     public static class MyPetSkillTree extends de.Keyle.MyPet.skill.MyPetSkillTree
     {
-        private String inheritance = null;
-
-        public MyPetSkillTree(String Name, String inheritance)
+        public MyPetSkillTree(String name)
         {
-            super(Name);
-            this.inheritance = inheritance;
+            super(name);
         }
 
-        public MyPetSkillTree(String Name)
+        public MyPetSkillTree(String name, String inheritance)
         {
-            super(Name);
-        }
-
-        public String getInheritance()
-        {
-            return inheritance;
+            super(name, inheritance);
         }
 
         public void setInheritance(String inheritance)

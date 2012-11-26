@@ -25,11 +25,18 @@ import java.util.Map;
 public class MyPetSkillTreeSkill
 {
     String name;
+    boolean addedByInheritance = false;
     Map<String, String> options = new HashMap<String, String>();
 
     public MyPetSkillTreeSkill(String name)
     {
         this.name = name;
+    }
+
+    public MyPetSkillTreeSkill(String name, boolean addedByInheritance)
+    {
+        this.name = name;
+        this.addedByInheritance = addedByInheritance;
     }
 
     public String getName()
@@ -49,6 +56,11 @@ public class MyPetSkillTreeSkill
             return options.get(option);
         }
         return null;
+    }
+
+    public boolean isAddedByInheritance()
+    {
+        return addedByInheritance;
     }
 
     @Override

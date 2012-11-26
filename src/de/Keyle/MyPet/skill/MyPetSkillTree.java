@@ -27,12 +27,19 @@ import java.util.TreeMap;
 public class MyPetSkillTree
 {
     private String skillTreeName;
+    protected String inheritance = null;
 
     private SortedMap<Integer, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Integer, MyPetSkillTreeLevel>();
 
-    public MyPetSkillTree(String Name)
+    public MyPetSkillTree(String name)
     {
-        this.skillTreeName = Name;
+        this.skillTreeName = name;
+    }
+
+    public MyPetSkillTree(String name, String inheritance)
+    {
+        this.skillTreeName = name;
+        this.inheritance = inheritance;
     }
 
     public String getName()
@@ -98,5 +105,15 @@ public class MyPetSkillTree
             }
         }
         return levelList;
+    }
+
+    public String getInheritance()
+    {
+        return inheritance;
+    }
+
+    public boolean hasInheritance()
+    {
+        return inheritance != null;
     }
 }

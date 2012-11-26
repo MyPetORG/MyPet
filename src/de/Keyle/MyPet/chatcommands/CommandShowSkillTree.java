@@ -42,8 +42,8 @@ public class CommandShowSkillTree implements CommandExecutor
                     if (MyPetSkillTreeConfigLoader.containsSkillTree(args[0], args[1]))
                     {
                         MyPetSkillTree skillTree = MyPetSkillTreeConfigLoader.getMobType(args[0]).getSkillTree(args[1]);
-                        MyPetUtil.getLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " -----");
-                        MyPetUtil.getDebugLogger().info("----- Console: MyPet Skilltree: " + skillTree.getName() + " -----");
+                        MyPetUtil.getLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
+                        MyPetUtil.getDebugLogger().info("----- Console: MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
                         for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
                             MyPetUtil.getLogger().info(" " + lvl.getLevel() + ":");
