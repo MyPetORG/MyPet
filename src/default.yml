@@ -11,6 +11,11 @@ skilltrees:
       - Inventory
       - Inventory
       - Inventory
+      - HPregeneration
+      - HPregeneration
+      - HPregeneration
+      - HPregeneration
+      - HPregeneration
       - Control
       - Pickup
       - Behavior
@@ -19,52 +24,10 @@ skilltrees:
       - HP
       - HP
       - HP
-
-  # Hunter skilltree -> MyPet.custom.skilltree.Hunter
-  Hunter:
-    inherit: Pickup
-    '2':
-      - Control
-      - Inventory
-      - Damage
-      - Damage
-      - Poison
-    '4':
-      - HP
-      - Damage
-    '6':
-      - Inventory
-      - Behavior
-      - Poison
-    '8':
-      - Inventory
-      - HP
-      - Damage
-    '10':
-      - Inventory
-      - HP
-      - Damage
-      - Poison
-    '12':
-      - Inventory
-      - HP
-      - Damage
-    '14':
-      - Inventory
-      - HP
-      - Damage
-    '16':
-      - HP
-      - Damage
-    '18':
-      - HP
-      - Damage
-    '20':
-      - HP
-      - Damage
 
   # every normal should have permissions for this skilltree -> MyPet.custom.skilltree.default
   default:
+    inherit: Pickup
     '2':
       - Inventory
     '4':
@@ -78,7 +41,6 @@ skilltrees:
       - Behavior
       - Poison
     '8':
-      - Pickup
       - HP
       - Damage
     '10':
@@ -110,7 +72,7 @@ skilltrees:
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 
-  # Hunter will inherit this
+  # default skilltree will inherit this
   Pickup:
-    '2':
+    '4':
       - Pickup
