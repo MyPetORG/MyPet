@@ -57,11 +57,6 @@ public class EntityMyIronGolem extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyIronGolem.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     protected void setPlayerCreated(boolean flag)
     {
         byte b0 = this.datawatcher.getByte(16);

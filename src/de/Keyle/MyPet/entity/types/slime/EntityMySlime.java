@@ -68,11 +68,6 @@ public class EntityMySlime extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MySlime.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     public int getSize()
     {
         return this.datawatcher.getByte(16);

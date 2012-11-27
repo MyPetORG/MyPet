@@ -68,11 +68,6 @@ public class EntityMySkeleton extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MySkeleton.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     public void setEquipment(int slot, ItemStack item)
     {
         super.setEquipment(slot, item);

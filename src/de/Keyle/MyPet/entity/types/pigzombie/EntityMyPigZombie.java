@@ -57,11 +57,6 @@ public class EntityMyPigZombie extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyPigZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {

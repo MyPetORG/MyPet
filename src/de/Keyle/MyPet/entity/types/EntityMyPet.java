@@ -69,7 +69,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             this.myPet = myPet;
             isMyPet = true;
 
-            this.setHealth(myPet.getHealth() >= getMaxHealth() ? getMaxHealth() : myPet.getHealth());
+            this.setHealth(myPet.getHealth() >= myPet.getMaxHealth() ? myPet.getMaxHealth() : myPet.getHealth());
         }
     }
 
@@ -87,7 +87,17 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         this.health = i;
     }
 
-    public abstract int getMaxHealth();
+    public int getMaxHealth()
+    {
+        if (isMyPet())
+        {
+            return myPet.getMaxHealth();
+        }
+        else
+        {
+            return MyPet.getStartHP(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+        }
+    }
 
     public void setLocation(Location loc)
     {

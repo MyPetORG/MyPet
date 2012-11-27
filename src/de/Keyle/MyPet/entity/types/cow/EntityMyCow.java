@@ -67,11 +67,6 @@ public class EntityMyCow extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyCow.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     public boolean isBaby()
     {
         return this.datawatcher.getInt(12) < 0;

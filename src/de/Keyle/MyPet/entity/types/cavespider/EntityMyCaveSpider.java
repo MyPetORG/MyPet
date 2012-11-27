@@ -58,11 +58,6 @@ public class EntityMyCaveSpider extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyCaveSpider.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     public EnumMonsterType getMonsterType()
     {
         return EnumMonsterType.ARTHROPOD;

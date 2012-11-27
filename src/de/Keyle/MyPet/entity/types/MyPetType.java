@@ -53,6 +53,7 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
+import net.minecraft.server.EntityCreature;
 import net.minecraft.server.World;
 import org.bukkit.entity.EntityType;
 
@@ -95,6 +96,18 @@ public enum MyPetType
         for (MyPetType myPetType : MyPetType.values())
         {
             if (myPetType.entityType == type)
+            {
+                return myPetType;
+            }
+        }
+        return null;
+    }
+
+    public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass)
+    {
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            if (myPetType.entityClass == entityClass)
             {
                 return myPetType;
             }

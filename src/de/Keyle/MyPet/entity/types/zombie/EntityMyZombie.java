@@ -68,11 +68,6 @@ public class EntityMyZombie extends EntityMyPet
         }
     }
 
-    public int getMaxHealth()
-    {
-        return MyPet.getStartHP(MyZombie.class) + (isMyPet() && myPet.getSkillSystem().hasSkill("HP") ? myPet.getSkillSystem().getSkill("HP").getLevel() : 0);
-    }
-
     public boolean isBaby()
     {
         return getDataWatcher().getByte(12) == 1;
