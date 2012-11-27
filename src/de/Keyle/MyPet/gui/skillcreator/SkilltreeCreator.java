@@ -24,6 +24,7 @@ import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
@@ -252,7 +253,7 @@ public class SkilltreeCreator
         catch (Exception ignored)
         {
         }
-
+        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("resources/logo.png")).getImage();
         try
         {
             Class.forName("org.bukkit.configuration.file.FileConfiguration");
@@ -275,6 +276,7 @@ public class SkilltreeCreator
                 bukkitDownloaderFrame = new JFrame("Bukkit Downloader");
                 bukkitDownloaderFrame.setContentPane(bukkitDownloader.downloaderPanel);
                 bukkitDownloaderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                bukkitDownloaderFrame.setIconImage(logoImage);
                 bukkitDownloaderFrame.pack();
                 bukkitDownloaderFrame.setVisible(true);
                 bukkitDownloaderFrame.setLocationRelativeTo(null);
@@ -290,6 +292,7 @@ public class SkilltreeCreator
         skilltreeCreatorFrame = new JFrame("SkilltreeCreator");
         skilltreeCreatorFrame.setContentPane(skilltreeCreator.skilltreeCreatorPanel);
         skilltreeCreatorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        skilltreeCreatorFrame.setIconImage(logoImage);
         skilltreeCreatorFrame.pack();
         skilltreeCreatorFrame.setVisible(true);
         skilltreeCreatorFrame.setLocationRelativeTo(null);
@@ -298,6 +301,7 @@ public class SkilltreeCreator
         levelCreatorFrame = levelCreator.getFrame();
         levelCreatorFrame.setContentPane(levelCreator.getMainPanel());
         levelCreatorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        levelCreatorFrame.setIconImage(logoImage);
         levelCreatorFrame.pack();
         levelCreatorFrame.setLocationRelativeTo(null);
         levelCreatorFrame.addWindowListener(new WindowListener()
