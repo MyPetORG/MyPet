@@ -43,8 +43,6 @@ public class MyPetList
         if (inactiveMyPet.getPetOwner().isOnline())
         {
             MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getPetOwner());
-            activeMyPet.setHealth(inactiveMyPet.getHealth());
-            activeMyPet.setHungerValue(inactiveMyPet.getHungerValue());
             activeMyPet.setLocation(inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
@@ -71,6 +69,8 @@ public class MyPetList
                     }
                 }
             }
+            activeMyPet.setHealth(inactiveMyPet.getHealth());
+            activeMyPet.setHungerValue(inactiveMyPet.getHungerValue());
             return activeMyPet;
         }
         return null;
