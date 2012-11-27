@@ -254,7 +254,7 @@ public class LevelCreator
     private void countSkillLevels()
     {
         int level = 0;
-        if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
+        if (skillTreeTree.getSelectionPath() != null && skillTreeTree.getSelectionPath().getPathCount() > 1 && MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
         {
             level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
         }

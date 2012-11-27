@@ -27,6 +27,7 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.*;
 
@@ -67,6 +68,7 @@ public class MyPetSkillTreeConfig
         YamlConfiguration yamlConfig;
         File skillFile;
         boolean save;
+        String savedFiles = "";
         for (String mobType : myPetTypes)
         {
             save = false;
@@ -77,6 +79,7 @@ public class MyPetSkillTreeConfig
             if (skillTreeMobTypes.get(mobType).getSkillTreeNames().size() != 0)
             {
                 skillFile = new File(configPath + File.separator + mobType + ".yml");
+
 
                 yamlConfig = new YamlConfiguration(skillFile);
                 yamlConfig.clearConfig();
@@ -106,9 +109,11 @@ public class MyPetSkillTreeConfig
                 if (save)
                 {
                     yamlConfig.saveConfig();
+                    savedFiles += "\n   " + mobType + ".yml";
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "Saved to:\n" + configPath + File.separator + savedFiles, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static void loadSkillTree(YamlConfiguration MWConfig, MyPetSkillTreeMobType skillTreeMobType)
