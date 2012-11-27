@@ -286,6 +286,7 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDeath(final EntityDeathEvent event)
     {
+        MyPetUtil.getLogger().info("" + event.getEntity().getLastDamageCause().getCause());
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
@@ -429,7 +430,7 @@ public class MyPetEntityListener implements Listener
             {
                 killer = "Fall";
             }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE))
+            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE) || event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE_TICK))
             {
                 killer = "Fire";
             }
