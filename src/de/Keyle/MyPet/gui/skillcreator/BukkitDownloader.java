@@ -78,7 +78,6 @@ public class BukkitDownloader
 
     private void createUIComponents()
     {
-        nameLabel = new JLabel("Downloading Craftbukkit " + version + " from dl.bukkit.org");
         progressLabel = new JLabel("Downloaded: 0/0MiB");
     }
 
@@ -90,6 +89,7 @@ public class BukkitDownloader
             String path = SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
             path += File.separator + "MyPet";
+            nameLabel.setText("<HTML>Downloading Craftbukkit " + version + "<BR>   from: dl.bukkit.org<BR>   to: " + path + "\\craftbukkit.jar</HTML>");
             File bukkitPath = new File(path);
             bukkitPath.mkdirs();
 
