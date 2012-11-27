@@ -97,6 +97,7 @@ public class LevelCreator
                         skillTree.addLevel(newLevel);
 
                         ((SortedDefaultMutableTreeNode) skillTreeTreeModel.getRoot()).add(levelNode);
+                        skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                         skillTreeTree.updateUI();
                         saveButton.setEnabled(true);
                     }

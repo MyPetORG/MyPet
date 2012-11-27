@@ -21,6 +21,7 @@
             <constraints/>
             <properties>
               <rootVisible value="true"/>
+              <showsRootHandles value="true"/>
             </properties>
           </component>
         </children>
