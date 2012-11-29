@@ -118,7 +118,6 @@ public class SkilltreeCreator
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() - 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
                 skilltreeList.setSelectedIndex(skilltreeList.getSelectedIndex() - 1);
-                saveButton.setEnabled(true);
             }
         });
         skilltreeDownButton.addActionListener(new ActionListener()
@@ -130,7 +129,6 @@ public class SkilltreeCreator
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() + 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
                 skilltreeList.setSelectedIndex(skilltreeList.getSelectedIndex() + 1);
-                saveButton.setEnabled(true);
             }
         });
         addSkilltreeButton.addActionListener(new ActionListener()
@@ -149,7 +147,6 @@ public class SkilltreeCreator
                             MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).addSkillTree(skillTree);
                             skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
                             deleteSkilltreeButton.setEnabled(true);
-                            saveButton.setEnabled(true);
                         }
                         else
                         {
@@ -182,7 +179,6 @@ public class SkilltreeCreator
                 {
                     deleteSkilltreeButton.setEnabled(false);
                 }
-                saveButton.setEnabled(true);
             }
         });
         skilltreeList.addMouseListener(new MouseAdapter()
@@ -202,7 +198,6 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                saveButton.setEnabled(false);
                 MyPetSkillTreeConfig.saveSkillTrees();
             }
         });
@@ -233,7 +228,6 @@ public class SkilltreeCreator
                         {
                             deleteSkilltreeButton.setEnabled(false);
                         }
-                        saveButton.setEnabled(true);
                         break;
                 }
             }
@@ -297,7 +291,7 @@ public class SkilltreeCreator
         skilltreeCreatorFrame.setVisible(true);
         skilltreeCreatorFrame.setLocationRelativeTo(null);
 
-        levelCreator = new LevelCreator(skilltreeCreatorFrame, skilltreeCreator.saveButton);
+        levelCreator = new LevelCreator(skilltreeCreatorFrame);
         levelCreatorFrame = levelCreator.getFrame();
         levelCreatorFrame.setContentPane(levelCreator.getMainPanel());
         levelCreatorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

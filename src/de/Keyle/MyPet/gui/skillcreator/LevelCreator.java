@@ -69,7 +69,7 @@ public class LevelCreator
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
-    public LevelCreator(final JFrame parentFrame, final JButton saveButton)
+    public LevelCreator(final JFrame parentFrame)
     {
         addLevelButton.addActionListener(new ActionListener()
         {
@@ -104,7 +104,6 @@ public class LevelCreator
                         ((SortedDefaultMutableTreeNode) skillTreeTreeModel.getRoot()).add(levelNode);
                         skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                         skillTreeTree.updateUI();
-                        saveButton.setEnabled(true);
                     }
                     else
                     {
@@ -145,7 +144,6 @@ public class LevelCreator
                     ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
                     skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                     skillTreeTree.updateUI();
-                    saveButton.setEnabled(true);
                 }
                 countSkillLevels();
             }
@@ -184,7 +182,6 @@ public class LevelCreator
                 skillTreeTree.updateUI();
                 addSkillButton.setEnabled(false);
                 deleteLevelSkillButton.setEnabled(false);
-                saveButton.setEnabled(true);
                 countSkillLevels();
             }
         });
@@ -229,7 +226,6 @@ public class LevelCreator
                     inheritanceComboBox.setEnabled(false);
                     skillTree.setInheritance(null);
                 }
-                saveButton.setEnabled(true);
             }
         });
         backButton.addActionListener(new ActionListener()
@@ -250,7 +246,6 @@ public class LevelCreator
                     {
                         skillTree.setInheritance(e.getItem().toString());
                         countSkillLevels();
-                        saveButton.setEnabled(true);
                     }
                 }
             }
