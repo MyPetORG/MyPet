@@ -39,10 +39,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class LevelCreator
 {
@@ -342,7 +339,7 @@ public class LevelCreator
         this.inheritanceComboBoxModel.removeAllElements();
 
         inheritanceCheckBox.setSelected(false);
-        if (skillTreeMobType.getSkillTreeNames().size() == 1)
+        if (skillTreeMobType.getSkillTreeNames().size() == 1 && MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() == 0)
         {
             inheritanceCheckBox.setEnabled(false);
             inheritanceComboBox.setEnabled(false);
@@ -350,10 +347,20 @@ public class LevelCreator
         else
         {
             inheritanceCheckBox.setEnabled(true);
+            ArrayList<String> skilltreeNames = new ArrayList<String>();
             for (String skillTreeName : skillTreeMobType.getSkillTreeNames())
             {
-                if (!skillTreeName.equals(skillTree.getName()))
+                if (!skillTreeName.equals(skillTree.getName()) && !skilltreeNames.contains(skillTreeName))
                 {
+                    skilltreeNames.add(skillTreeName);
+                    inheritanceComboBoxModel.addElement(skillTreeName);
+                }
+            }
+            for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames())
+            {
+                if (!skillTreeName.equals(skillTree.getName()) && !skilltreeNames.contains(skillTreeName))
+                {
+                    skilltreeNames.add(skillTreeName);
                     inheritanceComboBoxModel.addElement(skillTreeName);
                 }
             }
