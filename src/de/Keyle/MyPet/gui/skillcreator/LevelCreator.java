@@ -32,6 +32,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -55,6 +58,8 @@ public class LevelCreator
     private JLabel mobTypeLabel;
     private JTable skillCounterTabel;
     private JLabel skilllevelLabel;
+    private JButton copyButton;
+    private JTextField permissionsTextField;
     private JFrame levelCreatorFrame;
 
     DefaultTableModel skillCounterTabelModel;
@@ -250,6 +255,15 @@ public class LevelCreator
                 }
             }
         });
+        copyButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                StringSelection stringSelection = new StringSelection("MyPet.custom.skilltree." + skillTree.getName());
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+            }
+        });
     }
 
     private void countSkillLevels()
@@ -327,6 +341,7 @@ public class LevelCreator
         this.skillTree = skillTree;
         this.skillTreeMobType = skillTreeMobType;
 
+        permissionsTextField.setText("MyPet.custom.skilltree." + skillTree.getName());
         mobTypeLabel.setText(skillTreeMobType.getMobTypeName());
 
         this.inheritanceComboBoxModel.removeAllElements();
