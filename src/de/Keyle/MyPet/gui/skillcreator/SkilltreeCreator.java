@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.net.URISyntaxException;
 
 public class SkilltreeCreator
 {
@@ -236,7 +237,15 @@ public class SkilltreeCreator
 
     public static void main(String[] args)
     {
-        String path = SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String path = "";
+        try
+        {
+            path = SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+        }
+        catch (URISyntaxException e)
+        {
+            e.printStackTrace();
+        }
         path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
         File bukkitFile = new File(path);
 
