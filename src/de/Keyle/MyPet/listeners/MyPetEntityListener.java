@@ -286,7 +286,6 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDeath(final EntityDeathEvent event)
     {
-        MyPetUtil.getLogger().info("" + event.getEntity().getLastDamageCause().getCause());
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
