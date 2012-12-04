@@ -23,6 +23,7 @@ import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalSit;
 import de.Keyle.MyPet.entity.pathfinder.target.*;
+import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
