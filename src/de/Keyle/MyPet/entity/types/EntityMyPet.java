@@ -258,29 +258,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     }
 
     /**
-     * N.A.
-     */
-    public void j_()
-    {
-        super.j_();
-        if (this.b)
-        {
-            this.e += (1.0F - this.e) * 0.4F;
-        }
-        else
-        {
-            this.e += (0.0F - this.e) * 0.4F;
-        }
-        if (this.G())
-        {
-            this.h = true;
-            this.g = false;
-            this.j = 0.0F;
-            this.i = 0.0F;
-        }
-    }
-
-    /**
      * Is called when a MyPet attemps to do damge to another entity
      */
     public boolean m(Entity entity)
