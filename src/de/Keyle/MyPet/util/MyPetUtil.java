@@ -111,6 +111,11 @@ public class MyPetUtil
         }
     }
 
+    public static boolean canHurtAt(Player petOwner, Location location)
+    {
+        return canHurtWorldGuard(location) && petOwner.getGameMode() != GameMode.CREATIVE && location.getWorld().getPVP();
+    }
+
     public static boolean canHurt(Player petOwner, Player victim)
     {
         return canHurtCitizens(victim) && canHurtFactions(petOwner, victim) && canHurtTowny(petOwner, victim) && canHurtWorldGuard(victim) && victim.getGameMode() != GameMode.CREATIVE && victim.getWorld().getPVP();
@@ -125,6 +130,20 @@ public class MyPetUtil
                 NPC npc = CitizensAPI.getNPCRegistry().getNPC(victim);
                 return !npc.data().get("protected", true);
             }
+        }
+        return true;
+    }
+
+    public static boolean canHurtWorldGuard(Location location)
+    {
+        if (MyPetConfig.useWorldGuard && getServer().getPluginManager().isPluginEnabled("WorldGuard"))
+        {
+            WorldGuardPlugin WGP = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
+            RegionManager mgr = WGP.getGlobalRegionManager().get(location.getWorld());
+            Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
+            ApplicableRegionSet set = mgr.getApplicableRegions(pt);
+
+            return set.allows(DefaultFlag.PVP);
         }
         return true;
     }
