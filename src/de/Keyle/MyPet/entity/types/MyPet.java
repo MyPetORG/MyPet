@@ -300,6 +300,11 @@ public abstract class MyPet
         hungerTime = MyPetConfig.hungerSystemTime;
     }
 
+    public int getDamage()
+    {
+        return MyPet.getStartDamage(this.getClass()) + (getSkillSystem().hasSkill("Damage") ? getSkillSystem().getSkill("Damage").getLevel() : 0);
+    }
+
     public MyPetSkillSystem getSkillSystem()
     {
         return skillSystem;
@@ -387,10 +392,7 @@ public abstract class MyPet
 
     public static void setStartHP(Class<? extends MyPet> myPetClass, int hp)
     {
-        if (startHP.containsKey(myPetClass))
-        {
-            startHP.put(myPetClass, hp);
-        }
+        startHP.put(myPetClass, hp);
     }
 
     public static int getStartDamage(Class<? extends MyPet> myPetClass)
@@ -404,10 +406,7 @@ public abstract class MyPet
 
     public static void setStartDamage(Class<? extends MyPet> myPetClass, int damage)
     {
-        if (startDamage.containsKey(myPetClass))
-        {
-            startDamage.put(myPetClass, damage);
-        }
+        startDamage.put(myPetClass, damage);
     }
 
     public static List<Material> getFood(Class<? extends MyPet> myPetClass)
