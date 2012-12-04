@@ -29,6 +29,7 @@ public class Control extends MyPetGenericSkill
 {
     public static Material item = Material.STRING;
     private Location moveTo;
+    private Location prevMoveTo;
 
     public Control()
     {
@@ -61,6 +62,18 @@ public class Control extends MyPetGenericSkill
 
     public void setMoveTo(Location loc)
     {
-        moveTo = loc;
+
+        if (prevMoveTo != null)
+        {
+            if (MyPetUtil.getDistance2D(loc, prevMoveTo) > 1)
+            {
+                moveTo = loc;
+                prevMoveTo = loc;
+            }
+        }
+        else
+        {
+            moveTo = loc;
+        }
     }
 }
