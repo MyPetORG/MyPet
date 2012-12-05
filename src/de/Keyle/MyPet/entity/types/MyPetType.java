@@ -78,15 +78,15 @@ public enum MyPetType
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
     Zombie(EntityType.ZOMBIE, "Zombie", EntityMyZombie.class, MyZombie.class);
 
-    private EntityType entityType;
-    private String typeName;
+    private EntityType bukkitType;
+    private String name;
     private Class<? extends EntityMyPet> entityClass;
     private Class<? extends MyPet> myPetClass;
 
-    private MyPetType(EntityType type, String name, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass)
+    private MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass)
     {
-        this.entityType = type;
-        this.typeName = name;
+        this.bukkitType = bukkitType;
+        this.name = typeName;
         this.entityClass = entityClass;
         this.myPetClass = myPetClass;
     }
@@ -95,7 +95,7 @@ public enum MyPetType
     {
         for (MyPetType myPetType : MyPetType.values())
         {
-            if (myPetType.entityType == type)
+            if (myPetType.bukkitType == type)
             {
                 return myPetType;
             }
@@ -119,7 +119,7 @@ public enum MyPetType
     {
         for (MyPetType myPetType : MyPetType.values())
         {
-            if (myPetType.typeName.equalsIgnoreCase(name))
+            if (myPetType.name.equalsIgnoreCase(name))
             {
                 return myPetType;
             }
@@ -129,9 +129,9 @@ public enum MyPetType
 
     public static boolean isLeashableEntityType(EntityType type)
     {
-        for (MyPetType MPT : MyPetType.values())
+        for (MyPetType myPetType : MyPetType.values())
         {
-            if (MPT.entityType == type)
+            if (myPetType.bukkitType == type)
             {
                 return true;
             }
@@ -141,7 +141,7 @@ public enum MyPetType
 
     public EntityType getEntityType()
     {
-        return entityType;
+        return bukkitType;
     }
 
     public Class<? extends EntityMyPet> getEntityClass()
@@ -156,7 +156,7 @@ public enum MyPetType
 
     public String getTypeName()
     {
-        return typeName;
+        return name;
     }
 
     public EntityMyPet getNewEntityInstance(World world, MyPet myPet)
