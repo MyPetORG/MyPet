@@ -199,7 +199,7 @@ public class MyPetList
 
     public static InactiveMyPet getInactiveMyPet(Player owner)
     {
-        for (MyPetPlayer myPetPlayer : mActivePets.keySet())
+        for (MyPetPlayer myPetPlayer : mInctivePets.keySet())
         {
             if (myPetPlayer.equals(owner))
             {
