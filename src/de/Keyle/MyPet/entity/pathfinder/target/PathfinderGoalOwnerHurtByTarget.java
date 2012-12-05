@@ -67,6 +67,14 @@ public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
                 return false;
             }
         }
+        else if (lastDamager instanceof EntityMyPet)
+        {
+            MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
+            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+            {
+                return false;
+            }
+        }
         if (myPet.getSkillSystem().hasSkill("Behavior"))
         {
             Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");

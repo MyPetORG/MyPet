@@ -95,6 +95,14 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
                 return false;
             }
         }
+        else if (this.target instanceof EntityMyPet)
+        {
+            MyPet targetMyPet = ((EntityMyPet) this.target).getMyPet();
+            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+            {
+                return false;
+            }
+        }
         this.target = this.petEntity.goalTarget;
         this.petEntity.goalTarget = null;
         return true;

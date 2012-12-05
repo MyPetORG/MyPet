@@ -82,6 +82,14 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
                                             continue;
                                         }
                                     }
+                                    else if (entityLiving instanceof EntityMyPet)
+                                    {
+                                        MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
+                                        if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+                                        {
+                                            continue;
+                                        }
+                                    }
                                     this.target = entityLiving;
                                     return true;
                                 }

@@ -84,6 +84,14 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
                             continue;
                         }
                     }
+                    else if (entityLiving instanceof EntityMyPet)
+                    {
+                        MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
+                        if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+                        {
+                            continue;
+                        }
+                    }
                     if (behaviorSkill != null)
                     {
                         if (behaviorSkill.getBehavior() == BehaviorState.Raid)

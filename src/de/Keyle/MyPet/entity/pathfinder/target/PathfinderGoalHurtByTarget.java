@@ -43,6 +43,22 @@ public class PathfinderGoalHurtByTarget extends net.minecraft.server.PathfinderG
             {
                 return super.a();
             }
+            else
+            {
+                return false;
+            }
+        }
+        else if (d.aC() instanceof EntityMyPet)
+        {
+            MyPet targetMyPet = ((EntityMyPet) d.aC()).getMyPet();
+            if (MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+            {
+                return super.a();
+            }
+            else
+            {
+                return false;
+            }
         }
         return super.a();
     }
