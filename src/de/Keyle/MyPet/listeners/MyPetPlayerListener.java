@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
@@ -101,18 +102,25 @@ public class MyPetPlayerListener implements Listener
     public void onPlayerJoin(final PlayerJoinEvent event)
     {
         MyPetUtil.getDebugLogger().info("PlayerJoin: " + event.getPlayer().getName() + "     ----------------------------------");
-        MyPetUtil.getDebugLogger().info("MyPetPlayer: " + (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()) ? MyPetPlayer.getMyPetPlayer(event.getPlayer().getName()).toString() : "false"));
-        MyPetUtil.getDebugLogger().info("has MyPet-permission: " + MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"));
-        if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"))
+        MyPetUtil.getDebugLogger().info("   - MyPetPlayer: " + (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()) ? MyPetPlayer.getMyPetPlayer(event.getPlayer().getName()).toString() : "false"));
+
+        MyPetUtil.getDebugLogger().info("   - has inactive MyPet: " + MyPetList.hasInactiveMyPet(event.getPlayer()));
+        if (MyPetList.hasInactiveMyPet(event.getPlayer()))
         {
-            if (MyPetList.hasInactiveMyPet(event.getPlayer()))
+            InactiveMyPet inactiveMyPet = MyPetList.getInactiveMyPet(event.getPlayer());
+            MyPetUtil.getDebugLogger().info("   - has MyPet-permission: " + MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"));
+            if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + inactiveMyPet.getPetType().getTypeName()))
             {
                 MyPetList.setMyPetActive(event.getPlayer(), true);
             }
-            MyPetUtil.getDebugLogger().info("has MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
-            if (MyPetList.hasMyPet(event.getPlayer()))
+        }
+        MyPetUtil.getDebugLogger().info("   - has MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
+        if (MyPetList.hasMyPet(event.getPlayer()))
+        {
+            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            MyPetUtil.getDebugLogger().info("   - has MyPet-permission: " + MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"));
+            if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + myPet.getPetType().getTypeName()))
             {
-                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
                 if (myPet.status == PetState.Dead)
                 {
                     event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
@@ -126,15 +134,8 @@ public class MyPetPlayerListener implements Listener
                     myPet.status = PetState.Despawned;
                 }
             }
-            MyPetUtil.getDebugLogger().info("-------------------------------------------------------------");
-        }
-        else
-        {
-            if (MyPetList.hasMyPet(event.getPlayer()))
+            else
             {
-                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-
-                myPet.removePet();
                 MyPetList.setMyPetActive(event.getPlayer(), false);
             }
         }
@@ -166,15 +167,19 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onPlayerMove(final PlayerMoveEvent event)
     {
-        if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash"))
+        if (MyPetList.hasInactiveMyPet(event.getPlayer()))
         {
-            if (MyPetList.hasInactiveMyPet(event.getPlayer()))
+            InactiveMyPet inactiveMyPet = MyPetList.getInactiveMyPet(event.getPlayer());
+            if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + inactiveMyPet.getPetType().getTypeName()))
             {
                 MyPetList.setMyPetActive(event.getPlayer(), true);
             }
-            if (MyPetList.hasMyPet(event.getPlayer()))
+        }
+        if (MyPetList.hasMyPet(event.getPlayer()))
+        {
+            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+            if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + myPet.getPetType().getTypeName()))
             {
-                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
                 if (myPet.status == PetState.Here)
                 {
                     if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
@@ -186,16 +191,16 @@ public class MyPetPlayerListener implements Listener
                         else
                         {
                             myPet.removePet();
-                            myPet.setLocation(event.getPlayer().getLocation());
+                            myPet.setLocation(event.getTo());
                             myPet.createPet();
                         }
                     }
                 }
             }
-        }
-        else if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            MyPetList.setMyPetActive(event.getPlayer(), false);
+            else
+            {
+                MyPetList.setMyPetActive(event.getPlayer(), false);
+            }
         }
     }
 }
