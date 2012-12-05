@@ -135,7 +135,7 @@ public class MyPetEntityListener implements Listener
                     if (!MyPetList.hasMyPet(damager))
                     {
                         Entity leashTarget = event.getEntity();
-                        if (!MyPetPermissions.has(damager, "MyPet.user.leash." + leashTarget.getType().getName().toLowerCase()) || damager.getItemInHand().getType() != MyPetConfig.leashItem)
+                        if (!MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()) || damager.getItemInHand().getType() != MyPetConfig.leashItem)
                         {
                             return;
                         }
