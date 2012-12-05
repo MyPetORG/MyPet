@@ -42,7 +42,7 @@ public class EntityMyCaveSpider extends EntityMyPet
 
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(4, controlPathfinder);
-        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
+        this.goalSelector.a(5, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, 20F, controlPathfinder));
         this.goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(6, new PathfinderGoalRandomLookaround(this));
 

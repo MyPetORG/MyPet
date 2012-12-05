@@ -20,31 +20,31 @@
 package de.Keyle.MyPet.entity.pathfinder.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.*;
+import net.minecraft.server.Navigation;
+import net.minecraft.server.PathfinderGoal;
+import org.bukkit.Location;
 
 public class PathfinderGoalFollowOwner extends PathfinderGoal
 {
     private EntityMyPet petEntity;
-    private EntityLiving petOwner;
-    private World world;
-    private float f;
+    private float walkSpeed;
     private Navigation nav;
-    private int h;
-    private float b;
-    private float maxDistance;
-    private boolean i;
+    private int setPathTimer = 0;
+    private float stopDistance;
+    private float startDistance;
+    private float teleportDistance;
+    private boolean nav_a_save;
     private PathfinderGoalControl controlPathfinderGoal;
 
-    public PathfinderGoalFollowOwner(EntityMyPet entitytameableanimal, float speed, float maxDistance, float f2, PathfinderGoalControl Control)
+    public PathfinderGoalFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance, PathfinderGoalControl pathfinderGoalControl)
     {
-        this.controlPathfinderGoal = Control;
-        this.petEntity = entitytameableanimal;
-        this.world = entitytameableanimal.world;
-        this.f = speed;
-        this.nav = entitytameableanimal.getNavigation();
-        this.maxDistance = maxDistance;
-        this.b = f2;
-        this.a(3);
+        this.controlPathfinderGoal = pathfinderGoalControl;
+        this.petEntity = entityMyPet;
+        this.walkSpeed = walkSpeed;
+        this.nav = entityMyPet.getNavigation();
+        this.startDistance = startDistance * startDistance;
+        this.stopDistance = stopDistance * stopDistance;
+        this.teleportDistance = teleportDistance * teleportDistance;
     }
 
     /**
@@ -52,9 +52,36 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
      */
     public boolean a()
     {
-        EntityLiving entityLiving = this.petEntity.getOwner();
+        if (!this.petEntity.canMove())
+        {
+            return false;
+        }
+        else if (this.petEntity.aG() != null)
+        {
+            return false;
+        }
+        else if (this.petEntity.e(this.petEntity.getOwner()) < this.startDistance)
+        {
+            return false;
+        }
+        else if (controlPathfinderGoal.moveTo != null)
+        {
+            return false;
+        }
+        return true;
+    }
 
-        if (entityLiving == null)
+    public boolean b()
+    {
+        if (controlPathfinderGoal.moveTo != null)
+        {
+            return false;
+        }
+        else if (this.nav.f())
+        {
+            return false;
+        }
+        else if (this.petEntity.e(this.petEntity.getOwner()) < this.stopDistance)
         {
             return false;
         }
@@ -66,70 +93,38 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.e(entityLiving) < (double) (this.maxDistance * this.maxDistance))
-        {
-            return false;
-        }
-        else if (controlPathfinderGoal.moveTo != null)
-        {
-            return false;
-        }
-        else
-        {
-            this.petOwner = entityLiving;
-            return true;
-        }
-    }
-
-    public boolean b()
-    {
-        return controlPathfinderGoal.moveTo == null && !this.nav.f() && this.petEntity.e(this.petOwner) > (double) (this.b * this.b) && this.petEntity.canMove();
+        return true;
     }
 
     public void c()
     {
-        this.h = 0;
-        this.i = this.nav.a();
+        this.setPathTimer = 0;
+        this.nav_a_save = this.nav.a();
         this.nav.a(false);
     }
 
     public void d()
     {
-        this.petOwner = null;
         this.nav.f();
-        this.nav.a(this.i);
+        this.nav.a(this.nav_a_save);
     }
 
     public void e()
     {
-        this.petEntity.getControllerLook().a(this.petOwner, 10.0F, (float) this.petEntity.bp());
+        this.petEntity.getControllerLook().a(this.petEntity.getOwner(), 10.0F, (float) this.petEntity.bp());
 
         if (this.petEntity.canMove())
         {
-            if (--this.h <= 0)
+            if (--this.setPathTimer <= 0)
             {
-                this.h = 10;
+                this.setPathTimer = 10;
 
-                if (!this.nav.a(this.petOwner, this.f))
+                if (!this.nav.a(this.petEntity.getOwner(), this.walkSpeed))
                 {
-                    if (this.petEntity.e(this.petOwner) >= 144.0D && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null)
+                    if (this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null)
                     {
-                        int i = MathHelper.floor(this.petOwner.locX) - 2;
-                        int j = MathHelper.floor(this.petOwner.locZ) - 2;
-                        int k = MathHelper.floor(this.petOwner.boundingBox.b);
-
-                        for (int l = 0 ; l <= 4 ; ++l)
-                        {
-                            for (int i1 = 0 ; i1 <= 4 ; ++i1)
-                            {
-                                if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && this.world.t(i + l, k - 1, j + i1) && !this.world.t(i + l, k, j + i1) && !this.world.t(i + l, k + 1, j + i1))
-                                {
-                                    this.petEntity.setPositionRotation((double) ((float) (i + l) + 0.5F), (double) k, (double) ((float) (j + i1) + 0.5F), this.petEntity.yaw, this.petEntity.pitch);
-                                    this.nav.f();
-                                    return;
-                                }
-                            }
-                        }
+                        Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
+                        this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                     }
                 }
             }

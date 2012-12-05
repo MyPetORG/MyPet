@@ -41,7 +41,7 @@ public class EntityMyIronGolem extends EntityMyPet
         PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
 
         this.goalSelector.a(3, controlPathfinder);
-        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, controlPathfinder));
+        this.goalSelector.a(4, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, 20F, controlPathfinder));
         this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
 

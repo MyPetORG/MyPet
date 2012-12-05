@@ -49,7 +49,7 @@ public class EntityMyOcelot extends EntityMyPet
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
         this.goalSelector.a(2, this.sitPathfinder);
         this.goalSelector.a(5, controlPathfinder);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, controlPathfinder));
+        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F, controlPathfinder));
         this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
 
