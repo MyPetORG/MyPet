@@ -30,12 +30,13 @@ import de.Keyle.MyPet.util.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MyPetPlayerListener implements Listener
 {
@@ -77,23 +78,6 @@ public class MyPetPlayerListener implements Listener
                         ((Control) myPet.getSkillSystem().getSkill("Control")).setMoveTo(block.getLocation());
                     }
                 }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event)
-    {
-        if (event.isCancelled() || event.getPlayer().getItemInHand().getType() != MyPetConfig.leashItem || !(event.getRightClicked() instanceof LivingEntity))
-        {
-            return;
-        }
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (event.getRightClicked() != myPet.getCraftPet())
-            {
-                myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) event.getRightClicked()).getHandle();
             }
         }
     }
