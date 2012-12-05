@@ -193,6 +193,7 @@ public class MyPetList
         inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
         inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());
         inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
+        inactiveMyPet.setPetType(activeMyPet.getPetType());
 
         return inactiveMyPet;
     }
