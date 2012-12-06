@@ -62,7 +62,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.aG() != null)
+        else if (this.petEntity.aG() != null && this.petEntity.aG().isAlive())
         {
             return false;
         }
@@ -95,7 +95,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.aG() != null)
+        else if (this.petEntity.aG() != null && this.petEntity.aG().isAlive())
         {
             return false;
         }

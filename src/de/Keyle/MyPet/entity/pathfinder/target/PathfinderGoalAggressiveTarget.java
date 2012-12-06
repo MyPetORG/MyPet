@@ -120,6 +120,10 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
         {
             return false;
         }
+        else if (this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)).size() == 0)
+        {
+            return false;
+        }
         return true;
     }
 
