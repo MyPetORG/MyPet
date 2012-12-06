@@ -36,9 +36,8 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     private boolean nav_a_save;
     private PathfinderGoalControl controlPathfinderGoal;
 
-    public PathfinderGoalFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance, PathfinderGoalControl pathfinderGoalControl)
+    public PathfinderGoalFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance)
     {
-        this.controlPathfinderGoal = pathfinderGoalControl;
         this.petEntity = entityMyPet;
         this.walkSpeed = walkSpeed;
         this.nav = entityMyPet.getNavigation();
@@ -52,6 +51,13 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
      */
     public boolean a()
     {
+        if (petEntity.petPathfinderSelector.hasGoal("Control"))
+        {
+            if (controlPathfinderGoal == null)
+            {
+                controlPathfinderGoal = (PathfinderGoalControl) petEntity.petPathfinderSelector.getGoal("Control");
+            }
+        }
         if (!this.petEntity.canMove())
         {
             return false;
@@ -64,7 +70,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (controlPathfinderGoal.moveTo != null)
+        else if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null)
         {
             return false;
         }

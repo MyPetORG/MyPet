@@ -40,36 +40,31 @@ public class EntityMyWolf extends EntityMyPet
         this.texture = "/mob/wolf.png";
         this.a(0.6F, 0.8F);
 
-        if (this.sitPathfinder == null)
-        {
-            this.sitPathfinder = new PathfinderGoalSit(this);
-        }
-        PathfinderGoalControl controlPathfinder = new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F);
-
-        this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, this.sitPathfinder);
-        this.goalSelector.a(5, controlPathfinder);
-        this.goalSelector.a(7, new PathfinderGoalFollowOwner(this, this.walkSpeed, 5.0F, 2.0F, 20F, controlPathfinder));
-        this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        this.goalSelector.a(8, new PathfinderGoalRandomLookaround(this));
-
+        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Sit", sitPathfinder);
         if (MyPet.getStartDamage(MyWolf.class) > 0)
         {
-            this.goalSelector.a(3, new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-            this.goalSelector.a(4, new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
-            this.targetSelector.a(1, new PathfinderGoalOwnerHurtByTarget(this));
-            this.targetSelector.a(2, new PathfinderGoalOwnerHurtTarget(myPet));
-            this.targetSelector.a(3, new PathfinderGoalHurtByTarget(this, true));
-            this.targetSelector.a(4, new PathfinderGoalControlTarget(myPet, controlPathfinder, 1));
-            this.targetSelector.a(5, new PathfinderGoalAggressiveTarget(myPet, 15));
-            this.targetSelector.a(6, new PathfinderGoalFarmTarget(myPet, 15));
+            petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
+            petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
+            petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));
+            petTargetSelector.addGoal("HurtByTarget", new PathfinderGoalHurtByTarget(this, true));
+            petTargetSelector.addGoal("ControlTarget", new PathfinderGoalControlTarget(myPet, 1));
+            petTargetSelector.addGoal("AggressiveTarget", new PathfinderGoalAggressiveTarget(myPet, 15));
+            petTargetSelector.addGoal("FarmTarget", new PathfinderGoalFarmTarget(myPet, 15));
         }
+        petPathfinderSelector.addGoal("Control", new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
+        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
 
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
         {
+            this.sitPathfinder = new PathfinderGoalSit(this);
+
             super.setMyPet(myPet);
 
             this.setSitting(((MyWolf) myPet).isSitting());
@@ -91,10 +86,6 @@ public class EntityMyWolf extends EntityMyPet
 
     public void setSitting(boolean sitting)
     {
-        if (this.sitPathfinder == null)
-        {
-            this.sitPathfinder = new PathfinderGoalSit(this);
-        }
         this.sitPathfinder.setSitting(sitting);
     }
 

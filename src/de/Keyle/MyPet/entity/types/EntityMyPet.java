@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.pathfinder.MyPetPathfinderGoalSelector;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
@@ -35,6 +36,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected boolean g;
     protected float j;
     protected float i;
+    public MyPetPathfinderGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected float walkSpeed = 0.3F;
 
@@ -54,7 +56,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         super(world);
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
-        this.getNavigation().a(true);
+
+        this.petPathfinderSelector = new MyPetPathfinderGoalSelector(this.goalSelector);
+        this.petTargetSelector = new MyPetPathfinderGoalSelector(this.targetSelector);
+
+        this.getNavigation().b(true);
     }
 
     public boolean isMyPet()

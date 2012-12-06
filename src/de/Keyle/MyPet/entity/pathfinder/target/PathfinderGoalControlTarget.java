@@ -39,7 +39,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
     private float range;
     private PathfinderGoalControl controlPathfinderGoal;
 
-    public PathfinderGoalControlTarget(MyPet myPet, PathfinderGoalControl controlPathfinderGoal, float range)
+    public PathfinderGoalControlTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
@@ -52,6 +52,17 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
      */
     public boolean a()
     {
+        if (petEntity.petPathfinderSelector.hasGoal("Control"))
+        {
+            if (controlPathfinderGoal == null)
+            {
+                controlPathfinderGoal = (PathfinderGoalControl) petEntity.petPathfinderSelector.getGoal("Control");
+            }
+        }
+        else
+        {
+            return false;
+        }
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
         {
             Behavior behaviorSkill = null;
