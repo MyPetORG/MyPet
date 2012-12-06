@@ -225,13 +225,27 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     --itemStack.count;
                 }
                 this.heal(3, RegainReason.EATING);
-                myPet.setHungerValue(myPet.getHungerValue() + 3);
+                int hungerAdd = 6 - ((getMaxHealth() - getHealth()) * 2);
+                hungerAdd = hungerAdd < 0 ? 0 : hungerAdd;
+                myPet.setHungerValue(myPet.getHungerValue() + hungerAdd);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 this.tamedEffect(true);
                 return true;
+            }
+            else if (myPet.getHungerValue() < 100)
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                myPet.setHungerValue(myPet.getHungerValue() + 6);
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
             }
         }
         return false;
