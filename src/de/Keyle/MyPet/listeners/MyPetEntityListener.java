@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -71,7 +72,18 @@ public class MyPetEntityListener implements Listener
                 {
                     Player damager = (Player) e.getDamager();
                     MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                    if (damager.getItemInHand().getType() == MyPetConfig.leashItem)
+                    if (myPet.getCraftPet().getHandle().isRidden())
+                    {
+                        event.setCancelled(true);
+                        if (myPet.getSkillSystem().hasSkill("Ride"))
+                        {
+                            if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
+                            {
+                                ((PathfinderGoalRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
+                            }
+                        }
+                    }
+                    else if (damager.getItemInHand().getType() == MyPetConfig.leashItem)
                     {
                         String msg;
                         if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)

@@ -44,7 +44,6 @@ import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetJSexp;
 import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.skills.*;
@@ -182,6 +181,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkillSystem.registerSkill(Control.class);
         MyPetSkillSystem.registerSkill(HP.class);
         MyPetSkillSystem.registerSkill(Poison.class);
+        MyPetSkillSystem.registerSkill(Ride.class);
 
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 

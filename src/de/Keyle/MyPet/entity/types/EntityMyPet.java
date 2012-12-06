@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.pathfinder.MyPetPathfinderGoalSelector;
 import de.Keyle.MyPet.skill.skills.Control;
+import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.*;
 import org.bukkit.Location;
@@ -39,7 +40,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public MyPetPathfinderGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected float walkSpeed = 0.3F;
-
+    protected boolean isRidden = false;
     protected boolean isMyPet = false;
     protected MyPet myPet;
 
@@ -103,6 +104,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             return MyPet.getStartHP(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         }
+    }
+
+    public boolean isRidden()
+    {
+        return isRidden;
+    }
+
+    public void setRidden(boolean flag)
+    {
+        isRidden = flag;
     }
 
     public void setLocation(Location loc)
@@ -181,9 +192,23 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             return false;
         }
 
+
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
         {
-            if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
+            if (this.isRidden())
+            {
+                this.getOwner().mount(null);
+                return true;
+            }
+            if (myPet.getSkillSystem().getSkillLevel("Ride") > 0)
+            {
+                if (itemStack.id == Ride.item.getId() && canMove())
+                {
+                    this.getOwner().mount(this);
+                    return true;
+                }
+            }
+            else if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
             {
                 if (itemStack.id == Control.item.getId())
                 {

@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.Control;
+import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -60,6 +61,17 @@ public class MyPetPlayerListener implements Listener
                             if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                             {
                                 event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
+                                return;
+                            }
+                        }
+                    }
+                    if (myPet.getSkillSystem().hasSkill("Ride"))
+                    {
+                        Ride ride = (Ride) myPet.getSkillSystem().getSkill("Ride");
+                        if (ride.getLevel() > 0)
+                        {
+                            if (myPet.getCraftPet().getHandle().isRidden())
+                            {
                                 return;
                             }
                         }

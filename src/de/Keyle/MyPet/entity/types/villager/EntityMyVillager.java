@@ -21,12 +21,14 @@ package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.*;
 
 public class EntityMyVillager extends EntityMyPet
@@ -35,10 +37,10 @@ public class EntityMyVillager extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/villager/villager.png";
-        this.bw = 0.5F;
         this.a(0.6F, 0.8F);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
         if (MyPet.getStartDamage(MyVillager.class) > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
