@@ -47,7 +47,7 @@ public class Pickup extends MyPetGenericSkill
     {
         if (level > 0)
         {
-            if (myPet.getSkillSystem().hasSkill("Inventory") && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+            if (myPet.getSkillSystem().getSkillLevel("Inventory") > 0)
             {
                 pickup = !pickup;
                 myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", myPet.petName));
@@ -73,7 +73,7 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void schedule()
     {
-        if (level > 0 && pickup && myPet.status == PetState.Here && myPet.getSkillSystem().hasSkill("Inventory") && myPet.getSkillSystem().getSkill("Inventory").getLevel() > 0)
+        if (level > 0 && pickup && myPet.status == PetState.Here && myPet.getSkillSystem().getSkillLevel("Inventory") > 0)
         {
             for (Entity e : myPet.getCraftPet().getNearbyEntities(level * rangePerLevel, level * rangePerLevel, rangePerLevel))
             {

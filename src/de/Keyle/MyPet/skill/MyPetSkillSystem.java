@@ -127,4 +127,13 @@ public class MyPetSkillSystem
     {
         return skills.containsKey(skillName);
     }
+
+    public int getSkillLevel(String skillName)
+    {
+        if (hasSkill(skillName))
+        {
+            return getSkill(skillName).getLevel();
+        }
+        return -1;
+    }
 }

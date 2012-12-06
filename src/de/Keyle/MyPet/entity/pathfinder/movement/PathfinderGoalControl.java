@@ -54,7 +54,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
         {
             stopControl = false;
         }
-        if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+        if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
         {
             Control controlSkill = (Control) myPet.getSkillSystem().getSkill("Control");
             return controlSkill.getLocation(false) != null;

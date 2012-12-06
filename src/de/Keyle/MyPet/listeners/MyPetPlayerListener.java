@@ -50,7 +50,7 @@ public class MyPetPlayerListener implements Listener
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.status == PetState.Here && myPet.getCraftPet().canMove())
             {
-                if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+                if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
                 {
                     if (myPet.getSkillSystem().hasSkill("Behavior"))
                     {

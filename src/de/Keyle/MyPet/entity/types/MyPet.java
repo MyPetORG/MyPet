@@ -302,7 +302,7 @@ public abstract class MyPet
 
     public int getDamage()
     {
-        return MyPet.getStartDamage(this.getClass()) + (getSkillSystem().hasSkill("Damage") ? getSkillSystem().getSkill("Damage").getLevel() : 0);
+        return MyPet.getStartDamage(this.getClass()) + (getSkillSystem().hasSkill("Damage") ? getSkillSystem().getSkillLevel("Damage") : 0);
     }
 
     public MyPetSkillSystem getSkillSystem()

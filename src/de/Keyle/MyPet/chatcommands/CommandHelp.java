@@ -48,15 +48,15 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage("/petcall | Call your pet  (alias: /pc or /petc)");
                 player.sendMessage("/petskill | Shows the skill-levels");
 
-                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Inventory") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Inventory").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().getSkillLevel("Inventory") > 0)
                 {
                     player.sendMessage("/petinventory | Opens the inventory of the pet  (alias: /pi or /peti)");
                 }
-                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Pickup") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Pickup").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().getSkillLevel("Pickup") > 0)
                 {
                     player.sendMessage("/petpickup | Toggle pickup on/off  (alias: /pp or /petp)");
                 }
-                if (MyPetList.getMyPet(player).getSkillSystem().hasSkill("Behavior") && MyPetList.getMyPet(player).getSkillSystem().getSkill("Behavior").getLevel() > 0)
+                if (MyPetList.getMyPet(player).getSkillSystem().getSkillLevel("Behavior") > 0)
                 {
                     player.sendMessage("/petbehavior | Toggles the behaivior  (alias: /pb or /petb)");
                 }

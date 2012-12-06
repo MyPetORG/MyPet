@@ -177,7 +177,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
         {
-            if (myPet.getSkillSystem().hasSkill("Control") && myPet.getSkillSystem().getSkill("Control").getLevel() > 0)
+            if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
             {
                 if (itemStack.id == Control.item.getId())
                 {

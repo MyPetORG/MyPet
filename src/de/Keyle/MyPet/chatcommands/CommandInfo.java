@@ -63,7 +63,7 @@ public class CommandInfo implements CommandExecutor
 
                 if (!myPet.isPassiv())
                 {
-                    int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkill("Damage").getLevel() : 0);
+                    int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkillLevel("Damage") : 0);
                     player.sendMessage(MyPetUtil.setColors("   Damage: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
                 }
                 if (MyPetConfig.hungerSystem)
