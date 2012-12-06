@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2011-2012 Keyle
+  ~
+  ~ This file is part of MyPet
+  ~
+  ~ MyPet is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MyPet is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project name="MyPet" default="Main" basedir=".">
+
+    <!-- Setting some vars -->
+    <property name="MyPet.bukkit.version" value="0.2" />
+    <property name="MyPet.minecraft.version" value="1.4.5" />
+    <property name="MyPet.src.dir" location="${basedir}/src" />
+    <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
+    <property name="MyPet.output.dir" location="${basedir}/../out/jar" />
+    <property name="MyPet.build.dir" location="${MyPet.output.dir}/MyPet" />
+
+    <!-- Adding classpathes -->
+    <path id="MyPet.manifest.classpath">
+        <pathelement location="craftbukkit-1.3.2-R1.0.jar" />
+        <pathelement location="craftbukkit-1.3.2-R2.0.jar" />
+        <pathelement location="craftbukkit.jar" />
+    </path>
+
+    <path id="MyPet.module.classpath">
+        <pathelement location="${MyPet.output.dir}" />
+        <pathelement location="${basedir}/../Libraries/Factions.jar" />
+        <pathelement location="${basedir}/../Libraries/Towny.jar" />
+        <pathelement location="${basedir}/../Libraries/WorldEdit.jar" />
+        <pathelement location="${basedir}/../Libraries/WorldGuard.jar" />
+        <pathelement location="${basedir}/../Libraries/Vault.jar" />
+        <pathelement location="${basedir}/../Libraries/citizensapi-2.0.jar" />
+        <pathelement location="${basedir}/../Libraries/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
+        <pathelement location="${basedir}/../Libraries/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
+    </path>
+
+    <path id="javac2.classpath">
+        <pathelement location="${idea.lib}/javac2.jar" />
+        <pathelement location="${idea.lib}/jdom.jar" />
+        <pathelement location="${idea.lib}/asm.jar" />
+        <pathelement location="${idea.lib}/asm-commons.jar" />
+    </path>
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath" />
+
+    <!-- Construct Class-Path for the MANIFEST -->
+    <pathconvert property="MyPet.manifest.classpath.dot" pathsep=" ">
+        <path refid="MyPet.manifest.classpath" />
+        <chainedmapper>
+            <flattenmapper />
+            <globmapper from="*" to="./*" />
+        </chainedmapper>
+    </pathconvert>
+    <pathconvert property="MyPet.manifest.classpath.dotdot" pathsep=" ">
+        <path refid="MyPet.manifest.classpath" />
+        <chainedmapper>
+            <flattenmapper />
+            <globmapper from="*" to="../*" />
+        </chainedmapper>
+    </pathconvert>
+    <pathconvert property="MyPet.manifest.classpath.MyPet" pathsep=" ">
+        <path refid="MyPet.manifest.classpath" />
+        <chainedmapper>
+            <flattenmapper />
+            <globmapper from="*" to="./MyPet/*" />
+        </chainedmapper>
+    </pathconvert>
+
+    <!-- Deletes the existing directories -->
+    <target name="1_clean">
+        <delete dir="${MyPet.build.dir}" />
+        <delete file="${MyPet.output.dir}/MyPet.jar" />
+    </target>
+
+    <!-- Creates the directories -->
+    <target name="2_makedir" depends="1_clean">
+        <mkdir dir="${MyPet.output.dir}" />
+        <mkdir dir="${MyPet.build.dir}" />
+    </target>
+
+    <!-- Creates the directories -->
+    <target name="3_copyresources" depends="1_clean, 2_makedir">
+        <copydir src="${MyPet.resources.dir}" dest="${MyPet.build.dir}/resources" />
+        <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.build.dir}/plugin.yml" />
+        <copy file="${basedir}/src/default.yml" tofile="${MyPet.build.dir}/default.yml" />
+        <unjar src="${idea.lib}/forms_rt.jar" dest="${MyPet.build.dir}">
+            <patternset>
+                <include name="com/intellij/uiDesigner/core/*.class" />
+            </patternset>
+        </unjar>
+    </target>
+
+    <!-- Compiles the java code -->
+    <target name="4_compile" depends="1_clean, 2_makedir">
+        <javac2 srcdir="${MyPet.src.dir}" destdir="${MyPet.build.dir}" debug="true" debuglevel="lines,vars,source">
+            <classpath refid="MyPet.module.classpath" />
+            <classpath refid="javac2.classpath" />
+        </javac2>
+    </target>
+
+    <!--Creates the deployable jar file  -->
+    <target name="5_jar" depends="3_copyresources, 4_compile">
+        <property name="version.num" value="1.00" />
+        <buildnumber />
+        <jar destfile="${MyPet.output.dir}\MyPet.jar" basedir="${MyPet.build.dir}">
+            <manifest>
+                <attribute name="Created-By" value="Keyle" />
+                <attribute name="Build" value="${build.number}" />
+                <attribute name="Main-Class" value="de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator" />
+                <attribute name="Class-Path" value="${MyPet.manifest.classpath.dot} ${MyPet.manifest.classpath.dotdot} ${MyPet.manifest.classpath.MyPet}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Does all the other steps -->
+    <target name="Main" depends="5_jar">
+        <description>Main target</description>
+        <echo message="Compilation Finished!" />
+    </target>
+
+</project>
