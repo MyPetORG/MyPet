@@ -265,9 +265,4 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         int damage = isMyPet() ? myPet.getDamage() : MyPet.getStartDamage(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
-
-    @Override
-    public void V()
-    {
-    }
 }
