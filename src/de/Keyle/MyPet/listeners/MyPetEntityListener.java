@@ -23,6 +23,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
@@ -39,7 +40,6 @@ import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftOcelot;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -52,6 +52,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public class MyPetEntityListener implements Listener
 {
@@ -146,7 +148,7 @@ public class MyPetEntityListener implements Listener
 
                     if (!MyPetList.hasMyPet(damager))
                     {
-                        Entity leashTarget = event.getEntity();
+                        LivingEntity leashTarget = (LivingEntity) event.getEntity();
                         if (!MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()) || damager.getItemInHand().getType() != MyPetConfig.leashItem)
                         {
                             return;
@@ -154,45 +156,54 @@ public class MyPetEntityListener implements Listener
 
                         boolean willBeLeashed = false;
 
-                        if (leashTarget instanceof Wolf)
+                        List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
+
+                        for (LeashFlag flag : leashFlags)
                         {
-                            Wolf targetWolf = (Wolf) event.getEntity();
-
-                            String wolfOwner = ((CraftWolf) targetWolf).getHandle().getOwnerName();
-                            Player attacker = (Player) e.getDamager();
-
-                            boolean isTarmed = targetWolf.isTamed();
-                            if (isTarmed && wolfOwner.equals(attacker.getName()))
+                            if (flag == LeashFlag.None)
                             {
                                 willBeLeashed = true;
                             }
-                        }
-                        else if (leashTarget instanceof Ocelot)
-                        {
-                            Ocelot targetOcelot = (Ocelot) event.getEntity();
-
-                            String ocelotOwner = ((CraftOcelot) targetOcelot).getHandle().getOwnerName();
-                            Player attacker = (Player) e.getDamager();
-
-                            boolean isTarmed = targetOcelot.isTamed();
-                            if (isTarmed && ocelotOwner.equals(attacker.getName()))
+                            else if (flag == LeashFlag.Adult)
                             {
-                                willBeLeashed = true;
+                                if (leashTarget instanceof Ageable)
+                                {
+                                    willBeLeashed = ((Ageable) leashTarget).isAdult();
+                                }
+                                else if (leashTarget instanceof Zombie)
+                                {
+                                    willBeLeashed = !((Zombie) leashTarget).isBaby();
+                                }
                             }
-                        }
-                        else if (leashTarget instanceof IronGolem)
-                        {
-                            IronGolem targetIronGolem = (IronGolem) event.getEntity();
-
-                            willBeLeashed = targetIronGolem.isPlayerCreated();
-                        }
-                        else if (leashTarget instanceof Silverfish || leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Slime || leashTarget instanceof Spider || leashTarget instanceof Skeleton)
-                        {
-                            willBeLeashed = ((LivingEntity) leashTarget).getHealth() <= 2;
-                        }
-                        else if (leashTarget instanceof Chicken || leashTarget instanceof MushroomCow || leashTarget instanceof Cow || leashTarget instanceof Pig || leashTarget instanceof Sheep || leashTarget instanceof Villager)
-                        {
-                            willBeLeashed = !((Ageable) leashTarget).isAdult();
+                            else if (flag == LeashFlag.Baby)
+                            {
+                                if (leashTarget instanceof Ageable)
+                                {
+                                    willBeLeashed = !((Ageable) leashTarget).isAdult();
+                                }
+                                else if (leashTarget instanceof Zombie)
+                                {
+                                    willBeLeashed = ((Zombie) leashTarget).isBaby();
+                                }
+                            }
+                            else if (flag == LeashFlag.LowHp)
+                            {
+                                willBeLeashed = leashTarget.getHealth() <= 2;
+                            }
+                            else if (flag == LeashFlag.UserCreated)
+                            {
+                                if (leashTarget instanceof IronGolem)
+                                {
+                                    willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
+                                }
+                            }
+                            else if (flag == LeashFlag.Tamed)
+                            {
+                                if (leashTarget instanceof Tameable)
+                                {
+                                    willBeLeashed = ((Tameable) leashTarget).isTamed();
+                                }
+                            }
                         }
 
                         if (willBeLeashed)

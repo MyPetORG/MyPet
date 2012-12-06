@@ -21,6 +21,7 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
@@ -143,6 +144,23 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Wolf.Food", Material.RAW_BEEF.getId() + "," + Material.RAW_CHICKEN.getId());
         setProperty("MyPet.Pets.Zombie.Food", Material.ROTTEN_FLESH.getId());
 
+        setProperty("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Chicken.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name());
+        setProperty("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.Ocelot.LeashFlags", LeashFlag.Tamed.name());
+        setProperty("MyPet.Pets.Pig.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.PigZombie.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Sheep.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.Silverfish.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Skeleton.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Slime.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Villager.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name());
+        setProperty("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name());
+
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
             setProperty("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetExperience.mobExp.get(entityType).getMin());
@@ -229,6 +247,23 @@ public class MyPetConfig
         seperateFood(MyWolf.class, config.getString("MyPet.Pets.Wolf.Food", "363,365"));
         seperateFood(MyZombie.class, config.getString("MyPet.Pets.Zombie.Food", "367"));
 
+        seperateLeashFlags(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MyChicken.class, config.getString("MyPet.Pets.Chicken.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyCow.class, config.getString("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name()));
+        seperateLeashFlags(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyOcelot.class, config.getString("MyPet.Pets.Ocelot.LeashFlags", LeashFlag.Tamed.name()));
+        seperateLeashFlags(MyPig.class, config.getString("MyPet.Pets.Pig.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyPigZombie.class, config.getString("MyPet.Pets.PigZombie.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MySheep.class, config.getString("MyPet.Pets.Sheep.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MySilverfish.class, config.getString("MyPet.Pets.Silverfish.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MySkeleton.class, config.getString("MyPet.Pets.Skeleton.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MySlime.class, config.getString("MyPet.Pets.Slime.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MySpider.class, config.getString("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MyVillager.class, config.getString("MyPet.Pets.Villager.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyWolf.class, config.getString("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name()));
+        seperateLeashFlags(MyZombie.class, config.getString("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name()));
+
         if (config.getStringList("MyPet.exp.active") != null)
         {
             int min;
@@ -268,6 +303,7 @@ public class MyPetConfig
 
     private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString)
     {
+        foodString = foodString.replaceAll("\\s", "");
         if (foodString.contains(","))
         {
             for (String foodIDString : foodString.split(","))
@@ -291,6 +327,38 @@ public class MyPetConfig
                 {
                     MyPet.setFood(myPetClass, Material.getMaterial(itemID));
                 }
+            }
+        }
+    }
+
+    private static void seperateLeashFlags(Class<? extends MyPet> myPetClass, String leashFlagString)
+    {
+        leashFlagString = leashFlagString.replaceAll("\\s", "");
+        if (leashFlagString.contains(","))
+        {
+            for (String leashFlagSplit : leashFlagString.split(","))
+            {
+                if (LeashFlag.getLeashFlagByName(leashFlagSplit) != null)
+                {
+                    MyPet.setLeashFlags(myPetClass, LeashFlag.getLeashFlagByName(leashFlagSplit));
+                }
+                else
+                {
+                    MyPetUtil.getLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                    MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                }
+            }
+        }
+        else
+        {
+            if (LeashFlag.getLeashFlagByName(leashFlagString) != null)
+            {
+                MyPet.setLeashFlags(myPetClass, LeashFlag.getLeashFlagByName(leashFlagString));
+            }
+            else
+            {
+                MyPetUtil.getLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
             }
         }
     }

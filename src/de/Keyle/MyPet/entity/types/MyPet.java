@@ -57,6 +57,7 @@ public abstract class MyPet
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
+    private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
 
     static
     {
@@ -91,6 +92,23 @@ public abstract class MyPet
         startDamage.put(MyVillager.class, 4);
         startDamage.put(MyWolf.class, 4);
         startDamage.put(MyZombie.class, 4);
+    }
+
+    public static enum LeashFlag
+    {
+        Baby, Adult, LowHp, Tamed, UserCreated, None;
+
+        public static LeashFlag getLeashFlagByName(String name)
+        {
+            for (LeashFlag leashFlags : LeashFlag.values())
+            {
+                if (leashFlags.name().equalsIgnoreCase(name))
+                {
+                    return leashFlags;
+                }
+            }
+            return null;
+        }
     }
 
     public static enum PetState
@@ -434,6 +452,34 @@ public abstract class MyPet
             List<Material> foodList = new ArrayList<Material>();
             foodList.add(foodToAdd);
             food.put(myPetClass, foodList);
+        }
+    }
+
+    public static List<LeashFlag> getLeashFlags(Class<? extends MyPet> myPetClass)
+    {
+        List<LeashFlag> leashFlagList = new ArrayList<LeashFlag>();
+        if (leashFlags.containsKey(myPetClass))
+        {
+            leashFlagList.addAll(leashFlags.get(myPetClass));
+        }
+        return leashFlagList;
+    }
+
+    public static void setLeashFlags(Class<? extends MyPet> myPetClass, LeashFlag leashFlagToAdd)
+    {
+        if (leashFlags.containsKey(myPetClass))
+        {
+            List<LeashFlag> leashFlagList = leashFlags.get(myPetClass);
+            if (!leashFlagList.contains(leashFlagToAdd))
+            {
+                leashFlagList.add(leashFlagToAdd);
+            }
+        }
+        else
+        {
+            List<LeashFlag> leashFlagList = new ArrayList<LeashFlag>();
+            leashFlagList.add(leashFlagToAdd);
+            leashFlags.put(myPetClass, leashFlagList);
         }
     }
 
