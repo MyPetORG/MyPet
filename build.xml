@@ -114,7 +114,7 @@
     <target name="5_jar" depends="3_copyresources, 4_compile">
         <property name="version.num" value="1.00" />
         <buildnumber />
-        <jar destfile="${MyPet.output.dir}\MyPet.jar" basedir="${MyPet.build.dir}">
+        <jar destfile="${MyPet.output.dir}/MyPet.jar" basedir="${MyPet.build.dir}">
             <manifest>
                 <attribute name="Created-By" value="Keyle" />
                 <attribute name="Build" value="${build.number}" />
@@ -128,6 +128,12 @@
     <target name="Main" depends="5_jar">
         <description>Main target</description>
         <echo message="Compilation Finished!" />
+    </target>
+
+    <!-- Does all the other steps and copy jar to testfolder -->
+    <target name="Test" depends="Main">
+        <description>Test target</description>
+        <copyfile src="${MyPet.output.dir}/MyPet.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
 
 </project>
