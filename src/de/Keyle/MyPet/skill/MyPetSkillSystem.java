@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import java.util.*;
@@ -81,7 +82,7 @@ public class MyPetSkillSystem
 
                 if (!skills.containsKey(skillName))
                 {
-                    skill.myPet = this.myPet;
+                    skill.setMyPet(this.myPet);
                     skills.put(skillName, skill);
                 }
             }

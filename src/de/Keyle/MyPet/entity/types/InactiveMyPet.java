@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.Location;

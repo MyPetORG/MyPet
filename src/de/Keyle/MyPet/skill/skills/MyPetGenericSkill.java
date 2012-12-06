@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Scheduler;

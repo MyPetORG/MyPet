@@ -19,7 +19,6 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Location;
