@@ -51,6 +51,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -222,7 +223,7 @@ public class MyPetEntityListener implements Listener
                             else if (leashTarget instanceof Wolf)
                             {
                                 ((MyWolf) myPet).setSitting(((Wolf) leashTarget).isSitting());
-                                ((MyWolf) myPet).setCollarColor(DyeColor.getByData((byte)((CraftWolf) leashTarget).getHandle().getCollarColor()));
+                                ((MyWolf) myPet).setCollarColor(DyeColor.getByData((byte) ((CraftWolf) leashTarget).getHandle().getCollarColor()));
                             }
                             else if (leashTarget instanceof Sheep)
                             {
@@ -391,6 +392,16 @@ public class MyPetEntityListener implements Listener
                                 }
                             }
                         }
+                    }
+                }
+            }
+            else if (event.getEntity() instanceof IronGolem)
+            {
+                if (event.getTarget() instanceof CraftMyPet)
+                {
+                    if (event.getReason() == TargetReason.RANDOM_TARGET)
+                    {
+                        event.setCancelled(true);
                     }
                 }
             }
