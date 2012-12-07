@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.*;
+import org.bukkit.DyeColor;
 
 public class EntityMyWolf extends EntityMyPet
 {
@@ -71,8 +72,9 @@ public class EntityMyWolf extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setSitting(((MyWolf) myPet).isSitting());
-            this.setCollarColor(((MyWolf) myPet).getCollarColor());
             this.setTamed(((MyWolf) myPet).isTamed());
+            this.setCollarColor(((MyWolf) myPet).getCollarColor().getData());
+
         }
     }
 
@@ -172,10 +174,10 @@ public class EntityMyWolf extends EntityMyPet
         return this.datawatcher.getByte(20) & 0xF;
     }
 
-    public void setCollarColor(int value)
+    public void setCollarColor(byte value)
     {
         this.datawatcher.watch(20, (byte) (value & 0xF));
-        ((MyWolf) myPet).collarColor = value;
+        ((MyWolf) myPet).collarColor = DyeColor.getByData(value);
     }
 
     @Override

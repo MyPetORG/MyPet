@@ -39,6 +39,7 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
@@ -221,7 +222,7 @@ public class MyPetEntityListener implements Listener
                             else if (leashTarget instanceof Wolf)
                             {
                                 ((MyWolf) myPet).setSitting(((Wolf) leashTarget).isSitting());
-                                ((MyWolf) myPet).setCollarColor(((CraftWolf) leashTarget).getHandle().getCollarColor());
+                                ((MyWolf) myPet).setCollarColor(DyeColor.getByData((byte)((CraftWolf) leashTarget).getHandle().getCollarColor()));
                             }
                             else if (leashTarget instanceof Sheep)
                             {

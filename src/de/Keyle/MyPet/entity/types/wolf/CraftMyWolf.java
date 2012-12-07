@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
+import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.CraftServer;
 
 public class CraftMyWolf extends CraftMyPet
@@ -69,14 +70,14 @@ public class CraftMyWolf extends CraftMyPet
         ((EntityMyWolf) getHandle()).setSitting(flag);
     }
 
-    public int getCollarColor()
+    public DyeColor getCollarColor()
     {
-        return ((EntityMyWolf) getHandle()).getCollarColor();
+        return DyeColor.getByData((byte)((EntityMyWolf) getHandle()).getCollarColor());
     }
 
-    public void setCollarColor(int value)
+    public void setCollarColor(DyeColor value)
     {
-        ((EntityMyWolf) getHandle()).setCollarColor(value);
+        ((EntityMyWolf) getHandle()).setCollarColor(value.getData());
     }
 
     @Override

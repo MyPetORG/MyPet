@@ -23,6 +23,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
+import org.bukkit.DyeColor;
 
 public class MyWolf extends MyPet
 {
@@ -30,7 +31,7 @@ public class MyWolf extends MyPet
     protected boolean isBaby = false;
     protected boolean isTamed = true;
     protected boolean isAngry = false;
-    protected int collarColor = 0;
+    protected DyeColor collarColor = DyeColor.RED;
 
     public MyWolf(MyPetPlayer petOwner)
     {
@@ -59,7 +60,7 @@ public class MyWolf extends MyPet
         this.isSitting = flag;
     }
 
-    public int getCollarColor()
+    public DyeColor getCollarColor()
     {
         if (status == PetState.Here)
         {
@@ -71,7 +72,7 @@ public class MyWolf extends MyPet
         }
     }
 
-    public void setCollarColor(int value)
+    public void setCollarColor(DyeColor value)
     {
         if (status == PetState.Here)
         {
@@ -151,7 +152,7 @@ public class MyWolf extends MyPet
         info.setBoolean("Baby", isBaby());
         info.setBoolean("Tamed", isTamed());
         info.setBoolean("Angry", isAngry());
-        info.setInt("CollarColor", getCollarColor());
+        info.setByte("CollarColor", getCollarColor().getData());
         return info;
     }
 
@@ -164,11 +165,11 @@ public class MyWolf extends MyPet
         }
         if (info.hasKey("CollarColor"))
         {
-            setCollarColor(info.getInt("CollarColor"));
+            setCollarColor(DyeColor.getByData(info.getByte("CollarColor")));
         }
         if (info.hasKey("Tamed"))
         {
-            setTamed(info.getBoolean("Collar"));
+            setTamed(info.getBoolean("Tamed"));
         }
         if (info.hasKey("Baby"))
         {
