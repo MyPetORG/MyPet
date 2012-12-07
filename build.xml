@@ -124,6 +124,20 @@
         </jar>
     </target>
 
+    <!--Creates the deployable jar file with buildnumber in filename  -->
+    <target name="5_jar_buildnumber" depends="3_copyresources, 4_compile">
+        <property name="version.num" value="1.00" />
+        <buildnumber />
+        <jar destfile="${MyPet.output.dir}/MyPet-b${build.number}.jar" basedir="${MyPet.build.dir}">
+            <manifest>
+                <attribute name="Created-By" value="Keyle" />
+                <attribute name="Build" value="${build.number}" />
+                <attribute name="Main-Class" value="de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator" />
+                <attribute name="Class-Path" value="${MyPet.manifest.classpath.dot} ${MyPet.manifest.classpath.dotdot} ${MyPet.manifest.classpath.MyPet}" />
+            </manifest>
+        </jar>
+    </target>
+
     <!-- Does all the other steps -->
     <target name="Main" depends="5_jar">
         <description>Main target</description>
@@ -134,6 +148,12 @@
     <target name="Test" depends="Main">
         <description>Test target</description>
         <copyfile src="${MyPet.output.dir}/MyPet.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
+    </target>
+
+    <!-- Does all the other steps and copy jar to testfolder -->
+    <target name="With buildnumbers" depends="5_jar_buildnumber">
+        <description>With buildnumber target</description>
+        <copyfile src="${MyPet.output.dir}/MyPet-b${build.number}.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
 
 </project>
