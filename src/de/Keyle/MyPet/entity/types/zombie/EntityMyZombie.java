@@ -76,7 +76,7 @@ public class EntityMyZombie extends EntityMyPet
 
     public void setBaby(boolean flag)
     {
-        getDataWatcher().watch(12, (byte) 1);
+        getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
         ((MyZombie) myPet).isBaby = flag;
     }
 
