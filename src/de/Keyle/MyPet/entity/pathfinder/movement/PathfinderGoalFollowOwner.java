@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.entity.pathfinder.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.Navigation;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.Location;
@@ -135,9 +136,9 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
 
                 if (!this.nav.a(this.petEntity.getOwner(), this.walkSpeed))
                 {
-                    if (this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null)
+                    Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
+                    if (this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetUtil.canSpawn(ownerLocation, this.petEntity))
                     {
-                        Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                     }
                 }

@@ -32,6 +32,9 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.minecraft.server.AxisAlignedBB;
+import net.minecraft.server.Entity;
+import net.minecraft.server.World;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -229,5 +232,14 @@ public class MyPetUtil
         }
         reader.close();
         return fileData.toString();
+    }
+
+    public static Boolean canSpawn(Location loc, Entity entity)
+    {
+        World world = entity.world;
+        float halfEntityWidth = entity.width / 2;
+        AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - entity.height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - entity.height + entity.length, loc.getZ() + halfEntityWidth);
+
+        return world.getCubes(entity, bb).isEmpty() && !world.containsLiquid(bb);
     }
 }

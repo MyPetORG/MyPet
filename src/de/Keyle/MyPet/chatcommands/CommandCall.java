@@ -46,8 +46,17 @@ public class CommandCall implements CommandExecutor
                     if (myPet.getLocation().getWorld() != petOwner.getLocation().getWorld())
                     {
                         myPet.removePet();
-                        myPet.setLocation(petOwner.getLocation());
-                        myPet.createPet();
+                        if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                        {
+                            myPet.setLocation(petOwner.getLocation());
+                            myPet.createPet();
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        }
+                        else
+                        {
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        }
                     }
                     else
                     {
@@ -55,18 +64,34 @@ public class CommandCall implements CommandExecutor
                         {
                             myPet.getCraftPet().leaveVehicle();
                         }
-                        myPet.getCraftPet().teleport(petOwner);
+                        if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                        {
+                            myPet.getCraftPet().teleport(petOwner);
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        }
+                        else
+                        {
+                            myPet.removePet();
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        }
+
                     }
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                     return true;
                 }
                 else if (myPet.status == PetState.Despawned)
                 {
-                    myPet.setLocation(petOwner.getLocation());
-                    myPet.createPet();
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                    if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                    {
+                        myPet.setLocation(petOwner.getLocation());
+                        myPet.createPet();
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                    }
+                    else
+                    {
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                    }
                     return true;
                 }
                 else if (myPet.status == PetState.Dead)
