@@ -66,6 +66,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             return false;
         }
+        else if (this.petEntity.getOwner() == null)
+        {
+            return false;
+        }
         else if (this.petEntity.e(this.petEntity.getOwner()) < this.startDistance)
         {
             return false;
@@ -84,6 +88,10 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
             return false;
         }
         else if (this.nav.f())
+        {
+            return false;
+        }
+        else if (this.petEntity.getOwner() == null)
         {
             return false;
         }
