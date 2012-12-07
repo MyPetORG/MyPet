@@ -221,6 +221,7 @@ public abstract class MyPet
                 }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
+                    status = PetState.Despawned;
                     return false;
                 }
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
@@ -247,6 +248,7 @@ public abstract class MyPet
                 }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
+                    status = PetState.Despawned;
                     return false;
                 }
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
