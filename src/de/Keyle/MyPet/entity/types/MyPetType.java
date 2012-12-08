@@ -25,6 +25,8 @@ import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
+import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
+import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
@@ -64,17 +66,18 @@ public enum MyPetType
     CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
+    Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
-    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
-    Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
     PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
+    Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
     Skeleton(EntityType.SKELETON, "Skeleton", EntityMySkeleton.class, MySkeleton.class),
     Slime(EntityType.SLIME, "Slime", EntityMySlime.class, MySlime.class),
     Spider(EntityType.SPIDER, "Spider", EntityMySpider.class, MySpider.class),
+    Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
     Zombie(EntityType.ZOMBIE, "Zombie", EntityMyZombie.class, MyZombie.class);
 

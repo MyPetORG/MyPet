@@ -72,7 +72,7 @@ public class CraftMyWolf extends CraftMyPet
 
     public DyeColor getCollarColor()
     {
-        return DyeColor.getByData((byte)((EntityMyWolf) getHandle()).getCollarColor());
+        return DyeColor.getByData((byte) ((EntityMyWolf) getHandle()).getCollarColor());
     }
 
     public void setCollarColor(DyeColor value)

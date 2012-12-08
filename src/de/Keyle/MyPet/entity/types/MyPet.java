@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
+import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
@@ -64,6 +65,7 @@ public abstract class MyPet
         startHP.put(MyCaveSpider.class, 20);
         startHP.put(MyChicken.class, 20);
         startHP.put(MyCow.class, 20);
+        startHP.put(MyCreeper.class, 20);
         startHP.put(MyIronGolem.class, 20);
         startHP.put(MyMooshroom.class, 20);
         startHP.put(MyOcelot.class, 20);
@@ -80,6 +82,7 @@ public abstract class MyPet
         startDamage.put(MyCaveSpider.class, 4);
         startDamage.put(MyChicken.class, 4);
         startDamage.put(MyCow.class, 4);
+        startDamage.put(MyCreeper.class, 0);
         startDamage.put(MyIronGolem.class, 4);
         startDamage.put(MyMooshroom.class, 4);
         startDamage.put(MyOcelot.class, 4);
@@ -215,7 +218,7 @@ public abstract class MyPet
                 net.minecraft.server.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(petLocation);
-                if (MyPetUtil.canSpawn(petLocation, petEntity))
+                if (!MyPetUtil.canSpawn(petLocation, petEntity))
                 {
                     return false;
                 }
@@ -246,7 +249,7 @@ public abstract class MyPet
                 net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(loc);
-                if (MyPetUtil.canSpawn(loc, petEntity))
+                if (!MyPetUtil.canSpawn(loc, petEntity))
                 {
                     return false;
                 }

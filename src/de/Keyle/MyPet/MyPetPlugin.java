@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
@@ -218,6 +219,8 @@ public class MyPetPlugin extends JavaPlugin
             a.setAccessible(true);
 
             // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
+            a.invoke(a, EntityMyCreeper.class, "Creeper", 50);
+            a.invoke(a, EntityCreeper.class, "Creeper", 50);
             a.invoke(a, EntityMySkeleton.class, "Skeleton", 51);
             a.invoke(a, EntitySkeleton.class, "Skeleton", 51);
             a.invoke(a, EntityMySpider.class, "Spider", 52);
@@ -250,7 +253,7 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
-            //TODO Creeper
+
 
             debugLogger.info("registered MyPet entities.");
         }
