@@ -24,6 +24,7 @@ import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -263,11 +264,12 @@ public class SkilltreeCreator
         }
         catch (ClassNotFoundException e)
         {
-            String[] buttons = {"Cancel", "Download CraftBukkit"};
+            String[] buttons = {"Exit", "Download CraftBukkit", "Choose a CraftBukkit.jar"};
             int result = JOptionPane.showOptionDialog(null, "Can't find a CraftBukkit executable\n" +
                     "\nin one of these folders:" +
-                    "\n   " + bukkitFile.getAbsolutePath() +
-                    "\n   " + bukkitFile.getParent(), "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
+                    "\n   " + bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator +
+                    "\n   " + bukkitFile.getAbsolutePath() + File.separator +
+                    "\n   " + bukkitFile.getParent() + File.separator, "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
 
             if (result == 0)
             {
@@ -285,6 +287,37 @@ public class SkilltreeCreator
                 bukkitDownloaderFrame.setLocationRelativeTo(null);
 
                 bukkitDownloader.startDownload();
+            }
+            else if (result == 2)
+            {
+                JFileChooser fileChooser = new JFileChooser(new File(path));
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileFilter(new FileFilter()
+                {
+                    @Override
+                    public boolean accept(File f)
+                    {
+                        return f.isDirectory() || f.getName().matches(".*\\.(jar)");
+                    }
+
+                    @Override
+                    public String getDescription()
+                    {
+                        return "Craftbukkit (*.jar)";
+                    }
+                });
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+                {
+                    try
+                    {
+                        Runtime.getRuntime().exec("java -cp \"" + fileChooser.getSelectedFile().getAbsolutePath() + "\"" + System.getProperties().getProperty("path.separator") + "\"" + (SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + "\" de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator");
+                    }
+                    catch (Exception e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                }
+                System.exit(0);
             }
             return;
         }
