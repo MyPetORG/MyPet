@@ -215,6 +215,10 @@ public abstract class MyPet
                 net.minecraft.server.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(petLocation);
+                if (MyPetUtil.canSpawn(petLocation, petEntity))
+                {
+                    return false;
+                }
                 if (!petLocation.getChunk().isLoaded())
                 {
                     petLocation.getChunk().load();
@@ -242,6 +246,10 @@ public abstract class MyPet
                 net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(loc);
+                if (MyPetUtil.canSpawn(loc, petEntity))
+                {
+                    return false;
+                }
                 if (!petLocation.getChunk().isLoaded())
                 {
                     petLocation.getChunk().load();
@@ -355,7 +363,7 @@ public abstract class MyPet
     public void setLocation(Location loc)
     {
         this.petLocation = loc;
-        if (status == PetState.Here)
+        if (status == PetState.Here && MyPetUtil.canSpawn(loc, this.craftMyPet.getHandle()))
         {
             craftMyPet.teleport(loc);
         }
