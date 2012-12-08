@@ -36,6 +36,7 @@ import net.minecraft.server.AxisAlignedBB;
 import net.minecraft.server.Entity;
 import net.minecraft.server.World;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -236,7 +237,7 @@ public class MyPetUtil
 
     public static Boolean canSpawn(Location loc, Entity entity)
     {
-        World world = entity.world;
+        World world = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = entity.width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - entity.height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - entity.height + entity.length, loc.getZ() + halfEntityWidth);
 
