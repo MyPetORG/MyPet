@@ -27,25 +27,22 @@ import java.util.Random;
 public class Poison extends MyPetGenericSkill
 {
     public static int chancePerLevel = 5;
-    private int chanceToPoison = chancePerLevel;
     private static Random random = new Random();
 
     public Poison()
     {
         super("Poison");
-        chanceToPoison = chancePerLevel;
     }
 
     @Override
     public void upgrade()
     {
         level++;
-        chanceToPoison = level * chancePerLevel;
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PoisonChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chanceToPoison));
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PoisonChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + level * chancePerLevel));
     }
 
     public boolean getPoison()
     {
-        return random.nextDouble() <= chanceToPoison / 100;
+        return random.nextDouble() <= level * chancePerLevel / 100;
     }
 }
