@@ -24,29 +24,16 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MyPetPlayer
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
     private String playerName;
-    private UUID entityUUID;
 
-    public MyPetPlayer(String playerName)
+    private MyPetPlayer(String playerName)
     {
         this.playerName = playerName;
-    }
-
-    public MyPetPlayer(String playerName, UUID entityUUID)
-    {
-        this.playerName = playerName;
-        this.entityUUID = entityUUID;
-    }
-
-    public void setUUID(UUID entityUUID)
-    {
-        this.entityUUID = entityUUID;
     }
 
     public String getName()
@@ -54,40 +41,14 @@ public class MyPetPlayer
         return playerName;
     }
 
-    public UUID getEntityUUID()
-    {
-        return entityUUID;
-    }
-
     public boolean isOnline()
     {
-        return getPlayer() != null;
+        return getPlayer() != null && getPlayer().isOnline();
     }
 
     public Player getPlayer()
     {
-        if (entityUUID != null)
-        {
-            return MyPetUtil.getPlayerByUUID(entityUUID);
-        }
-        else
-        {
-            return MyPetUtil.getServer().getPlayer(playerName);
-        }
-    }
-
-    public static MyPetPlayer getMyPetPlayer(String name, UUID entityUUID)
-    {
-        for (MyPetPlayer myPetPlayer : playerList)
-        {
-            if (myPetPlayer.getName().equals(name) && myPetPlayer.getEntityUUID().equals(entityUUID))
-            {
-                return myPetPlayer;
-            }
-        }
-        MyPetPlayer myPetPlayer = new MyPetPlayer(name, entityUUID);
-        playerList.add(myPetPlayer);
-        return myPetPlayer;
+        return MyPetUtil.getServer().getPlayer(playerName);
     }
 
     public static MyPetPlayer getMyPetPlayer(String name)
@@ -104,16 +65,9 @@ public class MyPetPlayer
         return myPetPlayer;
     }
 
-    public static boolean isMyPetPlayer(String name, UUID entityUUID)
+    public static MyPetPlayer getMyPetPlayer(Player player)
     {
-        for (MyPetPlayer myPetPlayer : playerList)
-        {
-            if (myPetPlayer.getName().equals(name) && myPetPlayer.getEntityUUID().equals(entityUUID))
-            {
-                return true;
-            }
-        }
-        return false;
+        return MyPetPlayer.getMyPetPlayer(player.getName());
     }
 
     public static boolean isMyPetPlayer(String name)
@@ -140,16 +94,16 @@ public class MyPetPlayer
         {
             return false;
         }
-        if (obj instanceof Player)
+        else if (obj instanceof Player)
         {
             Player player = (Player) obj;
-            return (entityUUID == null || entityUUID.equals(player.getUniqueId())) && playerName.equals(player.getName());
+            return playerName.equals(player.getName());
         }
-        if (obj instanceof OfflinePlayer)
+        else if (obj instanceof OfflinePlayer)
         {
             return ((OfflinePlayer) obj).getName().equals(playerName);
         }
-        if (obj instanceof MyPetPlayer)
+        else if (obj instanceof MyPetPlayer)
         {
             return this == obj;
         }
@@ -159,6 +113,6 @@ public class MyPetPlayer
     @Override
     public String toString()
     {
-        return "MyPetPlayer{name=" + playerName + ", UUID=" + (entityUUID != null ? entityUUID.toString() : "") + "}";
+        return "MyPetPlayer{name=" + playerName + "}";
     }
 }

@@ -88,7 +88,7 @@ public class MyPetPlugin extends JavaPlugin
         if (isReady)
         {
             debugLogger.info(savePets(true) + " pet/pets saved.");
-            for (MyPet myPet : MyPetList.getMyPetList())
+            for (MyPet myPet : MyPetList.getAllMyPets())
             {
                 myPet.removePet();
             }
@@ -97,7 +97,6 @@ public class MyPetPlugin extends JavaPlugin
         MyPetList.clearList();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
         debugLogger.info("MyPet disabled!");
-        MyPetUtil.getLogger().info("Disabled");
     }
 
     public void onEnable()
@@ -363,26 +362,30 @@ public class MyPetPlugin extends JavaPlugin
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
         MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
 
-        for (Player p : getServer().getOnlinePlayers())
+        for (Player player : getServer().getOnlinePlayers())
         {
-            if (MyPetPermissions.has(p, "MyPet.user.leash"))
+            if (MyPetList.hasInactiveMyPets(player))
             {
-                if (MyPetList.hasInactiveMyPet(p))
+                for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(player))
                 {
-                    MyPetList.setMyPetActive(p, true);
+                    if (MyPetPermissions.has(player, "MyPet.user.leash." + inactiveMyPet.getPetType().getTypeName()))
+                    {
+                        MyPetList.setMyPetActive(inactiveMyPet);
 
-                    MyPet myPet = MyPetList.getMyPet(p);
-                    if (myPet.status == PetState.Dead)
-                    {
-                        p.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
-                    }
-                    else if (MyPetUtil.getDistance2D(myPet.getLocation(), p.getLocation()) < 75)
-                    {
-                        myPet.createPet();
-                    }
-                    else
-                    {
-                        myPet.status = PetState.Despawned;
+                        MyPet myPet = MyPetList.getMyPet(player);
+                        if (myPet.status == PetState.Dead)
+                        {
+                            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                        }
+                        else if (MyPetUtil.getDistance2D(myPet.getLocation(), player.getLocation()) < 75)
+                        {
+                            myPet.createPet();
+                        }
+                        else
+                        {
+                            myPet.status = PetState.Despawned;
+                        }
+                        break;
                     }
                 }
             }
@@ -457,7 +460,7 @@ public class MyPetPlugin extends JavaPlugin
         NBTConfiguration nbtConfiguration = new NBTConfiguration(NBTPetFile);
         NBTTagList petNBTlist = new NBTTagList();
 
-        for (MyPet myPet : MyPetList.getMyPetList())
+        for (MyPet myPet : MyPetList.getAllMyPets())
         {
             NBTTagCompound petNBT = new NBTTagCompound();
             NBTTagCompound locationNBT = new NBTTagCompound("Location");
@@ -494,7 +497,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBTlist.add(petNBT);
             petCount++;
         }
-        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPetList())
+        for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets())
         {
             NBTTagCompound petNBT = new NBTTagCompound();
             NBTTagCompound locationNBT = new NBTTagCompound("Location");

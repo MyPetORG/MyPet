@@ -30,11 +30,11 @@ public class InactiveMyPet
 {
     private String petName = "";
     private final MyPetPlayer petOwner;
-    private int health;
-    private int hunger;
-    private int respawnTime;
+    private int health = -1;
+    private int hunger = 100;
+    private int respawnTime = 0;
     private Location location;
-    private double exp;
+    private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
 
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
@@ -83,6 +83,11 @@ public class InactiveMyPet
     public void setPetType(MyPetType petType)
     {
         this.petType = petType;
+        if (respawnTime <= 0 && health == -1)
+        {
+            this.health = MyPet.getStartHP(petType.getMyPetClass());
+        }
+
     }
 
     public MyPetType getPetType()

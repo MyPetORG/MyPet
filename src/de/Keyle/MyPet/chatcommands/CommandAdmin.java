@@ -51,7 +51,7 @@ public class CommandAdmin implements CommandExecutor
             String change = args[1];
             String value = args[2];
 
-            if (!MyPetList.hasMyPet(petOwner) && !MyPetList.hasInactiveMyPet(petOwner))
+            if (!MyPetList.hasMyPet(petOwner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
                 return true;
@@ -64,14 +64,7 @@ public class CommandAdmin implements CommandExecutor
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                if (MyPetList.hasMyPet(petOwner))
-                {
-                    MyPetList.getMyPet(petOwner).petName = name;
-                }
-                else
-                {
-                    MyPetList.getInactiveMyPet(petOwner).setPetName(name);
-                }
+                MyPetList.getMyPet(petOwner).petName = name;
             }
             else if (change.equalsIgnoreCase("exp"))
             {
@@ -79,30 +72,21 @@ public class CommandAdmin implements CommandExecutor
                 {
                     int Exp = Integer.parseInt(value);
                     Exp = Exp < 0 ? 0 : Exp;
-                    if (MyPetList.hasMyPet(petOwner))
-                    {
-                        MyPet myPet = MyPetList.getMyPet(petOwner);
+                    MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                        Collection<MyPetGenericSkill> skills = myPet.getSkillSystem().getSkills();
-                        if (skills.size() > 0)
-                        {
-                            for (MyPetGenericSkill skill : skills)
-                            {
-                                skill.setLevel(0);
-                            }
-                        }
-                        myPet.getExperience().reset();
-                        myPet.getExperience().addExp(Exp);
-                    }
-                    else
+                    Collection<MyPetGenericSkill> skills = myPet.getSkillSystem().getSkills();
+                    if (skills.size() > 0)
                     {
-                        MyPetList.getInactiveMyPet(petOwner).setExp(Exp);
+                        for (MyPetGenericSkill skill : skills)
+                        {
+                            skill.setLevel(0);
+                        }
                     }
+                    myPet.getExperience().reset();
+                    myPet.getExperience().addExp(Exp);
                 }
             }
-
             return true;
-
         }
         return true;
     }

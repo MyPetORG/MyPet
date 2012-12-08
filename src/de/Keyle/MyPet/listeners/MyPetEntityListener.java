@@ -22,25 +22,19 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
+import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
-import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
-import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
-import de.Keyle.MyPet.entity.types.pig.MyPig;
-import de.Keyle.MyPet.entity.types.sheep.MySheep;
-import de.Keyle.MyPet.entity.types.slime.MySlime;
-import de.Keyle.MyPet.entity.types.villager.MyVillager;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
+import net.minecraft.server.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
@@ -212,49 +206,67 @@ public class MyPetEntityListener implements Listener
                         if (willBeLeashed)
                         {
                             event.setCancelled(true);
-                            MyPet myPet = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getNewMyPetInstance(MyPetPlayer.getMyPetPlayer(damager.getName()));
-                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                            MyPetList.addMyPet(myPet);
-                            myPet.createPet(leashTarget.getLocation());
+                            InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
+                            inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
+                            inactiveMyPet.setPetName(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName());
+                            inactiveMyPet.setLocation(leashTarget.getLocation());
+
+                            NBTTagCompound extendedInfo = new NBTTagCompound("Info");
                             if (leashTarget instanceof Ocelot)
                             {
-                                ((MyOcelot) myPet).setCatType(((Ocelot) leashTarget).getCatType().getId());
-                                ((MyOcelot) myPet).setSitting(((Ocelot) leashTarget).isSitting());
+                                extendedInfo.setInt("CatType", ((Ocelot) leashTarget).getCatType().getId());
+                                extendedInfo.setBoolean("Sitting", ((Ocelot) leashTarget).isSitting());
                             }
                             else if (leashTarget instanceof Wolf)
                             {
-                                ((MyWolf) myPet).setSitting(((Wolf) leashTarget).isSitting());
-                                ((MyWolf) myPet).setCollarColor(DyeColor.getByData((byte) ((CraftWolf) leashTarget).getHandle().getCollarColor()));
+                                extendedInfo.setBoolean("Sitting", ((Wolf) leashTarget).isSitting());
+                                extendedInfo.setBoolean("Tamed", ((Wolf) leashTarget).isTamed());
+                                extendedInfo.setByte("CollarColor", (byte) ((CraftWolf) leashTarget).getHandle().getCollarColor());
                             }
                             else if (leashTarget instanceof Sheep)
                             {
-                                ((MySheep) myPet).setColor(((Sheep) leashTarget).getColor().getData());
-                                ((MySheep) myPet).setSheared(((Sheep) leashTarget).isSheared());
+                                extendedInfo.setInt("Color", ((Sheep) leashTarget).getColor().getData());
+                                extendedInfo.setBoolean("Sheared", ((Sheep) leashTarget).isSheared());
                             }
                             else if (leashTarget instanceof Villager)
                             {
-                                ((MyVillager) myPet).setProfession(((Villager) leashTarget).getProfession().getId());
+                                extendedInfo.setInt("Profession", ((Villager) leashTarget).getProfession().getId());
                             }
                             else if (leashTarget instanceof Pig)
                             {
-                                ((MyPig) myPet).setSaddle(((Pig) leashTarget).hasSaddle());
+                                extendedInfo.setBoolean("Saddle", ((Pig) leashTarget).hasSaddle());
                             }
                             else if (leashTarget instanceof Slime)
                             {
-                                ((MySlime) myPet).setSize(((Slime) leashTarget).getSize());
+                                extendedInfo.setInt("size", ((Slime) leashTarget).getSize());
                             }
-                            else if (leashFlags instanceof Creeper)
+                            else if (leashTarget instanceof Creeper)
                             {
-                                ((MyCreeper) myPet).setPowered(((Creeper) leashTarget).isPowered());
+                                extendedInfo.setBoolean("powered", ((Creeper) leashTarget).isPowered());
                             }
+                            else if (leashTarget instanceof Zombie)
+                            {
+                                extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
+                                extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
+                            }
+                            else if (leashTarget instanceof Ageable)
+                            {
+                                extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
+                            }
+                            inactiveMyPet.setInfo(extendedInfo);
+
                             event.getEntity().remove();
+
+                            MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                            myPet.createPet();
+
+                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
                             MyPetUtil.getDebugLogger().info("New Pet leashed:");
                             MyPetUtil.getDebugLogger().info("   " + myPet.toString());
                             MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
                             damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
                         }
                     }
-
                 }
             }
         }
