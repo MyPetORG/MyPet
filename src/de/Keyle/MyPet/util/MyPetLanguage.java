@@ -76,6 +76,7 @@ public class MyPetLanguage
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%white% comes to you.");
         addString("Msg_SpawnNoSpace", "MyPet.Message.spawnnospace", "%aqua%%petname%%white% can not come to you because there is not enough space.");
+        addString("Msg_Despawn", "MyPet.Message.despawn", "%aqua%%petname%%white% despawned.");
         addString("Msg_SendAway", "MyPet.Message.sendaway", "You sent %aqua%%petname%%white% away.");
         addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%white% is not here.");
         addString("Msg_Home", "MyPet.Message.call", "%aqua%%petname%%white% go to home.");
