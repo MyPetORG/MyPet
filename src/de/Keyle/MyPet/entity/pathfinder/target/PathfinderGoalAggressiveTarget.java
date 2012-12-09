@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.Entity;
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.PathfinderGoal;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -59,16 +59,16 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
             {
                 if (behavior.getBehavior() == BehaviorState.Aggressive && myPet.getCraftPet().canMove())
                 {
-                    if (target == null || !target.isAlive())
+                    if (petEntity.aG() == null || !petEntity.aG().isAlive())
                     {
                         for (float range = 1.F ; range <= this.range ; range++)
                         {
                             for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                             {
-                                Entity entity = (Entity) entityObj;
-                                EntityLiving entityLiving = (EntityLiving) entity;
-
-                                if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity)
+                                EntityLiving entityLiving = (EntityLiving) entityObj;
+                                Location loc1 = entityLiving.getBukkitEntity().getLocation();
+                                Location loc2 = petEntity.getBukkitEntity().getLocation();
+                                if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && MyPetUtil.getDistance2D(loc1, loc2) < 10)
                                 {
                                     if (entityLiving instanceof EntityPlayer)
                                     {
@@ -95,9 +95,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
                                 }
                             }
                         }
-                        return false;
                     }
-                    return true;
                 }
             }
         }
@@ -106,21 +104,15 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
 
     public boolean b()
     {
-        EntityLiving entityliving = petEntity.aG();
-
         if (!petEntity.canMove())
         {
             return false;
         }
-        else if (entityliving == null)
+        else if (petEntity.aG() == null)
         {
             return false;
         }
-        else if (!entityliving.isAlive())
-        {
-            return false;
-        }
-        else if (this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)).size() == 0)
+        else if (!petEntity.aG().isAlive())
         {
             return false;
         }

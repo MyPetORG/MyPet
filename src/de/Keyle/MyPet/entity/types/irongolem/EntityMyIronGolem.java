@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.irongolem;
 
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalMeleeAttack;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget;
@@ -40,12 +41,11 @@ public class EntityMyIronGolem extends EntityMyPet
         this.a(1.4F, 2.9F);
         this.walkSpeed = 0.25F;
 
-        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
         if (MyPet.getStartDamage(MyIronGolem.class) > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
+            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 5, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));
             petTargetSelector.addGoal("HurtByTarget", new PathfinderGoalHurtByTarget(this, true));

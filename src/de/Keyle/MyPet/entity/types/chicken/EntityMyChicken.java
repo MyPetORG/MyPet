@@ -21,6 +21,7 @@ package de.Keyle.MyPet.entity.types.chicken;
 
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
+import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalMeleeAttack;
 import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
 import de.Keyle.MyPet.entity.pathfinder.target.*;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget;
@@ -53,7 +54,7 @@ public class EntityMyChicken extends EntityMyPet
         if (MyPet.getStartDamage(MyChicken.class) > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, true));
+            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 2.5, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));
             petTargetSelector.addGoal("HurtByTarget", new PathfinderGoalHurtByTarget(this, true));
