@@ -3,6 +3,7 @@ package de.Keyle.MyPet.entity.types.creeper;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.NBTTagCompound;
 
 
 public class MyCreeper extends MyPet
@@ -13,12 +14,6 @@ public class MyCreeper extends MyPet
     {
         super(petOwner);
         this.petName = "Creeper";
-    }
-
-    @Override
-    public MyPetType getPetType()
-    {
-        return MyPetType.Creeper;
     }
 
     public void setPowered(boolean flag)
@@ -40,6 +35,26 @@ public class MyCreeper extends MyPet
         {
             return isPowered;
         }
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("Powered", isPowered());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setPowered(info.getBoolean("Powered"));
+    }
+
+    @Override
+    public MyPetType getPetType()
+    {
+        return MyPetType.Creeper;
     }
 
     @Override

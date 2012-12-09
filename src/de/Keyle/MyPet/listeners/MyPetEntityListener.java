@@ -242,7 +242,7 @@ public class MyPetEntityListener implements Listener
                             }
                             else if (leashTarget instanceof Creeper)
                             {
-                                extendedInfo.setBoolean("powered", ((Creeper) leashTarget).isPowered());
+                                extendedInfo.setBoolean("Powered", ((Creeper) leashTarget).isPowered());
                             }
                             else if (leashTarget instanceof Zombie)
                             {
