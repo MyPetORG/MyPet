@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -43,20 +44,20 @@ public class CommandAdmin implements CommandExecutor
             {
                 return true;
             }
-            if (args.length < 3)
+            if (args.length < 2)
             {
                 return false;
             }
             String petOwner = args[0];
             String change = args[1];
-            String value = args[2];
 
             if (!MyPetList.hasMyPet(petOwner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
                 return true;
             }
-            if (change.equalsIgnoreCase("name"))
+            MyPet myPet = MyPetList.getMyPet(petOwner);
+            if (change.equalsIgnoreCase("name") && args.length >= 3)
             {
                 String name = "";
                 for (int i = 2 ; i < args.length ; i++)
@@ -64,15 +65,15 @@ public class CommandAdmin implements CommandExecutor
                     name += args[i] + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyPetList.getMyPet(petOwner).petName = name;
+                myPet.setPetName(name);
             }
-            else if (change.equalsIgnoreCase("exp"))
+            else if (change.equalsIgnoreCase("exp") && args.length >= 3)
             {
+                String value = args[3];
                 if (MyPetUtil.isInt(value))
                 {
                     int Exp = Integer.parseInt(value);
                     Exp = Exp < 0 ? 0 : Exp;
-                    MyPet myPet = MyPetList.getMyPet(petOwner);
 
                     Collection<MyPetGenericSkill> skills = myPet.getSkillSystem().getSkills();
                     if (skills.size() > 0)
@@ -84,6 +85,24 @@ public class CommandAdmin implements CommandExecutor
                     }
                     myPet.getExperience().reset();
                     myPet.getExperience().addExp(Exp);
+                }
+            }
+            else if (change.equalsIgnoreCase("respawn"))
+            {
+                if (myPet.status == PetState.Dead)
+                {
+                    if (args.length >= 3 && MyPetUtil.isInt(args[2]))
+                    {
+                        int respawnTime = Integer.parseInt(args[2]);
+                        if (respawnTime >= 0)
+                        {
+                            myPet.respawnTime = respawnTime;
+                        }
+                    }
+                    else
+                    {
+                        myPet.respawnTime = 0;
+                    }
                 }
             }
             return true;
