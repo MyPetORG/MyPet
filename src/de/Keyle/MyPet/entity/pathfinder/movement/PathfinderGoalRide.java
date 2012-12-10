@@ -30,7 +30,7 @@ public class PathfinderGoalRide extends PathfinderGoal
     private final float speedPerLevel;
     private MyPet myPet;
     private float currentSpeed = 0.0F;
-    private boolean stopRiding = false;
+    private boolean stopRiding = true;
 
     public PathfinderGoalRide(EntityMyPet entityMyPet, float startSpeed, float speedPerLevel)
     {
