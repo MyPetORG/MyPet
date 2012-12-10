@@ -30,6 +30,7 @@ import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
+import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
@@ -230,6 +231,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntitySlime.class, "Slime", 55);
             a.invoke(a, EntityMyPigZombie.class, "PigZombie", 57);
             a.invoke(a, EntityPigZombie.class, "PigZombie", 57);
+            a.invoke(a, EntityMyEnderman.class, "Enderman", 58);
+            a.invoke(a, EntityEnderman.class, "Enderman", 58);
             a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
             a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
             a.invoke(a, EntityMySilverfish.class, "Silverfish", 60);
@@ -252,7 +255,6 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
-
 
             debugLogger.info("registered MyPet entities.");
         }

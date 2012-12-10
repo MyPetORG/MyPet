@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.NBTTagCompound;
@@ -114,5 +115,28 @@ public class Behavior extends MyPetGenericSkill
         NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
         nbtTagCompound.setString("Mode", behavior.name());
         return nbtTagCompound;
+    }
+
+    @Override
+    public void schedule()
+    {
+        if (myPet instanceof MyEnderman)
+        {
+            MyEnderman myEnderman = (MyEnderman) myPet;
+            if (behavior == BehaviorState.Aggressive)
+            {
+                if (!myEnderman.isScreaming())
+                {
+                    myEnderman.setScreaming(true);
+                }
+            }
+            else
+            {
+                if (myEnderman.isScreaming())
+                {
+                    myEnderman.setScreaming(false);
+                }
+            }
+        }
     }
 }

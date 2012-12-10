@@ -28,6 +28,9 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
+import de.Keyle.MyPet.entity.types.enderman.CraftMyEnderman;
+import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
+import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.skills.Behavior;
@@ -35,6 +38,7 @@ import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.NBTTagCompound;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.entity.CraftEnderman;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.*;
@@ -253,6 +257,11 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
                             }
+                            else if (leashTarget instanceof Enderman)
+                            {
+                                extendedInfo.setShort("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId());
+                                extendedInfo.setShort("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData());
+                            }
                             inactiveMyPet.setInfo(extendedInfo);
 
                             event.getEntity().remove();
@@ -289,6 +298,12 @@ public class MyPetEntityListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageResult(EntityDamageEvent event)
     {
+        if (event.getEntity() instanceof CraftMyEnderman)
+        {
+            MyEnderman myEnderman = (MyEnderman) ((CraftMyEnderman) event.getEntity()).getMyPet();
+            ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(true);
+            ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(false);
+        }
         if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
         {
             return;

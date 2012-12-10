@@ -27,6 +27,8 @@ import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
+import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
+import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
@@ -67,6 +69,7 @@ public enum MyPetType
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
+    Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
