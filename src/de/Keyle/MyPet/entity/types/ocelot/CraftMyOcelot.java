@@ -45,9 +45,9 @@ public class CraftMyOcelot extends CraftMyPet
         return Type.getType(((EntityMyOcelot) getHandle()).getCatType());
     }
 
-    public void setCatType(int catTypeID)
+    public void setCatType(Type catType)
     {
-        ((EntityMyOcelot) getHandle()).setCatType(catTypeID);
+        ((EntityMyOcelot) getHandle()).setCatType(catType.getId());
     }
 
     public boolean isBaby()
@@ -63,6 +63,6 @@ public class CraftMyOcelot extends CraftMyPet
     @Override
     public String toString()
     {
-        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",catType=" + getCatType() + ", baby=" + isBaby() + "}";
+        return "CraftMyOcelot{isPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",sitting=" + isSitting() + ",catType=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }

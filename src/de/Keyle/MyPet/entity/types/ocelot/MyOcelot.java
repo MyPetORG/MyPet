@@ -23,12 +23,13 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
+import org.bukkit.entity.Ocelot.Type;
 
 public class MyOcelot extends MyPet
 {
     protected boolean isSitting = false;
     protected boolean isBaby = false;
-    protected int catType = 0;
+    protected Type catType = Type.WILD_OCELOT;
 
     public MyOcelot(MyPetPlayer petOwner)
     {
@@ -57,11 +58,11 @@ public class MyOcelot extends MyPet
         this.isSitting = flag;
     }
 
-    public int getCatType()
+    public Type getCatType()
     {
         if (status == PetState.Here)
         {
-            return ((CraftMyOcelot) getCraftPet()).getCatType().getId();
+            return ((CraftMyOcelot) getCraftPet()).getCatType();
         }
         else
         {
@@ -69,11 +70,11 @@ public class MyOcelot extends MyPet
         }
     }
 
-    public void setCatType(int value)
+    public void setCatType(Type value)
     {
         if (status == PetState.Here)
         {
-            ((EntityMyOcelot) craftMyPet.getHandle()).setCatType(value);
+            ((CraftMyOcelot) getCraftPet()).setCatType(value);
         }
         this.catType = value;
     }
@@ -103,7 +104,7 @@ public class MyOcelot extends MyPet
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("CatType", getCatType());
+        info.setInt("CatType", getCatType().getId());
         info.setBoolean("Sitting", isSitting());
         info.setBoolean("Baby", isBaby());
         return info;
@@ -112,7 +113,7 @@ public class MyOcelot extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setCatType(info.getInt("CatType"));
+        setCatType(Type.getType(info.getInt("CatType")));
         setSitting(info.getBoolean("Sitting"));
         setBaby(info.getBoolean("Baby"));
     }
@@ -126,6 +127,6 @@ public class MyOcelot extends MyPet
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", cattype=" + getCatType() + ", baby=" + isBaby() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }

@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.*;
+import org.bukkit.entity.Ocelot.Type;
 
 public class EntityMyOcelot extends EntityMyPet
 {
@@ -72,7 +73,7 @@ public class EntityMyOcelot extends EntityMyPet
 
             this.setSitting(((MyOcelot) myPet).isSitting());
             this.setBaby(((MyOcelot) myPet).isBaby());
-            this.setCatType(((MyOcelot) myPet).getCatType());
+            this.setCatType(((MyOcelot) myPet).getCatType().getId());
         }
     }
 
@@ -113,7 +114,7 @@ public class EntityMyOcelot extends EntityMyPet
     public void setCatType(int value)
     {
         this.datawatcher.watch(18, (byte) value);
-        ((MyOcelot) myPet).catType = value;
+        ((MyOcelot) myPet).catType = Type.getType(value);
     }
 
     public boolean isBaby()
@@ -168,10 +169,39 @@ public class EntityMyOcelot extends EntityMyPet
             return true;
         }
 
-        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (entityhuman == getOwner())
         {
+            if (itemStack != null)
+            {
+                if (itemStack.id == 351)
+                {
+                    if (itemStack.getData() == 11)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
+                        return true;
+                    }
+                    else if (itemStack.getData() == 0)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
+                        return true;
+                    }
+                    else if (itemStack.getData() == 14)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.RED_CAT);
+                        return true;
+                    }
+                    else if (itemStack.getData() == 7)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
+                        return true;
+                    }
+                }
+            }
             this.sitPathfinder.toogleSitting();
             this.bE = false;
+            return true;
         }
         return false;
     }
