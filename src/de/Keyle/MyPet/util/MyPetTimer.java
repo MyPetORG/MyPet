@@ -56,9 +56,13 @@ public class MyPetTimer
                 {
                     myPet.scheduleTask();
                 }
-                for (Scheduler Task : tasksToSchedule)
+                for (Scheduler task : tasksToSchedule)
                 {
-                    Task.schedule();
+                    task.schedule();
+                }
+                for (MyPetPlayer player : MyPetPlayer.getPlayerList())
+                {
+                    player.schedule();
                 }
                 if (resetTimer && MyPetConfig.autoSaveTime > 0)
                 {

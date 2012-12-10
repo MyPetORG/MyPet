@@ -19,13 +19,16 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.entity.types.InactiveMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPetPlayer
+public class MyPetPlayer implements Scheduler
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
@@ -85,6 +88,62 @@ public class MyPetPlayer
     public static List<MyPetPlayer> getPlayerList()
     {
         return playerList;
+    }
+
+    public void schedule()
+    {
+        if (!isOnline())
+        {
+            return;
+        }
+        if (MyPetList.hasMyPet(this.getPlayer()))
+        {
+            if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(this.getPlayer()).getPetType().getTypeName()))
+            {
+                MyPetUtil.getDebugLogger().info("set MyPet of " + this.getName() + " to inactive");
+                MyPetList.setMyPetInactive(this.getPlayer());
+            }
+        }
+        if (!MyPetList.hasMyPet(this.getPlayer()) && MyPetList.hasInactiveMyPets(this.getPlayer()))
+        {
+            for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this.getPlayer()))
+            {
+                if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                {
+                    MyPetUtil.getDebugLogger().info("set MyPet " + inactiveMyPet.getPetName() + " of " + this.getName() + " to active");
+                    MyPetList.setMyPetActive(inactiveMyPet);
+                    break;
+                }
+            }
+        }
+        if (MyPetList.hasMyPet(this.getPlayer()))
+        {
+            MyPet myPet = MyPetList.getMyPet(this.getPlayer());
+            if (myPet.status == PetState.Here)
+            {
+                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), this.getPlayer().getLocation()) > 75)
+                {
+                    if (!myPet.getCraftPet().canMove())
+                    {
+                        myPet.removePet();
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
+                    }
+                    else
+                    {
+                        myPet.removePet();
+                        if (MyPetUtil.canSpawn(this.getPlayer().getLocation(), myPet.getCraftPet().getHandle()))
+                        {
+                            myPet.setLocation(this.getPlayer().getLocation());
+                            myPet.createPet();
+                        }
+                        else
+                        {
+                            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

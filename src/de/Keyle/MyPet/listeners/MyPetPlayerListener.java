@@ -36,7 +36,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MyPetPlayerListener implements Listener
@@ -103,9 +102,9 @@ public class MyPetPlayerListener implements Listener
         MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
-            MyPetUtil.getDebugLogger().info("   - has MyPet-permission: " + MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()));
-            if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()))
+            if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()))
             {
+                MyPetUtil.getDebugLogger().info("set MyPet of " + event.getPlayer().getName() + " to inactive");
                 MyPetList.setMyPetInactive(event.getPlayer());
             }
         }
@@ -114,7 +113,7 @@ public class MyPetPlayerListener implements Listener
         {
             for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
             {
-                if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + inactiveMyPet.getPetType().getTypeName()))
+                if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
                 {
                     MyPetList.setMyPetActive(inactiveMyPet);
                     break;
@@ -160,59 +159,6 @@ public class MyPetPlayerListener implements Listener
             myPet.removePet();
             MyPetPlugin.getPlugin().savePets(false);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
-        }
-    }
-
-    @EventHandler
-    public void onPlayerMove(final PlayerMoveEvent event)
-    {
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()))
-            {
-                MyPetUtil.getDebugLogger().info("set MyPet of " + event.getPlayer().getName() + " to inactive");
-                MyPetList.setMyPetInactive(event.getPlayer());
-            }
-        }
-        if (!MyPetList.hasMyPet(event.getPlayer()) && MyPetList.hasInactiveMyPets(event.getPlayer()))
-        {
-            for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
-            {
-                if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.leash." + inactiveMyPet.getPetType().getTypeName()))
-                {
-                    MyPetUtil.getDebugLogger().info("set MyPet " + inactiveMyPet.getPetName() + " of " + event.getPlayer().getName() + " to active");
-                    MyPetList.setMyPetActive(inactiveMyPet);
-                    break;
-                }
-            }
-        }
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.status == PetState.Here)
-            {
-                if (myPet.getLocation().getWorld() != event.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) > 75)
-                {
-                    if (!myPet.getCraftPet().canMove())
-                    {
-                        myPet.removePet();
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
-                    }
-                    else
-                    {
-                        myPet.removePet();
-                        if (MyPetUtil.canSpawn(event.getTo(), myPet.getCraftPet().getHandle()))
-                        {
-                            myPet.setLocation(event.getTo());
-                            myPet.createPet();
-                        }
-                        else
-                        {
-                            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                        }
-                    }
-                }
-            }
         }
     }
 }
