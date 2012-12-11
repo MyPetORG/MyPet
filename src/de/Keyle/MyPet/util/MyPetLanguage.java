@@ -65,6 +65,7 @@ public class MyPetLanguage
         addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%petname%%white% has now an inventory with %size%slots.");
         addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%white% can now be controlled with a %item%");
         addString("Msg_ControlAggroFarm", "MyPet.Message.controlaggrofarm", "You can't control %aqua%%petname%%white% when in %mode% mode!");
+        addString("Msg_AddRide", "MyPet.Message.addride", "%aqua%%petname%%white% can now be ridden.");
         addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%white% now can pickup items in a range of %range%.");
         addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%white% regenerates now one HP every %sec%sec");
         addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%white% has now a max health of %maxhealth%HP");

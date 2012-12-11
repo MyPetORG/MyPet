@@ -36,7 +36,9 @@ public class Ride extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        level += 1;
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName));
+        if(level == 1)
+        {
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName));
+        }
     }
 }
