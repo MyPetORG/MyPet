@@ -64,7 +64,8 @@ public class CommandCall implements CommandExecutor
                         {
                             myPet.getCraftPet().leaveVehicle();
                         }
-                        if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                        Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
+                        if (MyPetUtil.canSpawn(petOwner.getLocation(), entitySize[0], 0.0F, entitySize[1]))
                         {
                             myPet.getCraftPet().teleport(petOwner);
                             sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
@@ -81,7 +82,8 @@ public class CommandCall implements CommandExecutor
                 }
                 else if (myPet.status == PetState.Despawned)
                 {
-                    if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                    Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
+                    if (MyPetUtil.canSpawn(petOwner.getLocation(), entitySize[0], 0.F, entitySize[1]))
                     {
                         myPet.setLocation(petOwner.getLocation());
                         myPet.createPet();

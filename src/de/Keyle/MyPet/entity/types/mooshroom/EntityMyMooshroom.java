@@ -38,7 +38,6 @@ public class EntityMyMooshroom extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/redcow.png";
-        this.a(0.9F, 1.3F);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));

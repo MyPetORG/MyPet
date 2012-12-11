@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
+import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
@@ -60,6 +61,7 @@ public abstract class MyPet
     private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
+    private static Map<Class<? extends MyPet>, Float[]> entitySizes = new HashMap<Class<? extends MyPet>, Float[]>();
 
     static
     {
@@ -98,6 +100,25 @@ public abstract class MyPet
         startDamage.put(MyVillager.class, 4);
         startDamage.put(MyWolf.class, 4);
         startDamage.put(MyZombie.class, 4);
+
+        entitySizes.put(MyCaveSpider.class, new Float[]{0.7F, 0.5F});
+        entitySizes.put(MyChicken.class, new Float[]{0.3F, 0.7F});
+        entitySizes.put(MyCow.class, new Float[]{0.9F, 1.3F});
+        entitySizes.put(MyCreeper.class, new Float[]{0.9F, 0.9F});
+        entitySizes.put(MyEnderman.class, new Float[]{0.6F, 2.9F});
+        entitySizes.put(MyIronGolem.class, new Float[]{1.4F, 2.9F});
+        entitySizes.put(MyMooshroom.class, new Float[]{0.9F, 1.3F});
+        entitySizes.put(MyOcelot.class, new Float[]{0.6F, 0.8F});
+        entitySizes.put(MyPig.class, new Float[]{0.9F, 0.9F});
+        entitySizes.put(MyPigZombie.class, new Float[]{0.9F, 0.9F});
+        entitySizes.put(MySheep.class, new Float[]{0.9F, 1.3F});
+        entitySizes.put(MySilverfish.class, new Float[]{0.3F, 0.7F});
+        entitySizes.put(MySkeleton.class, new Float[]{0.6F, 0.6F});
+        entitySizes.put(MySlime.class, new Float[]{0.6F, 0.6F});
+        entitySizes.put(MySpider.class, new Float[]{1.4F, 0.9F});
+        entitySizes.put(MyVillager.class, new Float[]{0.6F, 0.8F});
+        entitySizes.put(MyWolf.class, new Float[]{0.6F, 0.8F});
+        entitySizes.put(MyZombie.class, new Float[]{0.9F, 0.9F});
     }
 
     public static enum LeashFlag
@@ -497,6 +518,15 @@ public abstract class MyPet
             leashFlagList.add(leashFlagToAdd);
             leashFlags.put(myPetClass, leashFlagList);
         }
+    }
+
+    public static Float[] getEntitySize(Class<? extends MyPet> myPetClass)
+    {
+        if (entitySizes.containsKey(myPetClass))
+        {
+            return entitySizes.get(myPetClass);
+        }
+        return null;
     }
 
     public boolean isPassiv()

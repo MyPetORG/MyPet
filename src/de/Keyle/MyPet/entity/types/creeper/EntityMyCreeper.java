@@ -20,7 +20,6 @@ public class EntityMyCreeper extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/creeper.png";
-        this.a(0.9F, 0.9F);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));

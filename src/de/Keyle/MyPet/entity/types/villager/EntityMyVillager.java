@@ -38,7 +38,6 @@ public class EntityMyVillager extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/villager/villager.png";
-        this.a(0.6F, 0.8F);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));

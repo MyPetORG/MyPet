@@ -38,7 +38,6 @@ public class EntityMySlime extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/slime.png";
-        this.a(0.6F, 0.6F);
         this.walkSpeed = 0.25F;
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
@@ -78,7 +77,8 @@ public class EntityMySlime extends EntityMyPet
     public void setSize(int value)
     {
         this.datawatcher.watch(16, (byte) value);
-        a(0.6F * value, 0.6F * value);
+        Float[] entitySize = MyPet.getEntitySize(MySlime.class);
+        this.a(entitySize[0] * value,entitySize[1] * value);
         this.aV = value;
         ((MySlime) myPet).size = value;
     }

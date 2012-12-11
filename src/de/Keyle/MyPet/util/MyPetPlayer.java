@@ -131,7 +131,8 @@ public class MyPetPlayer implements Scheduler
                     else
                     {
                         myPet.removePet();
-                        if (MyPetUtil.canSpawn(this.getPlayer().getLocation(), myPet.getCraftPet().getHandle()))
+                        Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
+                        if (MyPetUtil.canSpawn(this.getPlayer().getLocation(), entitySize[0], 0.0F, entitySize[1]))
                         {
                             myPet.setLocation(this.getPlayer().getLocation());
                             myPet.createPet();

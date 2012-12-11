@@ -62,6 +62,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         this.petTargetSelector = new MyPetPathfinderGoalSelector(this.targetSelector);
 
         this.getNavigation().b(true);
+
+        Float[] entitySize = MyPet.getEntitySize(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+        this.a(entitySize[0],entitySize[1]);
     }
 
     public boolean isMyPet()

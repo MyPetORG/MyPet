@@ -38,7 +38,6 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/villager_golem.png";
-        this.a(1.4F, 2.9F);
         this.walkSpeed = 0.25F;
 
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));

@@ -41,7 +41,6 @@ public class EntityMyOcelot extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/ozelot.png";
-        this.a(0.6F, 0.8F);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Sit", sitPathfinder);

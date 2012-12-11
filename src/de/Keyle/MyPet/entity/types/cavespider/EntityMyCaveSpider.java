@@ -38,7 +38,6 @@ public class EntityMyCaveSpider extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/cavespider.png";
-        this.a(0.7F, 0.5F);
         this.walkSpeed = 0.4F;
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
