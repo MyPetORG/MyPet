@@ -32,7 +32,7 @@ public class Control extends MyPetGenericSkill
 
     public Control()
     {
-        super("Control");
+        super("Control",1);
     }
 
     @Override

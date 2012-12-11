@@ -38,7 +38,7 @@ public class Inventory extends MyPetGenericSkill
 
     public Inventory()
     {
-        super("Inventory");
+        super("Inventory",6);
     }
 
     @Override
@@ -69,18 +69,14 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void setLevel(int level)
     {
-        this.level = level > 6 ? 6 : level;
+        super.setLevel(level);
         inv.setSize(this.level * 9);
     }
 
     @Override
     public void upgrade()
     {
-        if (level >= 6)
-        {
-            return;
-        }
-        level++;
+        super.upgrade();
         inv.setSize(level * 9);
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
     }

@@ -37,7 +37,7 @@ public class HPregeneration extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        level++;
+        super.upgrade();
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (healtregenTime - level)));
     }
 

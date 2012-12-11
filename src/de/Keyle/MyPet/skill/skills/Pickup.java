@@ -65,7 +65,7 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        level++;
+        super.upgrade();
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + (level * rangePerLevel)));
     }
 

@@ -37,7 +37,7 @@ public class Poison extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        level++;
+        super.upgrade();
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PoisonChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + level * chancePerLevel));
     }
 

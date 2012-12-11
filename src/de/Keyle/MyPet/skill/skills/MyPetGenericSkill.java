@@ -27,11 +27,18 @@ public class MyPetGenericSkill implements Scheduler
 {
     protected String skillName;
     protected int level = 0;
+    protected int maxLevel = -1;
     protected MyPet myPet;
 
     protected MyPetGenericSkill(String name)
     {
         this.skillName = name;
+    }
+
+    protected MyPetGenericSkill(String name, int maxLevel)
+    {
+        this.skillName = name;
+        this.maxLevel = maxLevel;
     }
 
     public String getName()
@@ -56,12 +63,50 @@ public class MyPetGenericSkill implements Scheduler
 
     public void setLevel(int level)
     {
-        this.level = level;
+        if (level >= 0)
+        {
+            if(maxLevel != -1)
+            {
+                this.level = level > maxLevel ? maxLevel : level;
+            }
+            else
+            {
+                this.level = level;
+            }
+        }
+        else
+        {
+            this.level = 0;
+        }
     }
 
     public void upgrade()
     {
-        this.level++;
+        if (maxLevel != -1)
+        {
+            if(this.level < maxLevel)
+            {
+                this.level++;
+            }
+        }
+        else
+        {
+            level++;
+        }
+    }
+
+    public void upgrade(int value)
+    {
+        if (value > 0)
+        {
+            value--;
+            this.level += value;
+            if (maxLevel != -1 && this.level > maxLevel)
+            {
+                level = maxLevel-1;
+            }
+            upgrade();
+        }
     }
 
     public NBTTagCompound save()

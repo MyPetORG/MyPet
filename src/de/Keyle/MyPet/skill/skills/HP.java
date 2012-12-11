@@ -33,7 +33,7 @@ public class HP extends MyPetGenericSkill
     @Override
     public void upgrade()
     {
-        level++;
+        super.upgrade();
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", myPet.petName).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + level)));
     }
 }
