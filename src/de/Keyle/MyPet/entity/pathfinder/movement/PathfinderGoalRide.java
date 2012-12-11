@@ -89,18 +89,17 @@ public class PathfinderGoalRide extends PathfinderGoal
 
         EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 
-        float f1 = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
-        //TODO testen was f1 ist
-        if (f1 > 5.0F)
+        float rotationDiff = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
+        if (rotationDiff > 5.0F)
         {
-            f1 = 5.0F;
+            rotationDiff = 5.0F;
         }
-        if (f1 < -5.0F)
+        if (rotationDiff < -5.0F)
         {
-            f1 = -5.0F;
+            rotationDiff = -5.0F;
         }
 
-        this.petEntity.yaw = MathHelper.g(this.petEntity.yaw + f1);
+        this.petEntity.yaw = MathHelper.g(this.petEntity.yaw + rotationDiff);
         if (this.currentSpeed < totalSpeed)
         {
             this.currentSpeed += (totalSpeed - this.currentSpeed) * 0.01F;
@@ -113,8 +112,9 @@ public class PathfinderGoalRide extends PathfinderGoal
         int x = MathHelper.floor(this.petEntity.locX);
         int y = MathHelper.floor(this.petEntity.locY);
         int z = MathHelper.floor(this.petEntity.locZ);
-        float f2 = this.currentSpeed;
 
+        // Calculation of new Pathpoint
+        float f2 = this.currentSpeed;
         float f3 = 0.91F;
         if (this.petEntity.onGround)
         {
