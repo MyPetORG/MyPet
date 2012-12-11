@@ -19,10 +19,13 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.event.MyPetSelectSetActiveEvent;
+import de.Keyle.MyPet.event.MyPetSelectSetInactiveEvent;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import org.bukkit.entity.Player;
 
@@ -248,7 +251,20 @@ public class MyPetList
     {
         if (hasMyPet(inactiveMyPet.getPetName()))
         {
+            MyPet activeMyPet = getMyPet(inactiveMyPet.getPetOwner().getPlayer());
+            MyPetSelectSetInactiveEvent event = new MyPetSelectSetInactiveEvent(activeMyPet);
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
+            if(event.isCancelled())
+            {
+                return null;
+            }
             setMyPetInactive(inactiveMyPet.getPetOwner().getPlayer());
+        }
+        MyPetSelectSetActiveEvent event = new MyPetSelectSetActiveEvent(inactiveMyPet);
+        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        if(event.isCancelled())
+        {
+            return null;
         }
         MyPet activeMyPet = getMyPet(inactiveMyPet);
         addMyPet(activeMyPet);
@@ -263,6 +279,12 @@ public class MyPetList
         if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
         {
             MyPet activeMyPet = getMyPet(owner);
+            MyPetSelectSetInactiveEvent event = new MyPetSelectSetInactiveEvent(activeMyPet);
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
+            if(event.isCancelled())
+            {
+                return null;
+            }
             activeMyPet.removePet();
             InactiveMyPet inactiveMyPet = getInactiveMyPet(activeMyPet);
             removeMyPet(activeMyPet);
