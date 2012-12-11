@@ -33,6 +33,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,7 +71,7 @@ public class Metrics {
     /**
      * The current revision number
      */
-    private final static int REVISION = 5;
+    private final static int REVISION = 6;
 
     /**
      * The base url of the metrics domain
@@ -112,7 +113,7 @@ public class Metrics {
      * The plugin configuration file
      */
     private final YamlConfiguration configuration;
-    
+
     /**
      * The plugin configuration file
      */
@@ -124,14 +125,19 @@ public class Metrics {
     private final String guid;
 
     /**
+     * Debug mode
+     */
+    private final boolean debug;
+
+    /**
      * Lock for synchronization
      */
     private final Object optOutLock = new Object();
 
     /**
-     * Id of the scheduled task
+     * The scheduled task
      */
-    private volatile int taskId = -1;
+    private volatile BukkitTask task = null;
 
     public Metrics(final Plugin plugin) throws IOException {
         if (plugin == null) {
@@ -147,6 +153,7 @@ public class Metrics {
         // add some defaults
         configuration.addDefault("opt-out", false);
         configuration.addDefault("guid", UUID.randomUUID().toString());
+        configuration.addDefault("debug", false);
 
         // Do we need to create the file?
         if (configuration.get("guid", null) == null) {
@@ -156,6 +163,7 @@ public class Metrics {
 
         // Load the guid then
         guid = configuration.getString("guid");
+        debug = configuration.getBoolean("debug", false);
     }
 
     /**
@@ -225,25 +233,31 @@ public class Metrics {
             }
 
             // Is metrics already running?
-            if (taskId >= 0) {
+            if (task != null) {
                 return true;
             }
 
             // Begin hitting the server with glorious data
-            taskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, new Runnable() {
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable()
+            {
 
                 private boolean firstPost = true;
 
-                public void run() {
-                    try {
+                public void run()
+                {
+                    try
+                    {
                         // This has to be synchronized or it can collide with the disable method.
-                        synchronized (optOutLock) {
+                        synchronized (optOutLock)
+                        {
                             // Disable Task, if it is running and the server owner decided to opt-out
-                            if (isOptOut() && taskId > 0) {
-                                plugin.getServer().getScheduler().cancelTask(taskId);
-                                taskId = -1;
+                            if (isOptOut() && task != null)
+                            {
+                                task.cancel();
+                                task = null;
                                 // Tell all plotters to stop gathering information.
-                                for (Graph graph : graphs){
+                                for (Graph graph : graphs)
+                                {
                                     graph.onOptOut();
                                 }
                             }
@@ -257,8 +271,13 @@ public class Metrics {
                         // After the first post we set firstPost to false
                         // Each post thereafter will be a ping
                         firstPost = false;
-                    } catch (IOException e) {
-                        Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                    }
+                    catch (IOException e)
+                    {
+                        if (debug)
+                        {
+                            Bukkit.getLogger().log(Level.INFO, "[Metrics] " + e.getMessage());
+                        }
                     }
                 }
             }, 0, PING_INTERVAL * 1200);
@@ -278,10 +297,14 @@ public class Metrics {
                 // Reload the metrics file
                 configuration.load(getConfigFile());
             } catch (IOException ex) {
-                Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                if (debug) {
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                }
                 return true;
             } catch (InvalidConfigurationException ex) {
-                Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                if (debug) {
+                    Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
+                }
                 return true;
             }
             return configuration.getBoolean("opt-out", false);
@@ -289,23 +312,23 @@ public class Metrics {
     }
 
     /**
-    * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
-    *
-    * @throws IOException
-    */
+     * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
+     *
+     * @throws IOException
+     */
     public void enable() throws IOException {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock) {
-        	// Check if the server owner has already set opt-out, if not, set it.
-        	if (isOptOut()) {
-        		configuration.set("opt-out", false);
-        		configuration.save(configurationFile);
-        	}
+            // Check if the server owner has already set opt-out, if not, set it.
+            if (isOptOut()) {
+                configuration.set("opt-out", false);
+                configuration.save(configurationFile);
+            }
 
-        	// Enable Task, if it is not running
-        	if (taskId < 0) {
-        		start();
-        	}
+            // Enable Task, if it is not running
+            if (task == null) {
+                start();
+            }
         }
     }
 
@@ -324,9 +347,9 @@ public class Metrics {
             }
 
             // Disable Task, if it is running
-            if (taskId > 0) {
-                this.plugin.getServer().getScheduler().cancelTask(taskId);
-                taskId = -1;
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         }
     }
@@ -352,16 +375,44 @@ public class Metrics {
      * Generic method that posts a plugin to the metrics website
      */
     private void postPlugin(final boolean isPing) throws IOException {
-        // The plugin's description file containg all of the plugin data such as name, version, author, etc
-        final PluginDescriptionFile description = plugin.getDescription();
+        // Server software specific section
+        PluginDescriptionFile description = plugin.getDescription();
+        String pluginName = description.getName();
+        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+        String pluginVersion = description.getVersion();
+        String serverVersion = Bukkit.getVersion();
+        int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
+
+        // END server software specific section -- all code below does not use any code outside of this class / Java
 
         // Construct the post data
         final StringBuilder data = new StringBuilder();
+
+        // The plugin's description file containg all of the plugin data such as name, version, author, etc
         data.append(encode("guid")).append('=').append(encode(guid));
-        encodeDataPair(data, "version", description.getVersion());
-        encodeDataPair(data, "server", Bukkit.getVersion());
-        encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
+        encodeDataPair(data, "version", pluginVersion);
+        encodeDataPair(data, "server", serverVersion);
+        encodeDataPair(data, "players", Integer.toString(playersOnline));
         encodeDataPair(data, "revision", String.valueOf(REVISION));
+
+        // New data as of R6
+        String osname = System.getProperty("os.name");
+        String osarch = System.getProperty("os.arch");
+        String osversion = System.getProperty("os.version");
+        String java_version = System.getProperty("java.version");
+        int coreCount = Runtime.getRuntime().availableProcessors();
+
+        // normalize os arch .. amd64 -> x86_64
+        if (osarch.equals("amd64")) {
+            osarch = "x86_64";
+        }
+
+        encodeDataPair(data, "osname", osname);
+        encodeDataPair(data, "osarch", osarch);
+        encodeDataPair(data, "osversion", osversion);
+        encodeDataPair(data, "cores", Integer.toString(coreCount));
+        encodeDataPair(data, "online-mode", Boolean.toString(onlineMode));
+        encodeDataPair(data, "java_version", java_version);
 
         // If we're pinging, append it
         if (isPing) {
@@ -393,7 +444,7 @@ public class Metrics {
         }
 
         // Create the url
-        URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(plugin.getDescription().getName())));
+        URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(pluginName)));
 
         // Connect to the website
         URLConnection connection;
