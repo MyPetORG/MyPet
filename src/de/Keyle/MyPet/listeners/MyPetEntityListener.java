@@ -34,6 +34,7 @@ import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
+import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
@@ -366,6 +367,16 @@ public class MyPetEntityListener implements Listener
                 {
                     event.setDroppedExp(0);
                 }
+            }
+            if (MyPetExperience.lossFixed > 0 || MyPetExperience.lossPercent > 0)
+            {
+                double lostExpirience = MyPetExperience.lossFixed;
+                lostExpirience += myPet.getExperience().getRequiredExp() * MyPetExperience.lossPercent / 100;
+                if (lostExpirience > myPet.getExperience().getCurrentExp())
+                {
+                    lostExpirience = myPet.getExperience().getCurrentExp();
+                }
+                myPet.getExperience().removeExp(lostExpirience);
             }
             SendDeathMessage(event);
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));

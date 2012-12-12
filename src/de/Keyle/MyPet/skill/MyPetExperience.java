@@ -30,6 +30,9 @@ import java.util.Map;
 
 public class MyPetExperience
 {
+    public static int lossPercent = 0;
+    public static double lossFixed = 0;
+
     private final MyPet myPet;
 
     private double exp = 0;
@@ -165,6 +168,15 @@ public class MyPetExperience
             return (int) (expEvent.getNewExp() - expEvent.getOldExp());
         }
         return 0;
+    }
+
+    public void removeExp(double exp)
+    {
+        if (exp > getCurrentExp())
+        {
+            exp = getCurrentExp();
+        }
+        this.exp -= exp;
     }
 
     public double getCurrentExp()

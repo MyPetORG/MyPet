@@ -92,6 +92,8 @@ public class MyPetConfig
         setProperty("MyPet.Support.WorldGuard", true);
         setProperty("MyPet.Support.Citizens", true);
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
+        setProperty("MyPet.Exp.loss.Percent", 0);
+        setProperty("MyPet.Exp.loss.Fixed", 0.0);
 
         setProperty("MyPet.Leash.Item", 287);
         setProperty("MyPet.Skill.Control.Item", 287);
@@ -186,6 +188,9 @@ public class MyPetConfig
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
         useHeroes = config.getBoolean("MyPet.Support.Heroes", true);
+
+        MyPetExperience.lossPercent = config.getInt("MyPet.Exp.loss.Percent");
+        MyPetExperience.lossFixed = config.getDouble("MyPet.Exp.loss.Fixed");
 
         for (MyPetType petType : MyPetType.values())
         {
