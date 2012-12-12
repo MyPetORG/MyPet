@@ -233,37 +233,6 @@ public abstract class MyPet
         return false;
     }
 
-    public boolean createPet(Location loc)
-    {
-        if (status != PetState.Here && getOwner().isOnline())
-        {
-            if (respawnTime <= 0)
-            {
-                this.petLocation = loc;
-                net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-                EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
-                petEntity.setLocation(loc);
-                if (!MyPetUtil.canSpawn(loc, petEntity))
-                {
-                    return false;
-                }
-                if (!petLocation.getChunk().isLoaded())
-                {
-                    petLocation.getChunk().load();
-                }
-                if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
-                {
-                    status = PetState.Despawned;
-                    return false;
-                }
-                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
-                status = PetState.Here;
-                return true;
-            }
-        }
-        return false;
-    }
-
     public CraftMyPet getCraftPet()
     {
         return craftMyPet;
