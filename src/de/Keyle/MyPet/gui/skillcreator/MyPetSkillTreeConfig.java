@@ -36,7 +36,7 @@ public class MyPetSkillTreeConfig
     private static Map<String, MyPetSkillTreeMobType> skillTreeMobTypes = new HashMap<String, MyPetSkillTreeMobType>();
 
     private static String configPath;
-    private static String[] myPetTypes = {"default", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman","IronGolem", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Slime", "Spider", "Skeleton", "Silverfish", "Villager", "Wolf", "Zombie"};
+    private static String[] myPetTypes = {"default", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman","IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Slime", "Spider", "Skeleton", "Silverfish", "Villager", "Wolf", "Zombie"};
 
     public static void setConfigPath(String path)
     {

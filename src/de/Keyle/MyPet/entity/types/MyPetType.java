@@ -31,6 +31,8 @@ import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
+import de.Keyle.MyPet.entity.types.magmacube.EntityMyMagmaCube;
+import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
@@ -58,6 +60,7 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityCreature;
+import net.minecraft.server.EntityMagmaCube;
 import net.minecraft.server.World;
 import org.bukkit.entity.EntityType;
 
@@ -71,6 +74,7 @@ public enum MyPetType
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
+    MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube" , EntityMyMagmaCube.class, MyMagmaCube.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),

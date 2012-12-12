@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
+import de.Keyle.MyPet.entity.types.magmacube.EntityMyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
@@ -263,6 +264,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
             a.invoke(a, EntityMySilverfish.class, "Silverfish", 60);
             a.invoke(a, EntitySilverfish.class, "Silverfish", 60);
+            a.invoke(a, EntityMyMagmaCube.class, "LavaSlime", 62);
+            a.invoke(a, EntityMagmaCube.class, "LavaSlime", 62);
             a.invoke(a, EntityMyPig.class, "Pig", 90);
             a.invoke(a, EntityPig.class, "Pig", 90);
             a.invoke(a, EntityMySheep.class, "Sheep", 91);
