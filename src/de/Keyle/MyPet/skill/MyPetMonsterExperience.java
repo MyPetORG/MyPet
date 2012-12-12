@@ -21,16 +21,13 @@ package de.Keyle.MyPet.skill;
 
 import org.bukkit.entity.EntityType;
 
-import java.util.Random;
-
 public class MyPetMonsterExperience
 {
-    private int min;
-    private int max;
+    private double min;
+    private double max;
     private EntityType entityType;
-    private static Random random = new Random();
 
-    public MyPetMonsterExperience(int min, int max, EntityType entityType)
+    public MyPetMonsterExperience(double min, double max, EntityType entityType)
     {
         if (max >= min)
         {
@@ -45,7 +42,7 @@ public class MyPetMonsterExperience
         this.entityType = entityType;
     }
 
-    public MyPetMonsterExperience(int exp, EntityType entityType)
+    public MyPetMonsterExperience(double exp, EntityType entityType)
     {
         this.max = exp;
         this.min = exp;
@@ -54,15 +51,15 @@ public class MyPetMonsterExperience
 
     public double getRandomExp()
     {
-        return max == min ? max : random.nextInt(max - min + 1) + min;
+        return max == min ? max : ((int) (doubleRandom(min, max) * 100)) / 100.;
     }
 
-    public int getMin()
+    public double getMin()
     {
         return min;
     }
 
-    public int getMax()
+    public double getMax()
     {
         return max;
     }
@@ -72,7 +69,7 @@ public class MyPetMonsterExperience
         return entityType;
     }
 
-    public void setMin(int min)
+    public void setMin(double min)
     {
         this.min = min;
         if (min > max)
@@ -81,7 +78,7 @@ public class MyPetMonsterExperience
         }
     }
 
-    public void setMax(int max)
+    public void setMax(double max)
     {
         this.max = max;
         if (max < min)
@@ -90,9 +87,14 @@ public class MyPetMonsterExperience
         }
     }
 
-    public void setExp(int exp)
+    public void setExp(double exp)
     {
         max = (min = exp);
+    }
+
+    private static double doubleRandom(double low, double high)
+    {
+        return Math.random() * (high - low) + low;
     }
 
     @Override

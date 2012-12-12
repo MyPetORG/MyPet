@@ -242,19 +242,19 @@ public class MyPetConfig
 
         if (config.getStringList("MyPet.exp.active") != null)
         {
-            int min;
-            int max;
+            double min;
+            double max;
             for (EntityType entityType : MyPetExperience.mobExp.keySet())
             {
                 min = 0;
                 max = 0;
                 if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Max"))
                 {
-                    max = config.getInt("MyPet.Exp.Active." + entityType.getName() + ".Max", 0);
+                    max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
                 }
                 if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Min"))
                 {
-                    min = config.getInt("MyPet.Exp.Active." + entityType.getName() + ".Min", 0);
+                    min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
                 }
                 if (min == max)
                 {
