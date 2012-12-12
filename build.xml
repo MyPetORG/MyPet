@@ -42,6 +42,7 @@
         <pathelement location="${basedir}/../Libraries/WorldEdit.jar" />
         <pathelement location="${basedir}/../Libraries/WorldGuard.jar" />
         <pathelement location="${basedir}/../Libraries/Vault.jar" />
+        <pathelement location="${basedir}/../Libraries/Heroes.jar" />
         <pathelement location="${basedir}/../Libraries/citizensapi-2.0.jar" />
         <pathelement location="${basedir}/../Libraries/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${basedir}/../Libraries/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />

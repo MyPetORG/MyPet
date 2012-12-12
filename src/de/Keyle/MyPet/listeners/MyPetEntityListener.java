@@ -309,6 +309,16 @@ public class MyPetEntityListener implements Listener
             return;
         }
         EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
+
+        if(e.getDamager() instanceof CraftMyPet)
+        {
+            MyPet myPet = ((CraftMyPet)e.getDamager()).getMyPet();
+            if(HeroesDamageFix.damageFaked(myPet.getDamage()))
+            {
+                event.setDamage(myPet.getDamage());
+            }
+        }
+
         if (event.getEntity() instanceof LivingEntity)
         {
             if (e.getDamager() instanceof Player)

@@ -97,6 +97,7 @@ public class MyPetPlugin extends JavaPlugin
         getTimer().stopTimer();
         MyPetList.clearList();
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
+        HeroesDamageFix.reset();
         debugLogger.info("MyPet disabled!");
     }
 
