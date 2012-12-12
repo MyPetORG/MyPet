@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
+import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
@@ -95,43 +96,11 @@ public class MyPetConfig
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
         setProperty("MyPet.Skill.Inventory.Creative", true);
 
-        setProperty("MyPet.Pets.CaveSpider.HP", 20);
-        setProperty("MyPet.Pets.Chicken.HP", 20);
-        setProperty("MyPet.Pets.Cow.HP", 20);
-        setProperty("MyPet.Pets.Creeper.HP", 20);
-        setProperty("MyPet.Pets.Enderman.HP", 20);
-        setProperty("MyPet.Pets.IronGolem.HP", 20);
-        setProperty("MyPet.Pets.Mooshroom.HP", 20);
-        setProperty("MyPet.Pets.Ocelot.HP", 20);
-        setProperty("MyPet.Pets.Pig.HP", 20);
-        setProperty("MyPet.Pets.PigZombie.HP", 20);
-        setProperty("MyPet.Pets.Sheep.HP", 20);
-        setProperty("MyPet.Pets.Silverfish.HP", 20);
-        setProperty("MyPet.Pets.Skeleton.HP", 20);
-        setProperty("MyPet.Pets.Slime.HP", 20);
-        setProperty("MyPet.Pets.Spider.HP", 20);
-        setProperty("MyPet.Pets.Villager.HP", 20);
-        setProperty("MyPet.Pets.Wolf.HP", 20);
-        setProperty("MyPet.Pets.Zombie.HP", 20);
-
-        setProperty("MyPet.Pets.CaveSpider.Damage", 4);
-        setProperty("MyPet.Pets.Chicken.Damage", 4);
-        setProperty("MyPet.Pets.Cow.Damage", 4);
-        setProperty("MyPet.Pets.Creeper.Damage", 0);
-        setProperty("MyPet.Pets.Enderman.Damage", 4);
-        setProperty("MyPet.Pets.IronGolem.Damage", 4);
-        setProperty("MyPet.Pets.Mooshroom.Damage", 4);
-        setProperty("MyPet.Pets.Ocelot.Damage", 4);
-        setProperty("MyPet.Pets.Pig.Damage", 4);
-        setProperty("MyPet.Pets.PigZombie.Damage", 4);
-        setProperty("MyPet.Pets.Sheep.Damage", 4);
-        setProperty("MyPet.Pets.Silverfish.Damage", 4);
-        setProperty("MyPet.Pets.Skeleton.Damage", 4);
-        setProperty("MyPet.Pets.Slime.Damage", 4);
-        setProperty("MyPet.Pets.Spider.Damage", 4);
-        setProperty("MyPet.Pets.Villager.Damage", 4);
-        setProperty("MyPet.Pets.Wolf.Damage", 4);
-        setProperty("MyPet.Pets.Zombie.Damage", 4);
+        for (MyPetType petType : MyPetType.values())
+        {
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".Damage", 2);
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", 20);
+        }
 
         setProperty("MyPet.Pets.CaveSpider.Food", Material.ROTTEN_FLESH.getId());
         setProperty("MyPet.Pets.Chicken.Food", Material.SEEDS.getId());
@@ -206,43 +175,11 @@ public class MyPetConfig
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
 
-        MyPet.setStartHP(MyCaveSpider.class, config.getInt("MyPet.Pets.CaveSpider.HP", 20));
-        MyPet.setStartHP(MyChicken.class, config.getInt("MyPet.Pets.Chicken.HP", 20));
-        MyPet.setStartHP(MyCow.class, config.getInt("MyPet.Pets.Cow.HP", 20));
-        MyPet.setStartHP(MyCreeper.class, config.getInt("MyPet.Pets.Creeper.HP", 20));
-        MyPet.setStartHP(MyEnderman.class, config.getInt("MyPet.Pets.Enderman.HP", 20));
-        MyPet.setStartHP(MyIronGolem.class, config.getInt("MyPet.Pets.IronGolem.HP", 20));
-        MyPet.setStartHP(MyMooshroom.class, config.getInt("MyPet.Pets.Mooshroom.HP", 20));
-        MyPet.setStartHP(MyOcelot.class, config.getInt("MyPet.Pets.Ocelot.HP", 20));
-        MyPet.setStartHP(MyPig.class, config.getInt("MyPet.Pets.Pig.HP", 20));
-        MyPet.setStartHP(MyPigZombie.class, config.getInt("MyPet.Pets.PigZombie.HP", 20));
-        MyPet.setStartHP(MySheep.class, config.getInt("MyPet.Pets.Sheep.HP", 20));
-        MyPet.setStartHP(MySilverfish.class, config.getInt("MyPet.Pets.Silverfish.HP", 20));
-        MyPet.setStartHP(MySkeleton.class, config.getInt("MyPet.Pets.Skeleton.HP", 20));
-        MyPet.setStartHP(MySlime.class, config.getInt("MyPet.Pets.Slime.HP", 20));
-        MyPet.setStartHP(MySpider.class, config.getInt("MyPet.Pets.Spider.HP", 20));
-        MyPet.setStartHP(MyVillager.class, config.getInt("MyPet.Pets.Villager.HP", 20));
-        MyPet.setStartHP(MyWolf.class, config.getInt("MyPet.Pets.Wolf.HP", 20));
-        MyPet.setStartHP(MyZombie.class, config.getInt("MyPet.Pets.Zombie.HP", 20));
-
-        MyPet.setStartDamage(MyCaveSpider.class, config.getInt("MyPet.Pets.CaveSpider.Damage", 4));
-        MyPet.setStartDamage(MyChicken.class, config.getInt("MyPet.Pets.Chicken.Damage", 4));
-        MyPet.setStartDamage(MyCow.class, config.getInt("MyPet.Pets.Cow.Damage", 4));
-        MyPet.setStartDamage(MyCreeper.class, config.getInt("MyPet.Pets.Creeper.Damage", 0));
-        MyPet.setStartDamage(MyEnderman.class, config.getInt("MyPet.Pets.Enderman.Damage", 4));
-        MyPet.setStartDamage(MyIronGolem.class, config.getInt("MyPet.Pets.IronGolem.Damage", 4));
-        MyPet.setStartDamage(MyMooshroom.class, config.getInt("MyPet.Pets.Mooshroom.Damage", 4));
-        MyPet.setStartDamage(MyOcelot.class, config.getInt("MyPet.Pets.Ocelot.Damage", 4));
-        MyPet.setStartDamage(MyPig.class, config.getInt("MyPet.Pets.Pig.Damage", 4));
-        MyPet.setStartDamage(MyPigZombie.class, config.getInt("MyPet.Pets.PigZombie.Damage", 4));
-        MyPet.setStartDamage(MySheep.class, config.getInt("MyPet.Pets.Sheep.Damage", 4));
-        MyPet.setStartDamage(MySilverfish.class, config.getInt("MyPet.Pets.Silverfish.Damage", 4));
-        MyPet.setStartDamage(MySkeleton.class, config.getInt("MyPet.Pets.Skeleton.Damage", 4));
-        MyPet.setStartDamage(MySlime.class, config.getInt("MyPet.Pets.Slime.Damage", 4));
-        MyPet.setStartDamage(MySpider.class, config.getInt("MyPet.Pets.Spider.Damage", 4));
-        MyPet.setStartDamage(MyVillager.class, config.getInt("MyPet.Pets.Villager.Damage", 4));
-        MyPet.setStartDamage(MyWolf.class, config.getInt("MyPet.Pets.Wolf.Damage", 4));
-        MyPet.setStartDamage(MyZombie.class, config.getInt("MyPet.Pets.Zombie.Damage", 4));
+        for (MyPetType petType : MyPetType.values())
+        {
+            MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", 20));
+            MyPet.setStartDamage(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".Damage", 2));
+        }
 
         seperateFood(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.Food", "367"));
         seperateFood(MyChicken.class, config.getString("MyPet.Pets.Chicken.Food", "295"));
