@@ -90,7 +90,6 @@ public class MyPetPlugin extends JavaPlugin
     {
         if (isReady)
         {
-            HeroesDamageFix.reset();
             debugLogger.info(savePets(true) + " pet/pets saved.");
             for (MyPet myPet : MyPetList.getAllMyPets())
             {
@@ -392,6 +391,8 @@ public class MyPetPlugin extends JavaPlugin
         {
             debugLogger.info("Metrics not activivated");
         }
+
+        HeroesDamageFix.reset();
 
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
         MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
