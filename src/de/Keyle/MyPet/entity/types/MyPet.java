@@ -65,41 +65,11 @@ public abstract class MyPet
 
     static
     {
-        startHP.put(MyCaveSpider.class, 20);
-        startHP.put(MyChicken.class, 20);
-        startHP.put(MyCow.class, 20);
-        startHP.put(MyCreeper.class, 20);
-        startHP.put(MyEnderman.class, 20);
-        startHP.put(MyIronGolem.class, 20);
-        startHP.put(MyMooshroom.class, 20);
-        startHP.put(MyOcelot.class, 20);
-        startHP.put(MyPig.class, 20);
-        startHP.put(MyPigZombie.class, 20);
-        startHP.put(MySheep.class, 20);
-        startHP.put(MySilverfish.class, 20);
-        startHP.put(MySlime.class, 20);
-        startHP.put(MySpider.class, 20);
-        startHP.put(MyVillager.class, 20);
-        startHP.put(MyWolf.class, 20);
-        startHP.put(MyZombie.class, 20);
-
-        startDamage.put(MyCaveSpider.class, 4);
-        startDamage.put(MyChicken.class, 4);
-        startDamage.put(MyCow.class, 4);
-        startDamage.put(MyCreeper.class, 0);
-        startDamage.put(MyEnderman.class, 4);
-        startDamage.put(MyIronGolem.class, 4);
-        startDamage.put(MyMooshroom.class, 4);
-        startDamage.put(MyOcelot.class, 4);
-        startDamage.put(MyPig.class, 4);
-        startDamage.put(MyPigZombie.class, 4);
-        startDamage.put(MySheep.class, 4);
-        startDamage.put(MySilverfish.class, 4);
-        startDamage.put(MySlime.class, 4);
-        startDamage.put(MySpider.class, 4);
-        startDamage.put(MyVillager.class, 4);
-        startDamage.put(MyWolf.class, 4);
-        startDamage.put(MyZombie.class, 4);
+        for (MyPetType petType : MyPetType.values())
+        {
+            startHP.put(petType.getMyPetClass(), 20);
+            startDamage.put(petType.getMyPetClass(), 4);
+        }
 
         entitySizes.put(MyCaveSpider.class, new Float[]{0.7F, 0.5F});
         entitySizes.put(MyChicken.class, new Float[]{0.3F, 0.7F});
