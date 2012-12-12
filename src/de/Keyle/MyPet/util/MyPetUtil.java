@@ -19,6 +19,9 @@
 
 package de.Keyle.MyPet.util;
 
+import com.herocraftonline.heroes.Heroes;
+import com.herocraftonline.heroes.characters.Hero;
+import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.P;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
@@ -125,7 +128,7 @@ public class MyPetUtil
 
     public static boolean canHurt(Player petOwner, Player victim)
     {
-        return canHurtCitizens(victim) && canHurtFactions(petOwner, victim) && canHurtTowny(petOwner, victim) && canHurtWorldGuard(victim) && victim.getGameMode() != GameMode.CREATIVE && victim.getWorld().getPVP();
+        return canHurtCitizens(victim) && canHurtFactions(petOwner, victim) && canHurtTowny(petOwner, victim) && canHurtWorldGuard(victim) && canHurtHeroes(petOwner, victim) && victim.getGameMode() != GameMode.CREATIVE && victim.getWorld().getPVP();
     }
 
     public static boolean canHurtCitizens(Player victim)
@@ -209,6 +212,34 @@ public class MyPetUtil
         return canHurt;
     }
 
+    public static boolean canHurtHeroes(Player attacker, Player victim)
+    {
+        if (MyPetConfig.useHeroes && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
+        {
+            Heroes heroesPlugin = (Heroes) getServer().getPluginManager().getPlugin("Heroes");
+
+            Hero heroAttacker = heroesPlugin.getCharacterManager().getHero(attacker);
+            Hero heroDefender = heroesPlugin.getCharacterManager().getHero(victim);
+            int attackerLevel = heroAttacker.getTieredLevel(false);
+            int defenderLevel = heroDefender.getTieredLevel(false);
+
+            if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange)
+            {
+                return false;
+            }
+            if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel))
+            {
+                return false;
+            }
+            HeroParty party = heroDefender.getParty();
+            if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void sendMessage(Player player, String Message)
     {
         if (player != null && player.isOnline())
@@ -240,7 +271,7 @@ public class MyPetUtil
 
     public static Boolean canSpawn(Location loc, Entity entity)
     {
-        return canSpawn(loc,entity.width,entity.height,entity.length);
+        return canSpawn(loc, entity.width, entity.height, entity.length);
     }
 
     public static Boolean canSpawn(Location loc, float width, float height, float length)
@@ -266,15 +297,15 @@ public class MyPetUtil
         {
             for (int z = minZ ; z < maxZ ; z++)
             {
-                if (world.getChunkAt(x,z).isLoaded())
+                if (world.getChunkAt(x, z).isLoaded())
                 {
                     for (int y = minY - 1 ; y < maxY ; y++)
                     {
-                        Block block = Block.byId[world.getBlockAt(x,y,z).getTypeId()];
+                        Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
 
                         if (block != null)
                         {
-                            block.a(((CraftWorld)world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
+                            block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
                         }
                     }
                 }

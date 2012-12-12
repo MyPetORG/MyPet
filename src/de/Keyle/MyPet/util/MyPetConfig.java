@@ -66,6 +66,7 @@ public class MyPetConfig
     public static boolean useFactions = true;
     public static boolean useWorldGuard = true;
     public static boolean useCitizens = true;
+    public static boolean useHeroes = true;
 
     public static boolean superperms = false;
     public static boolean debugLogger = true;
@@ -84,6 +85,7 @@ public class MyPetConfig
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Support.Towny", true);
+        setProperty("MyPet.Support.Heroes", true);
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
         setProperty("MyPet.Support.Citizens", true);
@@ -177,6 +179,7 @@ public class MyPetConfig
         useFactions = config.getBoolean("MyPet.Support.Factions", true);
         useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
         useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
+        useHeroes = config.getBoolean("MyPet.Support.Heroes", true);
 
         for (MyPetType petType : MyPetType.values())
         {
