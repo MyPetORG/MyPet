@@ -34,11 +34,15 @@ import net.minecraft.server.*;
 
 public class EntityMySlime extends EntityMyPet
 {
+    int jumpDelay;
+    PathEntity lastPathEntity = null;
+
     public EntityMySlime(World world, MyPet myPet)
     {
         super(world, myPet);
         this.texture = "/mob/slime.png";
         this.walkSpeed = 0.25F;
+        this.jumpDelay = (this.random.nextInt(20) + 10);
 
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
@@ -125,5 +129,23 @@ public class EntityMySlime extends EntityMyPet
     protected String ba()
     {
         return "mob.slime." + (getSize() > 1 ? "big" : "small");
+
+    }
+
+    /**
+     * Method is called when pet moves
+     * Is used to create the hopping motion
+     */
+    public void j_()
+    {
+        super.j_();
+
+        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
+        {
+            getControllerJump().a();
+            jumpDelay = (this.random.nextInt(20) + 10);
+            lastPathEntity = getNavigation().d();
+            makeSound("mob.slime." + (getSize() > 1 ? "big" : "small"), aX(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+        }
     }
 }

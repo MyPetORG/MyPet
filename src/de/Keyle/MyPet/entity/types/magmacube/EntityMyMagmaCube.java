@@ -29,13 +29,15 @@ import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.slime.CraftMySlime;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.*;
 
 public class EntityMyMagmaCube extends EntityMyPet
 {
+    int jumpDelay;
+    PathEntity lastPathEntity = null;
+
     public EntityMyMagmaCube(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -80,7 +82,7 @@ public class EntityMyMagmaCube extends EntityMyPet
     {
         this.datawatcher.watch(16, (byte) value);
         Float[] entitySize = MyPet.getEntitySize(MyMagmaCube.class);
-        this.a(entitySize[0] * value,entitySize[1] * value);
+        this.a(entitySize[0] * value, entitySize[1] * value);
         this.aV = value;
         ((MyMagmaCube) myPet).size = value;
     }
@@ -132,5 +134,22 @@ public class EntityMyMagmaCube extends EntityMyPet
     protected String ba()
     {
         return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
+    }
+
+    /**
+     * Method is called when pet moves
+     * Is used to create the hopping motion
+     */
+    public void j_()
+    {
+        super.j_();
+
+        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
+        {
+            getControllerJump().a();
+            jumpDelay = (this.random.nextInt(20) + 10);
+            lastPathEntity = getNavigation().d();
+            makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), aX(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+        }
     }
 }
