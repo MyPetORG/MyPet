@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.bat.CraftMyBat;
 import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
 import de.Keyle.MyPet.entity.types.enderman.CraftMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
@@ -279,7 +280,7 @@ public class MyPetEntityListener implements Listener
                 }
             }
         }
-        else if (event.getEntity() instanceof CraftMyChicken)
+        else if (event.getEntity() instanceof CraftMyChicken || event.getEntity() instanceof CraftMyBat)
         {
             if (event.getCause() == DamageCause.FALL)
             {

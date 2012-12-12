@@ -19,6 +19,8 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
+import de.Keyle.MyPet.entity.types.bat.MyBat;
 import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
@@ -60,7 +62,6 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityCreature;
-import net.minecraft.server.EntityMagmaCube;
 import net.minecraft.server.World;
 import org.bukkit.entity.EntityType;
 
@@ -68,13 +69,14 @@ import java.lang.reflect.Constructor;
 
 public enum MyPetType
 {
+    Bat(EntityType.BAT, "Bat", EntityMyBat.class, MyBat.class),
     CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
-    MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube" , EntityMyMagmaCube.class, MyMagmaCube.class),
+    MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube", EntityMyMagmaCube.class, MyMagmaCube.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),

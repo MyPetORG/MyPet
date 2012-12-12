@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
@@ -266,6 +267,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntitySilverfish.class, "Silverfish", 60);
             a.invoke(a, EntityMyMagmaCube.class, "LavaSlime", 62);
             a.invoke(a, EntityMagmaCube.class, "LavaSlime", 62);
+            a.invoke(a, EntityMyBat.class, "Bat", 65);
+            a.invoke(a, EntityBat.class, "Bat", 65);
             a.invoke(a, EntityMyPig.class, "Pig", 90);
             a.invoke(a, EntityPig.class, "Pig", 90);
             a.invoke(a, EntityMySheep.class, "Sheep", 91);

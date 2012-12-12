@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.bat.MyBat;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
@@ -72,6 +73,7 @@ public abstract class MyPet
             startDamage.put(petType.getMyPetClass(), 4);
         }
 
+        entitySizes.put(MyBat.class, new Float[]{0.5F, 0.9F});
         entitySizes.put(MyCaveSpider.class, new Float[]{0.7F, 0.5F});
         entitySizes.put(MyChicken.class, new Float[]{0.3F, 0.7F});
         entitySizes.put(MyCow.class, new Float[]{0.9F, 1.3F});
