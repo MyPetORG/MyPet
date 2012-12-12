@@ -106,8 +106,8 @@ public class EntityMyZombie extends EntityMyPet
     protected void a()
     {
         super.a();
-        getDataWatcher().a(12, Byte.valueOf((byte) 0)); // is baby
-        getDataWatcher().a(13, Byte.valueOf((byte) 0)); // is villager
+        getDataWatcher().a(12, new Byte((byte) 0)); // is baby
+        getDataWatcher().a(13, new Byte((byte) 0)); // is villager
     }
 
     protected void a(int i, int j, int k, int l)

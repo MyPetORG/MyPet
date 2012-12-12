@@ -78,7 +78,7 @@ public class EntityMySlime extends EntityMyPet
     {
         this.datawatcher.watch(16, (byte) value);
         Float[] entitySize = MyPet.getEntitySize(MySlime.class);
-        this.a(entitySize[0] * value,entitySize[1] * value);
+        this.a(entitySize[0] * value, entitySize[1] * value);
         this.aV = value;
         ((MySlime) myPet).size = value;
     }
@@ -98,7 +98,7 @@ public class EntityMySlime extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, (byte) 1); //size
+        this.datawatcher.a(16, new Byte((byte) 1)); //size
     }
 
     /**
