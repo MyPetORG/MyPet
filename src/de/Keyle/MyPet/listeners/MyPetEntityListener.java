@@ -323,17 +323,17 @@ public class MyPetEntityListener implements Listener
                     }
 
                 }
-                else if (e.getDamager() instanceof CraftMyPet)
+            }
+            else if (e.getDamager() instanceof CraftMyPet)
+            {
+                MyPet myPet = ((CraftMyPet) e.getDamager()).getHandle().getMyPet();
+                if (myPet.getSkillSystem().hasSkill("Poison"))
                 {
-                    MyPet myPet = ((CraftMyPet) e.getDamager()).getHandle().getMyPet();
-                    if (myPet.getSkillSystem().hasSkill("Poison"))
+                    Poison poisonSkill = (Poison) myPet.getSkillSystem().getSkill("Poison");
+                    if (poisonSkill.getPoison())
                     {
-                        Poison poisonSkill = (Poison) myPet.getSkillSystem().getSkill("Poison");
-                        if (poisonSkill.getPoison())
-                        {
-                            PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
-                            ((LivingEntity) event.getEntity()).addPotionEffect(effect);
-                        }
+                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
+                        ((LivingEntity) event.getEntity()).addPotionEffect(effect);
                     }
                 }
             }
