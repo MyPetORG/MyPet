@@ -21,7 +21,6 @@ package de.Keyle.MyPet.entity.types.magmacube;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.entity.types.slime.CraftMySlime;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
 
@@ -65,14 +64,14 @@ public class MyMagmaCube extends MyPet
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("size", getSize());
+        info.setInt("Size", getSize());
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setSize(info.getInt("size"));
+        setSize(info.getInt("Size"));
     }
 
     @Override

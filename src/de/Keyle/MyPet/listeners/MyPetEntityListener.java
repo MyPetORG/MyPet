@@ -242,7 +242,7 @@ public class MyPetEntityListener implements Listener
                             }
                             else if (leashTarget instanceof Slime)
                             {
-                                extendedInfo.setInt("size", ((Slime) leashTarget).getSize());
+                                extendedInfo.setInt("Size", ((Slime) leashTarget).getSize());
                             }
                             else if (leashTarget instanceof Creeper)
                             {
@@ -310,10 +310,10 @@ public class MyPetEntityListener implements Listener
         }
         EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
 
-        if(e.getDamager() instanceof CraftMyPet)
+        if (e.getDamager() instanceof CraftMyPet)
         {
-            MyPet myPet = ((CraftMyPet)e.getDamager()).getMyPet();
-            if(HeroesDamageFix.damageFaked(myPet.getDamage()))
+            MyPet myPet = ((CraftMyPet) e.getDamager()).getMyPet();
+            if (HeroesDamageFix.damageFaked(myPet.getDamage()))
             {
                 event.setDamage(myPet.getDamage());
             }

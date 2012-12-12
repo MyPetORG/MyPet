@@ -59,14 +59,14 @@ public class MySlime extends MyPet
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
-        info.setInt("size", getSize());
+        info.setInt("Size", getSize());
         return info;
     }
 
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setSize(info.getInt("size"));
+        setSize(info.getInt("Size"));
     }
 
     @Override
