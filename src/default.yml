@@ -24,6 +24,9 @@ skilltrees:
       - HP
       - HP
       - HP
+      - Ride
+      - Ride
+      - Poison
 
   # every normal should have permissions for this skilltree -> MyPet.custom.skilltree.default
   default:
@@ -49,6 +52,7 @@ skilltrees:
       - Damage
       - Poison
     '12':
+      - Ride
       - Inventory
       - HP
       - Damage
