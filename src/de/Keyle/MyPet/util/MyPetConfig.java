@@ -61,6 +61,7 @@ public class MyPetConfig
     public static boolean levelSystem = true;
     public static boolean hungerSystem = true;
     public static boolean sendMetrics = true;
+    public static boolean checkForUpdates = false;
     public static boolean useTowny = true;
     public static boolean useFactions = true;
     public static boolean useWorldGuard = true;
@@ -79,6 +80,7 @@ public class MyPetConfig
         setProperty("MyPet.HungerSystem.Active", true);
         setProperty("MyPet.HungerSystem.Time", 60);
         setProperty("MyPet.SendMetrics", true);
+        setProperty("MyPet.CheckForUpdates", false);
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Support.Towny", true);
@@ -169,6 +171,7 @@ public class MyPetConfig
         hungerSystemTime = config.getInt("MyPet.HungerSystem.Time", 60);
         superperms = config.getBoolean("MyPet.SuperPerms", false);
         sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
+        checkForUpdates = config.getBoolean("MyPet.CheckForUpdates", false);
         debugLogger = config.getBoolean("MyPet.DebugLogger", false);
         useTowny = config.getBoolean("MyPet.Support.Towny", true);
         useFactions = config.getBoolean("MyPet.Support.Factions", true);
