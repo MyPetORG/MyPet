@@ -1,0 +1,22 @@
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+/.classpath
+/.project
+/.settings
+
+# NetBeans
+/nbproject
+
+# vim
+.*.sw[a-p]
+
+# Mac filesystem dust
+/.DS_Store
+
+#Ant
+build.number
