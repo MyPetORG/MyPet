@@ -23,10 +23,11 @@
     <!-- Setting some vars -->
     <property name="MyPet.bukkit.version" value="0.2" />
     <property name="MyPet.minecraft.version" value="1.4.5" />
-    <property name="MyPet.src.dir" location="${basedir}/src" />
+    <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
-    <property name="MyPet.output.dir" location="${basedir}/../out/jar" />
-    <property name="MyPet.build.dir" location="${MyPet.output.dir}/MyPet" />
+    <property name="MyPet.output.dir" location="${basedir}/../out/jar/MyPet" />
+    <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/build" />
+    <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/src" />
 
     <!-- Adding classpathes -->
     <path id="MyPet.manifest.classpath">
@@ -81,41 +82,45 @@
 
     <!-- Deletes the existing directories -->
     <target name="1_clean">
-        <delete dir="${MyPet.build.dir}" />
-        <delete file="${MyPet.output.dir}/MyPet.jar" />
+        <delete dir="${MyPet.output.dir}" />
     </target>
 
     <!-- Creates the directories -->
     <target name="2_makedir" depends="1_clean">
         <mkdir dir="${MyPet.output.dir}" />
-        <mkdir dir="${MyPet.build.dir}" />
+        <mkdir dir="${MyPet.output.dir.build}" />
     </target>
 
-    <!-- Creates the directories -->
+    <!-- Copies resources to build dir -->
     <target name="3_copyresources" depends="1_clean, 2_makedir">
-        <copydir src="${MyPet.resources.dir}" dest="${MyPet.build.dir}/resources" />
-        <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.build.dir}/plugin.yml" />
-        <copy file="${basedir}/src/default.yml" tofile="${MyPet.build.dir}/default.yml" />
-        <unjar src="${idea.lib}/forms_rt.jar" dest="${MyPet.build.dir}">
+        <copydir src="${MyPet.resources.dir}" dest="${MyPet.output.dir.build}/resources" />
+        <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.output.dir.build}/plugin.yml" />
+        <copy file="${basedir}/src/default.yml" tofile="${MyPet.output.dir.build}/default.yml" />
+        <unjar src="${idea.lib}/forms_rt.jar" dest="${MyPet.output.dir.build}">
             <patternset>
                 <include name="com/intellij/uiDesigner/core/*.class" />
             </patternset>
         </unjar>
     </target>
 
+    <!-- Copies source to src dir -->
+    <target name="4_copysource" depends="1_clean, 2_makedir">
+        <copydir src="${MyPet.src.dir}" dest="${MyPet.output.dir.src}" />
+    </target>
+
     <!-- Compiles the java code -->
-    <target name="4_compile" depends="1_clean, 2_makedir">
-        <javac2 srcdir="${MyPet.src.dir}" destdir="${MyPet.build.dir}" debug="true" debuglevel="lines,vars,source">
+    <target name="5_compile" depends="1_clean, 2_makedir, 4_copysource">
+        <javac2 srcdir="${MyPet.output.dir.src}" destdir="${MyPet.output.dir.build}" debug="true" debuglevel="lines,vars,source">
             <classpath refid="MyPet.module.classpath" />
             <classpath refid="javac2.classpath" />
         </javac2>
     </target>
 
     <!--Creates the deployable jar file  -->
-    <target name="5_jar" depends="3_copyresources, 4_compile">
+    <target name="6_jar" depends="3_copyresources, 5_compile">
         <property name="version.num" value="1.00" />
         <buildnumber />
-        <jar destfile="${MyPet.output.dir}/MyPet.jar" basedir="${MyPet.build.dir}">
+        <jar destfile="${MyPet.output.dir}/MyPet.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
                 <attribute name="Created-By" value="Keyle" />
                 <attribute name="Build" value="${build.number}" />
@@ -126,21 +131,12 @@
     </target>
 
     <!--Creates the deployable jar file with buildnumber in filename  -->
-    <target name="5_jar_buildnumber" depends="3_copyresources, 4_compile">
-        <property name="version.num" value="1.00" />
-        <buildnumber />
-        <jar destfile="${MyPet.output.dir}/MyPet-b${build.number}.jar" basedir="${MyPet.build.dir}">
-            <manifest>
-                <attribute name="Created-By" value="Keyle" />
-                <attribute name="Build" value="${build.number}" />
-                <attribute name="Main-Class" value="de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator" />
-                <attribute name="Class-Path" value="${MyPet.manifest.classpath.dot} ${MyPet.manifest.classpath.dotdot} ${MyPet.manifest.classpath.MyPet}" />
-            </manifest>
-        </jar>
+    <target name="7_jar_buildnumber" depends="6_jar">
+        <copy file="${MyPet.output.dir}/MyPet.jar" tofile="${MyPet.output.dir}/MyPet-b${build.number}.jar" />
     </target>
 
     <!-- Does all the other steps -->
-    <target name="Main" depends="5_jar">
+    <target name="Main" depends="6_jar">
         <description>Main target</description>
         <echo message="Compilation Finished!" />
     </target>
@@ -152,7 +148,7 @@
     </target>
 
     <!-- Does all the other steps and copy jar to testfolder -->
-    <target name="With buildnumbers" depends="5_jar_buildnumber">
+    <target name="With buildnumbers" depends="7_jar_buildnumber">
         <description>With buildnumber target</description>
         <copyfile src="${MyPet.output.dir}/MyPet-b${build.number}.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
