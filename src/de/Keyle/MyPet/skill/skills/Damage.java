@@ -37,13 +37,22 @@ public class Damage extends MyPetGenericSkill
         {
             isPassive = false;
         }
-        super.upgrade(value);
-        if (isPassive)
+        if (value > 0)
         {
-            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().setPathfinder();
-            isPassive = false;
+            value--;
+            this.level += value;
+            if (maxLevel != -1 && this.level > maxLevel)
+            {
+                level = maxLevel - 1;
+            }
+            if (isPassive)
+            {
+                getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+                getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+                getMyPet().getCraftPet().getHandle().setPathfinder();
+                isPassive = false;
+            }
+            upgrade();
         }
     }
 
