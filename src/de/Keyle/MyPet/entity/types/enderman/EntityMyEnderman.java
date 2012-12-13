@@ -10,7 +10,6 @@ import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
 import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.*;
 
@@ -21,12 +20,15 @@ public class EntityMyEnderman extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/enderman.png";
+        this.setPathfinder();
+    }
 
+    public void setPathfinder()
+    {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
-        if (MyPet.getStartDamage(MyCreeper.class) > 0)
+        if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 3, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));

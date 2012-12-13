@@ -22,7 +22,9 @@ package de.Keyle.MyPet.entity.pathfinder;
 import net.minecraft.server.PathfinderGoal;
 import net.minecraft.server.PathfinderGoalSelector;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MyPetPathfinderGoalSelector
@@ -79,5 +81,26 @@ public class MyPetPathfinderGoalSelector
     public PathfinderGoal getGoal(String name)
     {
         return goalMap.get(name);
+    }
+
+    public boolean clearGoals()
+    {
+        try
+        {
+            Field goalSelector_a = goalSelector.getClass().getDeclaredField("a");
+            goalSelector_a.setAccessible(true);
+            if (goalSelector_a.get(this.goalSelector) instanceof List)
+            {
+                ((List) goalSelector_a.get(this.goalSelector)).clear();
+                goalMap.clear();
+                goalPos = 1;
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return false;
     }
 }

@@ -39,11 +39,14 @@ public class EntityMyIronGolem extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/villager_golem.png";
         this.walkSpeed = 0.25F;
+        this.setPathfinder();
+    }
 
+    public void setPathfinder()
+    {
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
-        if (MyPet.getStartDamage(MyIronGolem.class) > 0)
+        if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 5, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));

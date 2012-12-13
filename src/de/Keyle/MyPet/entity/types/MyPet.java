@@ -474,7 +474,7 @@ public abstract class MyPet
 
     public boolean isPassiv()
     {
-        return getStartDamage(this.getClass()) == 0;
+        return getDamage() == 0;
     }
 
     public abstract MyPetType getPetType();

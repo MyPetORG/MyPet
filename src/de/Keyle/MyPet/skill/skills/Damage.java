@@ -24,15 +24,60 @@ import de.Keyle.MyPet.util.MyPetUtil;
 
 public class Damage extends MyPetGenericSkill
 {
+    private boolean isPassive = true;
+
     public Damage()
     {
         super("Damage");
     }
 
+    public void upgrade(int value)
+    {
+        if (getMyPet().getDamage() > 0)
+        {
+            isPassive = false;
+        }
+        super.upgrade(value);
+        if (isPassive)
+        {
+            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().setPathfinder();
+            isPassive = false;
+        }
+    }
+
+    public void setLevel(int level)
+    {
+        if (getMyPet().getDamage() > 0)
+        {
+            isPassive = false;
+        }
+        super.setLevel(level);
+        if (isPassive)
+        {
+            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().setPathfinder();
+            isPassive = false;
+        }
+    }
+
     @Override
     public void upgrade()
     {
+        if (getMyPet().getDamage() > 0)
+        {
+            isPassive = false;
+        }
         super.upgrade();
         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + level));
+        if (isPassive)
+        {
+            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+            getMyPet().getCraftPet().getHandle().setPathfinder();
+            isPassive = false;
+        }
     }
 }

@@ -39,11 +39,15 @@ public class EntityMyBat extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/bat.png";
+        this.setPathfinder();
+    }
 
+    public void setPathfinder()
+    {
+        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
-        if (MyPet.getStartDamage(MyBat.class) > 0)
+        if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
             petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 3, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));
