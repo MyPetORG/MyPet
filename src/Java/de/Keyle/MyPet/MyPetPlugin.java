@@ -144,7 +144,7 @@ public class MyPetPlugin extends JavaPlugin
         }
 
         debugLogger.info("----------- loading MyPet ... -----------");
-        debugLogger.info("MyPet " + getDescription().getVersion());
+        debugLogger.info("MyPet " + getDescription().getVersion() + " build: {@BUILD_NUMBER@}");
         debugLogger.info("Bukkit " + getServer().getVersion());
 
         UpdateCheck updateCheck = new UpdateCheck();

@@ -105,7 +105,9 @@
 
     <!-- Copies source to src dir -->
     <target name="4_copysource" depends="1_clean, 2_makedir">
+        <buildnumber />
         <copydir src="${MyPet.src.dir}" dest="${MyPet.output.dir.src}" />
+        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${build.number}" />
     </target>
 
     <!-- Compiles the java code -->
@@ -119,7 +121,6 @@
     <!--Creates the deployable jar file  -->
     <target name="6_jar" depends="3_copyresources, 5_compile">
         <property name="version.num" value="1.00" />
-        <buildnumber />
         <jar destfile="${MyPet.output.dir}/MyPet.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
                 <attribute name="Created-By" value="Keyle" />
