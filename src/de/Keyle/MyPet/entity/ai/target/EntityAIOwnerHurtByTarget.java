@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.target;
+package de.Keyle.MyPet.entity.ai.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -30,13 +30,13 @@ import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalOwnerHurtByTarget extends PathfinderGoal
+public class EntityAIOwnerHurtByTarget extends PathfinderGoal
 {
     private EntityMyPet petEntity;
     private EntityLiving lastDamager;
     private MyPet myPet;
 
-    public PathfinderGoalOwnerHurtByTarget(EntityMyPet entityMyPet)
+    public EntityAIOwnerHurtByTarget(EntityMyPet entityMyPet)
     {
         this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();

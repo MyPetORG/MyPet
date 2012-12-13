@@ -17,13 +17,13 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.movement;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.*;
 
-public class PathfinderGoalRide extends PathfinderGoal
+public class EntityAIRide extends PathfinderGoal
 {
     private final EntityMyPet petEntity;
     private final float startSpeed;
@@ -32,7 +32,7 @@ public class PathfinderGoalRide extends PathfinderGoal
     private float currentSpeed = 0.0F;
     private boolean stopRiding = true;
 
-    public PathfinderGoalRide(EntityMyPet entityMyPet, float startSpeed, float speedPerLevel)
+    public EntityAIRide(EntityMyPet entityMyPet, float startSpeed, float speedPerLevel)
     {
         this.petEntity = entityMyPet;
         this.startSpeed = startSpeed;

@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.target;
+package de.Keyle.MyPet.entity.ai.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -31,7 +31,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalAggressiveTarget extends PathfinderGoal
+public class EntityAIAggressiveTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -39,7 +39,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
     private EntityLiving target;
     private float range;
 
-    public PathfinderGoalAggressiveTarget(MyPet myPet, float range)
+    public EntityAIAggressiveTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
         this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
@@ -48,7 +48,7 @@ public class PathfinderGoalAggressiveTarget extends PathfinderGoal
     }
 
     /**
-     * Checks whether this pathfinder should be activated
+     * Checks whether this ai should be activated
      */
     public boolean a()
     {

@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.movement;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -28,7 +28,7 @@ import net.minecraft.server.Navigation;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.Location;
 
-public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
+public class EntityAIControl extends PathfinderGoal implements Scheduler
 {
     private MyPet myPet;
     private float speed;
@@ -38,7 +38,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     private boolean stopControl = false;
 
 
-    public PathfinderGoalControl(MyPet myPet, float f)
+    public EntityAIControl(MyPet myPet, float f)
     {
         this.myPet = myPet;
         speed = f;
@@ -46,7 +46,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     }
 
     /**
-     * Checks whether this pathfinder should be activated
+     * Checks whether this ai should be activated
      */
     public boolean a()
     {
@@ -63,7 +63,7 @@ public class PathfinderGoalControl extends PathfinderGoal implements Scheduler
     }
 
     /**
-     * Checks whether this pathfinder should be stopped
+     * Checks whether this ai should be stopped
      */
     public boolean b()
     {

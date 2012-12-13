@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.movement;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -25,7 +25,7 @@ import net.minecraft.server.Navigation;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.Location;
 
-public class PathfinderGoalFollowOwner extends PathfinderGoal
+public class EntityAIFollowOwner extends PathfinderGoal
 {
     private EntityMyPet petEntity;
     private float walkSpeed;
@@ -35,9 +35,9 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     private float startDistance;
     private float teleportDistance;
     private boolean nav_a_save;
-    private PathfinderGoalControl controlPathfinderGoal;
+    private EntityAIControl controlPathfinderGoal;
 
-    public PathfinderGoalFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance)
+    public EntityAIFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance)
     {
         this.petEntity = entityMyPet;
         this.walkSpeed = walkSpeed;
@@ -48,7 +48,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
     }
 
     /**
-     * Checks whether this pathfinder should be activated
+     * Checks whether this ai should be activated
      */
     public boolean a()
     {
@@ -56,7 +56,7 @@ public class PathfinderGoalFollowOwner extends PathfinderGoal
         {
             if (controlPathfinderGoal == null)
             {
-                controlPathfinderGoal = (PathfinderGoalControl) petEntity.petPathfinderSelector.getGoal("Control");
+                controlPathfinderGoal = (EntityAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
         if (!this.petEntity.canMove())

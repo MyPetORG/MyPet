@@ -17,9 +17,9 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.target;
+package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
@@ -31,15 +31,15 @@ import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalControlTarget extends PathfinderGoal
+public class EntityAIControlTarget extends PathfinderGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityLiving target;
     private float range;
-    private PathfinderGoalControl controlPathfinderGoal;
+    private EntityAIControl controlPathfinderGoal;
 
-    public PathfinderGoalControlTarget(MyPet myPet, float range)
+    public EntityAIControlTarget(MyPet myPet, float range)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
@@ -47,7 +47,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
     }
 
     /**
-     * Checks whether this pathfinder should be activated
+     * Checks whether this ai should be activated
      */
     public boolean a()
     {
@@ -55,7 +55,7 @@ public class PathfinderGoalControlTarget extends PathfinderGoal
         {
             if (controlPathfinderGoal == null)
             {
-                controlPathfinderGoal = (PathfinderGoalControl) petEntity.petPathfinderSelector.getGoal("Control");
+                controlPathfinderGoal = (EntityAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
         else

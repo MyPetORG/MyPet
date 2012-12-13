@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder;
+package de.Keyle.MyPet.entity.ai;
 
 import net.minecraft.server.PathfinderGoal;
 import net.minecraft.server.PathfinderGoalSelector;
@@ -27,46 +27,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyPetPathfinderGoalSelector
+public class MyPetEntityAISelector
 {
-    private PathfinderGoalSelector goalSelector;
-    private Map<String, PathfinderGoal> goalMap = new HashMap<String, PathfinderGoal>();
+    private PathfinderGoalSelector entityAISelector;
+    private Map<String, PathfinderGoal> AIGoalMap = new HashMap<String, PathfinderGoal>();
     private int goalPos = 1;
 
-    public MyPetPathfinderGoalSelector(PathfinderGoalSelector goalSelector)
+    public MyPetEntityAISelector(PathfinderGoalSelector entityAISelector)
     {
-        this.goalSelector = goalSelector;
+        this.entityAISelector = entityAISelector;
     }
 
-    public void addGoal(String name, PathfinderGoal goalSelector)
+    public void addGoal(String name, PathfinderGoal entityAIgoal)
     {
-        if (goalMap.containsKey(name))
+        if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        goalMap.put(name, goalSelector);
-        this.goalSelector.a(goalPos, goalSelector);
+        AIGoalMap.put(name, entityAIgoal);
+        this.entityAISelector.a(goalPos, entityAIgoal);
         goalPos++;
     }
 
     public void addGoal(String name, int pos, PathfinderGoal goalSelector)
     {
-        if (goalMap.containsKey(name))
+        if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        goalMap.put(name, goalSelector);
-        this.goalSelector.a(pos, goalSelector);
+        AIGoalMap.put(name, goalSelector);
+        this.entityAISelector.a(pos, goalSelector);
     }
 
     public void addGoal(String name, boolean increment, PathfinderGoal goalSelector)
     {
-        if (goalMap.containsKey(name))
+        if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        goalMap.put(name, goalSelector);
-        this.goalSelector.a(goalPos, goalSelector);
+        AIGoalMap.put(name, goalSelector);
+        this.entityAISelector.a(goalPos, goalSelector);
         if (increment)
         {
             goalPos++;
@@ -75,24 +75,24 @@ public class MyPetPathfinderGoalSelector
 
     public boolean hasGoal(String name)
     {
-        return goalMap.containsKey(name);
+        return AIGoalMap.containsKey(name);
     }
 
     public PathfinderGoal getGoal(String name)
     {
-        return goalMap.get(name);
+        return AIGoalMap.get(name);
     }
 
     public boolean clearGoals()
     {
         try
         {
-            Field goalSelector_a = goalSelector.getClass().getDeclaredField("a");
+            Field goalSelector_a = entityAISelector.getClass().getDeclaredField("a");
             goalSelector_a.setAccessible(true);
-            if (goalSelector_a.get(this.goalSelector) instanceof List)
+            if (goalSelector_a.get(this.entityAISelector) instanceof List)
             {
-                ((List) goalSelector_a.get(this.goalSelector)).clear();
-                goalMap.clear();
+                ((List) goalSelector_a.get(this.entityAISelector)).clear();
+                AIGoalMap.clear();
                 goalPos = 1;
                 return true;
             }

@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -84,7 +84,7 @@ public class MyPetEntityListener implements Listener
                         {
                             if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
                             {
-                                ((PathfinderGoalRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
+                                ((EntityAIRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
                             }
                         }
                     }

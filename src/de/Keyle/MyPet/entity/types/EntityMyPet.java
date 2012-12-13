@@ -19,12 +19,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.entity.pathfinder.MyPetPathfinderGoalSelector;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalControl;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalRide;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalAggressiveTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalControlTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalFarmTarget;
+import de.Keyle.MyPet.entity.ai.MyPetEntityAISelector;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -42,7 +42,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected boolean g;
     protected float j;
     protected float i;
-    public MyPetPathfinderGoalSelector petPathfinderSelector, petTargetSelector;
+    public MyPetEntityAISelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected float walkSpeed = 0.3F;
     protected boolean isRidden = false;
@@ -63,8 +63,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
 
-        this.petPathfinderSelector = new MyPetPathfinderGoalSelector(this.goalSelector);
-        this.petTargetSelector = new MyPetPathfinderGoalSelector(this.targetSelector);
+        this.petPathfinderSelector = new MyPetEntityAISelector(this.goalSelector);
+        this.petTargetSelector = new MyPetEntityAISelector(this.targetSelector);
 
         this.getNavigation().b(true);
 
@@ -91,20 +91,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
-        petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-            petPathfinderSelector.addGoal("MeleeAttack", new de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalMeleeAttack(this, this.walkSpeed, 3, 20));
-            petTargetSelector.addGoal("OwnerHurtByTarget", new de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget(this));
-            petTargetSelector.addGoal("OwnerHurtTarget", new de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget(this, true));
-            petTargetSelector.addGoal("ControlTarget", new PathfinderGoalControlTarget(myPet, 1));
-            petTargetSelector.addGoal("AggressiveTarget", new PathfinderGoalAggressiveTarget(myPet, 15));
-            petTargetSelector.addGoal("FarmTarget", new PathfinderGoalFarmTarget(myPet, 15));
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 3, 20));
+            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
+            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
+            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this, true));
+            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
+            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
+            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
         }
-        petPathfinderSelector.addGoal("Control", new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
+        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
         petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }

@@ -17,19 +17,19 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.movement;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import net.minecraft.server.PathfinderGoal;
 
-public class PathfinderGoalSit extends PathfinderGoal
+public class EntityAISit extends PathfinderGoal
 {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
 
-    public PathfinderGoalSit(EntityMyPet entityMyPet)
+    public EntityAISit(EntityMyPet entityMyPet)
     {
         this.entityMyPet = entityMyPet;
         a(5);

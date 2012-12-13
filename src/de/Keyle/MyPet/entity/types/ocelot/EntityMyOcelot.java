@@ -19,14 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.ocelot;
 
-import de.Keyle.MyPet.entity.pathfinder.movement.*;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalFollowOwner;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalMeleeAttack;
-import de.Keyle.MyPet.entity.pathfinder.movement.PathfinderGoalSit;
-import de.Keyle.MyPet.entity.pathfinder.target.*;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalHurtByTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtByTarget;
-import de.Keyle.MyPet.entity.pathfinder.target.PathfinderGoalOwnerHurtTarget;
+import de.Keyle.MyPet.entity.ai.movement.*;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.movement.EntityAISit;
+import de.Keyle.MyPet.entity.ai.target.*;
+import de.Keyle.MyPet.entity.ai.target.EntityAIHurtByTarget;
+import de.Keyle.MyPet.entity.ai.target.EntityAIOwnerHurtByTarget;
+import de.Keyle.MyPet.entity.ai.target.EntityAIOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Ride;
@@ -35,7 +35,7 @@ import org.bukkit.entity.Ocelot.Type;
 
 public class EntityMyOcelot extends EntityMyPet
 {
-    private PathfinderGoalSit sitPathfinder;
+    private EntityAISit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
     {
@@ -48,20 +48,20 @@ public class EntityMyOcelot extends EntityMyPet
     {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
         petPathfinderSelector.addGoal("Sit", sitPathfinder);
-        petPathfinderSelector.addGoal("Ride", new PathfinderGoalRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
-            petPathfinderSelector.addGoal("MeleeAttack", new PathfinderGoalMeleeAttack(this, this.walkSpeed, 3, 20));
-            petTargetSelector.addGoal("OwnerHurtByTarget", new PathfinderGoalOwnerHurtByTarget(this));
-            petTargetSelector.addGoal("OwnerHurtTarget", new PathfinderGoalOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new PathfinderGoalHurtByTarget(this, true));
-            petTargetSelector.addGoal("ControlTarget", new PathfinderGoalControlTarget(myPet, 1));
-            petTargetSelector.addGoal("AggressiveTarget", new PathfinderGoalAggressiveTarget(myPet, 15));
-            petTargetSelector.addGoal("FarmTarget", new PathfinderGoalFarmTarget(myPet, 15));
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 3, 20));
+            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
+            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
+            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this, true));
+            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
+            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
+            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
         }
-        petPathfinderSelector.addGoal("Control", new PathfinderGoalControl(myPet, this.walkSpeed + 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new PathfinderGoalFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
+        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
         petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
@@ -70,7 +70,7 @@ public class EntityMyOcelot extends EntityMyPet
     {
         if (myPet != null)
         {
-            this.sitPathfinder = new PathfinderGoalSit(this);
+            this.sitPathfinder = new EntityAISit(this);
 
             super.setMyPet(myPet);
 

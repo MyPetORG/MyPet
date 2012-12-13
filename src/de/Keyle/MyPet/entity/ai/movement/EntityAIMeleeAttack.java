@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.movement;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import net.minecraft.server.EntityLiving;
 import net.minecraft.server.PathfinderGoal;
@@ -25,7 +25,7 @@ import net.minecraft.server.World;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class PathfinderGoalMeleeAttack extends PathfinderGoal
+public class EntityAIMeleeAttack extends PathfinderGoal
 {
     private World petWorld;
     EntityLiving petEntity;
@@ -36,7 +36,7 @@ public class PathfinderGoalMeleeAttack extends PathfinderGoal
     private int ticksUntilNextHit;
     private int timeUntilNextNavigationUpdate;
 
-    public PathfinderGoalMeleeAttack(EntityLiving petEntity, float walkSpeed, double range, int ticksUntilNextHit)
+    public EntityAIMeleeAttack(EntityLiving petEntity, float walkSpeed, double range, int ticksUntilNextHit)
     {
         this.petEntity = petEntity;
         this.petWorld = petEntity.world;

@@ -17,18 +17,18 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.target;
+package de.Keyle.MyPet.entity.ai.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityPlayer;
 
-public class PathfinderGoalHurtByTarget extends net.minecraft.server.PathfinderGoalHurtByTarget
+public class EntityAIHurtByTarget extends net.minecraft.server.PathfinderGoalHurtByTarget
 {
     MyPet myPet;
 
-    public PathfinderGoalHurtByTarget(EntityMyPet petEntity, boolean b)
+    public EntityAIHurtByTarget(EntityMyPet petEntity, boolean b)
     {
         super(petEntity, b);
         myPet = petEntity.getMyPet();

@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.pathfinder.target;
+package de.Keyle.MyPet.entity.ai.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -30,14 +30,14 @@ import net.minecraft.server.EntityTameableAnimal;
 import net.minecraft.server.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
+public class EntityAIOwnerHurtTarget extends PathfinderGoal
 {
 
     EntityMyPet petEntity;
     EntityLiving target;
     MyPet myPet;
 
-    public PathfinderGoalOwnerHurtTarget(MyPet myPet)
+    public EntityAIOwnerHurtTarget(MyPet myPet)
     {
         this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
@@ -45,7 +45,7 @@ public class PathfinderGoalOwnerHurtTarget extends PathfinderGoal
     }
 
     /**
-     * Checks whether this pathfinder goal should be activated
+     * Checks whether this ai goal should be activated
      */
     public boolean a()
     {
