@@ -68,7 +68,9 @@
                         <preferred-size width="289" height="48"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <toolTipText value="Doubleclick an item to edit the selected skilltree."/>
+                    </properties>
                   </component>
                   <component id="366ba" class="javax.swing.JButton" binding="skilltreeDownButton">
                     <constraints>
