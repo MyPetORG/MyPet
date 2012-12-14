@@ -19,10 +19,14 @@
 
 package de.Keyle.MyPet.util.configuration;
 
+import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.NBTBase;
 import net.minecraft.server.NBTTagCompound;
 
 import java.io.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipException;
 
 public class NBTConfiguration
 {
@@ -61,7 +65,8 @@ public class NBTConfiguration
     {
         try
         {
-            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(NBTFile));
+            DataOutputStream outputStream = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(NBTFile)));
+
             NBTBase.a(nbtTagCompound, outputStream);
             outputStream.close();
             return true;
@@ -79,14 +84,38 @@ public class NBTConfiguration
         {
             FileInputStream inputStream = new FileInputStream(NBTFile);
             inputStream.read();
-
             if (inputStream.read() != -1)
             {
                 inputStream.close();
                 inputStream = new FileInputStream(NBTFile);
-                DataInputStream F_In = new DataInputStream(inputStream);
+                DataInputStream F_In = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputStream)));
                 nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
                 F_In.close();
+                MyPetUtil.getDebugLogger().info("loaded GZIP NBTfile");
+            }
+            inputStream.close();
+            return;
+        }
+        catch (ZipException ignored)
+        {
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            FileInputStream inputStream = new FileInputStream(NBTFile);
+            inputStream.read();
+            if (inputStream.read() != -1)
+            {
+                inputStream.close();
+                inputStream = new FileInputStream(NBTFile);
+                DataInputStream F_In;
+                F_In = new DataInputStream(inputStream);
+                nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
+                F_In.close();
+                MyPetUtil.getDebugLogger().info("loaded unziped NBTfile");
             }
             inputStream.close();
         }
