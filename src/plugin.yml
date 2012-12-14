@@ -2,7 +2,7 @@ name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
 version: {@MYPET_VERSION@} ({@COMPATIBLE_VERSIONS@})
 author: Keyle
-website: http://dev.bukkit.org/server-mods/mypet/
+website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Citizens, WorldGuard, Factions, Towny]
 commands:
   myPet:
