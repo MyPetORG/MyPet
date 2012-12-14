@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (C) 2011-2012 Keyle
   ~
   ~ This file is part of MyPet
@@ -23,6 +22,9 @@
     <!-- Setting some vars -->
     <property name="MyPet.bukkit.version" value="0.2" />
     <property name="MyPet.minecraft.version" value="1.4.5" />
+    <property name="MyPet.mypet.version" value="1.0.0" />
+    <property name="MyPet.compatible.version" value="1.4.4/1.4.5" />
+
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
     <property name="MyPet.output.dir" location="${basedir}/../out/jar/MyPet" />
@@ -101,6 +103,8 @@
                 <include name="com/intellij/uiDesigner/core/*.class" />
             </patternset>
         </unjar>
+        <replace file="${MyPet.output.dir.build}/plugin.yml" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
+        <replace file="${MyPet.output.dir.build}/plugin.yml" token="{@COMPATIBLE_VERSIONS@}" value="${MyPet.compatible.version}" />
     </target>
 
     <!-- Copies source to src dir -->
