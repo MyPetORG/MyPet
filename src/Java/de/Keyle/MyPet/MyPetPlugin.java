@@ -348,7 +348,7 @@ public class MyPetPlugin extends JavaPlugin
 
         if (MyPetConfig.sendMetrics)
         {
-            debugLogger.info("Metrics is activivated");
+            debugLogger.info("Metrics is activated");
             try
             {
                 Metrics metrics = new Metrics(this);
@@ -383,7 +383,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         else
         {
-            debugLogger.info("Metrics not activivated");
+            debugLogger.info("Metrics not activated");
         }
 
         HeroesDamageFix.reset();
