@@ -40,7 +40,7 @@ public class UpdateCheck
 
     public boolean isUpdateAvailable(String mcVersion, String mpVersion)
     {
-        RSSFeedParser rssFeedParser = new RSSFeedParser("http://dev.bukkit.org/server-mods/mywolf/files.rss");
+        RSSFeedParser rssFeedParser = new RSSFeedParser("http://dev.bukkit.org/server-mods/mypet/files.rss");
         rssFeedParser.readFeed();
         lastAvailableUpdate = null;
 
