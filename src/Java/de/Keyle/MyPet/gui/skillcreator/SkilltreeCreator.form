@@ -27,6 +27,7 @@
               <model>
                 <item value=""/>
                 <item value="default"/>
+                <item value="Bat"/>
                 <item value="CaveSpider"/>
                 <item value="Chicken"/>
                 <item value="Cow"/>
