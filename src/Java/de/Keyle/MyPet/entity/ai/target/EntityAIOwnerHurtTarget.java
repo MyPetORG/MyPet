@@ -83,7 +83,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
                 }
             }
         }
-        if (this.target instanceof EntityPlayer)
+        if (this.petEntity.goalTarget instanceof EntityPlayer)
         {
             Player targetPlayer = (Player) this.petEntity.goalTarget.getBukkitEntity();
             if (myPet.getOwner().equals(targetPlayer))
@@ -95,7 +95,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
                 return false;
             }
         }
-        else if (this.target instanceof EntityMyPet)
+        else if (this.petEntity.goalTarget instanceof EntityMyPet)
         {
             MyPet targetMyPet = ((EntityMyPet) this.target).getMyPet();
             if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
