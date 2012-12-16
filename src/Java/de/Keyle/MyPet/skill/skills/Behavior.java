@@ -31,12 +31,32 @@ public class Behavior extends MyPetGenericSkill
 
     public static enum BehaviorState
     {
-        Normal, Friendly, Aggressive, Raid, Farm
+        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true);
+
+        boolean active;
+
+        BehaviorState(boolean active)
+        {
+            this.active = active;
+        }
+
+        public void setActive(boolean active)
+        {
+            if (this != Normal)
+            {
+                this.active = active;
+            }
+        }
+
+        public boolean isActive()
+        {
+            return this.active;
+        }
     }
 
     public Behavior()
     {
-        super("Behavior",1);
+        super("Behavior", 1);
     }
 
     public void setBehavior(BehaviorState behaviorState)
@@ -85,12 +105,26 @@ public class Behavior extends MyPetGenericSkill
         {
             if (behavior == BehaviorState.Normal)
             {
-                behavior = BehaviorState.Friendly;
-                myPet.getCraftPet().setTarget(null);
+                if (BehaviorState.Friendly.isActive())
+                {
+                    behavior = BehaviorState.Friendly;
+                    myPet.getCraftPet().setTarget(null);
+                }
+                else if (BehaviorState.Aggressive.isActive())
+                {
+                    behavior = BehaviorState.Aggressive;
+                }
             }
             else if (behavior == BehaviorState.Friendly)
             {
-                behavior = BehaviorState.Aggressive;
+                if (BehaviorState.Aggressive.isActive())
+                {
+                    behavior = BehaviorState.Aggressive;
+                }
+                else
+                {
+                    behavior = BehaviorState.Normal;
+                }
             }
             else
             {

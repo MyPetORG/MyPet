@@ -52,19 +52,19 @@ public class CommandBehavior implements CommandExecutor
                     Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
                     if (args.length == 1)
                     {
-                        if (args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend"))
+                        if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend")) && BehaviorState.Friendly.isActive())
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
                         }
-                        else if (args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("aggro"))
+                        else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("aggro")) && BehaviorState.Aggressive.isActive())
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
                         }
-                        else if (args[0].equalsIgnoreCase("farm"))
+                        else if (args[0].equalsIgnoreCase("farm") && BehaviorState.Farm.isActive())
                         {
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
                         }
-                        else if (args[0].equalsIgnoreCase("raid"))
+                        else if (args[0].equalsIgnoreCase("raid") && BehaviorState.Raid.isActive())
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
                         }

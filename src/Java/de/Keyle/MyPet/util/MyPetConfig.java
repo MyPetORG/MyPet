@@ -103,6 +103,10 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
         setProperty("MyPet.Skill.Inventory.Creative", true);
+        setProperty("MyPet.Skill.Behavior.Aggro", true);
+        setProperty("MyPet.Skill.Behavior.Farm", true);
+        setProperty("MyPet.Skill.Behavior.Friendly", true);
+        setProperty("MyPet.Skill.Behavior.Raid", true);
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -171,6 +175,10 @@ public class MyPetConfig
         HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
         Inventory.creative = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+        Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));
+        Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
+        Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
+        Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
 
         passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
