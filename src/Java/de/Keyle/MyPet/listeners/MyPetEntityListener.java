@@ -157,17 +157,12 @@ public class MyPetEntityListener implements Listener
                             return;
                         }
 
-                        boolean willBeLeashed = false;
-
+                        boolean willBeLeashed = true;
                         List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
 
                         for (LeashFlag flag : leashFlags)
                         {
-                            if (flag == LeashFlag.None)
-                            {
-                                willBeLeashed = true;
-                            }
-                            else if (flag == LeashFlag.Adult)
+                            if (flag == LeashFlag.Adult)
                             {
                                 if (leashTarget instanceof Ageable)
                                 {
@@ -200,12 +195,28 @@ public class MyPetEntityListener implements Listener
                                     willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
                                 }
                             }
+                            else if (flag == LeashFlag.Wild)
+                            {
+                                if (leashTarget instanceof IronGolem)
+                                {
+                                    willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
+                                }
+                                else if (leashTarget instanceof Tameable)
+                                {
+                                    willBeLeashed = !((Tameable) leashTarget).isTamed();
+                                }
+                            }
                             else if (flag == LeashFlag.Tamed)
                             {
                                 if (leashTarget instanceof Tameable)
                                 {
                                     willBeLeashed = ((Tameable) leashTarget).isTamed();
                                 }
+                            }
+                            if (!willBeLeashed || flag == LeashFlag.None)
+                            {
+                                willBeLeashed = false;
+                                break;
                             }
                         }
 
