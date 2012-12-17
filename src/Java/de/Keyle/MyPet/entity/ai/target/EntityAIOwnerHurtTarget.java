@@ -97,7 +97,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         }
         else if (this.petEntity.goalTarget instanceof EntityMyPet)
         {
-            MyPet targetMyPet = ((EntityMyPet) this.target).getMyPet();
+            MyPet targetMyPet = ((EntityMyPet) this.petEntity.goalTarget).getMyPet();
             if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
                 return false;
