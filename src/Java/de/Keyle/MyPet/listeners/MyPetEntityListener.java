@@ -479,14 +479,14 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-            String killer = MyPetUtil.setColors(MyPetLanguage.getString("Unknown"));
+            String killer = "Unknow";
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
                 if (e.getDamager().getType() == EntityType.PLAYER)
                 {
-                    if (e.getDamager() == myPet.getOwner())
+                    if (e.getDamager() == myPet.getOwner().getPlayer())
                     {
                         killer = "You";
                     }
@@ -498,19 +498,38 @@ public class MyPetEntityListener implements Listener
                 else if (e.getDamager().getType() == EntityType.WOLF)
                 {
                     Wolf w = (Wolf) e.getDamager();
+                    killer = "Wolf";
                     if (w.isTamed())
                     {
-                        killer = "Wolf (" + w.getOwner().getName() + ')';
-                    }
-                    else
-                    {
-                        killer = "Wolf";
+                        killer += " (" + w.getOwner().getName() + ')';
                     }
                 }
                 else if (e.getDamager() instanceof CraftMyPet)
                 {
                     CraftMyPet craftMyPet = (CraftMyPet) e.getDamager();
                     killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ')';
+                }
+                else if (e.getDamager() instanceof Arrow)
+                {
+                    Arrow arrow = (Arrow) e.getDamager();
+                    killer = "Arrow (";
+                    MyPetUtil.getLogger().info("shoter: " + arrow.getShooter());
+                    if (arrow.getShooter() instanceof Player)
+                    {
+                        if (arrow.getShooter() == myPet.getOwner().getPlayer())
+                        {
+                            killer += "You";
+                        }
+                        else
+                        {
+                            killer += ((Player) e.getDamager()).getName();
+                        }
+                    }
+                    else
+                    {
+                        killer += e.getDamager().getType().getName();
+                    }
+                    killer += ")";
                 }
                 else
                 {
