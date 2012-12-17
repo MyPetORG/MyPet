@@ -21,8 +21,8 @@ package de.Keyle.MyPet.entity.types.chicken;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.Item;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_4_5.Item;
+import net.minecraft.server.v1_4_5.World;
 
 public class EntityMyChicken extends EntityMyPet
 {

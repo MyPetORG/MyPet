@@ -21,8 +21,8 @@ package de.Keyle.MyPet.entity.types.cavespider;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.EnumMonsterType;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_4_5.EnumMonsterType;
+import net.minecraft.server.v1_4_5.World;
 
 public class EntityMyCaveSpider extends EntityMyPet
 {

@@ -20,10 +20,10 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.skills.Behavior;
-import net.minecraft.server.EntityCreature;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftCreature;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import net.minecraft.server.v1_4_5.EntityCreature;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

@@ -21,7 +21,7 @@ package de.Keyle.MyPet.entity.types.pigzombie;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_4_5.World;
 
 public class EntityMyPigZombie extends EntityMyPet
 {

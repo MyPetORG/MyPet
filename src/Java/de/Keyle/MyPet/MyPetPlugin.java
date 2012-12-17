@@ -57,7 +57,7 @@ import de.Keyle.MyPet.util.Metrics.Plotter;
 import de.Keyle.MyPet.util.configuration.NBTConfiguration;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.*;
+import net.minecraft.server.v1_4_5.*;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

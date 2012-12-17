@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.entity.types.sheep;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 
 public class CraftMySheep extends CraftMyPet
 {

@@ -35,13 +35,13 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.minecraft.server.AxisAlignedBB;
-import net.minecraft.server.Block;
-import net.minecraft.server.Entity;
-import net.minecraft.server.MathHelper;
+import net.minecraft.server.v1_4_5.AxisAlignedBB;
+import net.minecraft.server.v1_4_5.Block;
+import net.minecraft.server.v1_4_5.Entity;
+import net.minecraft.server.v1_4_5.MathHelper;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_5.util.UnsafeList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -276,7 +276,7 @@ public class MyPetUtil
 
     public static Boolean canSpawn(Location loc, float width, float height, float length)
     {
-        net.minecraft.server.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_4_5.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 

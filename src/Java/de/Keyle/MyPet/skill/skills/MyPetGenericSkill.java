@@ -21,7 +21,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Scheduler;
-import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.v1_4_5.NBTTagCompound;
 
 public class MyPetGenericSkill implements Scheduler
 {
@@ -65,7 +65,7 @@ public class MyPetGenericSkill implements Scheduler
     {
         if (level >= 0)
         {
-            if(maxLevel != -1)
+            if (maxLevel != -1)
             {
                 this.level = level > maxLevel ? maxLevel : level;
             }
@@ -84,7 +84,7 @@ public class MyPetGenericSkill implements Scheduler
     {
         if (maxLevel != -1)
         {
-            if(this.level < maxLevel)
+            if (this.level < maxLevel)
             {
                 this.level++;
             }
@@ -103,7 +103,7 @@ public class MyPetGenericSkill implements Scheduler
             this.level += value;
             if (maxLevel != -1 && this.level > maxLevel)
             {
-                level = maxLevel-1;
+                level = maxLevel - 1;
             }
             upgrade();
         }
