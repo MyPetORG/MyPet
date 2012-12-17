@@ -73,9 +73,17 @@ public class MyPetEntityListener implements Listener
 
             if (event.getEntity() instanceof CraftMyPet)
             {
-                if (e.getDamager() instanceof Player)
+                if (e.getDamager() instanceof Player || (e.getDamager() instanceof Arrow && ((Arrow) e.getDamager()).getShooter() instanceof Player))
                 {
-                    Player damager = (Player) e.getDamager();
+                    Player damager;
+                    if (e.getDamager() instanceof Arrow)
+                    {
+                        damager = (Player) ((Arrow) e.getDamager()).getShooter();
+                    }
+                    else
+                    {
+                        damager = (Player) e.getDamager();
+                    }
                     MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                     if (myPet.getCraftPet().getHandle().isRidden())
                     {
