@@ -56,7 +56,7 @@ public class CommandInventory implements CommandExecutor
                     }
                     if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin"))
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CreativeInventory")).replace("%petname%", myPet.petName));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_InventoryCreative")).replace("%petname%", myPet.petName));
                         return true;
                     }
                     if (myPet.getSkillSystem().hasSkill("Inventory"))
