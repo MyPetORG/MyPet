@@ -69,7 +69,7 @@ public class CommandAdmin implements CommandExecutor
             }
             else if (change.equalsIgnoreCase("exp") && args.length >= 3)
             {
-                String value = args[3];
+                String value = args[2];
                 if (MyPetUtil.isInt(value))
                 {
                     int Exp = Integer.parseInt(value);
