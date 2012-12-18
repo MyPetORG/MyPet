@@ -56,32 +56,59 @@ permissions:
   MyPet.user.leash.*:
     description: Player can leash all MyPet-Types.
     children:
-      MyPet.user.leash.cavespider: true
-      MyPet.user.leash.chicken: true
-      MyPet.user.leash.cow: true
-      MyPet.user.leash.mooshroomcow: true
-      MyPet.user.leash.silverfish: true
-      MyPet.user.leash.ocelot: true
-      MyPet.user.leash.pig: true
-      MyPet.user.leash.pigzombie: true
-      MyPet.user.leash.sheep: true
-      MyPet.user.leash.skeleton: true
-      MyPet.user.leash.slime: true
-      MyPet.user.leash.spider: true
-      MyPet.user.leash.villager: true
-      MyPet.user.leash.wolf: true
-      MyPet.user.leash.zombie: true
-  MyPet.*:
-    description: Gives access to ALL MyPet features.
+      MyPet.user.leash.Bat: true
+      MyPet.user.leash.CaveSpider: true
+      MyPet.user.leash.Chicken: true
+      MyPet.user.leash.Cow: true
+      MyPet.user.leash.Creeper: true
+      MyPet.user.leash.Enderman: true
+      MyPet.user.leash.IronGolem: true
+      MyPet.user.leash.MagmaCube: true
+      MyPet.user.leash.Mooshroom: true
+      MyPet.user.leash.Ocelot: true
+      MyPet.user.leash.Pig: true
+      MyPet.user.leash.PigZombie: true
+      MyPet.user.leash.Sheep: true
+      MyPet.user.leash.Silverfish: true
+      MyPet.user.leash.Skeleton: true
+      MyPet.user.leash.Slime: true
+      MyPet.user.leash.Spider: true
+      MyPet.user.leash.Villager: true
+      MyPet.user.leash.Wolf: true
+      MyPet.user.leash.Zombie: true
+  MyPet.user.keep.*:
+    description: Player can leash all MyPet-Types.
     children:
-      MyPet.admin: true
-      MyPet.user.release: true
-      MyPet.user.leash.*: true
+      MyPet.user.keep.Bat: true
+      MyPet.user.keep.CaveSpider: true
+      MyPet.user.keep.Chicken: true
+      MyPet.user.keep.Cow: true
+      MyPet.user.keep.Creeper: true
+      MyPet.user.keep.Enderman: true
+      MyPet.user.keep.IronGolem: true
+      MyPet.user.keep.MagmaCube: true
+      MyPet.user.keep.Mooshroom: true
+      MyPet.user.keep.Ocelot: true
+      MyPet.user.keep.Pig: true
+      MyPet.user.keep.PigZombie: true
+      MyPet.user.keep.Sheep: true
+      MyPet.user.keep.Silverfish: true
+      MyPet.user.keep.Skeleton: true
+      MyPet.user.keep.Slime: true
+      MyPet.user.keep.Spider: true
+      MyPet.user.keep.Villager: true
+      MyPet.user.keep.Wolf: true
+      MyPet.user.keep.Zombie: true
+  MyPet.*:
+    description: Gives access to ALL (not includes admin) MyPet features.
+    children:
+      MyPet.user.*: true
   MyPet.user.*:
     description: Gives access to MyPet features for normal user.
     children:
       MyPet.admin: false
       MyPet.user.leash.*: true
+      MyPet.user.keep.*: true
       MyPet.user.release: true
   MyPet.user.release:
     description: Allows usage of /petrelease
