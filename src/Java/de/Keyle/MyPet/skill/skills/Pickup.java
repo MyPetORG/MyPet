@@ -124,4 +124,10 @@ public class Pickup extends MyPetGenericSkill
         return nbtTagCompound;
 
     }
+
+    public void reset()
+    {
+        super.reset();
+        pickup = false;
+    }
 }

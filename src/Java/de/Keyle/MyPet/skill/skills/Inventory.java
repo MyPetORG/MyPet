@@ -38,7 +38,7 @@ public class Inventory extends MyPetGenericSkill
 
     public Inventory()
     {
-        super("Inventory",6);
+        super("Inventory", 6);
     }
 
     @Override
@@ -106,5 +106,11 @@ public class Inventory extends MyPetGenericSkill
     {
         this.myPet = myPet;
         inv.setName(myPet.petName);
+    }
+
+    public void reset()
+    {
+        super.reset();
+        inv.setSize(0);
     }
 }

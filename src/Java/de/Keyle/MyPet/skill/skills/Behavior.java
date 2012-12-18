@@ -174,4 +174,10 @@ public class Behavior extends MyPetGenericSkill
             }
         }
     }
+
+    public void reset()
+    {
+        super.reset();
+        behavior = BehaviorState.Normal;
+    }
 }

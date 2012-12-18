@@ -32,7 +32,7 @@ public class Control extends MyPetGenericSkill
 
     public Control()
     {
-        super("Control",1);
+        super("Control", 1);
     }
 
     @Override
@@ -74,5 +74,12 @@ public class Control extends MyPetGenericSkill
         {
             moveTo = loc;
         }
+    }
+
+    public void reset()
+    {
+        super.reset();
+        moveTo = null;
+        prevMoveTo = null;
     }
 }

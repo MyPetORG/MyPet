@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.bat.MyBat;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
@@ -39,6 +40,7 @@ import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -136,31 +138,34 @@ public abstract class MyPet
     public MyPet(MyPetPlayer Owner)
     {
         this.petOwner = Owner;
-        if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
+        if (MyPetConfig.automaticSkilltreeAssignment)
         {
-            for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()))
+            if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
             {
-                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()))
                 {
-                    this.skillTree = MyPetSkillTreeConfigLoader.getMobType(this.getPetType().getTypeName()).getSkillTree(skillTreeName);
-                    break;
+                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                    {
+                        this.skillTree = MyPetSkillTreeConfigLoader.getMobType(this.getPetType().getTypeName()).getSkillTree(skillTreeName);
+                        break;
+                    }
                 }
             }
-        }
-        if (this.skillTree == null)
-        {
-            for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames("default"))
+            if (this.skillTree == null)
             {
-                if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames("default"))
                 {
-                    this.skillTree = MyPetSkillTreeConfigLoader.getMobType("default").getSkillTree(skillTreeName);
-                    break;
+                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                    {
+                        this.skillTree = MyPetSkillTreeConfigLoader.getMobType("default").getSkillTree(skillTreeName);
+                        break;
+                    }
                 }
             }
-        }
-        if (this.skillTree == null)
-        {
-            this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
+            if (this.skillTree == null)
+            {
+                this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
+            }
         }
         skillSystem = new MyPetSkillSystem(this);
         experience = new MyPetExperience(this);
@@ -171,6 +176,22 @@ public abstract class MyPet
     {
         this.petName = newName;
         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
+    }
+
+    public boolean setSkilltree(MyPetSkillTree skillTree)
+    {
+        boolean replace = false;
+        if (skillTree != null)
+        {
+            replace = true;
+        }
+        skillSystem.reset();
+        this.skillTree = skillTree;
+        for (int i = 1 ; i <= experience.getLevel() ; i++)
+        {
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
+        }
+        return replace;
     }
 
     public void removePet()

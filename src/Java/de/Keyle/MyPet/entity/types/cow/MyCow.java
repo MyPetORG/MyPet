@@ -78,6 +78,6 @@ public class MyCow extends MyPet
     @Override
     public String toString()
     {
-        return "MyCow{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", baby=" + isBaby() + "}";
+        return "MyCow{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", baby=" + isBaby() + "}";
     }
 }

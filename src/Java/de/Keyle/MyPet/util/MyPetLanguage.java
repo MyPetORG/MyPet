@@ -99,6 +99,8 @@ public class MyPetLanguage
         addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%white% pickup: activated");
         addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%white% is now in %mode% mode.");
         addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%white% has now a chance of %chance%% to poison enemies");
+        addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %name%.");
+        addString("Msg_AvailableSkilltrees", "MyPet.Message.availableskilltrees", "Available skilltrees for %aqua%%petname%%white%:");
 
         yamlConfiguration.saveConfig();
     }

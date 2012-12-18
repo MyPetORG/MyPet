@@ -137,4 +137,12 @@ public class MyPetSkillSystem
         }
         return -1;
     }
+
+    public void reset()
+    {
+        for (MyPetGenericSkill skill : skills.values())
+        {
+            skill.reset();
+        }
+    }
 }

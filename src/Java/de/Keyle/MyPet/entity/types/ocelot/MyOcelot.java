@@ -127,6 +127,6 @@ public class MyOcelot extends MyPet
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }

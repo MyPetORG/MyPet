@@ -102,6 +102,6 @@ public class MyPig extends MyPet
     @Override
     public String toString()
     {
-        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
+        return "MyPig{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
     }
 }

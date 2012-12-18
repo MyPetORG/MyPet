@@ -47,6 +47,10 @@ commands:
     aliases: [pst, petst]
     description: Shows the fully configured skilltree
     usage: '/<command> [SkillTreeName]'
+  petchooseskilltree:
+    aliases: [pcst, petcst]
+    description: Chooses a skilltree.
+    usage: '/<command> <SkillTreeName>'
 
 permissions:
   MyPet.user.leash.*:

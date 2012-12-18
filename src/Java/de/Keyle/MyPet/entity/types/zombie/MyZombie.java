@@ -102,6 +102,6 @@ public class MyZombie extends MyPet
     @Override
     public String toString()
     {
-        return "MyZombie{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
+        return "MyZombie{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
     }
 }

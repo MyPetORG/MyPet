@@ -44,7 +44,7 @@ public class MyPetLevelUpListener implements Listener
         }
         int lvl = event.getLevel();
         MyPetSkillTree skillTree = myPet.getSkillTree();
-        if (skillTree.hasLevel(lvl))
+        if (skillTree != null && skillTree.hasLevel(lvl))
         {
             Map<String, Integer> skillLevelUpgradeCount = new HashMap<String, Integer>();
             List<MyPetSkillTreeSkill> skillList = skillTree.getLevel(lvl).getSkills();
