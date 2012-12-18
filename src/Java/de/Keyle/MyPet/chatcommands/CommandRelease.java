@@ -22,6 +22,20 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.chicken.MyChicken;
+import de.Keyle.MyPet.entity.types.cow.MyCow;
+import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
+import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
+import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
+import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
+import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
+import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.sheep.MySheep;
+import de.Keyle.MyPet.entity.types.slime.MySlime;
+import de.Keyle.MyPet.entity.types.villager.MyVillager;
+import de.Keyle.MyPet.entity.types.wolf.MyWolf;
+import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.Inventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
@@ -30,11 +44,15 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.EntityItem;
 import net.minecraft.server.ItemStack;
 import net.minecraft.server.World;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.entity.Ocelot.Type;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.material.MaterialData;
 
 public class CommandRelease implements CommandExecutor
 {
@@ -82,7 +100,129 @@ public class CommandRelease implements CommandExecutor
                             }
                         }
                     }
-                    myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
+                    LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
+
+                    if (myPet instanceof MyChicken)
+                    {
+                        if (((MyChicken) myPet).isBaby())
+                        {
+                            ((Chicken) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Chicken) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyCow)
+                    {
+                        if (((MyCow) myPet).isBaby())
+                        {
+                            ((Cow) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Cow) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyCreeper)
+                    {
+                        ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
+                    }
+                    else if (myPet instanceof MyEnderman)
+                    {
+                        MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlockID(), (byte) ((MyEnderman) myPet).getBlockData());
+                        ((Enderman) normalEntity).setCarriedMaterial(materialData);
+                    }
+                    else if (myPet instanceof MyIronGolem)
+                    {
+                        ((IronGolem) normalEntity).setPlayerCreated(true);
+                    }
+                    else if (myPet instanceof MyMooshroom)
+                    {
+                        if (((MyMooshroom) myPet).isBaby())
+                        {
+                            ((MushroomCow) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((MushroomCow) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyMagmaCube)
+                    {
+                        ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
+                    }
+                    else if (myPet instanceof MyOcelot)
+                    {
+                        ((Ocelot) normalEntity).setCatType(Type.WILD_OCELOT);
+                        ((Ocelot) normalEntity).setTamed(false);
+                        if (((MyOcelot) myPet).isBaby())
+                        {
+                            ((Ocelot) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Ocelot) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyPig)
+                    {
+                        ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
+                        if (((MyPig) myPet).isBaby())
+                        {
+                            ((Pig) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Pig) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MySheep)
+                    {
+                        ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
+                        ((Sheep) normalEntity).setColor(DyeColor.getByData((byte) ((MySheep) myPet).getColor()));
+                        if (((MySheep) myPet).isBaby())
+                        {
+                            ((Sheep) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Sheep) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyVillager)
+                    {
+                        ((Villager) normalEntity).setProfession(Profession.getProfession(((MyVillager) myPet).getProfession()));
+                        if (((MyVillager) myPet).isBaby())
+                        {
+                            ((Villager) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Villager) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MyWolf)
+                    {
+                        ((Wolf) normalEntity).setTamed(false);
+                        if (((MyWolf) myPet).isBaby())
+                        {
+                            ((Wolf) normalEntity).setBaby();
+                        }
+                        else
+                        {
+                            ((Wolf) normalEntity).setAdult();
+                        }
+                    }
+                    else if (myPet instanceof MySlime)
+                    {
+                        ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
+                    }
+                    else if (myPet instanceof MyZombie)
+                    {
+                        ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+                    }
+
                     myPet.removePet();
 
 
