@@ -99,7 +99,7 @@ public abstract class MyPet
 
     public static enum LeashFlag
     {
-        Baby, Adult, LowHp, Tamed, UserCreated, Wild, None;
+        Baby, Adult, LowHp, Tamed, UserCreated, Wild, CanBreed, None;
 
         public static LeashFlag getLeashFlagByName(String name)
         {
