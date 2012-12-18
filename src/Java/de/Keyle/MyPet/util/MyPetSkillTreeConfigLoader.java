@@ -33,7 +33,6 @@ import java.util.Set;
 
 public class MyPetSkillTreeConfigLoader
 {
-    //private static Map<String, String> Inheritances = new HashMap<String, String>();
     private static Map<String, MyPetSkillTreeMobType> skillTreeMobTypes = new HashMap<String, MyPetSkillTreeMobType>();
 
     private static String configPath;
@@ -68,6 +67,11 @@ public class MyPetSkillTreeConfigLoader
 
             if (!skillFile.exists())
             {
+                if (!skillTreeMobType.getMobTypeName().equals("default"))
+                {
+                    addDefault(skillTreeMobType);
+                }
+                manageInheritance(skillTreeMobType);
                 continue;
             }
 
