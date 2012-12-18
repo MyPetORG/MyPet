@@ -274,14 +274,14 @@ public class MyPetEntityListener implements Listener
                                 extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
                                 extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
                             }
-                            else if (leashTarget instanceof Ageable)
-                            {
-                                extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
-                            }
                             else if (leashTarget instanceof Enderman)
                             {
                                 extendedInfo.setShort("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId());
                                 extendedInfo.setShort("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData());
+                            }
+                            if (leashTarget instanceof Ageable)
+                            {
+                                extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
                             }
                             inactiveMyPet.setInfo(extendedInfo);
 
