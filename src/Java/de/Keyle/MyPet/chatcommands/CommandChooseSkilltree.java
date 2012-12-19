@@ -53,7 +53,14 @@ public class CommandChooseSkilltree implements CommandExecutor
                         MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(args[0]);
                         if (MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.custom.skilltree." + skillTree.getName()))
                         {
-                            myPet.setSkilltree(skillTree);
+                            if (myPet.setSkilltree(skillTree))
+                            {
+                                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeSwitchedTo").replace("%name%", skillTree.getName())));
+                            }
+                            else
+                            {
+                                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeNotSwitched")));
+                            }
                         }
                         else
                         {
