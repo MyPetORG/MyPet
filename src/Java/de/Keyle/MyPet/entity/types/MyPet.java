@@ -48,10 +48,10 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.v1_4_5.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.ArrayList;
@@ -238,7 +238,7 @@ public abstract class MyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_4_5.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))

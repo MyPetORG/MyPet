@@ -21,8 +21,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.Navigation;
-import net.minecraft.server.PathfinderGoal;
+import net.minecraft.server.v1_4_5.Navigation;
+import net.minecraft.server.v1_4_5.PathfinderGoal;
 import org.bukkit.Location;
 
 public class EntityAIFollowOwner extends PathfinderGoal

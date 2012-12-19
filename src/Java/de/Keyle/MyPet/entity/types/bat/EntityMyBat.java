@@ -24,13 +24,10 @@ import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.ai.target.*;
-import de.Keyle.MyPet.entity.ai.target.EntityAIHurtByTarget;
-import de.Keyle.MyPet.entity.ai.target.EntityAIOwnerHurtByTarget;
-import de.Keyle.MyPet.entity.ai.target.EntityAIOwnerHurtTarget;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Ride;
-import net.minecraft.server.*;
+import net.minecraft.server.v1_4_5.*;
 
 
 public class EntityMyBat extends EntityMyPet

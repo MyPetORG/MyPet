@@ -21,7 +21,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Scheduler;
-import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.v1_4_5.NBTTagCompound;
 
 public class MyPetGenericSkill implements Scheduler
 {

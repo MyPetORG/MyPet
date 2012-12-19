@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.*;
+import net.minecraft.server.v1_4_5.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;

@@ -20,8 +20,7 @@
 package de.Keyle.MyPet.entity.types.magmacube;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 
 public class CraftMyMagmaCube extends CraftMyPet
 {

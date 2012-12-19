@@ -21,7 +21,7 @@ package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import org.bukkit.DyeColor;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 
 public class CraftMyWolf extends CraftMyPet
 {

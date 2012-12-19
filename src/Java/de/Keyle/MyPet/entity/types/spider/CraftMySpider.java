@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.entity.types.spider;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 import org.bukkit.entity.EntityType;
 
 public class CraftMySpider extends CraftMyPet

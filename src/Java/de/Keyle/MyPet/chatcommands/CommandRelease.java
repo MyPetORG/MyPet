@@ -41,10 +41,9 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.EntityItem;
-import net.minecraft.server.ItemStack;
-import net.minecraft.server.World;
-import org.bukkit.DyeColor;
+import net.minecraft.server.v1_4_5.EntityItem;
+import net.minecraft.server.v1_4_5.ItemStack;
+import net.minecraft.server.v1_4_5.World;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -86,11 +85,11 @@ public class CommandRelease implements CommandExecutor
                 name = name.substring(0, name.length() - 1);
                 if (myPet.petName.equalsIgnoreCase(name))
                 {
-                    if (myPet.getSkills().getSkillLevel("Inventory") > 0)
+                    if (myPet.getSkillSystem().getSkillLevel("Inventory") > 0)
                     {
                         World world = myPet.getCraftPet().getHandle().world;
                         Location petLocation = myPet.getLocation();
-                        for (ItemStack is : ((Inventory) myPet.getSkills().getSkill("Inventory")).inv.getContents())
+                        for (ItemStack is : ((Inventory) myPet.getSkillSystem().getSkill("Inventory")).inv.getContents())
                         {
                             if (is != null)
                             {

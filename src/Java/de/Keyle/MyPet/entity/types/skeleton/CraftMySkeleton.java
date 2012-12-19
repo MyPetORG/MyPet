@@ -20,8 +20,7 @@
 package de.Keyle.MyPet.entity.types.skeleton;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import net.minecraft.server.ItemStack;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 
 public class CraftMySkeleton extends CraftMyPet
 {
@@ -30,6 +29,8 @@ public class CraftMySkeleton extends CraftMyPet
         super(server, entityMySkeleton);
     }
 
+    // disabled because of new equipment API
+    /*
     protected ItemStack[] getEquipment()
     {
         return ((MySkeleton) getHandle().getMyPet()).getEquipment();
@@ -39,6 +40,7 @@ public class CraftMySkeleton extends CraftMyPet
     {
         ((MySkeleton) getHandle().getMyPet()).setEquipment(slot, item);
     }
+    */
 
     @Override
     public String toString()

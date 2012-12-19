@@ -38,11 +38,10 @@ import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.NBTTagCompound;
+import net.minecraft.server.v1_4_5.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.entity.CraftEnderman;
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.entity.CraftWolf;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftEnderman;
+import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -257,7 +256,7 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setBoolean("Sitting", ((Wolf) leashTarget).isSitting());
                                 extendedInfo.setBoolean("Tamed", ((Wolf) leashTarget).isTamed());
-                                extendedInfo.setByte("CollarColor", (byte) ((CraftWolf) leashTarget).getHandle().getCollarColor());
+                                extendedInfo.setByte("CollarColor", ((Wolf) leashTarget).getCollarColor().getData());
                             }
                             else if (leashTarget instanceof Sheep)
                             {

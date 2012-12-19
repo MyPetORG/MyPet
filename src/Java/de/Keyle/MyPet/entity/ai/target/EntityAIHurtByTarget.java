@@ -22,9 +22,10 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.v1_4_5.EntityPlayer;
+import net.minecraft.server.v1_4_5.PathfinderGoalHurtByTarget;
 
-public class EntityAIHurtByTarget extends net.minecraft.server.PathfinderGoalHurtByTarget
+public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
 {
     MyPet myPet;
 

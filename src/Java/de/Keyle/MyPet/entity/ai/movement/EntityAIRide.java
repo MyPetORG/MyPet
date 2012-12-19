@@ -21,7 +21,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.*;
+import net.minecraft.server.v1_4_5.*;
 
 public class EntityAIRide extends PathfinderGoal
 {

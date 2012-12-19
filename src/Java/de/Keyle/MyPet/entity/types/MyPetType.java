@@ -61,8 +61,8 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.EntityCreature;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_4_5.EntityCreature;
+import net.minecraft.server.v1_4_5.World;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Constructor;

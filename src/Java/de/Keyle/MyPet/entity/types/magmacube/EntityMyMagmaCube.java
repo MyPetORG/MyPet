@@ -21,8 +21,8 @@ package de.Keyle.MyPet.entity.types.magmacube;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.PathEntity;
-import net.minecraft.server.World;
+import net.minecraft.server.v1_4_5.PathEntity;
+import net.minecraft.server.v1_4_5.World;
 
 public class EntityMyMagmaCube extends EntityMyPet
 {
