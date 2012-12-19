@@ -129,7 +129,7 @@ public class MyPetCustomInventory implements IInventory
             {
                 if (item.getAmount() <= itemMaxStack)
                 {
-                    setItem(i, ((CraftItemStack) item.clone()).getHandle());
+                    setItem(i, CraftItemStack.asNMSCopy(item.clone()));
                     item.setAmount(0);
                     break;
                 }
@@ -137,7 +137,7 @@ public class MyPetCustomInventory implements IInventory
                 {
                     org.bukkit.inventory.ItemStack itemStack = item.clone();
                     itemStack.setAmount(itemStack.getMaxStackSize());
-                    setItem(i, ((CraftItemStack) itemStack).getHandle());
+                    setItem(i, CraftItemStack.asNMSCopy(item.clone()));
                     item.setAmount(item.getAmount() - itemStack.getMaxStackSize());
                 }
             }
