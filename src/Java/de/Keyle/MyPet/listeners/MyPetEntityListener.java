@@ -37,6 +37,7 @@ import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Poison;
+import de.Keyle.MyPet.skill.skills.Thorns;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_5.NBTTagCompound;
 import org.bukkit.ChatColor;
@@ -72,6 +73,7 @@ public class MyPetEntityListener implements Listener
 
             if (event.getEntity() instanceof CraftMyPet)
             {
+                MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                 if (e.getDamager() instanceof Player || (e.getDamager() instanceof Arrow && ((Arrow) e.getDamager()).getShooter() instanceof Player))
                 {
                     Player damager;
@@ -83,7 +85,6 @@ public class MyPetEntityListener implements Listener
                     {
                         damager = (Player) e.getDamager();
                     }
-                    MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
                     if (myPet.getCraftPet().getHandle().isRidden())
                     {
                         event.setCancelled(true);
@@ -147,6 +148,17 @@ public class MyPetEntityListener implements Listener
                     else if (!myPet.getOwner().equals(damager) && !MyPetUtil.canHurt(damager, myPet.getOwner().getPlayer()))
                     {
                         event.setCancelled(true);
+                    }
+                }
+                if (!event.isCancelled())
+                {
+                    if (myPet.getSkills().hasSkill("Thorns"))
+                    {
+                        Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
+                        if (thornsSkill.getLevel() > 0 && thornsSkill.isActivated())
+                        {
+                            ((LivingEntity) ((EntityDamageByEntityEvent) event).getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
+                        }
                     }
                 }
             }

@@ -105,6 +105,7 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Ride.SpeedPerLevel", 0.2F);
         setProperty("MyPet.Skill.Pickup.RangePerLvl", 1);
         setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
+        setProperty("MyPet.Skill.Thorns.ChancePerLevel", 5);
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
         setProperty("MyPet.Skill.Inventory.Creative", true);
         setProperty("MyPet.Skill.Behavior.Aggro", true);
@@ -178,6 +179,7 @@ public class MyPetConfig
         Pickup.rangePerLevel = config.getDouble("MyPet.Skill.Pickup.RangePerLvl", 1.0);
         HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
+        Thorns.chancePerLevel = config.getInt("MyPet.Skill.Thorns.ChancePerLevel", 5);
         Inventory.creative = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
