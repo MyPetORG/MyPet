@@ -44,13 +44,13 @@ public class MyPetCustomInventory implements IInventory
 
     public int getSize()
     {
-        return items.size();
+        return size;
     }
 
-    public void setSize(int Size)
+    public void setSize(int size)
     {
-        this.size = Size;
-        for (int i = items.size() ; i < Size ; i++)
+        this.size = size;
+        for (int i = items.size() ; i < size ; i++)
         {
             items.add(i, null);
         }
