@@ -228,6 +228,27 @@ public class MyPetCustomInventory implements IInventory
     public void onClose(CraftHumanEntity who)
     {
         this.transaction.remove(who);
+        if (items.size() > this.size)
+        {
+            for (int counterOutside = items.size() - 1 ; counterOutside >= this.size ; counterOutside--)
+            {
+                if (items.get(counterOutside) != null)
+                {
+                    for (int counterInside = 0 ; counterInside < size ; counterInside++)
+                    {
+                        if (items.get(counterInside) == null)
+                        {
+                            items.set(counterInside, items.get(counterOutside));
+                            items.set(counterOutside, null);
+                        }
+                    }
+                }
+                if (items.get(counterOutside) == null)
+                {
+                    items.remove(counterOutside);
+                }
+            }
+        }
     }
 
     public List<HumanEntity> getViewers()
