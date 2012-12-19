@@ -19,10 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.sheep;
 
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -55,7 +52,7 @@ public class EntityMySheep extends EntityMyPet
         }
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
-        petPathfinderSelector.addGoal("EatGrass", new PathfinderGoalEatTile(this));
+        petPathfinderSelector.addGoal("EatGrass", new EntityAIEatGrass(this, 0.02));
         petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
