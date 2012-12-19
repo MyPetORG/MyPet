@@ -228,9 +228,13 @@ public class MyPetEntityListener implements Listener
                                     willBeLeashed = ((Ageable) leashTarget).canBreed();
                                 }
                             }
-                            if (!willBeLeashed || flag == LeashFlag.None)
+                            if (!willBeLeashed)
                             {
-                                willBeLeashed = false;
+                                break;
+                            }
+                            if (flag == LeashFlag.None)
+                            {
+                                willBeLeashed = true;
                                 break;
                             }
                         }
