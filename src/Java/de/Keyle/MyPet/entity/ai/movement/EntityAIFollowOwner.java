@@ -140,6 +140,7 @@ public class EntityAIFollowOwner extends PathfinderGoal
                     if (this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetUtil.canSpawn(ownerLocation, this.petEntity))
                     {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
+                        this.nav.a(this.petEntity.getOwner(), this.walkSpeed);
                     }
                 }
             }
