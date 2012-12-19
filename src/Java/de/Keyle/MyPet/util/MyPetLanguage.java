@@ -103,6 +103,7 @@ public class MyPetLanguage
         addString("Msg_AvailableSkilltrees", "MyPet.Message.availableskilltrees", "Available skilltrees for %aqua%%petname%%white%:");
         addString("Msg_SkilltreeSwitchedTo", "MyPet.Message.skilltreeswitchedto", "You have selected the %aqua%%name%%white% skilltree.");
         addString("Msg_SkilltreeNotSwitched", "MyPet.Message.skilltreesnotwitched", "Skilltree hasn't changed!");
+        addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%white% only once!");
 
         yamlConfiguration.saveConfig();
     }

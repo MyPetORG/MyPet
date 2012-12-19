@@ -22,10 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,7 +40,11 @@ public class CommandChooseSkilltree implements CommandExecutor
         if (MyPetList.hasMyPet(player))
         {
             MyPet myPet = MyPetList.getMyPet(player);
-            if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
+            if (myPet.getSkillTree() != null && MyPetConfig.chooseSkilltreeOnce && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin"))
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnlyChooseSkilltreeOnce").replace("%petname%", myPet.petName)));
+            }
+            else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
                 MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
                 if (args.length == 1)

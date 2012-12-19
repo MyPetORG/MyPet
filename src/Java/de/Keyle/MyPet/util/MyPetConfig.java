@@ -60,6 +60,7 @@ public class MyPetConfig
     public static int autoSaveTime = 60;
     public static int hungerSystemTime = 60;
     public static boolean automaticSkilltreeAssignment = true;
+    public static boolean chooseSkilltreeOnce = true;
     public static boolean ownerCanAttackPet = false;
     public static boolean levelSystem = true;
     public static boolean hungerSystem = true;
@@ -88,6 +89,7 @@ public class MyPetConfig
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Skilltree.AutomaticAssignment", true);
+        setProperty("MyPet.Skilltree.ChooseOnce", true);
         setProperty("MyPet.Support.Towny", true);
         setProperty("MyPet.Support.Heroes", true);
         setProperty("MyPet.Support.Factions", true);
@@ -186,6 +188,7 @@ public class MyPetConfig
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
         automaticSkilltreeAssignment = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
+        chooseSkilltreeOnce = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
         levelSystem = config.getBoolean("MyPet.LevelSystem", true);
         ownerCanAttackPet = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         hungerSystem = config.getBoolean("MyPet.HungerSystem.Active", true);
