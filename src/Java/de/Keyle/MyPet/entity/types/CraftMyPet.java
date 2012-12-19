@@ -50,9 +50,9 @@ public abstract class CraftMyPet extends CraftCreature
             {
                 return;
             }
-            if (getHandle().myPet.getSkillSystem().hasSkill("Behavior"))
+            if (getHandle().myPet.getSkills().hasSkill("Behavior"))
             {
-                Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkillSystem().getSkill("Behavior");
+                Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkills().getSkill("Behavior");
                 if (behaviorSkill.getLevel() > 0 && behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
                     return;

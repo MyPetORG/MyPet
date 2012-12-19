@@ -44,8 +44,8 @@ import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.NBTTagCompound;
@@ -132,7 +132,7 @@ public abstract class MyPet
     protected Location petLocation;
 
     protected MyPetSkillTree skillTree = null;
-    protected MyPetSkillSystem skillSystem;
+    protected MyPetSkills skills;
     protected MyPetExperience experience;
 
     public MyPet(MyPetPlayer Owner)
@@ -167,7 +167,7 @@ public abstract class MyPet
                 this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
             }
         }
-        skillSystem = new MyPetSkillSystem(this);
+        skills = new MyPetSkills(this);
         experience = new MyPetExperience(this);
         hungerTime = MyPetConfig.hungerSystemTime;
     }
@@ -189,7 +189,7 @@ public abstract class MyPet
         {
             return false;
         }
-        skillSystem.reset();
+        skills.reset();
         this.skillTree = skillTree;
         for (int i = 1 ; i <= experience.getLevel() ; i++)
         {
@@ -298,7 +298,7 @@ public abstract class MyPet
 
     public int getMaxHealth()
     {
-        return getStartHP(this.getClass()) + (skillSystem.hasSkill("HP") ? skillSystem.getSkill("HP").getLevel() : 0);
+        return getStartHP(this.getClass()) + (skills.hasSkill("HP") ? skills.getSkill("HP").getLevel() : 0);
     }
 
     public int getHungerValue()
@@ -325,12 +325,12 @@ public abstract class MyPet
 
     public int getDamage()
     {
-        return MyPet.getStartDamage(this.getClass()) + (getSkillSystem().hasSkill("Damage") ? getSkillSystem().getSkillLevel("Damage") : 0);
+        return MyPet.getStartDamage(this.getClass()) + (getSkills().hasSkill("Damage") ? getSkills().getSkillLevel("Damage") : 0);
     }
 
-    public MyPetSkillSystem getSkillSystem()
+    public MyPetSkills getSkills()
     {
-        return skillSystem;
+        return skills;
     }
 
     public MyPetExperience getExperience()
@@ -363,9 +363,9 @@ public abstract class MyPet
     {
         if (status != PetState.Despawned && getOwner().isOnline())
         {
-            if (skillSystem.getSkills().size() > 0)
+            if (skills.getSkills().size() > 0)
             {
-                for (MyPetGenericSkill skill : skillSystem.getSkills())
+                for (MyPetGenericSkill skill : skills.getSkills())
                 {
                     skill.schedule();
                 }

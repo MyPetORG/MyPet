@@ -59,9 +59,9 @@ public class CommandInventory implements CommandExecutor
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_InventoryCreative")).replace("%petname%", myPet.petName));
                         return true;
                     }
-                    if (myPet.getSkillSystem().hasSkill("Inventory"))
+                    if (myPet.getSkills().hasSkill("Inventory"))
                     {
-                        myPet.getSkillSystem().getSkill("Inventory").activate();
+                        myPet.getSkills().getSkill("Inventory").activate();
                     }
                 }
                 else
@@ -74,9 +74,9 @@ public class CommandInventory implements CommandExecutor
                 if (MyPetList.hasMyPet(args[0]))
                 {
                     MyPet myPet = MyPetList.getMyPet(args[0]);
-                    if (myPet.getSkillSystem().getSkillLevel("Inventory") > 0)
+                    if (myPet.getSkills().getSkillLevel("Inventory") > 0)
                     {
-                        ((Inventory) myPet.getSkillSystem().getSkill("Inventory")).OpenInventory(player);
+                        ((Inventory) myPet.getSkills().getSkill("Inventory")).OpenInventory(player);
                     }
                 }
             }

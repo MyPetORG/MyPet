@@ -62,7 +62,7 @@ public class MyPetList
             }
 
             activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
-            Collection<MyPetGenericSkill> skills = activeMyPet.getSkillSystem().getSkills();
+            Collection<MyPetGenericSkill> skills = activeMyPet.getSkills().getSkills();
             if (skills.size() > 0)
             {
                 for (MyPetGenericSkill skill : skills)
@@ -180,7 +180,7 @@ public class MyPetList
         inactiveMyPet.setHungerValue(activeMyPet.getHungerValue());
         inactiveMyPet.setLocation(activeMyPet.getLocation());
         inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
-        inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());
+        inactiveMyPet.setSkills(activeMyPet.getSkills().getSkills());
         inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
         inactiveMyPet.setPetType(activeMyPet.getPetType());
         inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());

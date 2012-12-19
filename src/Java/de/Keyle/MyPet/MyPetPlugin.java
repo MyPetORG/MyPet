@@ -49,8 +49,8 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetJSexp;
-import de.Keyle.MyPet.skill.MyPetSkillSystem;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Metrics.Graph;
@@ -206,15 +206,15 @@ public class MyPetPlugin extends JavaPlugin
             getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
         }
 
-        MyPetSkillSystem.registerSkill(Inventory.class);
-        MyPetSkillSystem.registerSkill(HPregeneration.class);
-        MyPetSkillSystem.registerSkill(Pickup.class);
-        MyPetSkillSystem.registerSkill(Behavior.class);
-        MyPetSkillSystem.registerSkill(Damage.class);
-        MyPetSkillSystem.registerSkill(Control.class);
-        MyPetSkillSystem.registerSkill(HP.class);
-        MyPetSkillSystem.registerSkill(Poison.class);
-        MyPetSkillSystem.registerSkill(Ride.class);
+        MyPetSkills.registerSkill(Inventory.class);
+        MyPetSkills.registerSkill(HPregeneration.class);
+        MyPetSkills.registerSkill(Pickup.class);
+        MyPetSkills.registerSkill(Behavior.class);
+        MyPetSkills.registerSkill(Damage.class);
+        MyPetSkills.registerSkill(Control.class);
+        MyPetSkills.registerSkill(HP.class);
+        MyPetSkills.registerSkill(Poison.class);
+        MyPetSkills.registerSkill(Ride.class);
 
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 
@@ -536,7 +536,7 @@ public class MyPetPlugin extends JavaPlugin
             }
 
             NBTTagCompound skillsNBT = new NBTTagCompound("Skills");
-            Collection<MyPetGenericSkill> skillList = myPet.getSkillSystem().getSkills();
+            Collection<MyPetGenericSkill> skillList = myPet.getSkills().getSkills();
             if (skillList.size() > 0)
             {
                 for (MyPetGenericSkill skill : skillList)

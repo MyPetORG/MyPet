@@ -47,9 +47,9 @@ public class CommandBehavior implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
-                else if (myPet.getSkillSystem().hasSkill("Behavior"))
+                else if (myPet.getSkills().hasSkill("Behavior"))
                 {
-                    Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                    Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
                     if (args.length == 1)
                     {
                         if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend")) && BehaviorState.Friendly.isActive())

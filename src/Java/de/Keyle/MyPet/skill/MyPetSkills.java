@@ -25,7 +25,7 @@ import de.Keyle.MyPet.util.MyPetUtil;
 
 import java.util.*;
 
-public class MyPetSkillSystem
+public class MyPetSkills
 {
     private static List<Class<? extends MyPetGenericSkill>> skillClassList = new ArrayList<Class<? extends MyPetGenericSkill>>();
     private static List<String> skillNames = new ArrayList<String>();
@@ -61,7 +61,7 @@ public class MyPetSkillSystem
         return skillNames.contains(name.toLowerCase());
     }
 
-    public MyPetSkillSystem(MyPet myPet)
+    public MyPetSkills(MyPet myPet)
     {
         this.myPet = myPet;
         addSkills(skillClassList);

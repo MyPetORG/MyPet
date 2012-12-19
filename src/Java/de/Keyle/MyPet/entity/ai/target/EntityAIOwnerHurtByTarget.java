@@ -75,9 +75,9 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
                 return false;
             }
         }
-        if (myPet.getSkillSystem().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill("Behavior"))
         {
-            Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+            Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
             if (behaviorSkill.getLevel() > 0)
             {
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)

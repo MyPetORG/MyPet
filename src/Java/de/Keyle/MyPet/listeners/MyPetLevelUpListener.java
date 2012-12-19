@@ -61,15 +61,15 @@ public class MyPetLevelUpListener implements Listener
             }
             for (String skill : skillLevelUpgradeCount.keySet())
             {
-                if (myPet.getSkillSystem().hasSkill(skill))
+                if (myPet.getSkills().hasSkill(skill))
                 {
                     if (event.isQuiet())
                     {
-                        myPet.getSkillSystem().getSkill(skill).setLevel(myPet.getSkillSystem().getSkill(skill).getLevel() + skillLevelUpgradeCount.get(skill));
+                        myPet.getSkills().getSkill(skill).setLevel(myPet.getSkills().getSkill(skill).getLevel() + skillLevelUpgradeCount.get(skill));
                     }
                     else
                     {
-                        myPet.getSkillSystem().getSkill(skill).upgrade(skillLevelUpgradeCount.get(skill));
+                        myPet.getSkills().getSkill(skill).upgrade(skillLevelUpgradeCount.get(skill));
                     }
                 }
             }

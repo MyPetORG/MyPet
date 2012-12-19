@@ -43,7 +43,7 @@ public class EntityAIRide extends PathfinderGoal
 
     public boolean a()
     {
-        if (myPet.getSkillSystem().getSkillLevel("Ride") <= 0)
+        if (myPet.getSkills().getSkillLevel("Ride") <= 0)
         {
             return false;
         }
@@ -85,7 +85,7 @@ public class EntityAIRide extends PathfinderGoal
             return;
         }
 
-        float totalSpeed = this.startSpeed + (myPet.getSkillSystem().getSkillLevel("Ride") * this.speedPerLevel);
+        float totalSpeed = this.startSpeed + (myPet.getSkills().getSkillLevel("Ride") * this.speedPerLevel);
 
         EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 

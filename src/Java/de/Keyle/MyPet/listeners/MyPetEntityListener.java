@@ -88,7 +88,7 @@ public class MyPetEntityListener implements Listener
                     if (myPet.getCraftPet().getHandle().isRidden())
                     {
                         event.setCancelled(true);
-                        if (myPet.getSkillSystem().hasSkill("Ride"))
+                        if (myPet.getSkills().hasSkill("Ride"))
                         {
                             if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
                             {
@@ -121,7 +121,7 @@ public class MyPetEntityListener implements Listener
                         {
                             if (!myPet.isPassiv())
                             {
-                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkillSystem().hasSkill("Damage") ? myPet.getSkillSystem().getSkillLevel("Damage") : 0);
+                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().hasSkill("Damage") ? myPet.getSkills().getSkillLevel("Damage") : 0);
                                 damager.sendMessage(MyPetUtil.setColors("   Damage: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
                             }
                             if (MyPetConfig.hungerSystem)
@@ -369,9 +369,9 @@ public class MyPetEntityListener implements Listener
             else if (e.getDamager() instanceof CraftMyPet)
             {
                 MyPet myPet = ((CraftMyPet) e.getDamager()).getHandle().getMyPet();
-                if (myPet.getSkillSystem().hasSkill("Poison"))
+                if (myPet.getSkills().hasSkill("Poison"))
                 {
-                    Poison poisonSkill = (Poison) myPet.getSkillSystem().getSkill("Poison");
+                    Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
                     if (poisonSkill.getPoison())
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
@@ -447,9 +447,9 @@ public class MyPetEntityListener implements Listener
                 if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
                     MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                    if (myPet.getSkillSystem().hasSkill("Behavior"))
+                    if (myPet.getSkills().hasSkill("Behavior"))
                     {
-                        Behavior behaviorSkill = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                        Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
                         if (behaviorSkill.getLevel() > 0)
                         {
                             if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)

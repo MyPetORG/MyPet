@@ -50,11 +50,11 @@ public class MyPetPlayerListener implements Listener
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.status == PetState.Here && myPet.getCraftPet().canMove())
             {
-                if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
+                if (myPet.getSkills().getSkillLevel("Control") > 0)
                 {
-                    if (myPet.getSkillSystem().hasSkill("Behavior"))
+                    if (myPet.getSkills().hasSkill("Behavior"))
                     {
-                        Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                        Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
                         if (behavior.getLevel() > 0)
                         {
                             if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
@@ -64,9 +64,9 @@ public class MyPetPlayerListener implements Listener
                             }
                         }
                     }
-                    if (myPet.getSkillSystem().hasSkill("Ride"))
+                    if (myPet.getSkills().hasSkill("Ride"))
                     {
-                        Ride ride = (Ride) myPet.getSkillSystem().getSkill("Ride");
+                        Ride ride = (Ride) myPet.getSkills().getSkill("Ride");
                         if (ride.getLevel() > 0)
                         {
                             if (myPet.getCraftPet().getHandle().isRidden())
@@ -86,7 +86,7 @@ public class MyPetPlayerListener implements Listener
                                 break;
                             }
                         }
-                        ((Control) myPet.getSkillSystem().getSkill("Control")).setMoveTo(block.getLocation());
+                        ((Control) myPet.getSkills().getSkill("Control")).setMoveTo(block.getLocation());
                     }
                 }
             }
@@ -145,9 +145,9 @@ public class MyPetPlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getSkillSystem().hasSkill("Behavior"))
+            if (myPet.getSkills().hasSkill("Behavior"))
             {
-                Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+                Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
                 if (behavior.getLevel() > 0)
                 {
                     if (behavior.getBehavior() == BehaviorState.Aggressive)

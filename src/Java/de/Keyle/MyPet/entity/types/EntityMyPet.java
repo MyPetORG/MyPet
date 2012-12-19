@@ -229,7 +229,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 this.getOwner().mount(null);
                 return true;
             }
-            if (myPet.getSkillSystem().getSkillLevel("Ride") > 0)
+            if (myPet.getSkills().getSkillLevel("Ride") > 0)
             {
                 if (itemStack.id == Ride.item.getId() && canMove())
                 {
@@ -237,7 +237,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     return true;
                 }
             }
-            else if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
+            else if (myPet.getSkills().getSkillLevel("Control") > 0)
             {
                 if (itemStack.id == Control.item.getId())
                 {

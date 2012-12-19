@@ -118,7 +118,7 @@ public class MyPetSkillTreeConfigLoader
                             {
                                 for (String thisSkill : skillsOfThisLevel)
                                 {
-                                    if (MyPetSkillSystem.isValidSkill(thisSkill))
+                                    if (MyPetSkills.isValidSkill(thisSkill))
                                     {
                                         MyPetSkillTreeSkill skillTreeSkill = new MyPetSkillTreeSkill(thisSkill);
                                         skillTree.addSkillToLevel(Integer.parseInt(thisLevel), skillTreeSkill);

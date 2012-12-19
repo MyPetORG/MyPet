@@ -50,9 +50,9 @@ public class CommandPickup implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;
                 }
-                if (myPet.getSkillSystem().hasSkill("Pickup"))
+                if (myPet.getSkills().hasSkill("Pickup"))
                 {
-                    myPet.getSkillSystem().getSkill("Pickup").activate();
+                    myPet.getSkills().getSkill("Pickup").activate();
                 }
                 return true;
             }

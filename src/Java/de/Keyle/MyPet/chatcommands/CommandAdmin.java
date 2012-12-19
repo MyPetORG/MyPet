@@ -75,7 +75,7 @@ public class CommandAdmin implements CommandExecutor
                     int Exp = Integer.parseInt(value);
                     Exp = Exp < 0 ? 0 : Exp;
 
-                    Collection<MyPetGenericSkill> skills = myPet.getSkillSystem().getSkills();
+                    Collection<MyPetGenericSkill> skills = myPet.getSkills().getSkills();
                     if (skills.size() > 0)
                     {
                         for (MyPetGenericSkill skill : skills)

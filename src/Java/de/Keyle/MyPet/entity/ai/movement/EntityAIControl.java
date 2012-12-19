@@ -54,9 +54,9 @@ public class EntityAIControl extends PathfinderGoal implements Scheduler
         {
             stopControl = false;
         }
-        if (myPet.getSkillSystem().getSkillLevel("Control") > 0)
+        if (myPet.getSkills().getSkillLevel("Control") > 0)
         {
-            Control controlSkill = (Control) myPet.getSkillSystem().getSkill("Control");
+            Control controlSkill = (Control) myPet.getSkills().getSkill("Control");
             return controlSkill.getLocation(false) != null;
         }
         return false;
@@ -68,7 +68,7 @@ public class EntityAIControl extends PathfinderGoal implements Scheduler
     public boolean b()
     {
         boolean stop = false;
-        Control control = (Control) myPet.getSkillSystem().getSkill("Control");
+        Control control = (Control) myPet.getSkills().getSkill("Control");
 
         if (control.getLocation(false) != null && moveTo != control.getLocation(false))
         {

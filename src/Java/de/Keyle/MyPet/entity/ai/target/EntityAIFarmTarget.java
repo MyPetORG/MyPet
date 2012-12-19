@@ -47,9 +47,9 @@ public class EntityAIFarmTarget extends PathfinderGoal
      */
     public boolean a()
     {
-        if (myPet.getSkillSystem().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill("Behavior"))
         {
-            Behavior behavior = (Behavior) myPet.getSkillSystem().getSkill("Behavior");
+            Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
             if (behavior.getLevel() > 0)
             {
                 if (behavior.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
