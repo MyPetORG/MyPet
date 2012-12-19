@@ -43,6 +43,6 @@ public class Poison extends MyPetGenericSkill
 
     public boolean getPoison()
     {
-        return random.nextDouble() <= level * chancePerLevel / 100;
+        return random.nextDouble() <= level * chancePerLevel / 100.;
     }
 }
