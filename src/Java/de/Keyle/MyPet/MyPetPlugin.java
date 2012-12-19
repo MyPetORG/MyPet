@@ -50,6 +50,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetJSexp;
 import de.Keyle.MyPet.skill.MyPetSkillSystem;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Metrics.Graph;
@@ -453,6 +454,11 @@ public class MyPetPlugin extends JavaPlugin
             int petRespawnTime = myPetNBT.getInt("Respawntime");
             String petName = myPetNBT.getString("Name");
             String petOwner = myPetNBT.getString("Owner");
+            String skillTree = null;
+            if (myPetNBT.hasKey("Skilltree"))
+            {
+                skillTree = myPetNBT.getString("Skilltree");
+            }
             int petHunger = 100;
             if (myPetNBT.hasKey("Hunger"))
             {
@@ -475,6 +481,18 @@ public class MyPetPlugin extends JavaPlugin
             inactiveMyPet.setSkills(myPetNBT.getCompound("Skills"));
             inactiveMyPet.setPetType(MyPetType.valueOf(petType));
             inactiveMyPet.setInfo(myPetNBT.getCompound("Info"));
+            if (skillTree != null)
+            {
+                if (MyPetSkillTreeMobType.getMobTypeByPetType(inactiveMyPet.getPetType()) != null)
+                {
+                    MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByPetType(inactiveMyPet.getPetType());
+
+                    if (mobType.hasSkillTree(skillTree))
+                    {
+                        inactiveMyPet.setSkillTree(mobType.getSkillTree(skillTree));
+                    }
+                }
+            }
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
 
@@ -512,6 +530,10 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setString("Name", myPet.petName);
             petNBT.setDouble("Exp", myPet.getExperience().getExp());
             petNBT.setCompound("Info", myPet.getExtendedInfo());
+            if (myPet.getSkillTree() != null)
+            {
+                petNBT.setString("Skilltree", myPet.getSkillTree().getName());
+            }
 
             NBTTagCompound skillsNBT = new NBTTagCompound("Skills");
             Collection<MyPetGenericSkill> skillList = myPet.getSkillSystem().getSkills();
@@ -548,8 +570,13 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
             petNBT.setString("Name", inactiveMyPet.getPetName());
             petNBT.setDouble("Exp", inactiveMyPet.getExp());
+            if (inactiveMyPet.getSkillTree() != null)
+            {
+                petNBT.setString("Skilltree", inactiveMyPet.getSkillTree().getName());
+            }
 
             petNBT.set("Skills", inactiveMyPet.getSkills());
+
             petNBTlist.add(petNBT);
             petCount++;
         }

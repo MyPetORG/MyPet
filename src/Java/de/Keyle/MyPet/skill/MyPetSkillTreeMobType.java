@@ -19,6 +19,8 @@
 
 package de.Keyle.MyPet.skill;
 
+import de.Keyle.MyPet.entity.types.MyPetType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +117,11 @@ public class MyPetSkillTreeMobType
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
     {
         return mobTypes.get(mobTypeName.toLowerCase());
+    }
+
+    public static MyPetSkillTreeMobType getMobTypeByPetType(MyPetType myPetType)
+    {
+        return mobTypes.get(myPetType.getTypeName().toLowerCase());
     }
 
     public static boolean hasMobType(String mobTypeName)

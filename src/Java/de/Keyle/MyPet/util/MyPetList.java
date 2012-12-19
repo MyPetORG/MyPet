@@ -49,6 +49,7 @@ public class MyPetList
             activeMyPet.setLocation(inactiveMyPet.getLocation() == null ? inactiveMyPet.getPetOwner().getPlayer().getLocation() : inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
+            activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
 
             if (activeMyPet.respawnTime > 0)
@@ -182,6 +183,7 @@ public class MyPetList
         inactiveMyPet.setSkills(activeMyPet.getSkillSystem().getSkills());
         inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
         inactiveMyPet.setPetType(activeMyPet.getPetType());
+        inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());
 
         return inactiveMyPet;
     }
@@ -254,7 +256,7 @@ public class MyPetList
             MyPet activeMyPet = getMyPet(inactiveMyPet.getPetOwner().getPlayer());
             MyPetSelectSetInactiveEvent event = new MyPetSelectSetInactiveEvent(activeMyPet);
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
-            if(event.isCancelled())
+            if (event.isCancelled())
             {
                 return null;
             }
@@ -262,7 +264,7 @@ public class MyPetList
         }
         MyPetSelectSetActiveEvent event = new MyPetSelectSetActiveEvent(inactiveMyPet);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
-        if(event.isCancelled())
+        if (event.isCancelled())
         {
             return null;
         }
@@ -281,7 +283,7 @@ public class MyPetList
             MyPet activeMyPet = getMyPet(owner);
             MyPetSelectSetInactiveEvent event = new MyPetSelectSetInactiveEvent(activeMyPet);
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
-            if(event.isCancelled())
+            if (event.isCancelled())
             {
                 return null;
             }

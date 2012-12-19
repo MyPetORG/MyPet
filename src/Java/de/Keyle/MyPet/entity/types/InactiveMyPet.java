@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.NBTTagCompound;
@@ -36,6 +37,7 @@ public class InactiveMyPet
     private Location location;
     private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
+    private MyPetSkillTree skillTree = null;
 
     private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
     private NBTTagCompound NBTextendetInfo;
@@ -164,6 +166,16 @@ public class InactiveMyPet
     public void setLocation(Location Location)
     {
         this.location = Location;
+    }
+
+    public MyPetSkillTree getSkillTree()
+    {
+        return skillTree;
+    }
+
+    public void setSkillTree(MyPetSkillTree skillTree)
+    {
+        this.skillTree = skillTree;
     }
 
     public MyPetPlayer getPetOwner()

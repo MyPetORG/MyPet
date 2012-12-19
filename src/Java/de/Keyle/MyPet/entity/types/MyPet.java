@@ -178,12 +178,16 @@ public abstract class MyPet
         MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
     }
 
+    public MyPetSkillTree getSkillTree()
+    {
+        return skillTree;
+    }
+
     public boolean setSkilltree(MyPetSkillTree skillTree)
     {
-        boolean replace = false;
-        if (skillTree != null)
+        if (skillTree == null || this.skillTree == skillTree)
         {
-            replace = true;
+            return false;
         }
         skillSystem.reset();
         this.skillTree = skillTree;
@@ -191,7 +195,7 @@ public abstract class MyPet
         {
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
         }
-        return replace;
+        return true;
     }
 
     public void removePet()
@@ -332,11 +336,6 @@ public abstract class MyPet
     public MyPetExperience getExperience()
     {
         return experience;
-    }
-
-    public MyPetSkillTree getSkillTree()
-    {
-        return skillTree;
     }
 
     public Location getLocation()
