@@ -33,6 +33,7 @@ public class MyPetPlayer implements Scheduler
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
     private String playerName;
+    private boolean customData = false;
 
     private MyPetPlayer(String playerName)
     {
@@ -42,6 +43,11 @@ public class MyPetPlayer implements Scheduler
     public String getName()
     {
         return playerName;
+    }
+
+    public boolean hasCustomData()
+    {
+        return customData;
     }
 
     public boolean isOnline()

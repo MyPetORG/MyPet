@@ -439,6 +439,14 @@ public class MyPetPlugin extends JavaPlugin
         {
             debugLogger.info("Clean shutdown: " + nbtConfiguration.getNBTTagCompound().getBoolean("CleanShutdown"));
         }
+
+        debugLogger.info("Loading players -------------------------");
+        if (nbtConfiguration.getNBTTagCompound().hasKey("Players"))
+        {
+            loadPlayers(nbtConfiguration);
+        }
+        debugLogger.info("Players loaded -------------------------");
+
         debugLogger.info("loading Pets: -----------------------------");
         for (int i = 0 ; i < petList.size() ; i++)
         {
@@ -584,8 +592,41 @@ public class MyPetPlugin extends JavaPlugin
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
         nbtConfiguration.getNBTTagCompound().setBoolean("CleanShutdown", shutdown);
         nbtConfiguration.getNBTTagCompound().set("Pets", petNBTlist);
+        nbtConfiguration.getNBTTagCompound().set("Players", savePlayers());
         nbtConfiguration.save();
         return petCount;
+    }
+
+    private NBTTagList savePlayers()
+    {
+        NBTTagList playerNBTlist = new NBTTagList();
+
+        for (MyPetPlayer myPetPlayer : MyPetPlayer.getPlayerList())
+        {
+            if (myPetPlayer.hasCustomData())
+            {
+                NBTTagCompound playerNBT = new NBTTagCompound(myPetPlayer.getName());
+
+                playerNBT.setString("Name", myPetPlayer.getName());
+
+                playerNBTlist.add(playerNBT);
+            }
+        }
+
+        return playerNBTlist;
+    }
+
+    private void loadPlayers(NBTConfiguration nbtConfiguration)
+    {
+        nbtConfiguration.load();
+        NBTTagList playerList = nbtConfiguration.getNBTTagCompound().getList("Players");
+
+        for (int i = 0 ; i < playerList.size() ; i++)
+        {
+            NBTTagCompound myplayerNBT = (NBTTagCompound) playerList.get(i);
+
+            MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getString("Name"));
+        }
     }
 
     private boolean checkVersion(String mc, String mp)
