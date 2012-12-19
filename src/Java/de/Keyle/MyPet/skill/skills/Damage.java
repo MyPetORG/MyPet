@@ -80,7 +80,7 @@ public class Damage extends MyPetGenericSkill
             isPassive = false;
         }
         super.upgrade();
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDemage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + level));
+        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + level));
         if (isPassive)
         {
             getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
