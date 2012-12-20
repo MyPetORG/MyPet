@@ -205,7 +205,7 @@ public class EntityMySheep extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.sheep.say";
+        return !playIdleSound() ? "" : "mob.sheep.say";
     }
 
     /**

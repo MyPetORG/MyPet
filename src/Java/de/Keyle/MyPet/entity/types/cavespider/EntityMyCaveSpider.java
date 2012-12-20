@@ -67,7 +67,7 @@ public class EntityMyCaveSpider extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.spider.say";
+        return !playIdleSound() ? "" : "mob.spider.say";
     }
 
     /**

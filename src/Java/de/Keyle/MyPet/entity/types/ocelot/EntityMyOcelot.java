@@ -208,7 +208,7 @@ public class EntityMyOcelot extends EntityMyPet
      */
     protected String aY()
     {
-        return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
+        return !playIdleSound() ? "" : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
     /**

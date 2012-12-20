@@ -61,7 +61,7 @@ public class EntityMySilverfish extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.silverfish.say";
+        return !playIdleSound() ? "" : "mob.silverfish.say";
     }
 
     /**

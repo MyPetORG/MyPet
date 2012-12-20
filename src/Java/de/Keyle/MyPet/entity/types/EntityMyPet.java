@@ -48,6 +48,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected boolean isRidden = false;
     protected boolean isMyPet = false;
     protected MyPet myPet;
+    protected int idleSoundTimer = 400;
 
     // This Constructor should be never called!!!
     public EntityMyPet(World world)
@@ -164,6 +165,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean playIdleSound()
+    {
+        if (idleSoundTimer-- <= 0)
+        {
+            idleSoundTimer = 400;
+            return true;
         }
         return false;
     }

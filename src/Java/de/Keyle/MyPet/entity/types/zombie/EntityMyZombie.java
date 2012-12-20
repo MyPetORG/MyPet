@@ -94,7 +94,7 @@ public class EntityMyZombie extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.zombie.say";
+        return !playIdleSound() ? "" : "mob.zombie.say";
     }
 
     /**

@@ -109,7 +109,7 @@ public class EntityMyBat extends EntityMyPet
     @Override
     protected String aY()
     {
-        return "mob.bat.idle";
+        return !playIdleSound() ? "" : "mob.bat.idle";
     }
 
     /**

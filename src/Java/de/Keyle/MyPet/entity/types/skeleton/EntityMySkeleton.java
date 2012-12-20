@@ -77,7 +77,7 @@ public class EntityMySkeleton extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.skeleton.say";
+        return !playIdleSound() ? "" : "mob.skeleton.say";
     }
 
     /**

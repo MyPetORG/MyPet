@@ -158,7 +158,7 @@ public class EntityMyPig extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.pig.say";
+        return !playIdleSound() ? "" : "mob.pig.say";
     }
 
     /**

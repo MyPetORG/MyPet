@@ -157,7 +157,7 @@ public class EntityMyEnderman extends EntityMyPet
     @Override
     protected String aY()
     {
-        return isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
+        return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 
     /**

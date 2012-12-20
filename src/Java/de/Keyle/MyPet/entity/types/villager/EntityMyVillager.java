@@ -96,7 +96,7 @@ public class EntityMyVillager extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.villager.default";
+        return !playIdleSound() ? "" : "mob.villager.default";
     }
 
     /**

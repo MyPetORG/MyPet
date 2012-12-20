@@ -101,7 +101,7 @@ public class EntityMyIronGolem extends EntityMyPet
      */
     protected String aY()
     {
-        return "none";
+        return "";
     }
 
     /**

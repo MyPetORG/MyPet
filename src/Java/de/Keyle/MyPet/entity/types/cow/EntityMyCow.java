@@ -122,7 +122,7 @@ public class EntityMyCow extends EntityMyPet
      */
     protected String aY()
     {
-        return "mob.cow.say";
+        return !playIdleSound() ? "" : "mob.cow.say";
     }
 
     /**
