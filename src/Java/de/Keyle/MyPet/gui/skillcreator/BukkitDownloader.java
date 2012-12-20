@@ -75,11 +75,6 @@ public class BukkitDownloader
         downloader.run();
     }
 
-    private void createUIComponents()
-    {
-        progressLabel = new JLabel("Downloaded: 0/0MiB");
-    }
-
     class InternetDataTask extends SwingWorker<String, Void>
     {
         @Override
