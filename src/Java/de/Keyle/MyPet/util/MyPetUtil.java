@@ -25,7 +25,7 @@ import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.P;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.palmergames.bukkit.towny.object.TownyWorld;
-import com.palmergames.bukkit.util.CombatUtil;
+import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -190,7 +190,7 @@ public class MyPetUtil
         {
             try
             {
-                Class.forName("com.palmergames.bukkit.util.CombatUtil", false, null);
+                Class.forName("com.palmergames.bukkit.towny.utils.CombatUtil", false, null);
             }
             catch (ClassNotFoundException e)
             {
