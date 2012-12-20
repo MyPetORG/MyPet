@@ -60,6 +60,7 @@ import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_4_5.*;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -76,6 +77,10 @@ public class MyPetPlugin extends JavaPlugin
     private File NBTPetFile;
     private DebugLogger debugLogger;
     private boolean isReady = false;
+
+    public static final String MyPetVersion = "{@MYPET_VERSION@}";
+    public static final String MyPetBuild = "{@BUILD_NUMBER@}";
+    public static final String CompatibleMinecraftVersion = "{@MINECRAFT_VERSION@}";
 
     public static MyPetPlugin getPlugin()
     {
@@ -119,25 +124,18 @@ public class MyPetPlugin extends JavaPlugin
 
         debugLogger = new DebugLogger(MyPetConfig.debugLogger);
 
-        String mcVs = getDescription().getVersion();
-        mcVs = mcVs.substring(mcVs.indexOf('(') + 1, mcVs.indexOf(')'));
+        String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
 
-        String mcV = getServer().getVersion();
-        mcV = mcV.substring(mcV.indexOf("(MC: ") + 1, mcV.indexOf(')'));
-
-        String mpV = getDescription().getVersion();
-        mpV = mpV.substring(0, mpV.indexOf(' '));
-
-        if (!checkVersion(getServer().getVersion(), getDescription().getVersion()))
+        if (!CompatibleMinecraftVersion.equalsIgnoreCase(minecraftVersion))
         {
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
             MyPetUtil.getLogger().warning("This version of MyPet only work with:");
-            MyPetUtil.getLogger().warning("   Minecraft " + mcVs);
+            MyPetUtil.getLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
             MyPetUtil.getLogger().warning("MyPet disabled!");
             MyPetUtil.getLogger().warning("---------------------------------------------------------");
             MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
             MyPetUtil.getDebugLogger().warning("This version of MyPet only work with:");
-            MyPetUtil.getDebugLogger().warning("   Minecraft " + mcVs);
+            MyPetUtil.getDebugLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
             MyPetUtil.getDebugLogger().warning("MyPet disabled!");
             MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
             this.setEnabled(false);
@@ -145,13 +143,13 @@ public class MyPetPlugin extends JavaPlugin
         }
 
         debugLogger.info("----------- loading MyPet ... -----------");
-        debugLogger.info("MyPet " + getDescription().getVersion() + " build: {@BUILD_NUMBER@}");
+        debugLogger.info("MyPet " + MyPetVersion + " build: " + MyPetBuild);
         debugLogger.info("Bukkit " + getServer().getVersion());
 
         UpdateCheck updateCheck = new UpdateCheck();
         if (MyPetConfig.checkForUpdates)
         {
-            if (updateCheck.isUpdateAvailable(mcV, mpV))
+            if (updateCheck.isUpdateAvailable(CompatibleMinecraftVersion, MyPetVersion))
             {
                 MyPetUtil.getLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
                 MyPetUtil.getDebugLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
@@ -627,28 +625,6 @@ public class MyPetPlugin extends JavaPlugin
             NBTTagCompound myplayerNBT = (NBTTagCompound) playerList.get(i);
 
             MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getString("Name"));
-        }
-    }
-
-    private boolean checkVersion(String mc, String mp)
-    {
-        mp = mp.substring(mp.indexOf('(') + 1, mp.indexOf(')'));
-        mc = mc.substring(mc.indexOf("(MC: ") + 5, mc.indexOf(')'));
-        if (mp.contains("/"))
-        {
-            String[] temp = mp.split("/");
-            for (String v : temp)
-            {
-                if (v.equals(mc))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        else
-        {
-            return mp.equals(mc);
         }
     }
 
