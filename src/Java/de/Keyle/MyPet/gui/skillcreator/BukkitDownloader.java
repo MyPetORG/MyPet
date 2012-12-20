@@ -30,12 +30,13 @@ import java.net.URL;
 
 public class BukkitDownloader
 {
-    private JProgressBar downloadProgressBar;
-    private JButton cancelButton;
-    private JButton restartButton;
-    public JPanel downloaderPanel;
-    private JLabel progressLabel;
-    private JLabel nameLabel;
+    JProgressBar downloadProgressBar;
+    JButton cancelButton;
+    JButton restartButton;
+    JPanel downloaderPanel;
+    JLabel progressLabel;
+    JLabel nameLabel;
+    JFrame bukkitDownloaderFrame;
 
     private static final String downloadAddress = "http://dl.bukkit.org/latest-rb/craftbukkit.jar";
     InternetDataTask downloader;
@@ -118,7 +119,6 @@ public class BukkitDownloader
                     System.exit(0);
                 }
             }
-
             writer.close();
             reader.close();
 
@@ -131,5 +131,19 @@ public class BukkitDownloader
             restartButton.setEnabled(true);
             cancelButton.setEnabled(false);
         }
+    }
+
+    public JPanel getMainPanel()
+    {
+        return downloaderPanel;
+    }
+
+    public JFrame getFrame()
+    {
+        if (bukkitDownloaderFrame == null)
+        {
+            bukkitDownloaderFrame = new JFrame("Bukkit Downloader");
+        }
+        return bukkitDownloaderFrame;
     }
 }

@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
+import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
@@ -43,21 +44,21 @@ import java.util.*;
 
 public class LevelCreator
 {
-    private JTree skillTreeTree;
-    private JLabel skillTreeNameLabel;
-    private JButton deleteLevelSkillButton;
-    private JButton addLevelButton;
-    private JButton addSkillButton;
-    private JComboBox inheritanceComboBox;
-    private JCheckBox inheritanceCheckBox;
-    private JPanel levelCreatorPanel;
-    private JButton backButton;
-    private JLabel mobTypeLabel;
-    private JTable skillCounterTabel;
-    private JLabel skilllevelLabel;
-    private JButton copyButton;
-    private JTextField permissionsTextField;
-    private JFrame levelCreatorFrame;
+    JTree skillTreeTree;
+    JLabel skillTreeNameLabel;
+    JButton deleteLevelSkillButton;
+    JButton addLevelButton;
+    JButton addSkillButton;
+    JComboBox inheritanceComboBox;
+    JCheckBox inheritanceCheckBox;
+    JPanel levelCreatorPanel;
+    JButton backButton;
+    JLabel mobTypeLabel;
+    JTable skillCounterTabel;
+    JLabel skilllevelLabel;
+    JButton copyButton;
+    JTextField permissionsTextField;
+    JFrame levelCreatorFrame;
 
     DefaultTableModel skillCounterTabelModel;
     DefaultTreeModel skillTreeTreeModel;
@@ -66,7 +67,7 @@ public class LevelCreator
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
-    public LevelCreator(final JFrame parentFrame)
+    public LevelCreator()
     {
         addLevelButton.addActionListener(new ActionListener()
         {
@@ -229,7 +230,7 @@ public class LevelCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                parentFrame.setEnabled(true);
+                GuiMain.skilltreeCreator.getFrame().setEnabled(true);
                 levelCreatorFrame.setVisible(false);
             }
         });
@@ -437,6 +438,7 @@ public class LevelCreator
             super(userObject);
         }
 
+        @SuppressWarnings("unchecked")
         public void add(DefaultMutableTreeNode newChild)
         {
             super.add(newChild);

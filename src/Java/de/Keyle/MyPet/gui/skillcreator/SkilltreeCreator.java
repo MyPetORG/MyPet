@@ -19,48 +19,39 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
+import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
-import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.net.URISyntaxException;
 
 public class SkilltreeCreator
 {
-    private JComboBox mobTypeComboBox;
-    private JButton addSkilltreeButton;
-    private JButton deleteSkilltreeButton;
-    private JList skilltreeList;
-    private JButton skilltreeDownButton;
-    private JButton skilltreeUpButton;
-    private JPanel skilltreeCreatorPanel;
-    private JButton saveButton;
+    JComboBox mobTypeComboBox;
+    JButton addSkilltreeButton;
+    JButton deleteSkilltreeButton;
+    JList skilltreeList;
+    JButton skilltreeDownButton;
+    JButton skilltreeUpButton;
+    JPanel skilltreeCreatorPanel;
+    JButton saveButton;
+    JFrame skilltreeCreatorFrame;
 
     private DefaultListModel skillTreeListModel;
 
-    private static LevelCreator levelCreator;
-    private static SkilltreeCreator skilltreeCreator;
-    private static BukkitDownloader bukkitDownloader;
-    private static JFrame levelCreatorFrame;
-    private static JFrame bukkitDownloaderFrame;
-    private static JFrame skilltreeCreatorFrame;
-
     public SkilltreeCreator()
     {
-        mobTypeComboBox.addItemListener(new ItemListener()
+        this.mobTypeComboBox.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
             {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                 {
-                    if (mobTypeComboBox.getItemAt(0).equals(""))
+                    if (SkilltreeCreator.this.mobTypeComboBox.getItemAt(0).equals(""))
                     {
-                        mobTypeComboBox.removeItemAt(0);
+                        SkilltreeCreator.this.mobTypeComboBox.removeItemAt(0);
                         addSkilltreeButton.setEnabled(true);
                     }
 
@@ -115,7 +106,7 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeUp(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeUp(skilltreeList.getSelectedValue().toString());
                 String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() - 1);
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() - 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
@@ -126,7 +117,7 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeDown(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeDown(skilltreeList.getSelectedValue().toString());
                 String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() + 1);
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() + 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
@@ -146,7 +137,7 @@ public class SkilltreeCreator
                         {
                             skillTreeListModel.addElement(response);
                             MyPetSkillTree skillTree = new MyPetSkillTree(response);
-                            MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).addSkillTree(skillTree);
+                            MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).addSkillTree(skillTree);
                             skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
                             deleteSkilltreeButton.setEnabled(true);
                         }
@@ -167,7 +158,7 @@ public class SkilltreeCreator
             public void actionPerformed(ActionEvent e)
             {
                 int index = skilltreeList.getSelectedIndex();
-                MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
                 skillTreeListModel.remove(skilltreeList.getSelectedIndex());
                 if (index == skillTreeListModel.size())
                 {
@@ -190,8 +181,8 @@ public class SkilltreeCreator
                 if (evt.getClickCount() == 2)
                 {
 
-                    levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()));
-                    levelCreatorFrame.setVisible(true);
+                    GuiMain.levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
+                    GuiMain.levelCreator.getFrame().setVisible(true);
                     skilltreeCreatorFrame.setEnabled(false);
                 }
             }
@@ -210,13 +201,13 @@ public class SkilltreeCreator
                 switch (e.getKeyCode())
                 {
                     case KeyEvent.VK_ENTER:
-                        levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()));
-                        levelCreatorFrame.setVisible(true);
+                        GuiMain.levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
+                        GuiMain.levelCreator.getFrame().setVisible(true);
                         skilltreeCreatorFrame.setEnabled(false);
                         break;
                     case KeyEvent.VK_DELETE:
                         int index = skilltreeList.getSelectedIndex();
-                        MyPetSkillTreeConfig.getMobType(mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
+                        MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
                         skillTreeListModel.remove(skilltreeList.getSelectedIndex());
                         if (index == skillTreeListModel.size())
                         {
@@ -236,141 +227,18 @@ public class SkilltreeCreator
         });
     }
 
-    public static void main(String[] args)
+    public JPanel getMainPanel()
     {
-        String path = "";
-        try
+        return skilltreeCreatorPanel;
+    }
+
+    public JFrame getFrame()
+    {
+        if (skilltreeCreatorFrame == null)
         {
-            path = SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            skilltreeCreatorFrame = new JFrame("SkilltreeCreator");
         }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-        path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
-        File bukkitFile = new File(path);
-
-        try
-        {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception ignored)
-        {
-        }
-        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("resources/logo.png")).getImage();
-        try
-        {
-            Class.forName("org.bukkit.configuration.file.FileConfiguration");
-        }
-        catch (ClassNotFoundException e)
-        {
-            String[] buttons = {"Exit", "Download CraftBukkit", "Choose a CraftBukkit.jar"};
-            int result = JOptionPane.showOptionDialog(null, "Can't find a CraftBukkit executable\n" +
-                    "\nin one of these folders:" +
-                    "\n   " + bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator +
-                    "\n   " + bukkitFile.getAbsolutePath() + File.separator +
-                    "\n   " + bukkitFile.getParent() + File.separator, "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
-
-            if (result == 0)
-            {
-                System.exit(0);
-            }
-            else if (result == 1)
-            {
-                bukkitDownloader = new BukkitDownloader();
-                bukkitDownloaderFrame = new JFrame("Bukkit Downloader");
-                bukkitDownloaderFrame.setContentPane(bukkitDownloader.downloaderPanel);
-                bukkitDownloaderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                bukkitDownloaderFrame.setIconImage(logoImage);
-                bukkitDownloaderFrame.pack();
-                bukkitDownloaderFrame.setVisible(true);
-                bukkitDownloaderFrame.setLocationRelativeTo(null);
-
-                bukkitDownloader.startDownload();
-            }
-            else if (result == 2)
-            {
-                JFileChooser fileChooser = new JFileChooser(new File(path));
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileFilter(new FileFilter()
-                {
-                    @Override
-                    public boolean accept(File f)
-                    {
-                        return f.isDirectory() || f.getName().matches(".*\\.(jar)");
-                    }
-
-                    @Override
-                    public String getDescription()
-                    {
-                        return "Craftbukkit (*.jar)";
-                    }
-                });
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-                {
-                    try
-                    {
-                        Runtime.getRuntime().exec("java -cp \"" + fileChooser.getSelectedFile().getAbsolutePath() + "\"" + System.getProperties().getProperty("path.separator") + "\"" + (SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + "\" de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator");
-                    }
-                    catch (Exception e1)
-                    {
-                        e1.printStackTrace();
-                    }
-                }
-                System.exit(0);
-            }
-            return;
-        }
-        MyPetSkillTreeConfig.setConfigPath(bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "skilltrees");
-        MyPetSkillTreeConfig.loadSkillTrees();
-
-        skilltreeCreator = new SkilltreeCreator();
-        skilltreeCreatorFrame = new JFrame("SkilltreeCreator");
-        skilltreeCreatorFrame.setContentPane(skilltreeCreator.skilltreeCreatorPanel);
-        skilltreeCreatorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        skilltreeCreatorFrame.setIconImage(logoImage);
-        skilltreeCreatorFrame.pack();
-        skilltreeCreatorFrame.setVisible(true);
-        skilltreeCreatorFrame.setLocationRelativeTo(null);
-
-        levelCreator = new LevelCreator(skilltreeCreatorFrame);
-        levelCreatorFrame = levelCreator.getFrame();
-        levelCreatorFrame.setContentPane(levelCreator.getMainPanel());
-        levelCreatorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        levelCreatorFrame.setIconImage(logoImage);
-        levelCreatorFrame.pack();
-        levelCreatorFrame.setLocationRelativeTo(null);
-        levelCreatorFrame.addWindowListener(new WindowListener()
-        {
-            public void windowOpened(WindowEvent e)
-            {
-            }
-
-            public void windowClosing(WindowEvent e)
-            {
-                skilltreeCreatorFrame.setEnabled(true);
-            }
-
-            public void windowClosed(WindowEvent e)
-            {
-            }
-
-            public void windowIconified(WindowEvent e)
-            {
-            }
-
-            public void windowDeiconified(WindowEvent e)
-            {
-            }
-
-            public void windowActivated(WindowEvent e)
-            {
-            }
-
-            public void windowDeactivated(WindowEvent e)
-            {
-            }
-        });
+        return skilltreeCreatorFrame;
     }
 
     private void createUIComponents()
