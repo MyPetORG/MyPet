@@ -37,8 +37,7 @@ public class BukkitDownloader
     private JLabel progressLabel;
     private JLabel nameLabel;
 
-    private String version = "1.3.2-R2.0";
-    private String downloadAddress = "http://dl.bukkit.org/downloads/craftbukkit/get/01460_1.3.2-R2.0/craftbukkit.jar";
+    private static final String downloadAddress = "http://dl.bukkit.org/latest-rb/craftbukkit.jar";
     InternetDataTask downloader;
 
     public BukkitDownloader()
@@ -89,7 +88,7 @@ public class BukkitDownloader
             String path = SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
             path += File.separator + "MyPet";
-            nameLabel.setText("<HTML>Downloading Craftbukkit " + version + "<BR>   from: dl.bukkit.org<BR>   to: " + path + "\\craftbukkit.jar</HTML>");
+            nameLabel.setText("<HTML>Downloading lates Craftbukkit RB<BR>   from: dl.bukkit.org<BR>   to: " + path + "\\craftbukkit.jar</HTML>");
             File bukkitPath = new File(path);
             bukkitPath.mkdirs();
 
