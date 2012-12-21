@@ -74,7 +74,7 @@ public class Pickup extends MyPetGenericSkill
     {
         if (level > 0 && pickup && myPet.status == PetState.Here && myPet.getSkills().getSkillLevel("Inventory") > 0)
         {
-            for (Entity e : myPet.getCraftPet().getNearbyEntities(level * rangePerLevel, level * rangePerLevel, rangePerLevel))
+            for (Entity e : myPet.getCraftPet().getNearbyEntities(level * rangePerLevel, rangePerLevel, level * rangePerLevel))
             {
                 if (e instanceof Item)
                 {
