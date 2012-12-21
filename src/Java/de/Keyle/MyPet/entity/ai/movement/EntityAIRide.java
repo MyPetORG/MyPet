@@ -80,14 +80,18 @@ public class EntityAIRide extends PathfinderGoal
 
     public void e()
     {
+        EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
+
+        if (petRider.isSneaking() && this.petEntity.onGround)
+        {
+            this.petEntity.motY += 0.7;
+        }
         if (stopRiding)
         {
             return;
         }
 
         float totalSpeed = this.startSpeed + (myPet.getSkills().getSkillLevel("Ride") * this.speedPerLevel);
-
-        EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 
         float rotationDiff = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
         if (rotationDiff > 5.0F)
@@ -166,10 +170,6 @@ public class EntityAIRide extends PathfinderGoal
         PathPoint localPathPoint = new PathPoint(MathHelper.d(this.petEntity.width + 1.0F), MathHelper.d(this.petEntity.length + petRider.length + 1.0F), MathHelper.d(this.petEntity.width + 1.0F));
 
         if (((x != n) || (z != i1)) && (Pathfinder.a(this.petEntity, n, y, i1, localPathPoint, false, false, true) == 0) && (Pathfinder.a(this.petEntity, x, y + 1, z, localPathPoint, false, false, true) == 1) && (Pathfinder.a(this.petEntity, n, y + 1, i1, localPathPoint, false, false, true) == 1))
-        {
-            this.petEntity.getControllerJump().a();
-        }
-        else if (petRider.isSneaking())
         {
             this.petEntity.getControllerJump().a();
         }
