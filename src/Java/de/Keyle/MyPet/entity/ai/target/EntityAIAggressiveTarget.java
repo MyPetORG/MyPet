@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_5.EntityLiving;
 import net.minecraft.server.v1_4_5.EntityPlayer;
+import net.minecraft.server.v1_4_5.EntityTameableAnimal;
 import net.minecraft.server.v1_4_5.PathfinderGoal;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
@@ -88,6 +89,25 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                                         if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
                                         {
                                             continue;
+                                        }
+                                    }
+                                    else if (entityLiving instanceof EntityTameableAnimal)
+                                    {
+                                        EntityTameableAnimal tameableAnimal = (EntityTameableAnimal) entityLiving;
+                                        if (tameableAnimal.isTamed() && tameableAnimal.getOwner() instanceof EntityPlayer)
+                                        {
+                                            if (myPet.getOwner().getName().equalsIgnoreCase(tameableAnimal.getOwnerName()))
+                                            {
+                                                continue;
+                                            }
+                                            // Maybe later
+                                            /*
+                                            Player tamableAnimalOwner = (Player) tameableAnimal.getOwner().getBukkitEntity();
+                                            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), tamableAnimalOwner))
+                                            {
+                                                continue;
+                                            }
+                                            */
                                         }
                                     }
                                     this.target = entityLiving;
