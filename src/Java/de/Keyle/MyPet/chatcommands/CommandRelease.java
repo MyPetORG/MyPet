@@ -74,6 +74,11 @@ public class CommandRelease implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
                     return true;
                 }
+                else if (myPet.status == PetState.Dead)
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                    return true;
+                }
                 if (args.length < 1)
                 {
                     return false;
