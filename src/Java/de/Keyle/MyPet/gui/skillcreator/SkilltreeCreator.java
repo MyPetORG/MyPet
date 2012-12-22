@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 
@@ -236,7 +237,7 @@ public class SkilltreeCreator
     {
         if (skilltreeCreatorFrame == null)
         {
-            skilltreeCreatorFrame = new JFrame("SkilltreeCreator");
+            skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetPlugin.MyPetVersion);
         }
         return skilltreeCreatorFrame;
     }

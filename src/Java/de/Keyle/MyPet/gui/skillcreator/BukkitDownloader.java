@@ -19,6 +19,8 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
+import de.Keyle.MyPet.MyPetPlugin;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -142,7 +144,7 @@ public class BukkitDownloader
     {
         if (bukkitDownloaderFrame == null)
         {
-            bukkitDownloaderFrame = new JFrame("Bukkit Downloader");
+            bukkitDownloaderFrame = new JFrame("Bukkit Downloader - MyPet " + MyPetPlugin.MyPetVersion);
         }
         return bukkitDownloaderFrame;
     }

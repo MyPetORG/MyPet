@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
@@ -324,7 +325,7 @@ public class LevelCreator
     {
         if (levelCreatorFrame == null)
         {
-            levelCreatorFrame = new JFrame("LevelCreator");
+            levelCreatorFrame = new JFrame("LevelCreator - MyPet " + MyPetPlugin.MyPetVersion);
         }
         return levelCreatorFrame;
     }
