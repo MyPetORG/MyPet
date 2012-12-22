@@ -46,7 +46,7 @@ public class MyPetLanguage
 
     public void addString(String name, String node, String def)
     {
-        if (yamlConfiguration.getConfig().contains(node))
+        if (yamlConfiguration.getConfig().contains(node) && !yamlConfiguration.getConfig().isConfigurationSection(node))
         {
             LV.put(name, yamlConfiguration.getConfig().getString(node, def));
         }
