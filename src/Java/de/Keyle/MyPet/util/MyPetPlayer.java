@@ -55,6 +55,11 @@ public class MyPetPlayer implements Scheduler
         return getPlayer() != null && getPlayer().isOnline();
     }
 
+    public boolean isMyPetAdmin()
+    {
+        return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin");
+    }
+
     public Player getPlayer()
     {
         return MyPetUtil.getServer().getPlayer(playerName);
