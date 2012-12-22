@@ -57,7 +57,6 @@ public class EntityMyMagmaCube extends EntityMyPet
         this.datawatcher.watch(16, (byte) value);
         Float[] entitySize = MyPet.getEntitySize(MyMagmaCube.class);
         this.a(entitySize[0] * value, entitySize[1] * value);
-        this.aV = value;
         ((MyMagmaCube) myPet).size = value;
     }
 
