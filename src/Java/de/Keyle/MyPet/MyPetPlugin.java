@@ -455,6 +455,16 @@ public class MyPetPlugin extends JavaPlugin
             double petX = locationNBT.getDouble("X");
             double petY = locationNBT.getDouble("Y");
             double petZ = locationNBT.getDouble("Z");
+            float petYaw = 1F;
+            if (locationNBT.hasKey("Yaw"))
+            {
+                petYaw = locationNBT.getFloat("Yaw");
+            }
+            float petPitch = 1F;
+            if (locationNBT.hasKey("Pitch"))
+            {
+                petPitch = locationNBT.getFloat("Pitch");
+            }
             String petWorld = locationNBT.getString("World");
             double petExp = myPetNBT.getDouble("Exp");
             int petHealthNow = myPetNBT.getInt("Health");
@@ -479,7 +489,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
-            inactiveMyPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ));
+            inactiveMyPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
             inactiveMyPet.setRespawnTime(petRespawnTime);
@@ -526,6 +536,8 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setDouble("X", myPet.getLocation().getX());
             locationNBT.setDouble("Y", myPet.getLocation().getY());
             locationNBT.setDouble("Z", myPet.getLocation().getZ());
+            locationNBT.setFloat("Yaw", myPet.getLocation().getYaw());
+            locationNBT.setFloat("Pitch", myPet.getLocation().getPitch());
             locationNBT.setString("World", myPet.getLocation().getWorld().getName());
 
             petNBT.setString("Type", myPet.getPetType().getTypeName());
@@ -567,6 +579,8 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setDouble("X", inactiveMyPet.getLocation().getX());
             locationNBT.setDouble("Y", inactiveMyPet.getLocation().getY());
             locationNBT.setDouble("Z", inactiveMyPet.getLocation().getZ());
+            locationNBT.setFloat("Yaw", inactiveMyPet.getLocation().getYaw());
+            locationNBT.setFloat("Pitch", inactiveMyPet.getLocation().getPitch());
             locationNBT.setString("World", inactiveMyPet.getLocation().getWorld().getName());
 
             petNBT.setString("Type", inactiveMyPet.getPetType().getTypeName());
