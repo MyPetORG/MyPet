@@ -106,15 +106,16 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getInt(12) < 0;
     }
 
+    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)
         {
-            this.datawatcher.watch(12, -1);
+            this.datawatcher.watch(12, new Integer(-24000));
         }
         else
         {
-            this.datawatcher.watch(12, 0);
+            this.datawatcher.watch(12, new Integer(0));
         }
         ((MySheep) myPet).isBaby = flag;
     }
