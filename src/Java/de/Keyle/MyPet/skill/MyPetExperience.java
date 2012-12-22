@@ -170,13 +170,19 @@ public class MyPetExperience
         return 0;
     }
 
-    public void removeExp(double exp)
+    public void removeCurrentExp(double exp)
     {
         if (exp > getCurrentExp())
         {
             exp = getCurrentExp();
         }
         this.exp -= exp;
+    }
+
+    public void removeExp(double exp)
+    {
+        this.exp -= exp;
+        this.exp = (this.exp < 0 ? 0 : this.exp);
     }
 
     public double getCurrentExp()

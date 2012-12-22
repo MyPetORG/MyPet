@@ -59,6 +59,9 @@ public class MyPetConfig
     public static int respawnTimeFixed = 0;
     public static int autoSaveTime = 60;
     public static int hungerSystemTime = 60;
+    public static int skilltreeSwitchPenaltyPercent = 5;
+    public static double skilltreeSwitchPenaltyFixed = 0.0;
+    public static boolean skilltreeSwitchPenaltyAdmin = false;
     public static boolean automaticSkilltreeAssignment = true;
     public static boolean chooseSkilltreeOnce = true;
     public static boolean ownerCanAttackPet = false;
@@ -71,7 +74,6 @@ public class MyPetConfig
     public static boolean useWorldGuard = true;
     public static boolean useCitizens = true;
     public static boolean useHeroes = true;
-
     public static boolean superperms = false;
     public static boolean debugLogger = true;
 
@@ -90,6 +92,9 @@ public class MyPetConfig
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Skilltree.AutomaticAssignment", true);
         setProperty("MyPet.Skilltree.ChooseOnce", true);
+        setProperty("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
+        setProperty("MyPet.Skilltree.SwitchPenaltyPercent", 5);
+        setProperty("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         setProperty("MyPet.Support.Towny", true);
         setProperty("MyPet.Support.Heroes", true);
         setProperty("MyPet.Support.Factions", true);
@@ -186,6 +191,9 @@ public class MyPetConfig
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
 
+        skilltreeSwitchPenaltyFixed = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
+        skilltreeSwitchPenaltyPercent = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
+        skilltreeSwitchPenaltyAdmin = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);

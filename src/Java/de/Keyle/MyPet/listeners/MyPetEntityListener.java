@@ -417,7 +417,7 @@ public class MyPetEntityListener implements Listener
                 {
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
-                myPet.getExperience().removeExp(lostExpirience);
+                myPet.getExperience().removeCurrentExp(lostExpirience);
             }
             SendDeathMessage(event);
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));

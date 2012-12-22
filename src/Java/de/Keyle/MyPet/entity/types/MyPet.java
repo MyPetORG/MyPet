@@ -190,6 +190,19 @@ public abstract class MyPet
             return false;
         }
         skills.reset();
+        if (this.skillTree != null)
+        {
+            if (this.getOwner().isMyPetAdmin() && MyPetConfig.skilltreeSwitchPenaltyAdmin)
+            {
+                experience.removeExp(MyPetConfig.skilltreeSwitchPenaltyFixed);
+                experience.removeExp(experience.getExp() * MyPetConfig.skilltreeSwitchPenaltyPercent / 100.);
+            }
+            else
+            {
+                experience.removeExp(MyPetConfig.skilltreeSwitchPenaltyFixed);
+                experience.removeExp(experience.getExp() * MyPetConfig.skilltreeSwitchPenaltyPercent / 100.);
+            }
+        }
         this.skillTree = skillTree;
         for (int i = 1 ; i <= experience.getLevel() ; i++)
         {
