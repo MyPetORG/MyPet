@@ -62,6 +62,20 @@ public abstract class CraftMyPet extends CraftCreature
         }
     }
 
+    @Override
+    public void setHealth(int health)
+    {
+        if (health < 0)
+        {
+            health = 0;
+        }
+        if (health > getMaxHealth())
+        {
+            health = getMaxHealth();
+        }
+        getHandle().setHealth(health);
+    }
+
     public AnimalTamer getOwner()
     {
         if (petOwner == null && !("").equals(getOwnerName()))
