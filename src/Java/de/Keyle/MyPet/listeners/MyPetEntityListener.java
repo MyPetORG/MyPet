@@ -111,34 +111,32 @@ public class MyPetEntityListener implements Listener
                         {
                             msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%").replace("%petname%", myPet.petName));
-                        damager.sendMessage(MyPetUtil.setColors("   HP:       %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg));
+                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
+                        damager.sendMessage(MyPetUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
                         if (!myPet.getOwner().equals(damager))
                         {
-                            damager.sendMessage(MyPetUtil.setColors("   Owner:    %Owner%").replace("%Owner%", myPet.getOwner().getName()));
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
                         }
                         else
                         {
                             if (!myPet.isPassiv())
                             {
                                 int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().hasSkill("Damage") ? myPet.getSkills().getSkillLevel("Damage") : 0);
-                                damager.sendMessage(MyPetUtil.setColors("   Damage: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
+                                damager.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                             }
                             if (MyPetConfig.hungerSystem)
                             {
-                                damager.sendMessage(MyPetUtil.setColors("   Hunger: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()));
+                                damager.sendMessage(MyPetUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                             }
                             if (MyPetConfig.levelSystem)
                             {
                                 int lvl = myPet.getExperience().getLevel();
                                 double exp = myPet.getExperience().getCurrentExp();
                                 double reqEXP = myPet.getExperience().getRequiredExp();
-                                damager.sendMessage(MyPetUtil.setColors("   Level:    %lvl%").replace("%lvl%", "" + lvl));
-                                damager.sendMessage(MyPetUtil.setColors("   EXP:      %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)));
+                                damager.sendMessage(MyPetUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                                damager.sendMessage(MyPetUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
                             }
                         }
-                        damager.sendMessage("");
-
                         event.setCancelled(true);
                     }
                     else if (myPet.getOwner().equals(damager) && (!MyPetConfig.ownerCanAttackPet || !MyPetUtil.canHurtAt(myPet.getOwner().getPlayer(), myPet.getLocation())))

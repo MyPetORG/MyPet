@@ -106,6 +106,13 @@ public class MyPetLanguage
         addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%white% only once!");
         addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%white% has now a chance of %chance%% to reflect damage");
 
+        addString("Name_HP", "MyPet.Name.HP", "HP");
+        addString("Name_Damage", "MyPet.Name.Damage", "Damage");
+        addString("Name_Exp", "MyPet.Name.Exp", "Exp");
+        addString("Name_Level", "MyPet.Name.Level", "Level");
+        addString("Name_Hunger", "MyPet.Name.Hunger", "Hunger");
+        addString("Name_Owner", "MyPet.Name.Owner", "Owner");
+
         yamlConfiguration.saveConfig();
     }
 }
