@@ -22,6 +22,8 @@ package de.Keyle.MyPet.skill;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 
 import java.util.*;
 
@@ -50,7 +52,8 @@ public class MyPetSkills
             }
             catch (Exception e)
             {
-                MyPetUtil.getLogger().warning(clazz.getName() + "is not a valid skill!");
+                MyPetLogger.write(ChatColor.RED + clazz.getName() + "is not a valid skill!");
+                MyPetUtil.getDebugLogger().warning(clazz.getName() + "is not a valid skill!");
             }
 
         }
@@ -89,7 +92,8 @@ public class MyPetSkills
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().warning(skillClass.getName() + "is not a valid skill!");
+            MyPetLogger.write(ChatColor.RED + skillClass.getName() + "is not a valid skill!");
+            MyPetUtil.getDebugLogger().warning(skillClass.getName() + "is not a valid skill!");
             skillClassList.remove(skillClass);
         }
     }

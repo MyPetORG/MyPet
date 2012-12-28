@@ -76,6 +76,7 @@ public class MyPetUtil
         return getServer().getOfflinePlayer(Name);
     }
 
+    @Deprecated
     public static Logger getLogger()
     {
         return MyPetPlugin.getPlugin().getLogger();

@@ -28,7 +28,9 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_5.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -54,7 +56,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public EntityMyPet(World world)
     {
         super(world);
-        MyPetUtil.getLogger().severe("Don't try to get a MyPet this way!");
+        MyPetLogger.write(ChatColor.RED + "Don't try to get a MyPet this way!");
         MyPetUtil.getDebugLogger().severe("Default Entity constructor called!!!");
     }
 

@@ -45,6 +45,8 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -344,7 +346,7 @@ public class MyPetConfig
                 }
                 else
                 {
-                    MyPetUtil.getLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                    MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
                     MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
                 }
             }
@@ -357,7 +359,7 @@ public class MyPetConfig
             }
             else
             {
-                MyPetUtil.getLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
                 MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
             }
         }

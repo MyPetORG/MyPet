@@ -58,7 +58,9 @@ import de.Keyle.MyPet.util.Metrics.Plotter;
 import de.Keyle.MyPet.util.configuration.NBTConfiguration;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_5.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 import org.bukkit.entity.EntityType;
@@ -104,6 +106,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         getTimer().stopTimer();
         MyPetList.clearList();
+        MyPetLogger.setConsole(null);
         getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
         debugLogger.info("MyPet disabled!");
     }
@@ -111,6 +114,7 @@ public class MyPetPlugin extends JavaPlugin
     public void onEnable()
     {
         plugin = this;
+        MyPetLogger.setConsole(getServer().getConsoleSender());
 
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
         File delCraftBukkit = new File(getPlugin().getDataFolder().getPath() + File.separator + "craftbukkit.jar");
@@ -128,11 +132,11 @@ public class MyPetPlugin extends JavaPlugin
 
         if (!CompatibleMinecraftVersion.equalsIgnoreCase(minecraftVersion))
         {
-            MyPetUtil.getLogger().warning("---------------------------------------------------------");
-            MyPetUtil.getLogger().warning("This version of MyPet only work with:");
-            MyPetUtil.getLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
-            MyPetUtil.getLogger().warning("MyPet disabled!");
-            MyPetUtil.getLogger().warning("---------------------------------------------------------");
+            MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
+            MyPetLogger.write(ChatColor.RED + "This version of MyPet only work with:");
+            MyPetLogger.write(ChatColor.RED + "   Minecraft " + CompatibleMinecraftVersion);
+            MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
+            MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
             MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
             MyPetUtil.getDebugLogger().warning("This version of MyPet only work with:");
             MyPetUtil.getDebugLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
@@ -151,7 +155,7 @@ public class MyPetPlugin extends JavaPlugin
         {
             if (updateCheck.isUpdateAvailable(CompatibleMinecraftVersion, MyPetVersion))
             {
-                MyPetUtil.getLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
+                MyPetLogger.write(ChatColor.MAGIC + "Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
                 MyPetUtil.getDebugLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
             }
             else
@@ -232,12 +236,12 @@ public class MyPetPlugin extends JavaPlugin
                 }
                 template.close();
                 out.close();
-                MyPetUtil.getLogger().info("Default skilltree configfile created.");
+                MyPetLogger.write("Default skilltree configfile created.");
                 debugLogger.info("created default.yml");
             }
             catch (IOException ex)
             {
-                MyPetUtil.getLogger().info("Unable to create the default.yml!");
+                MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.yml!");
                 debugLogger.info("unable to create default.yml");
             }
         }
@@ -295,7 +299,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " NOT ENABLED");
+            MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.RED + " NOT ENABLED");
             e.printStackTrace();
             debugLogger.severe("error while registering MyPet entity.");
             debugLogger.severe(e.getMessage());
@@ -323,12 +327,12 @@ public class MyPetPlugin extends JavaPlugin
         {
             if (MyPetJSexp.setScriptPath(MyPetPlugin.plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
-                MyPetUtil.getLogger().info("Custom EXP-Script loaded!");
+                MyPetLogger.write("Custom EXP-Script loaded!");
                 MyPetUtil.getDebugLogger().info("loaded exp.js.");
             }
             else
             {
-                MyPetUtil.getLogger().info("No custom EXP-Script found (exp.js).");
+                MyPetLogger.write("No custom EXP-Script found (exp.js).");
                 MyPetUtil.getDebugLogger().info("exp.js not loaded.");
             }
         }
@@ -382,7 +386,7 @@ public class MyPetPlugin extends JavaPlugin
             }
             catch (IOException e)
             {
-                MyPetUtil.getLogger().info(e.getMessage());
+                MyPetLogger.write(e.getMessage());
             }
         }
         else
@@ -393,7 +397,7 @@ public class MyPetPlugin extends JavaPlugin
         HeroesDamageFix.reset();
 
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
-        MyPetUtil.getLogger().info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
+        MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())
         {
@@ -518,7 +522,7 @@ public class MyPetPlugin extends JavaPlugin
             petCount++;
         }
         debugLogger.info(petCount + " pet/pets loaded -------------------------");
-        MyPetUtil.getLogger().info(petCount + " pet/pets loaded");
+        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet/pets loaded");
         return petCount;
     }
 

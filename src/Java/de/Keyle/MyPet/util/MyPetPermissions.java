@@ -20,7 +20,9 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -85,7 +87,7 @@ public class MyPetPermissions
             }
             if (permissions != null)
             {
-                MyPetUtil.getLogger().info("\"Vault\" integration enabled!");
+                MyPetLogger.write(ChatColor.GREEN + "\"Vault\"" + ChatColor.RESET + " integration enabled!");
                 MyPetUtil.getDebugLogger().info("Permissions: Vault");
                 return;
             }
@@ -95,12 +97,12 @@ public class MyPetPermissions
         if (permissionsMode == PermissionsType.NONE && MyPetConfig.superperms)
         {
             permissionsMode = PermissionsType.Superperms;
-            MyPetUtil.getLogger().info("\"Superperms\" integration enabled!");
+            MyPetLogger.write(ChatColor.YELLOW + "\"Superperms\"" + ChatColor.RESET + " integration enabled!");
             MyPetUtil.getDebugLogger().info("Permissions: Superperms");
             return;
         }
 
-        MyPetUtil.getLogger().info("No permissions system found!");
+        MyPetLogger.write(ChatColor.RED + "No" + ChatColor.RESET + " permissions system found!");
         MyPetUtil.getDebugLogger().info("Permissions: -");
     }
 

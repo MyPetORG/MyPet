@@ -548,7 +548,6 @@ public class MyPetEntityListener implements Listener
                 {
                     Arrow arrow = (Arrow) e.getDamager();
                     killer = "Arrow (";
-                    MyPetUtil.getLogger().info("shoter: " + arrow.getShooter());
                     if (arrow.getShooter() instanceof Player)
                     {
                         if (arrow.getShooter() == myPet.getOwner().getPlayer())

@@ -21,6 +21,8 @@ package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -88,7 +90,7 @@ public class MyPetJSexp
         catch (ScriptException e)
         {
 
-            MyPetUtil.getLogger().info("Error in EXP-Script!");
+            MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
             MyPetUtil.getDebugLogger().info("Error in EXP-Script!");
             MyPetUtil.getDebugLogger().info("   " + e.getMessage());
             expScript = null;
@@ -96,7 +98,7 @@ public class MyPetJSexp
         }
         catch (Exception e)
         {
-            MyPetUtil.getLogger().info("EXP-Script doesn't return a valid value!");
+            MyPetLogger.write(ChatColor.RED + "EXP-Script doesn't return a valid value!");
             MyPetUtil.getDebugLogger().warning("EXP-Script doesn't return a valid value!");
             expScript = null;
             return false;

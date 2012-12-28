@@ -24,6 +24,8 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,16 +41,16 @@ public class CommandShowSkillTree implements CommandExecutor
             {
                 if (MyPetSkillTreeMobType.hasMobType(args[0]))
                 {
-                    MyPetUtil.getLogger().info("----- MyPet Skilltrees for: " + args[0]);
+                    MyPetLogger.write("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
                     for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames())
                     {
-                        MyPetUtil.getLogger().info("   " + skillTreeName);
+                        MyPetLogger.write("   " + skillTreeName);
                     }
                     MyPetUtil.getDebugLogger().info("----- MyPet Skilltrees for " + args[0] + " end -----");
                 }
                 else
                 {
-                    MyPetUtil.getLogger().info("There is no mobtype with the name: " + args[0]);
+                    MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
                 }
             }
             else if (args.length == 2)
@@ -58,28 +60,28 @@ public class CommandShowSkillTree implements CommandExecutor
                     if (MyPetSkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1]))
                     {
                         MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
-                        MyPetUtil.getLogger().info("----- MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
+                        MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : "none") + " -----");
                         MyPetUtil.getDebugLogger().info("----- Console: MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
                         for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
-                            MyPetUtil.getLogger().info(" " + lvl.getLevel() + ":");
+                            MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ":");
                             for (MyPetSkillTreeSkill skill : lvl.getSkills())
                             {
-                                MyPetUtil.getLogger().info("   " + skill.getName());
+                                MyPetLogger.write("   " + skill.getName());
                                 MyPetUtil.getDebugLogger().info("   " + skill.getName());
                             }
                         }
-                        MyPetUtil.getLogger().info("----- MyPet Skilltree end -----");
+                        MyPetLogger.write("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");
                         MyPetUtil.getDebugLogger().info("----- MyPet Skilltree end -----");
                     }
                     else
                     {
-                        MyPetUtil.getLogger().info("There is no skilltree with the name: " + args[1]);
+                        MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " skilltree with the name: " + ChatColor.AQUA + args[1]);
                     }
                 }
                 else
                 {
-                    MyPetUtil.getLogger().info("There is no mobtype with the name: " + args[0]);
+                    MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
                 }
             }
         }
