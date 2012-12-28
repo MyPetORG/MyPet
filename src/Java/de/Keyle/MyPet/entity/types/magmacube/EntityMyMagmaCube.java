@@ -49,12 +49,13 @@ public class EntityMyMagmaCube extends EntityMyPet
 
     public int getSize()
     {
-        return this.datawatcher.getByte(16);
+        int size = this.datawatcher.getByte(16);
+        return size <= 0 ? 1 : size;
     }
 
     public void setSize(int value)
     {
-        this.datawatcher.watch(16, (byte) value);
+        this.datawatcher.watch(16, new Byte((byte) value));
         Float[] entitySize = MyPet.getEntitySize(MyMagmaCube.class);
         this.a(entitySize[0] * value, entitySize[1] * value);
         ((MyMagmaCube) myPet).size = value;
