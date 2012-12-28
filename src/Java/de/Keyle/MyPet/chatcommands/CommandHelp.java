@@ -35,10 +35,10 @@ public class CommandHelp implements CommandExecutor
         {
             Player player = (Player) sender;
             player.sendMessage("--------------- MyPet - Help -------------------------");
-            player.sendMessage("/petinfo [player] | Display info about a MyPet  (alias: /winfo)");
+            player.sendMessage("/petinfo [player] | Display info about a MyPet  (alias: /pinfo)");
             if (MyPetPermissions.has(player, "MyPet.admin"))
             {
-                player.sendMessage("/petadmin [PlayerName] name/exp [Value]");
+                player.sendMessage("/petadmin [PlayerName] name/exp/respawn [Value]");
             }
             if (MyPetList.hasMyPet(player))
             {
@@ -46,7 +46,9 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage("/petrelease <petname> | Release your pet");
                 player.sendMessage("/petstop | MyPet stopps attacking  (alias: /ps or /pets)");
                 player.sendMessage("/petcall | Call your pet  (alias: /pc or /petc)");
+                player.sendMessage("/petsendaway | Sends your pet away  (alias: /psa or /petsa)");
                 player.sendMessage("/petskill | Shows the skill-levels");
+                player.sendMessage("/petchooseskilltree | Shows and chooses skilltrees  (alias: /pcst or /petcst)");
 
                 if (MyPetList.getMyPet(player).getSkills().getSkillLevel("Inventory") > 0)
                 {
@@ -62,7 +64,7 @@ public class CommandHelp implements CommandExecutor
                 }
             }
             player.sendMessage("");
-            player.sendMessage("For more information read the Command-Page on BukkitDev");
+            player.sendMessage("For more info read the command page on: mypet.keyle.de");
             player.sendMessage("-----------------------------------------------------");
         }
         return true;
