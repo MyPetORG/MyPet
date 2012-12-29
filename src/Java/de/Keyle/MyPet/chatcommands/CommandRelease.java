@@ -71,7 +71,7 @@ public class CommandRelease implements CommandExecutor
                 }
                 if (myPet.status == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
                 else if (myPet.status == PetState.Dead)

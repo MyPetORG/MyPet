@@ -46,7 +46,7 @@ public class CommandInventory implements CommandExecutor
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.status == PetState.Despawned)
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                         return true;
                     }
                     if (myPet.status == PetState.Dead)
