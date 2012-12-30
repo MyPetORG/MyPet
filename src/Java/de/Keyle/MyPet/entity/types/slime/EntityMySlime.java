@@ -33,7 +33,6 @@ public class EntityMySlime extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/slime.png";
-        this.walkSpeed = 0.25F;
         this.jumpDelay = (this.random.nextInt(20) + 10);
         this.setPathfinder();
     }

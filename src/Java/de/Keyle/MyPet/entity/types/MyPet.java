@@ -63,6 +63,7 @@ public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
+    private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
     private static Map<Class<? extends MyPet>, Float[]> entitySizes = new HashMap<Class<? extends MyPet>, Float[]>();
@@ -438,6 +439,20 @@ public abstract class MyPet
     public static void setStartDamage(Class<? extends MyPet> myPetClass, int damage)
     {
         startDamage.put(myPetClass, damage);
+    }
+
+    public static float getStartSpeed(Class<? extends MyPet> myPetClass)
+    {
+        if (startSpeed.containsKey(myPetClass))
+        {
+            return startSpeed.get(myPetClass);
+        }
+        return 0.3F;
+    }
+
+    public static void setStartSpeed(Class<? extends MyPet> myPetClass, float speed)
+    {
+        startSpeed.put(myPetClass, speed);
     }
 
     public static List<Material> getFood(Class<? extends MyPet> myPetClass)

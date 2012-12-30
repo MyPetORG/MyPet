@@ -124,6 +124,7 @@ public class MyPetConfig
         {
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Damage", 2);
             setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", 20);
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", 0.3F);
         }
 
         setProperty("MyPet.Pets.Bat.Food", Material.SPIDER_EYE.getId());
@@ -222,6 +223,7 @@ public class MyPetConfig
         {
             MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", 20));
             MyPet.setStartDamage(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".Damage", 2));
+            MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", 0.3F));
         }
 
         seperateFood(MyBat.class, config.getString("MyPet.Pets.Bat.Food", "375"));

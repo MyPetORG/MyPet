@@ -73,6 +73,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         Float[] entitySize = MyPet.getEntitySize(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         this.a(entitySize[0], entitySize[1]);
+        this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
     }
 
     public boolean isMyPet()

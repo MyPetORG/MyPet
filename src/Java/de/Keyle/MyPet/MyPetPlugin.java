@@ -315,6 +315,7 @@ public class MyPetPlugin extends JavaPlugin
             debugLogger.info("    startHP:    " + MyPet.getStartHP(myPetType.getMyPetClass()));
             debugLogger.info("    food:       " + MyPet.getFood(myPetType.getMyPetClass()));
             debugLogger.info("    leashFlags: " + MyPet.getLeashFlags(myPetType.getMyPetClass()));
+            debugLogger.info("    speed:      " + MyPet.getStartSpeed(myPetType.getMyPetClass()));
         }
 
         MyPetPermissions.setup();

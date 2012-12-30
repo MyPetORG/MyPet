@@ -33,7 +33,6 @@ public class EntityMyMagmaCube extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/lava.png";
-        this.walkSpeed = 0.25F;
         this.setPathfinder();
     }
 
