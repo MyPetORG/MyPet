@@ -104,6 +104,7 @@ public class MyPetLanguage
         addString("Msg_SkilltreeSwitchedTo", "MyPet.Message.skilltreeswitchedto", "You have selected the %aqua%%name%%white% skilltree.");
         addString("Msg_SkilltreeNotSwitched", "MyPet.Message.skilltreesnotwitched", "Skilltree hasn't changed!");
         addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%white% only once!");
+        addString("Msg_AutomaticSkilltreeAssignment", "MyPet.Message.automaticskilltreeassignment", "Skilltrees will be assigned automatically!");
         addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%white% has now a chance of %chance%% to reflect damage");
 
         addString("Name_HP", "MyPet.Name.HP", "HP");

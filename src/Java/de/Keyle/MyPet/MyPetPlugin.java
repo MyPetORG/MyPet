@@ -204,10 +204,7 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petadmin").setExecutor(new CommandAdmin());
         getCommand("petskill").setExecutor(new CommandSkill());
         getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
-        if (!MyPetConfig.automaticSkilltreeAssignment)
-        {
-            getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
-        }
+        getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
 
         MyPetSkills.registerSkill(Inventory.class);
         MyPetSkills.registerSkill(HPregeneration.class);
