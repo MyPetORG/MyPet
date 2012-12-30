@@ -113,6 +113,11 @@ public class MyPetLanguage
         addString("Name_Level", "MyPet.Name.Level", "Level");
         addString("Name_Hunger", "MyPet.Name.Hunger", "Hunger");
         addString("Name_Owner", "MyPet.Name.Owner", "Owner");
+        addString("Name_Aggressive", "MyPet.Name.Aggressive", "Aggressive");
+        addString("Name_Friendly", "MyPet.Name.Friendly", "Friendly");
+        addString("Name_Farm", "MyPet.Name.Farm", "Farm");
+        addString("Name_Normal", "MyPet.Name.Normal", "Normal");
+        addString("Name_Raid", "MyPet.Name.Raid", "Raid");
 
         yamlConfiguration.saveConfig();
     }
