@@ -30,7 +30,6 @@ public class EntityMySpider extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/spider.png";
-        this.setPathfinder();
     }
 
     public EnumMonsterType getMonsterType()

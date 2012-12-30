@@ -36,7 +36,6 @@ public class EntityMyBat extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/bat.png";
-        this.setPathfinder();
     }
 
     public void setPathfinder()

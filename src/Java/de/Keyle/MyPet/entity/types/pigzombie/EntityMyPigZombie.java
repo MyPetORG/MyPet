@@ -29,7 +29,6 @@ public class EntityMyPigZombie extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/pigzombie.png";
-        this.setPathfinder();
     }
 
     @Override

@@ -34,7 +34,6 @@ public class EntityMySlime extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/slime.png";
         this.jumpDelay = (this.random.nextInt(20) + 10);
-        this.setPathfinder();
     }
 
     public void setMyPet(MyPet myPet)

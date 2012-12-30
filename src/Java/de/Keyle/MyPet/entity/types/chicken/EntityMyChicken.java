@@ -39,7 +39,6 @@ public class EntityMyChicken extends EntityMyPet
         super(world, myPet);
         this.texture = "/mob/chicken.png";
         nextEggTimer = (random.nextInt(6000) + 6000);
-        this.setPathfinder();
     }
 
     public void setMyPet(MyPet myPet)

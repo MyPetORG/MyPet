@@ -11,7 +11,6 @@ public class EntityMyCreeper extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/creeper.png";
-        this.setPathfinder();
     }
 
     @Override

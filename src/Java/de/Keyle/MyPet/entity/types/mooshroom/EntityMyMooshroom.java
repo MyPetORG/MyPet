@@ -29,7 +29,6 @@ public class EntityMyMooshroom extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/redcow.png";
-        this.setPathfinder();
     }
 
     public void setMyPet(MyPet myPet)

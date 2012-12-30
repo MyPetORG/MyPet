@@ -17,7 +17,6 @@ public class EntityMyEnderman extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/enderman.png";
-        this.setPathfinder();
     }
 
     public void setPathfinder()

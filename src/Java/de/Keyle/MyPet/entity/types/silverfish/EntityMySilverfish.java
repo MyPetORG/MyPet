@@ -29,7 +29,6 @@ public class EntityMySilverfish extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/silverfish.png";
-        this.setPathfinder();
     }
 
     @Override
