@@ -50,6 +50,7 @@ public class MyPetLeashEvent extends Event
         return handlers;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList()
     {
         return handlers;
