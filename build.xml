@@ -35,8 +35,8 @@
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
-    <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/build" />
-    <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/src" />
+    <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/MyPet/build" />
+    <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/MyPet/src" />
 
     <!-- Adding classpathes -->
     <path id="MyPet.manifest.classpath">
@@ -45,7 +45,6 @@
     </path>
 
     <path id="MyPet.module.classpath">
-        <pathelement location="${MyPet.output.dir}" />
         <pathelement location="${MyPet.lib.dir}/Factions.jar" />
         <pathelement location="${MyPet.lib.dir}/Towny.jar" />
         <pathelement location="${MyPet.lib.dir}/WorldEdit.jar" />
@@ -90,12 +89,12 @@
 
     <!-- Deletes the existing directories -->
     <target name="1_clean">
-        <delete dir="${MyPet.output.dir}" />
+        <delete dir="${MyPet.output.dir}/MyPet" />
     </target>
 
     <!-- Creates the directories -->
     <target name="2_makedir" depends="1_clean">
-        <mkdir dir="${MyPet.output.dir}" />
+        <mkdir dir="${MyPet.output.dir}/MyPet" />
         <mkdir dir="${MyPet.output.dir.build}" />
     </target>
 
@@ -132,7 +131,7 @@
     <!--Creates the deployable jar file  -->
     <target name="6_jar" depends="3_copyresources, 5_compile">
         <property name="version.num" value="1.00" />
-        <jar destfile="${MyPet.output.dir}/MyPet.jar" basedir="${MyPet.output.dir.build}">
+        <jar destfile="${MyPet.output.dir}/MyPet/MyPet.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
                 <attribute name="Created-By" value="Keyle" />
                 <attribute name="Build" value="${build.number}" />
@@ -144,7 +143,7 @@
 
     <!--Creates the deployable jar file with buildnumber in filename  -->
     <target name="7_jar_buildnumber" depends="6_jar">
-        <copy file="${MyPet.output.dir}/MyPet.jar" tofile="${MyPet.output.dir}/MyPet-b${build.number}.jar" />
+        <copy file="${MyPet.output.dir}/MyPet/MyPet.jar" tofile="${MyPet.output.dir}/MyPet/MyPet-b${build.number}.jar" />
     </target>
 
     <!-- Does all the other steps -->
@@ -156,13 +155,12 @@
     <!-- Does all the other steps and copy jar to testfolder -->
     <target name="Test" depends="Main">
         <description>Test target</description>
-        <copyfile src="${MyPet.output.dir}/MyPet.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
+        <copyfile src="${MyPet.output.dir}/MyPet/MyPet.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
 
     <!-- Does all the other steps and copy jar to testfolder -->
     <target name="With buildnumbers" depends="7_jar_buildnumber">
         <description>With buildnumber target</description>
-        <copyfile src="${MyPet.output.dir}/MyPet-b${build.number}.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
 
 </project>
