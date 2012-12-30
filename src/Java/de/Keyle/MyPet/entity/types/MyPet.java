@@ -36,6 +36,7 @@ import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
 import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
+import de.Keyle.MyPet.entity.types.snowman.MySnowman;
 import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
@@ -92,6 +93,7 @@ public abstract class MyPet
         entitySizes.put(MySilverfish.class, new Float[]{0.3F, 0.7F});
         entitySizes.put(MySkeleton.class, new Float[]{0.6F, 0.6F});
         entitySizes.put(MySlime.class, new Float[]{0.6F, 0.6F});
+        entitySizes.put(MySnowman.class, new Float[]{0.4F, 1.8F});
         entitySizes.put(MySpider.class, new Float[]{1.4F, 0.9F});
         entitySizes.put(MyVillager.class, new Float[]{0.6F, 0.8F});
         entitySizes.put(MyWolf.class, new Float[]{0.6F, 0.8F});
