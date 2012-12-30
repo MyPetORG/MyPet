@@ -20,14 +20,21 @@
 
 <project name="MyPet" default="Main" basedir=".">
 
-    <!-- Setting some vars -->
+    <!-- Setting custom vars (only used when properties not set in IDE) -->
+    <!--
+    <property name="idea.lib.dir" location="" />
+    <property name="MyPet.lib.dir" location="" />
+    <property name="MyPet.test.output.dir" location="" />
+    <property name="MyPet.output.dir" location="" />
+    -->
+
+    <!-- Setting vars -->
     <property name="MyPet.bukkit.version" value="1.0" />
     <property name="MyPet.minecraft.version" value="1.4.5" />
     <property name="MyPet.mypet.version" value="1.0.4" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
-    <property name="MyPet.output.dir" location="${basedir}/../out/jar/MyPet" />
     <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/build" />
     <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/src" />
 
@@ -51,10 +58,10 @@
     </path>
 
     <path id="javac2.classpath">
-        <pathelement location="${idea.lib}/javac2.jar" />
-        <pathelement location="${idea.lib}/jdom.jar" />
-        <pathelement location="${idea.lib}/asm.jar" />
-        <pathelement location="${idea.lib}/asm-commons.jar" />
+        <pathelement location="${idea.lib.dir}/javac2.jar" />
+        <pathelement location="${idea.lib.dir}/jdom.jar" />
+        <pathelement location="${idea.lib.dir}/asm.jar" />
+        <pathelement location="${idea.lib.dir}/asm-commons.jar" />
     </path>
     <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath" />
 
@@ -97,7 +104,7 @@
         <copydir src="${MyPet.resources.dir}" dest="${MyPet.output.dir.build}/resources" />
         <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.output.dir.build}/plugin.yml" />
         <copy file="${basedir}/src/default.yml" tofile="${MyPet.output.dir.build}/default.yml" />
-        <unjar src="${idea.lib}/forms_rt.jar" dest="${MyPet.output.dir.build}">
+        <unjar src="${idea.lib.dir}/forms_rt.jar" dest="${MyPet.output.dir.build}">
             <patternset>
                 <include name="com/intellij/uiDesigner/core/*.class" />
             </patternset>
