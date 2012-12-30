@@ -84,14 +84,14 @@ public class EntityAIRide extends PathfinderGoal
 
         if (petRider.isSneaking() && this.petEntity.onGround)
         {
-            this.petEntity.motY += 0.7;
+            this.petEntity.motY += 0.5;
         }
         if (stopRiding)
         {
             return;
         }
 
-        float totalSpeed = this.startSpeed + (myPet.getSkills().getSkillLevel("Ride") * this.speedPerLevel);
+        float totalSpeed = this.startSpeed + ((myPet.getSkills().getSkillLevel("Ride") - 1) * this.speedPerLevel);
 
         float rotationDiff = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
         if (rotationDiff > 5.0F)

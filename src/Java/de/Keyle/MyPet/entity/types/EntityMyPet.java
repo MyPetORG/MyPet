@@ -96,7 +96,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed, Ride.speedPerLevel));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
