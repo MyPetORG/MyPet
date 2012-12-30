@@ -523,7 +523,7 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-            String killer = "Unknow";
+            String killer;
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
@@ -532,7 +532,7 @@ public class MyPetEntityListener implements Listener
                 {
                     if (e.getDamager() == myPet.getOwner().getPlayer())
                     {
-                        killer = "You";
+                        killer = MyPetLanguage.getString("Name_You");
                     }
                     else
                     {
@@ -542,7 +542,7 @@ public class MyPetEntityListener implements Listener
                 else if (e.getDamager().getType() == EntityType.WOLF)
                 {
                     Wolf w = (Wolf) e.getDamager();
-                    killer = "Wolf";
+                    killer = MyPetLanguage.getString("Name_Wolf");
                     if (w.isTamed())
                     {
                         killer += " (" + w.getOwner().getName() + ')';
@@ -553,15 +553,15 @@ public class MyPetEntityListener implements Listener
                     CraftMyPet craftMyPet = (CraftMyPet) e.getDamager();
                     killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ')';
                 }
-                else if (e.getDamager() instanceof Arrow)
+                else if (e.getDamager() instanceof Projectile)
                 {
-                    Arrow arrow = (Arrow) e.getDamager();
-                    killer = "Arrow (";
-                    if (arrow.getShooter() instanceof Player)
+                    Projectile projectile = (Projectile) e.getDamager();
+                    killer = MyPetLanguage.getString("Name_" + projectile.getType().name()) + " (";
+                    if (projectile.getShooter() instanceof Player)
                     {
-                        if (arrow.getShooter() == myPet.getOwner().getPlayer())
+                        if (projectile.getShooter() == myPet.getOwner().getPlayer())
                         {
-                            killer += "You";
+                            killer += MyPetLanguage.getString("Name_You");
                         }
                         else
                         {
@@ -570,42 +570,18 @@ public class MyPetEntityListener implements Listener
                     }
                     else
                     {
-                        killer += e.getDamager().getType().getName();
+                        killer += MyPetLanguage.getString("Name_" + e.getDamager().getType().name());
                     }
                     killer += ")";
                 }
                 else
                 {
-                    killer = e.getDamager().getType().getName();
+                    killer = MyPetLanguage.getString("Name_" + e.getDamager().getType().getName());
                 }
             }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.BLOCK_EXPLOSION))
+            else
             {
-                killer = "Explosion";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.DROWNING))
-            {
-                killer = "Drowning";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FALL))
-            {
-                killer = "Fall";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE) || event.getEntity().getLastDamageCause().getCause().equals(DamageCause.FIRE_TICK))
-            {
-                killer = "Fire";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LAVA))
-            {
-                killer = "Lava";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.LIGHTNING))
-            {
-                killer = "Lightning";
-            }
-            else if (event.getEntity().getLastDamageCause().getCause().equals(DamageCause.VOID))
-            {
-                killer = "The Void";
+                killer = MyPetLanguage.getString("Name_" + event.getEntity().getLastDamageCause().getCause().name());
             }
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
         }
