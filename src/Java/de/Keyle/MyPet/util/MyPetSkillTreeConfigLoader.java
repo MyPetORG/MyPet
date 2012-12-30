@@ -60,9 +60,9 @@ public class MyPetSkillTreeConfigLoader
 
         for (MyPetType mobType : MyPetType.values())
         {
-            skillFile = new File(configPath + File.separator + mobType.getTypeName() + ".yml");
+            skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".yml");
 
-            skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName().toLowerCase());
+            skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName());
             skillTreeMobTypes.put(mobType.getTypeName().toLowerCase(), skillTreeMobType);
 
             if (!skillFile.exists())
