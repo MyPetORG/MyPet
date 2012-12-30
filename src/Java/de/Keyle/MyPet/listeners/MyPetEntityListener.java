@@ -36,6 +36,7 @@ import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.skill.skills.Fire;
 import de.Keyle.MyPet.skill.skills.Poison;
 import de.Keyle.MyPet.skill.skills.Thorns;
 import de.Keyle.MyPet.util.*;
@@ -392,6 +393,14 @@ public class MyPetEntityListener implements Listener
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                    }
+                }
+                if (myPet.getSkills().hasSkill("Fire"))
+                {
+                    Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
+                    if (fireSkill.getFire())
+                    {
+                        event.getEntity().setFireTicks(5);
                     }
                 }
             }

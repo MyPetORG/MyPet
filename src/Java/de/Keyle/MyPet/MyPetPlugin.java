@@ -216,6 +216,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Poison.class);
         MyPetSkills.registerSkill(Ride.class);
         MyPetSkills.registerSkill(Thorns.class);
+        MyPetSkills.registerSkill(Fire.class);
 
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 
