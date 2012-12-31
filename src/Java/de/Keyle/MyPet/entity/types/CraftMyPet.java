@@ -19,7 +19,10 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
+import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_5.EntityCreature;
 import org.bukkit.craftbukkit.v1_4_5.CraftServer;
 import org.bukkit.craftbukkit.v1_4_5.entity.CraftCreature;
@@ -59,6 +62,20 @@ public abstract class CraftMyPet extends CraftCreature
                 }
             }
             entity.setTarget(((CraftLivingEntity) target).getHandle());
+        }
+    }
+
+    @Override
+    public void remove()
+    {
+        if (getMyPet().status != PetState.Despawned)
+        {
+            getMyPet().removePet();
+            getMyPet().sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn").replace("%petname%", getMyPet().petName)));
+        }
+        else
+        {
+            super.remove();
         }
     }
 
