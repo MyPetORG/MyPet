@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Keyle
+ * Copyright (C) 2011-2013 Keyle
  *
  * This file is part of MyPet
  *
@@ -36,7 +36,7 @@ public class HeroesDamageFix
             heroesPlugin = (Heroes) MyPetUtil.getServer().getPluginManager().getPlugin("Heroes");
         }
         heroesSearched = true;
-        MyPetUtil.getDebugLogger().info("HeroesDamageFix " + (heroesPlugin!=null?"":"not ") + "activated.");
+        MyPetUtil.getDebugLogger().info("HeroesDamageFix " + (heroesPlugin != null ? "" : "not ") + "activated.");
     }
 
     public static void reset()
@@ -47,11 +47,11 @@ public class HeroesDamageFix
 
     public static boolean damageFaked(int damage)
     {
-        if(!heroesSearched)
+        if (!heroesSearched)
         {
             findHeroesPlugin();
         }
-        if(heroesPlugin != null)
+        if (heroesPlugin != null)
         {
             Object entityDamageObject;
             try
@@ -65,10 +65,10 @@ public class HeroesDamageFix
                 e.printStackTrace();
                 return false;
             }
-            if(entityDamageObject != null)
+            if (entityDamageObject != null)
             {
-                int entityDamage = (Integer)entityDamageObject;
-                if(entityDamage != damage)
+                int entityDamage = (Integer) entityDamageObject;
+                if (entityDamage != damage)
                 {
                     return true;
                 }

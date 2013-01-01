@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Keyle
+ * Copyright (C) 2011-2013 Keyle
  *
  * This file is part of MyPet
  *
@@ -33,7 +33,7 @@ public class MyPetLogger
 
     public static void write(String msg)
     {
-        if(consoleCommandSender != null)
+        if (consoleCommandSender != null)
         {
             consoleCommandSender.sendMessage("[" + ChatColor.AQUA + ChatColor.MAGIC + "MyPet" + ChatColor.RESET + "] " + msg);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Keyle
+ * Copyright (C) 2011-2013 Keyle
  *
  * This file is part of MyPet
  *

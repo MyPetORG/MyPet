@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Keyle
+ * Copyright (C) 2011-2013 Keyle
  *
  * This file is part of MyPet
  *
@@ -37,7 +37,7 @@ public class Ride extends MyPetGenericSkill
     public void upgrade()
     {
         super.upgrade();
-        if(level == 1)
+        if (level == 1)
         {
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName));
         }
