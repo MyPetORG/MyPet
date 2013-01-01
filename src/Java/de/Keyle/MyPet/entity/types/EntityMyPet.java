@@ -316,14 +316,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected abstract String aZ();
 
     /**
-     * N.A.
-     */
-    public float aV()
-    {
-        return 0.4F;
-    }
-
-    /**
      * Returns the sound that is played when the MyPet dies
      */
     protected abstract String ba();

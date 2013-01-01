@@ -105,6 +105,14 @@ public class EntityMyBat extends EntityMyPet
         this.datawatcher.a(16, new Byte((byte) 0)); // hanging
     }
 
+    /**
+     * Returns the speed of played sounds
+     */
+    protected float aV()
+    {
+        return super.aV() * 0.95F;
+    }
+
     @Override
     protected String aY()
     {
