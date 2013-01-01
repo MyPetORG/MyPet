@@ -51,6 +51,10 @@ commands:
     aliases: [pcst, petcst]
     description: Chooses a skilltree.
     usage: '/<command> <SkillTreeName>'
+  petbeacon:
+    aliases: [pbeacon, petbeacon]
+    description: Beacon!
+    usage: '/<command> [stop]'
 
 permissions:
   MyPet.user.leash.*:

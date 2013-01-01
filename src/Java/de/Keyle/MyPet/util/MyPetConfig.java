@@ -111,7 +111,7 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Control.Item", 287);
         setProperty("MyPet.Skill.Ride.Item", 287);
         setProperty("MyPet.Skill.Ride.SpeedPerLevel", 0.2F);
-        setProperty("MyPet.Skill.Pickup.RangePerLvl", 1);
+        setProperty("MyPet.Skill.Pickup.RangePerLvl", 1.);
         setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
         setProperty("MyPet.Skill.Thorns.ChancePerLevel", 5);
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
@@ -120,6 +120,8 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Behavior.Farm", true);
         setProperty("MyPet.Skill.Behavior.Friendly", true);
         setProperty("MyPet.Skill.Behavior.Raid", true);
+        setProperty("MyPet.Skill.Beacon.RangePerLvl", 3.);
+        setProperty("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -188,6 +190,8 @@ public class MyPetConfig
         Ride.item = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
         Ride.speedPerLevel = (float) config.getDouble("MyPet.Skill.Ride.SpeedPerLevel", 0.2);
         Pickup.rangePerLevel = config.getDouble("MyPet.Skill.Pickup.RangePerLvl", 1.0);
+        Beacon.rangePerLevel = config.getDouble("MyPet.Skill.Beacon.RangePerLvl", 3.0);
+        Beacon.hungerDecreaseTime = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
         Thorns.chancePerLevel = config.getInt("MyPet.Skill.Thorns.ChancePerLevel", 5);

@@ -205,6 +205,7 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petskill").setExecutor(new CommandSkill());
         getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
+        getCommand("petbeacon").setExecutor(new CommandBeacon());
 
         MyPetSkills.registerSkill(Inventory.class);
         MyPetSkills.registerSkill(HPregeneration.class);
@@ -217,6 +218,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Ride.class);
         MyPetSkills.registerSkill(Thorns.class);
         MyPetSkills.registerSkill(Fire.class);
+        MyPetSkills.registerSkill(Beacon.class);
 
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 
