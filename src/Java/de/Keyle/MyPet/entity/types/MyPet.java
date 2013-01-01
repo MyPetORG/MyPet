@@ -49,10 +49,10 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.v1_4_5.NBTTagCompound;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.ArrayList;
@@ -254,7 +254,7 @@ public abstract class MyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_4_5.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_4_6.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))
@@ -344,6 +344,9 @@ public abstract class MyPet
             hunger = value;
         }
         hungerTime = MyPetConfig.hungerSystemTime;
+
+        MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
+        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
     }
 
     public int getDamage()
@@ -405,6 +408,9 @@ public abstract class MyPet
             {
                 hunger--;
                 hungerTime = MyPetConfig.hungerSystemTime;
+
+                MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
+                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
             }
         }
     }

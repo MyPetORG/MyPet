@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_5.EntityLiving;
-import net.minecraft.server.v1_4_5.EntityPlayer;
-import net.minecraft.server.v1_4_5.EntityTameableAnimal;
-import net.minecraft.server.v1_4_5.PathfinderGoal;
+import net.minecraft.server.v1_4_6.EntityLiving;
+import net.minecraft.server.v1_4_6.EntityPlayer;
+import net.minecraft.server.v1_4_6.EntityTameableAnimal;
+import net.minecraft.server.v1_4_6.PathfinderGoal;
 import org.bukkit.entity.Player;
 
 public class EntityAIOwnerHurtTarget extends PathfinderGoal

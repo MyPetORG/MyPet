@@ -64,8 +64,8 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_5.EntityCreature;
-import net.minecraft.server.v1_4_5.World;
+import net.minecraft.server.v1_4_6.EntityCreature;
+import net.minecraft.server.v1_4_6.World;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 

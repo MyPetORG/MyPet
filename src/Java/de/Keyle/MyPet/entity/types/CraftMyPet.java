@@ -22,18 +22,18 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_5.EntityCreature;
-import org.bukkit.craftbukkit.v1_4_5.CraftServer;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftLivingEntity;
-import org.bukkit.entity.AnimalTamer;
+import net.minecraft.server.v1_4_6.EntityCreature;
+import org.bukkit.craftbukkit.v1_4_6.CraftServer;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class CraftMyPet extends CraftCreature
 {
-    protected AnimalTamer petOwner;
+    protected MyPetPlayer petOwner;
 
     public CraftMyPet(CraftServer server, EntityMyPet entityMyPet)
     {
@@ -93,23 +93,13 @@ public abstract class CraftMyPet extends CraftCreature
         getHandle().setHealth(health);
     }
 
-    public AnimalTamer getOwner()
+    public MyPetPlayer getOwner()
     {
-        if (petOwner == null && !("").equals(getOwnerName()))
+        if (petOwner == null)
         {
-            petOwner = getServer().getPlayer(getOwnerName());
-
-            if (petOwner == null)
-            {
-                petOwner = getServer().getOfflinePlayer(getOwnerName());
-            }
+            petOwner = getHandle().myPet.getOwner();
         }
         return petOwner;
-    }
-
-    public String getOwnerName()
-    {
-        return getHandle().myPet.getOwner().getName();
     }
 
     public MyPet getMyPet()

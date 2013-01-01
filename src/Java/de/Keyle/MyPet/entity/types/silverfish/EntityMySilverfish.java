@@ -21,7 +21,7 @@ package de.Keyle.MyPet.entity.types.silverfish;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_5.World;
+import net.minecraft.server.v1_4_6.World;
 
 public class EntityMySilverfish extends EntityMyPet
 {

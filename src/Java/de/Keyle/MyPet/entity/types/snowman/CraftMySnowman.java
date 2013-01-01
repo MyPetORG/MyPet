@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.entity.types.snowman;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import org.bukkit.craftbukkit.v1_4_5.CraftServer;
+import org.bukkit.craftbukkit.v1_4_6.CraftServer;
 
 public class CraftMySnowman extends CraftMyPet
 {

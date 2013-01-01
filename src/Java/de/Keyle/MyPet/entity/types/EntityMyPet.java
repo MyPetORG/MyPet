@@ -29,7 +29,7 @@ import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_5.*;
+import net.minecraft.server.v1_4_6.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -19,9 +19,9 @@
 
 package de.Keyle.MyPet.util;
 
-import net.minecraft.server.v1_4_5.*;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_4_5.inventory.CraftItemStack;
+import net.minecraft.server.v1_4_6.*;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_4_6.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 

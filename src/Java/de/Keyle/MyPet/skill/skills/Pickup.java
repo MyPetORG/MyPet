@@ -23,9 +23,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_5.NBTTagCompound;
-import net.minecraft.server.v1_4_5.Packet22Collect;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_6.Packet22Collect;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -96,7 +96,7 @@ public class Pickup extends MyPetGenericSkill
                         {
                             if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().netServerHandler.sendPacket(new Packet22Collect(e.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(e.getEntityId(), myPet.getCraftPet().getEntityId()));
                             }
                         }
                         e.remove();

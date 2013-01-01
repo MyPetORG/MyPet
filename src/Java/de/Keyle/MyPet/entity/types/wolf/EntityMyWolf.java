@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Ride;
-import net.minecraft.server.v1_4_5.*;
+import net.minecraft.server.v1_4_6.*;
 import org.bukkit.DyeColor;
 
 public class EntityMyWolf extends EntityMyPet
@@ -216,7 +216,7 @@ public class EntityMyWolf extends EntityMyPet
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
-            this.bE = false;
+            this.bF = false;
         }
         return false;
     }

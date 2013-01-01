@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Keyle
+ * Copyright (C) 2011-2013 Keyle
  *
  * This file is part of MyPet
  *
@@ -24,10 +24,10 @@ import de.Keyle.MyPet.skill.skills.beacon.ContainerBeacon;
 import de.Keyle.MyPet.skill.skills.beacon.TileEntityBeacon;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_5.*;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_4_5.event.CraftEventFactory;
+import net.minecraft.server.v1_4_6.*;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
@@ -168,7 +168,7 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         }
 
         int containerCounter = entityPlayer.nextContainerCounter();
-        entityPlayer.netServerHandler.sendPacket(new Packet100OpenWindow(containerCounter, 7, this.getName(), this.getSize()));
+        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, this.getName(), this.getSize()));
         entityPlayer.activeContainer = container;
         entityPlayer.activeContainer.windowId = containerCounter;
         entityPlayer.activeContainer.addSlotListener(entityPlayer);

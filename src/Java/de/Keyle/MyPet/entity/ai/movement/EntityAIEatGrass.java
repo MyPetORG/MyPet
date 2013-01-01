@@ -20,9 +20,9 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_4_5.*;
+import net.minecraft.server.v1_4_6.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_5.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
 
 public class EntityAIEatGrass extends PathfinderGoal
 {

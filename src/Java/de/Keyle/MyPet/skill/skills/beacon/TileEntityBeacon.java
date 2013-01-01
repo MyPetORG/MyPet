@@ -20,9 +20,9 @@
 package de.Keyle.MyPet.skill.skills.beacon;
 
 import de.Keyle.MyPet.skill.skills.Beacon;
-import net.minecraft.server.v1_4_5.EntityHuman;
+import net.minecraft.server.v1_4_6.EntityHuman;
 
-public class TileEntityBeacon extends net.minecraft.server.v1_4_5.TileEntityBeacon
+public class TileEntityBeacon extends net.minecraft.server.v1_4_6.TileEntityBeacon
 {
     private Beacon beaconSkill;
 

@@ -21,7 +21,7 @@ package de.Keyle.MyPet.entity.types.pig;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_5.*;
+import net.minecraft.server.v1_4_6.*;
 
 public class EntityMyPig extends EntityMyPet
 {

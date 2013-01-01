@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.entity.types.bat;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import org.bukkit.craftbukkit.v1_4_5.CraftServer;
+import org.bukkit.craftbukkit.v1_4_6.CraftServer;
 
 
 public class CraftMyBat extends CraftMyPet

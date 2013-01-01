@@ -23,8 +23,8 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
-import net.minecraft.server.v1_4_5.*;
-import org.bukkit.craftbukkit.v1_4_5.entity.CraftPlayer;
+import net.minecraft.server.v1_4_6.*;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 
 public class EntityAIFarmTarget extends PathfinderGoal
 {

@@ -20,10 +20,10 @@
 package de.Keyle.MyPet.skill.skills.beacon;
 
 import de.Keyle.MyPet.skill.skills.Beacon;
-import net.minecraft.server.v1_4_5.*;
-import org.bukkit.craftbukkit.v1_4_5.inventory.CraftInventoryView;
+import net.minecraft.server.v1_4_6.*;
+import org.bukkit.craftbukkit.v1_4_6.inventory.CraftInventoryView;
 
-public class ContainerBeacon extends net.minecraft.server.v1_4_5.ContainerBeacon
+public class ContainerBeacon extends net.minecraft.server.v1_4_6.ContainerBeacon
 {
     private final SlotBeacon slotBeacon;
     private CraftInventoryView bukkitEntity = null;

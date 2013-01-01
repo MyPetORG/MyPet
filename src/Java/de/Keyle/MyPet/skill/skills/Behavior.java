@@ -22,8 +22,8 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_5.EntityLiving;
-import net.minecraft.server.v1_4_5.NBTTagCompound;
+import net.minecraft.server.v1_4_6.EntityLiving;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
 
 public class Behavior extends MyPetGenericSkill
 {
