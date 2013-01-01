@@ -319,7 +319,14 @@ public abstract class MyPet
 
     public int getHungerValue()
     {
-        return hunger;
+        if (MyPetConfig.hungerSystem)
+        {
+            return hunger;
+        }
+        else
+        {
+            return 100;
+        }
     }
 
     public void setHungerValue(int value)
@@ -394,7 +401,7 @@ public abstract class MyPet
                     respawnPet();
                 }
             }
-            if (MyPetConfig.hungerSystem && hunger > 1 && hungerTime-- <= 0)
+            if (MyPetConfig.hungerSystem && hunger > 1 && --hungerTime <= 0)
             {
                 hunger--;
                 hungerTime = MyPetConfig.hungerSystemTime;
