@@ -245,6 +245,11 @@ public class MyPetEntityListener implements Listener
                                     willBeLeashed = ((Wolf) leashTarget).isAngry();
                                 }
                             }
+                            else if (flag == LeashFlag.Impossible)
+                            {
+                                willBeLeashed = false;
+                                break;
+                            }
                             else if (flag == LeashFlag.None)
                             {
                                 willBeLeashed = true;
