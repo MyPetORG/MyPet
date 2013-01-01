@@ -266,22 +266,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
         if (canEat(itemStack))
         {
+            int addHunger = 6;
             if (getHealth() < getMaxHealth())
             {
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
                     --itemStack.count;
                 }
-                this.heal(3, RegainReason.EATING);
-                int hungerAdd = 6 - ((getMaxHealth() - getHealth()) * 2);
-                hungerAdd = hungerAdd < 0 ? 0 : hungerAdd;
-                myPet.setHungerValue(myPet.getHungerValue() + hungerAdd);
+                addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
+                this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 this.tamedEffect(true);
-                return true;
             }
             else if (myPet.getHungerValue() < 100)
             {
@@ -289,11 +287,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     --itemStack.count;
                 }
-                myPet.setHungerValue(myPet.getHungerValue() + 6);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
+            }
+            if (addHunger > 0 && myPet.getHungerValue() < 100)
+            {
+                myPet.setHungerValue(myPet.getHungerValue() + addHunger);
+                addHunger = 0;
+            }
+            if (addHunger < 6)
+            {
+                return true;
             }
         }
         return false;
