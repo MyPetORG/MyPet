@@ -128,4 +128,28 @@ public class MyPetSkillTreeMobType
     {
         return mobTypes.containsKey(mobTypeName.toLowerCase());
     }
+
+    public static List<String> getSkillTreeNames(MyPetType myPetType)
+    {
+        return getSkillTreeNames(myPetType.getTypeName().toLowerCase());
+    }
+
+    public static List<String> getSkillTreeNames(String myPetTypeName)
+    {
+        List<String> skillTreeNames;
+        if (mobTypes.containsKey(myPetTypeName.toLowerCase()))
+        {
+            skillTreeNames = getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTreeNames();
+        }
+        else
+        {
+            skillTreeNames = new ArrayList<String>();
+        }
+        return skillTreeNames;
+    }
+
+    public static boolean containsSkillTree(String myPetTypeName, String name)
+    {
+        return mobTypes.containsKey(myPetTypeName.toLowerCase()) && getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTreeNames().indexOf(name) != -1;
+    }
 }

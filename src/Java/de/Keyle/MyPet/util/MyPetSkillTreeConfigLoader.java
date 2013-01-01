@@ -26,15 +26,11 @@ import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MyPetSkillTreeConfigLoader
 {
-    private static Map<String, MyPetSkillTreeMobType> skillTreeMobTypes = new HashMap<String, MyPetSkillTreeMobType>();
-
     private static String configPath;
 
     public static void setConfigPath(String path)
@@ -50,7 +46,6 @@ public class MyPetSkillTreeConfigLoader
 
         skillFile = new File(configPath + File.separator + "default.yml");
         MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType("default");
-        skillTreeMobTypes.put("default", skillTreeMobType);
         if (skillFile.exists())
         {
             MWConfig = new YamlConfiguration(skillFile);
@@ -63,7 +58,6 @@ public class MyPetSkillTreeConfigLoader
             skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".yml");
 
             skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName());
-            skillTreeMobTypes.put(mobType.getTypeName().toLowerCase(), skillTreeMobType);
 
             if (!skillFile.exists())
             {
@@ -92,7 +86,6 @@ public class MyPetSkillTreeConfigLoader
         Set<String> SkillTreeNames = sec.getKeys(false);
         if (SkillTreeNames.size() > 0)
         {
-            Map<String, String> Inheritances = new HashMap<String, String>();
             for (String skillTreeName : SkillTreeNames)
             {
                 String inherit = MWConfig.getConfig().getString("skilltrees." + skillTreeName + ".inherit", "%#_DeFaUlT_#%");
@@ -189,30 +182,5 @@ public class MyPetSkillTreeConfigLoader
                 }
             }
         }
-    }
-
-    public static List<String> getSkillTreeNames(MyPetType myPetType)
-    {
-        return getSkillTreeNames(myPetType.getTypeName());
-    }
-
-    public static List<String> getSkillTreeNames(String myPetTypeName)
-    {
-        return skillTreeMobTypes.get(myPetTypeName.toLowerCase()).getSkillTreeNames();
-    }
-
-    public static boolean containsSkillTree(String myPetTypeName, String name)
-    {
-        return skillTreeMobTypes.containsKey(myPetTypeName.toLowerCase()) && getMobType(myPetTypeName.toLowerCase()).getSkillTreeNames().indexOf(name) != -1;
-    }
-
-    public static boolean hasMobType(String mobTypeName)
-    {
-        return skillTreeMobTypes.containsKey(mobTypeName.toLowerCase());
-    }
-
-    public static MyPetSkillTreeMobType getMobType(String mobTypeName)
-    {
-        return skillTreeMobTypes.get(mobTypeName.toLowerCase());
     }
 }

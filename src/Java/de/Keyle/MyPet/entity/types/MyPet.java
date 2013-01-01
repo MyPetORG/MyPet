@@ -46,6 +46,7 @@ import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.*;
@@ -143,24 +144,24 @@ public abstract class MyPet
         this.petOwner = Owner;
         if (MyPetConfig.automaticSkilltreeAssignment)
         {
-            if (MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()).size() > 0)
+            if (MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
             {
-                for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames(this.getPetType()))
+                for (String skillTreeName : MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()))
                 {
                     if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
                     {
-                        this.skillTree = MyPetSkillTreeConfigLoader.getMobType(this.getPetType().getTypeName()).getSkillTree(skillTreeName);
+                        this.skillTree = MyPetSkillTreeMobType.getMobTypeByPetType(this.getPetType()).getSkillTree(skillTreeName);
                         break;
                     }
                 }
             }
             if (this.skillTree == null)
             {
-                for (String skillTreeName : MyPetSkillTreeConfigLoader.getSkillTreeNames("default"))
+                for (String skillTreeName : MyPetSkillTreeMobType.getSkillTreeNames("default"))
                 {
                     if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
                     {
-                        this.skillTree = MyPetSkillTreeConfigLoader.getMobType("default").getSkillTree(skillTreeName);
+                        this.skillTree = MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTree(skillTreeName);
                         break;
                     }
                 }
