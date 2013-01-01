@@ -132,7 +132,6 @@ public class EntityMyBat extends EntityMyPet
     public void j_()
     {
         super.j_();
-        this.motY *= 0.6000000238418579D;
         this.locY += 0.65;
     }
 }
