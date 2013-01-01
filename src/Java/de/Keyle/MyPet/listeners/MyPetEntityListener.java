@@ -405,7 +405,7 @@ public class MyPetEntityListener implements Listener
                     Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
                     if (fireSkill.getFire())
                     {
-                        event.getEntity().setFireTicks(5);
+                        event.getEntity().setFireTicks(Fire.duration * 20);
                     }
                 }
             }

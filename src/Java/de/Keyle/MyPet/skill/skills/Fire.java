@@ -27,6 +27,7 @@ import java.util.Random;
 public class Fire extends MyPetGenericSkill
 {
     public static int chancePerLevel = 5;
+    public static int duration = 3;
     private static Random random = new Random();
 
     public Fire()
