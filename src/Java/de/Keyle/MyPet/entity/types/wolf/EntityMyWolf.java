@@ -212,11 +212,30 @@ public class EntityMyWolf extends EntityMyPet
         {
             return true;
         }
+        ItemStack itemstack = entityhuman.inventory.getItemInHand();
 
+        if (itemstack != null && itemstack.id == Item.INK_SACK.id)
+        {
+            int colorId = BlockCloth.e_(itemstack.getData());
+
+            if (colorId != getCollarColor())
+            {
+                setCollarColor((byte) colorId);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    if (--itemstack.count <= 0)
+                    {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
+                return true;
+            }
+        }
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
             this.bF = false;
+            return true;
         }
         return false;
     }
