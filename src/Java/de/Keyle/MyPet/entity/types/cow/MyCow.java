@@ -36,14 +36,7 @@ public class MyCow extends MyPet
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyCow) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

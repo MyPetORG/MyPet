@@ -41,14 +41,7 @@ public class MyWolf extends MyPet
 
     public boolean isSitting()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyWolf) getCraftPet()).isSitting();
-        }
-        else
-        {
-            return isSitting;
-        }
+        return isSitting;
     }
 
     public void setSitting(boolean flag)
@@ -62,14 +55,7 @@ public class MyWolf extends MyPet
 
     public DyeColor getCollarColor()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyWolf) getCraftPet()).getCollarColor();
-        }
-        else
-        {
-            return collarColor;
-        }
+        return collarColor;
     }
 
     public void setCollarColor(DyeColor value)
@@ -83,14 +69,7 @@ public class MyWolf extends MyPet
 
     public boolean isTamed()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyWolf) getCraftPet()).isTamed();
-        }
-        else
-        {
-            return isTamed;
-        }
+        return isTamed;
     }
 
     public void setTamed(boolean flag)
@@ -104,14 +83,7 @@ public class MyWolf extends MyPet
 
     public boolean isAngry()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyWolf) getCraftPet()).isAngry();
-        }
-        else
-        {
-            return isAngry;
-        }
+        return isAngry;
     }
 
     public void setAngry(boolean flag)
@@ -125,14 +97,7 @@ public class MyWolf extends MyPet
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyWolf) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

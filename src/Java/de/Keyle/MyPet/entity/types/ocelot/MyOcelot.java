@@ -39,14 +39,7 @@ public class MyOcelot extends MyPet
 
     public boolean isSitting()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyOcelot) craftMyPet).isSitting();
-        }
-        else
-        {
-            return isSitting;
-        }
+        return isSitting;
     }
 
     public void setSitting(boolean flag)
@@ -60,14 +53,7 @@ public class MyOcelot extends MyPet
 
     public Type getCatType()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyOcelot) getCraftPet()).getCatType();
-        }
-        else
-        {
-            return catType;
-        }
+        return catType;
     }
 
     public void setCatType(Type value)
@@ -81,14 +67,7 @@ public class MyOcelot extends MyPet
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyOcelot) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

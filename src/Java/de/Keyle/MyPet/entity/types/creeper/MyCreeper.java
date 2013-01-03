@@ -46,14 +46,7 @@ public class MyCreeper extends MyPet
 
     public boolean isPowered()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyCreeper) getCraftPet()).isPowered();
-        }
-        else
-        {
-            return isPowered;
-        }
+        return isPowered;
     }
 
     @Override

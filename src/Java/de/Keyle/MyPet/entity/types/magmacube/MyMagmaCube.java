@@ -36,14 +36,7 @@ public class MyMagmaCube extends MyPet
 
     public int getSize()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyMagmaCube) getCraftPet()).getSize();
-        }
-        else
-        {
-            return size;
-        }
+        return size;
     }
 
     public void setSize(int value)
@@ -53,11 +46,6 @@ public class MyMagmaCube extends MyPet
             ((CraftMyMagmaCube) getCraftPet()).setSize(value);
         }
         this.size = value;
-    }
-
-    public boolean isBrunung()
-    {
-        return ((CraftMyMagmaCube) getCraftPet()).isBurning();
     }
 
     @Override

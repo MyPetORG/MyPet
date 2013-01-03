@@ -39,11 +39,6 @@ public class CraftMyMagmaCube extends CraftMyPet
         ((EntityMyMagmaCube) getHandle()).setSize(value);
     }
 
-    public boolean isBurning()
-    {
-        return ((EntityMyMagmaCube) getHandle()).isBurning();
-    }
-
     @Override
     public String toString()
     {

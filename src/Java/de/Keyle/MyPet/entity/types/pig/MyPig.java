@@ -37,14 +37,7 @@ public class MyPig extends MyPet
 
     public boolean hasSaddle()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyPig) getCraftPet()).hasSaddle();
-        }
-        else
-        {
-            return hasSaddle;
-        }
+        return hasSaddle;
     }
 
     public void setSaddle(boolean saddle)
@@ -58,14 +51,7 @@ public class MyPig extends MyPet
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyPig) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

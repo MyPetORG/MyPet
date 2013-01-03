@@ -46,26 +46,12 @@ public class MyVillager extends MyPet
 
     public int getProfession()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyVillager) getCraftPet()).getProfession();
-        }
-        else
-        {
-            return profession;
-        }
+        return profession;
     }
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyVillager) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

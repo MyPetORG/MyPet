@@ -47,14 +47,7 @@ public class MySheep extends MyPet
 
     public int getColor()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMySheep) getCraftPet()).getColor();
-        }
-        else
-        {
-            return color;
-        }
+        return color;
     }
 
     public void setSheared(boolean flag)
@@ -68,26 +61,12 @@ public class MySheep extends MyPet
 
     public boolean isSheared()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMySheep) getCraftPet()).isSheared();
-        }
-        else
-        {
-            return isSheared;
-        }
+        return isSheared;
     }
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMySheep) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)

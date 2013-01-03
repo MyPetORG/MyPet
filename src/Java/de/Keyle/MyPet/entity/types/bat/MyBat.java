@@ -46,14 +46,7 @@ public class MyBat extends MyPet
 
     public boolean ishanging()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyBat) getCraftPet()).isHanging();
-        }
-        else
-        {
-            return hanging;
-        }
+        return hanging;
     }
 
     @Override

@@ -36,14 +36,7 @@ public class MySlime extends MyPet
 
     public int getSize()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMySlime) getCraftPet()).getSize();
-        }
-        else
-        {
-            return size;
-        }
+        return size;
     }
 
     public void setSize(int value)

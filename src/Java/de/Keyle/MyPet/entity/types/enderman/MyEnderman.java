@@ -40,14 +40,7 @@ public class MyEnderman extends MyPet
 
     public short getBlockID()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyEnderman) getCraftPet()).getBlockID();
-        }
-        else
-        {
-            return BlockID;
-        }
+        return BlockID;
     }
 
     public void setBlockID(short flag)
@@ -61,14 +54,7 @@ public class MyEnderman extends MyPet
 
     public short getBlockData()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyEnderman) getCraftPet()).getBlockData();
-        }
-        else
-        {
-            return BlockData;
-        }
+        return BlockData;
     }
 
     public void setBlockData(short flag)
@@ -82,14 +68,7 @@ public class MyEnderman extends MyPet
 
     public boolean isScreaming()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyEnderman) getCraftPet()).isScreaming();
-        }
-        else
-        {
-            return isScreaming;
-        }
+        return isScreaming;
     }
 
     public void setScreaming(boolean flag)
