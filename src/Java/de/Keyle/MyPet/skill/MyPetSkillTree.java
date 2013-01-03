@@ -28,18 +28,22 @@ public class MyPetSkillTree
 {
     private String skillTreeName;
     protected String inheritance = null;
+    private String permission = null;
+    private String displayName = null;
+    private short place = 0;
+    private SortedMap<Short, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Short, MyPetSkillTreeLevel>();
 
-    private SortedMap<Integer, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Integer, MyPetSkillTreeLevel>();
-
-    public MyPetSkillTree(String name)
+    public MyPetSkillTree(String name, short place)
     {
         this.skillTreeName = name;
+        this.place = place;
     }
 
-    public MyPetSkillTree(String name, String inheritance)
+    public MyPetSkillTree(String name, String inheritance, short place)
     {
         this.skillTreeName = name;
         this.inheritance = inheritance;
+        this.place = place;
     }
 
     public String getName()
@@ -47,12 +51,17 @@ public class MyPetSkillTree
         return skillTreeName;
     }
 
-    public boolean hasLevel(int level)
+    public short getPlace()
+    {
+        return place;
+    }
+
+    public boolean hasLevel(short level)
     {
         return skillsPerLevel.containsKey(level);
     }
 
-    public MyPetSkillTreeLevel getLevel(int level)
+    public MyPetSkillTreeLevel getLevel(short level)
     {
         if (!skillsPerLevel.containsKey(level))
         {
@@ -61,7 +70,7 @@ public class MyPetSkillTree
         return skillsPerLevel.get(level);
     }
 
-    public MyPetSkillTreeLevel addLevel(int level)
+    public MyPetSkillTreeLevel addLevel(short level)
     {
         if (!skillsPerLevel.containsKey(level))
         {
@@ -72,7 +81,17 @@ public class MyPetSkillTree
         return skillsPerLevel.get(level);
     }
 
-    public void removeLevel(int level)
+    public MyPetSkillTreeLevel addLevel(MyPetSkillTreeLevel level)
+    {
+        if (!skillsPerLevel.containsKey(level.getLevel()))
+        {
+            skillsPerLevel.put(level.getLevel(), level);
+            return level;
+        }
+        return skillsPerLevel.get(level);
+    }
+
+    public void removeLevel(short level)
     {
         if (skillsPerLevel.containsKey(level))
         {
@@ -80,12 +99,12 @@ public class MyPetSkillTree
         }
     }
 
-    public void addSkillToLevel(int level, MyPetSkillTreeSkill skill)
+    public void addSkillToLevel(short level, MyPetSkillTreeSkill skill)
     {
         addLevel(level).addSkill(skill);
     }
 
-    public void addSkillToLevel(int level, List<MyPetSkillTreeSkill> skillList)
+    public void addSkillToLevel(short level, List<MyPetSkillTreeSkill> skillList)
     {
         MyPetSkillTreeLevel myPetSkillTreeLevel = addLevel(level);
         for (MyPetSkillTreeSkill skill : skillList)
@@ -99,7 +118,7 @@ public class MyPetSkillTree
         List<MyPetSkillTreeLevel> levelList = new ArrayList<MyPetSkillTreeLevel>();
         if (skillsPerLevel.size() > 0)
         {
-            for (int level : skillsPerLevel.keySet())
+            for (short level : skillsPerLevel.keySet())
             {
                 levelList.add(skillsPerLevel.get(level));
             }
@@ -107,13 +126,71 @@ public class MyPetSkillTree
         return levelList;
     }
 
+    public String getDisplayName()
+    {
+        if (displayName == null)
+        {
+            return skillTreeName;
+        }
+        return displayName;
+    }
+
+    public boolean hasDisplayName()
+    {
+        return displayName != null;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
+    }
+
+    public String getPermission()
+    {
+        if (permission == null)
+        {
+            return skillTreeName;
+        }
+        return permission;
+    }
+
+    public boolean hasCustomPermissions()
+    {
+        return permission != null;
+    }
+
+    public void setPermission(String permission)
+    {
+        this.permission = permission;
+    }
+
     public String getInheritance()
     {
         return inheritance;
     }
 
+    public void setInheritance(String inheritance)
+    {
+        this.inheritance = inheritance;
+    }
+
     public boolean hasInheritance()
     {
         return inheritance != null;
+    }
+
+    public MyPetSkillTree clone()
+    {
+        MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName, place);
+        newSkillTree.setInheritance(inheritance);
+        newSkillTree.setDisplayName(displayName);
+        newSkillTree.setPermission(permission);
+
+        for (short level : skillsPerLevel.keySet())
+        {
+            newSkillTree.addLevel(skillsPerLevel.get(level).clone());
+        }
+
+        return newSkillTree;
     }
 }

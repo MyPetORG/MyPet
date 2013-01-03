@@ -19,14 +19,13 @@
 
 package de.Keyle.MyPet.skill;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
 
 public class MyPetSkillTreeSkill
 {
     String name;
     boolean addedByInheritance = false;
-    Map<String, String> options = new HashMap<String, String>();
+    NBTTagCompound propertiesCompound;
 
     public MyPetSkillTreeSkill(String name)
     {
@@ -44,23 +43,32 @@ public class MyPetSkillTreeSkill
         return name;
     }
 
-    public void addOption(String option, String value)
+    public void setProperties(NBTTagCompound propertiesCompound)
     {
-        options.put(option, value);
+        this.propertiesCompound = (NBTTagCompound) propertiesCompound.clone();
     }
 
-    public String getOption(String option)
+    public NBTTagCompound getProperties()
     {
-        if (options.containsKey(option))
+        if (propertiesCompound == null)
         {
-            return options.get(option);
+            return new NBTTagCompound("Properties");
         }
-        return null;
+        return propertiesCompound;
     }
 
     public boolean isAddedByInheritance()
     {
         return addedByInheritance;
+    }
+
+    public MyPetSkillTreeSkill clone()
+    {
+        MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(name, addedByInheritance);
+
+        newSkill.setProperties(getProperties());
+
+        return newSkill;
     }
 
     @Override

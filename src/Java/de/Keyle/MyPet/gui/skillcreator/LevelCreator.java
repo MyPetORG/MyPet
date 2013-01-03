@@ -21,7 +21,7 @@ package de.Keyle.MyPet.gui.skillcreator;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
@@ -79,7 +79,7 @@ public class LevelCreator
                 {
                     if (MyPetUtil.isInt(response))
                     {
-                        int newLevel = Integer.parseInt(response);
+                        short newLevel = Short.parseShort(response);
                         for (int i = 0 ; i < skillTreeTreeModel.getChildCount(skillTreeTreeModel.getRoot()) ; i++)
                         {
                             if (MyPetUtil.isInt(((DefaultMutableTreeNode) skillTreeTreeModel.getRoot()).getChildAt(i).toString()))
@@ -116,12 +116,12 @@ public class LevelCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                int level;
+                short level;
                 if (skillTreeTree.getSelectionPath().getPath().length == 2 || skillTreeTree.getSelectionPath().getPath().length == 3)
                 {
                     if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
                     {
-                        level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
+                        level = Short.parseShort(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
                     }
                     else
                     {
@@ -156,7 +156,7 @@ public class LevelCreator
                 {
                     if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
                     {
-                        int level = Integer.parseInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
+                        short level = Short.parseShort(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
                         skillTree.removeLevel(level);
                     }
                     else
@@ -168,7 +168,7 @@ public class LevelCreator
                 {
                     if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
                     {
-                        int level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
+                        short level = Short.parseShort(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
                         int index = ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).getIndex(((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(2)));
                         skillTree.getLevel(level).removeSkill(index);
                     }

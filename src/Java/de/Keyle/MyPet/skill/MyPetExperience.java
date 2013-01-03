@@ -75,7 +75,7 @@ public class MyPetExperience
     {
         this.myPet = pet;
         JSexp = new MyPetJSexp(pet, this);
-        for (int i = 1 ; i <= getLevel() ; i++)
+        for (short i = 1 ; i <= getLevel() ; i++)
         {
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
@@ -88,7 +88,7 @@ public class MyPetExperience
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
 
-        for (int i = 1 ; i <= getLevel() ; i++)
+        for (short i = 1 ; i <= getLevel() ; i++)
         {
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
@@ -102,15 +102,15 @@ public class MyPetExperience
         {
             return;
         }
-        int tmplvl = getLevel();
+        short tmplvl = getLevel();
         this.exp = expEvent.getExp();
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
 
-        for (int i = tmplvl ; i < getLevel() ; i++)
+        for (short i = tmplvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1, true));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1), true));
         }
     }
 
@@ -119,7 +119,7 @@ public class MyPetExperience
         return this.exp;
     }
 
-    public int addExp(double exp)
+    public short addExp(double exp)
     {
         MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
@@ -127,21 +127,21 @@ public class MyPetExperience
         {
             return 0;
         }
-        int tmpLvl = getLevel();
+        short tmpLvl = getLevel();
         this.exp = event.getExp();
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
         MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
 
 
-        for (int i = tmpLvl ; i < getLevel() ; i++)
+        for (short i = tmpLvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1));
+            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
         }
-        return (int) (event.getNewExp() - event.getOldExp());
+        return (short) (event.getNewExp() - event.getOldExp());
     }
 
-    public int addExp(EntityType type)
+    public short addExp(EntityType type)
     {
         if (mobExp.containsKey(type))
         {
@@ -151,22 +151,22 @@ public class MyPetExperience
             {
                 return 0;
             }
-            int tmpLvl = getLevel();
+            short tmpLvl = getLevel();
             this.exp = expEvent.getExp();
 
             MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
 
-            for (int i = tmpLvl ; i < getLevel() ; i++)
+            for (short i = tmpLvl ; i < getLevel() ; i++)
             {
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1));
+                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
             }
-            return (int) (expEvent.getNewExp() - expEvent.getOldExp());
+            return (short) (expEvent.getNewExp() - expEvent.getOldExp());
         }
         return 0;
     }
 
-    public int addExp(EntityType type, int percent)
+    public short addExp(EntityType type, int percent)
     {
         if (mobExp.containsKey(type))
         {
@@ -177,17 +177,17 @@ public class MyPetExperience
             {
                 return 0;
             }
-            int tmpLvl = getLevel();
+            short tmpLvl = getLevel();
             this.exp = expEvent.getExp();
 
             MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
 
-            for (int i = tmpLvl ; i < getLevel() ; i++)
+            for (short i = tmpLvl ; i < getLevel() ; i++)
             {
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1));
+                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
             }
-            return (int) (expEvent.getNewExp() - expEvent.getOldExp());
+            return (short) (expEvent.getNewExp() - expEvent.getOldExp());
         }
         return 0;
     }
@@ -231,18 +231,18 @@ public class MyPetExperience
         else
         {
             double tmpExp = this.exp;
-            int tmplvl = 0;
+            short tmplvl = 0;
 
-            while (tmpExp >= 7 + (int) (tmplvl * 3.5))
+            while (tmpExp >= 7 + (short) (tmplvl * 3.5))
             {
-                tmpExp -= 7 + (int) (tmplvl * 3.5);
+                tmpExp -= 7 + (short) (tmplvl * 3.5);
                 tmplvl++;
             }
             return tmpExp;
         }
     }
 
-    public int getLevel()
+    public short getLevel()
     {
         if (JSexp.isUsable())
         {
@@ -260,7 +260,7 @@ public class MyPetExperience
                 tmpExp -= 7 + (int) (tmpLvl * 3.5);
                 tmpLvl++;
             }
-            return tmpLvl + 1;
+            return (short) (tmpLvl + 1);
         }
     }
 
@@ -272,7 +272,7 @@ public class MyPetExperience
         }
         else
         {
-            return 7 + (int) ((this.getLevel() - 1) * 3.5);
+            return 7 + (short) ((this.getLevel() - 1) * 3.5);
         }
     }
 }

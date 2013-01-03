@@ -166,10 +166,6 @@ public abstract class MyPet
                     }
                 }
             }
-            if (this.skillTree == null)
-            {
-                this.skillTree = new MyPetSkillTree("%+-%NoNe%-+%");
-            }
         }
         skills = new MyPetSkills(this);
         experience = new MyPetExperience(this);
@@ -208,7 +204,7 @@ public abstract class MyPet
             }
         }
         this.skillTree = skillTree;
-        for (int i = 1 ; i <= experience.getLevel() ; i++)
+        for (short i = 1 ; i <= experience.getLevel() ; i++)
         {
             MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
         }

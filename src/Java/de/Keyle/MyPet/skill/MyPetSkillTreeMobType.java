@@ -49,8 +49,7 @@ public class MyPetSkillTreeMobType
     {
         if (!skillTrees.containsKey(skillTreeName))
         {
-            skillTrees.put(skillTreeName, new MyPetSkillTree(skillTreeName));
-            skillTreeList.add(skillTreeName);
+            addSkillTree(new MyPetSkillTree(skillTreeName, this.getNextPlace()));
         }
     }
 
@@ -59,7 +58,14 @@ public class MyPetSkillTreeMobType
         if (!skillTrees.containsKey(skillTree.getName()))
         {
             skillTrees.put(skillTree.getName(), skillTree);
-            skillTreeList.add(skillTree.getName());
+            if (skillTreeList.size() - 1 < skillTree.getPlace())
+            {
+                for (int x = skillTreeList.size() ; x <= skillTree.getPlace() ; x++)
+                {
+                    skillTreeList.add(x, null);
+                }
+            }
+            skillTreeList.set(skillTree.getPlace(), skillTree.getName());
         }
     }
 
@@ -111,7 +117,27 @@ public class MyPetSkillTreeMobType
 
     public List<String> getSkillTreeNames()
     {
-        return skillTreeList;
+        List<String> skilltreeNames = new ArrayList<String>();
+        for (String name : skillTreeList)
+        {
+            if (name != null)
+            {
+                skilltreeNames.add(name);
+            }
+        }
+        return skilltreeNames;
+    }
+
+    public short getNextPlace()
+    {
+        for (int i = 0 ; i < skillTreeList.size() ; i++)
+        {
+            if (skillTreeList.get(i) == null)
+            {
+                return (short) i;
+            }
+        }
+        return (short) skillTreeList.size();
     }
 
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
@@ -146,6 +172,11 @@ public class MyPetSkillTreeMobType
             skillTreeNames = new ArrayList<String>();
         }
         return skillTreeNames;
+    }
+
+    public static void clearMobTypes()
+    {
+        mobTypes.clear();
     }
 
     public static boolean containsSkillTree(String myPetTypeName, String name)

@@ -42,7 +42,7 @@ public class MyPetLevelUpListener implements Listener
         {
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
         }
-        int lvl = event.getLevel();
+        short lvl = event.getLevel();
         MyPetSkillTree skillTree = myPet.getSkillTree();
         if (skillTree != null && skillTree.hasLevel(lvl))
         {

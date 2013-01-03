@@ -32,7 +32,7 @@ import java.io.IOException;
 public class MyPetJSexp
 {
     public static String expScript = null;
-    private int lvl = 1;
+    private short lvl = 1;
     private MyPet myPet;
     private double lastExp = 0;
     private double requiredExp = 0;
@@ -50,7 +50,7 @@ public class MyPetJSexp
         return expScript != null;
     }
 
-    public int getLvl()
+    public short getLvl()
     {
         if (lastExp != myPetExperience.getExp())
         {
@@ -82,7 +82,7 @@ public class MyPetJSexp
         try
         {
             ScriptEngine se = parseJS();
-            lvl = ((Double) se.get("lvl")).intValue();
+            lvl = ((Double) se.get("lvl")).shortValue();
             requiredExp = ((Double) se.get("requiredExp"));
             currentExp = ((Double) se.get("currentExp"));
             return true;

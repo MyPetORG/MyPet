@@ -40,7 +40,7 @@ public class BukkitDownloader
     JLabel nameLabel;
     JFrame bukkitDownloaderFrame;
 
-    private static final String downloadAddress = "http://dl.bukkit.org/latest-rb/craftbukkit.jar";
+    private static final String downloadAddress = "{@BUKKIT_DOWNLOAD@}";
     InternetDataTask downloader;
 
     public BukkitDownloader()

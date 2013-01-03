@@ -48,10 +48,7 @@ import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetJSexp;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkills;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Metrics.Graph;
@@ -207,18 +204,7 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
         getCommand("petbeacon").setExecutor(new CommandBeacon());
 
-        MyPetSkills.registerSkill(Inventory.class);
-        MyPetSkills.registerSkill(HPregeneration.class);
-        MyPetSkills.registerSkill(Pickup.class);
-        MyPetSkills.registerSkill(Behavior.class);
-        MyPetSkills.registerSkill(Damage.class);
-        MyPetSkills.registerSkill(Control.class);
-        MyPetSkills.registerSkill(HP.class);
-        MyPetSkills.registerSkill(Poison.class);
-        MyPetSkills.registerSkill(Ride.class);
-        MyPetSkills.registerSkill(Thorns.class);
-        MyPetSkills.registerSkill(Fire.class);
-        MyPetSkills.registerSkill(Beacon.class);
+        registerSkills();
 
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 
@@ -246,8 +232,11 @@ public class MyPetPlugin extends JavaPlugin
                 debugLogger.info("unable to create default.yml");
             }
         }
-        MyPetSkillTreeConfigLoader.setConfigPath(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-        MyPetSkillTreeConfigLoader.loadSkillTrees();
+
+        MyPetSkillTreeLoaderYaml.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoader.saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+
+        MyPetSkillTreeLoader.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
         try
         {
@@ -433,6 +422,22 @@ public class MyPetPlugin extends JavaPlugin
         }
         this.isReady = true;
         debugLogger.info("----------- MyPet ready -----------");
+    }
+
+    public static void registerSkills()
+    {
+        MyPetSkills.registerSkill(Inventory.class);
+        MyPetSkills.registerSkill(HPregeneration.class);
+        MyPetSkills.registerSkill(Pickup.class);
+        MyPetSkills.registerSkill(Behavior.class);
+        MyPetSkills.registerSkill(Damage.class);
+        MyPetSkills.registerSkill(Control.class);
+        MyPetSkills.registerSkill(HP.class);
+        MyPetSkills.registerSkill(Poison.class);
+        MyPetSkills.registerSkill(Ride.class);
+        MyPetSkills.registerSkill(Thorns.class);
+        MyPetSkills.registerSkill(Fire.class);
+        MyPetSkills.registerSkill(Beacon.class);
     }
 
     int loadPets(File f)

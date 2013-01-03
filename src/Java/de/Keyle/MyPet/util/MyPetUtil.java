@@ -84,6 +84,10 @@ public class MyPetUtil
 
     public static DebugLogger getDebugLogger()
     {
+        if (MyPetPlugin.getPlugin() == null)
+        {
+            return null;
+        }
         return MyPetPlugin.getPlugin().getDebugLogger();
     }
 

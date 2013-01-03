@@ -29,19 +29,15 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-public class MyPetSkillTreeConfigLoader
+public class MyPetSkillTreeLoaderYaml
 {
-    private static String configPath;
-
-    public static void setConfigPath(String path)
-    {
-        configPath = path;
-    }
-
-    public static void loadSkillTrees()
+    public static void loadSkillTrees(String configPath)
     {
         YamlConfiguration MWConfig;
-        MyPetUtil.getDebugLogger().info("Loading skill configs in: " + configPath);
+        if (MyPetUtil.getDebugLogger() != null)
+        {
+            MyPetUtil.getDebugLogger().info("Loading skill configs in: " + configPath);
+        }
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.yml");
@@ -50,7 +46,11 @@ public class MyPetSkillTreeConfigLoader
         {
             MWConfig = new YamlConfiguration(skillFile);
             loadSkillTree(MWConfig, skillTreeMobType);
-            MyPetUtil.getDebugLogger().info("  default.yml");
+            skillFile.renameTo(new File(configPath + File.separator + "old_default.yml"));
+            if (MyPetUtil.getDebugLogger() != null)
+            {
+                MyPetUtil.getDebugLogger().info("  default.yml");
+            }
         }
 
         for (MyPetType mobType : MyPetType.values())
@@ -71,7 +71,11 @@ public class MyPetSkillTreeConfigLoader
 
             MWConfig = new YamlConfiguration(skillFile);
             loadSkillTree(MWConfig, skillTreeMobType);
-            MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".yml");
+            skillFile.renameTo(new File(configPath + File.separator + "old_" + mobType.getTypeName().toLowerCase() + ".yml"));
+            if (MyPetUtil.getDebugLogger() != null)
+            {
+                MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".yml");
+            }
         }
 
     }
@@ -90,13 +94,14 @@ public class MyPetSkillTreeConfigLoader
             {
                 String inherit = MWConfig.getConfig().getString("skilltrees." + skillTreeName + ".inherit", "%#_DeFaUlT_#%");
                 MyPetSkillTree skillTree;
+                short place = skillTreeMobType.getNextPlace();
                 if (!inherit.equals("%#_DeFaUlT_#%"))
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName, inherit);
+                    skillTree = new MyPetSkillTree(skillTreeName, inherit, place);
                 }
                 else
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName);
+                    skillTree = new MyPetSkillTree(skillTreeName, place);
                 }
 
                 Set<String> level = MWConfig.getConfig().getConfigurationSection("skilltrees." + skillTreeName).getKeys(false);
@@ -114,7 +119,7 @@ public class MyPetSkillTreeConfigLoader
                                     if (MyPetSkills.isValidSkill(thisSkill))
                                     {
                                         MyPetSkillTreeSkill skillTreeSkill = new MyPetSkillTreeSkill(thisSkill);
-                                        skillTree.addSkillToLevel(Integer.parseInt(thisLevel), skillTreeSkill);
+                                        skillTree.addSkillToLevel(Short.parseShort(thisLevel), skillTreeSkill);
                                     }
                                 }
                             }
@@ -139,7 +144,7 @@ public class MyPetSkillTreeConfigLoader
             if (!skillTreeMobType.hasSkillTree(skillTreeName))
             {
                 MyPetSkillTree defaultSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName);
-                MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName);
+                MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName, skillTreeMobType.getNextPlace());
 
                 for (MyPetSkillTreeLevel level : defaultSkillTree.getLevelList())
                 {
@@ -147,7 +152,7 @@ public class MyPetSkillTreeConfigLoader
                     {
                         if (!skill.isAddedByInheritance())
                         {
-                            MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(skill.getName());
+                            MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(skill.getName(), true);
                             newSkillTree.addSkillToLevel(level.getLevel(), newSkill);
                         }
                     }

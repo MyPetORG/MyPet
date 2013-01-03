@@ -19,10 +19,11 @@
 
 package de.Keyle.MyPet.gui;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.skillcreator.BukkitDownloader;
 import de.Keyle.MyPet.gui.skillcreator.LevelCreator;
-import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig;
 import de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLoader;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -37,6 +38,7 @@ public class GuiMain
     public static LevelCreator levelCreator;
     public static SkilltreeCreator skilltreeCreator;
     public static BukkitDownloader bukkitDownloader;
+    public static String configPath;
 
     public static void main(String[] args)
     {
@@ -50,7 +52,8 @@ public class GuiMain
             e.printStackTrace();
         }
         path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
-        File bukkitFile = new File(path);
+        File pluginDirFile = new File(path);
+        configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
 
         try
         {
@@ -65,9 +68,9 @@ public class GuiMain
             String[] buttons = {"Exit", "Download CraftBukkit", "Choose a CraftBukkit.jar"};
             int result = JOptionPane.showOptionDialog(null, "Can't find a CraftBukkit executable\n" +
                     "\nin one of these folders:" +
-                    "\n   " + bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator +
-                    "\n   " + bukkitFile.getAbsolutePath() + File.separator +
-                    "\n   " + bukkitFile.getParent() + File.separator, "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
+                    "\n   " + pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator +
+                    "\n   " + pluginDirFile.getAbsolutePath() + File.separator +
+                    "\n   " + pluginDirFile.getParent() + File.separator, "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
 
             if (result == 0)
             {
@@ -78,7 +81,7 @@ public class GuiMain
                 bukkitDownloader = new BukkitDownloader();
                 JFrame bukkitDownloaderFrame = bukkitDownloader.getFrame();
                 bukkitDownloaderFrame.setContentPane(bukkitDownloader.getMainPanel());
-                bukkitDownloaderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                bukkitDownloaderFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 bukkitDownloaderFrame.setIconImage(logoImage);
                 bukkitDownloaderFrame.pack();
                 bukkitDownloaderFrame.setVisible(true);
@@ -119,13 +122,15 @@ public class GuiMain
             }
             return;
         }
-        MyPetSkillTreeConfig.setConfigPath(bukkitFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "skilltrees");
-        MyPetSkillTreeConfig.loadSkillTrees();
+
+        MyPetPlugin.registerSkills();
+
+        MyPetSkillTreeLoader.loadSkillTrees(configPath + "skilltrees", false);
 
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
         skilltreeCreatorFrame.setContentPane(skilltreeCreator.getMainPanel());
-        skilltreeCreatorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        skilltreeCreatorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         skilltreeCreatorFrame.setIconImage(logoImage);
         skilltreeCreatorFrame.pack();
         skilltreeCreatorFrame.setVisible(true);
@@ -175,7 +180,7 @@ public class GuiMain
     {
         try
         {
-            Class.forName("org.bukkit.configuration.file.FileConfiguration");
+            Class.forName("net.minecraft.server.v{@MINECRAFT_VERSION_UNDERSCORE@}.NBTBase");
             return true;
         }
         catch (Exception e)

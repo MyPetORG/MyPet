@@ -21,12 +21,16 @@ package de.Keyle.MyPet.gui.skillcreator;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.gui.skillcreator.MyPetSkillTreeConfig.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLoader;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
+import java.io.File;
+import java.util.List;
 
 public class SkilltreeCreator
 {
@@ -57,7 +61,7 @@ public class SkilltreeCreator
                     }
 
                     skillTreeListModel.removeAllElements();
-                    for (String skillTreeName : MyPetSkillTreeConfig.getMobType(e.getItem().toString()).getSkillTreeNames())
+                    for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName(e.getItem().toString()).getSkillTreeNames())
                     {
                         skillTreeListModel.addElement(skillTreeName);
                     }
@@ -107,7 +111,7 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeUp(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeUp(skilltreeList.getSelectedValue().toString());
                 String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() - 1);
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() - 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
@@ -118,7 +122,7 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeDown(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeDown(skilltreeList.getSelectedValue().toString());
                 String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() + 1);
                 skillTreeListModel.set(skilltreeList.getSelectedIndex() + 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
                 skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
@@ -137,8 +141,10 @@ public class SkilltreeCreator
                         if (!skillTreeListModel.contains(response))
                         {
                             skillTreeListModel.addElement(response);
-                            MyPetSkillTree skillTree = new MyPetSkillTree(response);
-                            MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).addSkillTree(skillTree);
+                            MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString());
+                            Short place = mobType.getNextPlace();
+                            MyPetSkillTree skillTree = new MyPetSkillTree(response, place);
+                            mobType.addSkillTree(skillTree);
                             skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
                             deleteSkilltreeButton.setEnabled(true);
                         }
@@ -159,7 +165,7 @@ public class SkilltreeCreator
             public void actionPerformed(ActionEvent e)
             {
                 int index = skilltreeList.getSelectedIndex();
-                MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
+                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
                 skillTreeListModel.remove(skilltreeList.getSelectedIndex());
                 if (index == skillTreeListModel.size())
                 {
@@ -182,7 +188,7 @@ public class SkilltreeCreator
                 if (evt.getClickCount() == 2)
                 {
 
-                    GuiMain.levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
+                    GuiMain.levelCreator.setSkillTree(MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
                     GuiMain.levelCreator.getFrame().setVisible(true);
                     skilltreeCreatorFrame.setEnabled(false);
                 }
@@ -192,7 +198,13 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeConfig.saveSkillTrees();
+                List<String> savedPetTypes = MyPetSkillTreeLoader.saveSkillTrees(GuiMain.configPath + "skilltrees");
+                String savedPetsString = "";
+                for (String petType : savedPetTypes)
+                {
+                    savedPetsString += "\n   " + petType.toLowerCase() + ".st";
+                }
+                JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         skilltreeList.addKeyListener(new KeyAdapter()
@@ -202,13 +214,13 @@ public class SkilltreeCreator
                 switch (e.getKeyCode())
                 {
                     case KeyEvent.VK_ENTER:
-                        GuiMain.levelCreator.setSkillTree((MyPetSkillTree) MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
+                        GuiMain.levelCreator.setSkillTree(MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
                         GuiMain.levelCreator.getFrame().setVisible(true);
                         skilltreeCreatorFrame.setEnabled(false);
                         break;
                     case KeyEvent.VK_DELETE:
                         int index = skilltreeList.getSelectedIndex();
-                        MyPetSkillTreeConfig.getMobType(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
+                        MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
                         skillTreeListModel.remove(skilltreeList.getSelectedIndex());
                         if (index == skillTreeListModel.size())
                         {

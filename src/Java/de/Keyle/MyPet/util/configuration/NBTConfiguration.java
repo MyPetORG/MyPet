@@ -41,19 +41,6 @@ public class NBTConfiguration
     public NBTConfiguration(File file)
     {
         NBTFile = file;
-        if (!NBTFile.exists())
-        {
-            try
-            {
-                NBTFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        file.setWritable(true);
-        file.setReadable(true);
     }
 
     public NBTTagCompound getNBTTagCompound()
@@ -91,12 +78,18 @@ public class NBTConfiguration
                 DataInputStream F_In = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputStream)));
                 nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
                 F_In.close();
-                MyPetUtil.getDebugLogger().info("loaded GZIP NBTfile");
+                if (MyPetUtil.getDebugLogger() != null)
+                {
+                    MyPetUtil.getDebugLogger().info("loaded GZIP NBTfile");
+                }
             }
             inputStream.close();
             return;
         }
         catch (ZipException ignored)
+        {
+        }
+        catch (FileNotFoundException ignored)
         {
         }
         catch (IOException e)
@@ -115,9 +108,15 @@ public class NBTConfiguration
                 F_In = new DataInputStream(inputStream);
                 nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
                 F_In.close();
-                MyPetUtil.getDebugLogger().info("loaded unziped NBTfile");
+                if (MyPetUtil.getDebugLogger() != null)
+                {
+                    MyPetUtil.getDebugLogger().info("loaded unziped NBTfile");
+                }
             }
             inputStream.close();
+        }
+        catch (FileNotFoundException ignored)
+        {
         }
         catch (IOException e)
         {

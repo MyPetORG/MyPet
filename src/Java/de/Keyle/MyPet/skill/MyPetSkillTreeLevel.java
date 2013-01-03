@@ -24,15 +24,15 @@ import java.util.List;
 
 public class MyPetSkillTreeLevel
 {
-    int level;
+    short level;
     List<MyPetSkillTreeSkill> skillList = new ArrayList<MyPetSkillTreeSkill>();
 
-    public MyPetSkillTreeLevel(int level)
+    public MyPetSkillTreeLevel(short level)
     {
         this.level = level;
     }
 
-    public int getLevel()
+    public short getLevel()
     {
         return level;
     }
@@ -50,5 +50,17 @@ public class MyPetSkillTreeLevel
     public List<MyPetSkillTreeSkill> getSkills()
     {
         return skillList;
+    }
+
+    public MyPetSkillTreeLevel clone()
+    {
+        MyPetSkillTreeLevel newLevel = new MyPetSkillTreeLevel(level);
+
+        for (MyPetSkillTreeSkill skill : skillList)
+        {
+            newLevel.addSkill(skill.clone());
+        }
+
+        return newLevel;
     }
 }
