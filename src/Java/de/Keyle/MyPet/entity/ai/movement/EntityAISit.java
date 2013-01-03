@@ -41,11 +41,11 @@ public class EntityAISit extends PathfinderGoal
         {
             return false;
         }
-        if (this.entityMyPet.H())
+        else if (this.entityMyPet.H())
         {
             return false;
         }
-        if (!this.entityMyPet.onGround)
+        else if (!this.entityMyPet.onGround)
         {
             return false;
         }
