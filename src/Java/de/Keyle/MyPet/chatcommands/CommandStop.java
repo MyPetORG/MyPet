@@ -46,10 +46,19 @@ public class CommandStop implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
+                else if (myPet.status == PetState.Dead)
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                    return true;
+                }
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().b((EntityLiving) null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
+                if (myPet.getCraftPet().getHandle().canMove())
+                {
+                    myPet.getCraftPet().getHandle().getNavigation().a(myPet.getCraftPet().getHandle().getOwner(), myPet.getCraftPet().getHandle().getWalkSpeed());
+                }
                 return true;
             }
             else

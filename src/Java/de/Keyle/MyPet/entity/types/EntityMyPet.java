@@ -164,6 +164,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return true;
     }
 
+    public float getWalkSpeed()
+    {
+        return walkSpeed;
+    }
+
     public boolean canEat(ItemStack itemstack)
     {
         List<Material> foodList = MyPet.getFood(myPet.getClass());
