@@ -20,6 +20,8 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.PropertyHandler;
+import de.Keyle.MyPet.skill.PropertyHandler.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -31,8 +33,19 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
+@PropertyHandler(html = Fire.html, parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Double})
 public class Pickup extends MyPetGenericSkill
 {
+    protected final static String html = "<html>\n" +
+            "   <body>\n" +
+            "       <form action=\"#\">\n" +
+            "           <p>Increase pickup range by:</p>" +
+            "           <input name=\"add\" type=\"text\" /><br/><br/>" +
+            "           <input type=\"submit\" value=\"Save\" />" +
+            "       </form>\n" +
+            "   </body>\n" +
+            "</html>\n";
+
     public static double rangePerLevel = 1;
     private boolean pickup = false;
 

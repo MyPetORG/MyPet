@@ -113,6 +113,7 @@ public class MyPetConfig
         setProperty("MyPet.Skill.Ride.SpeedPerLevel", 0.2F);
         setProperty("MyPet.Skill.Pickup.RangePerLvl", 1.);
         setProperty("MyPet.Skill.Poison.ChancePerLevel", 5);
+        setProperty("MyPet.Skill.Poison.Duration", 3);
         setProperty("MyPet.Skill.Fire.ChancePerLevel", 5);
         setProperty("MyPet.Skill.Fire.Duration", 3);
         setProperty("MyPet.Skill.Thorns.ChancePerLevel", 5);
@@ -196,6 +197,7 @@ public class MyPetConfig
         Beacon.hungerDecreaseTime = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Poison.chancePerLevel = config.getInt("MyPet.Skill.Poison.ChancePerLevel", 5);
+        Poison.duration = config.getInt("MyPet.Skill.Poison.Duration", 3);
         Fire.chancePerLevel = config.getInt("MyPet.Skill.Fire.ChancePerLevel", 5);
         Fire.duration = config.getInt("MyPet.Skill.Fire.Duration", 3);
         Thorns.chancePerLevel = config.getInt("MyPet.Skill.Thorns.ChancePerLevel", 5);

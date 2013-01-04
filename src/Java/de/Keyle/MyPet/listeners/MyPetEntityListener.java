@@ -396,7 +396,7 @@ public class MyPetEntityListener implements Listener
                     Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
                     if (poisonSkill.getPoison())
                     {
-                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, 5, 1);
+                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, Poison.duration * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
                     }
                 }
