@@ -33,6 +33,7 @@ import net.minecraft.server.v1_4_6.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import java.util.List;
@@ -359,6 +360,18 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public boolean m(Entity entity)
     {
         int damage = isMyPet() ? myPet.getDamage() : MyPet.getStartDamage(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+        if (entity instanceof EntityPlayer)
+        {
+            Player victim = (Player) entity.getBukkitEntity();
+            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), victim))
+            {
+                if (myPet.hasTarget())
+                {
+                    myPet.getCraftPet().getHandle().b((EntityLiving) null);
+                }
+                return false;
+            }
+        }
         return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 }

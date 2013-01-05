@@ -537,6 +537,11 @@ public abstract class MyPet
         return getDamage() == 0;
     }
 
+    public boolean hasTarget()
+    {
+        return this.status == PetState.Here && craftMyPet.getHandle().aG() != null && craftMyPet.getHandle().aG().isAlive();
+    }
+
     public abstract MyPetType getPetType();
 
     public NBTTagCompound getExtendedInfo()
