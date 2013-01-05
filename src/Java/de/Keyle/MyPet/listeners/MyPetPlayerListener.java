@@ -69,7 +69,7 @@ public class MyPetPlayerListener implements Listener
                         Ride ride = (Ride) myPet.getSkills().getSkill("Ride");
                         if (ride.getLevel() > 0)
                         {
-                            if (myPet.getCraftPet().getHandle().isRidden())
+                            if (myPet.getCraftPet().getHandle().hasRider())
                             {
                                 return;
                             }

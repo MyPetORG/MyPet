@@ -145,7 +145,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
-    public boolean isRidden()
+    public boolean hasRider()
     {
         return isRidden;
     }
@@ -249,7 +249,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
         {
-            if (this.isRidden())
+            if (this.hasRider())
             {
                 this.getOwner().mount(null);
                 return true;
