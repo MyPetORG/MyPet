@@ -34,7 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import java.util.List;
 
@@ -97,7 +96,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
@@ -254,7 +253,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 this.getOwner().mount(null);
                 return true;
             }
-            if (myPet.getSkills().getSkillLevel("Ride") > 0)
+            if (myPet.getSkills().isSkillActive("Ride"))
             {
                 if (itemStack.id == Ride.item.getId() && canMove())
                 {
@@ -262,7 +261,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     return true;
                 }
             }
-            else if (myPet.getSkills().getSkillLevel("Control") > 0)
+            else if (myPet.getSkills().isSkillActive("Control"))
             {
                 if (itemStack.id == Control.item.getId())
                 {
@@ -280,7 +279,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     --itemStack.count;
                 }
                 addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
-                this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
+                //MyPetLogger.write("vA: " + getHealth());
+                //MyPetLogger.write("add: " + Math.min(3, getMaxHealth() - getHealth()));
+                this.health += Math.min(3, getMaxHealth() - getHealth());
+                //this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
+                //MyPetLogger.write("nA: " + getHealth());
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

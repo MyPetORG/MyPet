@@ -19,16 +19,15 @@
 
 package de.Keyle.MyPet.skill.skills.beacon;
 
-import de.Keyle.MyPet.skill.skills.Beacon;
 import org.bukkit.craftbukkit.v1_4_6.inventory.CraftInventory;
 import org.bukkit.inventory.BeaconInventory;
 import org.bukkit.inventory.ItemStack;
 
 public class CraftMyPetInventoryBeacon extends CraftInventory implements BeaconInventory
 {
-    public CraftMyPetInventoryBeacon(Beacon beacon)
+    public CraftMyPetInventoryBeacon(MyPetCustomBeaconInventory beaconInv)
     {
-        super(beacon);
+        super(beaconInv);
     }
 
     public void setItem(ItemStack item)

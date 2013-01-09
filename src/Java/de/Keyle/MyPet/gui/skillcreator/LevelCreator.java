@@ -21,10 +21,7 @@ package de.Keyle.MyPet.gui.skillcreator;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import javax.swing.*;
@@ -37,10 +34,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.*;
 
 public class LevelCreator
@@ -137,9 +131,9 @@ public class LevelCreator
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null)
                 {
-                    MyPetSkillTreeSkill skill = new MyPetSkillTreeSkill(choosenSkill);
+                    MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(choosenSkill);
                     skillTree.addSkillToLevel(level, skill);
-                    DefaultMutableTreeNode skillNode = new DefaultMutableTreeNode(choosenSkill);
+                    SkillTreeNode skillNode = new SkillTreeNode(skill);
                     ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
                     skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                     skillTreeTree.updateUI();
@@ -256,6 +250,34 @@ public class LevelCreator
                 StringSelection stringSelection = new StringSelection("MyPet.custom.skilltree." + skillTree.getName());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
+            }
+        });
+        skillTreeTree.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent evt)
+            {
+                if (evt.getClickCount() == 2)
+                {
+                    if (skillTreeTree.getSelectionPath().getPath().length == 3)
+                    {
+                        if (skillTreeTree.getSelectionPath().getPathComponent(2) instanceof SkillTreeNode)
+                        {
+                            MyPetSkillTreeSkill skill = ((SkillTreeNode) skillTreeTree.getSelectionPath().getPathComponent(2)).getSkill();
+                            if (skill.getClass().getAnnotation(SkillProperties.class) == null)
+                            {
+                                JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
+                                return;
+                            }
+                            if (MyPetSkills.isValidSkill(skill.getName()))
+                            {
+                                GuiMain.skillPropertyEditor.setHTML(skill);
+                            }
+                            GuiMain.skillPropertyEditor.getFrame().setVisible(true);
+                            getFrame().setEnabled(false);
+                        }
+                    }
+                }
             }
         });
     }
@@ -388,7 +410,7 @@ public class LevelCreator
             rootNode.add(levelNode);
             for (MyPetSkillTreeSkill skill : level.getSkills())
             {
-                DefaultMutableTreeNode skillNode = new DefaultMutableTreeNode(skill.getName());
+                SkillTreeNode skillNode = new SkillTreeNode(skill);
                 levelNode.add(skillNode);
                 skillcount++;
             }
@@ -430,6 +452,22 @@ public class LevelCreator
         };
         skillCounterTabel.getColumnModel().getColumn(0).setPreferredWidth(160);
         skillCounterTabel.getColumnModel().getColumn(1).setPreferredWidth(50);
+    }
+
+    private class SkillTreeNode extends DefaultMutableTreeNode
+    {
+        private MyPetSkillTreeSkill skill;
+
+        public SkillTreeNode(MyPetSkillTreeSkill skill)
+        {
+            super(skill.getName());
+            this.skill = skill;
+        }
+
+        public MyPetSkillTreeSkill getSkill()
+        {
+            return skill;
+        }
     }
 
     private class SortedDefaultMutableTreeNode extends DefaultMutableTreeNode

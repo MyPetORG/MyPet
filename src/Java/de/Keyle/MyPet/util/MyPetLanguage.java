@@ -119,6 +119,7 @@ public class MyPetLanguage
         addString("Name_Friendly", "MyPet.Name.Friendly", "Friendly");
         addString("Name_Farm", "MyPet.Name.Farm", "Farm");
         addString("Name_Normal", "MyPet.Name.Normal", "Normal");
+        addString("Name_Raid", "MyPet.Name.Raid", "Raid");
         addString("Name_Wolf", "MyPet.Name.Wolf", "Wolf");
         addString("Name_Bat", "MyPet.Name.Bat", "Bat");
         addString("Name_Chicken", "MyPet.Name.Chicken", "Chicken");
@@ -170,6 +171,12 @@ public class MyPetLanguage
         addString("Name_WITHER", "MyPet.Name.Wither", "Wither");
         addString("Name_CONTACT", "MyPet.Name.Contact", "Contact");
         addString("Name_Unknow", "MyPet.Name.Unknow", "Unknow");
+        addString("Name_Rows", "MyPet.Name.Rows", "Row(s)");
+        addString("Name_Blocks", "MyPet.Name.Blocks", "Block(s)");
+        addString("Name_Range", "MyPet.Name.Range", "Range");
+        addString("Name_Modes", "MyPet.Name.Modes", "Modes");
+        addString("Name_Tier", "MyPet.Name.Tier", "Tier");
+        addString("Name_Speed", "MyPet.Name.Speed", "Speed");
 
         yamlConfiguration.saveConfig();
     }

@@ -23,7 +23,6 @@ import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_4_6.*;
 
 public class EntityMySheep extends EntityMyPet
@@ -37,7 +36,7 @@ public class EntityMySheep extends EntityMyPet
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));

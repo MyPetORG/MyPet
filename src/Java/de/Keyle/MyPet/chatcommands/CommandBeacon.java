@@ -42,7 +42,7 @@ public class CommandBeacon implements CommandExecutor
             if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin") && MyPetList.hasMyPet(args[0]))
             {
                 MyPet myPet = MyPetList.getMyPet(args[0]);
-                if (myPet.getSkills().getSkillLevel("Beacon") > 0)
+                if (myPet.getSkills().isSkillActive("Beacon"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).activate(player);
                 }

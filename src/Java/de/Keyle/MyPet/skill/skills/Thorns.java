@@ -19,30 +19,82 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import java.util.Random;
 
+@SkillName("Thorns")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
 public class Thorns extends MyPetGenericSkill
 {
-    public static int chancePerLevel = 5;
+    private int chance = 0;
     private static Random random = new Random();
 
-    public Thorns()
+    public Thorns(boolean addedByInheritance)
     {
-        super("Thorns");
+        super(addedByInheritance);
     }
 
     @Override
-    public void upgrade()
+    public boolean isActive()
     {
-        super.upgrade();
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ThornsChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + level * chancePerLevel));
+        return chance > 0;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Thorns)
+        {
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                chance += upgrade.getProperties().getInt("add");
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ThornsChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return chance + "%";
+    }
+
+    public void reset()
+    {
+        chance = 0;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
+        {
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+        }
+        return html;
     }
 
     public boolean isActivated()
     {
-        return random.nextDouble() <= level * chancePerLevel / 100.;
+        return random.nextDouble() < chance / 100.;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new Thorns(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

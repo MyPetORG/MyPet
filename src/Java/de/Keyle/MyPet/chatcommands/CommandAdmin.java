@@ -21,7 +21,7 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -76,12 +76,9 @@ public class CommandAdmin implements CommandExecutor
                     Exp = Exp < 0 ? 0 : Exp;
 
                     Collection<MyPetGenericSkill> skills = myPet.getSkills().getSkills();
-                    if (skills.size() > 0)
+                    for (MyPetGenericSkill skill : skills)
                     {
-                        for (MyPetGenericSkill skill : skills)
-                        {
-                            skill.setLevel(0);
-                        }
+                        skill.reset();
                     }
                     myPet.getExperience().reset();
                     myPet.getExperience().addExp(Exp);

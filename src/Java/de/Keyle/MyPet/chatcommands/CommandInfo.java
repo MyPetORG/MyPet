@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -63,7 +64,7 @@ public class CommandInfo implements CommandExecutor
 
                 if (!myPet.isPassiv())
                 {
-                    int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().hasSkill("Damage") ? myPet.getSkills().getSkillLevel("Damage") : 0);
+                    int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                     player.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                 }
                 if (MyPetConfig.hungerSystem)

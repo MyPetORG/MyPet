@@ -126,6 +126,71 @@ public class MyPetUtil
         }
     }
 
+    public static boolean isByte(String number)
+    {
+        try
+        {
+            Byte.parseByte(number);
+            return true;
+        }
+        catch (NumberFormatException nFE)
+        {
+            return false;
+        }
+    }
+
+    public static boolean isDouble(String number)
+    {
+        try
+        {
+            Double.parseDouble(number);
+            return true;
+        }
+        catch (NumberFormatException nFE)
+        {
+            return false;
+        }
+    }
+
+    public static boolean isLong(String number)
+    {
+        try
+        {
+            Long.parseLong(number);
+            return true;
+        }
+        catch (NumberFormatException nFE)
+        {
+            return false;
+        }
+    }
+
+    public static boolean isFloat(String number)
+    {
+        try
+        {
+            Float.parseFloat(number);
+            return true;
+        }
+        catch (NumberFormatException nFE)
+        {
+            return false;
+        }
+    }
+
+    public static boolean isShort(String number)
+    {
+        try
+        {
+            Short.parseShort(number);
+            return true;
+        }
+        catch (NumberFormatException nFE)
+        {
+            return false;
+        }
+    }
+
     public static boolean canHurtAt(Player petOwner, Location location)
     {
         return canHurtWorldGuard(location) && petOwner.getGameMode() != GameMode.CREATIVE && location.getWorld().getPVP();
@@ -272,6 +337,12 @@ public class MyPetUtil
         }
         reader.close();
         return fileData.toString();
+    }
+
+    public static String convertStreamToString(java.io.InputStream is)
+    {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
     public static Boolean canSpawn(Location loc, Entity entity)

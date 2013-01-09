@@ -17,11 +17,11 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.skill;
 
 
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -118,7 +118,7 @@ public class MyPetSkillTreeLoaderYaml
                                 {
                                     if (MyPetSkills.isValidSkill(thisSkill))
                                     {
-                                        MyPetSkillTreeSkill skillTreeSkill = new MyPetSkillTreeSkill(thisSkill);
+                                        MyPetSkillTreeSkill skillTreeSkill = MyPetSkills.getNewSkillInstance(thisSkill);
                                         skillTree.addSkillToLevel(Short.parseShort(thisLevel), skillTreeSkill);
                                     }
                                 }
@@ -152,8 +152,9 @@ public class MyPetSkillTreeLoaderYaml
                     {
                         if (!skill.isAddedByInheritance())
                         {
-                            MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(skill.getName(), true);
-                            newSkillTree.addSkillToLevel(level.getLevel(), newSkill);
+                            MyPetSkillTreeSkill skillClone = skill.cloneSkill();
+                            skillClone.setIsInherited(true);
+                            newSkillTree.addSkillToLevel(level.getLevel(), skillClone);
                         }
                     }
                 }
@@ -179,8 +180,9 @@ public class MyPetSkillTreeLoaderYaml
                         {
                             if (!skill.isAddedByInheritance())
                             {
-                                MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(skill.getName(), true);
-                                skillTree.addSkillToLevel(level.getLevel(), newSkill);
+                                MyPetSkillTreeSkill skillClone = skill.cloneSkill();
+                                skillClone.setIsInherited(true);
+                                skillTree.addSkillToLevel(level.getLevel(), skillClone);
                             }
                         }
                     }

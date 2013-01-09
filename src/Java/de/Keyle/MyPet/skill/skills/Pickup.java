@@ -20,9 +20,12 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.PropertyHandler;
-import de.Keyle.MyPet.skill.PropertyHandler.NBTdatatypes;
-import de.Keyle.MyPet.util.MyPetCustomInventory;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
@@ -33,33 +36,69 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-@PropertyHandler(html = Fire.html, parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Double})
+@SkillName("Pickup")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Double})
 public class Pickup extends MyPetGenericSkill
 {
-    protected final static String html = "<html>\n" +
-            "   <body>\n" +
-            "       <form action=\"#\">\n" +
-            "           <p>Increase pickup range by:</p>" +
-            "           <input name=\"add\" type=\"text\" /><br/><br/>" +
-            "           <input type=\"submit\" value=\"Save\" />" +
-            "       </form>\n" +
-            "   </body>\n" +
-            "</html>\n";
-
-    public static double rangePerLevel = 1;
+    private double range = 0;
     private boolean pickup = false;
 
-    public Pickup()
+    public Pickup(boolean addedByInheritance)
     {
-        super("Pickup");
+        super(addedByInheritance);
+    }
+
+    @Override
+    public boolean isActive()
+    {
+        return range > 0;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Pickup)
+        {
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                range += upgrade.getProperties().getDouble("add");
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + String.format("%1.2f", range)));
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return MyPetLanguage.getString("Name_Range") + ": " + String.format("%1.2f", range) + " " + MyPetLanguage.getString("Name_Blocks");
+    }
+
+    public void reset()
+    {
+        range = 0;
+        pickup = false;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
+        {
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getDouble("add") + "\"");
+        }
+        return html;
     }
 
     @Override
     public void activate()
     {
-        if (level > 0)
+        if (range > 0)
         {
-            if (myPet.getSkills().getSkillLevel("Inventory") > 0)
+            if (myPet.getSkills().isSkillActive("Inventory"))
             {
                 pickup = !pickup;
                 myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString((pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", myPet.petName));
@@ -71,23 +110,16 @@ public class Pickup extends MyPetGenericSkill
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
-    }
-
-    @Override
-    public void upgrade()
-    {
-        super.upgrade();
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + (level * rangePerLevel)));
     }
 
     @Override
     public void schedule()
     {
-        if (level > 0 && pickup && myPet.status == PetState.Here && myPet.getSkills().getSkillLevel("Inventory") > 0)
+        if (range > 0 && pickup && myPet.status == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
         {
-            for (Entity e : myPet.getCraftPet().getNearbyEntities(level * rangePerLevel, rangePerLevel, level * rangePerLevel))
+            for (Entity e : myPet.getCraftPet().getNearbyEntities(range, range, range))
             {
                 if (e instanceof Item)
                 {
@@ -132,15 +164,17 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
         nbtTagCompound.setBoolean("Active", pickup);
         return nbtTagCompound;
 
     }
 
-    public void reset()
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
     {
-        super.reset();
-        pickup = false;
+        MyPetSkillTreeSkill newSkill = new Pickup(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

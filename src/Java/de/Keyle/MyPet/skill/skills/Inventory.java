@@ -20,7 +20,12 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetCustomInventory;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -31,14 +36,61 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+@SkillName("Inventory")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
 public class Inventory extends MyPetGenericSkill
 {
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
     public static boolean creative = true;
+    private int rows = 0;
 
-    public Inventory()
+    public Inventory(boolean addedByInheritance)
     {
-        super("Inventory", 6);
+        super(addedByInheritance);
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
+        {
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+        }
+        return html;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Inventory)
+        {
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                rows += upgrade.getProperties().getInt("add");
+                if (rows > 6)
+                {
+                    rows = 6;
+                }
+                inv.setSize(rows * 9);
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return rows + " " + MyPetLanguage.getString("Name_Rows");
+    }
+
+    public void reset()
+    {
+        rows = 0;
+        inv.setSize(0);
     }
 
     @Override
@@ -48,7 +100,7 @@ public class Inventory extends MyPetGenericSkill
         {
             myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
         }
-        else if (level > 0)
+        else if (rows > 0)
         {
             if (myPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && myPet.getLocation().getBlock().getType() != Material.WATER)
             {
@@ -66,21 +118,6 @@ public class Inventory extends MyPetGenericSkill
         }
     }
 
-    @Override
-    public void setLevel(int level)
-    {
-        super.setLevel(level);
-        inv.setSize(this.level * 9);
-    }
-
-    @Override
-    public void upgrade()
-    {
-        super.upgrade();
-        inv.setSize(level * 9);
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
-    }
-
     public void OpenInventory(Player p)
     {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
@@ -96,7 +133,7 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }
@@ -108,9 +145,17 @@ public class Inventory extends MyPetGenericSkill
         inv.setName(myPet.petName);
     }
 
-    public void reset()
+    @Override
+    public boolean isActive()
     {
-        super.reset();
-        inv.setSize(0);
+        return rows > 0;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new Inventory(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

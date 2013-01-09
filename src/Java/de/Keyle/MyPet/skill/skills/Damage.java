@@ -19,74 +19,91 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
+@SkillName("Damage")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
 public class Damage extends MyPetGenericSkill
 {
     private boolean isPassive = true;
+    private int damageIncrease = 0;
 
-    public Damage()
+    public Damage(boolean addedByInheritance)
     {
-        super("Damage");
+        super(addedByInheritance);
     }
 
-    public void upgrade(int value)
+    @Override
+    public boolean isActive()
     {
-        if (getMyPet().getDamage() > 0)
+        return damageIncrease > 0;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Damage)
         {
-            isPassive = false;
-        }
-        if (value > 0)
-        {
-            value--;
-            this.level += value;
-            if (maxLevel != -1 && this.level > maxLevel)
+            if (getMyPet().getDamage() > 0)
             {
-                level = maxLevel - 1;
-            }
-            if (isPassive)
-            {
-                getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-                getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-                getMyPet().getCraftPet().getHandle().setPathfinder();
                 isPassive = false;
             }
-            upgrade();
-        }
-    }
-
-    public void setLevel(int level)
-    {
-        if (getMyPet().getDamage() > 0)
-        {
-            isPassive = false;
-        }
-        super.setLevel(level);
-        if (isPassive)
-        {
-            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().setPathfinder();
-            isPassive = false;
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                damageIncrease += upgrade.getProperties().getInt("add");
+                if (damageIncrease > 0 && isPassive)
+                {
+                    getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+                    getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+                    getMyPet().getCraftPet().getHandle().setPathfinder();
+                    isPassive = false;
+                }
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + damageIncrease));
+                }
+            }
         }
     }
 
     @Override
-    public void upgrade()
+    public String getFormattedValue()
     {
-        if (getMyPet().getDamage() > 0)
+        return "+" + damageIncrease;
+    }
+
+    public void reset()
+    {
+        damageIncrease = 0;
+    }
+
+    public int getDamageIncrease()
+    {
+        return damageIncrease;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
         {
-            isPassive = false;
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
         }
-        super.upgrade();
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + level));
-        if (isPassive)
-        {
-            getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-            getMyPet().getCraftPet().getHandle().setPathfinder();
-            isPassive = false;
-        }
+        return html;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new Damage(isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

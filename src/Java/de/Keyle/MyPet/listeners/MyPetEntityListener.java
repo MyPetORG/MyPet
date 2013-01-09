@@ -35,10 +35,7 @@ import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.skills.Behavior;
-import de.Keyle.MyPet.skill.skills.Fire;
-import de.Keyle.MyPet.skill.skills.Poison;
-import de.Keyle.MyPet.skill.skills.Thorns;
+import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 import org.bukkit.ChatColor;
@@ -122,7 +119,7 @@ public class MyPetEntityListener implements Listener
                         {
                             if (!myPet.isPassiv())
                             {
-                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().hasSkill("Damage") ? myPet.getSkills().getSkillLevel("Damage") : 0);
+                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                                 damager.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                             }
                             if (MyPetConfig.hungerSystem)
@@ -151,10 +148,10 @@ public class MyPetEntityListener implements Listener
                 }
                 if (!event.isCancelled())
                 {
-                    if (myPet.getSkills().hasSkill("Thorns"))
+                    if (myPet.getSkills().isSkillActive("Thorns"))
                     {
                         Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
-                        if (thornsSkill.getLevel() > 0 && thornsSkill.isActivated())
+                        if (thornsSkill.isActivated())
                         {
                             ((LivingEntity) ((EntityDamageByEntityEvent) event).getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
                         }
@@ -396,7 +393,7 @@ public class MyPetEntityListener implements Listener
                     Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
                     if (poisonSkill.getPoison())
                     {
-                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, Poison.duration * 20, 1);
+                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, poisonSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
                     }
                 }
@@ -405,7 +402,7 @@ public class MyPetEntityListener implements Listener
                     Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
                     if (fireSkill.getFire())
                     {
-                        event.getEntity().setFireTicks(Fire.duration * 20);
+                        event.getEntity().setFireTicks(fireSkill.getDuration() * 20);
                     }
                 }
             }
@@ -477,33 +474,30 @@ public class MyPetEntityListener implements Listener
                 if (MyPetList.isMyPet(event.getEntity().getEntityId()))
                 {
                     MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                    if (myPet.getSkills().hasSkill("Behavior"))
+                    if (myPet.getSkills().isSkillActive("Behavior"))
                     {
                         Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-                        if (behaviorSkill.getLevel() > 0)
+                        if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                         {
-                            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                            event.setCancelled(true);
+                        }
+                        else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                        {
+                            event.setCancelled(true);
+                        }
+                        else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                        {
+                            if (event.getTarget() instanceof Player)
                             {
                                 event.setCancelled(true);
                             }
-                            else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                            else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
                             {
                                 event.setCancelled(true);
                             }
-                            else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                            else if (event.getTarget() instanceof CraftMyPet)
                             {
-                                if (event.getTarget() instanceof Player)
-                                {
-                                    event.setCancelled(true);
-                                }
-                                else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
-                                {
-                                    event.setCancelled(true);
-                                }
-                                else if (event.getTarget() instanceof CraftMyPet)
-                                {
-                                    event.setCancelled(true);
-                                }
+                                event.setCancelled(true);
                             }
                         }
                     }

@@ -44,11 +44,9 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
-import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkills;
-import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.skills.Damage;
+import de.Keyle.MyPet.skill.skills.HP;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 import org.bukkit.Location;
@@ -311,7 +309,7 @@ public abstract class MyPet
 
     public int getMaxHealth()
     {
-        return getStartHP(this.getClass()) + (skills.hasSkill("HP") ? skills.getSkill("HP").getLevel() : 0);
+        return getStartHP(this.getClass()) + (skills.isSkillActive("HP") ? ((HP) skills.getSkill("HP")).getHpIncrease() : 0);
     }
 
     public int getHungerValue()
@@ -348,7 +346,7 @@ public abstract class MyPet
 
     public int getDamage()
     {
-        return MyPet.getStartDamage(this.getClass()) + (getSkills().hasSkill("Damage") ? getSkills().getSkillLevel("Damage") : 0);
+        return MyPet.getStartDamage(this.getClass()) + (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamageIncrease() : 0);
     }
 
     public MyPetSkills getSkills()
@@ -386,12 +384,9 @@ public abstract class MyPet
     {
         if (status != PetState.Despawned && getOwner().isOnline())
         {
-            if (skills.getSkills().size() > 0)
+            for (MyPetGenericSkill skill : skills.getSkills())
             {
-                for (MyPetGenericSkill skill : skills.getSkills())
-                {
-                    skill.schedule();
-                }
+                skill.schedule();
             }
             if (status == PetState.Dead)
             {

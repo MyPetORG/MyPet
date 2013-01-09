@@ -91,7 +91,7 @@ public class CommandRelease implements CommandExecutor
                 name = name.substring(0, name.length() - 1);
                 if (myPet.petName.equalsIgnoreCase(name))
                 {
-                    if (myPet.getSkills().getSkillLevel("Inventory") > 0)
+                    if (myPet.getSkills().isSkillActive("Inventory"))
                     {
                         World world = myPet.getCraftPet().getHandle().world;
                         Location petLocation = myPet.getLocation();

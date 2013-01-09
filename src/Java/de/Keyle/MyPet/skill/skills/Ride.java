@@ -19,27 +19,84 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Material;
 
+@SkillName("Ride")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Float})
 public class Ride extends MyPetGenericSkill
 {
     public static Material item = Material.STRING;
-    public static float speedPerLevel = 0.2F;
+    private float speed = 0F;
+    private boolean active = false;
 
-    public Ride()
+    public Ride(boolean addedByInheritance)
     {
-        super("Ride");
+        super(addedByInheritance);
     }
 
     @Override
-    public void upgrade()
+    public boolean isActive()
     {
-        super.upgrade();
-        if (level == 1)
+        return active;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Ride)
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName));
+            active = true;
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                speed += upgrade.getProperties().getFloat("add");
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName)/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
+                }
+            }
         }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return MyPetLanguage.getString("Name_Speed") + " +" + String.format("%1.3f", speed);
+    }
+
+    public void reset()
+    {
+        speed = 0F;
+        active = false;
+    }
+
+    public float getSpeed()
+    {
+        return speed;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
+        {
+            html = html.replace("value=\"0.0\"", "value=\"" + getProperties().getFloat("add") + "\"");
+        }
+        return html;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new Ride(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

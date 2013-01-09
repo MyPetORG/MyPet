@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.Control;
-import de.Keyle.MyPet.skill.skills.Ride;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,29 +49,22 @@ public class MyPetPlayerListener implements Listener
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.status == PetState.Here && myPet.getCraftPet().canMove())
             {
-                if (myPet.getSkills().getSkillLevel("Control") > 0)
+                if (myPet.getSkills().isSkillActive("Control"))
                 {
-                    if (myPet.getSkills().hasSkill("Behavior"))
+                    if (myPet.getSkills().isSkillActive("Behavior"))
                     {
                         Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-                        if (behavior.getLevel() > 0)
+                        if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                         {
-                            if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
-                            {
-                                event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
-                                return;
-                            }
+                            event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
+                            return;
                         }
                     }
-                    if (myPet.getSkills().hasSkill("Ride"))
+                    if (myPet.getSkills().isSkillActive("Ride"))
                     {
-                        Ride ride = (Ride) myPet.getSkills().getSkill("Ride");
-                        if (ride.getLevel() > 0)
+                        if (myPet.getCraftPet().getHandle().hasRider())
                         {
-                            if (myPet.getCraftPet().getHandle().hasRider())
-                            {
-                                return;
-                            }
+                            return;
                         }
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
@@ -145,15 +137,12 @@ public class MyPetPlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getSkills().hasSkill("Behavior"))
+            if (myPet.getSkills().isSkillActive("Behavior"))
             {
                 Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-                if (behavior.getLevel() > 0)
+                if (behavior.getBehavior() == BehaviorState.Aggressive)
                 {
-                    if (behavior.getBehavior() == BehaviorState.Aggressive)
-                    {
-                        behavior.setBehavior(BehaviorState.Normal);
-                    }
+                    behavior.setBehavior(BehaviorState.Normal);
                 }
             }
             myPet.removePet();

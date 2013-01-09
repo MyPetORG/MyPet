@@ -19,28 +19,30 @@
 
 package de.Keyle.MyPet.skill;
 
+import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 
-public class MyPetSkillTreeSkill
+import java.io.InputStream;
+
+public abstract class MyPetSkillTreeSkill
 {
-    String name;
-    boolean addedByInheritance = false;
-    NBTTagCompound propertiesCompound;
+    private boolean addedByInheritance = false;
+    private NBTTagCompound propertiesCompound;
 
-    public MyPetSkillTreeSkill(String name)
+    public MyPetSkillTreeSkill(boolean addedByInheritance)
     {
-        this.name = name;
-    }
-
-    public MyPetSkillTreeSkill(String name, boolean addedByInheritance)
-    {
-        this.name = name;
         this.addedByInheritance = addedByInheritance;
     }
 
     public String getName()
     {
-        return name;
+        SkillName sn = this.getClass().getAnnotation(SkillName.class);
+        if (sn != null)
+        {
+            return sn.value();
+        }
+        return "BadSkillClass";
     }
 
     public void setProperties(NBTTagCompound propertiesCompound)
@@ -52,7 +54,8 @@ public class MyPetSkillTreeSkill
     {
         if (propertiesCompound == null)
         {
-            return new NBTTagCompound("Properties");
+            propertiesCompound = new NBTTagCompound("Properties");
+            return propertiesCompound;
         }
         return propertiesCompound;
     }
@@ -62,18 +65,30 @@ public class MyPetSkillTreeSkill
         return addedByInheritance;
     }
 
-    public MyPetSkillTreeSkill clone()
+    protected void setIsInherited(boolean flag)
     {
-        MyPetSkillTreeSkill newSkill = new MyPetSkillTreeSkill(name, addedByInheritance);
+        addedByInheritance = flag;
+    }
 
-        newSkill.setProperties(getProperties());
+    public abstract MyPetSkillTreeSkill cloneSkill();
 
-        return newSkill;
+    public String getHtml()
+    {
+        InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/" + getName() + ".html");
+        if (htmlStream == null)
+        {
+            htmlStream = MyPetPlugin.class.getClassLoader().getResourceAsStream("html/_default.html");
+            if (htmlStream == null)
+            {
+                return "NoSkillPropertieViewFoundError";
+            }
+        }
+        return MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
     }
 
     @Override
     public String toString()
     {
-        return "MyPetSkillTreeSkill{name=" + this.name + "}";
+        return "MyPetSkillTreeSkill{name=" + getName() + "}";
     }
 }

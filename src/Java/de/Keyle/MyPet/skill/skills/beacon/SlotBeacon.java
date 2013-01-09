@@ -27,9 +27,9 @@ import net.minecraft.server.v1_4_6.Slot;
 public class SlotBeacon extends Slot
 {
 
-    public SlotBeacon(IInventory beaconInventory, int index, int i1, int i2)
+    public SlotBeacon(IInventory beaconInventory, int index, int posX, int posY)
     {
-        super(beaconInventory, index, i1, i2);
+        super(beaconInventory, index, posX, posY);
     }
 
     public boolean isAllowed(ItemStack paramItemStack)

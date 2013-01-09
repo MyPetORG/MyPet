@@ -50,15 +50,15 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage("/petskill | Shows the skill-levels");
                 player.sendMessage("/petchooseskilltree | Shows and chooses skilltrees  (alias: /pcst or /petcst)");
 
-                if (MyPetList.getMyPet(player).getSkills().getSkillLevel("Inventory") > 0)
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
                 {
                     player.sendMessage("/petinventory | Opens the inventory of the pet  (alias: /pi or /peti)");
                 }
-                if (MyPetList.getMyPet(player).getSkills().getSkillLevel("Pickup") > 0)
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
                 {
                     player.sendMessage("/petpickup | Toggle pickup on/off  (alias: /pp or /petp)");
                 }
-                if (MyPetList.getMyPet(player).getSkills().getSkillLevel("Behavior") > 0)
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Behavior"))
                 {
                     player.sendMessage("/petbehavior | Toggles the behaivior  (alias: /pb or /petb)");
                 }

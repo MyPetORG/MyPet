@@ -17,7 +17,7 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.skill.skills.inventory;
 
 import net.minecraft.server.v1_4_6.*;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftHumanEntity;

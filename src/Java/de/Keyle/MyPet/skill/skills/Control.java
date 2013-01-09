@@ -19,27 +19,51 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+@SkillName("Control")
 public class Control extends MyPetGenericSkill
 {
     public static Material item = Material.STRING;
     private Location moveTo;
     private Location prevMoveTo;
+    private boolean active = false;
 
-    public Control()
+    public Control(boolean addedByInheritance)
     {
-        super("Control", 1);
+        super(addedByInheritance);
     }
 
     @Override
-    public void upgrade()
+    public boolean isActive()
     {
-        level = 1;
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", item.name()));
+        return active;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Control)
+        {
+            active = true;
+            if (!quiet)
+            {
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", item.name()));
+
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return "";
     }
 
     public Location getLocation()
@@ -61,7 +85,10 @@ public class Control extends MyPetGenericSkill
 
     public void setMoveTo(Location loc)
     {
-
+        if (!active)
+        {
+            return;
+        }
         if (prevMoveTo != null)
         {
             if (MyPetUtil.getDistance2D(loc, prevMoveTo) > 1)
@@ -78,8 +105,16 @@ public class Control extends MyPetGenericSkill
 
     public void reset()
     {
-        super.reset();
+        active = false;
         moveTo = null;
         prevMoveTo = null;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new Control(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

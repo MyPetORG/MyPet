@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_4_6.*;
 
 public class EntityMyIronGolem extends EntityMyPet
@@ -39,7 +38,7 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F, Ride.speedPerLevel));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 5, 20));

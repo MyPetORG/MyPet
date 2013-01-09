@@ -22,6 +22,7 @@ package de.Keyle.MyPet.gui;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.skillcreator.BukkitDownloader;
 import de.Keyle.MyPet.gui.skillcreator.LevelCreator;
+import de.Keyle.MyPet.gui.skillcreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLoader;
 
@@ -38,6 +39,7 @@ public class GuiMain
     public static LevelCreator levelCreator;
     public static SkilltreeCreator skilltreeCreator;
     public static BukkitDownloader bukkitDownloader;
+    public static SkillPropertyEditor skillPropertyEditor;
     public static String configPath;
 
     public static void main(String[] args)
@@ -137,7 +139,7 @@ public class GuiMain
         skilltreeCreatorFrame.setLocationRelativeTo(null);
 
         levelCreator = new LevelCreator();
-        JFrame levelCreatorFrame = levelCreator.getFrame();
+        final JFrame levelCreatorFrame = levelCreator.getFrame();
         levelCreatorFrame.setContentPane(levelCreator.getMainPanel());
         levelCreatorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         levelCreatorFrame.setIconImage(logoImage);
@@ -152,6 +154,45 @@ public class GuiMain
             public void windowClosing(WindowEvent e)
             {
                 skilltreeCreatorFrame.setEnabled(true);
+            }
+
+            public void windowClosed(WindowEvent e)
+            {
+            }
+
+            public void windowIconified(WindowEvent e)
+            {
+            }
+
+            public void windowDeiconified(WindowEvent e)
+            {
+            }
+
+            public void windowActivated(WindowEvent e)
+            {
+            }
+
+            public void windowDeactivated(WindowEvent e)
+            {
+            }
+        });
+
+        skillPropertyEditor = new SkillPropertyEditor();
+        final JFrame skillPropertyEditorFrame = skillPropertyEditor.getFrame();
+        skillPropertyEditorFrame.setContentPane(skillPropertyEditor.getMainPanel());
+        skillPropertyEditorFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        skillPropertyEditorFrame.setIconImage(logoImage);
+        skillPropertyEditorFrame.pack();
+        skillPropertyEditorFrame.setLocationRelativeTo(null);
+        skillPropertyEditorFrame.addWindowListener(new WindowListener()
+        {
+            public void windowOpened(WindowEvent e)
+            {
+            }
+
+            public void windowClosing(WindowEvent e)
+            {
+                levelCreatorFrame.setEnabled(true);
             }
 
             public void windowClosed(WindowEvent e)

@@ -47,33 +47,30 @@ public class EntityAIFarmTarget extends PathfinderGoal
      */
     public boolean a()
     {
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().isSkillActive("Behavior"))
         {
             Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-            if (behavior.getLevel() > 0)
+            if (behavior.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
             {
-                if (behavior.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
+                if (target == null || !target.isAlive())
                 {
-                    if (target == null || !target.isAlive())
+                    for (float range = 1.F ; range <= this.range ; range++)
                     {
-                        for (float range = 1.F ; range <= this.range ; range++)
+                        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                         {
-                            for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
-                            {
-                                Entity entity = (Entity) entityObj;
-                                EntityMonster entityLiving = (EntityMonster) entity;
+                            Entity entity = (Entity) entityObj;
+                            EntityMonster entityLiving = (EntityMonster) entity;
 
-                                if (petEntity.aA().canSee(entityLiving))
-                                {
-                                    this.target = entityLiving;
-                                    return true;
-                                }
+                            if (petEntity.aA().canSee(entityLiving))
+                            {
+                                this.target = entityLiving;
+                                return true;
                             }
                         }
-                        return false;
                     }
-                    return true;
+                    return false;
                 }
+                return true;
             }
         }
         return false;

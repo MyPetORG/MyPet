@@ -65,15 +65,12 @@ public class EntityAIControlTarget extends PathfinderGoal
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
         {
             Behavior behaviorSkill = null;
-            if (myPet.getSkills().hasSkill("Behavior"))
+            if (myPet.getSkills().isSkillActive("Behavior"))
             {
                 behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-                if (behaviorSkill.getLevel() > 0)
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
-                    if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))

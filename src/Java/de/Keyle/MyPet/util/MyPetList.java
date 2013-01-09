@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.event.MyPetSelectSetActiveEvent;
 import de.Keyle.MyPet.event.MyPetSelectSetInactiveEvent;
-import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import org.bukkit.entity.Player;
 
 import java.util.*;

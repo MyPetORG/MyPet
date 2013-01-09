@@ -20,20 +20,79 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
+@SkillName("HP")
+@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
 public class HP extends MyPetGenericSkill
 {
-    public HP()
+    private int hpIncrease = 0;
+
+    public HP(boolean addedByInheritance)
     {
-        super("HP");
+        super(addedByInheritance);
     }
 
     @Override
-    public void upgrade()
+    public boolean isActive()
     {
-        super.upgrade();
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", myPet.petName).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + level)));
+        return hpIncrease > 0;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof HP)
+        {
+            if (upgrade.getProperties().hasKey("add"))
+            {
+                hpIncrease += upgrade.getProperties().getInt("add");
+                if (!quiet)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", myPet.petName).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + hpIncrease)));
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return "+" + hpIncrease;
+    }
+
+    public void reset()
+    {
+        hpIncrease = 0;
+    }
+
+    public int getHpIncrease()
+    {
+        return hpIncrease;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        if (getProperties().hasKey("add"))
+        {
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+        }
+        return html;
+    }
+
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
+    {
+        MyPetSkillTreeSkill newSkill = new HP(isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

@@ -20,14 +20,171 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.EntityLiving;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@SkillName("Behavior")
+@SkillProperties(
+        parameterNames = {"friend", "aggro", "farm", "raid"},
+        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean})
 public class Behavior extends MyPetGenericSkill
 {
     private BehaviorState behavior = BehaviorState.Normal;
+    private Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
+    private boolean active = false;
+
+    public Behavior(boolean addedByInheritance)
+    {
+        super(addedByInheritance);
+        behaviorActive.put(BehaviorState.Normal, true);
+        behaviorActive.put(BehaviorState.Aggressive, false);
+        behaviorActive.put(BehaviorState.Farm, false);
+        behaviorActive.put(BehaviorState.Friendly, false);
+        behaviorActive.put(BehaviorState.Raid, false);
+    }
+
+    @Override
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Behavior)
+        {
+            active = true;
+            boolean valuesEdit = false;
+            String activeModes = "";
+            if (upgrade.getProperties().hasKey("friend"))
+            {
+                behaviorActive.put(BehaviorState.Friendly, upgrade.getProperties().getBoolean("friend"));
+                if (behaviorActive.get(BehaviorState.Friendly))
+                {
+                    activeModes = "Friendly";
+                }
+                valuesEdit = true;
+            }
+            if (upgrade.getProperties().hasKey("aggro"))
+            {
+                behaviorActive.put(BehaviorState.Aggressive, upgrade.getProperties().getBoolean("aggro"));
+                if (behaviorActive.get(BehaviorState.Aggressive))
+                {
+                    if (!activeModes.equalsIgnoreCase(""))
+                    {
+                        activeModes += ", ";
+                    }
+                    activeModes += "Aggressive";
+                }
+                valuesEdit = true;
+            }
+            if (upgrade.getProperties().hasKey("farm"))
+            {
+                behaviorActive.put(BehaviorState.Farm, upgrade.getProperties().getBoolean("farm"));
+                if (behaviorActive.get(BehaviorState.Farm))
+                {
+                    if (!activeModes.equalsIgnoreCase(""))
+                    {
+                        activeModes += ", ";
+                    }
+                    activeModes += "Farm";
+                }
+                valuesEdit = true;
+            }
+            if (upgrade.getProperties().hasKey("raid"))
+            {
+                behaviorActive.put(BehaviorState.Raid, upgrade.getProperties().getBoolean("raid"));
+                if (behaviorActive.get(BehaviorState.Raid))
+                {
+                    if (!activeModes.equalsIgnoreCase(""))
+                    {
+                        activeModes += ", ";
+                    }
+                    activeModes += "Raid";
+                }
+                valuesEdit = true;
+            }
+            if (!quiet && valuesEdit)
+            {
+                myPet.sendMessageToOwner(MyPetUtil.setColors(getFormattedValue()));
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        String activeModes = MyPetLanguage.getString("Name_Normal");
+        if (behaviorActive.get(BehaviorState.Friendly))
+        {
+
+            activeModes += ", " + MyPetLanguage.getString("Name_Friendly");
+        }
+        if (behaviorActive.get(BehaviorState.Aggressive))
+        {
+            if (!activeModes.equalsIgnoreCase(""))
+            {
+                activeModes += ", ";
+            }
+            activeModes += MyPetLanguage.getString("Name_Aggressive");
+        }
+        if (behaviorActive.get(BehaviorState.Farm))
+        {
+            if (!activeModes.equalsIgnoreCase(""))
+            {
+                activeModes += ", ";
+            }
+            activeModes += MyPetLanguage.getString("Name_Farm");
+        }
+        if (behaviorActive.get(BehaviorState.Raid))
+        {
+            if (!activeModes.equalsIgnoreCase(""))
+            {
+                activeModes += ", ";
+            }
+            activeModes += MyPetLanguage.getString("Name_Raid");
+        }
+        return MyPetLanguage.getString("Name_Modes") + ": " + activeModes;
+    }
+
+    public void reset()
+    {
+        behavior = BehaviorState.Normal;
+        behaviorActive.put(BehaviorState.Normal, true);
+        behaviorActive.put(BehaviorState.Aggressive, false);
+        behaviorActive.put(BehaviorState.Farm, false);
+        behaviorActive.put(BehaviorState.Friendly, false);
+        behaviorActive.put(BehaviorState.Raid, false);
+        active = false;
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        for (String name : getClass().getAnnotation(SkillProperties.class).parameterNames())
+        {
+            if (getProperties().hasKey(name))
+            {
+                if (!getProperties().getBoolean(name))
+                {
+                    html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
+                }
+            }
+        }
+        return html;
+    }
 
     public static enum BehaviorState
     {
@@ -54,10 +211,6 @@ public class Behavior extends MyPetGenericSkill
         }
     }
 
-    public Behavior()
-    {
-        super("Behavior", 1);
-    }
 
     public void setBehavior(BehaviorState behaviorState)
     {
@@ -71,7 +224,7 @@ public class Behavior extends MyPetGenericSkill
 
     public void activateBehavior(BehaviorState behaviorState)
     {
-        if (level > 0)
+        if (active)
         {
             behavior = behaviorState;
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", MyPetLanguage.getString("Name_" + behavior.name())));
@@ -82,7 +235,7 @@ public class Behavior extends MyPetGenericSkill
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
     }
 
@@ -92,16 +245,9 @@ public class Behavior extends MyPetGenericSkill
     }
 
     @Override
-    public void upgrade()
-    {
-        level = 1;
-        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LearnedSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
-    }
-
-    @Override
     public void activate()
     {
-        if (level > 0)
+        if (active)
         {
             if (behavior == BehaviorState.Normal)
             {
@@ -134,7 +280,7 @@ public class Behavior extends MyPetGenericSkill
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
     }
 
@@ -147,7 +293,7 @@ public class Behavior extends MyPetGenericSkill
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
         nbtTagCompound.setString("Mode", behavior.name());
         return nbtTagCompound;
     }
@@ -175,9 +321,11 @@ public class Behavior extends MyPetGenericSkill
         }
     }
 
-    public void reset()
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
     {
-        super.reset();
-        behavior = BehaviorState.Normal;
+        MyPetSkillTreeSkill newSkill = new Behavior(isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

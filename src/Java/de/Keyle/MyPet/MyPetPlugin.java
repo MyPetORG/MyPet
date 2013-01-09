@@ -65,7 +65,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
@@ -206,6 +207,7 @@ public class MyPetPlugin extends JavaPlugin
 
         registerSkills();
 
+        /*
         File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
 
         if (!defaultSkillConfig.exists())
@@ -232,6 +234,7 @@ public class MyPetPlugin extends JavaPlugin
                 debugLogger.info("unable to create default.yml");
             }
         }
+        */
 
         MyPetSkillTreeLoaderYaml.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
         MyPetSkillTreeLoader.saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");

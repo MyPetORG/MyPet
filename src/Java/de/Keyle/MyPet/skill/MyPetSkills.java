@@ -20,17 +20,18 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class MyPetSkills
 {
     private static List<Class<? extends MyPetGenericSkill>> skillClassList = new ArrayList<Class<? extends MyPetGenericSkill>>();
     private static List<String> skillNames = new ArrayList<String>();
+    private static Map<String, Class<? extends MyPetGenericSkill>> skillMap = new HashMap<String, Class<? extends MyPetGenericSkill>>();
 
     private MyPet myPet;
 
@@ -42,18 +43,27 @@ public class MyPetSkills
         {
             try
             {
-                Object obj = clazz.newInstance();
-                if (obj instanceof MyPetGenericSkill)
+                Constructor<?> ctor = clazz.getConstructor(boolean.class);
+                Object obj = ctor.newInstance(false);
+                if (clazz.getAnnotation(SkillName.class) != null && obj instanceof MyPetGenericSkill)
                 {
                     MyPetGenericSkill skill = (MyPetGenericSkill) obj;
                     skillNames.add(skill.getName().toLowerCase());
                     skillClassList.add(clazz);
+                    skillMap.put(skill.getName().toLowerCase(), clazz);
+                    if (MyPetUtil.getDebugLogger() != null)
+                    {
+                        MyPetUtil.getDebugLogger().info("registered skill: " + clazz.getName());
+                    }
                 }
             }
             catch (Exception e)
             {
-                MyPetLogger.write(ChatColor.RED + clazz.getName() + "is not a valid skill!");
-                MyPetUtil.getDebugLogger().warning(clazz.getName() + "is not a valid skill!");
+                MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
+                if (MyPetUtil.getDebugLogger() != null)
+                {
+                    MyPetUtil.getDebugLogger().warning(clazz.getName() + " is not a valid skill!");
+                }
             }
 
         }
@@ -62,6 +72,40 @@ public class MyPetSkills
     public static boolean isValidSkill(String name)
     {
         return skillNames.contains(name.toLowerCase());
+    }
+
+    public static Class<? extends MyPetGenericSkill> getSkillClass(String name)
+    {
+        if (isValidSkill(name))
+        {
+            return skillMap.get(name.toLowerCase());
+        }
+        return null;
+    }
+
+    public static MyPetSkillTreeSkill getNewSkillInstance(String name)
+    {
+        return getNewSkillInstance(name, false);
+    }
+
+    public static MyPetSkillTreeSkill getNewSkillInstance(String name, boolean is)
+    {
+        try
+        {
+            Constructor<?> ctor = getSkillClass(name).getConstructor(boolean.class);
+            Object obj = ctor.newInstance(is);
+            if (obj instanceof MyPetSkillTreeSkill)
+            {
+                return (MyPetSkillTreeSkill) obj;
+            }
+        }
+        catch (Exception e)
+        {
+            MyPetLogger.write(ChatColor.RED + getSkillClass(name).getName() + " is no valid Skill)!");
+            MyPetUtil.getDebugLogger().warning(getSkillClass(name).getName() + " is no valid Skill!");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public MyPetSkills(MyPet myPet)
@@ -77,7 +121,8 @@ public class MyPetSkills
 
         try
         {
-            Object obj = skillClass.newInstance();
+            Constructor<?> ctor = skillClass.getConstructor(boolean.class);
+            Object obj = ctor.newInstance(false);
             if (obj instanceof MyPetGenericSkill)
             {
                 skill = (MyPetGenericSkill) obj;
@@ -92,20 +137,17 @@ public class MyPetSkills
         }
         catch (Exception e)
         {
-            MyPetLogger.write(ChatColor.RED + skillClass.getName() + "is not a valid skill!");
-            MyPetUtil.getDebugLogger().warning(skillClass.getName() + "is not a valid skill!");
+            MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
+            MyPetUtil.getDebugLogger().warning(skillClass.getName() + " is not a valid skill!");
             skillClassList.remove(skillClass);
         }
     }
 
     public void addSkills(List<Class<? extends MyPetGenericSkill>> classList)
     {
-        if (classList.size() > 0)
+        for (Class<? extends MyPetGenericSkill> clazz : classList)
         {
-            for (Class<? extends MyPetGenericSkill> clazz : classList)
-            {
-                addSkill(clazz);
-            }
+            addSkill(clazz);
         }
     }
 
@@ -133,13 +175,9 @@ public class MyPetSkills
         return skills.containsKey(skillName);
     }
 
-    public int getSkillLevel(String skillName)
+    public boolean isSkillActive(String skillName)
     {
-        if (hasSkill(skillName))
-        {
-            return getSkill(skillName).getLevel();
-        }
-        return -1;
+        return hasSkill(skillName) && getSkill(skillName).isActive();
     }
 
     public void reset()

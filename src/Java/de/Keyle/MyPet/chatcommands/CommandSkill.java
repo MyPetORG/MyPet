@@ -20,7 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -53,9 +53,9 @@ public class CommandSkill implements CommandExecutor
                 {
                     for (MyPetGenericSkill skill : skillList)
                     {
-                        if (skill.getLevel() > 0)
+                        if (skill.isActive())
                         {
-                            player.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% lv: %gold%%lvl%").replace("%skillname%", skill.getName()).replace("%lvl%", "" + skill.getLevel()));
+                            player.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                         }
                     }
                 }

@@ -36,6 +36,7 @@
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
+    <property name="MyPet.html.dir" location="${basedir}/src/HTML" />
     <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/MyPet/build" />
     <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/MyPet/src" />
 
@@ -110,6 +111,7 @@
     <!-- Copies resources to build dir -->
     <target name="3_copyresources" depends="1_clean, 2_makedir">
         <copydir src="${MyPet.resources.dir}" dest="${MyPet.output.dir.build}/resources" />
+        <copydir src="${MyPet.html.dir}" dest="${MyPet.output.dir.build}/html" />
         <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.output.dir.build}/plugin.yml" />
         <copy file="${basedir}/src/default.yml" tofile="${MyPet.output.dir.build}/default.yml" />
         <unjar src="${idea.lib.dir}/forms_rt.jar" dest="${MyPet.output.dir.build}">

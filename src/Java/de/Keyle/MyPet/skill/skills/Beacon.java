@@ -20,41 +20,100 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.beacon.ContainerBeacon;
+import de.Keyle.MyPet.skill.skills.beacon.MyPetCustomBeaconInventory;
 import de.Keyle.MyPet.skill.skills.beacon.TileEntityBeacon;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.*;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Beacon extends MyPetGenericSkill implements IInventory
+@SkillName("Beacon")
+@SkillProperties(
+        parameterNames = {"Add_1", "Add_2", "Add_3", "Add_4", "Add_5", "Add_6", "Add_7", "Add_8", "level"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int})
+public class Beacon extends MyPetGenericSkill
 {
-    public static double rangePerLevel = 5;
     public static int hungerDecreaseTime = 60;
 
-    public List<HumanEntity> transaction = new ArrayList<HumanEntity>();
-    private int maxStack = 64;
-    private ItemStack tributeItem;
     private TileEntityBeacon tileEntityBeacon;
 
     private int primaryEffectId = 0;
     private int secondaryEffectId = 0;
-    private boolean active = false;
     private int hungerDecreaseTimer;
+    private boolean active = false;
+    private double range = 5;
+    private int level = 0;
+    private MyPetCustomBeaconInventory beaconInv;
 
-
-    public Beacon()
+    public Beacon(boolean addedByInheritance)
     {
-        super("Beacon");
-        hungerDecreaseTimer = hungerDecreaseTime;
+        super(addedByInheritance);
+        beaconInv = new MyPetCustomBeaconInventory();
+    }
+
+    @Override
+    public boolean isActive()
+    {
+        return level > 0;
+    }
+
+    public int getLevel()
+    {
+        return level;
+    }
+
+    @Override
+    public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
+    {
+        if (upgrade instanceof Beacon)
+        {
+            if (upgrade.getProperties().hasKey("level"))
+            {
+                level = upgrade.getProperties().getInt("level");
+            }
+        }
+    }
+
+    @Override
+    public String getFormattedValue()
+    {
+        return MyPetLanguage.getString("Name_Tier") + ": " + level;
+    }
+
+    public void reset()
+    {
+        stop(true);
+    }
+
+    @Override
+    public String getHtml()
+    {
+        String html = super.getHtml();
+        for (int i = 1 ; i <= 8 ; i++)
+        {
+            if (getProperties().hasKey("Add_" + i))
+            {
+                int buffId = getProperties().getInt("Add_" + i);
+                html = html.replace(" onselect=\"Add_" + i + "_" + buffId + "\"", " selected");
+                html = html.replaceAll("\\sonselect=\"Add_" + i + "_\\d\"", "");
+            }
+        }
+        if (getProperties().hasKey("level"))
+        {
+            int level = getProperties().getInt("level");
+            html = html.replace(" onselect=\"level_" + level + "\"", " selected");
+            html = html.replaceAll("\\sonselect=\"level_\\d\"", "");
+        }
+
+        return html;
     }
 
     @Override
@@ -66,7 +125,7 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
     }
 
@@ -78,34 +137,28 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         }
         else
         {
-            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.skillName));
+            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
-    }
-
-    @Override
-    public void upgrade()
-    {
-        super.upgrade();
     }
 
     @Override
     public void schedule()
     {
-        if (myPet.status == PetState.Here && this.level > 0 && this.active && this.primaryEffectId > 0)
+        if (myPet.status == PetState.Here && level > 0 && this.active && this.primaryEffectId > 0)
         {
             byte amplification = 0;
 
-            if (this.level >= 4 && this.primaryEffectId == this.secondaryEffectId)
+            if (this.primaryEffectId == this.secondaryEffectId)
             {
                 amplification = 1;
             }
-            double range = (rangePerLevel * level) * myPet.getHungerValue() / 100;
+            double range = this.range * myPet.getHungerValue() / 100;
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range)))
             {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
                 entityHuman.addEffect(new MobEffect(this.primaryEffectId, 180, amplification, true));
 
-                if (this.level >= 4 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
+                if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
                 {
                     entityHuman.addEffect(new MobEffect(this.secondaryEffectId, 180, 0, true));
                 }
@@ -140,17 +193,11 @@ public class Beacon extends MyPetGenericSkill implements IInventory
     @Override
     public NBTTagCompound save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(skillName);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
         nbtTagCompound.setInt("Primary", this.primaryEffectId);
         nbtTagCompound.setInt("Secondary", this.secondaryEffectId);
         nbtTagCompound.setBoolean("Active", this.active);
         return nbtTagCompound;
-    }
-
-    public void reset()
-    {
-        super.reset();
-        stop(true);
     }
 
     public void openBeacon(Player p)
@@ -161,14 +208,14 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         {
             tileEntityBeacon = new TileEntityBeacon(this);
         }
-        Container container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, new ContainerBeacon(entityPlayer.inventory, this, tileEntityBeacon));
+        Container container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, new ContainerBeacon(entityPlayer.inventory, beaconInv, tileEntityBeacon, this));
         if (container == null)
         {
             return;
         }
 
         int containerCounter = entityPlayer.nextContainerCounter();
-        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, this.getName(), this.getSize()));
+        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, this.getName(), beaconInv.getSize()));
         entityPlayer.activeContainer = container;
         entityPlayer.activeContainer.windowId = containerCounter;
         entityPlayer.activeContainer.addSlotListener(entityPlayer);
@@ -191,7 +238,10 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         else
         {
             this.primaryEffectId = 0;
-            active = false;
+            if (secondaryEffectId == 0)
+            {
+                active = false;
+            }
         }
     }
 
@@ -205,12 +255,17 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         if (effectId > 0)
         {
             this.secondaryEffectId = effectId;
+            active = true;
+            hungerDecreaseTimer = hungerDecreaseTime;
         }
         else
         {
             this.secondaryEffectId = 0;
+            if (primaryEffectId == 0)
+            {
+                active = false;
+            }
         }
-        hungerDecreaseTimer = hungerDecreaseTime;
     }
 
     public void stop(boolean reset)
@@ -223,106 +278,11 @@ public class Beacon extends MyPetGenericSkill implements IInventory
         }
     }
 
-    // Inventory Methods --------------------------------------------------------------------------------------------
-
-    public ItemStack[] getContents()
+    @Override
+    public MyPetSkillTreeSkill cloneSkill()
     {
-        return null;
-    }
-
-    public void onOpen(CraftHumanEntity who)
-    {
-        this.transaction.add(who);
-    }
-
-    public void onClose(CraftHumanEntity who)
-    {
-        this.transaction.remove(who);
-    }
-
-    public List<HumanEntity> getViewers()
-    {
-        return this.transaction;
-    }
-
-    public InventoryHolder getOwner()
-    {
-        return null;
-    }
-
-    public int getSize()
-    {
-        return 1;
-    }
-
-    public ItemStack getItem(int slot)
-    {
-        return slot == 0 ? this.tributeItem : null;
-    }
-
-    public ItemStack splitStack(int slot, int amount)
-    {
-        if (slot == 0 && this.tributeItem != null)
-        {
-            if (amount >= this.tributeItem.count)
-            {
-                ItemStack itemstack = this.tributeItem;
-
-                this.tributeItem = null;
-                return itemstack;
-            }
-            this.tributeItem.count -= amount;
-            return new ItemStack(this.tributeItem.id, amount, this.tributeItem.getData());
-        }
-        return null;
-    }
-
-    public ItemStack splitWithoutUpdate(int i)
-    {
-        if (i == 0 && this.tributeItem != null)
-        {
-            ItemStack itemstack = this.tributeItem;
-
-            this.tributeItem = null;
-            return itemstack;
-        }
-        return null;
-    }
-
-    public void setItem(int i, ItemStack itemStack)
-    {
-        if (i == 0)
-        {
-            this.tributeItem = itemStack;
-        }
-    }
-
-    public int getMaxStackSize()
-    {
-        return this.maxStack;
-    }
-
-    public void setMaxStackSize(int size)
-    {
-        this.maxStack = size;
-    }
-
-    public void update()
-    {
-    }
-
-    public void startOpen()
-    {
-    }
-
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    public boolean a_(EntityHuman entityHuman)
-    {
-        return true;
-    }
-
-    public void f()
-    {
+        MyPetSkillTreeSkill newSkill = new Beacon(this.isAddedByInheritance());
+        newSkill.setProperties(getProperties());
+        return newSkill;
     }
 }

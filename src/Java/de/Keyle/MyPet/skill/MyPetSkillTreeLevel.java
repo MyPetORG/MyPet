@@ -58,7 +58,7 @@ public class MyPetSkillTreeLevel
 
         for (MyPetSkillTreeSkill skill : skillList)
         {
-            newLevel.addSkill(skill.clone());
+            newLevel.addSkill(skill.cloneSkill());
         }
 
         return newLevel;

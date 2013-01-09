@@ -29,17 +29,19 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_6.ContainerBeacon
     private CraftInventoryView bukkitEntity = null;
     private PlayerInventory playerInventory;
     private TileEntityBeacon tileEntityBeacon;
+    MyPetCustomBeaconInventory beaconInv;
     Beacon beaconSkill;
 
-    public ContainerBeacon(PlayerInventory playerInventory, Beacon beaconSkill, TileEntityBeacon tileEntityBeacon)
+    public ContainerBeacon(PlayerInventory playerInventory, MyPetCustomBeaconInventory beaconInv, TileEntityBeacon tileEntityBeacon, Beacon beaconSkill)
     {
         super(playerInventory, tileEntityBeacon);
         this.c.clear();
         this.b.clear();
+        this.beaconInv = beaconInv;
         this.beaconSkill = beaconSkill;
         this.tileEntityBeacon = tileEntityBeacon;
         this.playerInventory = playerInventory;
-        a(this.slotBeacon = new SlotBeacon(beaconSkill, 0, 136, 110));
+        a(this.slotBeacon = new SlotBeacon(beaconInv, 0, 136, 110));
 
         for (int i = 0 ; i < 3 ; i++)
         {
@@ -72,7 +74,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_6.ContainerBeacon
             return this.bukkitEntity;
         }
 
-        CraftMyPetInventoryBeacon craftBeaconInventory = new CraftMyPetInventoryBeacon(this.beaconSkill);
+        CraftMyPetInventoryBeacon craftBeaconInventory = new CraftMyPetInventoryBeacon(this.beaconInv);
         this.bukkitEntity = new CraftInventoryView(this.playerInventory.player.getBukkitEntity(), craftBeaconInventory, this);
         return this.bukkitEntity;
     }

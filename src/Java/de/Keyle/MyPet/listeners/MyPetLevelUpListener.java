@@ -28,9 +28,7 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MyPetLevelUpListener implements Listener
 {
@@ -46,32 +44,10 @@ public class MyPetLevelUpListener implements Listener
         MyPetSkillTree skillTree = myPet.getSkillTree();
         if (skillTree != null && skillTree.hasLevel(lvl))
         {
-            Map<String, Integer> skillLevelUpgradeCount = new HashMap<String, Integer>();
             List<MyPetSkillTreeSkill> skillList = skillTree.getLevel(lvl).getSkills();
             for (MyPetSkillTreeSkill skill : skillList)
             {
-                if (skillLevelUpgradeCount.containsKey(skill.getName()))
-                {
-                    skillLevelUpgradeCount.put(skill.getName(), skillLevelUpgradeCount.get(skill.getName()) + 1);
-                }
-                else
-                {
-                    skillLevelUpgradeCount.put(skill.getName(), 1);
-                }
-            }
-            for (String skill : skillLevelUpgradeCount.keySet())
-            {
-                if (myPet.getSkills().hasSkill(skill))
-                {
-                    if (event.isQuiet())
-                    {
-                        myPet.getSkills().getSkill(skill).setLevel(myPet.getSkills().getSkill(skill).getLevel() + skillLevelUpgradeCount.get(skill));
-                    }
-                    else
-                    {
-                        myPet.getSkills().getSkill(skill).upgrade(skillLevelUpgradeCount.get(skill));
-                    }
-                }
+                myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
             }
         }
         if (!event.isQuiet())

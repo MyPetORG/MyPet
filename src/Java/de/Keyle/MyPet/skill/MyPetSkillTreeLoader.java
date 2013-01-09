@@ -121,7 +121,7 @@ public class MyPetSkillTreeLoader
                     String skillName = skillCompound.getString("Name");
                     if (MyPetSkills.isValidSkill(skillName))
                     {
-                        MyPetSkillTreeSkill skill = new MyPetSkillTreeSkill(skillName);
+                        MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(skillName);
                         skill.setProperties(skillCompound.getCompound("Properties"));
                         skillTree.addSkillToLevel(thisLevel, skill);
                     }
@@ -147,6 +147,13 @@ public class MyPetSkillTreeLoader
             if (!skillTreeMobType.hasSkillTree(skillTreeName) && defaultSkillTreeMobType.hasSkillTree(skillTreeName))
             {
                 MyPetSkillTree newSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName).clone();
+                for (MyPetSkillTreeLevel level : newSkillTree.getLevelList())
+                {
+                    for (MyPetSkillTreeSkill skill : level.getSkills())
+                    {
+                        skill.setIsInherited(true);
+                    }
+                }
                 skillTreeMobType.addSkillTree(newSkillTree);
             }
         }
@@ -172,7 +179,9 @@ public class MyPetSkillTreeLoader
                         {
                             if (!skill.isAddedByInheritance())
                             {
-                                skillTree.addSkillToLevel(level.getLevel(), skill.clone());
+                                MyPetSkillTreeSkill skillClone = skill.cloneSkill();
+                                skillClone.setIsInherited(true);
+                                skillTree.addSkillToLevel(level.getLevel(), skillClone);
                             }
                         }
                     }

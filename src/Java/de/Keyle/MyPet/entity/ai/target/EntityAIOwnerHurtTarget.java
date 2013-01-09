@@ -57,29 +57,26 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         {
             return false;
         }
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().isSkillActive("Behavior"))
         {
             Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-            if (behaviorSkill.getLevel() > 0)
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
             {
-                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                return false;
+            }
+            if (behaviorSkill.getBehavior() == BehaviorState.Raid)
+            {
+                if (this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.petEntity.goalTarget).isTamed())
                 {
                     return false;
                 }
-                if (behaviorSkill.getBehavior() == BehaviorState.Raid)
+                if (this.petEntity.goalTarget instanceof EntityMyPet)
                 {
-                    if (this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.petEntity.goalTarget).isTamed())
-                    {
-                        return false;
-                    }
-                    if (this.petEntity.goalTarget instanceof EntityMyPet)
-                    {
-                        return false;
-                    }
-                    if (this.petEntity.goalTarget instanceof EntityPlayer)
-                    {
-                        return false;
-                    }
+                    return false;
+                }
+                if (this.petEntity.goalTarget instanceof EntityPlayer)
+                {
+                    return false;
                 }
             }
         }

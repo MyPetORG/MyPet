@@ -21,29 +21,28 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.Ride;
 import net.minecraft.server.v1_4_6.*;
 
 public class EntityAIRide extends PathfinderGoal
 {
     private final EntityMyPet petEntity;
     private final float startSpeed;
-    private final float speedPerLevel;
     private MyPet myPet;
     private float currentSpeed = 0.0F;
     private boolean stopRiding = true;
 
-    public EntityAIRide(EntityMyPet entityMyPet, float startSpeed, float speedPerLevel)
+    public EntityAIRide(EntityMyPet entityMyPet, float startSpeed)
     {
         this.petEntity = entityMyPet;
         this.startSpeed = startSpeed;
-        this.speedPerLevel = speedPerLevel;
         myPet = petEntity.getMyPet();
         a(7);
     }
 
     public boolean a()
     {
-        if (myPet.getSkills().getSkillLevel("Ride") <= 0)
+        if (!myPet.getSkills().isSkillActive("Ride"))
         {
             return false;
         }
@@ -91,7 +90,7 @@ public class EntityAIRide extends PathfinderGoal
             return;
         }
 
-        float totalSpeed = this.startSpeed + ((myPet.getSkills().getSkillLevel("Ride") - 1) * this.speedPerLevel);
+        float totalSpeed = this.startSpeed + (((Ride) myPet.getSkills().getSkill("Ride")).getSpeed());
 
         float rotationDiff = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
         if (rotationDiff > 5.0F)
