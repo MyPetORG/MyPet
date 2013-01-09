@@ -19,11 +19,13 @@
 
 package de.Keyle.MyPet.entity.types.chicken;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.Item;
 import net.minecraft.server.v1_4_6.World;
 
+@EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet
 {
     // Variables for flying of the chicken

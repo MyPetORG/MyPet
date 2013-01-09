@@ -19,12 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.sheep;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.*;
 
+@EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMySheep extends EntityMyPet
 {
     public EntityMySheep(World world, MyPet myPet)

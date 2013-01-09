@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.wolf;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
@@ -26,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.*;
 import org.bukkit.DyeColor;
 
+@EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyWolf extends EntityMyPet
 {
     private EntityAISit sitPathfinder;

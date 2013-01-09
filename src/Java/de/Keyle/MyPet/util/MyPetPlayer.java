@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -142,8 +143,8 @@ public class MyPetPlayer implements Scheduler
                     else
                     {
                         myPet.removePet();
-                        Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
-                        if (MyPetUtil.canSpawn(this.getPlayer().getLocation(), entitySize[0], 0.0F, entitySize[1]))
+                        EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
+                        if (es != null && MyPetUtil.canSpawn(getPlayer().getLocation(), es.height(), 0.0F, es.width()))
                         {
                             myPet.setLocation(this.getPlayer().getLocation());
                             myPet.createPet();

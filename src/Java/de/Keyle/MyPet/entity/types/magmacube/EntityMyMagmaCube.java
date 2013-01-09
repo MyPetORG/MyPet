@@ -19,11 +19,13 @@
 
 package de.Keyle.MyPet.entity.types.magmacube;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.PathEntity;
 import net.minecraft.server.v1_4_6.World;
 
+@EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMyMagmaCube extends EntityMyPet
 {
     int jumpDelay;
@@ -54,8 +56,11 @@ public class EntityMyMagmaCube extends EntityMyPet
     public void setSize(int value)
     {
         this.datawatcher.watch(16, new Byte((byte) value));
-        Float[] entitySize = MyPet.getEntitySize(MyMagmaCube.class);
-        this.a(entitySize[0] * value, entitySize[1] * value);
+        EntitySize es = EntityMyMagmaCube.class.getAnnotation(EntitySize.class);
+        if (es != null)
+        {
+            this.a(es.height() * value, es.width() * value);
+        }
         ((MyMagmaCube) myPet).size = value;
     }
 

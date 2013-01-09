@@ -19,11 +19,13 @@
 
 package de.Keyle.MyPet.entity.types.cavespider;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.EnumMonsterType;
 import net.minecraft.server.v1_4_6.World;
 
+@EntitySize(width = 0.7F, height = 0.5F)
 public class EntityMyCaveSpider extends EntityMyPet
 {
     public EntityMyCaveSpider(World world, MyPet myPet)

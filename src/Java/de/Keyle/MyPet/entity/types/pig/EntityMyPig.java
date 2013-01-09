@@ -19,10 +19,12 @@
 
 package de.Keyle.MyPet.entity.types.pig;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.*;
 
+@EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet
 {
     public EntityMyPig(World world, MyPet myPet)

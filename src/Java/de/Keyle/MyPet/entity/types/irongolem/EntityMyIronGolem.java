@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.irongolem;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
@@ -28,6 +29,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.*;
 
+@EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet
 {
     public EntityMyIronGolem(World world, MyPet myPet)

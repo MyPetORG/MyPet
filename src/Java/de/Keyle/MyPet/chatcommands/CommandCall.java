@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
@@ -64,8 +65,8 @@ public class CommandCall implements CommandExecutor
                         {
                             myPet.getCraftPet().leaveVehicle();
                         }
-                        Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
-                        if (MyPetUtil.canSpawn(petOwner.getLocation(), entitySize[0], 0.0F, entitySize[1]))
+                        EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
+                        if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
                         {
                             myPet.getCraftPet().teleport(petOwner);
                             sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
@@ -82,8 +83,8 @@ public class CommandCall implements CommandExecutor
                 }
                 else if (myPet.status == PetState.Despawned)
                 {
-                    Float[] entitySize = MyPet.getEntitySize(myPet.getPetType().getMyPetClass());
-                    if (MyPetUtil.canSpawn(petOwner.getLocation(), entitySize[0], 0.F, entitySize[1]))
+                    EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
+                    if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
                     {
                         myPet.setLocation(petOwner.getLocation());
                         myPet.createPet();

@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types.bat;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
@@ -29,6 +30,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.*;
 
 
+@EntitySize(width = 0.5F, height = 0.9F)
 public class EntityMyBat extends EntityMyPet
 {
     public EntityMyBat(World world, MyPet myPet)

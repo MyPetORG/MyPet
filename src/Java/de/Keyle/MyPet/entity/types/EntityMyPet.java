@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.MyPetEntityAISelector;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
@@ -71,8 +72,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         this.getNavigation().b(true);
 
-        Float[] entitySize = MyPet.getEntitySize(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
-        this.a(entitySize[0], entitySize[1]);
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null)
+        {
+            this.a(es.height(), es.width());
+        }
         this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         this.setPathfinder();
     }

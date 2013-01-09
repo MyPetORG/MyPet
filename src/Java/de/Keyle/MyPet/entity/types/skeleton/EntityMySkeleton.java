@@ -19,12 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.skeleton;
 
+import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_6.Item;
 import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.World;
 
+@EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySkeleton extends EntityMyPet
 {
     public EntityMySkeleton(World world, MyPet myPet)
