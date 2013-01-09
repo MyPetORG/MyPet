@@ -35,6 +35,7 @@
     <property name="MyPet.mypet.version" value="1.0.5" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
+    <property name="MyPet.test.dir" location="${basedir}/src/Test" />
     <property name="MyPet.resources.dir" location="${basedir}/src/resources" />
     <property name="MyPet.html.dir" location="${basedir}/src/HTML" />
     <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/MyPet/build" />
@@ -61,6 +62,7 @@
         <pathelement location="${MyPet.lib.dir}/WorldGuard.jar" />
         <pathelement location="${MyPet.lib.dir}/Vault.jar" />
         <pathelement location="${MyPet.lib.dir}/Heroes.jar" />
+        <pathelement location="${MyPet.lib.dir}/junit-4.10.jar" />
         <pathelement location="${MyPet.lib.dir}/citizensapi-2.0.jar" />
         <pathelement location="${MyPet.lib.dir}/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${MyPet.lib.dir}/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
@@ -126,6 +128,7 @@
     <target name="4_copysource" depends="1_clean, 2_makedir">
         <buildnumber />
         <copydir src="${MyPet.src.dir}" dest="${MyPet.output.dir.src}" />
+        <copydir src="${MyPet.test.dir}" dest="${MyPet.output.dir.src}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${build.number}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
@@ -141,8 +144,18 @@
         </javac2>
     </target>
 
+    <target name="6_JUnit_Tests" depends="5_compile">
+        <junit printsummary="yes" fork="yes" haltonfailure="yes">
+            <classpath refid="MyPet.module.classpath" />
+            <classpath location="${MyPet.output.dir.build}" />
+            <!-- Define tests here -->
+            <test name="de.Keyle.MyPet.test.entity.EntitySizeTest" />
+        </junit>
+        <delete dir="${MyPet.output.dir.build}/de/Keyle/MyPet/test" />
+    </target>
+
     <!--Creates the deployable jar file  -->
-    <target name="6_jar" depends="3_copyresources, 5_compile">
+    <target name="7_jar" depends="3_copyresources, 5_compile, 6_JUnit_Tests">
         <property name="version.num" value="1.00" />
         <jar destfile="${MyPet.output.dir}/MyPet/MyPet.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
@@ -155,12 +168,12 @@
     </target>
 
     <!--Creates the deployable jar file with buildnumber in filename  -->
-    <target name="7_jar_buildnumber" depends="6_jar">
+    <target name="8_jar_buildnumber" depends="7_jar">
         <copy file="${MyPet.output.dir}/MyPet/MyPet.jar" tofile="${MyPet.output.dir}/MyPet/MyPet-b${build.number}.jar" />
     </target>
 
     <!-- Does all the other steps -->
-    <target name="Main" depends="6_jar">
+    <target name="Main" depends="7_jar">
         <description>Main target</description>
         <echo message="Compilation Finished!" />
     </target>
@@ -172,7 +185,7 @@
     </target>
 
     <!-- Does all the other steps and copy jar to testfolder -->
-    <target name="With buildnumbers" depends="7_jar_buildnumber">
+    <target name="With buildnumbers" depends="8_jar_buildnumber">
         <description>With buildnumber target</description>
     </target>
 
