@@ -19,22 +19,8 @@
 
 package de.Keyle.MyPet.util;
 
-import com.herocraftonline.heroes.Heroes;
-import com.herocraftonline.heroes.characters.Hero;
-import com.herocraftonline.heroes.characters.party.HeroParty;
-import com.massivecraft.factions.P;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.towny.object.TownyWorld;
-import com.palmergames.bukkit.towny.utils.CombatUtil;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.minecraft.server.v1_4_6.AxisAlignedBB;
 import net.minecraft.server.v1_4_6.Block;
 import net.minecraft.server.v1_4_6.Entity;
@@ -43,8 +29,6 @@ import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
 import org.bukkit.craftbukkit.v1_4_6.util.UnsafeList;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -189,125 +173,6 @@ public class MyPetUtil
         {
             return false;
         }
-    }
-
-    public static boolean canHurtAt(Player petOwner, Location location)
-    {
-        return canHurtWorldGuard(location) && petOwner.getGameMode() != GameMode.CREATIVE && location.getWorld().getPVP();
-    }
-
-    public static boolean canHurt(Player petOwner, Player victim)
-    {
-        return canHurtCitizens(victim) && canHurtFactions(petOwner, victim) && canHurtTowny(petOwner, victim) && canHurtWorldGuard(victim) && canHurtHeroes(petOwner, victim) && victim.getGameMode() != GameMode.CREATIVE && victim.getWorld().getPVP();
-    }
-
-    public static boolean canHurtCitizens(Player victim)
-    {
-        if (MyPetConfig.useCitizens && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
-        {
-            if (victim.hasMetadata("NPC"))
-            {
-                NPC npc = CitizensAPI.getNPCRegistry().getNPC(victim);
-                return !npc.data().get("protected", true);
-            }
-        }
-        return true;
-    }
-
-    public static boolean canHurtWorldGuard(Location location)
-    {
-        if (MyPetConfig.useWorldGuard && getServer().getPluginManager().isPluginEnabled("WorldGuard"))
-        {
-            WorldGuardPlugin WGP = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
-            RegionManager mgr = WGP.getGlobalRegionManager().get(location.getWorld());
-            Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
-            ApplicableRegionSet set = mgr.getApplicableRegions(pt);
-
-            return set.allows(DefaultFlag.PVP);
-        }
-        return true;
-    }
-
-    public static boolean canHurtWorldGuard(Player victim)
-    {
-        if (MyPetConfig.useWorldGuard && getServer().getPluginManager().isPluginEnabled("WorldGuard"))
-        {
-            Location loc = victim.getLocation();
-            WorldGuardPlugin WGP = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
-            RegionManager mgr = WGP.getGlobalRegionManager().get(loc.getWorld());
-            Vector pt = new Vector(loc.getX(), loc.getY(), loc.getZ());
-            ApplicableRegionSet set = mgr.getApplicableRegions(pt);
-
-            return set.allows(DefaultFlag.PVP);
-        }
-        return true;
-    }
-
-    public static boolean canHurtFactions(Player attacker, Player victim)
-    {
-        if (MyPetConfig.useFactions && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Factions"))
-        {
-            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, victim, EntityDamageEvent.DamageCause.CUSTOM, 0);
-            return P.p.entityListener.canDamagerHurtDamagee(sub, false);
-        }
-        return true;
-    }
-
-    public static boolean canHurtTowny(Player attacker, Player defender)
-    {
-        boolean canHurt = true;
-        if (MyPetConfig.useTowny && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Towny"))
-        {
-            try
-            {
-                Class.forName("com.palmergames.bukkit.towny.utils.CombatUtil", false, null);
-            }
-            catch (ClassNotFoundException e)
-            {
-                return canHurt;
-            }
-            try
-            {
-                TownyWorld world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
-                if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
-                {
-                    canHurt = false;
-                }
-            }
-            catch (Exception ignored)
-            {
-                MyPetUtil.getDebugLogger().info("Towny Exception!");
-            }
-        }
-        return canHurt;
-    }
-
-    public static boolean canHurtHeroes(Player attacker, Player victim)
-    {
-        if (MyPetConfig.useHeroes && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
-        {
-            Heroes heroesPlugin = (Heroes) getServer().getPluginManager().getPlugin("Heroes");
-
-            Hero heroAttacker = heroesPlugin.getCharacterManager().getHero(attacker);
-            Hero heroDefender = heroesPlugin.getCharacterManager().getHero(victim);
-            int attackerLevel = heroAttacker.getTieredLevel(false);
-            int defenderLevel = heroDefender.getTieredLevel(false);
-
-            if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange)
-            {
-                return false;
-            }
-            if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel))
-            {
-                return false;
-            }
-            HeroParty party = heroDefender.getParty();
-            if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     public static void sendMessage(Player player, String Message)

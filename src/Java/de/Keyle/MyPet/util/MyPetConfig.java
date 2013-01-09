@@ -72,11 +72,6 @@ public class MyPetConfig
     public static boolean hungerSystem = true;
     public static boolean sendMetrics = true;
     public static boolean checkForUpdates = false;
-    public static boolean useTowny = true;
-    public static boolean useFactions = true;
-    public static boolean useWorldGuard = true;
-    public static boolean useCitizens = true;
-    public static boolean useHeroes = true;
     public static boolean superperms = false;
     public static boolean debugLogger = true;
 
@@ -103,6 +98,10 @@ public class MyPetConfig
         setProperty("MyPet.Support.Factions", true);
         setProperty("MyPet.Support.WorldGuard", true);
         setProperty("MyPet.Support.Citizens", true);
+        setProperty("MyPet.Support.mcMMO", true);
+        setProperty("MyPet.Support.Regios", true);
+        setProperty("MyPet.Support.MobArena", true);
+        setProperty("MyPet.Support.Residence", true);
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
         setProperty("MyPet.Exp.loss.Percent", 0);
         setProperty("MyPet.Exp.loss.Fixed", 0.0);
@@ -207,11 +206,15 @@ public class MyPetConfig
         sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
         checkForUpdates = config.getBoolean("MyPet.CheckForUpdates", false);
         debugLogger = config.getBoolean("MyPet.DebugLogger", false);
-        useTowny = config.getBoolean("MyPet.Support.Towny", true);
-        useFactions = config.getBoolean("MyPet.Support.Factions", true);
-        useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
-        useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
-        useHeroes = config.getBoolean("MyPet.Support.Heroes", true);
+        MyPetPvP.useTowny = config.getBoolean("MyPet.Support.Towny", true);
+        MyPetPvP.useFactions = config.getBoolean("MyPet.Support.Factions", true);
+        MyPetPvP.useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
+        MyPetPvP.useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
+        MyPetPvP.useHeroes = config.getBoolean("MyPet.Support.Heroes", true);
+        MyPetPvP.useMcMMO = config.getBoolean("MyPet.Support.mcMMO", true);
+        MyPetPvP.useMobArena = config.getBoolean("MyPet.Support.MobArena", true);
+        MyPetPvP.useRegios = config.getBoolean("MyPet.Support.Regios", true);
+        MyPetPvP.useResidence = config.getBoolean("MyPet.Support.Residence", true);
 
         MyPetExperience.lossPercent = config.getInt("MyPet.Exp.loss.Percent");
         MyPetExperience.lossFixed = config.getDouble("MyPet.Exp.loss.Fixed");

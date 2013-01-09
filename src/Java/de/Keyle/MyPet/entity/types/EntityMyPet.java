@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
+import de.Keyle.MyPet.util.MyPetPvP;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_6.*;
@@ -355,7 +356,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         if (entity instanceof EntityPlayer)
         {
             Player victim = (Player) entity.getBukkitEntity();
-            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), victim))
+            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), victim))
             {
                 if (myPet.hasTarget())
                 {

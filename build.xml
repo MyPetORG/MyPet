@@ -63,6 +63,10 @@
         <pathelement location="${MyPet.lib.dir}/Vault.jar" />
         <pathelement location="${MyPet.lib.dir}/Heroes.jar" />
         <pathelement location="${MyPet.lib.dir}/citizensapi-2.0.jar" />
+        <pathelement location="${MyPet.lib.dir}/mcMMO.jar" />
+        <pathelement location="${MyPet.lib.dir}/MobArena.jar" />
+        <pathelement location="${MyPet.lib.dir}/Regios.jar" />
+        <pathelement location="${MyPet.lib.dir}/Residence.jar" />
         <pathelement location="${MyPet.lib.dir}/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${MyPet.lib.dir}/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
     </path>

@@ -23,7 +23,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_4_6.EntityLiving;
 import net.minecraft.server.v1_4_6.EntityPlayer;
 import net.minecraft.server.v1_4_6.EntityTameableAnimal;
@@ -87,7 +87,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
             {
                 return false;
             }
-            else if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+            else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
                 return false;
             }
@@ -95,7 +95,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         else if (this.petEntity.goalTarget instanceof EntityMyPet)
         {
             MyPet targetMyPet = ((EntityMyPet) this.petEntity.goalTarget).getMyPet();
-            if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
                 return false;
             }

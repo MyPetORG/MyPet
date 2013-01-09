@@ -121,6 +121,7 @@ public class MyPetPlugin extends JavaPlugin
         {
             delCraftBukkit.delete();
         }
+        MyPetPvP.reset();
         MyPetConfig.config = this.getConfig();
         MyPetConfig.setDefault();
         MyPetConfig.loadConfiguration();

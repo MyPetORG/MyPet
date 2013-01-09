@@ -23,6 +23,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
+import de.Keyle.MyPet.util.MyPetPvP;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.EntityLiving;
 import net.minecraft.server.v1_4_6.EntityPlayer;
@@ -76,7 +77,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                                     {
                                         continue;
                                     }
-                                    if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+                                    if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
                                     {
                                         continue;
                                     }
@@ -84,7 +85,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                                 else if (entityLiving instanceof EntityMyPet)
                                 {
                                     MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
-                                    if (!MyPetUtil.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+                                    if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
                                     {
                                         continue;
                                     }
