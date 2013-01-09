@@ -69,6 +69,12 @@ public class MyPetSkills
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static List<Class<? extends MyPetGenericSkill>> getRegisteredSkills()
+    {
+        return skillClassList;
+    }
+
     public static boolean isValidSkill(String name)
     {
         return skillNames.contains(name.toLowerCase());

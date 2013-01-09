@@ -150,6 +150,8 @@
             <classpath location="${MyPet.output.dir.build}" />
             <!-- Define tests here -->
             <test name="de.Keyle.MyPet.test.entity.EntitySizeTest" />
+            <test name="de.Keyle.MyPet.test.skill.skills.SkillNameTest" />
+            <test name="de.Keyle.MyPet.test.skill.skills.SkillPropertiesTest" />
         </junit>
         <delete dir="${MyPet.output.dir.build}/de/Keyle/MyPet/test" />
     </target>
