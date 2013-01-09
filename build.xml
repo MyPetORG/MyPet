@@ -62,10 +62,13 @@
         <pathelement location="${MyPet.lib.dir}/WorldGuard.jar" />
         <pathelement location="${MyPet.lib.dir}/Vault.jar" />
         <pathelement location="${MyPet.lib.dir}/Heroes.jar" />
-        <pathelement location="${MyPet.lib.dir}/junit-4.10.jar" />
         <pathelement location="${MyPet.lib.dir}/citizensapi-2.0.jar" />
         <pathelement location="${MyPet.lib.dir}/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${MyPet.lib.dir}/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
+    </path>
+
+    <path id="MyPet.test.classpath">
+        <pathelement location="${MyPet.lib.dir}/junit-4.10.jar" />
     </path>
 
     <path id="javac2.classpath">
@@ -140,6 +143,7 @@
     <target name="5_compile" depends="1_clean, 2_makedir, 4_copysource">
         <javac2 srcdir="${MyPet.output.dir.src}" destdir="${MyPet.output.dir.build}" debug="true" debuglevel="lines,vars,source">
             <classpath refid="MyPet.module.classpath" />
+            <classpath refid="MyPet.test.classpath" />
             <classpath refid="javac2.classpath" />
         </javac2>
     </target>
@@ -147,6 +151,7 @@
     <target name="6_JUnit_Tests" depends="5_compile">
         <junit printsummary="yes" fork="yes" haltonfailure="yes">
             <classpath refid="MyPet.module.classpath" />
+            <classpath refid="MyPet.test.classpath" />
             <classpath location="${MyPet.output.dir.build}" />
             <!-- Define tests here -->
             <test name="de.Keyle.MyPet.test.entity.EntitySizeTest" />
