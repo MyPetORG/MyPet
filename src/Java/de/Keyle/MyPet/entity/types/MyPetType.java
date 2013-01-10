@@ -21,6 +21,8 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.bat.MyBat;
+import de.Keyle.MyPet.entity.types.blaze.EntityMyBlaze;
+import de.Keyle.MyPet.entity.types.blaze.MyBlaze;
 import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
@@ -76,6 +78,7 @@ import java.lang.reflect.Constructor;
 public enum MyPetType
 {
     Bat(EntityType.BAT, "Bat", EntityMyBat.class, MyBat.class),
+    Blaze(EntityType.BLAZE, "Blaze", EntityMyBlaze.class, MyBlaze.class),
     CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
     Chicken(EntityType.CHICKEN, "Chicken", EntityMyChicken.class, MyChicken.class),
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),

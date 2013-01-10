@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.bat.MyBat;
+import de.Keyle.MyPet.entity.types.blaze.MyBlaze;
 import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
@@ -126,6 +127,7 @@ public class MyPetConfig
         }
 
         setProperty("MyPet.Pets.Bat.Food", Material.SPIDER_EYE.getId());
+        setProperty("MyPet.Pets.Blaze.Food", Material.SULPHUR.getId());
         setProperty("MyPet.Pets.CaveSpider.Food", Material.ROTTEN_FLESH.getId());
         setProperty("MyPet.Pets.Chicken.Food", Material.SEEDS.getId());
         setProperty("MyPet.Pets.Cow.Food", Material.WHEAT.getId());
@@ -149,6 +151,7 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Zombie.Food", Material.ROTTEN_FLESH.getId());
 
         setProperty("MyPet.Pets.Bat.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Blaze.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Chicken.LeashFlags", LeashFlag.Baby.name());
         setProperty("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name());
@@ -230,6 +233,7 @@ public class MyPetConfig
         }
 
         seperateFood(MyBat.class, config.getString("MyPet.Pets.Bat.Food", "375"));
+        seperateFood(MyBlaze.class, config.getString("MyPet.Pets.Blaze.Food", "289"));
         seperateFood(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.Food", "367"));
         seperateFood(MyChicken.class, config.getString("MyPet.Pets.Chicken.Food", "295"));
         seperateFood(MyCow.class, config.getString("MyPet.Pets.Cow.Food", "296"));
@@ -253,6 +257,7 @@ public class MyPetConfig
         seperateFood(MyZombie.class, config.getString("MyPet.Pets.Zombie.Food", "367"));
 
         seperateLeashFlags(MyBat.class, config.getString("MyPet.Pets.Bat.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MyBlaze.class, config.getString("MyPet.Pets.Blaze.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyChicken.class, config.getString("MyPet.Pets.Chicken.LeashFlags", LeashFlag.Baby.name()));
         seperateLeashFlags(MyCow.class, config.getString("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name()));
