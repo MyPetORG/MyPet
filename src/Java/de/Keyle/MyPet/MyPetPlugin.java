@@ -79,7 +79,7 @@ public class MyPetPlugin extends JavaPlugin
     public static MyPetLanguage language;
     private final MyPetTimer timer = new MyPetTimer();
     private File NBTPetFile;
-    private DebugLogger debugLogger;
+    private DebugLogger debugLogger = null;
     private boolean isReady = false;
 
     public static final String MyPetVersion = "{@MYPET_VERSION@}";
@@ -129,7 +129,10 @@ public class MyPetPlugin extends JavaPlugin
         MyPetConfig.setDefault();
         MyPetConfig.loadConfiguration();
 
-        debugLogger = new DebugLogger(MyPetConfig.debugLogger);
+        if (debugLogger == null)
+        {
+            debugLogger = new DebugLogger(MyPetConfig.debugLogger);
+        }
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
 
