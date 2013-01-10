@@ -57,6 +57,8 @@ import de.Keyle.MyPet.entity.types.spider.EntityMySpider;
 import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
+import de.Keyle.MyPet.entity.types.witch.EntityMyWitch;
+import de.Keyle.MyPet.entity.types.witch.MyWitch;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
@@ -91,6 +93,7 @@ public enum MyPetType
     Slime(EntityType.SLIME, "Slime", EntityMySlime.class, MySlime.class),
     Snowman(EntityType.SNOWMAN, "Snowman", EntityMySnowman.class, MySnowman.class),
     Spider(EntityType.SPIDER, "Spider", EntityMySpider.class, MySpider.class),
+    Witch(EntityType.WITCH, "Witch", EntityMyWitch.class, MyWitch.class),
     Wolf(EntityType.WOLF, "Wolf", EntityMyWolf.class, MyWolf.class),
     Villager(EntityType.VILLAGER, "Villager", EntityMyVillager.class, MyVillager.class),
     Zombie(EntityType.ZOMBIE, "Zombie", EntityMyZombie.class, MyZombie.class);

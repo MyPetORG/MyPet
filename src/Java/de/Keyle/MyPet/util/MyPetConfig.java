@@ -42,6 +42,7 @@ import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.snowman.MySnowman;
 import de.Keyle.MyPet.entity.types.spider.MySpider;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
+import de.Keyle.MyPet.entity.types.witch.MyWitch;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
@@ -144,6 +145,7 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Spider.Food", Material.ROTTEN_FLESH.getId());
         setProperty("MyPet.Pets.Villager.Food", Material.APPLE.getId());
         setProperty("MyPet.Pets.Wolf.Food", Material.RAW_BEEF.getId() + "," + Material.RAW_CHICKEN.getId());
+        setProperty("MyPet.Pets.Witch.Food", Material.APPLE.getId());
         setProperty("MyPet.Pets.Zombie.Food", Material.ROTTEN_FLESH.getId());
 
         setProperty("MyPet.Pets.Bat.LeashFlags", LeashFlag.LowHp.name());
@@ -165,6 +167,7 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Snowman.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Villager.LeashFlags", LeashFlag.Baby.name());
+        setProperty("MyPet.Pets.Witch.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name());
         setProperty("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name());
 
@@ -245,6 +248,7 @@ public class MyPetConfig
         seperateFood(MySnowman.class, config.getString("MyPet.Pets.Snowman.Food", "332,391"));
         seperateFood(MySpider.class, config.getString("MyPet.Pets.Spider.Food", "367"));
         seperateFood(MyVillager.class, config.getString("MyPet.Pets.Villager.Food", "260"));
+        seperateFood(MyWitch.class, config.getString("MyPet.Pets.Witch.Food", "260"));
         seperateFood(MyWolf.class, config.getString("MyPet.Pets.Wolf.Food", "363,365"));
         seperateFood(MyZombie.class, config.getString("MyPet.Pets.Zombie.Food", "367"));
 
@@ -267,6 +271,7 @@ public class MyPetConfig
         seperateLeashFlags(MySnowman.class, config.getString("MyPet.Pets.Snowman.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MySpider.class, config.getString("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyVillager.class, config.getString("MyPet.Pets.Villager.LeashFlags", LeashFlag.Baby.name()));
+        seperateLeashFlags(MyWitch.class, config.getString("MyPet.Pets.Witch.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyWolf.class, config.getString("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name()));
         seperateLeashFlags(MyZombie.class, config.getString("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name()));
 

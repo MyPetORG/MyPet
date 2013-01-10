@@ -45,6 +45,7 @@ import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
 import de.Keyle.MyPet.entity.types.snowman.EntityMySnowman;
 import de.Keyle.MyPet.entity.types.spider.EntityMySpider;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
+import de.Keyle.MyPet.entity.types.witch.EntityMyWitch;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
@@ -270,6 +271,8 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityMagmaCube.class, "LavaSlime", 62);
             a.invoke(a, EntityMyBat.class, "Bat", 65);
             a.invoke(a, EntityBat.class, "Bat", 65);
+            a.invoke(a, EntityMyWitch.class, "Witch", 66);
+            a.invoke(a, EntityWitch.class, "Witch", 66);
             a.invoke(a, EntityMyPig.class, "Pig", 90);
             a.invoke(a, EntityPig.class, "Pig", 90);
             a.invoke(a, EntityMySheep.class, "Sheep", 91);
