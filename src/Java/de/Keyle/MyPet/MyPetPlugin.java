@@ -71,6 +71,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class MyPetPlugin extends JavaPlugin
@@ -155,6 +156,8 @@ public class MyPetPlugin extends JavaPlugin
         debugLogger.info("----------- loading MyPet ... -----------");
         debugLogger.info("MyPet " + MyPetVersion + " build: " + MyPetBuild);
         debugLogger.info("Bukkit " + getServer().getVersion());
+
+        debugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
         UpdateCheck updateCheck = new UpdateCheck();
         if (MyPetConfig.checkForUpdates)
