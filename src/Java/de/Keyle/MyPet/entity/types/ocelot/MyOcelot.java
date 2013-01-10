@@ -46,7 +46,7 @@ public class MyOcelot extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyOcelot) craftMyPet).setSitting(flag);
+            ((EntityMyOcelot) getCraftPet().getHandle()).setSitting(flag);
         }
         this.isSitting = flag;
     }
@@ -60,7 +60,7 @@ public class MyOcelot extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyOcelot) getCraftPet()).setCatType(value);
+            ((EntityMyOcelot) getCraftPet().getHandle()).setCatType(value.getId());
         }
         this.catType = value;
     }
@@ -74,7 +74,7 @@ public class MyOcelot extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyOcelot) getCraftPet()).setBaby(flag);
+            ((EntityMyOcelot) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

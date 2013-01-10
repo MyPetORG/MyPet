@@ -44,7 +44,7 @@ public class MyPig extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyPig) getCraftPet()).setSaddle(saddle);
+            ((EntityMyPig) getCraftPet().getHandle()).setSaddle(saddle);
         }
         this.hasSaddle = saddle;
     }
@@ -58,7 +58,7 @@ public class MyPig extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyPig) getCraftPet()).setBaby(flag);
+            ((EntityMyPig) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

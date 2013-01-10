@@ -39,7 +39,7 @@ public class MyVillager extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyVillager) getCraftPet()).setProfession(value);
+            ((EntityMyVillager) getCraftPet().getHandle()).setProfession(value);
         }
         this.profession = value;
     }
@@ -58,7 +58,7 @@ public class MyVillager extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyVillager) getCraftPet()).setBaby(flag);
+            ((EntityMyVillager) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

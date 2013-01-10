@@ -39,7 +39,7 @@ public class MyBat extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyBat) getCraftPet()).setHanging(flag);
+            ((EntityMyBat) getCraftPet().getHandle()).setHanging(flag);
         }
         this.hanging = flag;
     }

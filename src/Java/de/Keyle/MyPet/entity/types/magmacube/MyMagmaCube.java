@@ -43,7 +43,7 @@ public class MyMagmaCube extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyMagmaCube) getCraftPet()).setSize(value);
+            ((EntityMyMagmaCube) getCraftPet().getHandle()).setSize(value);
         }
         this.size = value;
     }

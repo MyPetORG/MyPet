@@ -27,12 +27,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.entity.types.bat.CraftMyBat;
-import de.Keyle.MyPet.entity.types.chicken.CraftMyChicken;
-import de.Keyle.MyPet.entity.types.enderman.CraftMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
-import de.Keyle.MyPet.entity.types.irongolem.CraftMyIronGolem;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
@@ -336,18 +332,23 @@ public class MyPetEntityListener implements Listener
                 }
             }
         }
-        else if (event.getEntity() instanceof CraftMyChicken || event.getEntity() instanceof CraftMyBat)
+        else if (event.getEntity() instanceof CraftMyPet)
         {
+            CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
+
             if (event.getCause() == DamageCause.FALL)
             {
-                event.setCancelled(true);
+                if (craftMyPet.getPetType() == MyPetType.Chicken || craftMyPet.getPetType() == MyPetType.Bat || craftMyPet.getPetType() == MyPetType.IronGolem)
+                {
+                    event.setCancelled(true);
+                }
             }
-        }
-        else if (event.getEntity() instanceof CraftMyIronGolem)
-        {
-            if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.DROWNING)
+            else if (event.getCause() == DamageCause.DROWNING)
             {
-                event.setCancelled(true);
+                if (craftMyPet.getPetType() == MyPetType.IronGolem)
+                {
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -355,9 +356,9 @@ public class MyPetEntityListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageResult(EntityDamageEvent event)
     {
-        if (event.getEntity() instanceof CraftMyEnderman)
+        if (event.getEntity() instanceof CraftMyPet && ((CraftMyPet) event.getEntity()).getPetType() == MyPetType.Enderman)
         {
-            MyEnderman myEnderman = (MyEnderman) ((CraftMyEnderman) event.getEntity()).getMyPet();
+            MyEnderman myEnderman = (MyEnderman) ((CraftMyPet) event.getEntity()).getMyPet();
             ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(true);
             ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(false);
         }

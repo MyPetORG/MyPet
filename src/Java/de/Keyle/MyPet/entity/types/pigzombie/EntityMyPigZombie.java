@@ -45,16 +45,6 @@ public class EntityMyPigZombie extends EntityMyPet
         }
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyPigZombie(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**

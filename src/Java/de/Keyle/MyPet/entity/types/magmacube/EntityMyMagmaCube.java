@@ -69,16 +69,6 @@ public class EntityMyMagmaCube extends EntityMyPet
         return false;
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyMagmaCube(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()

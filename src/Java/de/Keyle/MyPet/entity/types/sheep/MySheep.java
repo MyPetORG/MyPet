@@ -40,7 +40,7 @@ public class MySheep extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySheep) getCraftPet()).setColor(value);
+            ((EntityMySheep) getCraftPet().getHandle()).setColor(value);
         }
         this.color = value;
     }
@@ -54,7 +54,7 @@ public class MySheep extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySheep) getCraftPet()).setSheared(flag);
+            ((EntityMySheep) getCraftPet().getHandle()).setSheared(flag);
         }
         this.isSheared = flag;
     }
@@ -73,7 +73,7 @@ public class MySheep extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySheep) getCraftPet()).setBaby(flag);
+            ((EntityMySheep) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

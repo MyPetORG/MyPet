@@ -43,7 +43,7 @@ public class MyMooshroom extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyMooshroom) getCraftPet()).setBaby(flag);
+            ((EntityMyMooshroom) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

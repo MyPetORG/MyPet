@@ -43,7 +43,7 @@ public class MyCow extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyCow) getCraftPet()).setBaby(flag);
+            ((EntityMyCow) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

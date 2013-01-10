@@ -226,7 +226,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
-    public abstract org.bukkit.entity.Entity getBukkitEntity();
+    public org.bukkit.entity.Entity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftMyPet(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
+    }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 

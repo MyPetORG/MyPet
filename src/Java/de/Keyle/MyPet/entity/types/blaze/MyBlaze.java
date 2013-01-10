@@ -42,7 +42,7 @@ public class MyBlaze extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyBlaze) getCraftPet()).setOnFire(flag);
+            ((EntityMyBlaze) getCraftPet().getHandle()).setOnFire(flag);
         }
         isOnFire = flag;
     }

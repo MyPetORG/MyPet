@@ -71,16 +71,6 @@ public class EntityMyIronGolem extends EntityMyPet
         }
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyIronGolem(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()

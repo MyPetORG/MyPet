@@ -72,16 +72,6 @@ public class EntityMyChicken extends EntityMyPet
         ((MyChicken) myPet).isBaby = flag;
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyChicken(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()

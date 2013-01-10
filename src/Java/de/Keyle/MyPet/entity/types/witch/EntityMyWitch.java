@@ -41,16 +41,6 @@ public class EntityMyWitch extends EntityMyPet
         }
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyWitch(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()

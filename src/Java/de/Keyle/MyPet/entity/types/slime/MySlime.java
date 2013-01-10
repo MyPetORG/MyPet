@@ -43,7 +43,7 @@ public class MySlime extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySlime) getCraftPet()).setSize(value);
+            ((EntityMySlime) getCraftPet().getHandle()).setSize(value);
         }
         this.size = value;
     }

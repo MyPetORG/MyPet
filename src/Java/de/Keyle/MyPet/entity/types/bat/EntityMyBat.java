@@ -59,16 +59,6 @@ public class EntityMyBat extends EntityMyPet
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyBat(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)

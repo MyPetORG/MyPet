@@ -37,42 +37,28 @@ public class MyZombie extends MyPet
 
     public boolean isBaby()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyZombie) getCraftPet()).isBaby();
-        }
-        else
-        {
-            return isBaby;
-        }
+        return isBaby;
     }
 
     public void setBaby(boolean flag)
     {
         if (status == PetState.Here)
         {
-            ((CraftMyZombie) getCraftPet()).setBaby(flag);
+            ((EntityMyZombie) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
     public boolean isVillager()
     {
-        if (status == PetState.Here)
-        {
-            return ((CraftMyZombie) getCraftPet()).isVillager();
-        }
-        else
-        {
-            return isVillager;
-        }
+        return isVillager;
     }
 
     public void setVillager(boolean flag)
     {
         if (status == PetState.Here)
         {
-            ((CraftMyZombie) getCraftPet()).setVillager(flag);
+            ((EntityMyZombie) getCraftPet().getHandle()).setVillager(flag);
         }
         this.isVillager = flag;
     }

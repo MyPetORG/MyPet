@@ -57,7 +57,7 @@ public class MySkeleton extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMySkeleton) getCraftPet()).setWither(flag);
+            ((EntityMySkeleton) getCraftPet().getHandle()).setWither(flag);
         }
         this.isWither = flag;
     }

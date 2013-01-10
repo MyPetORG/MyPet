@@ -48,7 +48,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) getCraftPet()).setSitting(flag);
+            ((EntityMyWolf) getCraftPet().getHandle()).setSitting(flag);
         }
         this.isSitting = flag;
     }
@@ -62,7 +62,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) getCraftPet()).setCollarColor(value);
+            ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getData());
         }
         this.collarColor = value;
     }
@@ -76,7 +76,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) getCraftPet()).setTamed(flag);
+            ((EntityMyWolf) getCraftPet().getHandle()).setTamed(flag);
         }
         this.isTamed = flag;
     }
@@ -90,7 +90,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) getCraftPet()).setAngry(flag);
+            ((EntityMyWolf) getCraftPet().getHandle()).setAngry(flag);
         }
         this.isAngry = flag;
     }
@@ -104,7 +104,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyWolf) getCraftPet()).setBaby(flag);
+            ((EntityMyWolf) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }

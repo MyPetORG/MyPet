@@ -31,7 +31,7 @@ import org.bukkit.craftbukkit.v1_4_6.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-public abstract class CraftMyPet extends CraftCreature
+public class CraftMyPet extends CraftCreature
 {
     protected MyPetPlayer petOwner;
 
@@ -118,6 +118,11 @@ public abstract class CraftMyPet extends CraftCreature
         return getHandle().canMove();
     }
 
+    public MyPetType getPetType()
+    {
+        return getMyPet().getPetType();
+    }
+
     @Override
     public EntityType getType()
     {
@@ -127,6 +132,6 @@ public abstract class CraftMyPet extends CraftCreature
     @Override
     public String toString()
     {
-        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + "}";
+        return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",type=" + getPetType() + "}";
     }
 }

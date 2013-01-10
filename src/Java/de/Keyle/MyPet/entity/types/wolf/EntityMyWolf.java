@@ -178,16 +178,6 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).collarColor = DyeColor.getByData(value);
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyWolf(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()

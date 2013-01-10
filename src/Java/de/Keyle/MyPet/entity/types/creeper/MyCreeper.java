@@ -39,7 +39,7 @@ public class MyCreeper extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyCreeper) getCraftPet()).setPowered(flag);
+            ((EntityMyCreeper) getCraftPet().getHandle()).setPowered(flag);
         }
         this.isPowered = flag;
     }

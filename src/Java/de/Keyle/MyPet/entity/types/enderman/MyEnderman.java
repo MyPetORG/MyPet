@@ -47,7 +47,7 @@ public class MyEnderman extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyEnderman) getCraftPet()).setBlockID(flag);
+            ((EntityMyEnderman) getCraftPet().getHandle()).setBlockID(flag);
         }
         this.BlockID = flag;
     }
@@ -61,7 +61,7 @@ public class MyEnderman extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyEnderman) getCraftPet()).setBlockData(flag);
+            ((EntityMyEnderman) getCraftPet().getHandle()).setBlockData(flag);
         }
         this.BlockData = flag;
     }
@@ -75,7 +75,7 @@ public class MyEnderman extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((CraftMyEnderman) getCraftPet()).setScreaming(flag);
+            ((EntityMyEnderman) getCraftPet().getHandle()).setScreaming(flag);
         }
         this.isScreaming = flag;
     }

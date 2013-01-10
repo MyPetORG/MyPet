@@ -34,16 +34,6 @@ public class EntityMyCreeper extends EntityMyPet
         this.texture = "/mob/creeper.png";
     }
 
-    @Override
-    public org.bukkit.entity.Entity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
-            this.bukkitEntity = new CraftMyCreeper(this.world.getServer(), this);
-        }
-        return this.bukkitEntity;
-    }
-
     public void setMyPet(MyPet myPet)
     {
         if (myPet != null)
