@@ -22,6 +22,8 @@ package de.Keyle.MyPet.entity.types.pigzombie;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_4_6.Item;
+import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.World;
 
 @EntitySize(width = 0.9F, height = 0.9F)
@@ -31,6 +33,16 @@ public class EntityMyPigZombie extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/pigzombie.png";
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+        }
     }
 
     @Override

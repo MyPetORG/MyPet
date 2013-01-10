@@ -45,11 +45,6 @@ public class EntityMySkeleton extends EntityMyPet
         }
     }
 
-    public void setEquipment(int slot, ItemStack item)
-    {
-        super.setEquipment(slot, item);
-    }
-
     @Override
     public org.bukkit.entity.Entity getBukkitEntity()
     {
