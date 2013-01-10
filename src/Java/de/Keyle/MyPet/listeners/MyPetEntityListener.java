@@ -146,7 +146,7 @@ public class MyPetEntityListener implements Listener
                 }
                 if (!event.isCancelled())
                 {
-                    if (myPet.getSkills().isSkillActive("Thorns"))
+                    if (((EntityDamageByEntityEvent) event).getDamager() instanceof LivingEntity && myPet.getSkills().isSkillActive("Thorns"))
                     {
                         Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
                         if (thornsSkill.isActivated())
