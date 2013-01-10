@@ -40,7 +40,11 @@ public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
     {
         if (d.aC() instanceof EntityPlayer)
         {
-            if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), ((EntityPlayer) d.aC()).getBukkitEntity()))
+            if (d.aC().getBukkitEntity() == myPet.getOwner().getPlayer())
+            {
+                return false;
+            }
+            else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), ((EntityPlayer) d.aC()).getBukkitEntity()))
             {
                 return super.a();
             }
