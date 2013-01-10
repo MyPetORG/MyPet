@@ -77,6 +77,7 @@ public class MyPetConfig
     public static boolean checkForUpdates = false;
     public static boolean superperms = false;
     public static boolean debugLogger = true;
+    public static boolean inheritAlreadyInheritedSkills = false;
 
     public static void setDefault()
     {
@@ -92,6 +93,7 @@ public class MyPetConfig
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.Skilltree.AutomaticAssignment", true);
+        setProperty("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
         setProperty("MyPet.Skilltree.ChooseOnce", true);
         setProperty("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         setProperty("MyPet.Skilltree.SwitchPenaltyPercent", 5);
@@ -202,6 +204,7 @@ public class MyPetConfig
         skilltreeSwitchPenaltyFixed = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         skilltreeSwitchPenaltyPercent = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         skilltreeSwitchPenaltyAdmin = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
+        inheritAlreadyInheritedSkills = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
         passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
         respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
         respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);

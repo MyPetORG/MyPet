@@ -67,8 +67,16 @@ public class CommandShowSkillTree implements CommandExecutor
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ":");
                             for (MyPetSkillTreeSkill skill : lvl.getSkills())
                             {
-                                MyPetLogger.write("   " + skill.getName());
-                                MyPetUtil.getDebugLogger().info("   " + skill.getName());
+                                if (skill.isAddedByInheritance())
+                                {
+                                    MyPetLogger.write("   " + ChatColor.DARK_GRAY + skill.getName());
+                                    MyPetUtil.getDebugLogger().info("   (i) " + skill.getName());
+                                }
+                                else
+                                {
+                                    MyPetLogger.write("   " + skill.getName());
+                                    MyPetUtil.getDebugLogger().info("   " + skill.getName());
+                                }
                             }
                         }
                         MyPetLogger.write("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");

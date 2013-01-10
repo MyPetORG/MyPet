@@ -21,6 +21,7 @@ package de.Keyle.MyPet.skill;
 
 
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.MyPetConfig;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.NBTConfiguration;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
@@ -177,7 +178,7 @@ public class MyPetSkillTreeLoader
                     {
                         for (MyPetSkillTreeSkill skill : level.getSkills())
                         {
-                            if (!skill.isAddedByInheritance())
+                            if (!skill.isAddedByInheritance() || MyPetConfig.inheritAlreadyInheritedSkills)
                             {
                                 MyPetSkillTreeSkill skillClone = skill.cloneSkill();
                                 skillClone.setIsInherited(true);
@@ -218,8 +219,7 @@ public class MyPetSkillTreeLoader
 
     private static boolean saveSkillTree(NBTConfiguration nbtConfiguration, String petTypeName)
     {
-
-        boolean saveMobType = false, saveSkillTree, saveLevel;
+        boolean saveMobType = false;
 
         if (MyPetSkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0)
         {
@@ -228,7 +228,6 @@ public class MyPetSkillTreeLoader
             NBTTagList skilltreeTagList = new NBTTagList();
             for (String skillTreeName : mobType.getSkillTreeNames())
             {
-                saveSkillTree = false;
                 MyPetSkillTree skillTree = mobType.getSkillTree(skillTreeName);
                 NBTTagCompound skilltreeCompound = new NBTTagCompound();
                 skilltreeCompound.setString("Name", skillTree.getName());
@@ -249,7 +248,6 @@ public class MyPetSkillTreeLoader
                 NBTTagList levelTagList = new NBTTagList();
                 for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                 {
-                    saveLevel = false;
                     NBTTagCompound levelCompound = new NBTTagCompound();
                     levelCompound.setShort("Level", level.getLevel());
 
@@ -263,28 +261,20 @@ public class MyPetSkillTreeLoader
                             skillCompound.set("Properties", skill.getProperties());
 
                             skillTagList.add(skillCompound);
-                            saveLevel = true;
                         }
                     }
                     levelCompound.set("Skills", skillTagList);
-                    if (saveLevel)
-                    {
-                        levelTagList.add(levelCompound);
-                        saveSkillTree = true;
-                    }
+                    levelTagList.add(levelCompound);
                 }
                 skilltreeCompound.set("Level", levelTagList);
-                if (saveSkillTree)
-                {
-                    skilltreeTagList.add(skilltreeCompound);
-                    saveMobType = true;
-                }
+                skilltreeTagList.add(skilltreeCompound);
             }
             nbtConfiguration.getNBTTagCompound().set("Skilltrees", skilltreeTagList);
 
-            if (saveMobType)
+            if (mobType.getSkillTreeNames().size() > 0)
             {
                 nbtConfiguration.save();
+                saveMobType = true;
             }
         }
         return saveMobType;
