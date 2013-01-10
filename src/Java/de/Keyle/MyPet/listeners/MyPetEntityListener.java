@@ -41,7 +41,9 @@ import net.minecraft.server.v1_4_6.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftEnderman;
 import org.bukkit.craftbukkit.v1_4_6.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftSkeleton;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -308,6 +310,10 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setShort("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId());
                                 extendedInfo.setShort("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData());
+                            }
+                            else if (leashTarget instanceof Skeleton)
+                            {
+                                extendedInfo.setBoolean("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER);
                             }
                             if (leashTarget instanceof Ageable)
                             {

@@ -31,7 +31,9 @@ import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
+import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
+import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
@@ -42,6 +44,7 @@ import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_6.EntityItem;
+import net.minecraft.server.v1_4_6.Item;
 import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.World;
 import org.bukkit.DyeColor;
@@ -49,8 +52,10 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_4_6.entity.CraftSkeleton;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
+import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.material.MaterialData;
 
@@ -226,6 +231,22 @@ public class CommandRelease implements CommandExecutor
                     else if (myPet instanceof MyZombie)
                     {
                         ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+                    }
+                    else if (myPet instanceof MySkeleton)
+                    {
+                        if (((MySkeleton) myPet).isWither())
+                        {
+                            ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
+                            ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.STONE_SWORD));
+                        }
+                        else
+                        {
+                            ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
+                        }
+                    }
+                    else if (myPet instanceof MyPigZombie)
+                    {
+                        ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
                     }
 
                     myPet.removePet();

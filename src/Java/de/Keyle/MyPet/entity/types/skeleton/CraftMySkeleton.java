@@ -29,6 +29,16 @@ public class CraftMySkeleton extends CraftMyPet
         super(server, entityMySkeleton);
     }
 
+    public boolean isWither()
+    {
+        return ((EntityMySkeleton) getHandle()).isWither();
+    }
+
+    public void setWither(boolean flag)
+    {
+        ((EntityMySkeleton) getHandle()).setWither(flag);
+    }
+
     // disabled because of new equipment API
     /*
     protected ItemStack[] getEquipment()

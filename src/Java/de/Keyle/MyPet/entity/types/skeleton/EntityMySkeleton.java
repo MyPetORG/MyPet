@@ -42,7 +42,19 @@ public class EntityMySkeleton extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setEquipment(0, new ItemStack(Item.IRON_SWORD));
+            this.setWither(((MySkeleton) myPet).isWither());
         }
+    }
+
+    public boolean isWither()
+    {
+        return this.datawatcher.getByte(13) == 1;
+    }
+
+    public void setWither(boolean flag)
+    {
+        this.datawatcher.watch(13, (byte) (flag ? 1 : 0));
+        ((MySkeleton) myPet).isWither = flag;
     }
 
     @Override

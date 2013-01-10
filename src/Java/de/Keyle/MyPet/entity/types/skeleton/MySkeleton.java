@@ -27,6 +27,8 @@ import net.minecraft.server.v1_4_6.NBTTagCompound;
 
 public class MySkeleton extends MyPet
 {
+    protected boolean isWither = false;
+
     public MySkeleton(MyPetPlayer petOwner)
     {
         super(petOwner);
@@ -51,10 +53,25 @@ public class MySkeleton extends MyPet
         return new ItemStack[0];
     }
 
+    public void setWither(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((CraftMySkeleton) getCraftPet()).setWither(flag);
+        }
+        this.isWither = flag;
+    }
+
+    public boolean isWither()
+    {
+        return isWither;
+    }
+
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("Wither", isWither());
         /*
         NBTTagList items = new NBTTagList();
         ItemStack[] equipment = getEquipment();
@@ -77,6 +94,10 @@ public class MySkeleton extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
+        if (info.hasKey("Wither"))
+        {
+            setWither(info.getBoolean("Wither"));
+        }
         //TODO load equipment
     }
 
