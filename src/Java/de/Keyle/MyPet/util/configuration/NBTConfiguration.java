@@ -80,7 +80,7 @@ public class NBTConfiguration
                 F_In.close();
                 if (MyPetUtil.getDebugLogger() != null)
                 {
-                    MyPetUtil.getDebugLogger().info("loaded GZIP NBTfile");
+                    MyPetUtil.getDebugLogger().info("loaded GZIP NBT file (" + NBTFile.getName() + ")");
                 }
             }
             inputStream.close();
@@ -110,7 +110,7 @@ public class NBTConfiguration
                 F_In.close();
                 if (MyPetUtil.getDebugLogger() != null)
                 {
-                    MyPetUtil.getDebugLogger().info("loaded unziped NBTfile");
+                    MyPetUtil.getDebugLogger().info("loaded unziped NBT file (" + NBTFile.getName() + ")");
                 }
             }
             inputStream.close();
