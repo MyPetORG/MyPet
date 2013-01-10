@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types.blaze;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.v1_4_6.NBTTagCompound;
 
 public class MyBlaze extends MyPet
 {
@@ -45,6 +46,20 @@ public class MyBlaze extends MyPet
             ((EntityMyBlaze) getCraftPet().getHandle()).setOnFire(flag);
         }
         isOnFire = flag;
+    }
+
+    @Override
+    public NBTTagCompound getExtendedInfo()
+    {
+        NBTTagCompound info = new NBTTagCompound("Info");
+        info.setBoolean("Fire", isOnFire());
+        return info;
+    }
+
+    @Override
+    public void setExtendedInfo(NBTTagCompound info)
+    {
+        setOnFire(info.getBoolean("Fire"));
     }
 
     @Override
