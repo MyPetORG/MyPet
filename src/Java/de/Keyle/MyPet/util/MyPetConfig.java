@@ -30,6 +30,7 @@ import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.giant.MyGiant;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
@@ -133,6 +134,7 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Cow.Food", Material.WHEAT.getId());
         setProperty("MyPet.Pets.Creeper.Food", Material.SULPHUR.getId());
         setProperty("MyPet.Pets.Enderman.Food", Material.SOUL_SAND.getId());
+        setProperty("MyPet.Pets.Giant.Food", Material.ROTTEN_FLESH.getId());
         setProperty("MyPet.Pets.IronGolem.Food", Material.IRON_INGOT.getId());
         setProperty("MyPet.Pets.MagmaCube.Food", Material.REDSTONE.getId());
         setProperty("MyPet.Pets.Mooshroom.Food", Material.WHEAT.getId());
@@ -157,6 +159,7 @@ public class MyPetConfig
         setProperty("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name());
         setProperty("MyPet.Pets.Creeper.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Enderman.LeashFlags", LeashFlag.LowHp.name());
+        setProperty("MyPet.Pets.Giant.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name());
         setProperty("MyPet.Pets.MagmaCube.LeashFlags", LeashFlag.LowHp.name());
         setProperty("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.Baby.name());
@@ -239,6 +242,7 @@ public class MyPetConfig
         seperateFood(MyCow.class, config.getString("MyPet.Pets.Cow.Food", "296"));
         seperateFood(MyCreeper.class, config.getString("MyPet.Pets.Creeper.Food", "289"));
         seperateFood(MyEnderman.class, config.getString("MyPet.Pets.Enderman.Food", "88"));
+        seperateFood(MyGiant.class, config.getString("MyPet.Pets.Giant.Food", "367"));
         seperateFood(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.Food", "265"));
         seperateFood(MyMagmaCube.class, config.getString("MyPet.Pets.MagmaCube.Food", "331"));
         seperateFood(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.Food", "296"));
@@ -263,6 +267,7 @@ public class MyPetConfig
         seperateLeashFlags(MyCow.class, config.getString("MyPet.Pets.Cow.LeashFlags", LeashFlag.Baby.name()));
         seperateLeashFlags(MyCreeper.class, config.getString("MyPet.Pets.Creeper.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyEnderman.class, config.getString("MyPet.Pets.Enderman.LeashFlags", LeashFlag.LowHp.name()));
+        seperateLeashFlags(MyGiant.class, config.getString("MyPet.Pets.Giant.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name()));
         seperateLeashFlags(MyMagmaCube.class, config.getString("MyPet.Pets.MagmaCube.LeashFlags", LeashFlag.LowHp.name()));
         seperateLeashFlags(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.Baby.name()));
