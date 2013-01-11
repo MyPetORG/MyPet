@@ -74,10 +74,10 @@ public abstract class MyPetSkillTreeSkill
 
     public String getHtml()
     {
-        InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/" + getName() + ".html");
+        InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
         if (htmlStream == null)
         {
-            htmlStream = MyPetPlugin.class.getClassLoader().getResourceAsStream("html/_default.html");
+            htmlStream = MyPetPlugin.class.getClassLoader().getResourceAsStream("html/skills/_default.html");
             if (htmlStream == null)
             {
                 return "NoSkillPropertieViewFoundError";
