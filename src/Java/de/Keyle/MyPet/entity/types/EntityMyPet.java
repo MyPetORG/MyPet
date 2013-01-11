@@ -35,7 +35,9 @@ import net.minecraft.server.v1_4_6.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import java.util.List;
 
@@ -94,6 +96,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             this.myPet = myPet;
             isMyPet = true;
 
+            ((LivingEntity) this.getBukkitEntity()).setMaxHealth(myPet.getMaxHealth());
             this.setHealth(myPet.getHealth());
         }
     }
@@ -122,31 +125,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public MyPet getMyPet()
     {
         return myPet;
-    }
-
-    public void setHealth(int i)
-    {
-        if (i > this.getMaxHealth())
-        {
-            i = this.getMaxHealth();
-        }
-        else if (i < 0)
-        {
-            i = 0;
-        }
-        this.health = i;
-    }
-
-    public int getMaxHealth()
-    {
-        if (isMyPet())
-        {
-            return myPet.getMaxHealth();
-        }
-        else
-        {
-            return MyPet.getStartHP(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
-        }
     }
 
     public boolean hasRider()
@@ -212,6 +190,12 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
 
         return super.damageEntity(damagesource, i);
+    }
+
+    @Override
+    public int getMaxHealth()
+    {
+        return this.maxHealth;
     }
 
     protected void tamedEffect(boolean tamed)
@@ -291,11 +275,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     --itemStack.count;
                 }
                 addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
-                //MyPetLogger.write("vA: " + getHealth());
-                //MyPetLogger.write("add: " + Math.min(3, getMaxHealth() - getHealth()));
-                this.health += Math.min(3, getMaxHealth() - getHealth());
-                //this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
-                //MyPetLogger.write("nA: " + getHealth());
+                this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
                 if (itemStack.count <= 0)
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -312,6 +292,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
+                this.tamedEffect(true);
             }
             if (addHunger > 0 && myPet.getHungerValue() < 100)
             {

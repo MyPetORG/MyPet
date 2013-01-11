@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
@@ -53,6 +54,12 @@ public class HP extends MyPetGenericSkill
             if (upgrade.getProperties().hasKey("add"))
             {
                 hpIncrease += upgrade.getProperties().getInt("add");
+
+                if (getMyPet().status == PetState.Here)
+                {
+                    getMyPet().getCraftPet().setMaxHealth(getMyPet().getMaxHealth());
+                }
+
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHP")).replace("%petname%", myPet.petName).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + hpIncrease)));

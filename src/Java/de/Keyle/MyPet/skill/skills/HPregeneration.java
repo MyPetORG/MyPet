@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 @SkillName("HPregeneration")
 @SkillProperties(parameterNames = {"add", "remove"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int})
@@ -110,7 +111,7 @@ public class HPregeneration extends MyPetGenericSkill
         {
             if (timeCounter-- <= 0)
             {
-                //myPet.getCraftPet().getHandle().heal(1, EntityRegainHealthEvent.RegainReason.REGEN);
+                myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
                 timeCounter = healtregenTime - timeDecrease;
             }
         }
