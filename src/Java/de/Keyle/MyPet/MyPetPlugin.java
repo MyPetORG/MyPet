@@ -375,10 +375,10 @@ public class MyPetPlugin extends JavaPlugin
 
                 Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
                 Graph graphCount = metrics.createGraph("Counted MyPets per type");
+                Graph graphTotalCount = metrics.createGraph("Total MyPets");
 
-                for (MyPetType MPT : MyPetType.values())
+                for (final MyPetType petType : MyPetType.values())
                 {
-                    final MyPetType petType = MPT;
                     Plotter plotter = new Metrics.Plotter(petType.getTypeName())
                     {
                         final MyPetType type = petType;
@@ -389,10 +389,19 @@ public class MyPetPlugin extends JavaPlugin
                             return MyPetList.countMyPets(type);
                         }
                     };
-
                     graphPercent.addPlotter(plotter);
                     graphCount.addPlotter(plotter);
                 }
+
+                Plotter plotter = new Metrics.Plotter("Total MyPets")
+                {
+                    @Override
+                    public int getValue()
+                    {
+                        return MyPetList.countMyPets();
+                    }
+                };
+                graphTotalCount.addPlotter(plotter);
 
                 metrics.start();
             }
