@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 import org.bukkit.ChatColor;
@@ -394,6 +395,7 @@ public class MyPetEntityListener implements Listener
             }
             else if (e.getDamager() instanceof CraftMyPet)
             {
+                boolean skillUsed = false;
                 MyPet myPet = ((CraftMyPet) e.getDamager()).getHandle().getMyPet();
                 if (myPet.getSkills().hasSkill("Poison"))
                 {
@@ -402,9 +404,20 @@ public class MyPetEntityListener implements Listener
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.POISON, poisonSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                        skillUsed = true;
                     }
                 }
-                if (myPet.getSkills().hasSkill("Fire"))
+                if (!skillUsed && myPet.getSkills().hasSkill("Wither"))
+                {
+                    Wither witherSkill = (Wither) myPet.getSkills().getSkill("Wither");
+                    if (witherSkill.getWither())
+                    {
+                        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, witherSkill.getDuration() * 20, 1);
+                        ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                        skillUsed = true;
+                    }
+                }
+                if (!skillUsed && myPet.getSkills().hasSkill("Fire"))
                 {
                     Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
                     if (fireSkill.getFire())

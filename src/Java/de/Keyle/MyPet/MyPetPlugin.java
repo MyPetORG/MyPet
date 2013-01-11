@@ -457,6 +457,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Thorns.class);
         MyPetSkills.registerSkill(Fire.class);
         MyPetSkills.registerSkill(Beacon.class);
+        MyPetSkills.registerSkill(Wither.class);
     }
 
     int loadPets(File f)
