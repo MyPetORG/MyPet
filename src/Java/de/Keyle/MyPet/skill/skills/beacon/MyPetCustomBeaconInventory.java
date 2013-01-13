@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.skill.skills.beacon;
 
+import de.Keyle.MyPet.skill.skills.Beacon;
 import net.minecraft.server.v1_4_6.EntityHuman;
 import net.minecraft.server.v1_4_6.IInventory;
 import net.minecraft.server.v1_4_6.ItemStack;
@@ -34,8 +35,14 @@ public class MyPetCustomBeaconInventory implements IInventory
     public List<HumanEntity> transaction = new ArrayList<HumanEntity>();
     private int maxStack = 64;
     private ItemStack tributeItem;
+    Beacon beaconSkill;
 
     // Inventory Methods --------------------------------------------------------------------------------------------
+
+    public MyPetCustomBeaconInventory(Beacon beaconSkill)
+    {
+        this.beaconSkill = beaconSkill;
+    }
 
     public ItemStack[] getContents()
     {
@@ -95,6 +102,7 @@ public class MyPetCustomBeaconInventory implements IInventory
         {
             ItemStack itemstack = this.tributeItem;
 
+            beaconSkill.tributeItem = null;
             this.tributeItem = null;
             return itemstack;
         }
@@ -105,6 +113,14 @@ public class MyPetCustomBeaconInventory implements IInventory
     {
         if (i == 0)
         {
+            if (itemStack != null)
+            {
+                beaconSkill.tributeItem = itemStack.cloneItemStack();
+            }
+            else
+            {
+                beaconSkill.tributeItem = null;
+            }
             this.tributeItem = itemStack;
         }
     }

@@ -25,6 +25,7 @@ import net.minecraft.server.v1_4_6.EntityHuman;
 public class TileEntityBeacon extends net.minecraft.server.v1_4_6.TileEntityBeacon
 {
     private Beacon beaconSkill;
+    private boolean primaryBuffCheck = false;
 
     public TileEntityBeacon(Beacon beaconSkill)
     {
@@ -46,12 +47,32 @@ public class TileEntityBeacon extends net.minecraft.server.v1_4_6.TileEntityBeac
     @Override
     public void d(int effectId)
     {
-        beaconSkill.setPrimaryEffectId(effectId);
+        if (!beaconSkill.activate(true, effectId))
+        {
+            beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+        }
+        else
+        {
+            beaconSkill.setTributeItem(null);
+            primaryBuffCheck = true;
+        }
     }
 
     @Override
     public void e(int effectId)
     {
-        beaconSkill.setSecondaryEffectId(effectId);
+        if (!beaconSkill.activate(false, effectId))
+        {
+            beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+        }
+        else
+        {
+            beaconSkill.setTributeItem(null);
+        }
+        if (primaryBuffCheck)
+        {
+            beaconSkill.setTributeItem(null);
+            primaryBuffCheck = false;
+        }
     }
 }

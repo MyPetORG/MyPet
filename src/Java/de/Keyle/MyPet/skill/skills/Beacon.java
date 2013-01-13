@@ -35,28 +35,60 @@ import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 @SkillName("Beacon")
 @SkillProperties(
-        parameterNames = {"Add_1", "Add_2", "Add_3", "Add_4", "Add_5", "Add_6", "Add_7", "Add_8", "level"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.Int})
+        parameterNames = {"1_1", "1_3", "1_11", "1_8", "1_5", "2_1", "2_3", "2_11", "2_8", "2_5", "2_10", "duration", "range"},
+        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Int, NBTdatatypes.Double})
 public class Beacon extends MyPetGenericSkill
 {
     public static int hungerDecreaseTime = 60;
 
     private TileEntityBeacon tileEntityBeacon;
 
+    private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
+    private Map<Integer, Boolean> primaryActive = new HashMap<Integer, Boolean>();
+    private int[] primaryBuffs = {1, 3, 11, 8, 5};
+    private Map<Integer, Boolean> secundaryActive = new HashMap<Integer, Boolean>();
+    private int[] secundaryBuffs = {1, 3, 11, 8, 5, 10};
     private int primaryEffectId = 0;
     private int secondaryEffectId = 0;
     private int hungerDecreaseTimer;
     private boolean active = false;
-    private double range = 5;
+    private double range = 0;
+    private int duration = 0;
     private int level = 0;
     private MyPetCustomBeaconInventory beaconInv;
+    public ItemStack tributeItem;
+
+    static
+    {
+        buffNames.put(1, "Speed");
+        buffNames.put(3, "Haste");
+        buffNames.put(5, "Strength");
+        buffNames.put(8, "JumpBoost");
+        buffNames.put(10, "Regeneration");
+        buffNames.put(11, "Resistance");
+    }
 
     public Beacon(boolean addedByInheritance)
     {
         super(addedByInheritance);
-        beaconInv = new MyPetCustomBeaconInventory();
+        beaconInv = new MyPetCustomBeaconInventory(this);
+        primaryActive.put(1, false);
+        primaryActive.put(3, false);
+        primaryActive.put(5, false);
+        primaryActive.put(8, false);
+        primaryActive.put(11, false);
+        secundaryActive.put(1, false);
+        secundaryActive.put(3, false);
+        secundaryActive.put(5, false);
+        secundaryActive.put(8, false);
+        secundaryActive.put(10, false);
+        secundaryActive.put(11, false);
     }
 
     @Override
@@ -70,14 +102,63 @@ public class Beacon extends MyPetGenericSkill
         return level;
     }
 
+    public ItemStack getTributeItem()
+    {
+        return tributeItem;
+    }
+
+    public void setTributeItem(ItemStack itemStack)
+    {
+        beaconInv.setItem(0, itemStack);
+    }
+
     @Override
     public void upgrade(MyPetSkillTreeSkill upgrade, boolean quiet)
     {
         if (upgrade instanceof Beacon)
         {
-            if (upgrade.getProperties().hasKey("level"))
+            level = 4;
+            for (int primaryBuffId : primaryBuffs)
             {
-                level = upgrade.getProperties().getInt("level");
+                if (upgrade.getProperties().hasKey("1_" + primaryBuffId))
+                {
+                    primaryActive.put(primaryBuffId, upgrade.getProperties().getBoolean("1_" + primaryBuffId));
+                }
+            }
+
+            for (int secundaryBuffId : secundaryBuffs)
+            {
+                if (upgrade.getProperties().hasKey("2_" + secundaryBuffId))
+                {
+                    if (secundaryBuffId == 10)
+                    {
+                        secundaryActive.put(secundaryBuffId, upgrade.getProperties().getBoolean("2_" + secundaryBuffId));
+                    }
+                    else
+                    {
+                        if (primaryActive.get(secundaryBuffId))
+                        {
+                            secundaryActive.put(secundaryBuffId, upgrade.getProperties().getBoolean("2_" + secundaryBuffId));
+                        }
+                        else
+                        {
+                            secundaryActive.put(secundaryBuffId, false);
+                        }
+                    }
+                }
+            }
+            if (upgrade.getProperties().hasKey("duration"))
+            {
+                duration = upgrade.getProperties().getInt("duration");
+            }
+            if (upgrade.getProperties().hasKey("range"))
+            {
+                range = upgrade.getProperties().getDouble("range");
+            }
+            if (!quiet)
+            {
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddBeacon").replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration)));
+                myPet.sendMessageToOwner("  " + getFormattedValue());
             }
         }
     }
@@ -85,7 +166,31 @@ public class Beacon extends MyPetGenericSkill
     @Override
     public String getFormattedValue()
     {
-        return MyPetLanguage.getString("Name_Tier") + ": " + level;
+        String availableBuffs = "";
+        for (int primaryBuffId : primaryBuffs)
+        {
+            if (primaryActive.get(primaryBuffId))
+            {
+                if (!availableBuffs.equalsIgnoreCase(""))
+                {
+                    availableBuffs += ", ";
+                }
+                availableBuffs += MyPetLanguage.getString("Name_" + buffNames.get(primaryBuffId));
+                if (secundaryActive.get(primaryBuffId))
+                {
+                    availableBuffs += " (II)";
+                }
+            }
+        }
+        if (secundaryActive.get(10))
+        {
+            if (!availableBuffs.equalsIgnoreCase(""))
+            {
+                availableBuffs += ", ";
+            }
+            availableBuffs += MyPetLanguage.getString("Name_" + buffNames.get(10));
+        }
+        return availableBuffs;
     }
 
     public void reset()
@@ -97,22 +202,25 @@ public class Beacon extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        for (int i = 1 ; i <= 8 ; i++)
+        for (int i = 0 ; i < 11 ; i++)
         {
-            if (getProperties().hasKey("Add_" + i))
+            String name = getClass().getAnnotation(SkillProperties.class).parameterNames()[i];
+            if (getProperties().hasKey(name))
             {
-                int buffId = getProperties().getInt("Add_" + i);
-                html = html.replace(" onselect=\"Add_" + i + "_" + buffId + "\"", " selected");
-                html = html.replaceAll("\\sonselect=\"Add_" + i + "_\\d\"", "");
+                if (!getProperties().getBoolean(name))
+                {
+                    html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
+                }
             }
         }
-        if (getProperties().hasKey("level"))
+        if (getProperties().hasKey("duration"))
         {
-            int level = getProperties().getInt("level");
-            html = html.replace(" onselect=\"level_" + level + "\"", " selected");
-            html = html.replaceAll("\\sonselect=\"level_\\d\"", "");
+            html = html.replace("name=\"duration\" value=\"0\"", "name=\"duration\" value=\"" + getProperties().getInt("duration") + "\"");
         }
-
+        if (getProperties().hasKey("range"))
+        {
+            html = html.replace("name=\"range\" value=\"0.0\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
+        }
         return html;
     }
 
@@ -141,6 +249,51 @@ public class Beacon extends MyPetGenericSkill
         }
     }
 
+    public boolean activate(boolean primary, int effectId)
+    {
+        if (level > 0)
+        {
+            if (primary)
+            {
+                if (primaryActive.get(effectId))
+                {
+                    setPrimaryEffectId(effectId);
+                    return true;
+                }
+                else
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                    return false;
+                }
+            }
+            else
+            {
+                if (secundaryActive.get(effectId))
+                {
+                    setSecondaryEffectId(effectId);
+                    return true;
+                }
+                else
+                {
+                    if (effectId != 10)
+                    {
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconImprovedBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                    }
+                    else
+                    {
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                    }
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+        }
+        return false;
+    }
+
     @Override
     public void schedule()
     {
@@ -152,15 +305,15 @@ public class Beacon extends MyPetGenericSkill
             {
                 amplification = 1;
             }
-            double range = this.range * myPet.getHungerValue() / 100;
+            double range = this.range * myPet.getHungerValue() / 100.;
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range)))
             {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
-                entityHuman.addEffect(new MobEffect(this.primaryEffectId, 180, amplification, true));
+                entityHuman.addEffect(new MobEffect(this.primaryEffectId, duration * 20, amplification, true));
 
                 if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
                 {
-                    entityHuman.addEffect(new MobEffect(this.secondaryEffectId, 180, 0, true));
+                    entityHuman.addEffect(new MobEffect(this.secondaryEffectId, duration * 20, 0, true));
                 }
             }
 
@@ -215,7 +368,7 @@ public class Beacon extends MyPetGenericSkill
         }
 
         int containerCounter = entityPlayer.nextContainerCounter();
-        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, this.getName(), beaconInv.getSize()));
+        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, myPet.petName + "'s - Beacon", beaconInv.getSize()));
         entityPlayer.activeContainer = container;
         entityPlayer.activeContainer.windowId = containerCounter;
         entityPlayer.activeContainer.addSlotListener(entityPlayer);

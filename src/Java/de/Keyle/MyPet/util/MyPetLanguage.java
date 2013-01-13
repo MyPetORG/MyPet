@@ -61,6 +61,7 @@ public class MyPetLanguage
     {
         // -- Messages -- -----------------------------------------------------------------------------------------------------------------------------------
         // --  A  --
+        addString("Msg_AddBeacon", "MyPet.Message.addbeacon", "These buffs are now usable (range: %range% - duration: %duration%sec):");
         addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%white% can now be controlled with a %item%");
         addString("Msg_AddDamage", "MyPet.Message.adddamage", "%aqua%%petname%%white% has now %dmg% bonusdamage");
         addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%white% has now a max health of %maxhealth%HP");
@@ -73,6 +74,8 @@ public class MyPetLanguage
         addString("Msg_AvailableSkilltrees", "MyPet.Message.availableskilltrees", "Available skilltrees for %aqua%%petname%%white%:");
         // --  B  --
         addString("Msg_BeaconCreative", "MyPet.Message.beaconwhileincreative", "You can't open the beacon window while you are in creative mode");
+        addString("Msg_BeaconBuffNotActive", "MyPet.Message.beaconbuffnotactive", "You %red%can't%white% use the %gold%%buff%%white% buff.");
+        addString("Msg_BeaconImprovedBuffNotActive", "MyPet.Message.beaconimprovedbuffnotactive", "You %red%can't%white% use the improved %gold%%buff%%white% buff.");
         addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%white% is now in %mode% mode.");
         // --  C  --
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%white% comes to you.");
@@ -175,9 +178,12 @@ public class MyPetLanguage
         // --  G  --
         addString("Name_Ghast", "MyPet.Name.Ghast", "Ghast");
         // --  H  --
+        addString("Name_Haste", "MyPet.Name.Haste", "Haste");
         addString("Name_Help", "MyPet.Name.Help", "Help");
         addString("Name_HP", "MyPet.Name.HP", "HP");
         addString("Name_Hunger", "MyPet.Name.Hunger", "Hunger");
+        // --  J  --
+        addString("Name_JumpBoost", "MyPet.Name.JumpBoost", "Jump Boost");
         // --  L  --
         addString("Name_LAVA", "MyPet.Name.Lava", "Lava");
         addString("Name_LavaSlime", "MyPet.Name.MagmaCube", "Magma Cube");
@@ -200,6 +206,8 @@ public class MyPetLanguage
         // --  R  --
         addString("Name_Raid", "MyPet.Name.Raid", "Raid");
         addString("Name_Range", "MyPet.Name.Range", "Range");
+        addString("Name_Regeneration", "MyPet.Name.Regeneration", "Regeneration");
+        addString("Name_Resistance", "MyPet.Name.Resistance", "Resistance");
         addString("Name_Rows", "MyPet.Name.Rows", "Row(s)");
         // --  S  --
         addString("Name_Sheep", "MyPet.Name.Sheep", "Sheep");
@@ -213,6 +221,7 @@ public class MyPetLanguage
         addString("Name_Spider", "MyPet.Name.Spider", "Spider");
         addString("Name_SPLASH_POTION", "MyPet.Name.SplashPotion", "Splash Potion");
         addString("Name_Squid", "MyPet.Name.Squid", "Squid");
+        addString("Name_Strength", "MyPet.Name.Strength", "Strength");
         // --  T  --
         addString("Name_Tier", "MyPet.Name.Tier", "Tier");
         // --  U  --
