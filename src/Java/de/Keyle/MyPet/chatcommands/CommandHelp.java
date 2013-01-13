@@ -19,8 +19,10 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,37 +36,37 @@ public class CommandHelp implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            player.sendMessage("--------------- MyPet - Help -------------------------");
-            player.sendMessage("/petinfo [player] | Display info about a MyPet  (alias: /pinfo)");
+            player.sendMessage("--------------- MyPet - " + MyPetLanguage.getString("Name_Help") + " -------------------------");
+            player.sendMessage(MyPetUtil.setColors("/petinfo" + MyPetLanguage.getString("Msg_Cmd_petinfo")));
             if (MyPetPermissions.has(player, "MyPet.admin"))
             {
-                player.sendMessage("/petadmin [PlayerName] name/exp/respawn [Value]");
+                player.sendMessage(MyPetUtil.setColors("/petadmin" + MyPetLanguage.getString("Msg_Cmd_petadmin")));
             }
             if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage("/petname <new pet name> | Set the name of your pet");
-                player.sendMessage("/petrelease <petname> | Release your pet");
-                player.sendMessage("/petstop | MyPet stopps attacking  (alias: /ps or /pets)");
-                player.sendMessage("/petcall | Call your pet  (alias: /pc or /petc)");
-                player.sendMessage("/petsendaway | Sends your pet away  (alias: /psa or /petsa)");
-                player.sendMessage("/petskill | Shows the skill-levels");
-                player.sendMessage("/petchooseskilltree | Shows and chooses skilltrees  (alias: /pcst or /petcst)");
+                player.sendMessage(MyPetUtil.setColors("/petname" + MyPetLanguage.getString("Msg_Cmd_petname")));
+                player.sendMessage(MyPetUtil.setColors("/petrelease" + MyPetLanguage.getString("Msg_Cmd_petrelease")));
+                player.sendMessage(MyPetUtil.setColors("/petstop" + MyPetLanguage.getString("Msg_Cmd_petstop")));
+                player.sendMessage(MyPetUtil.setColors("/petcall" + MyPetLanguage.getString("Msg_Cmd_petcall")));
+                player.sendMessage(MyPetUtil.setColors("/petsendaway" + MyPetLanguage.getString("Msg_Cmd_petsendaway")));
+                player.sendMessage(MyPetUtil.setColors("/petskill" + MyPetLanguage.getString("Msg_Cmd_petskill")));
+                player.sendMessage(MyPetUtil.setColors("/petchooseskilltree" + MyPetLanguage.getString("Msg_Cmd_petchooseskilltree")));
 
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
                 {
-                    player.sendMessage("/petinventory | Opens the inventory of the pet  (alias: /pi or /peti)");
+                    player.sendMessage(MyPetUtil.setColors("/petinventory" + MyPetLanguage.getString("Msg_Cmd_petinventory")));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
                 {
-                    player.sendMessage("/petpickup | Toggle pickup on/off  (alias: /pp or /petp)");
+                    player.sendMessage(MyPetUtil.setColors("/petpickup" + MyPetLanguage.getString("Msg_Cmd_petpickup")));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Behavior"))
                 {
-                    player.sendMessage("/petbehavior | Toggles the behaivior  (alias: /pb or /petb)");
+                    player.sendMessage(MyPetUtil.setColors("/petbehavior" + MyPetLanguage.getString("Msg_Cmd_petbehavior")));
                 }
             }
             player.sendMessage("");
-            player.sendMessage("For more info read the command page on: mypet.keyle.de");
+            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Cmd_moreinfo") + "mypet.keyle.de"));
             player.sendMessage("-----------------------------------------------------");
         }
         return true;

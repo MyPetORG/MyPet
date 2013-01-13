@@ -108,6 +108,19 @@ public class MyPetLanguage
         addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%white% only once!");
         addString("Msg_AutomaticSkilltreeAssignment", "MyPet.Message.automaticskilltreeassignment", "Skilltrees will be assigned automatically!");
         addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%white% has now a chance of %chance%% to reflect damage");
+        addString("Msg_Cmd_petinfo", "MyPet.Message.petinfo", " [player] | Display info about a MyPet  (alias: /pinfo)");
+        addString("Msg_Cmd_petname", "MyPet.Message.petname", " <new pet name> | Set the name of your pet");
+        addString("Msg_Cmd_petrelease", "MyPet.Message.petrelease", " <petname> | Release your pet");
+        addString("Msg_Cmd_petstop", "MyPet.Message.petstop", " | MyPet stopps attacking  (alias: /ps or /pets)");
+        addString("Msg_Cmd_petcall", "MyPet.Message.petcall", " | Call your pet  (alias: /pc or /petc)");
+        addString("Msg_Cmd_petsendaway", "MyPet.Message.petsendaway", " | Sends your pet away  (alias: /psa or /petsa)");
+        addString("Msg_Cmd_petskill", "MyPet.Message.petskill", " | Shows the skill-levels");
+        addString("Msg_Cmd_petchooseskilltree", "MyPet.Message.petchooseskilltree", " | Shows and chooses skilltrees  (alias: /pcst or /petcst)");
+        addString("Msg_Cmd_petinventory", "MyPet.Message.petinventory", " | Opens the inventory of the pet  (alias: /pi or /peti)");
+        addString("Msg_Cmd_petpickup", "MyPet.Message.petpickup", " | Toggle pickup on/off  (alias: /pp or /petp)");
+        addString("Msg_Cmd_petbehavior", "MyPet.Message.petbehavior", " | Toggles the behaivior  (alias: /pb or /petb)");
+        addString("Msg_Cmd_moreinfo", "MyPet.Message.moreinfo", "For more info read the command page on: ");
+        addString("Msg_Cmd_petadmin", "MyPet.Message.petadmin", " [PlayerName] name/exp/respawn [Value]");
 
         addString("Name_HP", "MyPet.Name.HP", "HP");
         addString("Name_Damage", "MyPet.Name.Damage", "Damage");
@@ -177,6 +190,7 @@ public class MyPetLanguage
         addString("Name_Modes", "MyPet.Name.Modes", "Modes");
         addString("Name_Tier", "MyPet.Name.Tier", "Tier");
         addString("Name_Speed", "MyPet.Name.Speed", "Speed");
+        addString("Name_Help", "MyPet.Name.Help", "Help");
 
         yamlConfiguration.saveConfig();
     }
