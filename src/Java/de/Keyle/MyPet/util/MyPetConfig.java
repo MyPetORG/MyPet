@@ -83,7 +83,8 @@ public class MyPetConfig
     {
         setProperty("MyPet.RespawnTime.Factor", 5);
         setProperty("MyPet.RespawnTime.Fixed", 0);
-        setProperty("MyPet.SuperPerms", false);
+        setProperty("MyPet.Permissions.SuperPerms", false);
+        setProperty("MyPet.Permissions.UseExtendedPermissions", false);
         setProperty("MyPet.OwnerCanAttackPet", false);
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.HungerSystem.Active", true);
@@ -214,7 +215,8 @@ public class MyPetConfig
         ownerCanAttackPet = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         hungerSystem = config.getBoolean("MyPet.HungerSystem.Active", true);
         hungerSystemTime = config.getInt("MyPet.HungerSystem.Time", 60);
-        superperms = config.getBoolean("MyPet.SuperPerms", false);
+        superperms = config.getBoolean("MyPet.Permissions.SuperPerms", false);
+        MyPetPermissions.useExtendedPermissions = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
         checkForUpdates = config.getBoolean("MyPet.CheckForUpdates", false);
         debugLogger = config.getBoolean("MyPet.DebugLogger", false);

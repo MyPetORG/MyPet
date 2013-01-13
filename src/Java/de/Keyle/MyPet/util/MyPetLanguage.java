@@ -79,6 +79,7 @@ public class MyPetLanguage
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%white% is %red%dead%white% and will respawn in %gold%%time%%white% sec");
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%white% first.");
         addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %name%.");
+        addString("Msg_CantUse", "MyPet.Message.cantuse", "%red%You can not use this now.");
         addString("Msg_Cmd_petinfo", "MyPet.Message.petinfo", " [player] | Display info about a MyPet  (alias: /pinfo)");
         addString("Msg_Cmd_petname", "MyPet.Message.petname", " <new pet name> | Set the name of your pet");
         addString("Msg_Cmd_petrelease", "MyPet.Message.petrelease", " <petname> | Release your pet");

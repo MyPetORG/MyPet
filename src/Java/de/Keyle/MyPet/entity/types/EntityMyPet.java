@@ -28,6 +28,8 @@ import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
+import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPvP;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -253,8 +255,15 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (itemStack.id == Ride.item.getId() && canMove())
                 {
-                    this.getOwner().mount(this);
-                    return true;
+                    if (MyPetPermissions.hasExtended((Player) this.getOwner().getBukkitEntity(), "MyPet.user.extended.Ride"))
+                    {
+                        this.getOwner().mount(this);
+                        return true;
+                    }
+                    else
+                    {
+                        getMyPet().sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                    }
                 }
             }
             else if (myPet.getSkills().isSkillActive("Control"))
@@ -267,6 +276,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
         if (canEat(itemStack))
         {
+            if (!MyPetPermissions.hasExtended((Player) this.getOwner().getBukkitEntity(), "MyPet.user.extended.CanFeed"))
+            {
+                return true;
+            }
             int addHunger = 6;
             if (getHealth() < getMaxHealth())
             {

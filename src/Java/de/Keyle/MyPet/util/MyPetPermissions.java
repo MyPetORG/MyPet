@@ -30,6 +30,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class MyPetPermissions
 {
     private static Object permissions;
+    public static boolean useExtendedPermissions = false;
 
     public enum PermissionsType
     {
@@ -63,6 +64,15 @@ public class MyPetPermissions
         }
         return false;
 
+    }
+
+    public static boolean hasExtended(Player player, String node)
+    {
+        if (useExtendedPermissions)
+        {
+            return has(player, node);
+        }
+        return true;
     }
 
     public static void setup(PermissionsType pt)

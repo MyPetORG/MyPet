@@ -67,6 +67,11 @@ public class MyPetPlayerListener implements Listener
                             return;
                         }
                     }
+                    if (!MyPetPermissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control"))
+                    {
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                        return;
+                    }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
                     if (block != null && block.getType() != Material.AIR)
                     {

@@ -50,6 +50,11 @@ public class CommandChooseSkilltree implements CommandExecutor
             }
             else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
+                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.ChooseSkilltree"))
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                    return true;
+                }
                 MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
                 if (args.length == 1)
                 {

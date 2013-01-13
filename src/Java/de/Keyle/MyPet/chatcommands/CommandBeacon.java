@@ -50,6 +50,11 @@ public class CommandBeacon implements CommandExecutor
             else if (MyPetList.hasMyPet(player))
             {
                 MyPet myPet = MyPetList.getMyPet(player);
+                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon"))
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                    return true;
+                }
                 if (myPet.status == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
