@@ -89,11 +89,11 @@ public class Fire extends MyPetGenericSkill
         String html = super.getHtml();
         if (getProperties().hasKey("add"))
         {
-            html = html.replace("add\" value=\"5\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("add\" value=\"0\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
         }
         if (getProperties().hasKey("duration"))
         {
-            html = html.replace("duration\" value=\"3\"", "duration\" value=\"" + getProperties().getInt("duration") + "\"");
+            html = html.replace("duration\" value=\"0\"", "duration\" value=\"" + getProperties().getInt("duration") + "\"");
         }
         return html;
     }

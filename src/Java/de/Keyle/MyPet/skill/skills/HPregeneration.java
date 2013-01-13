@@ -96,11 +96,11 @@ public class HPregeneration extends MyPetGenericSkill
         String html = super.getHtml();
         if (getProperties().hasKey("add"))
         {
-            html = html.replace("add\" value=\"1\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("add\" value=\"0\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
         }
         if (getProperties().hasKey("remove"))
         {
-            html = html.replace("remove\" value=\"1\"", "remove\" value=\"" + getProperties().getInt("remove") + "\"");
+            html = html.replace("remove\" value=\"0\"", "remove\" value=\"" + getProperties().getInt("remove") + "\"");
         }
         return html;
     }
