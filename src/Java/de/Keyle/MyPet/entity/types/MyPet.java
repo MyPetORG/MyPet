@@ -33,6 +33,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -223,6 +224,7 @@ public abstract class MyPet
                     return false;
                 }
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
                 status = PetState.Here;
                 return true;
             }
