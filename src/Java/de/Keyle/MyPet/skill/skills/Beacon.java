@@ -336,20 +336,30 @@ public class Beacon extends MyPetGenericSkill
         {
             this.secondaryEffectId = nbtTagCompound.getInt("Secondary");
         }
-
         if (nbtTagCompound.hasKey("Active"))
         {
             this.active = nbtTagCompound.getBoolean("Active");
+        }
+        if (nbtTagCompound.hasKey("Item"))
+        {
+            setTributeItem(ItemStack.a(nbtTagCompound.getCompound("Item")));
         }
     }
 
     @Override
     public NBTTagCompound save()
     {
+
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         nbtTagCompound.setInt("Primary", this.primaryEffectId);
         nbtTagCompound.setInt("Secondary", this.secondaryEffectId);
         nbtTagCompound.setBoolean("Active", this.active);
+        if (tributeItem != null)
+        {
+            NBTTagCompound item = new NBTTagCompound();
+            tributeItem.save(item);
+            nbtTagCompound.setCompound("Item", item);
+        }
         return nbtTagCompound;
     }
 
