@@ -52,7 +52,11 @@ public class LevelCreator
     JTable skillCounterTabel;
     JLabel skilllevelLabel;
     JButton copyButton;
-    JTextField permissionsTextField;
+    JTextField permissionDisplayTextField;
+    JCheckBox displayNameCheckbox;
+    JCheckBox permissionCheckbox;
+    JTextField displayNameTextField;
+    JTextField permissionTextField;
     JFrame levelCreatorFrame;
 
     DefaultTableModel skillCounterTabelModel;
@@ -221,6 +225,46 @@ public class LevelCreator
                 }
             }
         });
+        permissionCheckbox.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (permissionCheckbox.isSelected())
+                {
+                    permissionTextField.setEnabled(true);
+                    if (!permissionTextField.getText().equalsIgnoreCase(""))
+                    {
+                        skillTree.setPermission(permissionTextField.getText());
+                    }
+                    else
+                    {
+                        skillTree.setPermission(null);
+                    }
+                }
+                else
+                {
+                    permissionTextField.setEnabled(false);
+                    skillTree.setPermission(null);
+                }
+                permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+            }
+        });
+        displayNameCheckbox.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (displayNameCheckbox.isSelected())
+                {
+                    displayNameTextField.setEnabled(true);
+                    skillTree.setDisplayName(displayNameTextField.getText());
+                }
+                else
+                {
+                    displayNameTextField.setEnabled(false);
+                    skillTree.setDisplayName(null);
+                }
+            }
+        });
         backButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -278,6 +322,58 @@ public class LevelCreator
                         }
                     }
                 }
+            }
+        });
+        permissionTextField.addKeyListener(new KeyListener()
+        {
+            public void keyTyped(KeyEvent arg0)
+            {
+            }
+
+            public void keyReleased(KeyEvent arg0)
+            {
+                permissionTextField.setText(permissionTextField.getText().replaceAll("[^a-zA-Z0-9]*", ""));
+                if (!skillTree.getPermission().equals(permissionTextField.getText()))
+                {
+                    if (!permissionTextField.getText().equalsIgnoreCase(""))
+                    {
+                        skillTree.setPermission(permissionTextField.getText());
+                    }
+                    else
+                    {
+                        skillTree.setPermission(null);
+                    }
+                    permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+                }
+            }
+
+            public void keyPressed(KeyEvent arg0)
+            {
+            }
+        });
+        displayNameTextField.addKeyListener(new KeyListener()
+        {
+            public void keyTyped(KeyEvent arg0)
+            {
+            }
+
+            public void keyReleased(KeyEvent arg0)
+            {
+                if (!skillTree.getDisplayName().equals(displayNameTextField.getText()))
+                {
+                    if (!displayNameTextField.getText().equalsIgnoreCase(""))
+                    {
+                        skillTree.setDisplayName(displayNameTextField.getText());
+                    }
+                    else
+                    {
+                        skillTree.setDisplayName(null);
+                    }
+                }
+            }
+
+            public void keyPressed(KeyEvent arg0)
+            {
             }
         });
     }
@@ -357,7 +453,20 @@ public class LevelCreator
         this.skillTree = skillTree;
         this.skillTreeMobType = skillTreeMobType;
 
-        permissionsTextField.setText("MyPet.custom.skilltree." + skillTree.getName());
+
+        if (skillTree.hasDisplayName())
+        {
+            displayNameTextField.setText(skillTree.getDisplayName());
+            displayNameTextField.setEnabled(true);
+            displayNameCheckbox.setSelected(true);
+        }
+        if (skillTree.hasCustomPermissions())
+        {
+            permissionTextField.setText(skillTree.getPermission());
+            permissionTextField.setEnabled(true);
+            permissionCheckbox.setSelected(true);
+        }
+        permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
         mobTypeLabel.setText(skillTreeMobType.getMobTypeName());
 
         this.inheritanceComboBoxModel.removeAllElements();
