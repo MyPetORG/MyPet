@@ -104,20 +104,10 @@ public abstract class MyPet
             {
                 for (String skillTreeName : MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()))
                 {
-                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
+                    MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByPetType(this.getPetType()).getSkillTree(skillTreeName);
+                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
                     {
-                        this.skillTree = MyPetSkillTreeMobType.getMobTypeByPetType(this.getPetType()).getSkillTree(skillTreeName);
-                        break;
-                    }
-                }
-            }
-            if (this.skillTree == null)
-            {
-                for (String skillTreeName : MyPetSkillTreeMobType.getSkillTreeNames("default"))
-                {
-                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTreeName))
-                    {
-                        this.skillTree = MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTree(skillTreeName);
+                        this.skillTree = skillTree;
                         break;
                     }
                 }
