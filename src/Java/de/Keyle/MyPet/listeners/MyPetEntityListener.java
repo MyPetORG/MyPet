@@ -584,7 +584,7 @@ public class MyPetEntityListener implements Listener
                         }
                         else
                         {
-                            killer += ((Player) e.getDamager()).getName();
+                            killer += ((Player) projectile.getShooter()).getName();
                         }
                     }
                     else
