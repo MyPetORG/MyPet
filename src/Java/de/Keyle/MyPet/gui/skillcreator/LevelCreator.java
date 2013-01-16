@@ -137,7 +137,7 @@ public class LevelCreator
                 {
                     MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(choosenSkill);
                     skillTree.addSkillToLevel(level, skill);
-                    SkillTreeNode skillNode = new SkillTreeNode(skill);
+                    SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
                     ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
                     skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                     skillTreeTree.updateUI();
@@ -305,9 +305,9 @@ public class LevelCreator
                 {
                     if (skillTreeTree.getSelectionPath().getPath().length == 3)
                     {
-                        if (skillTreeTree.getSelectionPath().getPathComponent(2) instanceof SkillTreeNode)
+                        if (skillTreeTree.getSelectionPath().getPathComponent(2) instanceof SkillTreeSkillNode)
                         {
-                            MyPetSkillTreeSkill skill = ((SkillTreeNode) skillTreeTree.getSelectionPath().getPathComponent(2)).getSkill();
+                            MyPetSkillTreeSkill skill = ((SkillTreeSkillNode) skillTreeTree.getSelectionPath().getPathComponent(2)).getSkill();
                             if (skill.getClass().getAnnotation(SkillProperties.class) == null)
                             {
                                 JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
@@ -519,7 +519,7 @@ public class LevelCreator
             rootNode.add(levelNode);
             for (MyPetSkillTreeSkill skill : level.getSkills())
             {
-                SkillTreeNode skillNode = new SkillTreeNode(skill);
+                SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
                 levelNode.add(skillNode);
                 skillcount++;
             }
@@ -563,11 +563,11 @@ public class LevelCreator
         skillCounterTabel.getColumnModel().getColumn(1).setPreferredWidth(50);
     }
 
-    private class SkillTreeNode extends DefaultMutableTreeNode
+    private class SkillTreeSkillNode extends DefaultMutableTreeNode
     {
         private MyPetSkillTreeSkill skill;
 
-        public SkillTreeNode(MyPetSkillTreeSkill skill)
+        public SkillTreeSkillNode(MyPetSkillTreeSkill skill)
         {
             super(skill.getName());
             this.skill = skill;
