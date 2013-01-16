@@ -181,7 +181,12 @@ public class MyPetSkillTree
 
     public MyPetSkillTree clone()
     {
-        MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName, place);
+        return clone(skillTreeName, place);
+    }
+
+    public MyPetSkillTree clone(String toName, short toPlace)
+    {
+        MyPetSkillTree newSkillTree = new MyPetSkillTree(toName, toPlace);
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);

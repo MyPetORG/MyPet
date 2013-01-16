@@ -43,8 +43,12 @@ public class SkilltreeCreator
     JPanel skilltreeCreatorPanel;
     JButton saveButton;
     JFrame skilltreeCreatorFrame;
+    JPopupMenu rightclickMenu;
+    JMenuItem copyMenuItem;
+    JMenuItem pasteMenuItem;
 
     private DefaultListModel skillTreeListModel;
+    private MyPetSkillTree skilltreeCopyPaste;
 
     public SkilltreeCreator()
     {
@@ -192,6 +196,8 @@ public class SkilltreeCreator
                     GuiMain.levelCreator.getFrame().setVisible(true);
                     skilltreeCreatorFrame.setEnabled(false);
                 }
+                //if(evt.getButton())
+                System.out.println("b: " + evt.getButton());
             }
         });
         saveButton.addActionListener(new ActionListener()
@@ -238,6 +244,34 @@ public class SkilltreeCreator
                 }
             }
         });
+        copyMenuItem.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                skilltreeCopyPaste = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString());
+                pasteMenuItem.setEnabled(true);
+            }
+        });
+        pasteMenuItem.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                for (int i = 2 ; ; i++)
+                {
+                    if (!skillTreeListModel.contains(skilltreeCopyPaste.getName() + "_" + i))
+                    {
+                        skillTreeListModel.addElement(skilltreeCopyPaste.getName() + "_" + i);
+                        MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString());
+                        Short place = mobType.getNextPlace();
+                        MyPetSkillTree skillTree = skilltreeCopyPaste.clone(skilltreeCopyPaste.getName() + "_" + i, place);
+                        mobType.addSkillTree(skillTree);
+                        skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
+                        deleteSkilltreeButton.setEnabled(true);
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     public JPanel getMainPanel()
@@ -258,5 +292,50 @@ public class SkilltreeCreator
     {
         skillTreeListModel = new DefaultListModel();
         skilltreeList = new JList(skillTreeListModel);
+
+        createRightclickMenu();
+    }
+
+    public void createRightclickMenu()
+    {
+        rightclickMenu = new JPopupMenu();
+
+        copyMenuItem = new JMenuItem("Copy");
+        rightclickMenu.add(copyMenuItem);
+
+        pasteMenuItem = new JMenuItem("Paste");
+        pasteMenuItem.setEnabled(false);
+        rightclickMenu.add(pasteMenuItem);
+
+        MouseListener popupListener = new PopupListener(rightclickMenu);
+        skilltreeList.addMouseListener(popupListener);
+    }
+
+    class PopupListener extends MouseAdapter
+    {
+        JPopupMenu popup;
+
+        PopupListener(JPopupMenu popupMenu)
+        {
+            popup = popupMenu;
+        }
+
+        public void mousePressed(MouseEvent e)
+        {
+            maybeShowPopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e)
+        {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e)
+        {
+            if (e.isPopupTrigger())
+            {
+                popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
     }
 }
