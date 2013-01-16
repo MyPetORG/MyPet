@@ -20,11 +20,10 @@
 package de.Keyle.MyPet.entity.types.pigzombie;
 
 import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_6.Item;
-import net.minecraft.server.v1_4_6.ItemStack;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_6.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPigZombie extends EntityMyPet
@@ -45,7 +44,105 @@ public class EntityMyPigZombie extends EntityMyPet
         }
     }
 
+    public void setEquipment(int slot, ItemStack itemStack)
+    {
+        super.setEquipment(slot, itemStack);
+        ((MyPigZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
+    }
+
+    public boolean checkForEquipment(ItemStack itemstack)
+    {
+        int slot = b(itemstack);
+        if (slot == 0)
+        {
+            if (itemstack.getItem() instanceof ItemSword)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemAxe)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemSpade)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemHoe)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemPickaxe)
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean a(EntityHuman entityhuman)
+    {
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (entityhuman == getOwner() && itemStack != null)
+        {
+            if (itemStack.id == Item.SHEARS.id)
+            {
+                for (EquipmentSlot slot : EquipmentSlot.values())
+                {
+                    ItemStack itemInSlot = ((MyPigZombie) myPet).getEquipment(slot);
+                    if (itemInSlot != null)
+                    {
+                        EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        setEquipment(slot.getSlotId(), null);
+                    }
+                }
+                return true;
+            }
+            else if (checkForEquipment(itemStack) && getOwner().isSneaking())
+            {
+                EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
+                ItemStack itemInSlot = ((MyPigZombie) myPet).getEquipment(slot);
+                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
+                {
+                    EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                setEquipment(b(itemStack), itemStack.cloneItemStack());
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Returns the default sound of the MyPet

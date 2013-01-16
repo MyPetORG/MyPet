@@ -19,15 +19,21 @@
 
 package de.Keyle.MyPet.entity.types.skeleton;
 
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_6.NBTTagList;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MySkeleton extends MyPet
 {
     protected boolean isWither = false;
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
 
     public MySkeleton(MyPetPlayer petOwner)
     {
@@ -35,22 +41,28 @@ public class MySkeleton extends MyPet
         this.petName = "Skeleton";
     }
 
-    protected void setEquipment(int slot, ItemStack item)
+    public void setEquipment(EquipmentSlot slot, ItemStack item)
     {
-        //this.equipment = equipment;
         if (status == PetState.Here)
         {
-            getCraftPet().getHandle().setEquipment(slot, item);
+            getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
         }
+        equipment.put(slot, item);
     }
 
-    protected ItemStack[] getEquipment()
+    public ItemStack[] getEquipment()
     {
-        if (status == PetState.Here)
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0 ; i < EquipmentSlot.values().length ; i++)
         {
-            return getCraftPet().getHandle().getEquipment();
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
         }
-        return new ItemStack[0];
+        return equipment;
+    }
+
+    public ItemStack getEquipment(EquipmentSlot slot)
+    {
+        return equipment.get(slot);
     }
 
     public void setWither(boolean flag)
@@ -72,22 +84,19 @@ public class MySkeleton extends MyPet
     {
         NBTTagCompound info = new NBTTagCompound("Info");
         info.setBoolean("Wither", isWither());
-        /*
+
         NBTTagList items = new NBTTagList();
-        ItemStack[] equipment = getEquipment();
-        for (int i = 0 ; i < equipment.length ; i++)
+        for (EquipmentSlot slot : EquipmentSlot.values())
         {
-            ItemStack itemStack = equipment[i];
-            if (itemStack != null)
+            if (getEquipment(slot) != null)
             {
                 NBTTagCompound item = new NBTTagCompound();
-                item.setInt("Slot", i);
-                itemStack.save(item);
+                item.setInt("Slot", slot.getSlotId());
+                getEquipment(slot).save(item);
                 items.add(item);
             }
         }
-        info.set("Items", items);
-        */
+        info.set("Equipment", items);
         return info;
     }
 
@@ -98,7 +107,17 @@ public class MySkeleton extends MyPet
         {
             setWither(info.getBoolean("Wither"));
         }
-        //TODO load equipment
+        if (info.hasKey("Equipment"))
+        {
+            NBTTagList equipment = info.getList("Equipment");
+            for (int i = 0 ; i < equipment.size() ; i++)
+            {
+                NBTTagCompound Item = (NBTTagCompound) equipment.get(i);
+
+                ItemStack itemStack = ItemStack.a(Item);
+                setEquipment(EquipmentSlot.getSlotById(Item.getInt("Slot")), itemStack);
+            }
+        }
     }
 
     @Override

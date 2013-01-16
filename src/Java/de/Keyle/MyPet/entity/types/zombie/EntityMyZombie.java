@@ -20,9 +20,10 @@
 package de.Keyle.MyPet.entity.types.zombie;
 
 import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_6.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyZombie extends EntityMyPet
@@ -66,6 +67,45 @@ public class EntityMyZombie extends EntityMyPet
         ((MyZombie) myPet).isVillager = flag;
     }
 
+    public void setEquipment(int slot, ItemStack itemStack)
+    {
+        super.setEquipment(slot, itemStack);
+        ((MyZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
+    }
+
+    public boolean checkForEquipment(ItemStack itemstack)
+    {
+        int slot = b(itemstack);
+        if (slot == 0)
+        {
+            if (itemstack.getItem() instanceof ItemSword)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemAxe)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemSpade)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemHoe)
+            {
+                return true;
+            }
+            else if (itemstack.getItem() instanceof ItemPickaxe)
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()
@@ -73,6 +113,65 @@ public class EntityMyZombie extends EntityMyPet
         super.a();
         getDataWatcher().a(12, new Byte((byte) 0)); // is baby
         getDataWatcher().a(13, new Byte((byte) 0)); // is villager
+    }
+
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean a(EntityHuman entityhuman)
+    {
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (entityhuman == getOwner() && itemStack != null)
+        {
+            if (itemStack.id == Item.SHEARS.id)
+            {
+                for (EquipmentSlot slot : EquipmentSlot.values())
+                {
+                    ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
+                    if (itemInSlot != null)
+                    {
+                        EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        setEquipment(slot.getSlotId(), null);
+                    }
+                }
+                return true;
+            }
+            else if (checkForEquipment(itemStack) && getOwner().isSneaking())
+            {
+                EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
+                ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
+                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
+                {
+                    EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                setEquipment(b(itemStack), itemStack.cloneItemStack());
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void a(int i, int j, int k, int l)

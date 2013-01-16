@@ -19,15 +19,22 @@
 
 package de.Keyle.MyPet.entity.types.zombie;
 
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import net.minecraft.server.v1_4_6.ItemStack;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_6.NBTTagList;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MyZombie extends MyPet
 {
     protected boolean isBaby = false;
     protected boolean isVillager = false;
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
 
     public MyZombie(MyPetPlayer petOwner)
     {
@@ -63,12 +70,49 @@ public class MyZombie extends MyPet
         this.isVillager = flag;
     }
 
+    public void setEquipment(EquipmentSlot slot, ItemStack item)
+    {
+        if (status == PetState.Here)
+        {
+            getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
+        }
+        equipment.put(slot, item);
+    }
+
+    public ItemStack[] getEquipment()
+    {
+        ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
+        for (int i = 0 ; i < EquipmentSlot.values().length ; i++)
+        {
+            equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
+        }
+        return equipment;
+    }
+
+    public ItemStack getEquipment(EquipmentSlot slot)
+    {
+        return equipment.get(slot);
+    }
+
     @Override
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = new NBTTagCompound("Info");
         info.setBoolean("Baby", isBaby);
         info.setBoolean("Villager", isVillager);
+
+        NBTTagList items = new NBTTagList();
+        for (EquipmentSlot slot : EquipmentSlot.values())
+        {
+            if (getEquipment(slot) != null)
+            {
+                NBTTagCompound item = new NBTTagCompound();
+                item.setInt("Slot", slot.getSlotId());
+                getEquipment(slot).save(item);
+                items.add(item);
+            }
+        }
+        info.set("Equipment", items);
         return info;
     }
 
@@ -77,6 +121,17 @@ public class MyZombie extends MyPet
     {
         setBaby(info.getBoolean("Baby"));
         setVillager(info.getBoolean("Villager"));
+        if (info.hasKey("Equipment"))
+        {
+            NBTTagList equipment = info.getList("Equipment");
+            for (int i = 0 ; i < equipment.size() ; i++)
+            {
+                NBTTagCompound Item = (NBTTagCompound) equipment.get(i);
+
+                ItemStack itemStack = ItemStack.a(Item);
+                setEquipment(EquipmentSlot.getSlotById(Item.getInt("Slot")), itemStack);
+            }
+        }
     }
 
     @Override
