@@ -26,8 +26,11 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeLoader;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.event.*;
 import java.io.File;
 import java.util.List;
@@ -37,7 +40,7 @@ public class SkilltreeCreator
     JComboBox mobTypeComboBox;
     JButton addSkilltreeButton;
     JButton deleteSkilltreeButton;
-    JList skilltreeList;
+    JTree skilltreeTree;
     JButton skilltreeDownButton;
     JButton skilltreeUpButton;
     JPanel skilltreeCreatorPanel;
@@ -47,8 +50,10 @@ public class SkilltreeCreator
     JMenuItem copyMenuItem;
     JMenuItem pasteMenuItem;
 
-    private DefaultListModel skillTreeListModel;
+    DefaultTreeModel skilltreeTreeModel;
+
     private MyPetSkillTree skilltreeCopyPaste;
+    MyPetSkillTreeMobType selectedMobtype;
 
     public SkilltreeCreator()
     {
@@ -58,81 +63,96 @@ public class SkilltreeCreator
             {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                 {
-                    if (SkilltreeCreator.this.mobTypeComboBox.getItemAt(0).equals(""))
-                    {
-                        SkilltreeCreator.this.mobTypeComboBox.removeItemAt(0);
-                        addSkilltreeButton.setEnabled(true);
-                    }
-
-                    skillTreeListModel.removeAllElements();
-                    for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName(e.getItem().toString()).getSkillTreeNames())
-                    {
-                        skillTreeListModel.addElement(skillTreeName);
-                    }
-                    skilltreeList.setSelectedIndex(0);
+                    selectedMobtype = MyPetSkillTreeMobType.getMobTypeByName(mobTypeComboBox.getSelectedItem().toString());
+                    skilltreeTreeSetSkilltrees();
                 }
-
             }
         });
-        skilltreeList.addListSelectionListener(new ListSelectionListener()
+
+        skilltreeTree.addTreeSelectionListener(new TreeSelectionListener()
         {
-            public void valueChanged(ListSelectionEvent e)
+            public void valueChanged(TreeSelectionEvent e)
             {
-                if (skillTreeListModel.getSize() == 0 || skillTreeListModel.getSize() == 1)
+                if (skilltreeTree.getSelectionPath() != null && skilltreeTree.getSelectionPath().getPathCount() == 2)
                 {
-                    skilltreeDownButton.setEnabled(false);
-                    skilltreeUpButton.setEnabled(false);
-                }
-                else if (skilltreeList.getSelectedIndex() == skillTreeListModel.getSize() - 1)
-                {
-                    skilltreeDownButton.setEnabled(false);
-                    skilltreeUpButton.setEnabled(true);
-                    deleteSkilltreeButton.setEnabled(true);
-                    if (skilltreeDownButton.hasFocus())
+                    MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                    if (skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) <= 1)
                     {
-                        skilltreeUpButton.requestFocus();
+                        skilltreeDownButton.setEnabled(false);
+                        skilltreeUpButton.setEnabled(false);
                     }
-                }
-                else if (skilltreeList.getSelectedIndex() == 0)
-                {
-                    skilltreeDownButton.setEnabled(true);
-                    skilltreeUpButton.setEnabled(false);
-                    deleteSkilltreeButton.setEnabled(true);
-                    if (skilltreeUpButton.hasFocus())
+                    else if (selectedMobtype.getSkillTreePlace(skillTree) >= skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) - 1)
                     {
-                        skilltreeDownButton.requestFocus();
+                        skilltreeDownButton.setEnabled(false);
+                        skilltreeUpButton.setEnabled(true);
+                        deleteSkilltreeButton.setEnabled(true);
+                        if (skilltreeDownButton.hasFocus())
+                        {
+                            skilltreeUpButton.requestFocus();
+                        }
                     }
+                    else if (selectedMobtype.getSkillTreePlace(skillTree) <= 0)
+                    {
+                        skilltreeDownButton.setEnabled(true);
+                        skilltreeUpButton.setEnabled(false);
+                        deleteSkilltreeButton.setEnabled(true);
+                        if (skilltreeUpButton.hasFocus())
+                        {
+                            skilltreeDownButton.requestFocus();
+                        }
+                    }
+                    else
+                    {
+                        skilltreeDownButton.setEnabled(true);
+                        skilltreeUpButton.setEnabled(true);
+
+                    }
+                    copyMenuItem.setEnabled(true);
+                    deleteSkilltreeButton.setEnabled(true);
                 }
                 else
                 {
-                    skilltreeDownButton.setEnabled(true);
-                    skilltreeUpButton.setEnabled(true);
-                    deleteSkilltreeButton.setEnabled(true);
+                    copyMenuItem.setEnabled(false);
+                    deleteSkilltreeButton.setEnabled(false);
+                    skilltreeDownButton.setEnabled(false);
+                    skilltreeUpButton.setEnabled(false);
                 }
             }
         });
+
         skilltreeUpButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeUp(skilltreeList.getSelectedValue().toString());
-                String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() - 1);
-                skillTreeListModel.set(skilltreeList.getSelectedIndex() - 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
-                skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
-                skilltreeList.setSelectedIndex(skilltreeList.getSelectedIndex() - 1);
+                if (skilltreeTree.getSelectionPath().getPath().length == 2)
+                {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                    {
+                        MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                        selectedMobtype.moveSkillTreeUp(skillTree);
+                        skilltreeTreeSetSkilltrees();
+                        selectSkilltree(skillTree);
+                    }
+                }
             }
         });
         skilltreeDownButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).moveSkillTreeDown(skilltreeList.getSelectedValue().toString());
-                String skillTreeName = (String) skillTreeListModel.get(skilltreeList.getSelectedIndex() + 1);
-                skillTreeListModel.set(skilltreeList.getSelectedIndex() + 1, skillTreeListModel.get(skilltreeList.getSelectedIndex()));
-                skillTreeListModel.set(skilltreeList.getSelectedIndex(), skillTreeName);
-                skilltreeList.setSelectedIndex(skilltreeList.getSelectedIndex() + 1);
+                if (skilltreeTree.getSelectionPath().getPath().length == 2)
+                {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                    {
+                        MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                        selectedMobtype.moveSkillTreeDown(skillTree);
+                        skilltreeTreeSetSkilltrees();
+                        selectSkilltree(skillTree);
+                    }
+                }
             }
         });
+
         addSkilltreeButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -142,15 +162,12 @@ public class SkilltreeCreator
                 {
                     if (response.matches("(?m)[\\w-]+"))
                     {
-                        if (!skillTreeListModel.contains(response))
+                        if (!selectedMobtype.hasSkillTree(response))
                         {
-                            skillTreeListModel.addElement(response);
-                            MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString());
-                            Short place = mobType.getNextPlace();
-                            MyPetSkillTree skillTree = new MyPetSkillTree(response, place);
-                            mobType.addSkillTree(skillTree);
-                            skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
-                            deleteSkilltreeButton.setEnabled(true);
+                            MyPetSkillTree skillTree = new MyPetSkillTree(response);
+                            selectedMobtype.addSkillTree(skillTree);
+                            skilltreeTreeSetSkilltrees();
+                            selectSkilltree(skillTree);
                         }
                         else
                         {
@@ -168,36 +185,34 @@ public class SkilltreeCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                int index = skilltreeList.getSelectedIndex();
-                MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
-                skillTreeListModel.remove(skilltreeList.getSelectedIndex());
-                if (index == skillTreeListModel.size())
+                if (skilltreeTree.getSelectionPath().getPath().length == 2)
                 {
-                    skilltreeList.setSelectedIndex(index - 1);
-                }
-                else
-                {
-                    skilltreeList.setSelectedIndex(index);
-                }
-                if (skillTreeListModel.size() == 0)
-                {
-                    deleteSkilltreeButton.setEnabled(false);
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                    {
+                        MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                        selectedMobtype.removeSkillTree(skillTree.getName());
+                        skilltreeTreeSetSkilltrees();
+                    }
                 }
             }
         });
-        skilltreeList.addMouseListener(new MouseAdapter()
+        skilltreeTree.addMouseListener(new MouseAdapter()
         {
             public void mouseClicked(MouseEvent evt)
             {
                 if (evt.getClickCount() == 2)
                 {
-
-                    GuiMain.levelCreator.setSkillTree(MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
-                    GuiMain.levelCreator.getFrame().setVisible(true);
-                    skilltreeCreatorFrame.setEnabled(false);
+                    if (skilltreeTree.getSelectionPath().getPath().length == 2)
+                    {
+                        if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                        {
+                            MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                            GuiMain.levelCreator.setSkillTree(skillTree, selectedMobtype);
+                            GuiMain.levelCreator.getFrame().setVisible(true);
+                            skilltreeCreatorFrame.setEnabled(false);
+                        }
+                    }
                 }
-                //if(evt.getButton())
-                System.out.println("b: " + evt.getButton());
             }
         });
         saveButton.addActionListener(new ActionListener()
@@ -213,42 +228,37 @@ public class SkilltreeCreator
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        skilltreeList.addKeyListener(new KeyAdapter()
+        skilltreeTree.addKeyListener(new KeyAdapter()
         {
             public void keyPressed(KeyEvent e)
             {
-                switch (e.getKeyCode())
+                if (skilltreeTree.getSelectionPath().getPath().length == 2)
                 {
-                    case KeyEvent.VK_ENTER:
-                        GuiMain.levelCreator.setSkillTree(MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString()), MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()));
-                        GuiMain.levelCreator.getFrame().setVisible(true);
-                        skilltreeCreatorFrame.setEnabled(false);
-                        break;
-                    case KeyEvent.VK_DELETE:
-                        int index = skilltreeList.getSelectedIndex();
-                        MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).removeSkillTree(skilltreeList.getSelectedValue().toString());
-                        skillTreeListModel.remove(skilltreeList.getSelectedIndex());
-                        if (index == skillTreeListModel.size())
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                    {
+                        MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                        switch (e.getKeyCode())
                         {
-                            skilltreeList.setSelectedIndex(index - 1);
+                            case KeyEvent.VK_ENTER:
+                                GuiMain.levelCreator.setSkillTree(skillTree, selectedMobtype);
+                                GuiMain.levelCreator.getFrame().setVisible(true);
+                                skilltreeCreatorFrame.setEnabled(false);
+                                break;
+                            case KeyEvent.VK_DELETE:
+                                selectedMobtype.removeSkillTree(skillTree.getName());
+                                skilltreeTreeSetSkilltrees();
+                                break;
                         }
-                        else
-                        {
-                            skilltreeList.setSelectedIndex(index);
-                        }
-                        if (skillTreeListModel.size() == 0)
-                        {
-                            deleteSkilltreeButton.setEnabled(false);
-                        }
-                        break;
+                    }
                 }
+
             }
         });
         copyMenuItem.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                skilltreeCopyPaste = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString()).getSkillTree(skilltreeList.getSelectedValue().toString());
+                skilltreeCopyPaste = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                 pasteMenuItem.setEnabled(true);
             }
         });
@@ -258,15 +268,12 @@ public class SkilltreeCreator
             {
                 for (int i = 2 ; ; i++)
                 {
-                    if (!skillTreeListModel.contains(skilltreeCopyPaste.getName() + "_" + i))
+                    if (!selectedMobtype.hasSkillTree(skilltreeCopyPaste.getName() + "_" + i))
                     {
-                        skillTreeListModel.addElement(skilltreeCopyPaste.getName() + "_" + i);
-                        MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(SkilltreeCreator.this.mobTypeComboBox.getSelectedItem().toString());
-                        Short place = mobType.getNextPlace();
-                        MyPetSkillTree skillTree = skilltreeCopyPaste.clone(skilltreeCopyPaste.getName() + "_" + i, place);
-                        mobType.addSkillTree(skillTree);
-                        skilltreeList.setSelectedIndex(skillTreeListModel.getSize() - 1);
-                        deleteSkilltreeButton.setEnabled(true);
+                        MyPetSkillTree skillTree = skilltreeCopyPaste.clone(skilltreeCopyPaste.getName() + "_" + i);
+                        selectedMobtype.addSkillTree(skillTree);
+                        skilltreeTreeSetSkilltrees();
+                        selectSkilltree(skillTree);
                         break;
                     }
                 }
@@ -288,12 +295,78 @@ public class SkilltreeCreator
         return skilltreeCreatorFrame;
     }
 
+    public void selectSkilltree(String skilltreeName)
+    {
+        DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
+        DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
+        path[0] = root;
+        for (int i = 0 ; i < root.getChildCount() ; i++)
+        {
+            if (root.getChildAt(i) instanceof SkillTreeNode)
+            {
+                SkillTreeNode node = (SkillTreeNode) root.getChildAt(i);
+                if (node.getSkillTree().getName().equals(skilltreeName))
+                {
+                    path[1] = node;
+                    TreePath treePath = new TreePath(path);
+                    skilltreeTree.setSelectionPath(treePath);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void selectSkilltree(MyPetSkillTree skilltree)
+    {
+        DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
+        DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
+        path[0] = root;
+        for (int i = 0 ; i < root.getChildCount() ; i++)
+        {
+            if (root.getChildAt(i) instanceof SkillTreeNode)
+            {
+                SkillTreeNode node = (SkillTreeNode) root.getChildAt(i);
+                if (node.getSkillTree() == skilltree)
+                {
+                    path[1] = node;
+                    TreePath treePath = new TreePath(path);
+                    skilltreeTree.setSelectionPath(treePath);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void skilltreeTreeSetSkilltrees()
+    {
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(selectedMobtype.getMobTypeName());
+        skilltreeTreeModel.setRoot(rootNode);
+        for (MyPetSkillTree skillTree : selectedMobtype.getSkillTrees())
+        {
+            SkillTreeNode skillTreeNode = new SkillTreeNode(skillTree);
+            rootNode.add(skillTreeNode);
+        }
+        skilltreeTreeExpandAll();
+    }
+
+    public void skilltreeTreeExpandAll()
+    {
+        for (int i = 0 ; i < skilltreeTree.getRowCount() ; i++)
+        {
+            skilltreeTree.expandRow(i);
+        }
+    }
+
     private void createUIComponents()
     {
-        skillTreeListModel = new DefaultListModel();
-        skilltreeList = new JList(skillTreeListModel);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
+        skilltreeTreeModel = new DefaultTreeModel(root);
+        skilltreeTree = new JTree(skilltreeTreeModel);
 
         createRightclickMenu();
+
+        selectedMobtype = MyPetSkillTreeMobType.getMobTypeByName("default");
+        skilltreeTreeSetSkilltrees();
     }
 
     public void createRightclickMenu()
@@ -308,7 +381,23 @@ public class SkilltreeCreator
         rightclickMenu.add(pasteMenuItem);
 
         MouseListener popupListener = new PopupListener(rightclickMenu);
-        skilltreeList.addMouseListener(popupListener);
+        skilltreeTree.addMouseListener(popupListener);
+    }
+
+    private class SkillTreeNode extends DefaultMutableTreeNode
+    {
+        private MyPetSkillTree skillTree;
+
+        public SkillTreeNode(MyPetSkillTree skillTree)
+        {
+            super(skillTree.getName());
+            this.skillTree = skillTree;
+        }
+
+        public MyPetSkillTree getSkillTree()
+        {
+            return skillTree;
+        }
     }
 
     class PopupListener extends MouseAdapter

@@ -94,14 +94,14 @@ public class MyPetSkillTreeLoaderYaml
             {
                 String inherit = MWConfig.getConfig().getString("skilltrees." + skillTreeName + ".inherit", "%#_DeFaUlT_#%");
                 MyPetSkillTree skillTree;
-                short place = skillTreeMobType.getNextPlace();
+                int place = skillTreeMobType.getNextPlace();
                 if (!inherit.equals("%#_DeFaUlT_#%"))
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName, inherit, place);
+                    skillTree = new MyPetSkillTree(skillTreeName, inherit);
                 }
                 else
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName, place);
+                    skillTree = new MyPetSkillTree(skillTreeName);
                 }
 
                 Set<String> level = MWConfig.getConfig().getConfigurationSection("skilltrees." + skillTreeName).getKeys(false);
@@ -144,7 +144,7 @@ public class MyPetSkillTreeLoaderYaml
             if (!skillTreeMobType.hasSkillTree(skillTreeName))
             {
                 MyPetSkillTree defaultSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName);
-                MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName, skillTreeMobType.getNextPlace());
+                MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName);
 
                 for (MyPetSkillTreeLevel level : defaultSkillTree.getLevelList())
                 {

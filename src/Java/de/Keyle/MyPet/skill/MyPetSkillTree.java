@@ -30,30 +30,22 @@ public class MyPetSkillTree
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
-    private short place = 0;
     private SortedMap<Short, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Short, MyPetSkillTreeLevel>();
 
-    public MyPetSkillTree(String name, short place)
+    public MyPetSkillTree(String name)
     {
         this.skillTreeName = name;
-        this.place = place;
     }
 
-    public MyPetSkillTree(String name, String inheritance, short place)
+    public MyPetSkillTree(String name, String inheritance)
     {
         this.skillTreeName = name;
         this.inheritance = inheritance;
-        this.place = place;
     }
 
     public String getName()
     {
         return skillTreeName;
-    }
-
-    public short getPlace()
-    {
-        return place;
     }
 
     public boolean hasLevel(short level)
@@ -88,7 +80,7 @@ public class MyPetSkillTree
             skillsPerLevel.put(level.getLevel(), level);
             return level;
         }
-        return skillsPerLevel.get(level);
+        return skillsPerLevel.get(level.getLevel());
     }
 
     public void removeLevel(short level)
@@ -181,12 +173,12 @@ public class MyPetSkillTree
 
     public MyPetSkillTree clone()
     {
-        return clone(skillTreeName, place);
+        return clone(skillTreeName);
     }
 
-    public MyPetSkillTree clone(String toName, short toPlace)
+    public MyPetSkillTree clone(String toName)
     {
-        MyPetSkillTree newSkillTree = new MyPetSkillTree(toName, toPlace);
+        MyPetSkillTree newSkillTree = new MyPetSkillTree(toName);
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);

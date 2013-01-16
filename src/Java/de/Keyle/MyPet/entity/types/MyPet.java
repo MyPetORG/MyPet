@@ -102,9 +102,8 @@ public abstract class MyPet
         {
             if (MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
             {
-                for (String skillTreeName : MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()))
+                for (MyPetSkillTree skillTree : MyPetSkillTreeMobType.getSkillTrees(this.getPetType()))
                 {
-                    MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByPetType(this.getPetType()).getSkillTree(skillTreeName);
                     if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
                     {
                         this.skillTree = skillTree;

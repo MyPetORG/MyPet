@@ -45,27 +45,24 @@ public class MyPetSkillTreeMobType
         return mobTypeName;
     }
 
-    public void addSkillTree(String skillTreeName)
+    public void addSkillTree(MyPetSkillTree skillTree)
     {
-        if (!skillTrees.containsKey(skillTreeName))
-        {
-            addSkillTree(new MyPetSkillTree(skillTreeName, this.getNextPlace()));
-        }
+        addSkillTree(skillTree, getNextPlace());
     }
 
-    public void addSkillTree(MyPetSkillTree skillTree)
+    public void addSkillTree(MyPetSkillTree skillTree, int place)
     {
         if (!skillTrees.containsKey(skillTree.getName()))
         {
             skillTrees.put(skillTree.getName(), skillTree);
-            if (skillTreeList.size() - 1 < skillTree.getPlace())
+            if (skillTreeList.size() - 1 < place)
             {
-                for (int x = skillTreeList.size() ; x <= skillTree.getPlace() ; x++)
+                for (int x = skillTreeList.size() ; x <= place ; x++)
                 {
                     skillTreeList.add(x, null);
                 }
             }
-            skillTreeList.set(skillTree.getPlace(), skillTree.getName());
+            skillTreeList.set(place, skillTree.getName());
         }
     }
 
@@ -74,7 +71,13 @@ public class MyPetSkillTreeMobType
         if (skillTrees.containsKey(skillTreeName))
         {
             skillTrees.remove(skillTreeName);
+            skillTreeList.remove(skillTreeName);
         }
+    }
+
+    public void moveSkillTreeUp(MyPetSkillTree skillTree)
+    {
+        moveSkillTreeUp(skillTree.getName());
     }
 
     public void moveSkillTreeUp(String skillTreeName)
@@ -85,20 +88,37 @@ public class MyPetSkillTreeMobType
             String skillTree = skillTreeList.get(index - 1);
             skillTreeList.set(index - 1, skillTreeName);
             skillTreeList.set(index, skillTree);
-
         }
+    }
+
+    public void moveSkillTreeDown(MyPetSkillTree skillTree)
+    {
+        moveSkillTreeDown(skillTree.getName());
     }
 
     public void moveSkillTreeDown(String skillTreeName)
     {
         int index = skillTreeList.indexOf(skillTreeName);
-        if (index != -1 && index > 0 && index < skillTreeList.size())
+        if (index != -1 && index >= 0 && index < skillTreeList.size())
         {
             String skillTree = skillTreeList.get(index + 1);
             skillTreeList.set(index + 1, skillTreeName);
             skillTreeList.set(index, skillTree);
-
         }
+    }
+
+    public int getSkillTreePlace(String skillTreeName)
+    {
+        if (skillTrees.containsKey(skillTreeName))
+        {
+            return skillTreeList.indexOf(skillTreeName);
+        }
+        return -1;
+    }
+
+    public int getSkillTreePlace(MyPetSkillTree skillTree)
+    {
+        return getSkillTreePlace(skillTree.getName());
     }
 
     public MyPetSkillTree getSkillTree(String skillTreeName)
@@ -128,6 +148,16 @@ public class MyPetSkillTreeMobType
         return skilltreeNames;
     }
 
+    public List<MyPetSkillTree> getSkillTrees()
+    {
+        List<MyPetSkillTree> skilltreeNames = new ArrayList<MyPetSkillTree>();
+        for (String name : skillTreeList)
+        {
+            skilltreeNames.add(getSkillTree(name));
+        }
+        return skilltreeNames;
+    }
+
     public short getNextPlace()
     {
         for (int i = 0 ; i < skillTreeList.size() ; i++)
@@ -138,6 +168,14 @@ public class MyPetSkillTreeMobType
             }
         }
         return (short) skillTreeList.size();
+    }
+
+    protected void cleanupPlaces()
+    {
+        while (skillTreeList.indexOf(null) != -1)
+        {
+            skillTreeList.remove(null);
+        }
     }
 
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
@@ -172,6 +210,23 @@ public class MyPetSkillTreeMobType
             skillTreeNames = new ArrayList<String>();
         }
         return skillTreeNames;
+    }
+
+    public static List<MyPetSkillTree> getSkillTrees(MyPetType myPetType)
+    {
+        return getSkillTrees(myPetType.getTypeName().toLowerCase());
+    }
+
+    public static List<MyPetSkillTree> getSkillTrees(String myPetTypeName)
+    {
+        if (mobTypes.containsKey(myPetTypeName.toLowerCase()))
+        {
+            return getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTrees();
+        }
+        else
+        {
+            return new ArrayList<MyPetSkillTree>();
+        }
     }
 
     public static void clearMobTypes()

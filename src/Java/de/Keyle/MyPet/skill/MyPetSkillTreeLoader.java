@@ -84,8 +84,8 @@ public class MyPetSkillTreeLoader
             {
                 MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".st");
             }
+            skillTreeMobType.cleanupPlaces();
         }
-
     }
 
     private static void loadSkillTree(NBTConfiguration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
@@ -95,7 +95,8 @@ public class MyPetSkillTreeLoader
         for (int i_skilltree = 0 ; i_skilltree < skilltreeList.size() ; i_skilltree++)
         {
             NBTTagCompound skilltreeCompound = (NBTTagCompound) skilltreeList.get(i_skilltree);
-            MyPetSkillTree skillTree = new MyPetSkillTree(skilltreeCompound.getString("Name"), skilltreeCompound.getShort("Place"));
+            MyPetSkillTree skillTree = new MyPetSkillTree(skilltreeCompound.getString("Name"));
+            int place = skilltreeCompound.getInt("Place");
 
             if (skilltreeCompound.hasKey("Inherits"))
             {
@@ -128,7 +129,7 @@ public class MyPetSkillTreeLoader
                     }
                 }
             }
-            skillTreeMobType.addSkillTree(skillTree);
+            skillTreeMobType.addSkillTree(skillTree, place);
         }
         if (applyDefaultAndInheritance)
         {
@@ -224,14 +225,14 @@ public class MyPetSkillTreeLoader
         if (MyPetSkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0)
         {
             MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(petTypeName);
+            mobType.cleanupPlaces();
 
             NBTTagList skilltreeTagList = new NBTTagList();
-            for (String skillTreeName : mobType.getSkillTreeNames())
+            for (MyPetSkillTree skillTree : mobType.getSkillTrees())
             {
-                MyPetSkillTree skillTree = mobType.getSkillTree(skillTreeName);
                 NBTTagCompound skilltreeCompound = new NBTTagCompound();
                 skilltreeCompound.setString("Name", skillTree.getName());
-                skilltreeCompound.setShort("Place", skillTree.getPlace());
+                skilltreeCompound.setInt("Place", mobType.getSkillTreePlace(skillTree));
                 if (skillTree.hasInheritance())
                 {
                     skilltreeCompound.setString("Inherits", skillTree.getInheritance());
