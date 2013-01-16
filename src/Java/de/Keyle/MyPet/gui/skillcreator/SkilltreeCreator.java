@@ -45,6 +45,7 @@ public class SkilltreeCreator
     JButton skilltreeUpButton;
     JPanel skilltreeCreatorPanel;
     JButton saveButton;
+    JButton renameSkilltreeButton;
     JFrame skilltreeCreatorFrame;
     JPopupMenu rightclickMenu;
     JMenuItem copyMenuItem;
@@ -109,17 +110,18 @@ public class SkilltreeCreator
                     }
                     copyMenuItem.setEnabled(true);
                     deleteSkilltreeButton.setEnabled(true);
+                    renameSkilltreeButton.setEnabled(true);
                 }
                 else
                 {
                     copyMenuItem.setEnabled(false);
                     deleteSkilltreeButton.setEnabled(false);
+                    renameSkilltreeButton.setEnabled(false);
                     skilltreeDownButton.setEnabled(false);
                     skilltreeUpButton.setEnabled(false);
                 }
             }
         });
-
         skilltreeUpButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -152,7 +154,6 @@ public class SkilltreeCreator
                 }
             }
         });
-
         addSkilltreeButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -177,6 +178,44 @@ public class SkilltreeCreator
                     else
                     {
                         JOptionPane.showMessageDialog(null, "This is not a valid skilltree name!\n\na-z\nA-Z\n0-9\n_ -", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+        renameSkilltreeButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2)
+                {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
+                    {
+                        MyPetSkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
+                        String response = (String) JOptionPane.showInputDialog(null, "Enter the name of the new skilltree.", "Create new Skilltree", JOptionPane.QUESTION_MESSAGE, null, null, skillTree.getName());
+                        if (response != null)
+                        {
+                            if (response.matches("(?m)[\\w-]+"))
+                            {
+                                if (!selectedMobtype.hasSkillTree(response))
+                                {
+                                    MyPetSkillTree newSkillTree = skillTree.clone(response);
+                                    selectedMobtype.removeSkillTree(skillTree.getName());
+                                    selectedMobtype.addSkillTree(newSkillTree);
+                                    skilltreeTreeSetSkilltrees();
+                                    selectSkilltree(newSkillTree);
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, "There is already a skilltree with this name!", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "This is not a valid skilltree name!\n\na-z\nA-Z\n0-9\n_ -", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
+                        skilltreeTreeSetSkilltrees();
                     }
                 }
             }
