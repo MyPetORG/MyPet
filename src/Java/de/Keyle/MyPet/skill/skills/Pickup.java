@@ -144,6 +144,7 @@ public class Pickup extends MyPetGenericSkill
                                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(e.getEntityId(), myPet.getCraftPet().getEntityId()));
                             }
                         }
+                        myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
                         e.remove();
                     }
                     else
