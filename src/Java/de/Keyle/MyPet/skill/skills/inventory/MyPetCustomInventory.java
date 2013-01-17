@@ -96,54 +96,75 @@ public class MyPetCustomInventory implements IInventory
         update();
     }
 
-    public int addItem(org.bukkit.inventory.ItemStack item)
+    public int addItem(org.bukkit.inventory.ItemStack itemAdd)
     {
-        item = item.clone();
-        int itemID = item.getTypeId();
-        int itemDuarbility = item.getDurability();
-        int itemMaxStack = item.getMaxStackSize();
+        itemAdd = itemAdd.clone();
+        int itemID = itemAdd.getTypeId();
+        int itemDuarbility = itemAdd.getDurability();
+        int itemMaxStack = itemAdd.getMaxStackSize();
         for (int i = 0 ; i < this.getSize() ; i++)
         {
-            if (getItem(i) != null && getItem(i).id == itemID && getItem(i).getData() == itemDuarbility && getItem(i).getEnchantments() == null && item.getEnchantments().size() == 0 && getItem(i).count < itemMaxStack)
+            ItemStack item = getItem(i);
+            if (item != null)
             {
-                if (item.getAmount() >= itemMaxStack - getItem(i).count)
+                if (getItem(i).id != itemID)
                 {
-                    item.setAmount(item.getAmount() - (itemMaxStack - getItem(i).count));
-                    getItem(i).count = itemMaxStack;
+                    continue;
+                }
+                else if (getItem(i).getData() != itemDuarbility)
+                {
+                    continue;
+                }
+                else if (item.getEnchantments().size() > 0 || itemAdd.getEnchantments().size() > 0)
+                {
+                    continue;
+                }
+                else if (item.count >= itemMaxStack)
+                {
+                    continue;
+                }
+                else if (itemAdd.hasItemMeta())
+                {
+                    continue;
+                }
+                if (itemAdd.getAmount() >= itemMaxStack - item.count)
+                {
+                    itemAdd.setAmount(itemAdd.getAmount() - (itemMaxStack - item.count));
+                    item.count = itemMaxStack;
                 }
                 else
                 {
-                    getItem(i).count += item.getAmount();
-                    item.setAmount(0);
+                    item.count += itemAdd.getAmount();
+                    itemAdd.setAmount(0);
                     break;
                 }
             }
         }
         for (int i = 0 ; i < getSize() ; i++)
         {
-            if (item.getAmount() <= 0)
+            if (itemAdd.getAmount() <= 0)
             {
                 break;
             }
             if (getItem(i) == null)
             {
-                if (item.getAmount() <= itemMaxStack)
+                if (itemAdd.getAmount() <= itemMaxStack)
                 {
-                    setItem(i, CraftItemStack.asNMSCopy(item.clone()));
-                    item.setAmount(0);
+                    setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
+                    itemAdd.setAmount(0);
                     break;
                 }
                 else
                 {
-                    org.bukkit.inventory.ItemStack itemStack = item.clone();
+                    org.bukkit.inventory.ItemStack itemStack = itemAdd.clone();
                     itemStack.setAmount(itemStack.getMaxStackSize());
-                    setItem(i, CraftItemStack.asNMSCopy(item.clone()));
-                    item.setAmount(item.getAmount() - itemStack.getMaxStackSize());
+                    setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
+                    itemAdd.setAmount(itemAdd.getAmount() - itemStack.getMaxStackSize());
                 }
             }
         }
         update();
-        return item.getAmount();
+        return itemAdd.getAmount();
     }
 
     public ItemStack splitStack(int i, int j)
