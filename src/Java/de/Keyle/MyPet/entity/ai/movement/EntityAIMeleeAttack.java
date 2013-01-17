@@ -19,10 +19,10 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import net.minecraft.server.v1_4_6.EntityLiving;
-import net.minecraft.server.v1_4_6.PathfinderGoal;
-import net.minecraft.server.v1_4_6.World;
-import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
+import net.minecraft.server.v1_4_R1.EntityLiving;
+import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class EntityAIMeleeAttack extends PathfinderGoal
@@ -47,7 +47,7 @@ public class EntityAIMeleeAttack extends PathfinderGoal
 
     public boolean a()
     {
-        EntityLiving targetEntity = this.petEntity.aG();
+        EntityLiving targetEntity = this.petEntity.getGoalTarget();
         if (targetEntity == null)
         {
             return false;
@@ -62,11 +62,11 @@ public class EntityAIMeleeAttack extends PathfinderGoal
 
     public boolean b()
     {
-        if (this.petEntity.aG() == null)
+        if (this.petEntity.getGoalTarget() == null)
         {
             return false;
         }
-        else if (this.targetEntity != this.petEntity.aG())
+        else if (this.targetEntity != this.petEntity.getGoalTarget())
         {
             return false;
         }

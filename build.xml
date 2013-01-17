@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (C) 2011-2013 Keyle
   ~
   ~ This file is part of MyPet
@@ -20,8 +19,7 @@
 
 <project name="MyPet" default="Main" basedir=".">
 
-    <!-- Setting custom vars (only used when properties not set in IDE) -->
-    <!--
+    <!-- Setting custom vars (only used when properties not set in IDE) --><!--
     <property name="idea.lib.dir" location="" />
     <property name="MyPet.lib.dir" location="" />
     <property name="MyPet.test.output.dir" location="" />
@@ -29,9 +27,10 @@
     -->
 
     <!-- Setting some vars -->
-    <property name="MyPet.bukkit.version" value="0.3" />
+    <property name="MyPet.bukkit.version" value="0.1" />
     <property name="MyPet.craftbukkit.download" value="http://dl.bukkit.org/downloads/craftbukkit/get/01774_1.4.6-R0.3/craftbukkit-beta.jar" />
-    <property name="MyPet.minecraft.version" value="1.4.6" />
+    <property name="MyPet.minecraft.version" value="1.4.7" />
+    <property name="MyPet.minecraft.version.package" value="1_4_R1" />
     <property name="MyPet.mypet.version" value="1.0.5" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
@@ -41,17 +40,9 @@
     <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/MyPet/build" />
     <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/MyPet/src" />
 
-    <property name="MyPet.minecraft.version.underscore" value="${MyPet.minecraft.version}" />
-    <script language="javascript">
-        project.setProperty('MyPet.minecraft.version.underscore',
-        project.getProperty('MyPet.minecraft.version.underscore').replace(".", "_"));
-    </script>
-
     <!-- Adding classpathes -->
     <path id="MyPet.manifest.classpath">
         <pathelement location="craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
-        <pathelement location="bukkit-1.4.6-R0.2.jar" />
-        <pathelement location="bukkit-1.4.6-R0.1.jar" />
         <pathelement location="craftbukkit.jar" />
     </path>
 
@@ -139,7 +130,7 @@
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${build.number}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/GuiMain.java" token="{@MINECRAFT_VERSION_UNDERSCORE@}" value="${MyPet.minecraft.version.underscore}" />
+        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/GuiMain.java" token="{@MINECRAFT_VERSION_UNDERSCORE@}" value="${MyPet.minecraft.version.package}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/skillcreator/BukkitDownloader.java" token="{@BUKKIT_DOWNLOAD@}" value="${MyPet.craftbukkit.download}" />
     </target>
 

@@ -28,10 +28,10 @@ import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.skill.skills.HP;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -196,7 +196,7 @@ public abstract class MyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_4_6.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_4_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))
@@ -483,7 +483,7 @@ public abstract class MyPet
 
     public boolean hasTarget()
     {
-        return this.status == PetState.Here && craftMyPet.getHandle().aG() != null && craftMyPet.getHandle().aG().isAlive();
+        return this.status == PetState.Here && craftMyPet.getHandle().getGoalTarget() != null && craftMyPet.getHandle().getGoalTarget().isAlive();
     }
 
     public abstract MyPetType getPetType();

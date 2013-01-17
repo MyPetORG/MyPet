@@ -23,9 +23,9 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_6.ItemStack;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
-import net.minecraft.server.v1_4_6.NBTTagList;
+import net.minecraft.server.v1_4_R1.ItemStack;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTTagList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class MyPigZombie extends MyPet
             {
                 NBTTagCompound Item = (NBTTagCompound) equipment.get(i);
 
-                ItemStack itemStack = ItemStack.a(Item);
+                ItemStack itemStack = ItemStack.createStack(Item);
                 setEquipment(EquipmentSlot.getSlotById(Item.getInt("Slot")), itemStack);
             }
         }

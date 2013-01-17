@@ -20,9 +20,9 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_4_6.*;
+import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
 
 public class EntityAIEatGrass extends PathfinderGoal
 {
@@ -40,7 +40,7 @@ public class EntityAIEatGrass extends PathfinderGoal
 
     public boolean a()
     {
-        if (this.entityMyPet.aG() != null && this.entityMyPet.aG().isAlive())
+        if (this.entityMyPet.getGoalTarget() != null && this.entityMyPet.getGoalTarget().isAlive())
         {
             return false;
         }

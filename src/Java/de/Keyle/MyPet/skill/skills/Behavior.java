@@ -27,8 +27,7 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.EntityLiving;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -230,7 +229,7 @@ public class Behavior extends MyPetGenericSkill
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", MyPetLanguage.getString("Name_" + behavior.name())));
             if (behavior == BehaviorState.Friendly)
             {
-                myPet.getCraftPet().getHandle().b((EntityLiving) null);
+                myPet.getCraftPet().getHandle().setGoalTarget(null);
             }
         }
         else

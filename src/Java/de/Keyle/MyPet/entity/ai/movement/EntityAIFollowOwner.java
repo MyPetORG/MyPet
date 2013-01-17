@@ -21,8 +21,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.Navigation;
-import net.minecraft.server.v1_4_6.PathfinderGoal;
+import net.minecraft.server.v1_4_R1.Navigation;
+import net.minecraft.server.v1_4_R1.PathfinderGoal;
 import org.bukkit.Location;
 
 public class EntityAIFollowOwner extends PathfinderGoal
@@ -63,7 +63,7 @@ public class EntityAIFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.aG() != null && this.petEntity.aG().isAlive())
+        else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
         {
             return false;
         }
@@ -104,7 +104,7 @@ public class EntityAIFollowOwner extends PathfinderGoal
         {
             return false;
         }
-        else if (this.petEntity.aG() != null && this.petEntity.aG().isAlive())
+        else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
         {
             return false;
         }

@@ -33,7 +33,7 @@ import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPvP;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_6.*;
+import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -361,7 +361,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (myPet.hasTarget())
                 {
-                    myPet.getCraftPet().getHandle().b((EntityLiving) null);
+                    myPet.getCraftPet().getHandle().setGoalTarget((EntityLiving) null);
                 }
                 return false;
             }

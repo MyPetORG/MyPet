@@ -22,8 +22,8 @@ package de.Keyle.MyPet.entity.types.slime;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_6.PathEntity;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_R1.PathEntity;
+import net.minecraft.server.v1_4_R1.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySlime extends EntityMyPet

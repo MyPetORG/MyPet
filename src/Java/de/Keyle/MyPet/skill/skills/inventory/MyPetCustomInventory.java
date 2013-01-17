@@ -19,9 +19,9 @@
 
 package de.Keyle.MyPet.skill.skills.inventory;
 
-import net.minecraft.server.v1_4_6.*;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_4_6.inventory.CraftItemStack;
+import net.minecraft.server.v1_4_R1.*;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -227,7 +227,7 @@ public class MyPetCustomInventory implements IInventory
         {
             NBTTagCompound Item = (NBTTagCompound) items.get(i);
 
-            ItemStack itemStack = ItemStack.a(Item);
+            ItemStack itemStack = ItemStack.createStack(Item);
             setItem(Item.getByte("Slot"), itemStack);
         }
     }

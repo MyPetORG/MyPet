@@ -24,10 +24,10 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.EntityCreature;
-import org.bukkit.craftbukkit.v1_4_6.CraftServer;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftLivingEntity;
+import net.minecraft.server.v1_4_R1.EntityCreature;
+import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.types.mooshroom;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_6.World;
+import net.minecraft.server.v1_4_R1.World;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet

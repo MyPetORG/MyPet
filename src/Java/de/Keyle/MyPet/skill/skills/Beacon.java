@@ -30,9 +30,9 @@ import de.Keyle.MyPet.skill.skills.beacon.MyPetCustomBeaconInventory;
 import de.Keyle.MyPet.skill.skills.beacon.TileEntityBeacon;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.*;
-import org.bukkit.craftbukkit.v1_4_6.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_4_6.event.CraftEventFactory;
+import net.minecraft.server.v1_4_R1.*;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -342,7 +342,7 @@ public class Beacon extends MyPetGenericSkill
         }
         if (nbtTagCompound.hasKey("Item"))
         {
-            setTributeItem(ItemStack.a(nbtTagCompound.getCompound("Item")));
+            setTributeItem(ItemStack.createStack(nbtTagCompound.getCompound("Item")));
         }
     }
 

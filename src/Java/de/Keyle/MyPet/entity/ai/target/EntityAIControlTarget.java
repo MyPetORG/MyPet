@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_6.EntityLiving;
-import net.minecraft.server.v1_4_6.EntityPlayer;
-import net.minecraft.server.v1_4_6.EntityTameableAnimal;
-import net.minecraft.server.v1_4_6.PathfinderGoal;
+import net.minecraft.server.v1_4_R1.EntityLiving;
+import net.minecraft.server.v1_4_R1.EntityPlayer;
+import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
+import net.minecraft.server.v1_4_R1.PathfinderGoal;
 import org.bukkit.entity.Player;
 
 public class EntityAIControlTarget extends PathfinderGoal
@@ -128,7 +128,7 @@ public class EntityAIControlTarget extends PathfinderGoal
 
     public boolean b()
     {
-        EntityLiving entityliving = petEntity.aG();
+        EntityLiving entityliving = petEntity.getGoalTarget();
 
         if (!petEntity.canMove())
         {
@@ -147,11 +147,11 @@ public class EntityAIControlTarget extends PathfinderGoal
 
     public void c()
     {
-        petEntity.b(this.target);
+        petEntity.setGoalTarget(this.target);
     }
 
     public void d()
     {
-        petEntity.b((EntityLiving) null);
+        petEntity.setGoalTarget((EntityLiving) null);
     }
 }

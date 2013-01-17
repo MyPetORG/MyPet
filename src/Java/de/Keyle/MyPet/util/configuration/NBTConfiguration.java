@@ -20,8 +20,8 @@
 package de.Keyle.MyPet.util.configuration;
 
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.NBTBase;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTBase;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;

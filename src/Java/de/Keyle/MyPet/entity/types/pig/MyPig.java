@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
 public class MyPig extends MyPet
 {

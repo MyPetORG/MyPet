@@ -19,10 +19,10 @@
 
 package de.Keyle.MyPet.skill.skills.beacon;
 
-import net.minecraft.server.v1_4_6.IInventory;
-import net.minecraft.server.v1_4_6.Item;
-import net.minecraft.server.v1_4_6.ItemStack;
-import net.minecraft.server.v1_4_6.Slot;
+import net.minecraft.server.v1_4_R1.IInventory;
+import net.minecraft.server.v1_4_R1.Item;
+import net.minecraft.server.v1_4_R1.ItemStack;
+import net.minecraft.server.v1_4_R1.Slot;
 
 public class SlotBeacon extends Slot
 {

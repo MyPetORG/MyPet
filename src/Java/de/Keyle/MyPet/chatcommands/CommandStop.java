@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_6.EntityLiving;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -53,7 +52,7 @@ public class CommandStop implements CommandExecutor
                 }
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
                 myPet.getCraftPet().getHandle().setTarget(null);
-                myPet.getCraftPet().getHandle().b((EntityLiving) null);
+                myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
                 if (myPet.getCraftPet().getHandle().canMove())
                 {
