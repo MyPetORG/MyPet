@@ -47,11 +47,11 @@ import net.minecraft.server.v1_4_R1.EntityItem;
 import net.minecraft.server.v1_4_R1.Item;
 import net.minecraft.server.v1_4_R1.ItemStack;
 import net.minecraft.server.v1_4_R1.World;
-import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPigZombie;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftSkeleton;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
@@ -190,7 +190,7 @@ public class CommandRelease implements CommandExecutor
                     else if (myPet instanceof MySheep)
                     {
                         ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
-                        ((Sheep) normalEntity).setColor(DyeColor.getByData((byte) ((MySheep) myPet).getColor()));
+                        ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
                         if (((MySheep) myPet).isBaby())
                         {
                             ((Sheep) normalEntity).setBaby();
@@ -231,6 +231,17 @@ public class CommandRelease implements CommandExecutor
                     else if (myPet instanceof MyZombie)
                     {
                         ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+                        World world = myPet.getCraftPet().getHandle().world;
+                        Location petLocation = myPet.getLocation();
+                        for (ItemStack is : ((MyZombie) myPet).getEquipment())
+                        {
+                            if (is != null)
+                            {
+                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                itemEntity.pickupDelay = 10;
+                                world.addEntity(itemEntity);
+                            }
+                        }
                     }
                     else if (myPet instanceof MySkeleton)
                     {
@@ -243,10 +254,32 @@ public class CommandRelease implements CommandExecutor
                         {
                             ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
                         }
+                        World world = myPet.getCraftPet().getHandle().world;
+                        Location petLocation = myPet.getLocation();
+                        for (ItemStack is : ((MySkeleton) myPet).getEquipment())
+                        {
+                            if (is != null)
+                            {
+                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                itemEntity.pickupDelay = 10;
+                                world.addEntity(itemEntity);
+                            }
+                        }
                     }
                     else if (myPet instanceof MyPigZombie)
                     {
-                        ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+                        ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+                        World world = myPet.getCraftPet().getHandle().world;
+                        Location petLocation = myPet.getLocation();
+                        for (ItemStack is : ((MyPigZombie) myPet).getEquipment())
+                        {
+                            if (is != null)
+                            {
+                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                itemEntity.pickupDelay = 10;
+                                world.addEntity(itemEntity);
+                            }
+                        }
                     }
 
                     myPet.removePet();
