@@ -61,11 +61,13 @@ permissions:
     description: Player can leash all MyPet-Types.
     children:
       MyPet.user.leash.Bat: true
+      MyPet.user.leash.Blaze: true
       MyPet.user.leash.CaveSpider: true
       MyPet.user.leash.Chicken: true
       MyPet.user.leash.Cow: true
       MyPet.user.leash.Creeper: true
       MyPet.user.leash.Enderman: true
+      MyPet.user.leash.Giant: true
       MyPet.user.leash.IronGolem: true
       MyPet.user.leash.MagmaCube: true
       MyPet.user.leash.Mooshroom: true
@@ -76,19 +78,23 @@ permissions:
       MyPet.user.leash.Silverfish: true
       MyPet.user.leash.Skeleton: true
       MyPet.user.leash.Slime: true
+      MyPet.user.leash.Snowman: true
       MyPet.user.leash.Spider: true
       MyPet.user.leash.Villager: true
+      MyPet.user.leash.Witch: true
       MyPet.user.leash.Wolf: true
       MyPet.user.leash.Zombie: true
   MyPet.user.keep.*:
     description: Player can leash all MyPet-Types.
     children:
       MyPet.user.keep.Bat: true
+      MyPet.user.keep.Blaze: true
       MyPet.user.keep.CaveSpider: true
       MyPet.user.keep.Chicken: true
       MyPet.user.keep.Cow: true
       MyPet.user.keep.Creeper: true
       MyPet.user.keep.Enderman: true
+      MyPet.user.keep.Giant: true
       MyPet.user.keep.IronGolem: true
       MyPet.user.keep.MagmaCube: true
       MyPet.user.keep.Mooshroom: true
@@ -99,8 +105,10 @@ permissions:
       MyPet.user.keep.Silverfish: true
       MyPet.user.keep.Skeleton: true
       MyPet.user.keep.Slime: true
+      MyPet.user.keep.Snowman: true
       MyPet.user.keep.Spider: true
       MyPet.user.keep.Villager: true
+      MyPet.user.keep.Witch: true
       MyPet.user.keep.Wolf: true
       MyPet.user.keep.Zombie: true
   MyPet.*:
