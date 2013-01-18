@@ -32,6 +32,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static org.bukkit.Bukkit.getPluginManager;
+
 public class CommandCall implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -52,7 +54,7 @@ public class CommandCall implements CommandExecutor
                             myPet.setLocation(petOwner.getLocation());
                             myPet.createPet();
                             sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         else
                         {
@@ -70,7 +72,7 @@ public class CommandCall implements CommandExecutor
                         {
                             myPet.getCraftPet().teleport(petOwner);
                             sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         else
                         {
@@ -89,7 +91,7 @@ public class CommandCall implements CommandExecutor
                         myPet.setLocation(petOwner.getLocation());
                         myPet.createPet();
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                     }
                     else
                     {

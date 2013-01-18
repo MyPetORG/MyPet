@@ -31,6 +31,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static org.bukkit.Bukkit.getPluginManager;
+
 public class CommandSendAway implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -45,7 +47,7 @@ public class CommandSendAway implements CommandExecutor
                 {
                     myPet.removePet();
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
-                    MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
+                    getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
                     return true;
                 }
                 else if (myPet.status == PetState.Despawned)

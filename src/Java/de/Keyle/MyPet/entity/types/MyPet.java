@@ -40,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.bukkit.Bukkit.getPluginManager;
+import static org.bukkit.Bukkit.getServer;
+
 public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
@@ -120,7 +123,7 @@ public abstract class MyPet
     public void setPetName(String newName)
     {
         this.petName = newName;
-        MyPetUtil.getServer().getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
+        getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
     }
 
     public MyPetSkillTree getSkillTree()
@@ -151,7 +154,7 @@ public abstract class MyPet
         this.skillTree = skillTree;
         for (short i = 1 ; i <= experience.getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
+            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
         }
         return true;
     }
@@ -289,7 +292,7 @@ public abstract class MyPet
         hungerTime = MyPetConfig.hungerSystemTime;
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+        getServer().getPluginManager().callEvent(spoutEvent);
     }
 
     public int getDamage()
@@ -360,7 +363,7 @@ public abstract class MyPet
                 hungerTime = MyPetConfig.hungerSystemTime;
 
                 MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+                getServer().getPluginManager().callEvent(spoutEvent);
             }
         }
     }

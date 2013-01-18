@@ -19,7 +19,6 @@
 
 package de.Keyle.MyPet.skill;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.event.MyPetExpEvent;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
@@ -29,6 +28,8 @@ import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.bukkit.Bukkit.getServer;
 
 public class MyPetExperience
 {
@@ -77,7 +78,7 @@ public class MyPetExperience
         JSexp = new MyPetJSexp(pet, this);
         for (short i = 1 ; i <= getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
+            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
     }
 
@@ -86,18 +87,18 @@ public class MyPetExperience
         exp = 0;
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+        getServer().getPluginManager().callEvent(spoutEvent);
 
         for (short i = 1 ; i <= getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
+            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
     }
 
     public void setExp(double Exp)
     {
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), Exp);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+        getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled())
         {
             return;
@@ -106,11 +107,11 @@ public class MyPetExperience
         this.exp = expEvent.getExp();
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+        getServer().getPluginManager().callEvent(spoutEvent);
 
         for (short i = tmplvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1), true));
+            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1), true));
         }
     }
 
@@ -122,7 +123,7 @@ public class MyPetExperience
     public short addExp(double exp)
     {
         MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(event);
+        getServer().getPluginManager().callEvent(event);
         if (event.isCancelled())
         {
             return 0;
@@ -131,12 +132,12 @@ public class MyPetExperience
         this.exp = event.getExp();
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+        getServer().getPluginManager().callEvent(spoutEvent);
 
 
         for (short i = tmpLvl ; i < getLevel() ; i++)
         {
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
+            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
         }
         return (short) (event.getNewExp() - event.getOldExp());
     }
@@ -146,7 +147,7 @@ public class MyPetExperience
         if (mobExp.containsKey(type))
         {
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, mobExp.get(type).getRandomExp() + this.exp);
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+            getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled())
             {
                 return 0;
@@ -155,11 +156,11 @@ public class MyPetExperience
             this.exp = expEvent.getExp();
 
             MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+            getServer().getPluginManager().callEvent(spoutEvent);
 
             for (short i = tmpLvl ; i < getLevel() ; i++)
             {
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
+                getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
             }
             return (short) (expEvent.getNewExp() - expEvent.getOldExp());
         }
@@ -172,7 +173,7 @@ public class MyPetExperience
         {
             double exp = mobExp.get(type).getRandomExp() / 100. * percent;
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+            getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled())
             {
                 return 0;
@@ -181,11 +182,11 @@ public class MyPetExperience
             this.exp = expEvent.getExp();
 
             MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+            getServer().getPluginManager().callEvent(spoutEvent);
 
             for (short i = tmpLvl ; i < getLevel() ; i++)
             {
-                MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
+                getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, (short) (i + 1)));
             }
             return (short) (expEvent.getNewExp() - expEvent.getOldExp());
         }
@@ -199,7 +200,7 @@ public class MyPetExperience
             exp = getCurrentExp();
         }
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+        getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled())
         {
             return;
@@ -207,14 +208,14 @@ public class MyPetExperience
         this.exp = expEvent.getExp();
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(spoutEvent);
+        getServer().getPluginManager().callEvent(spoutEvent);
     }
 
     public void removeExp(double exp)
     {
         exp = this.exp - exp < 0 ? this.exp : exp;
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        MyPetPlugin.getPlugin().getServer().getPluginManager().callEvent(expEvent);
+        getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled())
         {
             return;

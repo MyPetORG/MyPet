@@ -55,6 +55,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
+import static org.bukkit.Bukkit.getPluginManager;
+
 public class MyPetEntityListener implements Listener
 {
     @EventHandler
@@ -323,7 +325,7 @@ public class MyPetEntityListener implements Listener
                             MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                             myPet.createPet();
 
-                            MyPetUtil.getServer().getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
                             MyPetUtil.getDebugLogger().info("New Pet leashed:");
                             MyPetUtil.getDebugLogger().info("   " + myPet.toString());
                             MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
