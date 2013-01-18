@@ -36,6 +36,9 @@ public class MyPetPlayer implements Scheduler
     private String playerName;
     private boolean customData = false;
 
+    private boolean autoRespawn = false;
+    private int autoRespawnMin = 1;
+
     private MyPetPlayer(String playerName)
     {
         this.playerName = playerName;
@@ -49,6 +52,28 @@ public class MyPetPlayer implements Scheduler
     public boolean hasCustomData()
     {
         return customData;
+    }
+
+    public void setAutoRespawnEnabled(boolean flag)
+    {
+        autoRespawn = flag;
+        customData = true;
+    }
+
+    public boolean hasAutoRespawnEnabled()
+    {
+        return autoRespawn;
+    }
+
+    public void setAutoRespawnMin(int value)
+    {
+        autoRespawnMin = value;
+        customData = true;
+    }
+
+    public int getAutoRespawnMin()
+    {
+        return autoRespawnMin;
     }
 
     public boolean isOnline()

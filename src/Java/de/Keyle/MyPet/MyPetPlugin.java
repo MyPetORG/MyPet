@@ -126,6 +126,7 @@ public class MyPetPlugin extends JavaPlugin
             delCraftBukkit.delete();
         }
         MyPetPvP.reset();
+        MyPetEconomy.reset();
         MyPetConfig.config = this.getConfig();
         MyPetConfig.setDefault();
         MyPetConfig.loadConfiguration();
@@ -214,6 +215,7 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
         getCommand("petbeacon").setExecutor(new CommandBeacon());
+        getCommand("petrespawn").setExecutor(new CommandRespawn());
 
         registerSkills();
 
@@ -708,6 +710,8 @@ public class MyPetPlugin extends JavaPlugin
                 NBTTagCompound playerNBT = new NBTTagCompound(myPetPlayer.getName());
 
                 playerNBT.setString("Name", myPetPlayer.getName());
+                playerNBT.setBoolean("AutoRespawn", myPetPlayer.hasAutoRespawnEnabled());
+                playerNBT.setInt("AutoRespawnMin", myPetPlayer.getAutoRespawnMin());
 
                 playerNBTlist.add(playerNBT);
             }
@@ -726,6 +730,15 @@ public class MyPetPlugin extends JavaPlugin
             NBTTagCompound myplayerNBT = (NBTTagCompound) playerList.get(i);
 
             MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getString("Name"));
+
+            if (myplayerNBT.hasKey("AutoRespawn"))
+            {
+                petPlayer.setAutoRespawnEnabled(myplayerNBT.getBoolean("AutoRespawn"));
+            }
+            if (myplayerNBT.hasKey("AutoRespawnMin"))
+            {
+                petPlayer.setAutoRespawnMin(myplayerNBT.getInt("AutoRespawnMin"));
+            }
         }
     }
 

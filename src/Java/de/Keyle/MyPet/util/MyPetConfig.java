@@ -67,6 +67,8 @@ public class MyPetConfig
     public static int hungerSystemTime = 60;
     public static int skilltreeSwitchPenaltyPercent = 5;
     public static double skilltreeSwitchPenaltyFixed = 0.0;
+    public static double respawnCostFactor = 1.0;
+    public static double respawnCostFixed = 0.0;
     public static boolean skilltreeSwitchPenaltyAdmin = false;
     public static boolean automaticSkilltreeAssignment = true;
     public static boolean chooseSkilltreeOnce = true;
@@ -81,8 +83,10 @@ public class MyPetConfig
 
     public static void setDefault()
     {
-        setProperty("MyPet.RespawnTime.Factor", 5);
-        setProperty("MyPet.RespawnTime.Fixed", 0);
+        setProperty("MyPet.Respawn.Time.Factor", 5);
+        setProperty("MyPet.Respawn.Time.Fixed", 0);
+        setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
+        setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
         setProperty("MyPet.Permissions.SuperPerms", false);
         setProperty("MyPet.Permissions.UseExtendedPermissions", false);
         setProperty("MyPet.OwnerCanAttackPet", false);
@@ -108,6 +112,7 @@ public class MyPetConfig
         setProperty("MyPet.Support.Regios", true);
         setProperty("MyPet.Support.MobArena", true);
         setProperty("MyPet.Support.Residence", true);
+        setProperty("MyPet.Support.Vault.Economy", true);
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
         setProperty("MyPet.Exp.loss.Percent", 0);
         setProperty("MyPet.Exp.loss.Fixed", 0.0);
@@ -207,8 +212,10 @@ public class MyPetConfig
         skilltreeSwitchPenaltyAdmin = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         inheritAlreadyInheritedSkills = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
         passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
-        respawnTimeFactor = config.getInt("MyPet.RespawnTime.Factor", 5);
-        respawnTimeFixed = config.getInt("MyPet.RespawnTime.Fixed", 0);
+        respawnTimeFactor = config.getInt("MyPet.Respawn.Time.Factor", 5);
+        respawnTimeFixed = config.getInt("MyPet.Respawn.Time.Fixed", 0);
+        respawnCostFactor = config.getDouble("MyPet.Respawn.EconomyCost.Factor", 1.0);
+        respawnCostFixed = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         automaticSkilltreeAssignment = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
         chooseSkilltreeOnce = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
         levelSystem = config.getBoolean("MyPet.LevelSystem", true);
@@ -220,6 +227,7 @@ public class MyPetConfig
         sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
         checkForUpdates = config.getBoolean("MyPet.CheckForUpdates", false);
         debugLogger = config.getBoolean("MyPet.DebugLogger", false);
+        MyPetEconomy.useEconomy = config.getBoolean("MyPet.Support.Vault.Economy", true);
         MyPetPvP.useTowny = config.getBoolean("MyPet.Support.Towny", true);
         MyPetPvP.useFactions = config.getBoolean("MyPet.Support.Factions", true);
         MyPetPvP.useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);

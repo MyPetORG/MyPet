@@ -171,14 +171,14 @@ public abstract class MyPet
         }
     }
 
-    protected void respawnPet()
+    public void respawnPet()
     {
         if (status != PetState.Here && getOwner().isOnline())
         {
             petLocation = getOwner().getPlayer().getLocation();
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
-            createPet();
             respawnTime = 0;
+            createPet();
             if (MyPetConfig.hungerSystem)
             {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
@@ -339,6 +339,16 @@ public abstract class MyPet
             if (status == PetState.Dead)
             {
                 respawnTime--;
+                if (MyPetEconomy.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && MyPetPermissions.has(getOwner().getPlayer(), "MyPet.user.respawn"))
+                {
+                    double cost = respawnTime * MyPetConfig.respawnCostFactor + MyPetConfig.respawnCostFixed;
+                    if (MyPetEconomy.canPay(getOwner(), cost))
+                    {
+                        MyPetEconomy.pay(getOwner(), cost);
+                        sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
+                        respawnTime = 1;
+                    }
+                }
                 if (respawnTime <= 0)
                 {
                     respawnPet();

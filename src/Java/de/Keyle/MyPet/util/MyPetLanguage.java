@@ -129,7 +129,12 @@ public class MyPetLanguage
         addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%white% has now a chance of %chance%% to poison enemies");
         // --  R  --
         addString("Msg_Release", "MyPet.Message.release", "%aqua%%petname%%white% is now %green%free%white% . . .");
+        addString("Msg_RespawnAuto", "MyPet.Message.respawnauto", "Auto respawn: %gold%%status%%white%.");
+        addString("Msg_RespawnAutoMin", "MyPet.Message.respawnautomin", "Set minimal auto respawn time to %gold%%time%%white%.");
         addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%white% respawn in %gold%%time%%white% sec");
+        addString("Msg_RespawnNoMoney", "MyPet.Message.respawnnomoney", "You need %red%%costs%%white% to let respawn %aqua%%petname%%white%!");
+        addString("Msg_RespawnPaid", "MyPet.Message.respawnpaid", "Respawn fee (%gold%%costs%%white%) for %aqua%%petname%%white% paid.");
+        addString("Msg_RespawnShow", "MyPet.Message.respawnshow", "Respawn fee for %aqua%%petname%%white%: %gold%%costs%%white% (%color%auto%white%)");
         // --  S  --
         addString("Msg_SendAway", "MyPet.Message.sendaway", "You sent %aqua%%petname%%white% away.");
         addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%petname%%white%'s skills: %skilltree%");
@@ -159,9 +164,11 @@ public class MyPetLanguage
         addString("Name_Creeper", "MyPet.Name.Creeper", "Creeper");
         // --  D  --
         addString("Name_Damage", "MyPet.Name.Damage", "Damage");
+        addString("Name_Disabled", "MyPet.Name.Disabled", "Disabled");
         addString("Name_DROWNING", "MyPet.Name.Drowning", "Drowning");
         // --  E  --
         addString("Name_EGG", "MyPet.Name.Egg", "Egg");
+        addString("Name_Enabled", "MyPet.Name.Enabled", "Enabled");
         addString("Name_EnderDragon", "MyPet.Name.EnderDragon", "Ender Dragon");
         addString("Name_Enderman", "MyPet.Name.Enderman", "Enderman");
         addString("Name_Exp", "MyPet.Name.Exp", "Exp");

@@ -457,6 +457,21 @@ public class MyPetEntityListener implements Listener
             }
             SendDeathMessage(event);
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+
+            if (MyPetEconomy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.respawnTime >= myPet.getOwner().getAutoRespawnMin() && MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
+            {
+                double costs = myPet.respawnTime * MyPetConfig.respawnCostFactor + MyPetConfig.respawnCostFixed;
+                if (MyPetEconomy.canPay(myPet.getOwner(), costs))
+                {
+                    MyPetEconomy.pay(myPet.getOwner(), costs);
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                    myPet.respawnTime = 1;
+                }
+                else
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnNoMoney").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                }
+            }
         }
         if (MyPetConfig.levelSystem && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {

@@ -52,9 +52,13 @@ commands:
     description: Chooses a skilltree.
     usage: '/<command> <SkillTreeName>'
   petbeacon:
-    aliases: [pbeacon, petbeacon]
+    aliases: [pbeacon]
     description: Beacon!
     usage: '/<command> [stop]'
+  petrespawn:
+    aliases: [pr, petr]
+    description: Pays respawn fee or enable auto respawn fee paying.
+    usage: '/<command> [pay/auto] [min respawn time]'
 
 permissions:
   MyPet.user.leash.*:
@@ -122,6 +126,7 @@ permissions:
       MyPet.user.leash.*: true
       MyPet.user.keep.*: true
       MyPet.user.release: true
+      MyPet.user.respawn: true
   MyPet.user.release:
     description: Allows usage of /petrelease
   MyPet.admin:
