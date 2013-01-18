@@ -117,7 +117,7 @@ public class MyWolf extends MyPet
         info.setBoolean("Baby", isBaby());
         info.setBoolean("Tamed", isTamed());
         info.setBoolean("Angry", isAngry());
-        info.setByte("CollarColor", getCollarColor().getData());
+        info.setByte("CollarColor", getCollarColor().getDyeData());
         return info;
     }
 
@@ -130,7 +130,7 @@ public class MyWolf extends MyPet
         }
         if (info.hasKey("CollarColor"))
         {
-            setCollarColor(DyeColor.getByData(info.getByte("CollarColor")));
+            setCollarColor(DyeColor.getByDyeData(info.getByte("CollarColor")));
         }
         if (info.hasKey("Tamed"))
         {

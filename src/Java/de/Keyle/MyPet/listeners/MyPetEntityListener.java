@@ -275,11 +275,11 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setBoolean("Sitting", ((Wolf) leashTarget).isSitting());
                                 extendedInfo.setBoolean("Tamed", ((Wolf) leashTarget).isTamed());
-                                extendedInfo.setByte("CollarColor", ((Wolf) leashTarget).getCollarColor().getData());
+                                extendedInfo.setByte("CollarColor", ((Wolf) leashTarget).getCollarColor().getDyeData());
                             }
                             else if (leashTarget instanceof Sheep)
                             {
-                                extendedInfo.setInt("Color", ((Sheep) leashTarget).getColor().getData());
+                                extendedInfo.setInt("Color", ((Sheep) leashTarget).getColor().getDyeData());
                                 extendedInfo.setBoolean("Sheared", ((Sheep) leashTarget).isSheared());
                             }
                             else if (leashTarget instanceof Villager)

@@ -203,23 +203,24 @@ public class EntityMyWolf extends EntityMyPet
         {
             return true;
         }
-        ItemStack itemstack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemstack != null && itemstack.id == Item.INK_SACK.id)
+        if (itemStack != null)
         {
-            int colorId = BlockCloth.e_(itemstack.getData());
-
-            if (colorId != getCollarColor())
+            if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
             {
-                setCollarColor((byte) colorId);
-                if (!entityhuman.abilities.canInstantlyBuild)
+                if (itemStack.getData() <= 15)
                 {
-                    if (--itemstack.count <= 0)
+                    setCollarColor((byte) itemStack.getData());
+                    if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
                     }
+                    return true;
                 }
-                return true;
             }
         }
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
