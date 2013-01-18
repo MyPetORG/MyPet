@@ -39,8 +39,15 @@ public class EntityMyPigZombie extends EntityMyPet
         if (myPet != null)
         {
             super.setMyPet(myPet);
+            MyPigZombie myPigZombie = (MyPigZombie) myPet;
 
-            this.setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+            for (EquipmentSlot slot : EquipmentSlot.values())
+            {
+                if (myPigZombie.getEquipment(slot) != null)
+                {
+                    setEquipment(slot.getSlotId(), myPigZombie.getEquipment(slot));
+                }
+            }
         }
     }
 

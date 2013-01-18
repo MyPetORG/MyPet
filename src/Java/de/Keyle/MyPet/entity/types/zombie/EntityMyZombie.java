@@ -39,9 +39,17 @@ public class EntityMyZombie extends EntityMyPet
         if (myPet != null)
         {
             super.setMyPet(myPet);
+            MyZombie myZombie = (MyZombie) myPet;
 
-            this.setBaby(((MyZombie) myPet).isBaby());
-            this.setVillager(((MyZombie) myPet).isVillager());
+            this.setBaby(myZombie.isBaby());
+            this.setVillager(myZombie.isVillager());
+            for (EquipmentSlot slot : EquipmentSlot.values())
+            {
+                if (myZombie.getEquipment(slot) != null)
+                {
+                    setEquipment(slot.getSlotId(), myZombie.getEquipment(slot));
+                }
+            }
         }
     }
 

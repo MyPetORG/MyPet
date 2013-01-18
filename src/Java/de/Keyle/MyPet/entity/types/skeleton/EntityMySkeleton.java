@@ -23,7 +23,6 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
@@ -37,12 +36,12 @@ public class EntityMySkeleton extends EntityMyPet
 
     public void setMyPet(MyPet myPet)
     {
-        MySkeleton mySkeleton = (MySkeleton) myPet;
         if (myPet != null)
         {
             super.setMyPet(myPet);
+            MySkeleton mySkeleton = (MySkeleton) myPet;
 
-            MyPetLogger.write("eq: " + mySkeleton.equipment);
+            this.setWither(mySkeleton.isWither());
             for (EquipmentSlot slot : EquipmentSlot.values())
             {
                 if (mySkeleton.getEquipment(slot) != null)
@@ -50,7 +49,6 @@ public class EntityMySkeleton extends EntityMyPet
                     setEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
                 }
             }
-            this.setWither(mySkeleton.isWither());
         }
     }
 
