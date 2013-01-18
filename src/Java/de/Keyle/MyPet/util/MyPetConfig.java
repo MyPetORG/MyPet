@@ -112,6 +112,7 @@ public class MyPetConfig
         setProperty("MyPet.Support.Regios", true);
         setProperty("MyPet.Support.MobArena", true);
         setProperty("MyPet.Support.Residence", true);
+        setProperty("MyPet.Support.AncientRPG", true);
         setProperty("MyPet.Support.Vault.Economy", true);
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
         setProperty("MyPet.Exp.loss.Percent", 0);
@@ -237,6 +238,7 @@ public class MyPetConfig
         MyPetPvP.useMobArena = config.getBoolean("MyPet.Support.MobArena", true);
         MyPetPvP.useRegios = config.getBoolean("MyPet.Support.Regios", true);
         MyPetPvP.useResidence = config.getBoolean("MyPet.Support.Residence", true);
+        MyPetPvP.useAncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
 
         MyPetExperience.lossPercent = config.getInt("MyPet.Exp.loss.Percent");
         MyPetExperience.lossFixed = config.getDouble("MyPet.Exp.loss.Fixed");

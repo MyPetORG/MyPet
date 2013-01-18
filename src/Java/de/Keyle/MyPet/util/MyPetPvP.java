@@ -1,5 +1,8 @@
 package de.Keyle.MyPet.util;
 
+import com.ancientshores.AncientRPG.API.ApiManager;
+import com.ancientshores.AncientRPG.Guild.AncientRPGGuild;
+import com.ancientshores.AncientRPG.Party.AncientRPGParty;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.garbagemule.MobArena.MobArenaHandler;
@@ -37,6 +40,7 @@ public class MyPetPvP
     public static boolean useMobArena = true;
     public static boolean useMcMMO = true;
     public static boolean useResidence = true;
+    public static boolean useAncientRPG = true;
 
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
@@ -47,6 +51,7 @@ public class MyPetPvP
     private static boolean searchedResidence = false;
     private static boolean searchedMobArena = false;
     private static boolean searchedMcMMO = false;
+    private static boolean searchedAncientRPG = false;
 
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
@@ -57,10 +62,11 @@ public class MyPetPvP
     private static Heroes pluginHeroes = null;
     private static RegiosAPI pluginRegios = null;
     private static MobArenaHandler pluginMobArena = null;
+    private static ApiManager pluginAncientRPG = null;
 
     public static boolean canHurt(Player attacker, Player defender)
     {
-        return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurt(defender);
+        return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurt(defender);
     }
 
     public static boolean canHurt(Player defender)
@@ -158,7 +164,7 @@ public class MyPetPvP
                 pluginHeroes = (Heroes) MyPetUtil.getServer().getPluginManager().getPlugin("Heroes");
             }
         }
-        if (useHeroes && MyPetUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
+        if (useHeroes && pluginHeroes != null)
         {
             Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
             Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
@@ -255,6 +261,39 @@ public class MyPetPvP
         return true;
     }
 
+    public static boolean canHurtAncientRPG(Player attacker, Player defender)
+    {
+        if (!searchedAncientRPG)
+        {
+            searchedAncientRPG = true;
+            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
+            {
+                pluginAncientRPG = ApiManager.getApiManager();
+            }
+        }
+        if (useAncientRPG && pluginAncientRPG != null)
+        {
+            AncientRPGParty party = pluginAncientRPG.getPlayerParty(attacker);
+            if (party != null)
+            {
+                if (!party.friendlyFire && party.containsName(defender.getName()))
+                {
+                    return false;
+                }
+            }
+
+            AncientRPGGuild guild = pluginAncientRPG.getPlayerGuild(attacker.getName());
+            if (guild != null)
+            {
+                if (!guild.friendlyFire && guild == pluginAncientRPG.getPlayerGuild(defender.getName()))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static void reset()
     {
         searchedCitizens = false;
@@ -266,6 +305,7 @@ public class MyPetPvP
         searchedResidence = false;
         searchedMobArena = false;
         searchedMcMMO = false;
+        searchedAncientRPG = false;
 
         pluginFactions = false;
         pluginCitizens = false;
@@ -276,5 +316,6 @@ public class MyPetPvP
         pluginHeroes = null;
         pluginRegios = null;
         pluginMobArena = null;
+        pluginAncientRPG = null;
     }
 }

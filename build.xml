@@ -58,6 +58,7 @@
         <pathelement location="${MyPet.lib.dir}/MobArena.jar" />
         <pathelement location="${MyPet.lib.dir}/Regios.jar" />
         <pathelement location="${MyPet.lib.dir}/Residence.jar" />
+        <pathelement location="${MyPet.lib.dir}/AncientRPG-1.0.jar" />
         <pathelement location="${MyPet.lib.dir}/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${MyPet.lib.dir}/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
     </path>
