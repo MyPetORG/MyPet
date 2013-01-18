@@ -94,7 +94,7 @@ public class SkillPropertyEditor
                                     }
                                     break;
                                 case Boolean:
-                                    if (value == null || value.equalsIgnoreCase(""))
+                                    if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off"))
                                     {
                                         tagCompound.setBoolean(name, false);
                                     }

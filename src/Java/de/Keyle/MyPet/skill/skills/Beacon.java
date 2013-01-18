@@ -41,8 +41,8 @@ import java.util.Map;
 
 @SkillName("Beacon")
 @SkillProperties(
-        parameterNames = {"1_1", "1_3", "1_11", "1_8", "1_5", "2_1", "2_3", "2_11", "2_8", "2_5", "2_10", "duration", "range"},
-        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Int, NBTdatatypes.Double})
+        parameterNames = {"1_1", "1_3", "1_11", "1_8", "1_5", "2_1", "2_3", "2_11", "2_8", "2_5", "2_10", "duration", "range", "addset_duration", "addset_range"},
+        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Int, NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String})
 public class Beacon extends MyPetGenericSkill
 {
     public static int hungerDecreaseTime = 60;
@@ -149,11 +149,25 @@ public class Beacon extends MyPetGenericSkill
             }
             if (upgrade.getProperties().hasKey("duration"))
             {
-                duration = upgrade.getProperties().getInt("duration");
+                if (!upgrade.getProperties().hasKey("addset_duration") || upgrade.getProperties().getString("addset_duration").equals("add"))
+                {
+                    duration += upgrade.getProperties().getInt("duration");
+                }
+                else
+                {
+                    duration = upgrade.getProperties().getInt("duration");
+                }
             }
             if (upgrade.getProperties().hasKey("range"))
             {
-                range = upgrade.getProperties().getDouble("range");
+                if (!upgrade.getProperties().hasKey("addset_range") || upgrade.getProperties().getString("addset_range").equals("add"))
+                {
+                    range += upgrade.getProperties().getDouble("range");
+                }
+                else
+                {
+                    range = upgrade.getProperties().getDouble("range");
+                }
             }
             if (!quiet)
             {
@@ -216,10 +230,26 @@ public class Beacon extends MyPetGenericSkill
         if (getProperties().hasKey("duration"))
         {
             html = html.replace("name=\"duration\" value=\"0\"", "name=\"duration\" value=\"" + getProperties().getInt("duration") + "\"");
+            if (getProperties().hasKey("addset_duration"))
+            {
+                if (getProperties().getString("addset_duration").equals("set"))
+                {
+                    html = html.replace("name=\"addset_duration\" value=\"add\" checked", "name=\"addset_duration\" value=\"add\"");
+                    html = html.replace("name=\"addset_duration\" value=\"set\"", "name=\"addset_duration\" value=\"set\" checked");
+                }
+            }
         }
         if (getProperties().hasKey("range"))
         {
             html = html.replace("name=\"range\" value=\"0.0\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
+            if (getProperties().hasKey("addset_range"))
+            {
+                if (getProperties().getString("addset_range").equals("set"))
+                {
+                    html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
+                    html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

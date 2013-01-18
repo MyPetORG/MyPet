@@ -30,7 +30,9 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import java.util.Random;
 
 @SkillName("Wither")
-@SkillProperties(parameterNames = {"add", "duration"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int})
+@SkillProperties(
+        parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
 public class Wither extends MyPetGenericSkill
 {
     private int chance = 0;
@@ -54,14 +56,28 @@ public class Wither extends MyPetGenericSkill
         if (upgrade instanceof Wither)
         {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("chance"))
             {
-                chance += upgrade.getProperties().getInt("add");
+                if (!upgrade.getProperties().hasKey("addset_chance") || upgrade.getProperties().getString("addset_chance").equals("add"))
+                {
+                    chance += upgrade.getProperties().getInt("chance");
+                }
+                else
+                {
+                    chance = upgrade.getProperties().getInt("chance");
+                }
                 valuesEdit = true;
             }
             if (upgrade.getProperties().hasKey("duration"))
             {
-                duration += upgrade.getProperties().getInt("duration");
+                if (!upgrade.getProperties().hasKey("addset_duration") || upgrade.getProperties().getString("addset_duration").equals("add"))
+                {
+                    duration += upgrade.getProperties().getInt("duration");
+                }
+                else
+                {
+                    duration = upgrade.getProperties().getInt("duration");
+                }
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit)
@@ -87,13 +103,29 @@ public class Wither extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("chance"))
         {
-            html = html.replace("add\" value=\"0\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("chance\" value=\"0\"", "chance\" value=\"" + getProperties().getInt("chance") + "\"");
+            if (getProperties().hasKey("addset_chance"))
+            {
+                if (getProperties().getString("addset_chance").equals("set"))
+                {
+                    html = html.replace("name=\"addset_chance\" value=\"add\" checked", "name=\"addset_chance\" value=\"add\"");
+                    html = html.replace("name=\"addset_chance\" value=\"set\"", "name=\"addset_chance\" value=\"set\" checked");
+                }
+            }
         }
         if (getProperties().hasKey("duration"))
         {
             html = html.replace("duration\" value=\"0\"", "duration\" value=\"" + getProperties().getInt("duration") + "\"");
+            if (getProperties().hasKey("addset_duration"))
+            {
+                if (getProperties().getString("addset_duration").equals("set"))
+                {
+                    html = html.replace("name=\"addset_duration\" value=\"add\" checked", "name=\"addset_duration\" value=\"add\"");
+                    html = html.replace("name=\"addset_duration\" value=\"set\"", "name=\"addset_duration\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

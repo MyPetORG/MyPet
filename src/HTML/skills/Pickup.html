@@ -23,8 +23,21 @@
         <form action="">
             <center>
                 <h1>Pickup</h1>
-                <p>Increase pickup range by:</p>
-                <input name="add" type="text" value="0" />
+                <table>
+                    <tr>
+                        <th colspan="3">Pickup range</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="addset_range" value="add" checked> add<br>
+                            <input type="radio" name="addset_range" value="set"> set<br>
+                        </td>
+                        <td>
+                            <input name="range" type="text" value="0" />
+                        </td>
+                        <td>Block(s)</td>
+                    </tr>
+                </table>
                 <br /><br />
                 <input type=submit value="Save">
             </center>

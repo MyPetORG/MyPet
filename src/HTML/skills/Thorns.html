@@ -23,8 +23,21 @@
         <form action="">
             <center>
                 <h1>Thorns</h1>
-                <p>Increase Chance to threw damage back by:</p>
-                <input name="add" type="text" value="0" />
+                <table>
+                    <tr>
+                        <th colspan="2">Chance to reflect damage.</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="addset_chance" value="add" checked> add<br>
+                            <input type="radio" name="addset_chance" value="set"> set<br>
+                        </td>
+                        <td>
+                            <input name="chance" type="text" value="0" />
+                        </td>
+                        <td>%</td>
+                    </tr>
+                </table>
                 <br /><br />
                 <input type=submit value="Save">
             </center>

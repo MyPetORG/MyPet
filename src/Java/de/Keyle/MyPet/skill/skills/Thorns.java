@@ -30,7 +30,9 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import java.util.Random;
 
 @SkillName("Thorns")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
+@SkillProperties(
+        parameterNames = {"chance", "addset_chance"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String})
 public class Thorns extends MyPetGenericSkill
 {
     private int chance = 0;
@@ -52,9 +54,16 @@ public class Thorns extends MyPetGenericSkill
     {
         if (upgrade instanceof Thorns)
         {
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("chance"))
             {
-                chance += upgrade.getProperties().getInt("add");
+                if (!upgrade.getProperties().hasKey("addset_chance") || upgrade.getProperties().getString("addset_chance").equals("add"))
+                {
+                    chance += upgrade.getProperties().getInt("chance");
+                }
+                else
+                {
+                    chance = upgrade.getProperties().getInt("chance");
+                }
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ThornsChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
@@ -78,9 +87,17 @@ public class Thorns extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("chance"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("chance") + "\"");
+            if (getProperties().hasKey("addset_chance"))
+            {
+                if (getProperties().getString("addset_chance").equals("set"))
+                {
+                    html = html.replace("name=\"addset_chance\" value=\"add\" checked", "name=\"addset_chance\" value=\"add\"");
+                    html = html.replace("name=\"addset_chance\" value=\"set\"", "name=\"addset_chance\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

@@ -420,6 +420,7 @@ public class MyPetPlugin extends JavaPlugin
         }
 
         HeroesDamageFix.reset();
+        AncientRpgDamageFix.findAncientRpgPlugin();
 
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
         MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.GREEN + " ENABLED");

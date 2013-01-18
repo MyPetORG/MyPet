@@ -29,7 +29,9 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Material;
 
 @SkillName("Ride")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Float})
+@SkillProperties(
+        parameterNames = {"speed", "addset_speed"},
+        parameterTypes = {NBTdatatypes.Float, NBTdatatypes.String})
 public class Ride extends MyPetGenericSkill
 {
     public static Material item = Material.STRING;
@@ -53,9 +55,16 @@ public class Ride extends MyPetGenericSkill
         if (upgrade instanceof Ride)
         {
             active = true;
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("speed"))
             {
-                speed += upgrade.getProperties().getFloat("add");
+                if (!upgrade.getProperties().hasKey("addset_speed") || upgrade.getProperties().getString("addset_speed").equals("speed"))
+                {
+                    speed += upgrade.getProperties().getFloat("speed");
+                }
+                else
+                {
+                    speed = upgrade.getProperties().getFloat("speed");
+                }
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName)/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
@@ -85,9 +94,17 @@ public class Ride extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("speed"))
         {
-            html = html.replace("value=\"0.0\"", "value=\"" + getProperties().getFloat("add") + "\"");
+            html = html.replace("value=\"0.0\"", "value=\"" + getProperties().getFloat("speed") + "\"");
+            if (getProperties().hasKey("addset_speed"))
+            {
+                if (getProperties().getString("addset_speed").equals("set"))
+                {
+                    html = html.replace("name=\"addset_speed\" value=\"add\" checked", "name=\"addset_speed\" value=\"add\"");
+                    html = html.replace("name=\"addset_speed\" value=\"set\"", "name=\"addset_speed\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

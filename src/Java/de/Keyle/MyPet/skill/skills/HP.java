@@ -30,7 +30,7 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 @SkillName("HP")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
+@SkillProperties(parameterNames = {"hp", "addset_hp"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String})
 public class HP extends MyPetGenericSkill
 {
     private int hpIncrease = 0;
@@ -51,9 +51,16 @@ public class HP extends MyPetGenericSkill
     {
         if (upgrade instanceof HP)
         {
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("hp"))
             {
-                hpIncrease += upgrade.getProperties().getInt("add");
+                if (!upgrade.getProperties().hasKey("addset_hp") || upgrade.getProperties().getString("addset_hp").equals("add"))
+                {
+                    hpIncrease += upgrade.getProperties().getInt("hp");
+                }
+                else
+                {
+                    hpIncrease = upgrade.getProperties().getInt("hp");
+                }
 
                 if (getMyPet().status == PetState.Here)
                 {
@@ -88,9 +95,17 @@ public class HP extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("hp"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("hp") + "\"");
+            if (getProperties().hasKey("addset_hp"))
+            {
+                if (getProperties().getString("addset_hp").equals("set"))
+                {
+                    html = html.replace("name=\"addset_hp\" value=\"add\" checked", "name=\"addset_hp\" value=\"add\"");
+                    html = html.replace("name=\"addset_hp\" value=\"set\"", "name=\"addset_hp\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

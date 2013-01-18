@@ -37,7 +37,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 @SkillName("Pickup")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Double})
+@SkillProperties(
+        parameterNames = {"range", "addset_range"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String})
 public class Pickup extends MyPetGenericSkill
 {
     private double range = 0;
@@ -59,9 +61,16 @@ public class Pickup extends MyPetGenericSkill
     {
         if (upgrade instanceof Pickup)
         {
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("range"))
             {
-                range += upgrade.getProperties().getDouble("add");
+                if (!upgrade.getProperties().hasKey("addset_range") || upgrade.getProperties().getString("addset_range").equals("add"))
+                {
+                    range += upgrade.getProperties().getDouble("range");
+                }
+                else
+                {
+                    range = upgrade.getProperties().getDouble("range");
+                }
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + String.format("%1.2f", range)));
@@ -86,9 +95,17 @@ public class Pickup extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("range"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getDouble("add") + "\"");
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getDouble("range") + "\"");
+            if (getProperties().hasKey("addset_range"))
+            {
+                if (getProperties().getString("addset_range").equals("set"))
+                {
+                    html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
+                    html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

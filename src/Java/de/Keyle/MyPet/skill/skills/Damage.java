@@ -28,7 +28,7 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 @SkillName("Damage")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
+@SkillProperties(parameterNames = {"damage", "addset_damage"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String})
 public class Damage extends MyPetGenericSkill
 {
     private boolean isPassive = true;
@@ -54,15 +54,29 @@ public class Damage extends MyPetGenericSkill
             {
                 isPassive = false;
             }
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("damage"))
             {
-                damageIncrease += upgrade.getProperties().getInt("add");
+                if (!upgrade.getProperties().hasKey("addset_damage") || upgrade.getProperties().getString("addset_damage").equals("add"))
+                {
+                    damageIncrease += upgrade.getProperties().getInt("damage");
+                }
+                else
+                {
+                    damageIncrease = upgrade.getProperties().getInt("damage");
+                }
                 if (damageIncrease > 0 && isPassive)
                 {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().setPathfinder();
                     isPassive = false;
+                }
+                else if (damageIncrease <= 0 && !isPassive)
+                {
+                    getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+                    getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+                    getMyPet().getCraftPet().getHandle().setPathfinder();
+                    isPassive = true;
                 }
                 if (!quiet)
                 {
@@ -92,9 +106,17 @@ public class Damage extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("damage"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("damage") + "\"");
+            if (getProperties().hasKey("addset_damage"))
+            {
+                if (getProperties().getString("addset_damage").equals("set"))
+                {
+                    html = html.replace("name=\"addset_damage\" value=\"add\" checked", "name=\"addset_damage\" value=\"add\"");
+                    html = html.replace("name=\"addset_damage\" value=\"set\"", "name=\"addset_damage\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

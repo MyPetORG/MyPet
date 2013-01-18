@@ -30,7 +30,9 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 @SkillName("HPregeneration")
-@SkillProperties(parameterNames = {"add", "remove"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int})
+@SkillProperties(
+        parameterNames = {"hp", "time", "addset_hp", "addset_time"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
 public class HPregeneration extends MyPetGenericSkill
 {
     public static int healtregenTime = 60;
@@ -55,19 +57,33 @@ public class HPregeneration extends MyPetGenericSkill
         if (upgrade instanceof HPregeneration)
         {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().hasKey("hp"))
             {
-                increaseHpBy += upgrade.getProperties().getInt("add");
+                if (!upgrade.getProperties().hasKey("addset_hp") || upgrade.getProperties().getString("addset_hp").equals("add"))
+                {
+                    increaseHpBy += upgrade.getProperties().getInt("hp");
+                }
+                else
+                {
+                    increaseHpBy = upgrade.getProperties().getInt("hp");
+                }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("remove"))
+            if (upgrade.getProperties().hasKey("time"))
             {
-                timeDecrease += upgrade.getProperties().getInt("remove");
+                if (!upgrade.getProperties().hasKey("addset_time") || upgrade.getProperties().getString("addset_time").equals("add"))
+                {
+                    timeDecrease += upgrade.getProperties().getInt("time");
+                }
+                else
+                {
+                    timeDecrease = upgrade.getProperties().getInt("time");
+                }
                 if (timeDecrease < 1)
                 {
                     timeDecrease = 1;
                 }
-                timeCounter -= upgrade.getProperties().getInt("remove");
+                timeCounter = healtregenTime - timeDecrease;
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit)
@@ -94,13 +110,29 @@ public class HPregeneration extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().hasKey("hp"))
         {
-            html = html.replace("add\" value=\"0\"", "add\" value=\"" + getProperties().getInt("add") + "\"");
+            html = html.replace("hp\" value=\"0\"", "hp\" value=\"" + getProperties().getInt("hp") + "\"");
+            if (getProperties().hasKey("addset_hp"))
+            {
+                if (getProperties().getString("addset_hp").equals("set"))
+                {
+                    html = html.replace("name=\"addset_hp\" value=\"add\" checked", "name=\"addset_hp\" value=\"add\"");
+                    html = html.replace("name=\"addset_hp\" value=\"set\"", "name=\"addset_hp\" value=\"set\" checked");
+                }
+            }
         }
-        if (getProperties().hasKey("remove"))
+        if (getProperties().hasKey("time"))
         {
-            html = html.replace("remove\" value=\"0\"", "remove\" value=\"" + getProperties().getInt("remove") + "\"");
+            html = html.replace("time\" value=\"0\"", "time\" value=\"" + getProperties().getInt("time") + "\"");
+            if (getProperties().hasKey("addset_time"))
+            {
+                if (getProperties().getString("addset_time").equals("set"))
+                {
+                    html = html.replace("name=\"addset_time\" value=\"add\" checked", "name=\"addset_time\" value=\"add\"");
+                    html = html.replace("name=\"addset_time\" value=\"set\"", "name=\"addset_time\" value=\"set\" checked");
+                }
+            }
         }
         return html;
     }

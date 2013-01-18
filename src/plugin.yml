@@ -3,7 +3,7 @@ main: de.Keyle.MyPet.MyPetPlugin
 version: {@MYPET_VERSION@}
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
-softdepend: [Vault, Heroes]
+softdepend: [Vault, Heroes, AncientRPG]
 commands:
   myPet:
     description: Help for all MyPet commands.
