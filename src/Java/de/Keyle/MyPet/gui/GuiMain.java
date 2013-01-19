@@ -127,6 +127,7 @@ public class GuiMain
 
         MyPetPlugin.registerSkills();
 
+        new File(configPath + "skilltrees" + File.separator).mkdirs();
         MyPetSkillTreeLoader.loadSkillTrees(configPath + "skilltrees", false);
 
         skilltreeCreator = new SkilltreeCreator();

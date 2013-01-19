@@ -33,11 +33,6 @@ public class NBTConfiguration
     private File NBTFile;
     private NBTTagCompound nbtTagCompound = new NBTTagCompound();
 
-    public NBTConfiguration(String path)
-    {
-        this(new File(path));
-    }
-
     public NBTConfiguration(File file)
     {
         NBTFile = file;

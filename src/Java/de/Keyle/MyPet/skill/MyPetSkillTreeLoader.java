@@ -29,10 +29,14 @@ import net.minecraft.server.v1_4_R1.NBTTagList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyPetSkillTreeLoader
 {
+    private static List<MyPetSkillTree> alreadyLoadedInheritance = new ArrayList<MyPetSkillTree>();
+
     public static void loadSkillTrees(String configPath)
     {
         loadSkillTrees(configPath, true);
@@ -115,6 +119,7 @@ public class MyPetSkillTreeLoader
             {
                 NBTTagCompound levelCompound = (NBTTagCompound) levelList.get(i_level);
                 short thisLevel = levelCompound.getShort("Level");
+                skillTree.addLevel(thisLevel);
 
                 NBTTagList skillList = levelCompound.getList("Skills");
                 for (int i_skill = 0 ; i_skill < skillList.size() ; i_skill++)
@@ -163,28 +168,48 @@ public class MyPetSkillTreeLoader
 
     private static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType)
     {
-        for (String skillTreeName : skillTreeMobType.getSkillTreeNames())
+        Map<MyPetSkillTree, MyPetSkillTree> skillTreeClones = new HashMap<MyPetSkillTree, MyPetSkillTree>();
+        for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
         {
-            if (!skillTreeMobType.hasSkillTree(skillTreeName))
-            {
-                continue;
-            }
-            MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(skillTreeName);
+            skillTreeClones.put(skillTree, skillTree.clone());
+        }
+        for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
+        {
+            alreadyLoadedInheritance.clear();
             if (skillTree.hasInheritance())
             {
-                if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
+                alreadyLoadedInheritance.add(skillTree);
+                manageInheritance(skillTreeMobType, skillTree, skillTree, skillTreeClones, 0);
+            }
+        }
+    }
+
+    private static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int tiefe)
+    {
+        if (skillTree.hasInheritance() && tiefe < 20)
+        {
+            if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
+            {
+                MyPetSkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
+                if (!alreadyLoadedInheritance.contains(skillTreeInherit))
                 {
-                    MyPetSkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
-                    for (MyPetSkillTreeLevel level : skillTreeInherit.getLevelList())
+                    if (skillTreeInherit.hasInheritance() && MyPetConfig.inheritAlreadyInheritedSkills)
+                    {
+                        alreadyLoadedInheritance.add(skillTreeInherit);
+                        manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, tiefe + 1);
+                    }
+                    else
+                    {
+                        alreadyLoadedInheritance.add(skillTreeInherit);
+                    }
+                    MyPetSkillTree skillTreeClone = clones.get(skillTreeInherit);
+                    for (MyPetSkillTreeLevel level : skillTreeClone.getLevelList())
                     {
                         for (MyPetSkillTreeSkill skill : level.getSkills())
                         {
-                            if (!skill.isAddedByInheritance() || MyPetConfig.inheritAlreadyInheritedSkills)
-                            {
-                                MyPetSkillTreeSkill skillClone = skill.cloneSkill();
-                                skillClone.setIsInherited(true);
-                                skillTree.addSkillToLevel(level.getLevel(), skillClone);
-                            }
+                            MyPetSkillTreeSkill skillClone = skill.cloneSkill();
+                            skillClone.setIsInherited(true);
+                            startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
                         }
                     }
                 }
