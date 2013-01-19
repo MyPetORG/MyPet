@@ -28,6 +28,8 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Material;
 
+import java.util.Locale;
+
 @SkillName("Ride")
 @SkillProperties(
         parameterNames = {"speed", "addset_speed"},
@@ -96,7 +98,7 @@ public class Ride extends MyPetGenericSkill
         String html = super.getHtml();
         if (getProperties().hasKey("speed"))
         {
-            html = html.replace("value=\"0.0\"", "value=\"" + getProperties().getFloat("speed") + "\"");
+            html = html.replace("value=\"0.000\"", "value=\"" + String.format(Locale.ENGLISH, "%1.3f", getProperties().getFloat("speed")) + "\"");
             if (getProperties().hasKey("addset_speed"))
             {
                 if (getProperties().getString("addset_speed").equals("set"))

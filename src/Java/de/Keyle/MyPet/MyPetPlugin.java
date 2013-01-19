@@ -251,6 +251,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkillTreeLoaderYaml.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
         MyPetSkillTreeLoader.saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
+        MyPetSkillTreeMobType.clearMobTypes();
         MyPetSkillTreeLoader.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
         try

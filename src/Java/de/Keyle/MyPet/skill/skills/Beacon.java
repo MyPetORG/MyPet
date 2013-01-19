@@ -241,7 +241,7 @@ public class Beacon extends MyPetGenericSkill
         }
         if (getProperties().hasKey("range"))
         {
-            html = html.replace("name=\"range\" value=\"0.0\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
+            html = html.replace("name=\"range\" value=\"0.00\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
             if (getProperties().hasKey("addset_range"))
             {
                 if (getProperties().getString("addset_range").equals("set"))

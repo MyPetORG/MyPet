@@ -31,6 +31,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.event.*;
 import java.io.File;
 import java.util.List;
@@ -401,6 +402,7 @@ public class SkilltreeCreator
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
         skilltreeTreeModel = new DefaultTreeModel(root);
         skilltreeTree = new JTree(skilltreeTreeModel);
+        skilltreeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         createRightclickMenu();
 

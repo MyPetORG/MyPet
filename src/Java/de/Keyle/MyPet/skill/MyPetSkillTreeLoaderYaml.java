@@ -61,11 +61,6 @@ public class MyPetSkillTreeLoaderYaml
 
             if (!skillFile.exists())
             {
-                if (!skillTreeMobType.getMobTypeName().equals("default"))
-                {
-                    addDefault(skillTreeMobType);
-                }
-                manageInheritance(skillTreeMobType);
                 continue;
             }
 
@@ -94,7 +89,6 @@ public class MyPetSkillTreeLoaderYaml
             {
                 String inherit = MWConfig.getConfig().getString("skilltrees." + skillTreeName + ".inherit", "%#_DeFaUlT_#%");
                 MyPetSkillTree skillTree;
-                int place = skillTreeMobType.getNextPlace();
                 if (!inherit.equals("%#_DeFaUlT_#%"))
                 {
                     skillTree = new MyPetSkillTree(skillTreeName, inherit);
@@ -126,66 +120,6 @@ public class MyPetSkillTreeLoaderYaml
                         }
                     }
                     skillTreeMobType.addSkillTree(skillTree);
-                }
-            }
-            if (!skillTreeMobType.getMobTypeName().equals("default"))
-            {
-                addDefault(skillTreeMobType);
-            }
-            manageInheritance(skillTreeMobType);
-        }
-    }
-
-    private static void addDefault(MyPetSkillTreeMobType skillTreeMobType)
-    {
-        MyPetSkillTreeMobType defaultSkillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName("default");
-        for (String skillTreeName : defaultSkillTreeMobType.getSkillTreeNames())
-        {
-            if (!skillTreeMobType.hasSkillTree(skillTreeName))
-            {
-                MyPetSkillTree defaultSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName);
-                MyPetSkillTree newSkillTree = new MyPetSkillTree(skillTreeName);
-
-                for (MyPetSkillTreeLevel level : defaultSkillTree.getLevelList())
-                {
-                    for (MyPetSkillTreeSkill skill : level.getSkills())
-                    {
-                        if (!skill.isAddedByInheritance())
-                        {
-                            MyPetSkillTreeSkill skillClone = skill.cloneSkill();
-                            skillClone.setIsInherited(true);
-                            newSkillTree.addSkillToLevel(level.getLevel(), skillClone);
-                        }
-                    }
-                }
-                skillTreeMobType.addSkillTree(newSkillTree);
-            }
-
-        }
-    }
-
-    private static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType)
-    {
-        for (String skillTreeName : skillTreeMobType.getSkillTreeNames())
-        {
-            MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(skillTreeName);
-            if (skillTree.hasInheritance())
-            {
-                if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
-                {
-                    MyPetSkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
-                    for (MyPetSkillTreeLevel level : skillTreeInherit.getLevelList())
-                    {
-                        for (MyPetSkillTreeSkill skill : level.getSkills())
-                        {
-                            if (!skill.isAddedByInheritance())
-                            {
-                                MyPetSkillTreeSkill skillClone = skill.cloneSkill();
-                                skillClone.setIsInherited(true);
-                                skillTree.addSkillToLevel(level.getLevel(), skillClone);
-                            }
-                        }
-                    }
                 }
             }
         }

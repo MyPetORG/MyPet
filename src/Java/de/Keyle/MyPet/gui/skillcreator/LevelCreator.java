@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -545,6 +546,7 @@ public class LevelCreator
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
         skillTreeTreeModel = new DefaultTreeModel(root);
         skillTreeTree = new JTree(skillTreeTreeModel);
+        skillTreeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         inheritanceComboBoxModel = new DefaultComboBoxModel();
         inheritanceComboBox = new JComboBox(inheritanceComboBoxModel);

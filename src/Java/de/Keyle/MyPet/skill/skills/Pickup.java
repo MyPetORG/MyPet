@@ -36,6 +36,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
+import java.util.Locale;
+
 @SkillName("Pickup")
 @SkillProperties(
         parameterNames = {"range", "addset_range"},
@@ -97,7 +99,7 @@ public class Pickup extends MyPetGenericSkill
         String html = super.getHtml();
         if (getProperties().hasKey("range"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getDouble("range") + "\"");
+            html = html.replace("value=\"0.00\"", "value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
             if (getProperties().hasKey("addset_range"))
             {
                 if (getProperties().getString("addset_range").equals("set"))
