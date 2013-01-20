@@ -150,6 +150,7 @@ public class MyPetPlugin extends JavaPlugin
             MyPetUtil.getDebugLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
             MyPetUtil.getDebugLogger().warning("MyPet disabled!");
             MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
+            checkForUpdates(minecraftVersion);
             this.setEnabled(false);
             return;
         }
@@ -160,23 +161,7 @@ public class MyPetPlugin extends JavaPlugin
 
         debugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
-        UpdateCheck updateCheck = new UpdateCheck();
-        if (MyPetConfig.checkForUpdates)
-        {
-            if (updateCheck.isUpdateAvailable(CompatibleMinecraftVersion, MyPetVersion))
-            {
-                MyPetLogger.write(ChatColor.MAGIC + "Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
-                MyPetUtil.getDebugLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
-            }
-            else
-            {
-                MyPetUtil.getDebugLogger().info("No Update available");
-            }
-        }
-        else
-        {
-            MyPetUtil.getDebugLogger().info("Updates not activated");
-        }
+        checkForUpdates(CompatibleMinecraftVersion);
 
         MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
         for (EntityType ET : MyPetExperience.mobExp.keySet())
@@ -421,7 +406,6 @@ public class MyPetPlugin extends JavaPlugin
         }
 
         HeroesDamageFix.reset();
-        AncientRpgDamageFix.findAncientRpgPlugin();
 
         debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
         MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.GREEN + " ENABLED");
@@ -473,6 +457,32 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Fire.class);
         MyPetSkills.registerSkill(Beacon.class);
         MyPetSkills.registerSkill(Wither.class);
+    }
+
+    public static boolean checkForUpdates(String compatibleMinecraftVersion)
+    {
+        UpdateCheck updateCheck = new UpdateCheck();
+        if (MyPetConfig.checkForUpdates)
+        {
+            if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion))
+            {
+                MyPetLogger.write(ChatColor.RED + "Update available!: " + ChatColor.RESET + updateCheck.getLastAvailableUpdate().getTitle());
+                MyPetUtil.getDebugLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
+                return true;
+            }
+            else
+            {
+                MyPetLogger.write(ChatColor.GREEN + "No" + ChatColor.RESET + " Update available.");
+                MyPetUtil.getDebugLogger().info("No Update available");
+                return false;
+            }
+        }
+        else
+        {
+            MyPetLogger.write("Update-Check " + ChatColor.YELLOW + "disabled" + ChatColor.RESET + ".");
+            MyPetUtil.getDebugLogger().info("Updates not activated");
+            return false;
+        }
     }
 
     int loadPets(File f)
