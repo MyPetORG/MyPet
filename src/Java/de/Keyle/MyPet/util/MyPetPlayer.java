@@ -86,6 +86,26 @@ public class MyPetPlayer implements Scheduler
         return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin");
     }
 
+    public boolean hasMyPet()
+    {
+        return MyPetList.hasMyPet(playerName);
+    }
+
+    public MyPet getMyPet()
+    {
+        return MyPetList.getMyPet(playerName);
+    }
+
+    public boolean hasInactiveMyPets()
+    {
+        return MyPetList.hasInactiveMyPets(playerName);
+    }
+
+    public List<InactiveMyPet> getInactiveMyPets()
+    {
+        return MyPetList.getInactiveMyPets(playerName);
+    }
+
     public Player getPlayer()
     {
         return MyPetUtil.getServer().getPlayer(playerName);
@@ -133,7 +153,7 @@ public class MyPetPlayer implements Scheduler
         {
             return;
         }
-        if (MyPetList.hasMyPet(this.getPlayer()))
+        if (hasMyPet())
         {
             if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(this.getPlayer()).getPetType().getTypeName()))
             {
@@ -141,9 +161,9 @@ public class MyPetPlayer implements Scheduler
                 MyPetList.setMyPetInactive(this.getPlayer());
             }
         }
-        if (!MyPetList.hasMyPet(this.getPlayer()) && MyPetList.hasInactiveMyPets(this.getPlayer()))
+        if (!hasMyPet() && hasInactiveMyPets())
         {
-            for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this.getPlayer()))
+            for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
             {
                 if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
                 {
@@ -153,9 +173,9 @@ public class MyPetPlayer implements Scheduler
                 }
             }
         }
-        if (MyPetList.hasMyPet(this.getPlayer()))
+        if (hasMyPet())
         {
-            MyPet myPet = MyPetList.getMyPet(this.getPlayer());
+            MyPet myPet = getMyPet();
             if (myPet.status == PetState.Here)
             {
                 if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), this.getPlayer().getLocation()) > 75)
