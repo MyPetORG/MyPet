@@ -91,7 +91,7 @@ public class Control extends MyPetGenericSkill
         }
         if (prevMoveTo != null)
         {
-            if (MyPetUtil.getDistance2D(loc, prevMoveTo) > 1)
+            if (loc.distance(prevMoveTo) > 1)
             {
                 moveTo = loc;
                 prevMoveTo = loc;

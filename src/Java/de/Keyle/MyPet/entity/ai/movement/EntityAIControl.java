@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Control;
-import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.Scheduler;
 import net.minecraft.server.v1_4_R1.Navigation;
 import net.minecraft.server.v1_4_R1.PathfinderGoal;
@@ -73,7 +72,7 @@ public class EntityAIControl extends PathfinderGoal implements Scheduler
         if (control.getLocation(false) != null && moveTo != control.getLocation(false))
         {
             moveTo = control.getLocation();
-            timeToMove = (int) MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) / 3;
+            timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
             timeToMove = timeToMove < 3 ? 3 : timeToMove;
             MyPetPlugin.getPlugin().getTimer().addTask(this);
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
@@ -85,7 +84,7 @@ public class EntityAIControl extends PathfinderGoal implements Scheduler
             }
         }
 
-        if (!this.myPet.getCraftPet().canMove() || moveTo != null && MyPetUtil.getDistance2D(myPet.getLocation(), moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
+        if (!this.myPet.getCraftPet().canMove() || moveTo != null && myPet.getLocation().distance(moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
         {
             moveTo = null;
             MyPetPlugin.getPlugin().getTimer().removeTask(this);

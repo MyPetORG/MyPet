@@ -183,11 +183,6 @@ public class MyPetUtil
         }
     }
 
-    public static double getDistance2D(Location loc1, Location loc2)
-    {
-        return Math.sqrt(Math.pow(loc1.getX() - loc2.getX(), 2.0D) + Math.pow(loc1.getZ() - loc2.getZ(), 2.0D));
-    }
-
     public static String readFileAsString(String filePath) throws java.io.IOException
     {
         StringBuilder fileData = new StringBuilder(1000);

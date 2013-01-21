@@ -61,6 +61,7 @@ import de.Keyle.MyPet.util.configuration.YamlConfiguration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
@@ -110,7 +111,7 @@ public class MyPetPlugin extends JavaPlugin
         getTimer().stopTimer();
         MyPetList.clearList();
         MyPetLogger.setConsole(null);
-        getPlugin().getServer().getScheduler().cancelTasks(getPlugin());
+        Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         debugLogger.info("MyPet disabled!");
     }
 
@@ -426,7 +427,7 @@ public class MyPetPlugin extends JavaPlugin
                         {
                             player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                         }
-                        else if (MyPetUtil.getDistance2D(myPet.getLocation(), player.getLocation()) < 75)
+                        else if (myPet.getLocation().distance(player.getLocation()) < 75)
                         {
                             myPet.createPet();
                         }
@@ -548,7 +549,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
-            inactiveMyPet.setLocation(new Location(MyPetUtil.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
             inactiveMyPet.setRespawnTime(petRespawnTime);
@@ -607,7 +608,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(wolfOwner));
 
-            inactiveMyPet.setLocation(new Location(MyPetUtil.getServer().getWorld(wolfWorld) != null ? MyPetUtil.getServer().getWorld(wolfWorld) : MyPetUtil.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? MyPetUtil.getServer().getWorld(wolfWorld) : MyPetUtil.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
             inactiveMyPet.setHealth(wolfHealthNow);
             inactiveMyPet.setPetName(wolfName);
             inactiveMyPet.setExp(wolfExp);
@@ -703,7 +704,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBTlist.add(petNBT);
             petCount++;
         }
-        String[] version = plugin.getDescription().getVersion().split(" \\(");
+        String[] version = this.getDescription().getVersion().split(" \\(");
         nbtConfiguration.getNBTTagCompound().setString("Version", version[0]);
         nbtConfiguration.getNBTTagCompound().setBoolean("CleanShutdown", shutdown);
         nbtConfiguration.getNBTTagCompound().set("Pets", petNBTlist);

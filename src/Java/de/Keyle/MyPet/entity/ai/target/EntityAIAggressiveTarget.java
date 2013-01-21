@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.EntityLiving;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
 import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
@@ -68,7 +67,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                             EntityLiving entityLiving = (EntityLiving) entityObj;
                             Location loc1 = entityLiving.getBukkitEntity().getLocation();
                             Location loc2 = petEntity.getBukkitEntity().getLocation();
-                            if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && MyPetUtil.getDistance2D(loc1, loc2) < 10)
+                            if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && loc1.distance(loc2) < 10)
                             {
                                 if (entityLiving instanceof EntityPlayer)
                                 {

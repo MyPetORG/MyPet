@@ -125,7 +125,7 @@ public class MyPetPlayerListener implements Listener
             {
                 event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
             }
-            else if (MyPetUtil.getDistance2D(myPet.getLocation(), event.getPlayer().getLocation()) < 75 && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
+            else if (myPet.getLocation().distance(event.getPlayer().getLocation()) < 75 && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld())
             {
                 myPet.createPet();
             }

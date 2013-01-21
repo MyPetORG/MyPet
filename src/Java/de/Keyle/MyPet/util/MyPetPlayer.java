@@ -178,7 +178,7 @@ public class MyPetPlayer implements Scheduler
             MyPet myPet = getMyPet();
             if (myPet.status == PetState.Here)
             {
-                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || MyPetUtil.getDistance2D(myPet.getLocation(), this.getPlayer().getLocation()) > 75)
+                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
                 {
                     if (!myPet.getCraftPet().canMove())
                     {
