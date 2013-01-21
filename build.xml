@@ -114,7 +114,7 @@
         <copydir src="${MyPet.resources.dir}" dest="${MyPet.output.dir.build}/resources" />
         <copydir src="${MyPet.html.dir}" dest="${MyPet.output.dir.build}/html" />
         <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.output.dir.build}/plugin.yml" />
-        <copy file="${basedir}/src/default.yml" tofile="${MyPet.output.dir.build}/default.yml" />
+        <copy file="${basedir}/src/NBT/skilltrees/default.st" tofile="${MyPet.output.dir.build}/skilltrees/default.st" />
         <unjar src="${idea.lib.dir}/forms_rt.jar" dest="${MyPet.output.dir.build}">
             <patternset>
                 <include name="com/intellij/uiDesigner/core/*.class" />

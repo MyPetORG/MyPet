@@ -69,8 +69,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -205,14 +204,13 @@ public class MyPetPlugin extends JavaPlugin
 
         registerSkills();
 
-        /*
-        File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
+        File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
 
         if (!defaultSkillConfig.exists())
         {
             try
             {
-                InputStream template = getPlugin().getResource("default.yml");
+                InputStream template = getPlugin().getResource("skilltrees/default.st");
                 OutputStream out = new FileOutputStream(defaultSkillConfig);
 
                 byte[] buf = new byte[1024];
@@ -224,7 +222,7 @@ public class MyPetPlugin extends JavaPlugin
                 template.close();
                 out.close();
                 MyPetLogger.write("Default skilltree configfile created.");
-                debugLogger.info("created default.yml");
+                debugLogger.info("created default.st");
             }
             catch (IOException ex)
             {
@@ -232,7 +230,6 @@ public class MyPetPlugin extends JavaPlugin
                 debugLogger.info("unable to create default.yml");
             }
         }
-        */
 
         MyPetSkillTreeLoaderYaml.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
         MyPetSkillTreeLoader.saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
