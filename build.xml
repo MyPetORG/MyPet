@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
   ~ Copyright (C) 2011-2013 Keyle
   ~
   ~ This file is part of MyPet
@@ -19,7 +21,9 @@
 
 <project name="MyPet" default="Main" basedir=".">
 
-    <!-- Setting custom vars (only used when properties not set in IDE) --><!--
+    <!-- Setting custom vars (only used when properties not set in IDE) -->
+
+    <!--
     <property name="idea.lib.dir" location="" />
     <property name="MyPet.lib.dir" location="" />
     <property name="MyPet.test.output.dir" location="" />
