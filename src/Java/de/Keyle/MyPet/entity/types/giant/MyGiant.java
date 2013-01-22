@@ -19,10 +19,15 @@
 
 package de.Keyle.MyPet.entity.types.giant;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import org.bukkit.Material;
 
+import static org.bukkit.Material.*;
+
+@MyPetInfo(food = {ROTTEN_FLESH})
 public class MyGiant extends MyPet
 {
     public MyGiant(MyPetPlayer petOwner)

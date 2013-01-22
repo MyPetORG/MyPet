@@ -17,33 +17,29 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.types.cavespider;
+package de.Keyle.MyPet.test.entity;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetPlayer;
+import org.junit.Test;
 
-import static org.bukkit.Material.ROTTEN_FLESH;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-@MyPetInfo(food = {ROTTEN_FLESH})
-public class MyCaveSpider extends MyPet
+public class MyPetInfoTest
 {
-    public MyCaveSpider(MyPetPlayer petOwner)
+    @Test
+    public void testMyPetInfo()
     {
-        super(petOwner);
-        this.petName = "Cave Spider";
-    }
-
-    @Override
-    public MyPetType getPetType()
-    {
-        return MyPetType.CaveSpider;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MyCaveSpider{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + "}";
+        for (MyPetType petType : MyPetType.values())
+        {
+            Class<? extends MyPet> entityClass = petType.getMyPetClass();
+            MyPetInfo pi = entityClass.getAnnotation(MyPetInfo.class);
+            assertNotNull(pi);
+            assertTrue(pi.walkSpeed() > 0);
+            assertTrue(pi.hp() > 0);
+            assertTrue(pi.damage() >= 0);
+        }
     }
 }

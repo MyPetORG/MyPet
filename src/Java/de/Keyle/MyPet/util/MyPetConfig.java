@@ -20,33 +20,10 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.entity.types.bat.MyBat;
-import de.Keyle.MyPet.entity.types.blaze.MyBlaze;
-import de.Keyle.MyPet.entity.types.cavespider.MyCaveSpider;
-import de.Keyle.MyPet.entity.types.chicken.MyChicken;
-import de.Keyle.MyPet.entity.types.cow.MyCow;
-import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
-import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
-import de.Keyle.MyPet.entity.types.giant.MyGiant;
-import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
-import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
-import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
-import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
-import de.Keyle.MyPet.entity.types.pig.MyPig;
-import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
-import de.Keyle.MyPet.entity.types.sheep.MySheep;
-import de.Keyle.MyPet.entity.types.silverfish.MySilverfish;
-import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
-import de.Keyle.MyPet.entity.types.slime.MySlime;
-import de.Keyle.MyPet.entity.types.snowman.MySnowman;
-import de.Keyle.MyPet.entity.types.spider.MySpider;
-import de.Keyle.MyPet.entity.types.villager.MyVillager;
-import de.Keyle.MyPet.entity.types.witch.MyWitch;
-import de.Keyle.MyPet.entity.types.wolf.MyWolf;
-import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -131,60 +108,14 @@ public class MyPetConfig
 
         for (MyPetType petType : MyPetType.values())
         {
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".Damage", 2);
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", 20);
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", 0.3F);
+            MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
+
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".Damage", pi.damage());
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
         }
-
-        setProperty("MyPet.Pets.Bat.Food", Material.SPIDER_EYE.getId());
-        setProperty("MyPet.Pets.Blaze.Food", Material.SULPHUR.getId());
-        setProperty("MyPet.Pets.CaveSpider.Food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.Pets.Chicken.Food", Material.SEEDS.getId());
-        setProperty("MyPet.Pets.Cow.Food", Material.WHEAT.getId());
-        setProperty("MyPet.Pets.Creeper.Food", Material.SULPHUR.getId());
-        setProperty("MyPet.Pets.Enderman.Food", Material.SOUL_SAND.getId());
-        setProperty("MyPet.Pets.Giant.Food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.Pets.IronGolem.Food", Material.IRON_INGOT.getId());
-        setProperty("MyPet.Pets.MagmaCube.Food", Material.REDSTONE.getId());
-        setProperty("MyPet.Pets.Mooshroom.Food", Material.WHEAT.getId());
-        setProperty("MyPet.Pets.Ocelot.Food", Material.RAW_FISH.getId());
-        setProperty("MyPet.Pets.Pig.Food", Material.CARROT_ITEM.getId());
-        setProperty("MyPet.Pets.PigZombie.Food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.Pets.Sheep.Food", Material.WHEAT.getId());
-        setProperty("MyPet.Pets.Silverfish.Food", Material.SUGAR.getId());
-        setProperty("MyPet.Pets.Skeleton.Food", Material.BONE.getId());
-        setProperty("MyPet.Pets.Slime.Food", Material.SUGAR.getId());
-        setProperty("MyPet.Pets.Snowman.Food", Material.CARROT.getId() + "," + Material.SNOW_BALL.getId());
-        setProperty("MyPet.Pets.Spider.Food", Material.ROTTEN_FLESH.getId());
-        setProperty("MyPet.Pets.Villager.Food", Material.APPLE.getId());
-        setProperty("MyPet.Pets.Wolf.Food", Material.RAW_BEEF.getId() + "," + Material.RAW_CHICKEN.getId());
-        setProperty("MyPet.Pets.Witch.Food", Material.APPLE.getId());
-        setProperty("MyPet.Pets.Zombie.Food", Material.ROTTEN_FLESH.getId());
-
-        setProperty("MyPet.Pets.Bat.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Blaze.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Chicken.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Cow.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Creeper.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Enderman.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Giant.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name());
-        setProperty("MyPet.Pets.MagmaCube.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Ocelot.LeashFlags", LeashFlag.Tamed.name());
-        setProperty("MyPet.Pets.Pig.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.PigZombie.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Sheep.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Silverfish.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Skeleton.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Slime.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Snowman.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Villager.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Witch.LeashFlags", LeashFlag.LowHp.name());
-        setProperty("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name());
-        setProperty("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name());
 
         for (EntityType entityType : MyPetExperience.mobExp.keySet())
         {
@@ -245,60 +176,14 @@ public class MyPetConfig
 
         for (MyPetType petType : MyPetType.values())
         {
-            MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", 20));
-            MyPet.setStartDamage(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".Damage", 2));
-            MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", 0.3F));
+            MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
+
+            MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
+            MyPet.setStartDamage(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".Damage", pi.damage()));
+            MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
+            seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
+            seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
         }
-
-        seperateFood(MyBat.class, config.getString("MyPet.Pets.Bat.Food", "375"));
-        seperateFood(MyBlaze.class, config.getString("MyPet.Pets.Blaze.Food", "289"));
-        seperateFood(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.Food", "367"));
-        seperateFood(MyChicken.class, config.getString("MyPet.Pets.Chicken.Food", "295"));
-        seperateFood(MyCow.class, config.getString("MyPet.Pets.Cow.Food", "296"));
-        seperateFood(MyCreeper.class, config.getString("MyPet.Pets.Creeper.Food", "289"));
-        seperateFood(MyEnderman.class, config.getString("MyPet.Pets.Enderman.Food", "88"));
-        seperateFood(MyGiant.class, config.getString("MyPet.Pets.Giant.Food", "367"));
-        seperateFood(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.Food", "265"));
-        seperateFood(MyMagmaCube.class, config.getString("MyPet.Pets.MagmaCube.Food", "331"));
-        seperateFood(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.Food", "296"));
-        seperateFood(MyOcelot.class, config.getString("MyPet.Pets.Ocelot.Food", "249"));
-        seperateFood(MyPig.class, config.getString("MyPet.Pets.Pig.Food", "391"));
-        seperateFood(MyPigZombie.class, config.getString("MyPet.Pets.PigZombie.Food", "367"));
-        seperateFood(MySheep.class, config.getString("MyPet.Pets.Sheep.Food", "296"));
-        seperateFood(MySilverfish.class, config.getString("MyPet.Pets.Silverfish.Food", "353"));
-        seperateFood(MySkeleton.class, config.getString("MyPet.Pets.Skeleton.Food", "352"));
-        seperateFood(MySlime.class, config.getString("MyPet.Pets.Slime.Food", "353"));
-        seperateFood(MySnowman.class, config.getString("MyPet.Pets.Snowman.Food", "332,391"));
-        seperateFood(MySpider.class, config.getString("MyPet.Pets.Spider.Food", "367"));
-        seperateFood(MyVillager.class, config.getString("MyPet.Pets.Villager.Food", "260"));
-        seperateFood(MyWitch.class, config.getString("MyPet.Pets.Witch.Food", "260"));
-        seperateFood(MyWolf.class, config.getString("MyPet.Pets.Wolf.Food", "363,365"));
-        seperateFood(MyZombie.class, config.getString("MyPet.Pets.Zombie.Food", "367"));
-
-        seperateLeashFlags(MyBat.class, config.getString("MyPet.Pets.Bat.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyBlaze.class, config.getString("MyPet.Pets.Blaze.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyCaveSpider.class, config.getString("MyPet.Pets.CaveSpider.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyChicken.class, config.getString("MyPet.Pets.Chicken.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyCow.class, config.getString("MyPet.Pets.Cow.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyCreeper.class, config.getString("MyPet.Pets.Creeper.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyEnderman.class, config.getString("MyPet.Pets.Enderman.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyGiant.class, config.getString("MyPet.Pets.Giant.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyIronGolem.class, config.getString("MyPet.Pets.IronGolem.LeashFlags", LeashFlag.UserCreated.name()));
-        seperateLeashFlags(MyMagmaCube.class, config.getString("MyPet.Pets.MagmaCube.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyMooshroom.class, config.getString("MyPet.Pets.Mooshroom.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyOcelot.class, config.getString("MyPet.Pets.Ocelot.LeashFlags", LeashFlag.Tamed.name()));
-        seperateLeashFlags(MyPig.class, config.getString("MyPet.Pets.Pig.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyPigZombie.class, config.getString("MyPet.Pets.PigZombie.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySheep.class, config.getString("MyPet.Pets.Sheep.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySilverfish.class, config.getString("MyPet.Pets.Silverfish.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySkeleton.class, config.getString("MyPet.Pets.Skeleton.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySlime.class, config.getString("MyPet.Pets.Slime.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySnowman.class, config.getString("MyPet.Pets.Snowman.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MySpider.class, config.getString("MyPet.Pets.Spider.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyVillager.class, config.getString("MyPet.Pets.Villager.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyWitch.class, config.getString("MyPet.Pets.Witch.LeashFlags", LeashFlag.LowHp.name()));
-        seperateLeashFlags(MyWolf.class, config.getString("MyPet.Pets.Wolf.LeashFlags", LeashFlag.Tamed.name()));
-        seperateLeashFlags(MyZombie.class, config.getString("MyPet.Pets.Zombie.LeashFlags", LeashFlag.LowHp.name() + ", " + LeashFlag.Adult.name()));
 
         if (config.getStringList("MyPet.exp.active") != null)
         {
@@ -337,6 +222,20 @@ public class MyPetConfig
         }
     }
 
+    private static String linkFood(Material[] foodTypes)
+    {
+        String linkedFood = "";
+        for(Material foodType : foodTypes)
+        {
+            if(!linkedFood.equalsIgnoreCase(""))
+            {
+                linkedFood += ",";
+            }
+            linkedFood += foodType.getId();
+        }
+        return linkedFood;
+    }
+
     private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString)
     {
         foodString = foodString.replaceAll("\\s", "");
@@ -365,6 +264,20 @@ public class MyPetConfig
                 }
             }
         }
+    }
+
+    private static String linkLeashFlags(LeashFlag[] leashFlags)
+    {
+        String linkedLeashFlags = "";
+        for(LeashFlag leashFlag : leashFlags)
+        {
+            if(!linkedLeashFlags.equalsIgnoreCase(""))
+            {
+                linkedLeashFlags += ",";
+            }
+            linkedLeashFlags+= leashFlag.name();
+        }
+        return linkedLeashFlags;
     }
 
     private static void seperateLeashFlags(Class<? extends MyPet> myPetClass, String leashFlagString)

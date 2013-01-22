@@ -19,10 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.silverfish;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
+import static org.bukkit.Material.SUGAR;
+
+@MyPetInfo(food = {SUGAR})
 public class MySilverfish extends MyPet
 {
     public MySilverfish(MyPetPlayer petOwner)

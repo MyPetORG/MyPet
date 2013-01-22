@@ -19,10 +19,15 @@
 
 package de.Keyle.MyPet.entity.types.irongolem;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
+import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.UserCreated;
+import static org.bukkit.Material.*;
+
+@MyPetInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
 public class MyIronGolem extends MyPet
 {
     public MyIronGolem(MyPetPlayer petOwner)

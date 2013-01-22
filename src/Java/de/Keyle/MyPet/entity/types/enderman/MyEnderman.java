@@ -20,11 +20,16 @@
 package de.Keyle.MyPet.entity.types.enderman;
 
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.bukkit.Material;
 
+import static org.bukkit.Material.*;
+
+@MyPetInfo(food = {SOUL_SAND})
 public class MyEnderman extends MyPet
 {
 

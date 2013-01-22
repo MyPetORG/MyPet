@@ -19,11 +19,15 @@
 
 package de.Keyle.MyPet.entity.types.villager;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
+import static org.bukkit.Material.APPLE;
+
+@MyPetInfo(food = {APPLE})
 public class MyVillager extends MyPet
 {
     protected int profession = 0;

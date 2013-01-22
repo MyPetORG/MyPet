@@ -19,10 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.spider;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
+import static org.bukkit.Material.ROTTEN_FLESH;
+
+@MyPetInfo(food = {ROTTEN_FLESH})
 public class MySpider extends MyPet
 {
     public MySpider(MyPetPlayer petOwner)

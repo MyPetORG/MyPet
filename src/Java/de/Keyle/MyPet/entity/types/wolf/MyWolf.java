@@ -19,12 +19,18 @@
 
 package de.Keyle.MyPet.entity.types.wolf;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.DyeColor;
 
+import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.*;
+import static org.bukkit.Material.RAW_BEEF;
+import static org.bukkit.Material.RAW_CHICKEN;
+
+@MyPetInfo(food = {RAW_BEEF,RAW_CHICKEN}, leashFlags = {Tamed})
 public class MyWolf extends MyPet
 {
     protected boolean isSitting = false;

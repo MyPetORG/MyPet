@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.entity.types.skeleton;
 
 import de.Keyle.MyPet.entity.EquipmentSlot;
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -30,6 +31,10 @@ import net.minecraft.server.v1_4_R1.NBTTagList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.bukkit.Material.BONE;
+import static org.bukkit.Material.SEEDS;
+
+@MyPetInfo(food = {BONE})
 public class MySkeleton extends MyPet
 {
     protected boolean isWither = false;

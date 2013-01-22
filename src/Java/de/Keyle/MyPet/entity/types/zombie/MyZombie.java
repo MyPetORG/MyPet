@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.entity.types.zombie;
 
 import de.Keyle.MyPet.entity.EquipmentSlot;
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -30,6 +31,9 @@ import net.minecraft.server.v1_4_R1.NBTTagList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.bukkit.Material.ROTTEN_FLESH;
+
+@MyPetInfo(food = {ROTTEN_FLESH})
 public class MyZombie extends MyPet
 {
     protected boolean isBaby = false;

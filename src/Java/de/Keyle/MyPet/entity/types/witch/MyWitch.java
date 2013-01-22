@@ -19,10 +19,14 @@
 
 package de.Keyle.MyPet.entity.types.witch;
 
+import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
+import static org.bukkit.Material.MUSHROOM_SOUP;
+
+@MyPetInfo(food = {MUSHROOM_SOUP})
 public class MyWitch extends MyPet
 {
     public MyWitch(MyPetPlayer petOwner)
