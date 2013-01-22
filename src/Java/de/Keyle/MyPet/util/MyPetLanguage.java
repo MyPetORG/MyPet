@@ -131,7 +131,7 @@ public class MyPetLanguage
         addString("Msg_Release", "MyPet.Message.release", "%aqua%%petname%%white% is now %green%free%white% . . .");
         addString("Msg_RespawnAuto", "MyPet.Message.respawnauto", "Auto respawn: %gold%%status%%white%.");
         addString("Msg_RespawnAutoMin", "MyPet.Message.respawnautomin", "Set minimal auto respawn time to %gold%%time%%white%.");
-        addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%white% respawn in %gold%%time%%white% sec");
+        addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%white% will respawn in %gold%%time%%white% sec.");
         addString("Msg_RespawnNoMoney", "MyPet.Message.respawnnomoney", "You need %red%%costs%%white% to let respawn %aqua%%petname%%white%!");
         addString("Msg_RespawnPaid", "MyPet.Message.respawnpaid", "Respawn fee (%gold%%costs%%white%) for %aqua%%petname%%white% paid.");
         addString("Msg_RespawnShow", "MyPet.Message.respawnshow", "Respawn fee for %aqua%%petname%%white%: %gold%%costs%%white% (%color%auto%white%)");
