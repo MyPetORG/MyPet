@@ -31,16 +31,16 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class MyPetPvP
 {
-    public static boolean useTowny = true;
-    public static boolean useFactions = true;
-    public static boolean useWorldGuard = true;
-    public static boolean useCitizens = true;
-    public static boolean useHeroes = true;
-    public static boolean useRegios = true;
-    public static boolean useMobArena = true;
-    public static boolean useMcMMO = true;
-    public static boolean useResidence = true;
-    public static boolean useAncientRPG = true;
+    public static boolean USE_Towny = true;
+    public static boolean USE_Factions = true;
+    public static boolean USE_WorldGuard = true;
+    public static boolean USE_Citizens = true;
+    public static boolean USE_Heroes = true;
+    public static boolean USE_Regios = true;
+    public static boolean USE_MobArena = true;
+    public static boolean USE_McMMO = true;
+    public static boolean USE_Residence = true;
+    public static boolean USE_AncientRPG = true;
 
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
@@ -81,7 +81,7 @@ public class MyPetPvP
             searchedCitizens = true;
             pluginCitizens = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Citizens");
         }
-        if (useCitizens && pluginCitizens)
+        if (USE_Citizens && pluginCitizens)
         {
             if (defender.hasMetadata("NPC"))
             {
@@ -102,7 +102,7 @@ public class MyPetPvP
                 pluginWorldGuard = (WorldGuardPlugin) MyPetUtil.getServer().getPluginManager().getPlugin("WorldGuard");
             }
         }
-        if (useWorldGuard && pluginWorldGuard != null)
+        if (USE_WorldGuard && pluginWorldGuard != null)
         {
             RegionManager mgr = pluginWorldGuard.getGlobalRegionManager().get(location.getWorld());
             Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
@@ -120,7 +120,7 @@ public class MyPetPvP
             searchedFactions = true;
             pluginFactions = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Factions");
         }
-        if (useFactions && pluginFactions)
+        if (USE_Factions && pluginFactions)
         {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
             return P.p.entityListener.canDamagerHurtDamagee(sub, false);
@@ -135,7 +135,7 @@ public class MyPetPvP
             searchedTowny = true;
             pluginTowny = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Towny");
         }
-        if (useTowny && pluginTowny)
+        if (USE_Towny && pluginTowny)
         {
             try
             {
@@ -164,7 +164,7 @@ public class MyPetPvP
                 pluginHeroes = (Heroes) MyPetUtil.getServer().getPluginManager().getPlugin("Heroes");
             }
         }
-        if (useHeroes && pluginHeroes != null)
+        if (USE_Heroes && pluginHeroes != null)
         {
             Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
             Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
@@ -198,7 +198,7 @@ public class MyPetPvP
                 pluginRegios = (RegiosAPI) MyPetUtil.getServer().getPluginManager().getPlugin("Regios");
             }
         }
-        if (useRegios && pluginRegios != null)
+        if (USE_Regios && pluginRegios != null)
         {
             for (Region region : pluginRegios.getRegions(defender.getLocation()))
             {
@@ -219,7 +219,7 @@ public class MyPetPvP
             searchedResidence = true;
             pluginResidence = MyPetUtil.getServer().getPluginManager().isPluginEnabled("mcMMO");
         }
-        if (useResidence && pluginResidence)
+        if (USE_Residence && pluginResidence)
         {
             FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
             return flagPermissions.has("pvp", true);
@@ -237,7 +237,7 @@ public class MyPetPvP
                 pluginMobArena = new MobArenaHandler();
             }
         }
-        if (useMobArena && pluginMobArena != null)
+        if (USE_MobArena && pluginMobArena != null)
         {
             if (pluginMobArena.isPlayerInArena(defender))
             {
@@ -254,7 +254,7 @@ public class MyPetPvP
             searchedMcMMO = true;
             pluginMcMMO = MyPetUtil.getServer().getPluginManager().isPluginEnabled("mcMMO");
         }
-        if (useMcMMO && pluginMcMMO)
+        if (USE_McMMO && pluginMcMMO)
         {
             return !PartyAPI.inSameParty(attacker, defender);
         }
@@ -271,7 +271,7 @@ public class MyPetPvP
                 pluginAncientRPG = ApiManager.getApiManager();
             }
         }
-        if (useAncientRPG && pluginAncientRPG != null)
+        if (USE_AncientRPG && pluginAncientRPG != null)
         {
             AncientRPGParty party = pluginAncientRPG.getPlayerParty(attacker);
             if (party != null)

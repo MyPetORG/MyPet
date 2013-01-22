@@ -24,13 +24,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class MyPetEconomy
 {
-    public static boolean useEconomy = true;
+    public static boolean USE_ECONOMY = true;
     private static boolean searchedVaultEconomy = false;
     private static Economy economy = null;
 
     public static boolean canUseEconomy()
     {
-        if (!useEconomy)
+        if (!USE_ECONOMY)
         {
             return false;
         }
@@ -43,7 +43,7 @@ public class MyPetEconomy
 
     public static boolean canPay(MyPetPlayer petOwner, double costs)
     {
-        if (!useEconomy)
+        if (!USE_ECONOMY)
         {
             return true;
         }
@@ -60,7 +60,7 @@ public class MyPetEconomy
 
     public static boolean pay(MyPetPlayer petOwner, double costs)
     {
-        if (!useEconomy)
+        if (!USE_ECONOMY)
         {
             return true;
         }
@@ -85,7 +85,7 @@ public class MyPetEconomy
 
     public static void reset()
     {
-        useEconomy = false;
+        USE_ECONOMY = false;
         searchedVaultEconomy = false;
         economy = null;
     }

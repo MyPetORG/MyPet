@@ -30,7 +30,7 @@ import org.bukkit.Material;
 @SkillName("Control")
 public class Control extends MyPetGenericSkill
 {
-    public static Material item = Material.STRING;
+    public static Material ITEM = Material.STRING;
     private Location moveTo;
     private Location prevMoveTo;
     private boolean active = false;
@@ -54,7 +54,7 @@ public class Control extends MyPetGenericSkill
             active = true;
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", item.name()));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", ITEM.name()));
 
             }
         }

@@ -41,7 +41,7 @@ import org.bukkit.entity.Player;
 public class Inventory extends MyPetGenericSkill
 {
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
-    public static boolean creative = true;
+    public static boolean OPEN_IN_CREATIVEMODE = true;
     private int rows = 0;
 
     public Inventory(boolean addedByInheritance)
@@ -96,7 +96,7 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !creative && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin"))
+        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin"))
         {
             myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
         }

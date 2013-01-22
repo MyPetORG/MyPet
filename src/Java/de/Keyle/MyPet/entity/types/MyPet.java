@@ -101,7 +101,7 @@ public abstract class MyPet
     public MyPet(MyPetPlayer Owner)
     {
         this.petOwner = Owner;
-        if (MyPetConfig.automaticSkilltreeAssignment)
+        if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT)
         {
             if (MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
             {
@@ -117,7 +117,7 @@ public abstract class MyPet
         }
         skills = new MyPetSkills(this);
         experience = new MyPetExperience(this);
-        hungerTime = MyPetConfig.hungerSystemTime;
+        hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
     }
 
     public void setPetName(String newName)
@@ -140,15 +140,15 @@ public abstract class MyPet
         skills.reset();
         if (this.skillTree != null)
         {
-            if (this.getOwner().isMyPetAdmin() && MyPetConfig.skilltreeSwitchPenaltyAdmin)
+            if (this.getOwner().isMyPetAdmin() && MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_ADMIN)
             {
-                experience.removeExp(MyPetConfig.skilltreeSwitchPenaltyFixed);
-                experience.removeExp(experience.getExp() * MyPetConfig.skilltreeSwitchPenaltyPercent / 100.);
+                experience.removeExp(MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_FIXED);
+                experience.removeExp(experience.getExp() * MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
             }
             else
             {
-                experience.removeExp(MyPetConfig.skilltreeSwitchPenaltyFixed);
-                experience.removeExp(experience.getExp() * MyPetConfig.skilltreeSwitchPenaltyPercent / 100.);
+                experience.removeExp(MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_FIXED);
+                experience.removeExp(experience.getExp() * MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
             }
         }
         this.skillTree = skillTree;
@@ -182,7 +182,7 @@ public abstract class MyPet
             sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
             respawnTime = 0;
             createPet();
-            if (MyPetConfig.hungerSystem)
+            if (MyPetConfiguration.USE_HUNGER_SYSTEM)
             {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
             }
@@ -265,7 +265,7 @@ public abstract class MyPet
 
     public int getHungerValue()
     {
-        if (MyPetConfig.hungerSystem)
+        if (MyPetConfiguration.USE_HUNGER_SYSTEM)
         {
             return hunger;
         }
@@ -289,7 +289,7 @@ public abstract class MyPet
         {
             hunger = value;
         }
-        hungerTime = MyPetConfig.hungerSystemTime;
+        hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
 
         MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
         getServer().getPluginManager().callEvent(spoutEvent);
@@ -344,7 +344,7 @@ public abstract class MyPet
                 respawnTime--;
                 if (MyPetEconomy.canUseEconomy() && getOwner().hasAutoRespawnEnabled() && respawnTime >= getOwner().getAutoRespawnMin() && MyPetPermissions.has(getOwner().getPlayer(), "MyPet.user.respawn"))
                 {
-                    double cost = respawnTime * MyPetConfig.respawnCostFactor + MyPetConfig.respawnCostFixed;
+                    double cost = respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
                     if (MyPetEconomy.canPay(getOwner(), cost))
                     {
                         MyPetEconomy.pay(getOwner(), cost);
@@ -357,10 +357,10 @@ public abstract class MyPet
                     respawnPet();
                 }
             }
-            if (MyPetConfig.hungerSystem && hunger > 1 && --hungerTime <= 0)
+            if (MyPetConfiguration.USE_HUNGER_SYSTEM && hunger > 1 && --hungerTime <= 0)
             {
                 hunger--;
-                hungerTime = MyPetConfig.hungerSystemTime;
+                hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
 
                 MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
                 getServer().getPluginManager().callEvent(spoutEvent);

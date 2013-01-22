@@ -127,13 +127,13 @@ public class MyPetPlugin extends JavaPlugin
         }
         MyPetPvP.reset();
         MyPetEconomy.reset();
-        MyPetConfig.config = this.getConfig();
-        MyPetConfig.setDefault();
-        MyPetConfig.loadConfiguration();
+        MyPetConfiguration.config = this.getConfig();
+        MyPetConfiguration.setDefault();
+        MyPetConfiguration.loadConfiguration();
 
         if (debugLogger == null)
         {
-            debugLogger = new DebugLogger(MyPetConfig.debugLogger);
+            debugLogger = new DebugLogger(MyPetConfiguration.USE_DEBUG_LOGGER);
         }
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
@@ -321,7 +321,7 @@ public class MyPetPlugin extends JavaPlugin
         language.load();
 
 
-        if (MyPetConfig.levelSystem)
+        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
         {
             if (MyPetJSexp.setScriptPath(MyPetPlugin.plugin.getDataFolder().getPath() + File.separator + "exp.js"))
             {
@@ -354,7 +354,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         debugLogger.info("----------------------------");
 
-        if (MyPetConfig.sendMetrics)
+        if (MyPetConfiguration.SEND_METRICS)
         {
             debugLogger.info("Metrics is activated");
             try
@@ -461,7 +461,7 @@ public class MyPetPlugin extends JavaPlugin
     public static boolean checkForUpdates(String compatibleMinecraftVersion)
     {
         UpdateCheck updateCheck = new UpdateCheck();
-        if (MyPetConfig.checkForUpdates)
+        if (MyPetConfiguration.CHECK_FOR_UPDATES)
         {
             if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion))
             {

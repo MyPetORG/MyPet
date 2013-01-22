@@ -48,7 +48,7 @@ public class MyPetTimer
 
         timer = MyPetPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
         {
-            int autoSaveTimer = MyPetConfig.autoSaveTime;
+            int autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
 
             public void run()
             {
@@ -64,15 +64,15 @@ public class MyPetTimer
                 {
                     player.schedule();
                 }
-                if (resetTimer && MyPetConfig.autoSaveTime > 0)
+                if (resetTimer && MyPetConfiguration.AUTOSAVE_TIME > 0)
                 {
-                    autoSaveTimer = MyPetConfig.autoSaveTime;
+                    autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
                     resetTimer = false;
                 }
-                if (MyPetConfig.autoSaveTime > 0 && autoSaveTimer-- < 0)
+                if (MyPetConfiguration.AUTOSAVE_TIME > 0 && autoSaveTimer-- < 0)
                 {
                     MyPetPlugin.getPlugin().savePets(false);
-                    autoSaveTimer = MyPetConfig.autoSaveTime;
+                    autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
                 }
             }
         }, 0L, 20L);

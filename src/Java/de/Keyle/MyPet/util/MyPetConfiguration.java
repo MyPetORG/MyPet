@@ -32,31 +32,31 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 
-public class MyPetConfig
+public class MyPetConfiguration
 {
     public static FileConfiguration config;
 
-    public static Material leashItem = Material.STRING;
-    public static int passivePercentPerMonster = 25;
-    public static int respawnTimeFactor = 5;
-    public static int respawnTimeFixed = 0;
-    public static int autoSaveTime = 60;
-    public static int hungerSystemTime = 60;
-    public static int skilltreeSwitchPenaltyPercent = 5;
-    public static double skilltreeSwitchPenaltyFixed = 0.0;
-    public static double respawnCostFactor = 1.0;
-    public static double respawnCostFixed = 0.0;
-    public static boolean skilltreeSwitchPenaltyAdmin = false;
-    public static boolean automaticSkilltreeAssignment = true;
-    public static boolean chooseSkilltreeOnce = true;
-    public static boolean ownerCanAttackPet = false;
-    public static boolean levelSystem = true;
-    public static boolean hungerSystem = true;
-    public static boolean sendMetrics = true;
-    public static boolean checkForUpdates = false;
-    public static boolean superperms = false;
-    public static boolean debugLogger = true;
-    public static boolean inheritAlreadyInheritedSkills = false;
+    public static Material LEASH_ITEM = Material.STRING;
+    public static int PASSIVE_PERCENT_PER_MONSTER = 25;
+    public static int RESPAWN_TIME_FACTOR = 5;
+    public static int RESPAWN_TIME_FIXED = 0;
+    public static int AUTOSAVE_TIME = 60;
+    public static int HUNGER_SYSTEM_TIME = 60;
+    public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
+    public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
+    public static double RESPAWN_COSTS_FACTOR = 1.0;
+    public static double RESPAWN_COSTS_FIXED = 0.0;
+    public static boolean SKILLTREE_SWITCH_PENALTY_ADMIN = false;
+    public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = true;
+    public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
+    public static boolean OWNER_CAN_ATTACK_PET = false;
+    public static boolean USE_LEVEL_SYSTEM = true;
+    public static boolean USE_HUNGER_SYSTEM = true;
+    public static boolean SEND_METRICS = true;
+    public static boolean CHECK_FOR_UPDATES = false;
+    public static boolean USE_SUPERPERMS = false;
+    public static boolean USE_DEBUG_LOGGER = true;
+    public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
 
     public static void setDefault()
     {
@@ -128,51 +128,51 @@ public class MyPetConfig
 
     public static void loadConfiguration()
     {
-        leashItem = MyPetUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
-        Control.item = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
-        Ride.item = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
-        Beacon.hungerDecreaseTime = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
-        HPregeneration.healtregenTime = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
-        Inventory.creative = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+        LEASH_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
+        Control.ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
+        Ride.ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
+        Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
+        HPregeneration.START_REGENERATION_TIME = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
+        Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
 
-        skilltreeSwitchPenaltyFixed = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
-        skilltreeSwitchPenaltyPercent = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
-        skilltreeSwitchPenaltyAdmin = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
-        inheritAlreadyInheritedSkills = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
-        passivePercentPerMonster = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
-        respawnTimeFactor = config.getInt("MyPet.Respawn.Time.Factor", 5);
-        respawnTimeFixed = config.getInt("MyPet.Respawn.Time.Fixed", 0);
-        respawnCostFactor = config.getDouble("MyPet.Respawn.EconomyCost.Factor", 1.0);
-        respawnCostFixed = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
-        automaticSkilltreeAssignment = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
-        chooseSkilltreeOnce = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
-        levelSystem = config.getBoolean("MyPet.LevelSystem", true);
-        ownerCanAttackPet = config.getBoolean("MyPet.OwnerCanAttackPet", false);
-        hungerSystem = config.getBoolean("MyPet.HungerSystem.Active", true);
-        hungerSystemTime = config.getInt("MyPet.HungerSystem.Time", 60);
-        superperms = config.getBoolean("MyPet.Permissions.SuperPerms", false);
-        MyPetPermissions.useExtendedPermissions = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
-        sendMetrics = config.getBoolean("MyPet.SendMetrics", true);
-        checkForUpdates = config.getBoolean("MyPet.CheckForUpdates", false);
-        debugLogger = config.getBoolean("MyPet.DebugLogger", false);
-        MyPetEconomy.useEconomy = config.getBoolean("MyPet.Support.Vault.Economy", true);
-        MyPetPvP.useTowny = config.getBoolean("MyPet.Support.Towny", true);
-        MyPetPvP.useFactions = config.getBoolean("MyPet.Support.Factions", true);
-        MyPetPvP.useWorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
-        MyPetPvP.useCitizens = config.getBoolean("MyPet.Support.Citizens", true);
-        MyPetPvP.useHeroes = config.getBoolean("MyPet.Support.Heroes", true);
-        MyPetPvP.useMcMMO = config.getBoolean("MyPet.Support.mcMMO", true);
-        MyPetPvP.useMobArena = config.getBoolean("MyPet.Support.MobArena", true);
-        MyPetPvP.useRegios = config.getBoolean("MyPet.Support.Regios", true);
-        MyPetPvP.useResidence = config.getBoolean("MyPet.Support.Residence", true);
-        MyPetPvP.useAncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
+        SKILLTREE_SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
+        SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
+        SKILLTREE_SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
+        INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
+        PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
+        RESPAWN_TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Factor", 5);
+        RESPAWN_TIME_FIXED = config.getInt("MyPet.Respawn.Time.Fixed", 0);
+        RESPAWN_COSTS_FACTOR = config.getDouble("MyPet.Respawn.EconomyCost.Factor", 1.0);
+        RESPAWN_COSTS_FIXED = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
+        AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
+        CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
+        USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem", true);
+        OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
+        USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
+        HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
+        USE_SUPERPERMS = config.getBoolean("MyPet.Permissions.SuperPerms", false);
+        SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
+        CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
+        USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
+        MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
+        MyPetEconomy.USE_ECONOMY = config.getBoolean("MyPet.Support.Vault.Economy", true);
+        MyPetPvP.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
+        MyPetPvP.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);
+        MyPetPvP.USE_WorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
+        MyPetPvP.USE_Citizens = config.getBoolean("MyPet.Support.Citizens", true);
+        MyPetPvP.USE_Heroes = config.getBoolean("MyPet.Support.Heroes", true);
+        MyPetPvP.USE_McMMO = config.getBoolean("MyPet.Support.mcMMO", true);
+        MyPetPvP.USE_MobArena = config.getBoolean("MyPet.Support.MobArena", true);
+        MyPetPvP.USE_Regios = config.getBoolean("MyPet.Support.Regios", true);
+        MyPetPvP.USE_Residence = config.getBoolean("MyPet.Support.Residence", true);
+        MyPetPvP.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
 
-        MyPetExperience.lossPercent = config.getInt("MyPet.Exp.loss.Percent");
-        MyPetExperience.lossFixed = config.getDouble("MyPet.Exp.loss.Fixed");
+        MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent");
+        MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed");
 
         for (MyPetType petType : MyPetType.values())
         {

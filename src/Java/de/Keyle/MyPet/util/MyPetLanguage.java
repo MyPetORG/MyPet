@@ -62,7 +62,7 @@ public class MyPetLanguage
         // -- Messages -- -----------------------------------------------------------------------------------------------------------------------------------
         // --  A  --
         addString("Msg_AddBeacon", "MyPet.Message.addbeacon", "These buffs are now usable (range: %range% - duration: %duration%sec):");
-        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%white% can now be controlled with a %item%");
+        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%white% can now be controlled with a %ITEM%");
         addString("Msg_AddDamage", "MyPet.Message.adddamage", "%aqua%%petname%%white% has now %dmg% bonusdamage");
         addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%white% has now a max health of %maxhealth%HP");
         addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%white% regenerates now one HP every %sec%sec");

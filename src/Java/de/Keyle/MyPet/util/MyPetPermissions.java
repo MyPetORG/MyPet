@@ -30,7 +30,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class MyPetPermissions
 {
     private static Object permissions;
-    public static boolean useExtendedPermissions = false;
+    public static boolean USE_EXTENDET_PERMISSIONS = false;
 
     public enum PermissionsType
     {
@@ -68,7 +68,7 @@ public class MyPetPermissions
 
     public static boolean hasExtended(Player player, String node)
     {
-        if (useExtendedPermissions)
+        if (USE_EXTENDET_PERMISSIONS)
         {
             return has(player, node);
         }
@@ -104,7 +104,7 @@ public class MyPetPermissions
             permissionsMode = PermissionsType.NONE;
         }
 
-        if (permissionsMode == PermissionsType.NONE && MyPetConfig.superperms)
+        if (permissionsMode == PermissionsType.NONE && MyPetConfiguration.USE_SUPERPERMS)
         {
             permissionsMode = PermissionsType.Superperms;
             MyPetLogger.write(ChatColor.YELLOW + "\"Superperms\"" + ChatColor.RESET + " integration enabled!");

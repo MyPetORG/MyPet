@@ -135,7 +135,7 @@ public class UpdateCheck
         static final String TITLE = "title";
         static final String DESCRIPTION = "description";
         static final String PUB_DATE = "pubDate";
-        static final String ITEM = "item";
+        static final String ITEM = "ITEM";
 
         final URL url;
 

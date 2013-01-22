@@ -39,7 +39,7 @@ public class CommandRespawn implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                double costs = myPet.respawnTime * MyPetConfig.respawnCostFactor + MyPetConfig.respawnCostFixed;
+                double costs = myPet.respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
 
                 if (!MyPetEconomy.canUseEconomy())
                 {

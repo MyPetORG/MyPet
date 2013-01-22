@@ -45,7 +45,7 @@ import java.util.Map;
         parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Int, NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String})
 public class Beacon extends MyPetGenericSkill
 {
-    public static int hungerDecreaseTime = 60;
+    public static int HUNGER_DECREASE_TIME = 60;
 
     private TileEntityBeacon tileEntityBeacon;
 
@@ -347,10 +347,10 @@ public class Beacon extends MyPetGenericSkill
                 }
             }
 
-            if (hungerDecreaseTime > 0 && hungerDecreaseTimer-- < 0)
+            if (HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0)
             {
                 myPet.setHungerValue(myPet.getHungerValue() - 1);
-                hungerDecreaseTimer = hungerDecreaseTime;
+                hungerDecreaseTimer = HUNGER_DECREASE_TIME;
             }
         }
     }
@@ -426,7 +426,7 @@ public class Beacon extends MyPetGenericSkill
         {
             this.primaryEffectId = effectId;
             active = true;
-            hungerDecreaseTimer = hungerDecreaseTime;
+            hungerDecreaseTimer = HUNGER_DECREASE_TIME;
         }
         else
         {
@@ -449,7 +449,7 @@ public class Beacon extends MyPetGenericSkill
         {
             this.secondaryEffectId = effectId;
             active = true;
-            hungerDecreaseTimer = hungerDecreaseTime;
+            hungerDecreaseTimer = HUNGER_DECREASE_TIME;
         }
         else
         {

@@ -253,7 +253,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             }
             if (myPet.getSkills().isSkillActive("Ride"))
             {
-                if (itemStack.id == Ride.item.getId() && canMove())
+                if (itemStack.id == Ride.ITEM.getId() && canMove())
                 {
                     if (MyPetPermissions.hasExtended((Player) this.getOwner().getBukkitEntity(), "MyPet.user.extended.Ride"))
                     {
@@ -268,7 +268,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             }
             else if (myPet.getSkills().isSkillActive("Control"))
             {
-                if (itemStack.id == Control.item.getId())
+                if (itemStack.id == Control.ITEM.getId())
                 {
                     return true;
                 }

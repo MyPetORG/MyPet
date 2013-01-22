@@ -36,7 +36,7 @@ import java.util.Locale;
         parameterTypes = {NBTdatatypes.Float, NBTdatatypes.String})
 public class Ride extends MyPetGenericSkill
 {
-    public static Material item = Material.STRING;
+    public static Material ITEM = Material.STRING;
     private float speed = 0F;
     private boolean active = false;
 

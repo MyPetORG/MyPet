@@ -33,8 +33,8 @@ import static org.bukkit.Bukkit.getServer;
 
 public class MyPetExperience
 {
-    public static int lossPercent = 0;
-    public static double lossFixed = 0;
+    public static int LOSS_PERCENT = 0;
+    public static double LOSS_FIXED = 0;
 
     private final MyPet myPet;
 

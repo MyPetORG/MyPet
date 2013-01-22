@@ -35,8 +35,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
 public class HPregeneration extends MyPetGenericSkill
 {
-    public static int healtregenTime = 60;
-    private int timeCounter = healtregenTime;
+    public static int START_REGENERATION_TIME = 60;
+    private int timeCounter = START_REGENERATION_TIME;
     private int timeDecrease = 0;
     private int increaseHpBy = 0;
 
@@ -83,12 +83,12 @@ public class HPregeneration extends MyPetGenericSkill
                 {
                     timeDecrease = 1;
                 }
-                timeCounter = healtregenTime - timeDecrease;
+                timeCounter = START_REGENERATION_TIME - timeDecrease;
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (healtregenTime - timeDecrease)).replace("%add%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%add%", "" + increaseHpBy));
             }
         }
     }
@@ -96,14 +96,14 @@ public class HPregeneration extends MyPetGenericSkill
     @Override
     public String getFormattedValue()
     {
-        return "+" + increaseHpBy + MyPetLanguage.getString("Name_HP") + " ->" + (healtregenTime - timeDecrease) + "sec";
+        return "+" + increaseHpBy + MyPetLanguage.getString("Name_HP") + " ->" + (START_REGENERATION_TIME - timeDecrease) + "sec";
     }
 
     public void reset()
     {
         timeDecrease = 0;
         increaseHpBy = 0;
-        timeCounter = healtregenTime;
+        timeCounter = START_REGENERATION_TIME;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class HPregeneration extends MyPetGenericSkill
             if (timeCounter-- <= 0)
             {
                 myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
-                timeCounter = healtregenTime - timeDecrease;
+                timeCounter = START_REGENERATION_TIME - timeDecrease;
             }
         }
     }

@@ -67,11 +67,11 @@ public class CommandInfo implements CommandExecutor
                     int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                     player.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                 }
-                if (MyPetConfig.hungerSystem)
+                if (MyPetConfiguration.USE_HUNGER_SYSTEM)
                 {
                     player.sendMessage(MyPetUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                 }
-                if (MyPetConfig.levelSystem)
+                if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                 {
                     int lvl = myPet.getExperience().getLevel();
                     double exp = myPet.getExperience().getCurrentExp();

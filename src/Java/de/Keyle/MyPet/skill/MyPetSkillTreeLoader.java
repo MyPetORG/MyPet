@@ -21,7 +21,7 @@ package de.Keyle.MyPet.skill;
 
 
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetConfig;
+import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.NBTConfiguration;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
@@ -193,7 +193,7 @@ public class MyPetSkillTreeLoader
                 MyPetSkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
                 if (!alreadyLoadedInheritance.contains(skillTreeInherit))
                 {
-                    if (skillTreeInherit.hasInheritance() && MyPetConfig.inheritAlreadyInheritedSkills)
+                    if (skillTreeInherit.hasInheritance() && MyPetConfiguration.INHERIT_ALREADY_INHERITED_SKILLS)
                     {
                         alreadyLoadedInheritance.add(skillTreeInherit);
                         manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, tiefe + 1);
