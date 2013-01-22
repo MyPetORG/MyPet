@@ -27,6 +27,7 @@ import java.util.Map;
 public class MyPetLanguage
 {
     private final YamlConfiguration yamlConfiguration;
+    private boolean save = false;
 
     public MyPetLanguage(YamlConfiguration yamlConfiguration)
     {
@@ -54,6 +55,7 @@ public class MyPetLanguage
         {
             yamlConfiguration.getConfig().set(node, def);
             LV.put(name, def);
+            save = true;
         }
     }
 
@@ -248,6 +250,11 @@ public class MyPetLanguage
         // --  Z  --
         addString("Name_Zombie", "MyPet.Name.Zombie", "Zombie");
 
-        yamlConfiguration.saveConfig();
+        if(save)
+        {
+            yamlConfiguration.saveConfig();
+            save = false;
+            MyPetUtil.getDebugLogger().info("Added new values to language config");
+        }
     }
 }
