@@ -225,9 +225,9 @@ public class MyPetConfig
     private static String linkFood(Material[] foodTypes)
     {
         String linkedFood = "";
-        for(Material foodType : foodTypes)
+        for (Material foodType : foodTypes)
         {
-            if(!linkedFood.equalsIgnoreCase(""))
+            if (!linkedFood.equalsIgnoreCase(""))
             {
                 linkedFood += ",";
             }
@@ -269,13 +269,13 @@ public class MyPetConfig
     private static String linkLeashFlags(LeashFlag[] leashFlags)
     {
         String linkedLeashFlags = "";
-        for(LeashFlag leashFlag : leashFlags)
+        for (LeashFlag leashFlag : leashFlags)
         {
-            if(!linkedLeashFlags.equalsIgnoreCase(""))
+            if (!linkedLeashFlags.equalsIgnoreCase(""))
             {
                 linkedLeashFlags += ",";
             }
-            linkedLeashFlags+= leashFlag.name();
+            linkedLeashFlags += leashFlag.name();
         }
         return linkedLeashFlags;
     }

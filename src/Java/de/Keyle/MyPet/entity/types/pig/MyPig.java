@@ -26,7 +26,6 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
 import static org.bukkit.Material.CARROT_ITEM;
-import static org.bukkit.Material.SEEDS;
 
 @MyPetInfo(food = {CARROT_ITEM})
 public class MyPig extends MyPet

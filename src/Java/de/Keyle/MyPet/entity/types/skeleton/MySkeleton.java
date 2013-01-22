@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.bukkit.Material.BONE;
-import static org.bukkit.Material.SEEDS;
 
 @MyPetInfo(food = {BONE})
 public class MySkeleton extends MyPet

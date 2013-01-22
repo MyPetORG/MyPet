@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.UserCreated;
-import static org.bukkit.Material.*;
+import static org.bukkit.Material.IRON_INGOT;
 
 @MyPetInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
 public class MyIronGolem extends MyPet
