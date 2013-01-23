@@ -35,7 +35,7 @@
     <property name="MyPet.craftbukkit.download" value="http://dl.bukkit.org/downloads/craftbukkit/get/01774_1.4.6-R0.3/craftbukkit-beta.jar" />
     <property name="MyPet.minecraft.version" value="1.4.7" />
     <property name="MyPet.minecraft.version.package" value="1_4_R1" />
-    <property name="MyPet.mypet.version" value="1.0.5" />
+    <property name="MyPet.mypet.version" value="1.0.6" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
     <property name="MyPet.test.dir" location="${basedir}/src/Test" />
