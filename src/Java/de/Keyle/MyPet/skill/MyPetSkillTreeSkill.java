@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
@@ -60,12 +61,57 @@ public abstract class MyPetSkillTreeSkill
         return propertiesCompound;
     }
 
+    public void setDefaultProperties()
+    {
+        SkillProperties sp = this.getClass().getAnnotation(SkillProperties.class);
+        if (sp != null)
+        {
+            for (int i = 0 ; i < sp.parameterNames().length ; i++)
+            {
+
+                String propertyName = sp.parameterNames()[i];
+                String defaultPropertyValue = sp.parameterDefaultValues()[i];
+                NBTdatatypes propertyType = sp.parameterTypes()[i];
+                if (!getProperties().hasKey(propertyName))
+                {
+                    switch (propertyType)
+                    {
+                        case Short:
+                            propertiesCompound.setShort(propertyName, Short.parseShort(defaultPropertyValue));
+                            break;
+                        case Int:
+                            propertiesCompound.setInt(propertyName, Integer.parseInt(defaultPropertyValue));
+                            break;
+                        case Long:
+                            propertiesCompound.setLong(propertyName, Long.parseLong(defaultPropertyValue));
+                            break;
+                        case Float:
+                            propertiesCompound.setFloat(propertyName, Float.parseFloat(defaultPropertyValue));
+                            break;
+                        case Double:
+                            propertiesCompound.setDouble(propertyName, Double.parseDouble(defaultPropertyValue));
+                            break;
+                        case Byte:
+                            propertiesCompound.setByte(propertyName, Byte.parseByte(defaultPropertyValue));
+                            break;
+                        case Boolean:
+                            propertiesCompound.setBoolean(propertyName, Boolean.parseBoolean(defaultPropertyValue));
+                            break;
+                        case String:
+                            propertiesCompound.setString(propertyName, defaultPropertyValue);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
     public boolean isAddedByInheritance()
     {
         return addedByInheritance;
     }
 
-    protected void setIsInherited(boolean flag)
+    public void setIsInherited(boolean flag)
     {
         addedByInheritance = flag;
     }

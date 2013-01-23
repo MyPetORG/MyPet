@@ -39,6 +39,7 @@ public class SkillPropertiesTest
             if (sn != null)
             {
                 assertEquals(sn.parameterNames().length, sn.parameterTypes().length);
+                assertEquals(sn.parameterNames().length, sn.parameterDefaultValues().length);
             }
         }
     }

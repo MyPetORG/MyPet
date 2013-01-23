@@ -37,7 +37,9 @@ import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 @SkillName("Inventory")
-@SkillProperties(parameterNames = {"add"}, parameterTypes = {NBTdatatypes.Int})
+@SkillProperties(parameterNames = {"add"},
+        parameterTypes = {NBTdatatypes.Int},
+        parameterDefaultValues = {"1"})
 public class Inventory extends MyPetGenericSkill
 {
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);

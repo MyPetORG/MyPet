@@ -53,11 +53,14 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Metrics.Graph;
 import de.Keyle.MyPet.util.Metrics.Plotter;
-import de.Keyle.MyPet.util.configuration.NBTConfiguration;
-import de.Keyle.MyPet.util.configuration.YamlConfiguration;
+import de.Keyle.MyPet.util.configuration.NBT_Configuration;
+import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.*;
@@ -231,11 +234,12 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
 
-        MyPetSkillTreeLoaderYaml.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-        MyPetSkillTreeLoader.saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
         MyPetSkillTreeMobType.clearMobTypes();
-        MyPetSkillTreeLoader.loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
         try
         {
@@ -317,7 +321,7 @@ public class MyPetPlugin extends JavaPlugin
 
         MyPetPermissions.setup();
 
-        language = new MyPetLanguage(new YamlConfiguration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
+        language = new MyPetLanguage(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
         language.load();
 
 
@@ -488,7 +492,7 @@ public class MyPetPlugin extends JavaPlugin
     {
         int petCount = 0;
 
-        NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
+        NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
         nbtConfiguration.load();
         NBTTagList petList = nbtConfiguration.getNBTTagCompound().getList("Pets");
         if (nbtConfiguration.getNBTTagCompound().hasKey("CleanShutdown"))
@@ -583,7 +587,7 @@ public class MyPetPlugin extends JavaPlugin
     {
         int wolfCount = 0;
 
-        NBTConfiguration nbtConfiguration = new NBTConfiguration(f);
+        NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
         nbtConfiguration.load();
         NBTTagList wolfList = nbtConfiguration.getNBTTagCompound().getList("Wolves");
 
@@ -625,7 +629,7 @@ public class MyPetPlugin extends JavaPlugin
     public int savePets(boolean shutdown)
     {
         int petCount = 0;
-        NBTConfiguration nbtConfiguration = new NBTConfiguration(NBTPetFile);
+        NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
         NBTTagList petNBTlist = new NBTTagList();
 
         for (MyPet myPet : MyPetList.getAllMyPets())
@@ -731,7 +735,7 @@ public class MyPetPlugin extends JavaPlugin
         return playerNBTlist;
     }
 
-    private void loadPlayers(NBTConfiguration nbtConfiguration)
+    private void loadPlayers(NBT_Configuration nbtConfiguration)
     {
         nbtConfiguration.load();
         NBTTagList playerList = nbtConfiguration.getNBTTagCompound().getList("Players");

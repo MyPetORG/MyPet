@@ -30,7 +30,10 @@ import de.Keyle.MyPet.util.MyPetUtil;
 import java.util.Random;
 
 @SkillName("Fire")
-@SkillProperties(parameterNames = {"chance", "duration", "addset_chance", "addset_duration"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
+@SkillProperties(
+        parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "3", "add", "add"})
 public class Fire extends MyPetGenericSkill
 {
     private int chance = 0;

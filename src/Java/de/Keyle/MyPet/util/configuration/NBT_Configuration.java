@@ -28,12 +28,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipException;
 
-public class NBTConfiguration
+public class NBT_Configuration
 {
     private File NBTFile;
     private NBTTagCompound nbtTagCompound = new NBTTagCompound();
 
-    public NBTConfiguration(File file)
+    public NBT_Configuration(File file)
     {
         NBTFile = file;
     }

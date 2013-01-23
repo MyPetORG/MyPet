@@ -41,7 +41,8 @@ import java.util.Locale;
 @SkillName("Pickup")
 @SkillProperties(
         parameterNames = {"range", "addset_range"},
-        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String})
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "add"})
 public class Pickup extends MyPetGenericSkill
 {
     private double range = 0;

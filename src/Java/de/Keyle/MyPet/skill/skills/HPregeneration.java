@@ -32,7 +32,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 @SkillName("HPregeneration")
 @SkillProperties(
         parameterNames = {"hp", "time", "addset_hp", "addset_time"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"1", "1", "add", "add"})
 public class HPregeneration extends MyPetGenericSkill
 {
     public static int START_REGENERATION_TIME = 60;

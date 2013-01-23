@@ -34,7 +34,7 @@ public class MyPetSkillTreeMobType
 
     private static Map<String, MyPetSkillTreeMobType> mobTypes = new HashMap<String, MyPetSkillTreeMobType>();
 
-    public MyPetSkillTreeMobType(String mobTypeName)
+    private MyPetSkillTreeMobType(String mobTypeName)
     {
         this.mobTypeName = mobTypeName.toLowerCase();
         mobTypes.put(this.mobTypeName, this);
@@ -61,6 +61,10 @@ public class MyPetSkillTreeMobType
                 {
                     skillTreeList.add(x, null);
                 }
+            }
+            if (skillTreeList.get(place) != null)
+            {
+                place = getNextPlace();
             }
             skillTreeList.set(place, skillTree.getName());
         }
@@ -150,6 +154,7 @@ public class MyPetSkillTreeMobType
 
     public List<MyPetSkillTree> getSkillTrees()
     {
+        cleanupPlaces();
         List<MyPetSkillTree> skilltreeNames = new ArrayList<MyPetSkillTree>();
         for (String name : skillTreeList)
         {
@@ -167,10 +172,12 @@ public class MyPetSkillTreeMobType
                 return (short) i;
             }
         }
-        return (short) skillTreeList.size();
+        short place = (short) skillTreeList.size();
+        skillTreeList.add(null);
+        return place;
     }
 
-    protected void cleanupPlaces()
+    public void cleanupPlaces()
     {
         while (skillTreeList.indexOf(null) != -1)
         {
@@ -180,11 +187,19 @@ public class MyPetSkillTreeMobType
 
     public static MyPetSkillTreeMobType getMobTypeByName(String mobTypeName)
     {
+        if (!mobTypes.containsKey(mobTypeName.toLowerCase()))
+        {
+            new MyPetSkillTreeMobType(mobTypeName);
+        }
         return mobTypes.get(mobTypeName.toLowerCase());
     }
 
     public static MyPetSkillTreeMobType getMobTypeByPetType(MyPetType myPetType)
     {
+        if (!mobTypes.containsKey(myPetType.getTypeName().toLowerCase()))
+        {
+            new MyPetSkillTreeMobType(myPetType.getTypeName().toLowerCase());
+        }
         return mobTypes.get(myPetType.getTypeName().toLowerCase());
     }
 

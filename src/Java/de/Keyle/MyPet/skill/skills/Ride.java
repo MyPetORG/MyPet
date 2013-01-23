@@ -33,7 +33,8 @@ import java.util.Locale;
 @SkillName("Ride")
 @SkillProperties(
         parameterNames = {"speed", "addset_speed"},
-        parameterTypes = {NBTdatatypes.Float, NBTdatatypes.String})
+        parameterTypes = {NBTdatatypes.Float, NBTdatatypes.String},
+        parameterDefaultValues = {"0.01", "add"})
 public class Ride extends MyPetGenericSkill
 {
     public static Material ITEM = Material.STRING;

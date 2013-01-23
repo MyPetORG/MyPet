@@ -35,7 +35,8 @@ import java.util.Map;
 @SkillName("Behavior")
 @SkillProperties(
         parameterNames = {"friend", "aggro", "farm", "raid"},
-        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean})
+        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},
+        parameterDefaultValues = {"true", "true", "true", "true"})
 public class Behavior extends MyPetGenericSkill
 {
     private BehaviorState behavior = BehaviorState.Normal;

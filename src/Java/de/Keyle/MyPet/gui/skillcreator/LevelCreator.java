@@ -139,6 +139,7 @@ public class LevelCreator
                     MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(choosenSkill);
                     skillTree.addSkillToLevel(level, skill);
                     SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
+                    skill.setDefaultProperties();
                     ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).add(skillNode);
                     skillTreeTree.expandPath(skillTreeTree.getSelectionPath());
                     skillTreeTree.updateUI();

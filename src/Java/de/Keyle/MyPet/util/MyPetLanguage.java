@@ -19,17 +19,17 @@
 
 package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.util.configuration.YamlConfiguration;
+import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyPetLanguage
 {
-    private final YamlConfiguration yamlConfiguration;
+    private final YAML_Configuration yamlConfiguration;
     private boolean save = false;
 
-    public MyPetLanguage(YamlConfiguration yamlConfiguration)
+    public MyPetLanguage(YAML_Configuration yamlConfiguration)
     {
         this.yamlConfiguration = yamlConfiguration;
     }
@@ -250,7 +250,7 @@ public class MyPetLanguage
         // --  Z  --
         addString("Name_Zombie", "MyPet.Name.Zombie", "Zombie");
 
-        if(save)
+        if (save)
         {
             yamlConfiguration.saveConfig();
             save = false;

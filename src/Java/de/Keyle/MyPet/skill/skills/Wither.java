@@ -32,7 +32,8 @@ import java.util.Random;
 @SkillName("Wither")
 @SkillProperties(
         parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String})
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "3", "add", "add"})
 public class Wither extends MyPetGenericSkill
 {
     private int chance = 0;

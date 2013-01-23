@@ -17,35 +17,49 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skilltreeloader;
 
 
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.configuration.YamlConfiguration;
+import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class MyPetSkillTreeLoaderYaml
+public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 {
-    public static void loadSkillTrees(String configPath)
+    public static MyPetSkillTreeLoader getSkilltreeLoader()
     {
-        YamlConfiguration MWConfig;
+        return new MyPetSkillTreeLoaderYAML();
+    }
+
+    private MyPetSkillTreeLoaderYAML()
+    {
+    }
+
+    public void loadSkillTrees(String configPath)
+    {
+        YAML_Configuration skilltreeConfig;
         if (MyPetUtil.getDebugLogger() != null)
         {
-            MyPetUtil.getDebugLogger().info("Loading skill configs in: " + configPath);
+            MyPetUtil.getDebugLogger().info("Loading yaml skill configs in: " + configPath);
         }
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.yml");
-        MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType("default");
+        MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName("default");
         if (skillFile.exists())
         {
-            MWConfig = new YamlConfiguration(skillFile);
-            loadSkillTree(MWConfig, skillTreeMobType);
+            skilltreeConfig = new YAML_Configuration(skillFile);
+            loadSkillTree(skilltreeConfig, skillTreeMobType);
             skillFile.renameTo(new File(configPath + File.separator + "old_default.yml"));
             if (MyPetUtil.getDebugLogger() != null)
             {
@@ -57,15 +71,15 @@ public class MyPetSkillTreeLoaderYaml
         {
             skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".yml");
 
-            skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName());
+            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
 
             if (!skillFile.exists())
             {
                 continue;
             }
 
-            MWConfig = new YamlConfiguration(skillFile);
-            loadSkillTree(MWConfig, skillTreeMobType);
+            skilltreeConfig = new YAML_Configuration(skillFile);
+            loadSkillTree(skilltreeConfig, skillTreeMobType);
             skillFile.renameTo(new File(configPath + File.separator + "old_" + mobType.getTypeName().toLowerCase() + ".yml"));
             if (MyPetUtil.getDebugLogger() != null)
             {
@@ -75,7 +89,13 @@ public class MyPetSkillTreeLoaderYaml
 
     }
 
-    private static void loadSkillTree(YamlConfiguration MWConfig, MyPetSkillTreeMobType skillTreeMobType)
+    @Override
+    public List<String> saveSkillTrees(String configPath)
+    {
+        return new ArrayList<String>();
+    }
+
+    private void loadSkillTree(YAML_Configuration MWConfig, MyPetSkillTreeMobType skillTreeMobType)
     {
         ConfigurationSection sec = MWConfig.getConfig().getConfigurationSection("skilltrees");
         if (sec == null)
@@ -113,6 +133,7 @@ public class MyPetSkillTreeLoaderYaml
                                     if (MyPetSkills.isValidSkill(thisSkill))
                                     {
                                         MyPetSkillTreeSkill skillTreeSkill = MyPetSkills.getNewSkillInstance(thisSkill);
+                                        skillTreeSkill.setDefaultProperties();
                                         skillTree.addSkillToLevel(Short.parseShort(thisLevel), skillTreeSkill);
                                     }
                                 }

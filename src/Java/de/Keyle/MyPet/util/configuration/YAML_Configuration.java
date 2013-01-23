@@ -24,17 +24,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class YamlConfiguration
+public class YAML_Configuration
 {
     public File yamlFile;
     private FileConfiguration config;
 
-    public YamlConfiguration(String path)
+    public YAML_Configuration(String path)
     {
         this(new File(path));
     }
 
-    public YamlConfiguration(File file)
+    public YAML_Configuration(File file)
     {
         yamlFile = file;
         config = new org.bukkit.configuration.file.YamlConfiguration();

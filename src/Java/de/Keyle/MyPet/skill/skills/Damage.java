@@ -28,7 +28,9 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 @SkillName("Damage")
-@SkillProperties(parameterNames = {"damage", "addset_damage"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String})
+@SkillProperties(
+        parameterNames = {"damage", "addset_damage"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"1", "add"})
 public class Damage extends MyPetGenericSkill
 {
     private boolean isPassive = true;

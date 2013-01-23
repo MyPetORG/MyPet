@@ -17,46 +17,51 @@
  * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skilltreeloader;
 
 
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetConfiguration;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.configuration.NBTConfiguration;
+import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.NBTTagList;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MyPetSkillTreeLoader
+public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
 {
-    private static List<MyPetSkillTree> alreadyLoadedInheritance = new ArrayList<MyPetSkillTree>();
+    public static MyPetSkillTreeLoaderNBT getSkilltreeLoader()
+    {
+        return new MyPetSkillTreeLoaderNBT();
+    }
 
-    public static void loadSkillTrees(String configPath)
+    private MyPetSkillTreeLoaderNBT()
+    {
+    }
+
+    public void loadSkillTrees(String configPath)
     {
         loadSkillTrees(configPath, true);
     }
 
-    public static void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
+    public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
     {
-        NBTConfiguration MWConfig;
+        NBT_Configuration skilltreeConfig;
         if (MyPetUtil.getDebugLogger() != null)
         {
-            MyPetUtil.getDebugLogger().info("Loading skill configs in: " + configPath);
+            MyPetUtil.getDebugLogger().info("Loading nbt skill configs in: " + configPath);
         }
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.st");
-        MyPetSkillTreeMobType skillTreeMobType = new MyPetSkillTreeMobType("default");
+        MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName("default");
         if (skillFile.exists())
         {
-            MWConfig = new NBTConfiguration(skillFile);
-            loadSkillTree(MWConfig, skillTreeMobType, applyDefaultAndInheritance);
+            skilltreeConfig = new NBT_Configuration(skillFile);
+            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
             if (MyPetUtil.getDebugLogger() != null)
             {
                 MyPetUtil.getDebugLogger().info("  default.st");
@@ -67,7 +72,7 @@ public class MyPetSkillTreeLoader
         {
             skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".st");
 
-            skillTreeMobType = new MyPetSkillTreeMobType(mobType.getTypeName());
+            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
 
             if (!skillFile.exists())
             {
@@ -82,8 +87,8 @@ public class MyPetSkillTreeLoader
                 continue;
             }
 
-            MWConfig = new NBTConfiguration(skillFile);
-            loadSkillTree(MWConfig, skillTreeMobType, applyDefaultAndInheritance);
+            skilltreeConfig = new NBT_Configuration(skillFile);
+            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
             if (MyPetUtil.getDebugLogger() != null)
             {
                 MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".st");
@@ -92,7 +97,7 @@ public class MyPetSkillTreeLoader
         }
     }
 
-    private static void loadSkillTree(NBTConfiguration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
+    protected void loadSkillTree(NBT_Configuration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
     {
         nbtConfiguration.load();
         NBTTagList skilltreeList = nbtConfiguration.getNBTTagCompound().getList("Skilltrees");
@@ -128,8 +133,10 @@ public class MyPetSkillTreeLoader
                     String skillName = skillCompound.getString("Name");
                     if (MyPetSkills.isValidSkill(skillName))
                     {
+                        NBTTagCompound skillPropertyCompound = skillCompound.getCompound("Properties");
                         MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(skillName);
-                        skill.setProperties(skillCompound.getCompound("Properties"));
+                        skill.setProperties(skillPropertyCompound);
+                        skill.setDefaultProperties();
                         skillTree.addSkillToLevel(thisLevel, skill);
                     }
                 }
@@ -146,87 +153,16 @@ public class MyPetSkillTreeLoader
         }
     }
 
-    private static void addDefault(MyPetSkillTreeMobType skillTreeMobType)
+    public List<String> saveSkillTrees(String configPath)
     {
-        MyPetSkillTreeMobType defaultSkillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName("default");
-        for (String skillTreeName : defaultSkillTreeMobType.getSkillTreeNames())
-        {
-            if (!skillTreeMobType.hasSkillTree(skillTreeName) && defaultSkillTreeMobType.hasSkillTree(skillTreeName))
-            {
-                MyPetSkillTree newSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName).clone();
-                for (MyPetSkillTreeLevel level : newSkillTree.getLevelList())
-                {
-                    for (MyPetSkillTreeSkill skill : level.getSkills())
-                    {
-                        skill.setIsInherited(true);
-                    }
-                }
-                skillTreeMobType.addSkillTree(newSkillTree);
-            }
-        }
-    }
-
-    private static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType)
-    {
-        Map<MyPetSkillTree, MyPetSkillTree> skillTreeClones = new HashMap<MyPetSkillTree, MyPetSkillTree>();
-        for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
-        {
-            skillTreeClones.put(skillTree, skillTree.clone());
-        }
-        for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
-        {
-            alreadyLoadedInheritance.clear();
-            if (skillTree.hasInheritance())
-            {
-                alreadyLoadedInheritance.add(skillTree);
-                manageInheritance(skillTreeMobType, skillTree, skillTree, skillTreeClones, 0);
-            }
-        }
-    }
-
-    private static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int tiefe)
-    {
-        if (skillTree.hasInheritance() && tiefe < 20)
-        {
-            if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
-            {
-                MyPetSkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
-                if (!alreadyLoadedInheritance.contains(skillTreeInherit))
-                {
-                    if (skillTreeInherit.hasInheritance() && MyPetConfiguration.INHERIT_ALREADY_INHERITED_SKILLS)
-                    {
-                        alreadyLoadedInheritance.add(skillTreeInherit);
-                        manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, tiefe + 1);
-                    }
-                    else
-                    {
-                        alreadyLoadedInheritance.add(skillTreeInherit);
-                    }
-                    MyPetSkillTree skillTreeClone = clones.get(skillTreeInherit);
-                    for (MyPetSkillTreeLevel level : skillTreeClone.getLevelList())
-                    {
-                        for (MyPetSkillTreeSkill skill : level.getSkills())
-                        {
-                            MyPetSkillTreeSkill skillClone = skill.cloneSkill();
-                            skillClone.setIsInherited(true);
-                            startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static List<String> saveSkillTrees(String configPath)
-    {
-        NBTConfiguration nbtConfig;
+        NBT_Configuration nbtConfig;
         File skillFile;
         List<String> savedPetTypes = new ArrayList<String>();
 
         for (MyPetType petType : MyPetType.values())
         {
             skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".st");
-            nbtConfig = new NBTConfiguration(skillFile);
+            nbtConfig = new NBT_Configuration(skillFile);
             if (saveSkillTree(nbtConfig, petType.getTypeName()))
             {
                 savedPetTypes.add(petType.getTypeName());
@@ -234,7 +170,7 @@ public class MyPetSkillTreeLoader
         }
 
         skillFile = new File(configPath + File.separator + "default.st");
-        nbtConfig = new NBTConfiguration(skillFile);
+        nbtConfig = new NBT_Configuration(skillFile);
         if (saveSkillTree(nbtConfig, "default"))
         {
             savedPetTypes.add("default");
@@ -243,7 +179,7 @@ public class MyPetSkillTreeLoader
         return savedPetTypes;
     }
 
-    private static boolean saveSkillTree(NBTConfiguration nbtConfiguration, String petTypeName)
+    protected boolean saveSkillTree(NBT_Configuration nbtConfiguration, String petTypeName)
     {
         boolean saveMobType = false;
 

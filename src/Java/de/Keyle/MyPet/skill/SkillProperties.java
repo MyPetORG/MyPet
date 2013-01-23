@@ -31,6 +31,8 @@ public @interface SkillProperties
 {
     String[] parameterNames() default {};
 
+    String[] parameterDefaultValues() default {};
+
     NBTdatatypes[] parameterTypes() default {};
 
     public enum NBTdatatypes

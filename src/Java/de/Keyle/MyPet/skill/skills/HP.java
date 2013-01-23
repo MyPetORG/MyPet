@@ -30,7 +30,10 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 @SkillName("HP")
-@SkillProperties(parameterNames = {"hp", "addset_hp"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String})
+@SkillProperties(
+        parameterNames = {"hp", "addset_hp"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"1", "add"})
 public class HP extends MyPetGenericSkill
 {
     private int hpIncrease = 0;

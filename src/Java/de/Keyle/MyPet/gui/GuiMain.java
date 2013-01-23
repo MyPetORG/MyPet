@@ -24,7 +24,8 @@ import de.Keyle.MyPet.gui.skillcreator.BukkitDownloader;
 import de.Keyle.MyPet.gui.skillcreator.LevelCreator;
 import de.Keyle.MyPet.gui.skillcreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator;
-import de.Keyle.MyPet.skill.MyPetSkillTreeLoader;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -127,8 +128,10 @@ public class GuiMain
 
         MyPetPlugin.registerSkills();
 
+
         new File(configPath + "skilltrees" + File.separator).mkdirs();
-        MyPetSkillTreeLoader.loadSkillTrees(configPath + "skilltrees", false);
+        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
+        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
 
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
