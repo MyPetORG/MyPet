@@ -68,7 +68,7 @@ public class MyWolf extends MyPet
     {
         if (status == PetState.Here)
         {
-            ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getData());
+            ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getDyeData());
         }
         this.collarColor = value;
     }
