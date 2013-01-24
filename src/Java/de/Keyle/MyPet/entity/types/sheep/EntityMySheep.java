@@ -26,11 +26,13 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMySheep extends EntityMyPet
 {
     public static boolean CAN_BE_SHEARED = true;
+    public static Material GROW_UP_ITEM = Material.POTION;
 
     public EntityMySheep(World world, MyPet myPet)
     {
@@ -182,6 +184,18 @@ public class EntityMySheep extends EntityMyPet
                     makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 }
                 itemStack.damage(1, entityhuman);
+            }
+            if (isBaby())
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    if (--itemStack.count <= 0)
+                    {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
+                this.setBaby(false);
+                return true;
             }
         }
         return false;

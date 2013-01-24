@@ -28,6 +28,8 @@ import net.minecraft.server.v1_4_R1.*;
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyZombie extends EntityMyPet
 {
+    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+
     public EntityMyZombie(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -177,6 +179,21 @@ public class EntityMyZombie extends EntityMyPet
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 return true;
+            }
+            else if (itemStack.id == GROW_UP_ITEM.getId())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
+                    return true;
+                }
             }
         }
         return false;

@@ -87,7 +87,7 @@ public class MyEnderman extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setShort("BlockID", getBlockID());
         info.setShort("BlockData", getBlockData());
         //info.setBoolean("Screaming", isScreaming());

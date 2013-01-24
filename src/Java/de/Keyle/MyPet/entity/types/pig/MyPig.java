@@ -70,7 +70,7 @@ public class MyPig extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setBoolean("Saddle", hasSaddle());
         info.setBoolean("Baby", isBaby());
         return info;

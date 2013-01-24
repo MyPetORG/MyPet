@@ -26,11 +26,13 @@ import net.minecraft.server.v1_4_R1.EntityHuman;
 import net.minecraft.server.v1_4_R1.Item;
 import net.minecraft.server.v1_4_R1.ItemStack;
 import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet
 {
     public static boolean CAN_GIVE_MILK = true;
+    public static Material GROW_UP_ITEM = Material.POTION;
 
     public EntityMyCow(World world, MyPet myPet)
     {
@@ -99,6 +101,24 @@ public class EntityMyCow extends EntityMyPet
                     ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
 
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                    return true;
+                }
+            }
+        }
+        else if (entityhuman == getOwner() && itemStack != null)
+        {
+            if (itemStack.id == GROW_UP_ITEM.getId())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
                     return true;
                 }
             }

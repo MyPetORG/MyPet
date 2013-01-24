@@ -26,7 +26,13 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
+import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
+import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
+import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
+import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
+import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -97,10 +103,10 @@ public class MyPetConfiguration
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
         setProperty("MyPet.Exp.loss.Percent", 0);
         setProperty("MyPet.Exp.loss.Fixed", 0.0);
+        setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
 
-        setProperty("MyPet.Leash.Item", 287);
-        setProperty("MyPet.Skill.Control.Item", 287);
-        setProperty("MyPet.Skill.Ride.Item", 287);
+        setProperty("MyPet.Skill.Control.Item", Control.ITEM.getId());
+        setProperty("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
         setProperty("MyPet.Skill.HPregeneration.Time", 60);
         setProperty("MyPet.Skill.Inventory.Creative", true);
         setProperty("MyPet.Skill.Behavior.Aggro", true);
@@ -112,6 +118,15 @@ public class MyPetConfiguration
         setProperty("MyPet.Pets.Chicken.CanLayEggs", true);
         setProperty("MyPet.Pets.Cow.CanGiveMilk", true);
         setProperty("MyPet.Pets.Sheep.CanBeSheared", true);
+        setProperty("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
+        setProperty("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -184,6 +199,15 @@ public class MyPetConfiguration
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
+        EntityMyChicken.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyCow.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyMooshroom.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyOcelot.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyPig.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMySheep.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyVillager.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyWolf.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyZombie.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId()), Material.POTION);
 
         for (MyPetType petType : MyPetType.values())
         {

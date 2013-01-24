@@ -27,6 +27,8 @@ import net.minecraft.server.v1_4_R1.*;
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet
 {
+    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+
     public EntityMyPig(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -135,6 +137,21 @@ public class EntityMyPig extends EntityMyPet
                     makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 }
                 itemStack.damage(1, entityhuman);
+            }
+            else if (itemStack.id == GROW_UP_ITEM.getId())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
+                    return true;
+                }
             }
         }
         return false;

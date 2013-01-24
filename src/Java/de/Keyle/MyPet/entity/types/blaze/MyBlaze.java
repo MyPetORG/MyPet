@@ -55,7 +55,7 @@ public class MyBlaze extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setBoolean("Fire", isOnFire());
         return info;
     }

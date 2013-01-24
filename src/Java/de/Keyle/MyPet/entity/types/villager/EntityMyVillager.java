@@ -22,11 +22,16 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_4_R1.EntityHuman;
+import net.minecraft.server.v1_4_R1.ItemStack;
 import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyVillager extends EntityMyPet
 {
+    public static Material GROW_UP_ITEM = Material.POTION;
+
     public EntityMyVillager(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -81,6 +86,36 @@ public class EntityMyVillager extends EntityMyPet
         super.a();
         this.datawatcher.a(16, new Integer(0)); // profession
         this.datawatcher.a(12, new Integer(0)); // age
+    }
+
+    public boolean a(EntityHuman entityhuman)
+    {
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (entityhuman == getOwner() && itemStack != null)
+        {
+            if (itemStack.id == GROW_UP_ITEM.getId())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

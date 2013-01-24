@@ -71,7 +71,7 @@ public class MyPigZombie extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
 
         NBTTagList items = new NBTTagList();
         for (EquipmentSlot slot : EquipmentSlot.values())

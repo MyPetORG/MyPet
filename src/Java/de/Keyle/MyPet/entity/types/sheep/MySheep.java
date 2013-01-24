@@ -86,7 +86,7 @@ public class MySheep extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setInt("Color", getColor().getDyeData());
         info.setBoolean("Sheared", isSheared());
         info.setBoolean("Baby", isBaby());

@@ -30,6 +30,8 @@ import org.bukkit.entity.Ocelot.Type;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet
 {
+    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+
     private EntityAISit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
@@ -183,6 +185,21 @@ public class EntityMyOcelot extends EntityMyPet
                     else if (itemStack.getData() == 7)
                     {
                         ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
+                        return true;
+                    }
+                }
+                else if (itemStack.id == GROW_UP_ITEM.getId())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
                         return true;
                     }
                 }

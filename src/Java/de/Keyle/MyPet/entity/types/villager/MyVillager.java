@@ -70,7 +70,7 @@ public class MyVillager extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setInt("Profession", getProfession());
         info.setBoolean("Baby", isBaby());
         return info;

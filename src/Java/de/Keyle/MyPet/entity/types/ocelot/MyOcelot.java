@@ -87,7 +87,7 @@ public class MyOcelot extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setInt("CatType", getCatType().getId());
         info.setBoolean("Sitting", isSitting());
         info.setBoolean("Baby", isBaby());

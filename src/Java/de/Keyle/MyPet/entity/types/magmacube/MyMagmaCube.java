@@ -55,7 +55,7 @@ public class MyMagmaCube extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setInt("Size", getSize());
         return info;
     }

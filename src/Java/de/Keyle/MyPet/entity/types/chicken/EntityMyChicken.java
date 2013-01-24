@@ -22,12 +22,18 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_4_R1.EntityHuman;
 import net.minecraft.server.v1_4_R1.Item;
+import net.minecraft.server.v1_4_R1.ItemStack;
 import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet
 {
+    public static boolean CAN_LAY_EGGS = true;
+    public static Material GROW_UP_ITEM = Material.POTION;
+
     // Variables for flying of the chicken
     public float b = 0.0F;
     public float c = 0.0F;
@@ -35,8 +41,6 @@ public class EntityMyChicken extends EntityMyPet
     public float h;
     public float i = 1.0F;
     private int nextEggTimer;
-
-    public static boolean CAN_LAY_EGGS = true;
 
     public EntityMyChicken(World world, MyPet myPet)
     {
@@ -80,6 +84,36 @@ public class EntityMyChicken extends EntityMyPet
     {
         super.a();
         this.datawatcher.a(12, new Integer(0)); // age
+    }
+
+    public boolean a(EntityHuman entityhuman)
+    {
+        if (super.a(entityhuman))
+        {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (entityhuman == getOwner() && itemStack != null)
+        {
+            if (itemStack.id == GROW_UP_ITEM.getId())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected void a(int i, int j, int k, int l)

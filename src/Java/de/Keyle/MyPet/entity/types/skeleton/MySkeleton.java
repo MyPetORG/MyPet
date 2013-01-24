@@ -86,7 +86,7 @@ public class MySkeleton extends MyPet
     @Override
     public NBTTagCompound getExtendedInfo()
     {
-        NBTTagCompound info = new NBTTagCompound("Info");
+        NBTTagCompound info = super.getExtendedInfo();
         info.setBoolean("Wither", isWither());
 
         NBTTagList items = new NBTTagList();
