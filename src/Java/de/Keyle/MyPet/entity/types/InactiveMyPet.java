@@ -84,6 +84,10 @@ public class InactiveMyPet
 
     public NBTTagCompound getSkills()
     {
+        if (NBTSkills == null)
+        {
+            NBTSkills = new NBTTagCompound("Skills");
+        }
         return NBTSkills;
     }
 
