@@ -49,15 +49,16 @@ public class InactiveMyPet
 
     public void setSkills(Collection<MyPetGenericSkill> skills)
     {
-        if (skills.size() > 0)
+        if (NBTSkills == null)
         {
-            for (MyPetGenericSkill skill : skills)
+            NBTSkills = new NBTTagCompound("Skills");
+        }
+        for (MyPetGenericSkill skill : skills)
+        {
+            NBTTagCompound s = skill.save();
+            if (s != null)
             {
-                NBTTagCompound s = skill.save();
-                if (s != null)
-                {
-                    this.NBTSkills.set(skill.getName(), s);
-                }
+                this.NBTSkills.set(skill.getName(), s);
             }
         }
     }
@@ -76,7 +77,7 @@ public class InactiveMyPet
     {
         if (NBTextendetInfo == null)
         {
-            NBTextendetInfo = new NBTTagCompound("Skills");
+            NBTextendetInfo = new NBTTagCompound("Info");
         }
         return NBTextendetInfo;
     }
