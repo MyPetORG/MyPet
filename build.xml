@@ -44,6 +44,15 @@
     <property name="MyPet.output.dir.build" location="${MyPet.output.dir}/MyPet/build" />
     <property name="MyPet.output.dir.src" location="${MyPet.output.dir}/MyPet/src" />
 
+    <property environment="env" />
+
+    <buildnumber />
+    <condition property="MyPet.build.number" value="${env.BUILD_NUMBER}" else="${build.number}">
+        <isset property="env.BUILD_NUMBER" />
+    </condition>
+
+    <echo message="Buildnumber: ${MyPet.build.number}" />
+
     <!-- Adding classpathes -->
     <path id="MyPet.manifest.classpath">
         <pathelement location="craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
@@ -129,10 +138,10 @@
 
     <!-- Copies source to src dir -->
     <target name="4_copysource" depends="1_clean, 2_makedir">
-        <buildnumber />
+
         <copydir src="${MyPet.src.dir}" dest="${MyPet.output.dir.src}" />
         <copydir src="${MyPet.test.dir}" dest="${MyPet.output.dir.src}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${build.number}" />
+        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${MyPet.build.number}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/GuiMain.java" token="{@MINECRAFT_VERSION_UNDERSCORE@}" value="${MyPet.minecraft.version.package}" />
@@ -165,10 +174,10 @@
     <!--Creates the deployable jar file  -->
     <target name="7_jar" depends="3_copyresources, 5_compile, 6_JUnit_Tests">
         <property name="version.num" value="1.00" />
-        <jar destfile="${MyPet.output.dir}/MyPet/MyPet.jar" basedir="${MyPet.output.dir.build}">
+        <jar destfile="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
                 <attribute name="Created-By" value="Keyle" />
-                <attribute name="Build" value="${build.number}" />
+                <attribute name="Build" value="${MyPet.build.number}" />
                 <attribute name="Main-Class" value="de.Keyle.MyPet.gui.GuiMain" />
                 <attribute name="Class-Path" value="${MyPet.manifest.classpath.dot} ${MyPet.manifest.classpath.dotdot} ${MyPet.manifest.classpath.MyPet}" />
             </manifest>
@@ -177,7 +186,7 @@
 
     <!--Creates the deployable jar file with buildnumber in filename  -->
     <target name="8_jar_buildnumber" depends="7_jar">
-        <copy file="${MyPet.output.dir}/MyPet/MyPet.jar" tofile="${MyPet.output.dir}/MyPet/MyPet-b${build.number}.jar" />
+        <copy file="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" tofile="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}-b${MyPet.build.number}.jar" />
     </target>
 
     <!-- Does all the other steps -->
@@ -189,7 +198,7 @@
     <!-- Does all the other steps and copy jar to testfolder -->
     <target name="Test" depends="Main">
         <description>Test target</description>
-        <copyfile src="${MyPet.output.dir}/MyPet/MyPet.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
+        <copyfile src="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
     </target>
 
     <!-- Does all the other steps and copy jar to testfolder -->
