@@ -116,6 +116,7 @@
         </constraints>
         <properties>
           <text value="Skill usages until level: -"/>
+          <visible value="false"/>
         </properties>
       </component>
       <scrollpane id="c7bd7">
@@ -124,6 +125,7 @@
         </constraints>
         <properties>
           <enabled value="false"/>
+          <visible value="false"/>
         </properties>
         <border type="none"/>
         <children>
