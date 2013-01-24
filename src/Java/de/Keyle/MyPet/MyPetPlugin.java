@@ -695,6 +695,7 @@ public class MyPetPlugin extends JavaPlugin
             petNBT.setInt("Respawntime", inactiveMyPet.getRespawnTime());
             petNBT.setString("Name", inactiveMyPet.getPetName());
             petNBT.setDouble("Exp", inactiveMyPet.getExp());
+            petNBT.setCompound("Info", inactiveMyPet.getInfo());
             if (inactiveMyPet.getSkillTree() != null)
             {
                 petNBT.setString("Skilltree", inactiveMyPet.getSkillTree().getName());

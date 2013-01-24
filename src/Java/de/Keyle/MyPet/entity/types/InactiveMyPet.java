@@ -39,7 +39,7 @@ public class InactiveMyPet
     private MyPetType petType = MyPetType.Wolf;
     private MyPetSkillTree skillTree = null;
 
-    private NBTTagCompound NBTSkills = new NBTTagCompound("Skills");
+    private NBTTagCompound NBTSkills;
     private NBTTagCompound NBTextendetInfo;
 
     public InactiveMyPet(MyPetPlayer petOwner)
@@ -74,6 +74,10 @@ public class InactiveMyPet
 
     public NBTTagCompound getInfo()
     {
+        if (NBTextendetInfo == null)
+        {
+            NBTextendetInfo = new NBTTagCompound("Skills");
+        }
         return NBTextendetInfo;
     }
 
