@@ -42,7 +42,7 @@ public class AncientRpgDamageFix implements Listener
     @EventHandler
     public void onAncientDamageEvent(ARPGEntityDamageByEntityEvent event)
     {
-        if (event.getEntity() instanceof CraftMyPet)
+        if (event.getDamager() instanceof CraftMyPet)
         {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
             event.setDamage(craftMyPet.getMyPet().getDamage());
