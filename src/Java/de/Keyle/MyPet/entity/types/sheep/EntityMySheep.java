@@ -30,6 +30,8 @@ import org.bukkit.DyeColor;
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMySheep extends EntityMyPet
 {
+    public static boolean CAN_BE_SHEARED = true;
+
     public EntityMySheep(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -162,7 +164,7 @@ public class EntityMySheep extends EntityMyPet
                     return true;
                 }
             }
-            else if (itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
+            else if (CAN_BE_SHEARED && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
             {
                 if (!this.world.isStatic)
                 {

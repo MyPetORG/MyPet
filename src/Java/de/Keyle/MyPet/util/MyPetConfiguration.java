@@ -24,6 +24,9 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
+import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -106,6 +109,10 @@ public class MyPetConfiguration
         setProperty("MyPet.Skill.Behavior.Raid", true);
         setProperty("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
 
+        setProperty("MyPet.Pets.Chicken.CanLayEggs", true);
+        setProperty("MyPet.Pets.Cow.CanGiveMilk", true);
+        setProperty("MyPet.Pets.Sheep.CanBeSheared", true);
+
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
@@ -173,6 +180,10 @@ public class MyPetConfiguration
 
         MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent");
         MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed");
+
+        EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
+        EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
+        EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
 
         for (MyPetType petType : MyPetType.values())
         {

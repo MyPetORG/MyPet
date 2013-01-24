@@ -30,6 +30,8 @@ import net.minecraft.server.v1_4_R1.World;
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet
 {
+    public static boolean CAN_GIVE_MILK = true;
+
     public EntityMyCow(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -92,7 +94,7 @@ public class EntityMyCow extends EntityMyPet
         {
             if (itemStack.id == Item.BUCKET.id)
             {
-                if (!this.world.isStatic)
+                if (CAN_GIVE_MILK && !this.world.isStatic)
                 {
                     ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
 

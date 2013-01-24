@@ -36,6 +36,8 @@ public class EntityMyChicken extends EntityMyPet
     public float i = 1.0F;
     private int nextEggTimer;
 
+    public static boolean CAN_LAY_EGGS = true;
+
     public EntityMyChicken(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -140,7 +142,7 @@ public class EntityMyChicken extends EntityMyPet
 
         this.b += this.i * 2.0F;
 
-        if (!world.isStatic && --nextEggTimer <= 0)
+        if (CAN_LAY_EGGS && !world.isStatic && --nextEggTimer <= 0)
         {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
             b(Item.EGG.id, 1);
