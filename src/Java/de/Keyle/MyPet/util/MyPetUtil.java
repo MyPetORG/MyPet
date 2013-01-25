@@ -34,7 +34,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class MyPetUtil
 {
@@ -60,12 +59,6 @@ public class MyPetUtil
         return getServer().getOfflinePlayer(Name);
     }
 
-    @Deprecated
-    public static Logger getLogger()
-    {
-        return MyPetPlugin.getPlugin().getLogger();
-    }
-
     public static DebugLogger getDebugLogger()
     {
         if (MyPetPlugin.getPlugin() == null)
@@ -77,9 +70,9 @@ public class MyPetUtil
 
     public static String setColors(String text)
     {
-        for(ChatColor color: ChatColor.values())
+        for (ChatColor color : ChatColor.values())
         {
-            text = text.replace("%" + color.name().replace("_","").toLowerCase() + "%",color.toString());
+            text = text.replace("%" + color.name().replace("_", "").toLowerCase() + "%", color.toString());
         }
         return text;
     }

@@ -124,8 +124,12 @@
 
     <!-- Copies resources to build dir -->
     <target name="3_copyresources" depends="1_clean, 2_makedir">
-        <copydir src="${MyPet.resources.dir}" dest="${MyPet.output.dir.build}/resources" />
-        <copydir src="${MyPet.html.dir}" dest="${MyPet.output.dir.build}/html" />
+        <copy todir="${MyPet.output.dir.build}/resources">
+            <fileset dir="${MyPet.resources.dir}" />
+        </copy>
+        <copy todir="${MyPet.output.dir.build}/html">
+            <fileset dir="${MyPet.html.dir}" />
+        </copy>
         <copy file="${basedir}/src/plugin.yml" tofile="${MyPet.output.dir.build}/plugin.yml" />
         <copy file="${basedir}/src/NBT/skilltrees/default.st" tofile="${MyPet.output.dir.build}/skilltrees/default.st" />
         <unjar src="${idea.lib.dir}/forms_rt.jar" dest="${MyPet.output.dir.build}">
@@ -138,9 +142,12 @@
 
     <!-- Copies source to src dir -->
     <target name="4_copysource" depends="1_clean, 2_makedir">
-
-        <copydir src="${MyPet.src.dir}" dest="${MyPet.output.dir.src}" />
-        <copydir src="${MyPet.test.dir}" dest="${MyPet.output.dir.src}" />
+        <copy todir="${MyPet.output.dir.src}">
+            <fileset dir="${MyPet.src.dir}" />
+        </copy>
+        <copy todir="${MyPet.output.dir.src}">
+            <fileset dir="${MyPet.test.dir}" />
+        </copy>
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${MyPet.build.number}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
@@ -150,7 +157,7 @@
 
     <!-- Compiles the java code -->
     <target name="5_compile" depends="1_clean, 2_makedir, 4_copysource">
-        <javac2 srcdir="${MyPet.output.dir.src}" destdir="${MyPet.output.dir.build}" debug="true" debuglevel="lines,vars,source">
+        <javac2 srcdir="${MyPet.output.dir.src}" destdir="${MyPet.output.dir.build}" debug="true" debuglevel="lines,vars,source" deprecation="true">
             <classpath refid="MyPet.module.classpath" />
             <classpath refid="MyPet.test.classpath" />
             <classpath refid="javac2.classpath" />

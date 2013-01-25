@@ -177,7 +177,7 @@ public class EntityMyWolf extends EntityMyPet
     public void setCollarColor(byte value)
     {
         this.datawatcher.watch(20, (byte) (value & 0xF));
-        ((MyWolf) myPet).collarColor = DyeColor.getByData(value);
+        ((MyWolf) myPet).collarColor = DyeColor.getByDyeData(value);
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
