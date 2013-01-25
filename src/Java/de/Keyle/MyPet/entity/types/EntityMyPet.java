@@ -43,6 +43,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
@@ -276,7 +278,27 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (itemStack.id == Ride.ITEM.getId() && canMove())
                 {
-                    if (MyPetPermissions.hasExtended((Player) this.getOwner().getBukkitEntity(), "MyPet.user.extended.Ride"))
+                    Player owner = null;
+                    try
+                    {
+                        Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                        gBE.setAccessible(true);
+                        owner = (Player) gBE.invoke(this.getOwner());
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    catch (NoSuchMethodException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                    catch (InvocationTargetException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+
+                    if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
                         this.getOwner().mount(this);
                         return true;
@@ -297,7 +319,26 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
         if (canEat(itemStack))
         {
-            if (!MyPetPermissions.hasExtended((Player) this.getOwner().getBukkitEntity(), "MyPet.user.extended.CanFeed"))
+            Player owner = null;
+            try
+            {
+                Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                gBE.setAccessible(true);
+                owner = (Player) gBE.invoke(this.getOwner());
+            }
+            catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+            catch (NoSuchMethodException e1)
+            {
+                e1.printStackTrace();
+            }
+            catch (InvocationTargetException e1)
+            {
+                e1.printStackTrace();
+            }
+            if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
             {
                 return true;
             }
@@ -372,7 +413,26 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         int damage = isMyPet() ? myPet.getDamage() : MyPet.getStartDamage(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         if (entity instanceof EntityPlayer)
         {
-            Player victim = (Player) entity.getBukkitEntity();
+            Player victim = null;
+            try
+            {
+                Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                gBE.setAccessible(true);
+                victim = (Player) gBE.invoke(entity);
+            }
+            catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+            catch (NoSuchMethodException e1)
+            {
+                e1.printStackTrace();
+            }
+            catch (InvocationTargetException e1)
+            {
+                e1.printStackTrace();
+            }
+
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), victim))
             {
                 if (myPet.hasTarget())

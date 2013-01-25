@@ -24,11 +24,11 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class EntityAIOwnerHurtTarget extends PathfinderGoal
 {
@@ -82,7 +82,26 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         }
         if (this.petEntity.goalTarget instanceof EntityPlayer)
         {
-            Player targetPlayer = (Player) this.petEntity.goalTarget.getBukkitEntity();
+            Player targetPlayer = null;
+            try
+            {
+                Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                gBE.setAccessible(true);
+                targetPlayer = (Player) gBE.invoke(this.petEntity.goalTarget);
+            }
+            catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+            catch (NoSuchMethodException e1)
+            {
+                e1.printStackTrace();
+            }
+            catch (InvocationTargetException e1)
+            {
+                e1.printStackTrace();
+            }
+
             if (myPet.getOwner().equals(targetPlayer))
             {
                 return false;

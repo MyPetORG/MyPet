@@ -22,6 +22,10 @@ package de.Keyle.MyPet.skill.skills.beacon;
 import de.Keyle.MyPet.skill.skills.Beacon;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftInventoryView;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeacon
 {
@@ -75,7 +79,28 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeaco
         }
 
         CraftMyPetInventoryBeacon craftBeaconInventory = new CraftMyPetInventoryBeacon(this.beaconInv);
-        this.bukkitEntity = new CraftInventoryView(this.playerInventory.player.getBukkitEntity(), craftBeaconInventory, this);
+
+        Player player = null;
+        try
+        {
+            Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+            gBE.setAccessible(true);
+            player = (Player) gBE.invoke(this.playerInventory.player);
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+        catch (NoSuchMethodException e1)
+        {
+            e1.printStackTrace();
+        }
+        catch (InvocationTargetException e1)
+        {
+            e1.printStackTrace();
+        }
+
+        this.bukkitEntity = new CraftInventoryView(player, craftBeaconInventory, this);
         return this.bukkitEntity;
     }
 

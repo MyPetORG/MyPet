@@ -22,8 +22,13 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
+import net.minecraft.server.v1_4_R1.EntityHuman;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
 import net.minecraft.server.v1_4_R1.PathfinderGoalHurtByTarget;
+import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
 {
@@ -40,11 +45,31 @@ public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
     {
         if (d.aC() instanceof EntityPlayer)
         {
-            if (d.aC().getBukkitEntity() == myPet.getOwner().getPlayer())
+            Player targetPlayer = null;
+            try
+            {
+                Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                gBE.setAccessible(true);
+                targetPlayer = (Player) gBE.invoke(d.aC());
+            }
+            catch (IllegalAccessException e)
+            {
+                e.printStackTrace();
+            }
+            catch (NoSuchMethodException e1)
+            {
+                e1.printStackTrace();
+            }
+            catch (InvocationTargetException e1)
+            {
+                e1.printStackTrace();
+            }
+
+            if (targetPlayer == myPet.getOwner().getPlayer())
             {
                 return false;
             }
-            else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), ((EntityPlayer) d.aC()).getBukkitEntity()))
+            else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
                 return super.a();
             }

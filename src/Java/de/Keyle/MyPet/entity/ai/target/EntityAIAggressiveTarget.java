@@ -24,13 +24,14 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class EntityAIAggressiveTarget extends PathfinderGoal
 {
@@ -65,13 +66,51 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                         for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                         {
                             EntityLiving entityLiving = (EntityLiving) entityObj;
-                            Location loc1 = entityLiving.getBukkitEntity().getLocation();
+                            LivingEntity livingEntity = null;
+                            try
+                            {
+                                Method gBE = Entity.class.getDeclaredMethod("getBukkitEntity");
+                                gBE.setAccessible(true);
+                                livingEntity = (LivingEntity) gBE.invoke(entityLiving);
+                            }
+                            catch (IllegalAccessException e)
+                            {
+                                e.printStackTrace();
+                            }
+                            catch (NoSuchMethodException e1)
+                            {
+                                e1.printStackTrace();
+                            }
+                            catch (InvocationTargetException e1)
+                            {
+                                e1.printStackTrace();
+                            }
+
+                            Location loc1 = livingEntity.getLocation();
                             Location loc2 = petEntity.getBukkitEntity().getLocation();
                             if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && loc1.distance(loc2) < 10)
                             {
                                 if (entityLiving instanceof EntityPlayer)
                                 {
-                                    Player targetPlayer = (Player) entityLiving.getBukkitEntity();
+                                    Player targetPlayer = null;
+                                    try
+                                    {
+                                        Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
+                                        gBE.setAccessible(true);
+                                        targetPlayer = (Player) gBE.invoke(entityLiving);
+                                    }
+                                    catch (IllegalAccessException e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                    catch (NoSuchMethodException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
+                                    catch (InvocationTargetException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
                                     if (myPet.getOwner().equals(targetPlayer))
                                     {
                                         continue;
