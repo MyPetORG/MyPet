@@ -37,10 +37,12 @@ import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
@@ -57,6 +59,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected boolean isMyPet = false;
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
+    protected CraftEntity myBukkitEntity;
 
     // This Constructor should be never called!!!
     public EntityMyPet(World world)
@@ -212,13 +215,31 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
-    public org.bukkit.entity.Entity getBukkitEntity()
+    public CraftEntity getBukkitEntity()
     {
-        if (this.bukkitEntity == null)
+        if (this.myBukkitEntity == null)
         {
-            this.bukkitEntity = new CraftMyPet(this.world.getServer(), this);
+            this.myBukkitEntity = new CraftMyPet(this.world.getServer(), this);
         }
-        return this.bukkitEntity;
+        try
+        {
+            Field bE = Entity.class.getDeclaredField("bukkitEntity");
+            bE.setAccessible(true);
+            if (bE.get(this) == null)
+            {
+                bE.set(this, this.myBukkitEntity);
+            }
+            return (CraftEntity) bE.get(this);
+        }
+        catch (NoSuchFieldException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+        return this.myBukkitEntity;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -343,11 +364,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return true;
     }
 
-    protected boolean bj()
-    {
-        return false;
-    }
-
     /**
      * Is called when a MyPet attemps to do damge to another entity
      */
@@ -361,7 +377,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (myPet.hasTarget())
                 {
-                    myPet.getCraftPet().getHandle().setGoalTarget((EntityLiving) null);
+                    myPet.getCraftPet().getHandle().setGoalTarget(null);
                 }
                 return false;
             }
