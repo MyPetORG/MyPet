@@ -46,11 +46,12 @@ public class MyPigZombie extends MyPet
 
     public void setEquipment(EquipmentSlot slot, ItemStack item)
     {
+        item = item.cloneItemStack();
+        equipment.put(slot, item);
         if (status == PetState.Here)
         {
             getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
         }
-        equipment.put(slot, item);
     }
 
     public ItemStack[] getEquipment()

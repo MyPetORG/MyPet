@@ -65,8 +65,18 @@ public class EntityMySkeleton extends EntityMyPet
 
     public void setEquipment(int slot, ItemStack itemStack)
     {
-        super.setEquipment(slot, itemStack);
+        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
         ((MySkeleton) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
+    }
+
+    public ItemStack getEquipment(int slot)
+    {
+        return ((MySkeleton) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
+    }
+
+    public ItemStack[] getEquipment()
+    {
+        return ((MySkeleton) myPet).getEquipment();
     }
 
     public boolean checkForEquipment(ItemStack itemstack)
