@@ -258,7 +258,14 @@ public class LevelCreator
                 if (displayNameCheckbox.isSelected())
                 {
                     displayNameTextField.setEnabled(true);
-                    skillTree.setDisplayName(displayNameTextField.getText());
+                    if (!displayNameTextField.getText().equalsIgnoreCase(""))
+                    {
+                        skillTree.setDisplayName(displayNameTextField.getText());
+                    }
+                    else
+                    {
+                        skillTree.setDisplayName(null);
+                    }
                 }
                 else
                 {
@@ -335,7 +342,7 @@ public class LevelCreator
             public void keyReleased(KeyEvent arg0)
             {
                 permissionTextField.setText(permissionTextField.getText().replaceAll("[^a-zA-Z0-9]*", ""));
-                if (!skillTree.getPermission().equals(permissionTextField.getText()))
+                if (permissionCheckbox.isSelected() && !skillTree.getPermission().equals(permissionTextField.getText()))
                 {
                     if (!permissionTextField.getText().equalsIgnoreCase(""))
                     {
@@ -361,7 +368,7 @@ public class LevelCreator
 
             public void keyReleased(KeyEvent arg0)
             {
-                if (!skillTree.getDisplayName().equals(displayNameTextField.getText()))
+                if (displayNameCheckbox.isSelected() && !skillTree.getDisplayName().equals(displayNameTextField.getText()))
                 {
                     if (!displayNameTextField.getText().equalsIgnoreCase(""))
                     {
@@ -458,16 +465,26 @@ public class LevelCreator
 
         if (skillTree.hasDisplayName())
         {
-            displayNameTextField.setText(skillTree.getDisplayName());
             displayNameTextField.setEnabled(true);
             displayNameCheckbox.setSelected(true);
         }
+        else
+        {
+            displayNameTextField.setEnabled(false);
+            displayNameCheckbox.setSelected(false);
+        }
+        displayNameTextField.setText(skillTree.getDisplayName());
         if (skillTree.hasCustomPermissions())
         {
-            permissionTextField.setText(skillTree.getPermission());
             permissionTextField.setEnabled(true);
             permissionCheckbox.setSelected(true);
         }
+        else
+        {
+            permissionTextField.setEnabled(false);
+            permissionCheckbox.setSelected(false);
+        }
+        permissionTextField.setText(skillTree.getPermission());
         permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
         mobTypeLabel.setText(skillTreeMobType.getMobTypeName());
 
