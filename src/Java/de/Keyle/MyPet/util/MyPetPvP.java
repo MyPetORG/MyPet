@@ -217,7 +217,7 @@ public class MyPetPvP
         if (!searchedResidence)
         {
             searchedResidence = true;
-            pluginResidence = MyPetUtil.getServer().getPluginManager().isPluginEnabled("mcMMO");
+            pluginResidence = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Residence");
         }
         if (USE_Residence && pluginResidence)
         {
