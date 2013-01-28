@@ -35,10 +35,13 @@ import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import net.minecraft.server.v1_4_R1.NBTTagList;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEnderman;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
@@ -50,6 +53,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -304,6 +308,22 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
                                 extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
+
+                                NBTTagList equipment = new NBTTagList();
+                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", i + 1);
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                extendedInfo.set("Equipment", equipment);
                             }
                             else if (leashTarget instanceof Enderman)
                             {
@@ -313,6 +333,40 @@ public class MyPetEntityListener implements Listener
                             else if (leashTarget instanceof Skeleton)
                             {
                                 extendedInfo.setBoolean("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER);
+
+                                NBTTagList equipment = new NBTTagList();
+                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", i + 1);
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                extendedInfo.set("Equipment", equipment);
+                            }
+                            else if (leashTarget instanceof PigZombie)
+                            {
+                                NBTTagList equipment = new NBTTagList();
+                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", i + 1);
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                extendedInfo.set("Equipment", equipment);
                             }
                             if (leashTarget instanceof Ageable)
                             {
