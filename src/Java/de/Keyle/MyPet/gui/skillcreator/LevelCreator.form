@@ -22,6 +22,7 @@
             <properties>
               <rootVisible value="true"/>
               <showsRootHandles value="true"/>
+              <toolTipText value="Doubleclick an item to edit the skill properties."/>
             </properties>
           </component>
         </children>
