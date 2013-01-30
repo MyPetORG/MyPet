@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -58,6 +59,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -309,20 +311,62 @@ public class MyPetEntityListener implements Listener
                                 extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
                                 extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
 
+                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
                                 NBTTagList equipment = new NBTTagList();
-                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+
+                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
                                 {
-                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                     if (itemStack != null && itemStack.getType() != Material.AIR)
                                     {
                                         net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
 
                                         NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", i + 1);
+                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
                                         nmsItemStack.save(item);
                                         equipment.add(item);
                                     }
                                 }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+
                                 extendedInfo.set("Equipment", equipment);
                             }
                             else if (leashTarget instanceof Enderman)
@@ -334,38 +378,122 @@ public class MyPetEntityListener implements Listener
                             {
                                 extendedInfo.setBoolean("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER);
 
+                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
                                 NBTTagList equipment = new NBTTagList();
-                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+
+                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
                                 {
-                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                     if (itemStack != null && itemStack.getType() != Material.AIR)
                                     {
                                         net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
 
                                         NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", i + 1);
+                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
                                         nmsItemStack.save(item);
                                         equipment.add(item);
                                     }
                                 }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+
                                 extendedInfo.set("Equipment", equipment);
                             }
                             else if (leashTarget instanceof PigZombie)
                             {
+                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
                                 NBTTagList equipment = new NBTTagList();
-                                for (int i = 0 ; i < leashTarget.getEquipment().getArmorContents().length ; i++)
+
+                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
                                 {
-                                    ItemStack itemStack = leashTarget.getEquipment().getArmorContents()[i];
+                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                     if (itemStack != null && itemStack.getType() != Material.AIR)
                                     {
                                         net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
 
                                         NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", i + 1);
+                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
                                         nmsItemStack.save(item);
                                         equipment.add(item);
                                     }
                                 }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                                {
+                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                    if (itemStack != null && itemStack.getType() != Material.AIR)
+                                    {
+                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                        NBTTagCompound item = new NBTTagCompound();
+                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                        nmsItemStack.save(item);
+                                        equipment.add(item);
+                                    }
+                                }
+
                                 extendedInfo.set("Equipment", equipment);
                             }
                             if (leashTarget instanceof Ageable)
