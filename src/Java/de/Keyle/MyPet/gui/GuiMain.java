@@ -54,7 +54,9 @@ public class GuiMain
         {
             e.printStackTrace();
         }
-        path = path.replace("/MyPet.jar", "").replace("/", File.separator).substring(1);
+        path = path.replace("/", File.separator);
+        path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
+        path = path.substring(1);
         File pluginDirFile = new File(path);
         configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
 
