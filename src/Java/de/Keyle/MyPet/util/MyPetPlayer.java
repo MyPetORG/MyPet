@@ -155,7 +155,7 @@ public class MyPetPlayer implements Scheduler
         }
         if (hasMyPet())
         {
-            if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(this.getPlayer()).getPetType().getTypeName()))
+            if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + getMyPet().getPetType().getTypeName()))
             {
                 MyPetUtil.getDebugLogger().info("set MyPet of " + this.getName() + " to inactive");
                 MyPetList.setMyPetInactive(this.getPlayer());
