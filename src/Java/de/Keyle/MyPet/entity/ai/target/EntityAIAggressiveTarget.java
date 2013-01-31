@@ -24,14 +24,14 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_4_R1.EntityLiving;
+import net.minecraft.server.v1_4_R1.EntityPlayer;
+import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
+import net.minecraft.server.v1_4_R1.PathfinderGoal;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class EntityAIAggressiveTarget extends PathfinderGoal
 {
@@ -66,25 +66,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                         for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
                         {
                             EntityLiving entityLiving = (EntityLiving) entityObj;
-                            LivingEntity livingEntity = null;
-                            try
-                            {
-                                Method gBE = Entity.class.getDeclaredMethod("getBukkitEntity");
-                                gBE.setAccessible(true);
-                                livingEntity = (LivingEntity) gBE.invoke(entityLiving);
-                            }
-                            catch (IllegalAccessException e)
-                            {
-                                e.printStackTrace();
-                            }
-                            catch (NoSuchMethodException e1)
-                            {
-                                e1.printStackTrace();
-                            }
-                            catch (InvocationTargetException e1)
-                            {
-                                e1.printStackTrace();
-                            }
+                            LivingEntity livingEntity = (LivingEntity) entityLiving.getBukkitEntity();
 
                             Location loc1 = livingEntity.getLocation();
                             Location loc2 = petEntity.getBukkitEntity().getLocation();
@@ -92,25 +74,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                             {
                                 if (entityLiving instanceof EntityPlayer)
                                 {
-                                    Player targetPlayer = null;
-                                    try
-                                    {
-                                        Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
-                                        gBE.setAccessible(true);
-                                        targetPlayer = (Player) gBE.invoke(entityLiving);
-                                    }
-                                    catch (IllegalAccessException e)
-                                    {
-                                        e.printStackTrace();
-                                    }
-                                    catch (NoSuchMethodException e1)
-                                    {
-                                        e1.printStackTrace();
-                                    }
-                                    catch (InvocationTargetException e1)
-                                    {
-                                        e1.printStackTrace();
-                                    }
+                                    Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                                     if (myPet.getOwner().equals(targetPlayer))
                                     {
                                         continue;
@@ -182,6 +146,6 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
 
     public void d()
     {
-        petEntity.setGoalTarget((EntityLiving) null);
+        petEntity.setGoalTarget(null);
     }
 }

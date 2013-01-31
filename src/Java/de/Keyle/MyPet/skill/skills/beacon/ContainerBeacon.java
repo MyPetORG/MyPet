@@ -24,9 +24,6 @@ import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeacon
 {
     private final SlotBeacon slotBeacon;
@@ -69,8 +66,6 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeaco
         icrafting.setContainerData(this, 2, this.beaconSkill.getSecondaryEffectId());
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
     public CraftInventoryView getBukkitView()
     {
         if (this.bukkitEntity != null)
@@ -79,30 +74,13 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeaco
         }
 
         CraftMyPetInventoryBeacon craftBeaconInventory = new CraftMyPetInventoryBeacon(this.beaconInv);
-
-        Player player = null;
-        try
-        {
-            Method gBE = EntityHuman.class.getDeclaredMethod("getBukkitEntity");
-            gBE.setAccessible(true);
-            player = (Player) gBE.invoke(this.playerInventory.player);
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
-        catch (NoSuchMethodException e1)
-        {
-            e1.printStackTrace();
-        }
-        catch (InvocationTargetException e1)
-        {
-            e1.printStackTrace();
-        }
+        Player player = (Player) this.playerInventory.player.getBukkitEntity();
 
         this.bukkitEntity = new CraftInventoryView(player, craftBeaconInventory, this);
         return this.bukkitEntity;
     }
+
+    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     public boolean a(EntityHuman entityhuman)
     {
