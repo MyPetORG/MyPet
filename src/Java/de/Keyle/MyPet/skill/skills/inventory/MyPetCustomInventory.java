@@ -98,6 +98,10 @@ public class MyPetCustomInventory implements IInventory
 
     public int addItem(org.bukkit.inventory.ItemStack itemAdd)
     {
+        if (itemAdd == null)
+        {
+            return 0;
+        }
         itemAdd = itemAdd.clone();
         int itemID = itemAdd.getTypeId();
         int itemDuarbility = itemAdd.getDurability();
@@ -115,7 +119,7 @@ public class MyPetCustomInventory implements IInventory
                 {
                     continue;
                 }
-                else if (item.getEnchantments().size() > 0 || itemAdd.getEnchantments().size() > 0)
+                else if ((item.getEnchantments() != null && item.getEnchantments().size() > 0) || (itemAdd.getEnchantments() != null && itemAdd.getEnchantments().size() > 0))
                 {
                     continue;
                 }
