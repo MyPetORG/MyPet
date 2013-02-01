@@ -142,9 +142,15 @@ public class MyPetPlayer implements Scheduler
         return false;
     }
 
-    public static List<MyPetPlayer> getPlayerList()
+    public static MyPetPlayer[] getMyPetPlayers()
     {
-        return playerList;
+        MyPetPlayer[] playerArray = new MyPetPlayer[playerList.size()];
+        int playerCounter = 0;
+        for (MyPetPlayer player : playerList)
+        {
+            playerArray[playerCounter++] = player;
+        }
+        return playerArray;
     }
 
     public void schedule()

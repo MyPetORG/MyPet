@@ -60,7 +60,7 @@ public class MyPetTimer
                 {
                     task.schedule();
                 }
-                for (MyPetPlayer player : MyPetPlayer.getPlayerList())
+                for (MyPetPlayer player : MyPetPlayer.getMyPetPlayers())
                 {
                     player.schedule();
                 }

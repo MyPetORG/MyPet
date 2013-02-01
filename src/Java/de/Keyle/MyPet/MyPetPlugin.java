@@ -352,7 +352,7 @@ public class MyPetPlugin extends JavaPlugin
         timer.startTimer();
 
         debugLogger.info("MyPetPlayer: ---------------");
-        for (MyPetPlayer myPetPlayer : MyPetPlayer.getPlayerList())
+        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
         {
             debugLogger.info("   " + myPetPlayer.toString());
         }
@@ -719,7 +719,7 @@ public class MyPetPlugin extends JavaPlugin
     {
         NBTTagList playerNBTlist = new NBTTagList();
 
-        for (MyPetPlayer myPetPlayer : MyPetPlayer.getPlayerList())
+        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
         {
             if (myPetPlayer.hasCustomData())
             {
