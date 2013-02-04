@@ -114,6 +114,7 @@ public class MyPetLanguage
         addString("Msg_InventorySwimming", "MyPet.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%petname%%white% is swimming!");
         // --  L  --
         addString("Msg_LearnedSkill", "MyPet.Message.learnskill", "%aqua%%petname%%white% learned the skill %skill%.");
+        addString("Msg_LightnigChance", "MyPet.Message.lightningchance", "%aqua%%petname%%white% has now a chance of %chance%% to shoot a lightning at his enemies");
         addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%white% is now Lv%lvl%");
         // --  N  --
         addString("Msg_Name", "MyPet.Message.name", "The name of your pet is: %aqua%%petname%");

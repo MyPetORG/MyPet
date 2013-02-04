@@ -66,6 +66,43 @@ import static org.bukkit.Bukkit.getPluginManager;
 public class MyPetEntityListener implements Listener
 {
     @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
+    {
+        if (event.getCause() == DamageCause.LIGHTNING)
+        {
+            LightningStrike bolt = (LightningStrike) event.getDamager();
+            if (Lightning.isSkillLightning(bolt))
+            {
+                MyPet boltMyPet = Lightning.lightningList.get(bolt);
+                if (event.getEntity() instanceof CraftMyPet)
+                {
+                    MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    if (boltMyPet == myPet)
+                    {
+                        event.setCancelled(true);
+                    }
+                    else if (!MyPetPvP.canHurt(boltMyPet.getOwner().getPlayer(), myPet.getOwner().getPlayer()))
+                    {
+                        event.setCancelled(true);
+                    }
+                }
+                else if (event.getEntity() instanceof Player)
+                {
+                    Player victim = (Player) event.getEntity();
+                    if (boltMyPet.getOwner().getPlayer() == victim)
+                    {
+                        event.setCancelled(true);
+                    }
+                    else if (!MyPetPvP.canHurt(boltMyPet.getOwner().getPlayer(), victim))
+                    {
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onEntityDamage(final EntityDamageEvent event)
     {
         if (event.isCancelled())
@@ -607,6 +644,18 @@ public class MyPetEntityListener implements Listener
                     if (fireSkill.getFire())
                     {
                         event.getEntity().setFireTicks(fireSkill.getDuration() * 20);
+                    }
+                }
+                if (!skillUsed && myPet.getSkills().hasSkill("Lightning"))
+                {
+                    Lightning lightningSkill = (Lightning) myPet.getSkills().getSkill("Lightning");
+                    if (lightningSkill.getLightning())
+                    {
+                        LightningStrike strike = event.getEntity().getLocation().getWorld().strikeLightning(event.getEntity().getLocation());
+                        if (strike != null)
+                        {
+                            Lightning.lightningList.put(strike, myPet);
+                        }
                     }
                 }
             }

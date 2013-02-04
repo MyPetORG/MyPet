@@ -188,6 +188,12 @@ public class MyPetPlugin extends JavaPlugin
         MyPetLevelUpListener levelupListener = new MyPetLevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, getPlugin());
 
+        MyPetWeatherListener weatherListener = new MyPetWeatherListener();
+        getServer().getPluginManager().registerEvents(weatherListener, getPlugin());
+
+        MyPetBlockListener blockListener = new MyPetBlockListener();
+        getServer().getPluginManager().registerEvents(blockListener, getPlugin());
+
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
         getCommand("petsendaway").setExecutor(new CommandSendAway());
@@ -460,6 +466,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Fire.class);
         MyPetSkills.registerSkill(Beacon.class);
         MyPetSkills.registerSkill(Wither.class);
+        MyPetSkills.registerSkill(Lightning.class);
     }
 
     public static boolean checkForUpdates(String compatibleMinecraftVersion)
