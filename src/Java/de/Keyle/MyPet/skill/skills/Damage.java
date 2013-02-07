@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
@@ -66,14 +67,14 @@ public class Damage extends MyPetGenericSkill
                 {
                     damageIncrease = upgrade.getProperties().getInt("damage");
                 }
-                if (damageIncrease > 0 && isPassive)
+                if (myPet.status == PetState.Here && damageIncrease > 0 && isPassive )
                 {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().setPathfinder();
                     isPassive = false;
                 }
-                else if (damageIncrease <= 0 && !isPassive)
+                else if (myPet.status == PetState.Here && damageIncrease <= 0 && !isPassive)
                 {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
