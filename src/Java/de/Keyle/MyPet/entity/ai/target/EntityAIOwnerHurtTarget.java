@@ -41,7 +41,6 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
     {
         this.petEntity = myPet.getCraftPet().getHandle();
         this.myPet = myPet;
-        this.a(1);
     }
 
     /**

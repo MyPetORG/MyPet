@@ -40,7 +40,6 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
     {
         this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();
-        a(1);
     }
 
     public boolean a()

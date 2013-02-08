@@ -168,12 +168,24 @@ public class EntityAIRide extends PathfinderGoal
 
         PathPoint localPathPoint = new PathPoint(MathHelper.d(this.petEntity.width + 1.0F), MathHelper.d(this.petEntity.length + petRider.length + 1.0F), MathHelper.d(this.petEntity.width + 1.0F));
 
-        if (((x != n) || (z != i1)) && (Pathfinder.a(this.petEntity, n, y, i1, localPathPoint, false, false, true) == 0) && (Pathfinder.a(this.petEntity, x, y + 1, z, localPathPoint, false, false, true) == 1) && (Pathfinder.a(this.petEntity, n, y + 1, i1, localPathPoint, false, false, true) == 1))
+        if ((x != n) || (z != i1))
         {
-            this.petEntity.getControllerJump().a();
+            int blockAtEntityPos = this.petEntity.world.getData(x, y, z);
+            int blockbelowEntityPos = this.petEntity.world.getData(x, y - 1, z);
+            boolean isStep = checkForStep(blockAtEntityPos) || ((Block.byId[blockAtEntityPos] == null) && checkForStep(blockbelowEntityPos));
+
+            if (!isStep && Pathfinder.a(this.petEntity, n, y, i1, localPathPoint, false, false, true) == 0 && Pathfinder.a(this.petEntity, x, y + 1, z, localPathPoint, false, false, true) == 1 && Pathfinder.a(this.petEntity, n, y + 1, i1, localPathPoint, false, false, true) == 1)
+            {
+                this.petEntity.getControllerJump().a();
+            }
         }
 
         this.petEntity.e(0.0F, f2);
+    }
+
+    private boolean checkForStep(int blockId)
+    {
+        return Block.byId[blockId] != null && (Block.byId[blockId].d() == 10 || Block.byId[blockId] instanceof BlockStepAbstract);
     }
 
     public void stopRiding(boolean flag)
