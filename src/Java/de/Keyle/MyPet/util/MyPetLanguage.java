@@ -143,6 +143,7 @@ public class MyPetLanguage
         addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%petname%%white%'s skills: %skilltree%");
         addString("Msg_SkilltreeNotSwitched", "MyPet.Message.skilltreesnotwitched", "Skilltree hasn't changed!");
         addString("Msg_SkilltreeSwitchedTo", "MyPet.Message.skilltreeswitchedto", "You have selected the %aqua%%name%%white% skilltree.");
+        addString("Msg_SlowChance", "MyPet.Message.slowchance", "%aqua%%petname%%white% has now a chance of %chance%% to slow target down for %duration%sec.");
         addString("Msg_SpawnNoSpace", "MyPet.Message.spawnnospace", "%aqua%%petname%%white% can not come to you because there is not enough space.");
         addString("Msg_StopAttack", "MyPet.Message.stopattack", "Your pet should now %green%stop%white% attacking!");
         // --  T  --

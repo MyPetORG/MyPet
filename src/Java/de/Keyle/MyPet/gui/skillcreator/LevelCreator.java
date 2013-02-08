@@ -67,6 +67,8 @@ public class LevelCreator
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
+    String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Lightning", "Pickup", "Poison", "Ride", "Slow", "Thorns", "Wither"};
+
     public LevelCreator()
     {
         addLevelButton.addActionListener(new ActionListener()
@@ -131,8 +133,6 @@ public class LevelCreator
                 {
                     return;
                 }
-
-                String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Lightning", "Pickup", "Poison", "Ride", "Thorns", "Wither"};
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null)
                 {

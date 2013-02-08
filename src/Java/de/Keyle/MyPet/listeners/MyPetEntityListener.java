@@ -644,6 +644,17 @@ public class MyPetEntityListener implements Listener
                     if (fireSkill.getFire())
                     {
                         event.getEntity().setFireTicks(fireSkill.getDuration() * 20);
+                        skillUsed = true;
+                    }
+                }
+                if (!skillUsed && myPet.getSkills().hasSkill("Slow"))
+                {
+                    Slow slowSkill = (Slow) myPet.getSkills().getSkill("Slow");
+                    if (slowSkill.getSlow())
+                    {
+                        PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, slowSkill.getDuration() * 20, 1);
+                        ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                        skillUsed = true;
                     }
                 }
                 if (!skillUsed && myPet.getSkills().hasSkill("Lightning"))
