@@ -54,7 +54,7 @@ public class Control extends MyPetGenericSkill
             active = true;
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", ITEM.name()));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", ITEM.name()).replace("%ITEM%", ITEM.name()));
 
             }
         }

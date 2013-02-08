@@ -89,7 +89,7 @@ public class HPregeneration extends MyPetGenericSkill
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%add%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%hp%", "" + increaseHpBy));
             }
         }
     }

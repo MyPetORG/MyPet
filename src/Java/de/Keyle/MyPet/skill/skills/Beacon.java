@@ -31,6 +31,7 @@ import de.Keyle.MyPet.skill.skills.beacon.TileEntityBeacon;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.*;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
@@ -172,7 +173,7 @@ public class Beacon extends MyPetGenericSkill
             }
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddBeacon").replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration)));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddBeacon").replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration).replace("%petname%", myPet.petName)));
                 myPet.sendMessageToOwner("  " + getFormattedValue());
             }
         }
@@ -190,11 +191,12 @@ public class Beacon extends MyPetGenericSkill
                 {
                     availableBuffs += ", ";
                 }
-                availableBuffs += MyPetLanguage.getString("Name_" + buffNames.get(primaryBuffId));
+                availableBuffs += ChatColor.GOLD + MyPetLanguage.getString("Name_" + buffNames.get(primaryBuffId));
                 if (secundaryActive.get(primaryBuffId))
                 {
                     availableBuffs += " (II)";
                 }
+                availableBuffs += ChatColor.RESET;
             }
         }
         if (secundaryActive.get(10))
@@ -203,7 +205,7 @@ public class Beacon extends MyPetGenericSkill
             {
                 availableBuffs += ", ";
             }
-            availableBuffs += MyPetLanguage.getString("Name_" + buffNames.get(10));
+            availableBuffs += ChatColor.GOLD + MyPetLanguage.getString("Name_" + buffNames.get(10)) + ChatColor.RESET;
         }
         return availableBuffs;
     }

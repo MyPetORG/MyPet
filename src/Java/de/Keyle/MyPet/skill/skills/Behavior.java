@@ -28,6 +28,7 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class Behavior extends MyPetGenericSkill
                 behaviorActive.put(BehaviorState.Friendly, upgrade.getProperties().getBoolean("friend"));
                 if (behaviorActive.get(BehaviorState.Friendly))
                 {
-                    activeModes = "Friendly";
+                    activeModes = ChatColor.GOLD + "Friendly" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
@@ -85,7 +86,7 @@ public class Behavior extends MyPetGenericSkill
                     {
                         activeModes += ", ";
                     }
-                    activeModes += "Aggressive";
+                    activeModes += ChatColor.GOLD + "Aggressive" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
@@ -98,7 +99,7 @@ public class Behavior extends MyPetGenericSkill
                     {
                         activeModes += ", ";
                     }
-                    activeModes += "Farm";
+                    activeModes += ChatColor.GOLD + "Farm" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
@@ -111,13 +112,14 @@ public class Behavior extends MyPetGenericSkill
                     {
                         activeModes += ", ";
                     }
-                    activeModes += "Raid";
+                    activeModes += ChatColor.GOLD + "Raid" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(getFormattedValue()));
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddBehavior").replace("%petname%", myPet.petName)));
+                myPet.sendMessageToOwner("  " + activeModes);
             }
         }
     }
@@ -125,11 +127,11 @@ public class Behavior extends MyPetGenericSkill
     @Override
     public String getFormattedValue()
     {
-        String activeModes = MyPetLanguage.getString("Name_Normal");
+        String activeModes = ChatColor.GOLD + MyPetLanguage.getString("Name_Normal") + ChatColor.RESET;
         if (behaviorActive.get(BehaviorState.Friendly))
         {
 
-            activeModes += ", " + MyPetLanguage.getString("Name_Friendly");
+            activeModes += ", " + ChatColor.GOLD + MyPetLanguage.getString("Name_Friendly") + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Aggressive))
         {
@@ -137,7 +139,7 @@ public class Behavior extends MyPetGenericSkill
             {
                 activeModes += ", ";
             }
-            activeModes += MyPetLanguage.getString("Name_Aggressive");
+            activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Aggressive") + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Farm))
         {
@@ -145,7 +147,7 @@ public class Behavior extends MyPetGenericSkill
             {
                 activeModes += ", ";
             }
-            activeModes += MyPetLanguage.getString("Name_Farm");
+            activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Farm") + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Raid))
         {
@@ -153,7 +155,7 @@ public class Behavior extends MyPetGenericSkill
             {
                 activeModes += ", ";
             }
-            activeModes += MyPetLanguage.getString("Name_Raid");
+            activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Raid") + ChatColor.RESET;
         }
         return MyPetLanguage.getString("Name_Modes") + ": " + activeModes;
     }
