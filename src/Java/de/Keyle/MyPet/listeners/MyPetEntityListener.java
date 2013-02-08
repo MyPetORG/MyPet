@@ -68,7 +68,7 @@ import static org.bukkit.Bukkit.getPluginManager;
 public class MyPetEntityListener implements Listener
 {
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
+    public void onEntityDamageByLightning(final EntityDamageByEntityEvent event)
     {
         if (event.getCause() == DamageCause.LIGHTNING)
         {
@@ -105,458 +105,442 @@ public class MyPetEntityListener implements Listener
     }
 
     @EventHandler
-    public void onEntityDamage(final EntityDamageEvent event)
+    public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event)
     {
-        if (event.isCancelled())
+        if(event.getEntity() instanceof CraftMyPet)
         {
-            return;
-        }
-        if (event instanceof EntityDamageByEntityEvent)
-        {
-            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-
-            if (event.getEntity() instanceof CraftMyPet)
+            MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+            if (event.getDamager() instanceof Player || (event.getDamager() instanceof Arrow && ((Arrow) event.getDamager()).getShooter() instanceof Player))
             {
-                MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                if (e.getDamager() instanceof Player || (e.getDamager() instanceof Arrow && ((Arrow) e.getDamager()).getShooter() instanceof Player))
+                Player damager;
+                if (event.getDamager() instanceof Arrow)
                 {
-                    Player damager;
-                    if (e.getDamager() instanceof Arrow)
+                    damager = (Player) ((Arrow) event.getDamager()).getShooter();
+                }
+                else
+                {
+                    damager = (Player) event.getDamager();
+                }
+                if (myPet.getCraftPet().getHandle().hasRider())
+                {
+                    event.setCancelled(true);
+                    if (myPet.getSkills().hasSkill("Ride"))
                     {
-                        damager = (Player) ((Arrow) e.getDamager()).getShooter();
+                        if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
+                        {
+                            ((EntityAIRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
+                        }
+                    }
+                }
+                else if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM)
+                {
+                    String msg;
+                    if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                    {
+                        msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                    }
+                    else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
+                    {
+                        msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                     }
                     else
                     {
-                        damager = (Player) e.getDamager();
+                        msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                     }
-                    if (myPet.getCraftPet().getHandle().hasRider())
+                    damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
+                    damager.sendMessage(MyPetUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
+                    if (!myPet.getOwner().equals(damager))
                     {
-                        event.setCancelled(true);
-                        if (myPet.getSkills().hasSkill("Ride"))
-                        {
-                            if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
-                            {
-                                ((EntityAIRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
-                            }
-                        }
+                        damager.sendMessage(MyPetUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
                     }
-                    else if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM)
+                    else
                     {
-                        String msg;
-                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                        if (!myPet.isPassiv())
                         {
-                            msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                         }
-                        else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
+                        if (MyPetConfiguration.USE_HUNGER_SYSTEM)
                         {
-                            msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                         }
-                        else
+                        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                         {
-                            msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            int lvl = myPet.getExperience().getLevel();
+                            double exp = myPet.getExperience().getCurrentExp();
+                            double reqEXP = myPet.getExperience().getRequiredExp();
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
                         }
-                        damager.sendMessage(MyPetUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
-                        damager.sendMessage(MyPetUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
-                        if (!myPet.getOwner().equals(damager))
-                        {
-                            damager.sendMessage(MyPetUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
-                        }
-                        else
-                        {
-                            if (!myPet.isPassiv())
-                            {
-                                int damage = MyPet.getStartDamage(myPet.getClass()) + (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
-                                damager.sendMessage(MyPetUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
-                            }
-                            if (MyPetConfiguration.USE_HUNGER_SYSTEM)
-                            {
-                                damager.sendMessage(MyPetUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
-                            }
-                            if (MyPetConfiguration.USE_LEVEL_SYSTEM)
-                            {
-                                int lvl = myPet.getExperience().getLevel();
-                                double exp = myPet.getExperience().getCurrentExp();
-                                double reqEXP = myPet.getExperience().getRequiredExp();
-                                damager.sendMessage(MyPetUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
-                                damager.sendMessage(MyPetUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
-                            }
-                        }
-                        event.setCancelled(true);
                     }
-                    else if (myPet.getOwner().equals(damager) && (!MyPetConfiguration.OWNER_CAN_ATTACK_PET || !MyPetPvP.canHurt(myPet.getOwner().getPlayer())))
-                    {
-                        event.setCancelled(true);
-                    }
-                    else if (!myPet.getOwner().equals(damager) && !MyPetPvP.canHurt(damager, myPet.getOwner().getPlayer()))
-                    {
-                        event.setCancelled(true);
-                    }
+                    event.setCancelled(true);
                 }
-                if (!event.isCancelled())
+                else if (myPet.getOwner().equals(damager) && (!MyPetConfiguration.OWNER_CAN_ATTACK_PET || !MyPetPvP.canHurt(myPet.getOwner().getPlayer())))
                 {
-                    if (((EntityDamageByEntityEvent) event).getDamager() instanceof LivingEntity && myPet.getSkills().isSkillActive("Thorns"))
-                    {
-                        Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
-                        if (thornsSkill.isActivated())
-                        {
-                            ((LivingEntity) ((EntityDamageByEntityEvent) event).getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
-                        }
-                    }
+                    event.setCancelled(true);
+                }
+                else if (!myPet.getOwner().equals(damager) && !MyPetPvP.canHurt(damager, myPet.getOwner().getPlayer()))
+                {
+                    event.setCancelled(true);
                 }
             }
-            else if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
+            if (!event.isCancelled())
             {
-                if (e.getDamager() instanceof Player)
+                Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
+                if (thornsSkill.isActivated())
                 {
-                    Player damager = (Player) e.getDamager();
+                    ((LivingEntity) event.getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
+                }
+            }
+        }
+    }
 
-                    if (!MyPetList.hasMyPet(damager))
+    @EventHandler
+    public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event)
+    {
+        if (event.getDamager() instanceof Player)
+        {
+            if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
+            {
+                Player damager = (Player) event.getDamager();
+
+                if (!MyPetList.hasMyPet(damager))
+                {
+                    LivingEntity leashTarget = (LivingEntity) event.getEntity();
+                    if (damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
                     {
-                        LivingEntity leashTarget = (LivingEntity) event.getEntity();
-                        if (!MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()) || damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM)
+                        return;
+                    }
+
+                    boolean willBeLeashed = true;
+                    List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
+
+                    for (LeashFlag flag : leashFlags)
+                    {
+                        if (flag == LeashFlag.Adult)
                         {
-                            return;
-                        }
-
-                        boolean willBeLeashed = true;
-                        List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
-
-                        for (LeashFlag flag : leashFlags)
-                        {
-                            if (flag == LeashFlag.Adult)
+                            if (leashTarget instanceof Ageable)
                             {
-                                if (leashTarget instanceof Ageable)
-                                {
-                                    willBeLeashed = ((Ageable) leashTarget).isAdult();
-                                }
-                                else if (leashTarget instanceof Zombie)
-                                {
-                                    willBeLeashed = !((Zombie) leashTarget).isBaby();
-                                }
-                            }
-                            else if (flag == LeashFlag.Baby)
-                            {
-                                if (leashTarget instanceof Ageable)
-                                {
-                                    willBeLeashed = !((Ageable) leashTarget).isAdult();
-                                }
-                                else if (leashTarget instanceof Zombie)
-                                {
-                                    willBeLeashed = ((Zombie) leashTarget).isBaby();
-                                }
-                            }
-                            else if (flag == LeashFlag.LowHp)
-                            {
-                                willBeLeashed = leashTarget.getHealth() <= 2;
-                            }
-                            else if (flag == LeashFlag.UserCreated)
-                            {
-                                if (leashTarget instanceof IronGolem)
-                                {
-                                    willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
-                                }
-                            }
-                            else if (flag == LeashFlag.Wild)
-                            {
-                                if (leashTarget instanceof IronGolem)
-                                {
-                                    willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
-                                }
-                                else if (leashTarget instanceof Tameable)
-                                {
-                                    willBeLeashed = !((Tameable) leashTarget).isTamed();
-                                }
-                            }
-                            else if (flag == LeashFlag.Tamed)
-                            {
-                                if (leashTarget instanceof Tameable)
-                                {
-                                    willBeLeashed = ((Tameable) leashTarget).isTamed();
-                                }
-                            }
-                            else if (flag == LeashFlag.CanBreed)
-                            {
-                                if (leashTarget instanceof Ageable)
-                                {
-                                    willBeLeashed = ((Ageable) leashTarget).canBreed();
-                                }
-                            }
-                            else if (flag == LeashFlag.Angry)
-                            {
-                                if (leashTarget instanceof Wolf)
-                                {
-                                    willBeLeashed = ((Wolf) leashTarget).isAngry();
-                                }
-                            }
-                            else if (flag == LeashFlag.Impossible)
-                            {
-                                willBeLeashed = false;
-                                break;
-                            }
-                            else if (flag == LeashFlag.None)
-                            {
-                                willBeLeashed = true;
-                                break;
-                            }
-                            if (!willBeLeashed)
-                            {
-                                break;
-                            }
-                        }
-
-                        if (willBeLeashed)
-                        {
-                            event.setCancelled(true);
-                            InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
-                            inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
-                            inactiveMyPet.setPetName(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName());
-                            inactiveMyPet.setLocation(leashTarget.getLocation());
-
-                            NBTTagCompound extendedInfo = new NBTTagCompound("Info");
-                            if (leashTarget instanceof Ocelot)
-                            {
-                                extendedInfo.setInt("CatType", ((Ocelot) leashTarget).getCatType().getId());
-                                extendedInfo.setBoolean("Sitting", ((Ocelot) leashTarget).isSitting());
-                            }
-                            else if (leashTarget instanceof Wolf)
-                            {
-                                extendedInfo.setBoolean("Sitting", ((Wolf) leashTarget).isSitting());
-                                extendedInfo.setBoolean("Tamed", ((Wolf) leashTarget).isTamed());
-                                extendedInfo.setByte("CollarColor", ((Wolf) leashTarget).getCollarColor().getDyeData());
-                            }
-                            else if (leashTarget instanceof Sheep)
-                            {
-                                extendedInfo.setInt("Color", ((Sheep) leashTarget).getColor().getDyeData());
-                                extendedInfo.setBoolean("Sheared", ((Sheep) leashTarget).isSheared());
-                            }
-                            else if (leashTarget instanceof Villager)
-                            {
-                                extendedInfo.setInt("Profession", ((Villager) leashTarget).getProfession().getId());
-                            }
-                            else if (leashTarget instanceof Pig)
-                            {
-                                extendedInfo.setBoolean("Saddle", ((Pig) leashTarget).hasSaddle());
-                            }
-                            else if (leashTarget instanceof Slime)
-                            {
-                                extendedInfo.setInt("Size", ((Slime) leashTarget).getSize());
-                            }
-                            else if (leashTarget instanceof Creeper)
-                            {
-                                extendedInfo.setBoolean("Powered", ((Creeper) leashTarget).isPowered());
+                                willBeLeashed = ((Ageable) leashTarget).isAdult();
                             }
                             else if (leashTarget instanceof Zombie)
                             {
-                                extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
-                                extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
-
-                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
-                                NBTTagList equipment = new NBTTagList();
-
-                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-
-                                extendedInfo.set("Equipment", equipment);
+                                willBeLeashed = !((Zombie) leashTarget).isBaby();
                             }
-                            else if (leashTarget instanceof Enderman)
-                            {
-                                extendedInfo.setShort("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId());
-                                extendedInfo.setShort("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData());
-                            }
-                            else if (leashTarget instanceof Skeleton)
-                            {
-                                extendedInfo.setBoolean("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER);
-
-                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
-                                NBTTagList equipment = new NBTTagList();
-
-                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-
-                                extendedInfo.set("Equipment", equipment);
-                            }
-                            else if (leashTarget instanceof PigZombie)
-                            {
-                                Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
-                                NBTTagList equipment = new NBTTagList();
-
-                                if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-                                if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                                {
-                                    ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                    if (itemStack != null && itemStack.getType() != Material.AIR)
-                                    {
-                                        net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-
-                                        NBTTagCompound item = new NBTTagCompound();
-                                        item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
-                                        nmsItemStack.save(item);
-                                        equipment.add(item);
-                                    }
-                                }
-
-                                extendedInfo.set("Equipment", equipment);
-                            }
+                        }
+                        else if (flag == LeashFlag.Baby)
+                        {
                             if (leashTarget instanceof Ageable)
                             {
-                                extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
+                                willBeLeashed = !((Ageable) leashTarget).isAdult();
                             }
-                            inactiveMyPet.setInfo(extendedInfo);
-
-                            event.getEntity().remove();
-
-                            MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
-                            myPet.createPet();
-
-                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                            MyPetUtil.getDebugLogger().info("New Pet leashed:");
-                            MyPetUtil.getDebugLogger().info("   " + myPet.toString());
-                            MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
-                            damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
+                            else if (leashTarget instanceof Zombie)
+                            {
+                                willBeLeashed = ((Zombie) leashTarget).isBaby();
+                            }
                         }
+                        else if (flag == LeashFlag.LowHp)
+                        {
+                            willBeLeashed = leashTarget.getHealth() <= 2;
+                        }
+                        else if (flag == LeashFlag.UserCreated)
+                        {
+                            if (leashTarget instanceof IronGolem)
+                            {
+                                willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
+                            }
+                        }
+                        else if (flag == LeashFlag.Wild)
+                        {
+                            if (leashTarget instanceof IronGolem)
+                            {
+                                willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
+                            }
+                            else if (leashTarget instanceof Tameable)
+                            {
+                                willBeLeashed = !((Tameable) leashTarget).isTamed();
+                            }
+                        }
+                        else if (flag == LeashFlag.Tamed)
+                        {
+                            if (leashTarget instanceof Tameable)
+                            {
+                                willBeLeashed = ((Tameable) leashTarget).isTamed();
+                            }
+                        }
+                        else if (flag == LeashFlag.CanBreed)
+                        {
+                            if (leashTarget instanceof Ageable)
+                            {
+                                willBeLeashed = ((Ageable) leashTarget).canBreed();
+                            }
+                        }
+                        else if (flag == LeashFlag.Angry)
+                        {
+                            if (leashTarget instanceof Wolf)
+                            {
+                                willBeLeashed = ((Wolf) leashTarget).isAngry();
+                            }
+                        }
+                        else if (flag == LeashFlag.Impossible)
+                        {
+                            willBeLeashed = false;
+                            break;
+                        }
+                        else if (flag == LeashFlag.None)
+                        {
+                            willBeLeashed = true;
+                            break;
+                        }
+                        if (!willBeLeashed)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (willBeLeashed)
+                    {
+                        event.setCancelled(true);
+                        InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
+                        inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
+                        inactiveMyPet.setPetName(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName());
+                        inactiveMyPet.setLocation(leashTarget.getLocation());
+
+                        NBTTagCompound extendedInfo = new NBTTagCompound("Info");
+                        if (leashTarget instanceof Ocelot)
+                        {
+                            extendedInfo.setInt("CatType", ((Ocelot) leashTarget).getCatType().getId());
+                            extendedInfo.setBoolean("Sitting", ((Ocelot) leashTarget).isSitting());
+                        }
+                        else if (leashTarget instanceof Wolf)
+                        {
+                            extendedInfo.setBoolean("Sitting", ((Wolf) leashTarget).isSitting());
+                            extendedInfo.setBoolean("Tamed", ((Wolf) leashTarget).isTamed());
+                            extendedInfo.setByte("CollarColor", ((Wolf) leashTarget).getCollarColor().getDyeData());
+                        }
+                        else if (leashTarget instanceof Sheep)
+                        {
+                            extendedInfo.setInt("Color", ((Sheep) leashTarget).getColor().getDyeData());
+                            extendedInfo.setBoolean("Sheared", ((Sheep) leashTarget).isSheared());
+                        }
+                        else if (leashTarget instanceof Villager)
+                        {
+                            extendedInfo.setInt("Profession", ((Villager) leashTarget).getProfession().getId());
+                        }
+                        else if (leashTarget instanceof Pig)
+                        {
+                            extendedInfo.setBoolean("Saddle", ((Pig) leashTarget).hasSaddle());
+                        }
+                        else if (leashTarget instanceof Slime)
+                        {
+                            extendedInfo.setInt("Size", ((Slime) leashTarget).getSize());
+                        }
+                        else if (leashTarget instanceof Creeper)
+                        {
+                            extendedInfo.setBoolean("Powered", ((Creeper) leashTarget).isPowered());
+                        }
+                        else if (leashTarget instanceof Zombie)
+                        {
+                            extendedInfo.setBoolean("Baby", ((Zombie) leashTarget).isBaby());
+                            extendedInfo.setBoolean("Villager", ((Zombie) leashTarget).isVillager());
+
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
+                            NBTTagList equipment = new NBTTagList();
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            extendedInfo.set("Equipment", equipment);
+                        }
+                        else if (leashTarget instanceof Enderman)
+                        {
+                            extendedInfo.setShort("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId());
+                            extendedInfo.setShort("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData());
+                        }
+                        else if (leashTarget instanceof Skeleton)
+                        {
+                            extendedInfo.setBoolean("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER);
+
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
+                            NBTTagList equipment = new NBTTagList();
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            extendedInfo.set("Equipment", equipment);
+                        }
+                        else if (leashTarget instanceof PigZombie)
+                        {
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aB();
+                            NBTTagList equipment = new NBTTagList();
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Chestplate.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Helmet.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Leggins.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
+                            {
+                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                if (itemStack != null && itemStack.getType() != Material.AIR)
+                                {
+                                    net.minecraft.server.v1_4_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    NBTTagCompound item = new NBTTagCompound();
+                                    item.setInt("Slot", EquipmentSlot.Boots.getSlotId());
+                                    nmsItemStack.save(item);
+                                    equipment.add(item);
+                                }
+                            }
+                            extendedInfo.set("Equipment", equipment);
+                        }
+                        if (leashTarget instanceof Ageable)
+                        {
+                            extendedInfo.setBoolean("Baby", !((Ageable) leashTarget).isAdult());
+                        }
+                        inactiveMyPet.setInfo(extendedInfo);
+
+                        event.getEntity().remove();
+
+                        MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                        myPet.createPet();
+
+                        getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                        MyPetUtil.getDebugLogger().info("New Pet leashed:");
+                        MyPetUtil.getDebugLogger().info("   " + myPet.toString());
+                        MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
+                        damager.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
                     }
                 }
             }
         }
-        else if (event.getEntity() instanceof CraftMyPet)
+    }
+
+    @EventHandler
+    public void onMyPetEntityDamage(final EntityDamageEvent event)
+    {
+        if (event.getEntity() instanceof CraftMyPet)
         {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
 
@@ -578,34 +562,21 @@ public class MyPetEntityListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDamageResult(EntityDamageEvent event)
+    public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event)
     {
+        // --  fix unwanted screaming of Endermen --
         if (event.getEntity() instanceof CraftMyPet && ((CraftMyPet) event.getEntity()).getPetType() == MyPetType.Enderman)
         {
             MyEnderman myEnderman = (MyEnderman) ((CraftMyPet) event.getEntity()).getMyPet();
             ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(true);
             ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(false);
         }
-        if (!(event instanceof EntityDamageByEntityEvent) || event.isCancelled())
-        {
-            return;
-        }
-        EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-
-        if (e.getDamager() instanceof CraftMyPet)
-        {
-            MyPet myPet = ((CraftMyPet) e.getDamager()).getMyPet();
-            if (HeroesDamageFix.damageFaked(myPet.getDamage()))
-            {
-                event.setDamage(myPet.getDamage());
-            }
-        }
 
         if (event.getEntity() instanceof LivingEntity)
         {
-            if (e.getDamager() instanceof Player)
+            if (event.getDamager() instanceof Player)
             {
-                Player damager = (Player) e.getDamager();
+                Player damager = (Player) event.getDamager();
                 if (MyPetList.hasMyPet(damager))
                 {
                     MyPet myPet = MyPetList.getMyPet(damager);
@@ -613,13 +584,19 @@ public class MyPetEntityListener implements Listener
                     {
                         myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) event.getEntity()).getHandle();
                     }
-
                 }
             }
-            else if (e.getDamager() instanceof CraftMyPet)
+            else if (event.getDamager() instanceof CraftMyPet)
             {
+                //  --  Heroes Damage fix  --
+                MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
+                if (HeroesDamageFix.damageFaked(myPet.getDamage()))
+                {
+                    event.setDamage(myPet.getDamage());
+                }
+
+                //  --  Skills  --
                 boolean skillUsed = false;
-                MyPet myPet = ((CraftMyPet) e.getDamager()).getHandle().getMyPet();
                 if (myPet.getSkills().hasSkill("Poison"))
                 {
                     Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
