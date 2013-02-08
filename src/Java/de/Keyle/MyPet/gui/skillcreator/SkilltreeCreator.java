@@ -485,7 +485,7 @@ public class SkilltreeCreator
         asJSONMenuItem = new JMenuItem("JSON format");
         saveButtonRightclickMenu.add(asJSONMenuItem);
 
-        asNBTMenuItem = new JMenuItem("NBT format");
+        asNBTMenuItem = new JMenuItem("NBT format (default)");
         saveButtonRightclickMenu.add(asNBTMenuItem);
 
         asAllMenuItem = new JMenuItem("All formats");
