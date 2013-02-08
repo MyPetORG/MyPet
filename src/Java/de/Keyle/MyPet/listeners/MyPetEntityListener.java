@@ -35,11 +35,13 @@ import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
 import de.Keyle.MyPet.util.*;
+import net.minecraft.server.v1_4_R1.MathHelper;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.NBTTagList;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEnderman;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
@@ -654,6 +656,15 @@ public class MyPetEntityListener implements Listener
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, slowSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
+                        skillUsed = true;
+                    }
+                }
+                if (!skillUsed && myPet.getSkills().hasSkill("Knockback"))
+                {
+                    Knockback knockbackSkill = (Knockback) myPet.getSkills().getSkill("Knockback");
+                    if (knockbackSkill.isActivated())
+                    {
+                        ((CraftEntity) event.getEntity()).getHandle().g(-MathHelper.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F, 0.1D, MathHelper.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F);
                         skillUsed = true;
                     }
                 }

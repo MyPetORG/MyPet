@@ -112,6 +112,8 @@ public class MyPetLanguage
         addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%petname%%white% has now an inventory with %size%slots.");
         addString("Msg_InventoryCreative", "MyPet.Message.inventorywhileincreative", "You can't open the inventory while you are in creative mode");
         addString("Msg_InventorySwimming", "MyPet.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%petname%%white% is swimming!");
+        // --  K  --
+        addString("Msg_KnockbackChance", "MyPet.Message.knockbackchance", "%aqua%%petname%%white% has now a chance of %chance%% to knock target back");
         // --  L  --
         addString("Msg_LearnedSkill", "MyPet.Message.learnskill", "%aqua%%petname%%white% learned the skill %skill%.");
         addString("Msg_LightnigChance", "MyPet.Message.lightningchance", "%aqua%%petname%%white% has now a chance of %chance%% to shoot a lightning at his enemies");
