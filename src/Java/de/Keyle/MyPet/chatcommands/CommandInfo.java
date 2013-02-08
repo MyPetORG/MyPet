@@ -20,6 +20,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
@@ -45,7 +46,11 @@ public class CommandInfo implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
-                if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                if(myPet.status == PetState.Dead)
+                {
+                    msg = ChatColor.RED + MyPetLanguage.getString("Name_Dead");
+                }
+                else if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
                 {
                     msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                 }

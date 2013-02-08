@@ -170,6 +170,7 @@ public class MyPetLanguage
         addString("Name_Creeper", "MyPet.Name.Creeper", "Creeper");
         // --  D  --
         addString("Name_Damage", "MyPet.Name.Damage", "Damage");
+        addString("Name_Dead", "MyPet.Name.Dead", "Dead");
         addString("Name_Disabled", "MyPet.Name.Disabled", "Disabled");
         addString("Name_DROWNING", "MyPet.Name.Drowning", "Drowning");
         // --  E  --
