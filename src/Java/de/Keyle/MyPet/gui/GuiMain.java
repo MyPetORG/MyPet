@@ -138,11 +138,46 @@ public class GuiMain
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
         skilltreeCreatorFrame.setContentPane(skilltreeCreator.getMainPanel());
-        skilltreeCreatorFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        skilltreeCreatorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         skilltreeCreatorFrame.setIconImage(logoImage);
         skilltreeCreatorFrame.pack();
         skilltreeCreatorFrame.setVisible(true);
         skilltreeCreatorFrame.setLocationRelativeTo(null);
+        skilltreeCreatorFrame.addWindowListener(new WindowListener()
+        {
+            public void windowOpened(WindowEvent e)
+            {
+            }
+
+            public void windowClosing(WindowEvent e)
+            {
+                int result = JOptionPane.showConfirmDialog(skilltreeCreatorFrame, "Are you sure that you want to close the SkilltreeCreator?", "Skilltree-Creator", JOptionPane.OK_CANCEL_OPTION);
+                if(result == 0)
+                {
+                    System.exit(0);
+                }
+            }
+
+            public void windowClosed(WindowEvent e)
+            {
+            }
+
+            public void windowIconified(WindowEvent e)
+            {
+            }
+
+            public void windowDeiconified(WindowEvent e)
+            {
+            }
+
+            public void windowActivated(WindowEvent e)
+            {
+            }
+
+            public void windowDeactivated(WindowEvent e)
+            {
+            }
+        });
 
         levelCreator = new LevelCreator();
         final JFrame levelCreatorFrame = levelCreator.getFrame();
