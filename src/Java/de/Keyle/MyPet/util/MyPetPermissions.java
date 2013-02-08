@@ -19,51 +19,15 @@
 
 package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.milkbowl.vault.permission.Permission;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class MyPetPermissions
 {
-    private static Object permissions;
     public static boolean USE_EXTENDET_PERMISSIONS = false;
-
-    public enum PermissionsType
-    {
-        NONE, Vault, Superperms
-    }
-
-    private static PermissionsType permissionsMode = PermissionsType.NONE;
-
 
     public static boolean has(Player player, String node)
     {
-        if (player.isOp())
-        {
-            //MyPetUtil.getLogger().info("--- permissions:" + node + " -> OP -> true");
-            return true;
-        }
-        else if (permissionsMode == PermissionsType.NONE)
-        {
-            //MyPetUtil.getLogger().info("--- permissions:" + node + " -> None -> true");
-            return true;
-        }
-        else if (permissionsMode == PermissionsType.Vault)
-        {
-            //MyPetUtil.getLogger().info("--- permissions:" + node + " -> Vault -> " + ((Permission) Permissions).has(player, node));
-            return ((Permission) permissions).has(player, node);
-        }
-        else if (permissionsMode == PermissionsType.Superperms)
-        {
-            //MyPetUtil.getLogger().info("--- permissions:" + node + " -> Bukkit -> " + player.hasPermission(node));
-            return player.hasPermission(node);
-        }
-        return false;
-
+        return player != null && player.hasPermission(node);
     }
 
     public static boolean hasExtended(Player player, String node)
@@ -75,49 +39,12 @@ public class MyPetPermissions
         return true;
     }
 
-    public static void setup(PermissionsType pt)
+    public static boolean hasExtended(Player player, String node, boolean defaultValue)
     {
-        permissionsMode = pt;
-    }
-
-    public static void setup()
-    {
-        Plugin p;
-
-        p = MyPetPlugin.getPlugin().getServer().getPluginManager().getPlugin("Vault");
-        if (p != null && permissionsMode == PermissionsType.NONE)
+        if (USE_EXTENDET_PERMISSIONS)
         {
-            permissionsMode = PermissionsType.Vault;
-            permissions = null;
-
-            RegisteredServiceProvider<Permission> permissionProvider = MyPetPlugin.getPlugin().getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-            if (permissionProvider != null)
-            {
-                permissions = permissionProvider.getProvider();
-            }
-            if (permissions != null)
-            {
-                MyPetLogger.write(ChatColor.GREEN + "\"Vault\"" + ChatColor.RESET + " integration enabled!");
-                MyPetUtil.getDebugLogger().info("Permissions: Vault");
-                return;
-            }
-            permissionsMode = PermissionsType.NONE;
+            return has(player, node);
         }
-
-        if (permissionsMode == PermissionsType.NONE && MyPetConfiguration.USE_SUPERPERMS)
-        {
-            permissionsMode = PermissionsType.Superperms;
-            MyPetLogger.write(ChatColor.YELLOW + "\"Superperms\"" + ChatColor.RESET + " integration enabled!");
-            MyPetUtil.getDebugLogger().info("Permissions: Superperms");
-            return;
-        }
-
-        MyPetLogger.write(ChatColor.RED + "No" + ChatColor.RESET + " permissions system found!");
-        MyPetUtil.getDebugLogger().info("Permissions: -");
-    }
-
-    public static PermissionsType getPermissionsMode()
-    {
-        return permissionsMode;
+        return defaultValue;
     }
 }

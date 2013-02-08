@@ -325,8 +325,6 @@ public class MyPetPlugin extends JavaPlugin
             debugLogger.info("    speed:      " + MyPet.getStartSpeed(myPetType.getMyPetClass()));
         }
 
-        MyPetPermissions.setup();
-
         language = new MyPetLanguage(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
         language.load();
 
