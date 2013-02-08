@@ -19,30 +19,23 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class MyPetVehicleListener implements Listener
 {
-    @EventHandler(priority = EventPriority.LOW)
-    public void onVehicleEnter(VehicleEnterEvent event)
+    @EventHandler
+    public void onVehicleEnter(final VehicleEnterEvent event)
     {
-        if (!event.isCancelled() && event.getEntered() instanceof Player)
+        if (event.getEntered() instanceof Player)
         {
             Player player = (Player) event.getEntered();
             if (MyPetList.hasMyPet(player))
             {
-                MyPet myPet = MyPetList.getMyPet(player);
-                if (myPet.status == PetState.Here)
-                {
-                    myPet.removePet();
-                }
+                MyPetList.getMyPet(player).removePet();
             }
         }
     }

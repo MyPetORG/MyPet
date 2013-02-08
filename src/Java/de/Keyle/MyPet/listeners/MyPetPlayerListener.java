@@ -96,16 +96,16 @@ public class MyPetPlayerListener implements Listener
         MyPetUtil.getDebugLogger().info("PlayerJoin: " + event.getPlayer().getName() + "     ----------------------------------");
         MyPetUtil.getDebugLogger().info("   - MyPetPlayer: " + (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()) ? MyPetPlayer.getMyPetPlayer(event.getPlayer().getName()).toString() : "false"));
 
-        MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
+            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
             if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()))
             {
                 MyPetUtil.getDebugLogger().info("set MyPet of " + event.getPlayer().getName() + " to inactive");
                 MyPetList.setMyPetInactive(event.getPlayer());
             }
+            MyPetUtil.getDebugLogger().info("   - has still an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
         }
-        MyPetUtil.getDebugLogger().info("   - has still an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
         if (!MyPetList.hasMyPet(event.getPlayer()) && MyPetList.hasInactiveMyPets(event.getPlayer()))
         {
             for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
@@ -117,9 +117,9 @@ public class MyPetPlayerListener implements Listener
                 }
             }
         }
-        MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
+            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.status == PetState.Dead)
             {
@@ -145,7 +145,7 @@ public class MyPetPlayerListener implements Listener
             if (myPet.getSkills().isSkillActive("Behavior"))
             {
                 Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-                if (behavior.getBehavior() == BehaviorState.Aggressive)
+                if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                 {
                     behavior.setBehavior(BehaviorState.Normal);
                 }

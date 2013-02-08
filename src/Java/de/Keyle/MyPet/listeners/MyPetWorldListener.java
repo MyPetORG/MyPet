@@ -20,7 +20,6 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.util.MyPetList;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,16 +28,13 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 public class MyPetWorldListener implements Listener
 {
     @EventHandler
-    public void onChunkUnload(ChunkUnloadEvent event)
+    public void onChunkUnload(final ChunkUnloadEvent event)
     {
         for (Entity entity : event.getChunk().getEntities())
         {
             if (entity instanceof CraftMyPet)
             {
-                if (MyPetList.isMyPet(entity.getEntityId()))
-                {
-                    MyPetList.getMyPet(entity.getEntityId()).removePet();
-                }
+                ((CraftMyPet) entity).getMyPet().removePet();
             }
         }
     }

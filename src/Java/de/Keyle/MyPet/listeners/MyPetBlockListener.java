@@ -28,7 +28,7 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 public class MyPetBlockListener implements Listener
 {
     @EventHandler
-    public void onBlockIgnite(BlockIgniteEvent event)
+    public void onBlockIgnite(final BlockIgniteEvent event)
     {
         if (event.getCause() == IgniteCause.LIGHTNING)
         {
