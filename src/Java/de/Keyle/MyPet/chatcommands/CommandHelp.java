@@ -38,7 +38,7 @@ public class CommandHelp implements CommandExecutor
             Player player = (Player) sender;
             player.sendMessage("--------------- MyPet - " + MyPetLanguage.getString("Name_Help") + " -------------------------");
             player.sendMessage(MyPetUtil.setColors("/petinfo" + MyPetLanguage.getString("Msg_Cmd_petinfo")));
-            if (MyPetPermissions.has(player, "MyPet.admin"))
+            if (MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 player.sendMessage(MyPetUtil.setColors("/petadmin" + MyPetLanguage.getString("Msg_Cmd_petadmin")));
             }

@@ -40,7 +40,7 @@ public class CommandAdmin implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (!MyPetPermissions.has(player, "MyPet.admin"))
+            if (!MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 return true;
             }

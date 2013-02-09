@@ -63,7 +63,6 @@ public class MyPetConfiguration
     public static boolean USE_HUNGER_SYSTEM = true;
     public static boolean SEND_METRICS = true;
     public static boolean CHECK_FOR_UPDATES = false;
-    public static boolean USE_SUPERPERMS = false;
     public static boolean USE_DEBUG_LOGGER = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
 
@@ -73,7 +72,7 @@ public class MyPetConfiguration
         setProperty("MyPet.Respawn.Time.Fixed", 0);
         setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
-        setProperty("MyPet.Permissions.SuperPerms", false);
+        setProperty("MyPet.Permissions.Enabled", true);
         setProperty("MyPet.Permissions.UseExtendedPermissions", false);
         setProperty("MyPet.OwnerCanAttackPet", false);
         setProperty("MyPet.LevelSystem", true);
@@ -176,11 +175,11 @@ public class MyPetConfiguration
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
-        USE_SUPERPERMS = config.getBoolean("MyPet.Permissions.SuperPerms", false);
         SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
+        MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
         MyPetEconomy.USE_ECONOMY = config.getBoolean("MyPet.Support.Vault.Economy", true);
         MyPetPvP.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
         MyPetPvP.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);

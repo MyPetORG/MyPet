@@ -98,7 +98,7 @@ public class Inventory extends MyPetGenericSkill
     @Override
     public void activate()
     {
-        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin"))
+        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
         {
             myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
         }

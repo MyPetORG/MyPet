@@ -83,7 +83,7 @@ public class MyPetPlayer implements Scheduler
 
     public boolean isMyPetAdmin()
     {
-        return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin");
+        return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin", false);
     }
 
     public boolean hasMyPet()

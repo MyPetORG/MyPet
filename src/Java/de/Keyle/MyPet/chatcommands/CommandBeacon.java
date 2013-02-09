@@ -39,7 +39,7 @@ public class CommandBeacon implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin") && MyPetList.hasMyPet(args[0]))
+            if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false) && MyPetList.hasMyPet(args[0]))
             {
                 MyPet myPet = MyPetList.getMyPet(args[0]);
                 if (myPet.getSkills().isSkillActive("Beacon"))
@@ -70,7 +70,7 @@ public class CommandBeacon implements CommandExecutor
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
                     return true;
                 }
-                if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin"))
+                if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconCreative")).replace("%petname%", myPet.petName));
                     return true;

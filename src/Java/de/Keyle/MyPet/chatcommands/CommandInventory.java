@@ -54,7 +54,7 @@ public class CommandInventory implements CommandExecutor
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                         return true;
                     }
-                    if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin"))
+                    if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_InventoryCreative")).replace("%petname%", myPet.petName));
                         return true;
@@ -74,7 +74,7 @@ public class CommandInventory implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 }
             }
-            else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin"))
+            else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 if (MyPetList.hasMyPet(args[0]))
                 {

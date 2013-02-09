@@ -24,10 +24,32 @@ import org.bukkit.entity.Player;
 public class MyPetPermissions
 {
     public static boolean USE_EXTENDET_PERMISSIONS = false;
+    public static boolean ENABLED = true;
 
     public static boolean has(Player player, String node)
     {
-        return player != null && player.hasPermission(node);
+        if(player != null)
+        {
+            if(ENABLED)
+            {
+                return player.hasPermission(node);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean has(Player player, String node, boolean defaultValue)
+    {
+        if(player != null)
+        {
+            if(ENABLED)
+            {
+                return player.hasPermission(node);
+            }
+            return defaultValue || player.isOp();
+        }
+        return false;
     }
 
     public static boolean hasExtended(Player player, String node)

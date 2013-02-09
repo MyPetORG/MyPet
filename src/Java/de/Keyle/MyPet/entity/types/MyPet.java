@@ -216,7 +216,7 @@ public abstract class MyPet
                     return false;
                 }
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
-                craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
+                craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
                 status = PetState.Here;
                 return true;
             }
