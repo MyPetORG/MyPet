@@ -107,7 +107,7 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event)
     {
-        if(event.getEntity() instanceof CraftMyPet)
+        if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Arrow && ((Arrow) event.getDamager()).getShooter() instanceof Player))
@@ -672,12 +672,17 @@ public class MyPetEntityListener implements Listener
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                if (!(e.getDamager() instanceof Player && myPet.getOwner() != e.getDamager()))
+                if (e.getDamager() instanceof Player && e.getDamager() == myPet.getOwner().getPlayer())
                 {
                     event.setDroppedExp(0);
                 }
+                else if (e.getDamager() instanceof Player)
+                {
+                    event.setDroppedExp(myPet.getExperience().getLevel() / 2);
+                }
+
             }
-            if (MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
+            if (MyPetConfiguration.USE_LEVEL_SYSTEM && MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
             {
                 double lostExpirience = MyPetExperience.LOSS_FIXED;
                 lostExpirience += myPet.getExperience().getRequiredExp() * MyPetExperience.LOSS_PERCENT / 100;

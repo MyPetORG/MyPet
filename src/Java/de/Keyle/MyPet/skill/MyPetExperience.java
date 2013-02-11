@@ -41,6 +41,13 @@ public class MyPetExperience
     private double exp = 0;
     MyPetJSexp JSexp;
 
+    private short lastLevel = 1;
+    private double lastExpL = Double.NaN;
+    private double lastExpC = Double.NaN;
+    private double lastExpR = Double.NaN;
+    private double lastCurrentExp = 0.0;
+    private double lastRequiredExp = 0.0;
+
     public static final Map<EntityType, MyPetMonsterExperience> mobExp = new HashMap<EntityType, MyPetMonsterExperience>();
 
     static
@@ -97,6 +104,7 @@ public class MyPetExperience
 
     public void setExp(double Exp)
     {
+        Exp = Exp < 0 ? 0 : Exp;
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), Exp);
         getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled())
@@ -225,9 +233,15 @@ public class MyPetExperience
 
     public double getCurrentExp()
     {
+        if (lastExpC == this.exp)
+        {
+            return lastCurrentExp;
+        }
+        lastExpC = this.exp;
         if (JSexp.isUsable())
         {
-            return JSexp.getCurrentExp();
+            lastCurrentExp = JSexp.getCurrentExp();
+            return lastCurrentExp;
         }
         else
         {
@@ -239,15 +253,22 @@ public class MyPetExperience
                 tmpExp -= 7 + (short) (tmplvl * 3.5);
                 tmplvl++;
             }
-            return tmpExp;
+            lastCurrentExp = tmpExp;
+            return lastCurrentExp;
         }
     }
 
     public short getLevel()
     {
+        if (lastExpL == this.exp)
+        {
+            return lastLevel;
+        }
+        lastExpL = this.exp;
         if (JSexp.isUsable())
         {
-            return JSexp.getLvl();
+            lastLevel = JSexp.getLvl();
+            return lastLevel;
         }
         else
         {
@@ -261,19 +282,27 @@ public class MyPetExperience
                 tmpExp -= 7 + (int) (tmpLvl * 3.5);
                 tmpLvl++;
             }
-            return (short) (tmpLvl + 1);
+            lastLevel = (short) (tmpLvl + 1);
+            return lastLevel;
         }
     }
 
     public double getRequiredExp()
     {
+        if (lastExpR == this.exp)
+        {
+            return lastRequiredExp;
+        }
+        lastExpR = this.exp;
         if (JSexp.isUsable())
         {
-            return JSexp.getRequiredExp();
+            lastRequiredExp = JSexp.getRequiredExp();
+            return lastRequiredExp;
         }
         else
         {
-            return 7 + (short) ((this.getLevel() - 1) * 3.5);
+            lastRequiredExp = 7 + (short) ((this.getLevel() - 1) * 3.5);
+            return lastRequiredExp;
         }
     }
 }

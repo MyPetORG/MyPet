@@ -65,7 +65,7 @@ public class MyPetPermissions
     {
         if (USE_EXTENDET_PERMISSIONS)
         {
-            return has(player, node);
+            return has(player, node, defaultValue);
         }
         return defaultValue;
     }
