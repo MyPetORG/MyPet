@@ -32,6 +32,7 @@ import net.minecraft.server.v1_4_R1.*;
 @EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet
 {
+    public static boolean CAN_THROW_UP = true;
     public EntityMyIronGolem(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -115,11 +116,11 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         this.world.broadcastEntityEffect(this, (byte) 4);
         boolean flag = super.m(entity);
-        if (flag)
+        if (CAN_THROW_UP && flag)
         {
             entity.motY += 0.4000000059604645D;
+            this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
         }
-        this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
         return flag;
     }
 }

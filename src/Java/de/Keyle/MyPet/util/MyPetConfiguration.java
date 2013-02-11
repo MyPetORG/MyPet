@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
@@ -117,6 +118,7 @@ public class MyPetConfiguration
         setProperty("MyPet.Pets.Chicken.CanLayEggs", true);
         setProperty("MyPet.Pets.Cow.CanGiveMilk", true);
         setProperty("MyPet.Pets.Sheep.CanBeSheared", true);
+        setProperty("MyPet.Pets.IronGolem.CanThrowUp", true);
         setProperty("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         setProperty("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         setProperty("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
@@ -198,6 +200,7 @@ public class MyPetConfiguration
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
+        EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
         EntityMyChicken.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyCow.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyMooshroom.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId()), Material.POTION);
