@@ -81,7 +81,7 @@ public class CommandInventory implements CommandExecutor
                     MyPet myPet = MyPetList.getMyPet(args[0]);
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
-                        ((Inventory) myPet.getSkills().getSkill("Inventory")).OpenInventory(player);
+                        ((Inventory) myPet.getSkills().getSkill("Inventory")).openInventory(player);
                     }
                 }
             }

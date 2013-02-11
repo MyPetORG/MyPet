@@ -276,6 +276,14 @@ public class MyPetCustomInventory implements IInventory
         }
     }
 
+    public void close()
+    {
+        for (HumanEntity humanEntity : transaction)
+        {
+            humanEntity.closeInventory();
+        }
+    }
+
     public List<HumanEntity> getViewers()
     {
         return this.transaction;

@@ -34,12 +34,13 @@ import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skills.Wither;
+import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.v1_4_R1.MathHelper;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
-import net.minecraft.server.v1_4_R1.NBTTagList;
+import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEnderman;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftLivingEntity;
@@ -184,7 +185,7 @@ public class MyPetEntityListener implements Listener
                     event.setCancelled(true);
                 }
             }
-            if (!event.isCancelled())
+            if (!event.isCancelled() && myPet.getSkills().isSkillActive("Thorns"))
             {
                 Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
                 if (thornsSkill.isActivated())
@@ -691,6 +692,28 @@ public class MyPetEntityListener implements Listener
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
                 myPet.getExperience().removeCurrentExp(lostExpirience);
+            }
+            if (myPet.getSkills().isSkillActive("Inventory"))
+            {
+                Inventory inventorySkill = (Inventory) myPet.getSkills().getSkill("Inventory");
+                inventorySkill.closeInventory();
+                if(inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin())
+                {
+                    World world = ((CraftWorld)event.getEntity().getLocation().getWorld()).getHandle();
+                    Location petLocation = event.getEntity().getLocation();
+                    MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                    for (int i = 0; i < inv.getSize(); i++)
+                    {
+                        net.minecraft.server.v1_4_R1.ItemStack is = inv.splitWithoutUpdate(i);
+                        if (is != null)
+                        {
+                            is = is.cloneItemStack();
+                            EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                            itemEntity.pickupDelay = 10;
+                            world.addEntity(itemEntity);
+                        }
+                    }
+                }
             }
             SendDeathMessage(event);
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));

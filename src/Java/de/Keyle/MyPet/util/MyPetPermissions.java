@@ -45,7 +45,7 @@ public class MyPetPermissions
         {
             if(ENABLED)
             {
-                return player.hasPermission(node);
+                return player.isOp() || player.hasPermission(node);
             }
             return defaultValue || player.isOp();
         }

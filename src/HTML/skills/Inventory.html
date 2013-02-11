@@ -23,9 +23,18 @@
 <form action="">
     <center>
         <h1>#Skillname#</h1>
-
-        <p>Increase row count (max: 6) of Inventory by:</p>
-        <input name="add" type="text" value="0" />
+        <table>
+            <tr>
+                <th colspan="2">Increase row count (max: 6) of Inventory by:</th>
+            </tr>
+            <tr>
+                <td colspan="2"><input name="add" type="text" value="0" /></td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="drop" checked></td>
+                <td>Drop items on death</td>
+            </tr>
+        </table>
         <br /><br />
         <input type=submit value="Save">
     </center>

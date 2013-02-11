@@ -37,14 +37,15 @@ import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 @SkillName("Inventory")
-@SkillProperties(parameterNames = {"add"},
-        parameterTypes = {NBTdatatypes.Int},
-        parameterDefaultValues = {"1"})
+@SkillProperties(parameterNames = {"add","drop"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
+        parameterDefaultValues = {"1", "false"})
 public class Inventory extends MyPetGenericSkill
 {
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
     public static boolean OPEN_IN_CREATIVEMODE = true;
     private int rows = 0;
+    private boolean dropOnDeath = false;
 
     public Inventory(boolean addedByInheritance)
     {
@@ -58,6 +59,13 @@ public class Inventory extends MyPetGenericSkill
         if (getProperties().hasKey("add"))
         {
             html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+        }
+        if (getProperties().hasKey("drop"))
+        {
+            if (!getProperties().getBoolean("drop"))
+            {
+                html = html.replace("name=\"drop\" checked", "name=\"drop\"");
+            }
         }
         return html;
     }
@@ -79,6 +87,10 @@ public class Inventory extends MyPetGenericSkill
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
                 }
+            }
+            if (upgrade.getProperties().hasKey("drop"))
+            {
+                dropOnDeath = upgrade.getProperties().getBoolean("drop");
             }
         }
     }
@@ -107,7 +119,7 @@ public class Inventory extends MyPetGenericSkill
             if (myPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && myPet.getLocation().getBlock().getType() != Material.WATER)
             {
                 inv.setName(myPet.petName);
-                OpenInventory(myPet.getOwner().getPlayer());
+                openInventory(myPet.getOwner().getPlayer());
             }
             else
             {
@@ -120,10 +132,15 @@ public class Inventory extends MyPetGenericSkill
         }
     }
 
-    public void OpenInventory(Player p)
+    public void openInventory(Player p)
     {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
         eh.openContainer(inv);
+    }
+
+    public void closeInventory()
+    {
+        inv.close();
     }
 
     @Override
@@ -151,6 +168,11 @@ public class Inventory extends MyPetGenericSkill
     public boolean isActive()
     {
         return rows > 0;
+    }
+
+    public boolean dropOnDeath()
+    {
+        return dropOnDeath;
     }
 
     @Override
