@@ -317,12 +317,12 @@ public class MyPetPlugin extends JavaPlugin
         debugLogger.info("Pet type: ----------");
         for (MyPetType myPetType : MyPetType.values())
         {
-            debugLogger.info("  " + myPetType.getTypeName() + ":");
-            debugLogger.info("    damage:     " + MyPet.getStartDamage(myPetType.getMyPetClass()));
-            debugLogger.info("    startHP:    " + MyPet.getStartHP(myPetType.getMyPetClass()));
-            debugLogger.info("    food:       " + MyPet.getFood(myPetType.getMyPetClass()));
-            debugLogger.info("    leashFlags: " + MyPet.getLeashFlags(myPetType.getMyPetClass()));
-            debugLogger.info("    speed:      " + MyPet.getStartSpeed(myPetType.getMyPetClass()));
+            debugLogger.info("  " + myPetType.getTypeName() + " { " +
+                    "damage:" + MyPet.getStartDamage(myPetType.getMyPetClass()) + ", " +
+                    "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
+                    "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
+                    "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
+                    "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
         language = new MyPetLanguage(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
