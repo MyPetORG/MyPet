@@ -67,18 +67,24 @@ public class Damage extends MyPetGenericSkill
                 {
                     damageIncrease = upgrade.getProperties().getInt("damage");
                 }
-                if (myPet.status == PetState.Here && damageIncrease > 0 && isPassive )
+                if (damageIncrease > 0 && isPassive )
                 {
-                    getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-                    getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-                    getMyPet().getCraftPet().getHandle().setPathfinder();
+                    if(myPet.status == PetState.Here)
+                    {
+                        getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+                        getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+                        getMyPet().getCraftPet().getHandle().setPathfinder();
+                    }
                     isPassive = false;
                 }
-                else if (myPet.status == PetState.Here && damageIncrease <= 0 && !isPassive)
+                else if (damageIncrease <= 0 && !isPassive)
                 {
-                    getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
-                    getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
-                    getMyPet().getCraftPet().getHandle().setPathfinder();
+                    if(myPet.status == PetState.Here)
+                    {
+                        getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
+                        getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
+                        getMyPet().getCraftPet().getHandle().setPathfinder();
+                    }
                     isPassive = true;
                 }
                 if (!quiet)
