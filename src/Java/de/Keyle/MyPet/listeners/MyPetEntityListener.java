@@ -199,7 +199,7 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event)
     {
-        if (event.getDamager() instanceof Player)
+        if (!(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player)
         {
             if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
             {
