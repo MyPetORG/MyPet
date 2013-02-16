@@ -44,12 +44,12 @@ public class CommandInventory implements CommandExecutor
                 if (MyPetList.hasMyPet(player))
                 {
                     MyPet myPet = MyPetList.getMyPet(player);
-                    if (myPet.status == PetState.Despawned)
+                    if (myPet.getStatus() == PetState.Despawned)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                         return true;
                     }
-                    if (myPet.status == PetState.Dead)
+                    if (myPet.getStatus() == PetState.Dead)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                         return true;

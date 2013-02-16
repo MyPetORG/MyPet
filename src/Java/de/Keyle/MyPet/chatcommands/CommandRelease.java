@@ -74,12 +74,12 @@ public class CommandRelease implements CommandExecutor
                 {
                     return true;
                 }
-                if (myPet.status == PetState.Despawned)
+                if (myPet.getStatus() == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
-                else if (myPet.status == PetState.Dead)
+                else if (myPet.getStatus() == PetState.Dead)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                     return true;

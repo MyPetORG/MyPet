@@ -69,7 +69,7 @@ public class Damage extends MyPetGenericSkill
                 }
                 if (damageIncrease > 0 && isPassive )
                 {
-                    if(myPet.status == PetState.Here)
+                    if(myPet.getStatus() == PetState.Here)
                     {
                         getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                         getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
@@ -79,7 +79,7 @@ public class Damage extends MyPetGenericSkill
                 }
                 else if (damageIncrease <= 0 && !isPassive)
                 {
-                    if(myPet.status == PetState.Here)
+                    if(myPet.getStatus() == PetState.Here)
                     {
                         getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                         getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();

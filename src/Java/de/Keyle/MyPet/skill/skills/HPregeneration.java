@@ -140,7 +140,7 @@ public class HPregeneration extends MyPetGenericSkill
 
     public void schedule()
     {
-        if (increaseHpBy > 0 && myPet.status == PetState.Here)
+        if (increaseHpBy > 0 && myPet.getStatus() == PetState.Here)
         {
             if (timeCounter-- <= 0)
             {

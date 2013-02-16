@@ -137,7 +137,7 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void schedule()
     {
-        if (range > 0 && pickup && myPet.status == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
+        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
         {
             for (Entity e : myPet.getCraftPet().getNearbyEntities(range, range, range))
             {

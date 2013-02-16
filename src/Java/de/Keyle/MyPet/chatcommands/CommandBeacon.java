@@ -55,12 +55,12 @@ public class CommandBeacon implements CommandExecutor
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
                     return true;
                 }
-                if (myPet.status == PetState.Despawned)
+                if (myPet.getStatus() == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
-                if (myPet.status == PetState.Dead)
+                if (myPet.getStatus() == PetState.Dead)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;

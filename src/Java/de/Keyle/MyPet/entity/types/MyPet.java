@@ -201,6 +201,7 @@ public abstract class MyPet
             {
                 net.minecraft.server.v1_4_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
+                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))
                 {
@@ -215,7 +216,6 @@ public abstract class MyPet
                     status = PetState.Despawned;
                     return false;
                 }
-                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
                 status = PetState.Here;
                 return true;
@@ -226,7 +226,24 @@ public abstract class MyPet
 
     public CraftMyPet getCraftPet()
     {
+        getStatus();
         return craftMyPet;
+    }
+
+    public PetState getStatus()
+    {
+        if(status == PetState.Here)
+        {
+            if(craftMyPet == null || craftMyPet.getHandle() == null)
+            {
+                status = PetState.Despawned;
+            }
+            else if(craftMyPet.getHealth() <= 0 || craftMyPet.isDead())
+            {
+                status = PetState.Dead;
+            }
+        }
+        return status;
     }
 
     public void setHealth(int d)
@@ -496,7 +513,7 @@ public abstract class MyPet
 
     public boolean hasTarget()
     {
-        return this.status == PetState.Here && craftMyPet.getHandle().getGoalTarget() != null && craftMyPet.getHandle().getGoalTarget().isAlive();
+        return this.getStatus() == PetState.Here && craftMyPet.getHandle().getGoalTarget() != null && craftMyPet.getHandle().getGoalTarget().isAlive();
     }
 
     public abstract MyPetType getPetType();

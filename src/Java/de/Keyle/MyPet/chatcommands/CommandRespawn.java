@@ -53,7 +53,7 @@ public class CommandRespawn implements CommandExecutor
 
                 if (args.length == 0)
                 {
-                    if (myPet.status != PetState.Dead)
+                    if (myPet.getStatus() != PetState.Dead)
                     {
                         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnShow").replace("%costs%", "-").replace("%petname%", myPet.petName).replace("%color%", (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString())));
                     }

@@ -46,7 +46,7 @@ public class CommandInfo implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
-                if(myPet.status == PetState.Dead)
+                if(myPet.getStatus() == PetState.Dead)
                 {
                     msg = ChatColor.RED + MyPetLanguage.getString("Name_Dead");
                 }

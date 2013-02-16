@@ -24,6 +24,7 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.EntityCreature;
 import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftCreature;
@@ -68,7 +69,7 @@ public class CraftMyPet extends CraftCreature
     @Override
     public void remove()
     {
-        if (getMyPet().status != PetState.Despawned)
+        if (getMyPet().getStatus() != PetState.Despawned)
         {
             getMyPet().removePet();
             getMyPet().sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn").replace("%petname%", getMyPet().petName)));
@@ -110,7 +111,16 @@ public class CraftMyPet extends CraftCreature
     @Override
     public EntityMyPet getHandle()
     {
-        return (EntityMyPet) entity;
+        if(entity instanceof EntityMyPet)
+        {
+            return (EntityMyPet) entity;
+        }
+        else
+        {
+            MyPetLogger.write("EntityHandleError cause by:");
+            MyPetLogger.write("   " + entity);
+            return null;
+        }
     }
 
     public boolean canMove()

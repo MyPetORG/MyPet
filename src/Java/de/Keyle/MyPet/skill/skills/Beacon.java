@@ -330,7 +330,7 @@ public class Beacon extends MyPetGenericSkill
     @Override
     public void schedule()
     {
-        if (myPet.status == PetState.Here && level > 0 && this.active && this.primaryEffectId > 0)
+        if (myPet.getStatus() == PetState.Here && level > 0 && this.active && this.primaryEffectId > 0)
         {
             byte amplification = 0;
 

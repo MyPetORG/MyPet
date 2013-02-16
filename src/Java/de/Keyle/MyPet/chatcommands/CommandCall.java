@@ -44,7 +44,7 @@ public class CommandCall implements CommandExecutor
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.status == PetState.Here)
+                if (myPet.getStatus() == PetState.Here)
                 {
                     if (myPet.getLocation().getWorld() != petOwner.getLocation().getWorld())
                     {
@@ -83,7 +83,7 @@ public class CommandCall implements CommandExecutor
                     }
                     return true;
                 }
-                else if (myPet.status == PetState.Despawned)
+                else if (myPet.getStatus() == PetState.Despawned)
                 {
                     EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
                     if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
@@ -99,7 +99,7 @@ public class CommandCall implements CommandExecutor
                     }
                     return true;
                 }
-                else if (myPet.status == PetState.Dead)
+                else if (myPet.getStatus() == PetState.Dead)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;

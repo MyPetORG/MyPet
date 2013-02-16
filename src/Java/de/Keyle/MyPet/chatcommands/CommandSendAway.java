@@ -43,19 +43,19 @@ public class CommandSendAway implements CommandExecutor
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.status == PetState.Here)
+                if (myPet.getStatus() == PetState.Here)
                 {
                     myPet.removePet();
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
                     getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
                     return true;
                 }
-                else if (myPet.status == PetState.Despawned)
+                else if (myPet.getStatus() == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AlreadyAway")).replace("%petname%", myPet.petName));
                     return true;
                 }
-                else if (myPet.status == PetState.Dead)
+                else if (myPet.getStatus() == PetState.Dead)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;

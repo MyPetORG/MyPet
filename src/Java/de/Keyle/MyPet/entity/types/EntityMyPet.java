@@ -213,6 +213,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
+    @Override
     public CraftEntity getBukkitEntity()
     {
         if (this.bukkitEntity == null)

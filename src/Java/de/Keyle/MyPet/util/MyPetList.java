@@ -104,7 +104,7 @@ public class MyPetList
     {
         for (MyPet pet : lActivePets)
         {
-            if (pet.status == PetState.Here && pet.getCraftPet().getEntityId() == entityID)
+            if (pet.getStatus() == PetState.Here && pet.getCraftPet().getEntityId() == entityID)
             {
                 return pet;
             }

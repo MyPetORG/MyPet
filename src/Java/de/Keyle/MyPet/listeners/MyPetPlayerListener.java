@@ -47,7 +47,7 @@ public class MyPetPlayerListener implements Listener
         if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getType() == Control.ITEM && MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.status == PetState.Here && myPet.getCraftPet().canMove())
+            if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove())
             {
                 if (myPet.getSkills().isSkillActive("Control"))
                 {
@@ -121,7 +121,7 @@ public class MyPetPlayerListener implements Listener
         {
             MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.status == PetState.Dead)
+            if (myPet.getStatus() == PetState.Dead)
             {
                 event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
             }

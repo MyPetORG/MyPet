@@ -86,7 +86,7 @@ public class CommandAdmin implements CommandExecutor
             }
             else if (change.equalsIgnoreCase("respawn"))
             {
-                if (myPet.status == PetState.Dead)
+                if (myPet.getStatus() == PetState.Dead)
                 {
                     if (args.length >= 3 && MyPetUtil.isInt(args[2]))
                     {

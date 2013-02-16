@@ -428,7 +428,7 @@ public class MyPetPlugin extends JavaPlugin
                         MyPetList.setMyPetActive(inactiveMyPet);
 
                         MyPet myPet = MyPetList.getMyPet(player);
-                        if (myPet.status == PetState.Dead)
+                        if (myPet.getStatus() == PetState.Dead)
                         {
                             player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                         }

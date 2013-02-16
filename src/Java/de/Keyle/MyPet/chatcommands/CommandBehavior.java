@@ -43,7 +43,7 @@ public class CommandBehavior implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (myPet.status == PetState.Despawned)
+                if (myPet.getStatus() == PetState.Despawned)
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;

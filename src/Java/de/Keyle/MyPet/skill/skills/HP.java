@@ -65,7 +65,7 @@ public class HP extends MyPetGenericSkill
                     hpIncrease = upgrade.getProperties().getInt("hp");
                 }
 
-                if (getMyPet().status == PetState.Here)
+                if (getMyPet().getStatus() == PetState.Here)
                 {
                     getMyPet().getCraftPet().setMaxHealth(getMyPet().getMaxHealth());
                 }
