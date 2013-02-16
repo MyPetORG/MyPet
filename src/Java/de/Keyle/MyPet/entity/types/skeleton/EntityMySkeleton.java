@@ -104,12 +104,12 @@ public class EntityMySkeleton extends EntityMyPet
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
-        return false;
+        else
+        {
+            return true;
+        }
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
