@@ -66,12 +66,20 @@ public class MyPetPvP
 
     public static boolean canHurt(Player attacker, Player defender)
     {
-        return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurt(defender);
+        if(attacker != null && defender != null)
+        {
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurt(defender);
+        }
+        return false;
     }
 
     public static boolean canHurt(Player defender)
     {
-        return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
+        if(defender != null)
+        {
+            return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
+        }
+        return false;
     }
 
     public static boolean canHurtCitizens(Player defender)
