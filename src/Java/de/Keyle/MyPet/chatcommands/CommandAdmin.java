@@ -22,10 +22,9 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
-import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,21 +43,22 @@ public class CommandAdmin implements CommandExecutor
             {
                 return true;
             }
-            if (args.length < 2)
+            if (args.length < 1)
             {
                 return false;
             }
-            String petOwner = args[0];
-            String change = args[1];
+            String option = args[0];
 
-            if (!MyPetList.hasMyPet(petOwner))
+            if (option.equalsIgnoreCase("name") && args.length >= 3)
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
-                return true;
-            }
-            MyPet myPet = MyPetList.getMyPet(petOwner);
-            if (change.equalsIgnoreCase("name") && args.length >= 3)
-            {
+                String petOwner = args[1];
+                if (!MyPetList.hasMyPet(petOwner))
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                    return true;
+                }
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+
                 String name = "";
                 for (int i = 2 ; i < args.length ; i++)
                 {
@@ -67,8 +67,15 @@ public class CommandAdmin implements CommandExecutor
                 name = name.substring(0, name.length() - 1);
                 myPet.setPetName(name);
             }
-            else if (change.equalsIgnoreCase("exp") && args.length >= 3)
+            else if (option.equalsIgnoreCase("exp") && args.length >= 3)
             {
+                String petOwner = args[1];
+                if (!MyPetList.hasMyPet(petOwner))
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                    return true;
+                }
+                MyPet myPet = MyPetList.getMyPet(petOwner);
                 String value = args[2];
                 if (MyPetUtil.isInt(value))
                 {
@@ -84,8 +91,15 @@ public class CommandAdmin implements CommandExecutor
                     myPet.getExperience().addExp(Exp);
                 }
             }
-            else if (change.equalsIgnoreCase("respawn"))
+            else if (option.equalsIgnoreCase("respawn"))
             {
+                String petOwner = args[1];
+                if (!MyPetList.hasMyPet(petOwner))
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                    return true;
+                }
+                MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (myPet.getStatus() == PetState.Dead)
                 {
                     if (args.length >= 3 && MyPetUtil.isInt(args[2]))
@@ -101,6 +115,12 @@ public class CommandAdmin implements CommandExecutor
                         myPet.respawnTime = 0;
                     }
                 }
+            }
+            else if (option.equalsIgnoreCase("reload"))
+            {
+                MyPetConfiguration.loadConfiguration();
+                MyPetLogger.write("Config reloaded.");
+                sender.sendMessage(MyPetUtil.setColors(ChatColor.AQUA + "MyPet config reloaded!"));
             }
             return true;
         }
