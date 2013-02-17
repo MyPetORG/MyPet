@@ -114,7 +114,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 3, 20));
             petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this, true));
+            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
             petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
             petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));

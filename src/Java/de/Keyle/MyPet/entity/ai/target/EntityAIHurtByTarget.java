@@ -22,26 +22,34 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
+import net.minecraft.server.v1_4_R1.EntityLiving;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_4_R1.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
-public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
+public class EntityAIHurtByTarget extends PathfinderGoalTarget
 {
+    EntityMyPet petEntity;
     MyPet myPet;
+    EntityLiving target = null;
 
-    public EntityAIHurtByTarget(EntityMyPet petEntity, boolean b)
+    public EntityAIHurtByTarget(EntityMyPet petEntity)
     {
-        super(petEntity, b);
+        super(petEntity, 16.0F, false);
+        this.petEntity = petEntity;
         myPet = petEntity.getMyPet();
     }
 
     @Override
     public boolean a()
     {
-        if (d.aC() instanceof EntityPlayer)
+        if(target != petEntity.aC())
         {
-            Player targetPlayer = (Player) d.aC().getBukkitEntity();
+            target = petEntity.aC();
+        }
+        if (target instanceof EntityPlayer)
+        {
+            Player targetPlayer = (Player) target.getBukkitEntity();
 
             if (targetPlayer == myPet.getOwner().getPlayer())
             {
@@ -49,19 +57,43 @@ public class EntityAIHurtByTarget extends PathfinderGoalHurtByTarget
             }
             else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
-                return super.a();
+                return a(this.target,true);
             }
             return false;
         }
-        else if (d.aC() instanceof EntityMyPet)
+        else if (target instanceof EntityMyPet)
         {
             MyPet targetMyPet = ((EntityMyPet) d.aC()).getMyPet();
             if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
-                return super.a();
+                return a(this.target, true);
             }
             return false;
         }
-        return super.a();
+        return a(this.target, true);
+    }
+
+    public boolean b()
+    {
+        if (!petEntity.canMove())
+        {
+            return false;
+        }
+        else if(!super.b())
+        {
+            target = null;
+            return false;
+        }
+        return true;
+    }
+
+    public void c()
+    {
+        petEntity.setGoalTarget(this.target);
+    }
+
+    public void d()
+    {
+        petEntity.setGoalTarget(null);
     }
 }
