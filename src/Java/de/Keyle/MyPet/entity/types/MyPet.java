@@ -171,6 +171,7 @@ public abstract class MyPet
             }
             status = PetState.Despawned;
             craftMyPet.remove();
+            craftMyPet = null;
         }
     }
 
@@ -264,7 +265,6 @@ public abstract class MyPet
 
     public int getHealth()
     {
-
         if (status == PetState.Here)
         {
             return craftMyPet.getHealth();

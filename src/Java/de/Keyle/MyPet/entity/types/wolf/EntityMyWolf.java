@@ -284,7 +284,7 @@ public class EntityMyWolf extends EntityMyPet
     @Override
     protected void bm()
     {
-        this.datawatcher.watch(18, (int) (25. * myPet.getHealth() / myPet.getMaxHealth())); // update tail height
+        this.datawatcher.watch(18, (int) (25. * getHealth() / getMaxHealth())); // update tail height
     }
 
     @Override

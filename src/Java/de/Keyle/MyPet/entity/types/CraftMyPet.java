@@ -24,7 +24,6 @@ import de.Keyle.MyPet.skill.skills.Behavior;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.EntityCreature;
 import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftCreature;
@@ -35,10 +34,12 @@ import org.bukkit.entity.LivingEntity;
 public class CraftMyPet extends CraftCreature
 {
     protected MyPetPlayer petOwner;
+    protected EntityMyPet petEntity;
 
     public CraftMyPet(CraftServer server, EntityMyPet entityMyPet)
     {
         super(server, entityMyPet);
+        petEntity = entityMyPet;
     }
 
     public void setTarget(LivingEntity target)
@@ -56,13 +57,13 @@ public class CraftMyPet extends CraftCreature
             }
             if (getHandle().myPet.getSkills().isSkillActive("Behavior"))
             {
-                Behavior behaviorSkill = (Behavior) getHandle().myPet.getSkills().getSkill("Behavior");
+                Behavior behaviorSkill = (Behavior) getMyPet().getSkills().getSkill("Behavior");
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
                     return;
                 }
             }
-            entity.setTarget(((CraftLivingEntity) target).getHandle());
+            petEntity.setTarget(((CraftLivingEntity) target).getHandle());
         }
     }
 
@@ -91,7 +92,7 @@ public class CraftMyPet extends CraftCreature
         {
             health = getMaxHealth();
         }
-        getHandle().setHealth(health);
+        petEntity.setHealth(health);
     }
 
     public MyPetPlayer getOwner()
@@ -105,27 +106,18 @@ public class CraftMyPet extends CraftCreature
 
     public MyPet getMyPet()
     {
-        return getHandle().getMyPet();
+        return petEntity.getMyPet();
     }
 
     @Override
     public EntityMyPet getHandle()
     {
-        if(entity instanceof EntityMyPet)
-        {
-            return (EntityMyPet) entity;
-        }
-        else
-        {
-            MyPetLogger.write("EntityHandleError cause by:");
-            MyPetLogger.write("   " + entity);
-            return null;
-        }
+        return petEntity;
     }
 
     public boolean canMove()
     {
-        return getHandle().canMove();
+        return petEntity.canMove();
     }
 
     public MyPetType getPetType()

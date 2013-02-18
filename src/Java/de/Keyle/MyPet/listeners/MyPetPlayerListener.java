@@ -33,9 +33,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 public class MyPetPlayerListener implements Listener
 {
@@ -153,6 +151,50 @@ public class MyPetPlayerListener implements Listener
             myPet.removePet();
             MyPetPlugin.getPlugin().savePets(false);
             MyPetPlugin.getPlugin().getTimer().resetTimer();
+        }
+    }
+
+    @EventHandler
+    public void onMyPetPlayerMove(final PlayerMoveEvent event)
+    {
+        if(MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        {
+            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            if(myPetPlayer.hasMyPet())
+            {
+                MyPet myPet = myPetPlayer.getMyPet();
+                if(myPet.getStatus() == PetState.Here && event.getPlayer().getLocation().getWorld() != myPet.getLocation().getWorld())
+                {
+                    myPet.removePet();
+                    myPet.setLocation(event.getTo());
+                    if(!myPet.createPet())
+                    {
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMyPetPlayerTeleport(final PlayerTeleportEvent event)
+    {
+        if(MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        {
+            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            if(myPetPlayer.hasMyPet())
+            {
+                MyPet myPet = myPetPlayer.getMyPet();
+                if(myPet.getStatus() == PetState.Here && event.getPlayer().getLocation().getWorld() != myPet.getLocation().getWorld())
+                {
+                    myPet.removePet();
+                    myPet.setLocation(event.getTo());
+                    if(!myPet.createPet())
+                    {
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                    }
+                }
+            }
         }
     }
 }
