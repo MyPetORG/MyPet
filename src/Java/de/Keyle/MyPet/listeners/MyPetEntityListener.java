@@ -51,11 +51,8 @@ import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -68,6 +65,15 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class MyPetEntityListener implements Listener
 {
+   @EventHandler
+   public void onMyPetEntityPortal(EntityPortalEvent event)
+    {
+        if(event.getEntity() instanceof CraftMyPet)
+        {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onEntityDamageByLightning(final EntityDamageByEntityEvent event)
     {
