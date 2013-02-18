@@ -432,7 +432,7 @@ public class MyPetPlugin extends JavaPlugin
                         {
                             player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                         }
-                        else if (myPet.getLocation().distance(player.getLocation()) < 75)
+                        else if (player.getLocation().getWorld() == myPet.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                         {
                             myPet.createPet();
                         }
