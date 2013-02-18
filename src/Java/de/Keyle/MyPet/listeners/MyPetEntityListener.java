@@ -667,7 +667,11 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
-            MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+            MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
+            if(myPet == null)
+            {
+                return;
+            }
             myPet.status = PetState.Dead;
             myPet.respawnTime = MyPetConfiguration.RESPAWN_TIME_FIXED + (myPet.getExperience().getLevel() * MyPetConfiguration.RESPAWN_TIME_FACTOR);
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
