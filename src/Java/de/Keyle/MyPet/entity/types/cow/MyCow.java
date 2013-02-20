@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
-import static org.bukkit.Material.SPIDER_EYE;
+import static org.bukkit.Material.WHEAT;
 
-@MyPetInfo(food = {SPIDER_EYE})
+@MyPetInfo(food = {WHEAT})
 public class MyCow extends MyPet
 {
     protected boolean isBaby = false;
