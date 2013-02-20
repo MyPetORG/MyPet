@@ -35,6 +35,7 @@ public class MyPetExperience
 {
     public static int LOSS_PERCENT = 0;
     public static double LOSS_FIXED = 0;
+    public static boolean DROP_LOST_EXP = true;
 
     private final MyPet myPet;
 

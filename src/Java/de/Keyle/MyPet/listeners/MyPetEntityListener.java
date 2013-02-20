@@ -65,10 +65,10 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class MyPetEntityListener implements Listener
 {
-   @EventHandler
-   public void onMyPetEntityPortal(EntityPortalEvent event)
+    @EventHandler
+    public void onMyPetEntityPortal(EntityPortalEvent event)
     {
-        if(event.getEntity() instanceof CraftMyPet)
+        if (event.getEntity() instanceof CraftMyPet)
         {
             event.setCancelled(true);
         }
@@ -674,25 +674,14 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-            if(myPet == null)
+            if (myPet == null)
             {
                 return;
             }
             myPet.status = PetState.Dead;
             myPet.respawnTime = MyPetConfiguration.RESPAWN_TIME_FIXED + (myPet.getExperience().getLevel() * MyPetConfiguration.RESPAWN_TIME_FACTOR);
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
-            {
-                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                if (e.getDamager() instanceof Player && e.getDamager() == myPet.getOwner().getPlayer())
-                {
-                    event.setDroppedExp(0);
-                }
-                else if (e.getDamager() instanceof Player)
-                {
-                    event.setDroppedExp(myPet.getExperience().getLevel() / 2);
-                }
+            event.setDroppedExp(0);
 
-            }
             if (MyPetConfiguration.USE_LEVEL_SYSTEM && MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
             {
                 double lostExpirience = MyPetExperience.LOSS_FIXED;
@@ -701,18 +690,22 @@ public class MyPetEntityListener implements Listener
                 {
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
+                if (MyPetExperience.DROP_LOST_EXP)
+                {
+                    event.setDroppedExp((int) (lostExpirience + 0.5));
+                }
                 myPet.getExperience().removeCurrentExp(lostExpirience);
             }
             if (myPet.getSkills().isSkillActive("Inventory"))
             {
                 Inventory inventorySkill = (Inventory) myPet.getSkills().getSkill("Inventory");
                 inventorySkill.closeInventory();
-                if(inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin())
+                if (inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin())
                 {
-                    World world = ((CraftWorld)event.getEntity().getLocation().getWorld()).getHandle();
+                    World world = ((CraftWorld) event.getEntity().getLocation().getWorld()).getHandle();
                     Location petLocation = event.getEntity().getLocation();
                     MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
-                    for (int i = 0; i < inv.getSize(); i++)
+                    for (int i = 0 ; i < inv.getSize() ; i++)
                     {
                         net.minecraft.server.v1_4_R1.ItemStack is = inv.splitWithoutUpdate(i);
                         if (is != null)

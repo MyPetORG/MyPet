@@ -101,8 +101,9 @@ public class MyPetConfiguration
         setProperty("MyPet.Support.AncientRPG", true);
         setProperty("MyPet.Support.Vault.Economy", true);
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
-        setProperty("MyPet.Exp.loss.Percent", 0);
-        setProperty("MyPet.Exp.loss.Fixed", 0.0);
+        setProperty("MyPet.Exp.Loss.Percent", 0);
+        setProperty("MyPet.Exp.Loss.Fixed", 0.0);
+        setProperty("MyPet.Exp.Loss.Drop", true);
         setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
 
         setProperty("MyPet.Skill.Control.Item", Control.ITEM.getId());
@@ -194,8 +195,9 @@ public class MyPetConfiguration
         MyPetPvP.USE_Residence = config.getBoolean("MyPet.Support.Residence", true);
         MyPetPvP.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
 
-        MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent");
-        MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed");
+        MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent", 0);
+        MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed", 0.0);
+        MyPetExperience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
 
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
