@@ -63,6 +63,7 @@ public class CommandAdmin implements CommandExecutor
                 }
                 name = name.substring(0, name.length() - 1);
                 myPet.setPetName(name);
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
             }
             else if (option.equalsIgnoreCase("exp") && args.length >= 3)
             {
@@ -151,13 +152,15 @@ public class CommandAdmin implements CommandExecutor
                     {
                         myPet.respawnTime = 0;
                     }
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
                 }
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
             }
             else if (option.equalsIgnoreCase("reload"))
             {
                 MyPetConfiguration.loadConfiguration();
                 MyPetLogger.write("Config reloaded.");
-                sender.sendMessage(MyPetUtil.setColors(ChatColor.AQUA + "MyPet config reloaded!"));
+                sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
             }
             return true;
         }
