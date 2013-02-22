@@ -21,7 +21,6 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -29,8 +28,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 public class CommandAdmin implements CommandExecutor
 {
@@ -77,18 +74,58 @@ public class CommandAdmin implements CommandExecutor
                 }
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 String value = args[2];
-                if (MyPetUtil.isInt(value))
-                {
-                    int Exp = Integer.parseInt(value);
-                    Exp = Exp < 0 ? 0 : Exp;
 
-                    Collection<MyPetGenericSkill> skills = myPet.getSkills().getSkills();
-                    for (MyPetGenericSkill skill : skills)
+                if (args.length == 3 || (args.length >= 4 && args[3].equalsIgnoreCase("set")))
+                {
+                    if (MyPetUtil.isDouble(value))
                     {
-                        skill.reset();
+                        double Exp = Double.parseDouble(value);
+                        Exp = Exp < 0 ? 0 : Exp;
+                        if (myPet.getExperience().getExp() > Exp)
+                        {
+                            myPet.getSkills().reset();
+                            myPet.getExperience().reset();
+                            myPet.getExperience().addExp(Exp);
+                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
+                        }
+                        else
+                        {
+                            myPet.getExperience().addExp(Exp - myPet.getExperience().getExp());
+                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
+                        }
                     }
-                    myPet.getExperience().reset();
-                    myPet.getExperience().addExp(Exp);
+                }
+                else if (args.length >= 4 && args[3].equalsIgnoreCase("add"))
+                {
+                    if (MyPetUtil.isDouble(value))
+                    {
+                        double Exp = Double.parseDouble(value);
+                        Exp = Exp < 0 ? 0 : Exp;
+                        myPet.getExperience().addExp(Exp);
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
+                    }
+                }
+                else if (args.length >= 4 && args[3].equalsIgnoreCase("remove"))
+                {
+                    if (MyPetUtil.isDouble(value))
+                    {
+                        double Exp = Double.parseDouble(value);
+                        Exp = Exp < 0 ? 0 : Exp;
+                        Exp = Exp <= myPet.getExperience().getExp() ? Exp : myPet.getExperience().getExp();
+                        if (Exp <= myPet.getExperience().getCurrentExp())
+                        {
+                            myPet.getExperience().removeExp(Exp);
+                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
+                        }
+                        else
+                        {
+                            Exp = myPet.getExperience().getExp() - Exp;
+                            myPet.getSkills().reset();
+                            myPet.getExperience().reset();
+                            myPet.getExperience().addExp(Exp);
+                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
+                        }
+                    }
                 }
             }
             else if (option.equalsIgnoreCase("respawn"))
