@@ -20,9 +20,14 @@
 package de.Keyle.MyPet.entity.types.giant;
 
 import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_4_R1.*;
 
 @EntitySize(width = 5.5f, height = 5.5F)
 public class EntityMyGiant extends EntityMyPet
@@ -31,6 +36,27 @@ public class EntityMyGiant extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/zombie.png";
+    }
+
+    public void setPathfinder()
+    {
+        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
+        if (myPet.getDamage() > 0)
+        {
+            petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 8, 20));
+            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
+            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
+            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
+            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
+            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
+            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
+        }
+        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
+        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
