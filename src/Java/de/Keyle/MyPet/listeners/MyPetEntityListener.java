@@ -584,6 +584,10 @@ public class MyPetEntityListener implements Listener
             if (event.getDamager() instanceof Player)
             {
                 Player damager = (Player) event.getDamager();
+                if(damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM && event.getEntity() instanceof CraftMyPet)
+                {
+                    return;
+                }
                 if (MyPetList.hasMyPet(damager))
                 {
                     MyPet myPet = MyPetList.getMyPet(damager);
