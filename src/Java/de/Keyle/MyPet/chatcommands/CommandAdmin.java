@@ -138,7 +138,11 @@ public class CommandAdmin implements CommandExecutor
                     return true;
                 }
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getStatus() == PetState.Dead)
+                if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
+                {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
+                }
+                else if (myPet.getStatus() == PetState.Dead)
                 {
                     if (args.length >= 3 && MyPetUtil.isInt(args[2]))
                     {
@@ -154,7 +158,10 @@ public class CommandAdmin implements CommandExecutor
                     }
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
                 }
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
+                else
+                {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
+                }
             }
             else if (option.equalsIgnoreCase("reload"))
             {
