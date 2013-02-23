@@ -71,7 +71,7 @@ public class Behavior extends MyPetGenericSkill
             if (upgrade.getProperties().hasKey("friend"))
             {
                 behaviorActive.put(BehaviorState.Friendly, upgrade.getProperties().getBoolean("friend"));
-                if (behaviorActive.get(BehaviorState.Friendly))
+                if (behaviorActive.get(BehaviorState.Friendly) && BehaviorState.Friendly.isActive())
                 {
                     activeModes = ChatColor.GOLD + "Friendly" + ChatColor.RESET;
                 }
@@ -80,7 +80,7 @@ public class Behavior extends MyPetGenericSkill
             if (upgrade.getProperties().hasKey("aggro"))
             {
                 behaviorActive.put(BehaviorState.Aggressive, upgrade.getProperties().getBoolean("aggro"));
-                if (behaviorActive.get(BehaviorState.Aggressive))
+                if (behaviorActive.get(BehaviorState.Aggressive) && BehaviorState.Aggressive.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
                     {
@@ -93,7 +93,7 @@ public class Behavior extends MyPetGenericSkill
             if (upgrade.getProperties().hasKey("farm"))
             {
                 behaviorActive.put(BehaviorState.Farm, upgrade.getProperties().getBoolean("farm"));
-                if (behaviorActive.get(BehaviorState.Farm))
+                if (behaviorActive.get(BehaviorState.Farm) && BehaviorState.Farm.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
                     {
@@ -106,7 +106,7 @@ public class Behavior extends MyPetGenericSkill
             if (upgrade.getProperties().hasKey("raid"))
             {
                 behaviorActive.put(BehaviorState.Raid, upgrade.getProperties().getBoolean("raid"));
-                if (behaviorActive.get(BehaviorState.Raid))
+                if (behaviorActive.get(BehaviorState.Raid) && BehaviorState.Raid.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
                     {
@@ -128,12 +128,12 @@ public class Behavior extends MyPetGenericSkill
     public String getFormattedValue()
     {
         String activeModes = ChatColor.GOLD + MyPetLanguage.getString("Name_Normal") + ChatColor.RESET;
-        if (behaviorActive.get(BehaviorState.Friendly))
+        if (behaviorActive.get(BehaviorState.Friendly) && BehaviorState.Friendly.isActive())
         {
 
             activeModes += ", " + ChatColor.GOLD + MyPetLanguage.getString("Name_Friendly") + ChatColor.RESET;
         }
-        if (behaviorActive.get(BehaviorState.Aggressive))
+        if (behaviorActive.get(BehaviorState.Aggressive) && BehaviorState.Aggressive.isActive())
         {
             if (!activeModes.equalsIgnoreCase(""))
             {
@@ -141,7 +141,7 @@ public class Behavior extends MyPetGenericSkill
             }
             activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Aggressive") + ChatColor.RESET;
         }
-        if (behaviorActive.get(BehaviorState.Farm))
+        if (behaviorActive.get(BehaviorState.Farm) && BehaviorState.Farm.isActive())
         {
             if (!activeModes.equalsIgnoreCase(""))
             {
@@ -149,7 +149,7 @@ public class Behavior extends MyPetGenericSkill
             }
             activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Farm") + ChatColor.RESET;
         }
-        if (behaviorActive.get(BehaviorState.Raid))
+        if (behaviorActive.get(BehaviorState.Raid) && BehaviorState.Raid.isActive())
         {
             if (!activeModes.equalsIgnoreCase(""))
             {
