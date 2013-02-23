@@ -46,40 +46,28 @@ public class CommandCall implements CommandExecutor
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (myPet.getStatus() == PetState.Here)
                 {
-                    if (myPet.getLocation().getWorld() != petOwner.getLocation().getWorld())
+                    if (myPet.getCraftPet().isInsideVehicle())
                     {
-                        myPet.removePet();
-                        if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                        myPet.getCraftPet().leaveVehicle();
+                    }
+
+                    myPet.removePet();
+                    if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
+                    {
+                        myPet.setLocation(petOwner.getLocation());
+                        if (myPet.createPet())
                         {
-                            myPet.setLocation(petOwner.getLocation());
-                            myPet.createPet();
                             sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
                             getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         else
                         {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
                         }
                     }
                     else
                     {
-                        if (myPet.getCraftPet().isInsideVehicle())
-                        {
-                            myPet.getCraftPet().leaveVehicle();
-                        }
-                        EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
-                        if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
-                        {
-                            myPet.getCraftPet().teleport(petOwner);
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                        }
-                        else
-                        {
-                            myPet.removePet();
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                        }
-
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
                     }
                     return true;
                 }
@@ -89,9 +77,15 @@ public class CommandCall implements CommandExecutor
                     if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
                     {
                         myPet.setLocation(petOwner.getLocation());
-                        myPet.createPet();
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        if (myPet.createPet())
+                        {
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        }
+                        else
+                        {
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                        }
                     }
                     else
                     {
