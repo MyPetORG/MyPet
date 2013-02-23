@@ -172,7 +172,7 @@ public class MyPetEntityListener implements Listener
                     {
                         damager.sendMessage(MyPetUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
                     }
-                    else
+                    if (myPet.getOwner().equals(damager) || myPet.getOwner().isMyPetAdmin())
                     {
                         if (!myPet.isPassiv())
                         {
