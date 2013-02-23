@@ -32,8 +32,8 @@ import static org.bukkit.Material.SOUL_SAND;
 public class MyEnderman extends MyPet
 {
 
-    short BlockID = 0;
-    short BlockData = 0;
+    int BlockID = 0;
+    int BlockData = 0;
     public boolean isScreaming = false;
 
     public MyEnderman(MyPetPlayer petOwner)
@@ -42,32 +42,24 @@ public class MyEnderman extends MyPet
         this.petName = "Enderman";
     }
 
-    public short getBlockID()
+    public int getBlockID()
     {
         return BlockID;
     }
 
-    public void setBlockID(short flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyEnderman) getCraftPet().getHandle()).setBlockID(flag);
-        }
-        this.BlockID = flag;
-    }
-
-    public short getBlockData()
+    public int getBlockData()
     {
         return BlockData;
     }
 
-    public void setBlockData(short flag)
+    public void setBlock(int id, int data)
     {
         if (status == PetState.Here)
         {
-            ((EntityMyEnderman) getCraftPet().getHandle()).setBlockData(flag);
+            ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(id, data);
         }
-        this.BlockData = flag;
+        this.BlockID = id;
+        this.BlockData = data;
     }
 
     public boolean isScreaming()
@@ -88,8 +80,8 @@ public class MyEnderman extends MyPet
     public NBTTagCompound getExtendedInfo()
     {
         NBTTagCompound info = super.getExtendedInfo();
-        info.setShort("BlockID", getBlockID());
-        info.setShort("BlockData", getBlockData());
+        info.setInt("BlockID", getBlockID());
+        info.setInt("BlockData", getBlockData());
         //info.setBoolean("Screaming", isScreaming());
         return info;
     }
@@ -97,8 +89,18 @@ public class MyEnderman extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setBlockID(info.getShort("BlockID"));
-        setBlockData(info.getShort("BlockData"));
+        int id, data;
+        if (info.get("BlockID").getTypeId() == 2)
+        {
+            id = info.getShort("BlockID");
+            data = info.getShort("BlockData");
+        }
+        else
+        {
+            id = info.getInt("BlockID");
+            data = info.getInt("BlockData");
+        }
+        setBlock(id, data);
         //setScreaming(info.getBoolean("Screaming"));
     }
 

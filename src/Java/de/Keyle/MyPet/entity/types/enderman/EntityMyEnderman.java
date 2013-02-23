@@ -66,20 +66,27 @@ public class EntityMyEnderman extends EntityMyPet
             super.setMyPet(myPet);
 
             this.setScreaming(((MyEnderman) myPet).isScreaming());
-            this.setBlockID(((MyEnderman) myPet).getBlockID());
-            this.setBlockData(((MyEnderman) myPet).getBlockData());
+            this.setBlock(((MyEnderman) myPet).getBlockID(), ((MyEnderman) myPet).getBlockData());
         }
     }
 
-    public short getBlockID()
+    public int getBlockID()
     {
-        return (short) this.datawatcher.getByte(16);
+        return ((MyEnderman) myPet).BlockID;
     }
 
-    public void setBlockID(short blockID)
+    public int getBlockData()
+    {
+        return ((MyEnderman) myPet).BlockData;
+    }
+
+    public void setBlock(int blockID, int blockData)
     {
         this.datawatcher.watch(16, (byte) (blockID & 0xFF));
         ((MyEnderman) myPet).BlockID = blockID;
+
+        this.datawatcher.watch(17, (byte) (blockData & 0xFF));
+        ((MyEnderman) myPet).BlockData = blockData;
     }
 
     public boolean isScreaming()
@@ -91,17 +98,6 @@ public class EntityMyEnderman extends EntityMyPet
     {
         this.datawatcher.watch(18, (byte) (screaming ? 1 : 0));
         ((MyEnderman) myPet).isScreaming = screaming;
-    }
-
-    public short getBlockData()
-    {
-        return (short) this.datawatcher.getByte(17);
-    }
-
-    public void setBlockData(short blockData)
-    {
-        this.datawatcher.watch(17, (byte) (blockData & 0xFF));
-        ((MyEnderman) myPet).BlockData = blockData;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -133,23 +129,21 @@ public class EntityMyEnderman extends EntityMyPet
         {
             if (itemStack.id == Item.SHEARS.id)
             {
-                if (itemStack.getData() == 11 && getBlockData() != 0)
+                if (getBlockID() != 0)
                 {
                     EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
 
-                    setBlockID((short) 0);
-                    setBlockData((short) 0);
+                    setBlock(0, 0);
 
                     return true;
                 }
             }
             else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256)
             {
-                setBlockID((short) itemStack.id);
-                setBlockData((short) itemStack.getData());
+                setBlock(itemStack.id, itemStack.getData());
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
                     --itemStack.count;
