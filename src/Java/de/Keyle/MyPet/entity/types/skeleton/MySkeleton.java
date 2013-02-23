@@ -51,7 +51,7 @@ public class MySkeleton extends MyPet
         equipment.put(slot, item);
         if (status == PetState.Here)
         {
-            getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
+            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
         }
     }
 

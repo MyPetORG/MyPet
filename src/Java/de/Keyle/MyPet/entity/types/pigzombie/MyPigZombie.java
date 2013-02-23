@@ -50,7 +50,7 @@ public class MyPigZombie extends MyPet
         equipment.put(slot, item);
         if (status == PetState.Here)
         {
-            getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
+            ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
         }
     }
 

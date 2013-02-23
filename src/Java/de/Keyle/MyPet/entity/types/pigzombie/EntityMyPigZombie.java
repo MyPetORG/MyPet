@@ -45,24 +45,24 @@ public class EntityMyPigZombie extends EntityMyPet
             {
                 if (myPigZombie.getEquipment(slot) != null)
                 {
-                    setEquipment(slot.getSlotId(), myPigZombie.getEquipment(slot));
+                    setPetEquipment(slot.getSlotId(), myPigZombie.getEquipment(slot));
                 }
             }
         }
     }
 
-    public void setEquipment(int slot, ItemStack itemStack)
+    public void setPetEquipment(int slot, ItemStack itemStack)
     {
         ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
         ((MyPigZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }
 
-    public ItemStack getEquipment(int slot)
+    public ItemStack getPetEquipment(int slot)
     {
         return ((MyPigZombie) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
     }
 
-    public ItemStack[] getEquipment()
+    public ItemStack[] getPetEquipment()
     {
         return ((MyPigZombie) myPet).getEquipment();
     }
@@ -130,7 +130,7 @@ public class EntityMyPigZombie extends EntityMyPet
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        setEquipment(slot.getSlotId(), null);
+                        setPetEquipment(slot.getSlotId(), null);
                     }
                 }
                 return true;
@@ -146,7 +146,7 @@ public class EntityMyPigZombie extends EntityMyPet
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                setEquipment(b(itemStack), itemStack.cloneItemStack());
+                setPetEquipment(b(itemStack), itemStack.cloneItemStack());
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
                     --itemStack.count;

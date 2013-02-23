@@ -80,7 +80,7 @@ public class MyZombie extends MyPet
         equipment.put(slot, item);
         if (status == PetState.Here)
         {
-            getCraftPet().getHandle().setEquipment(slot.getSlotId(), item);
+            ((EntityMyZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
         }
     }
 
