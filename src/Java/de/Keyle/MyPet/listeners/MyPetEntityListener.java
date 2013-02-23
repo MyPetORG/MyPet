@@ -65,6 +65,18 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class MyPetEntityListener implements Listener
 {
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMyPetEntitySpawn(final CreatureSpawnEvent event)
+    {
+        if (event.getEntity() instanceof CraftMyPet)
+        {
+            if (event.isCancelled())
+            {
+                event.setCancelled(false);
+            }
+        }
+    }
+
     @EventHandler
     public void onMyPetEntityPortal(EntityPortalEvent event)
     {
@@ -584,7 +596,7 @@ public class MyPetEntityListener implements Listener
             if (event.getDamager() instanceof Player)
             {
                 Player damager = (Player) event.getDamager();
-                if(damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM && event.getEntity() instanceof CraftMyPet)
+                if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM && event.getEntity() instanceof CraftMyPet)
                 {
                     return;
                 }
