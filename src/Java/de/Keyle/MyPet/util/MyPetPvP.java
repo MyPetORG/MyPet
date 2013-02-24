@@ -11,8 +11,6 @@ import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.P;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.towny.object.TownyWorld;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -66,7 +64,7 @@ public class MyPetPvP
 
     public static boolean canHurt(Player attacker, Player defender)
     {
-        if(attacker != null && defender != null)
+        if (attacker != null && defender != null)
         {
             return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurt(defender);
         }
@@ -75,7 +73,7 @@ public class MyPetPvP
 
     public static boolean canHurt(Player defender)
     {
-        if(defender != null)
+        if (defender != null)
         {
             return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
         }
@@ -145,18 +143,9 @@ public class MyPetPvP
         }
         if (USE_Towny && pluginTowny)
         {
-            try
+            if (CombatUtil.preventDamageCall(attacker, defender))
             {
-                TownyWorld world = TownyUniverse.getDataSource().getWorld(defender.getWorld().getName());
-                if (CombatUtil.preventDamageCall(world, attacker, defender, attacker, defender))
-                {
-                    return false;
-                }
-            }
-            catch (Exception ignored)
-            {
-                MyPetUtil.getDebugLogger().info("Towny Exception!");
-                return true;
+                return false;
             }
         }
         return true;
