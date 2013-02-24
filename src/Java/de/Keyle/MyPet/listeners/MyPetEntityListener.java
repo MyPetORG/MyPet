@@ -65,7 +65,7 @@ import static org.bukkit.Bukkit.getPluginManager;
 
 public class MyPetEntityListener implements Listener
 {
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onMyPetEntitySpawn(final CreatureSpawnEvent event)
     {
         if (event.getEntity() instanceof CraftMyPet)
