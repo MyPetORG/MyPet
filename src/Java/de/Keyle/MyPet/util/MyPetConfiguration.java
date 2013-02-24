@@ -52,6 +52,7 @@ public class MyPetConfiguration
     public static int RESPAWN_TIME_FIXED = 0;
     public static int AUTOSAVE_TIME = 60;
     public static int HUNGER_SYSTEM_TIME = 60;
+    public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
     public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
@@ -79,6 +80,7 @@ public class MyPetConfiguration
         setProperty("MyPet.LevelSystem", true);
         setProperty("MyPet.HungerSystem.Active", true);
         setProperty("MyPet.HungerSystem.Time", 60);
+        setProperty("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         setProperty("MyPet.SendMetrics", true);
         setProperty("MyPet.CheckForUpdates", false);
         setProperty("MyPet.DebugLogger", true);
@@ -178,6 +180,7 @@ public class MyPetConfiguration
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
+        HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);

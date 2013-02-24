@@ -28,10 +28,7 @@ import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
-import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetPvP;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
@@ -283,7 +280,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 return true;
             }
-            int addHunger = 6;
+            int addHunger = MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED;
             if (getHealth() < getMaxHealth())
             {
                 if (!entityhuman.abilities.canInstantlyBuild)
@@ -315,7 +312,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 myPet.setHungerValue(myPet.getHungerValue() + addHunger);
                 addHunger = 0;
             }
-            if (addHunger < 6)
+            if (addHunger < MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED)
             {
                 return true;
             }
