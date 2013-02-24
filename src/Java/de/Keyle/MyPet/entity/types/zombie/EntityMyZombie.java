@@ -19,10 +19,12 @@
 
 package de.Keyle.MyPet.entity.types.zombie;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_4_R1.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
@@ -41,17 +43,28 @@ public class EntityMyZombie extends EntityMyPet
         if (myPet != null)
         {
             super.setMyPet(myPet);
-            MyZombie myZombie = (MyZombie) myPet;
+            final MyZombie myZombie = (MyZombie) myPet;
+            final EntityMyZombie entityMyZombie = this;
 
             this.setBaby(myZombie.isBaby());
             this.setVillager(myZombie.isVillager());
-            for (EquipmentSlot slot : EquipmentSlot.values())
+
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
             {
-                if (myZombie.getEquipment(slot) != null)
+                public void run()
                 {
-                    setPetEquipment(slot.getSlotId(), myZombie.getEquipment(slot));
+                    if (myZombie.status == PetState.Here)
+                    {
+                        for (EquipmentSlot slot : EquipmentSlot.values())
+                        {
+                            if (myZombie.getEquipment(slot) != null)
+                            {
+                                entityMyZombie.setPetEquipment(slot.getSlotId(), myZombie.getEquipment(slot));
+                            }
+                        }
+                    }
                 }
-            }
+            }, 5L);
         }
     }
 

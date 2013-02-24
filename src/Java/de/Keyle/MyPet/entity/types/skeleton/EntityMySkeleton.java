@@ -19,10 +19,12 @@
 
 package de.Keyle.MyPet.entity.types.skeleton;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_4_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
@@ -39,16 +41,27 @@ public class EntityMySkeleton extends EntityMyPet
         if (myPet != null)
         {
             super.setMyPet(myPet);
-            MySkeleton mySkeleton = (MySkeleton) myPet;
+            final MySkeleton mySkeleton = (MySkeleton) myPet;
+            final EntityMySkeleton entityMySkeleton = this;
 
             this.setWither(mySkeleton.isWither());
-            for (EquipmentSlot slot : EquipmentSlot.values())
+
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
             {
-                if (mySkeleton.getEquipment(slot) != null)
+                public void run()
                 {
-                    setPetEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
+                    if (mySkeleton.status == PetState.Here)
+                    {
+                        for (EquipmentSlot slot : EquipmentSlot.values())
+                        {
+                            if (mySkeleton.getEquipment(slot) != null)
+                            {
+                                entityMySkeleton.setPetEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
+                            }
+                        }
+                    }
                 }
-            }
+            }, 5L);
         }
     }
 
