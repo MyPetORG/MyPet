@@ -61,20 +61,24 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
             Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
             if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
             {
+                this.petEntity.goalTarget = null;
                 return false;
             }
             if (behaviorSkill.getBehavior() == BehaviorState.Raid)
             {
                 if (this.petEntity.goalTarget instanceof EntityTameableAnimal && ((EntityTameableAnimal) this.petEntity.goalTarget).isTamed())
                 {
+                    this.petEntity.goalTarget = null;
                     return false;
                 }
                 if (this.petEntity.goalTarget instanceof EntityMyPet)
                 {
+                    this.petEntity.goalTarget = null;
                     return false;
                 }
                 if (this.petEntity.goalTarget instanceof EntityPlayer)
                 {
+                    this.petEntity.goalTarget = null;
                     return false;
                 }
             }
@@ -85,10 +89,12 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
 
             if (myPet.getOwner().equals(targetPlayer))
             {
+                this.petEntity.goalTarget = null;
                 return false;
             }
             else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
+                this.petEntity.goalTarget = null;
                 return false;
             }
         }
@@ -102,6 +108,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
             }
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
+                this.petEntity.goalTarget = null;
                 return false;
             }
         }
