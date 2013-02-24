@@ -23,7 +23,6 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,146 +35,153 @@ public class CommandAdmin implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            if (!MyPetPermissions.has(player, "MyPet.admin", false))
+            if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
             {
                 return true;
             }
-            if (args.length < 1)
+        }
+        if (args.length < 1)
+        {
+            return false;
+        }
+        String option = args[0];
+
+        if (option.equalsIgnoreCase("name") && args.length >= 3)
+        {
+            String petOwner = args[1];
+            if (!MyPetList.hasMyPet(petOwner))
             {
-                return false;
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                return true;
             }
-            String option = args[0];
+            MyPet myPet = MyPetList.getMyPet(petOwner);
 
-            if (option.equalsIgnoreCase("name") && args.length >= 3)
+            String name = "";
+            for (int i = 2 ; i < args.length ; i++)
             {
-                String petOwner = args[1];
-                if (!MyPetList.hasMyPet(petOwner))
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
-                    return true;
-                }
-                MyPet myPet = MyPetList.getMyPet(petOwner);
-
-                String name = "";
-                for (int i = 2 ; i < args.length ; i++)
-                {
-                    name += args[i] + " ";
-                }
-                name = name.substring(0, name.length() - 1);
-                myPet.setPetName(name);
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
+                name += args[i] + " ";
             }
-            else if (option.equalsIgnoreCase("exp") && args.length >= 3)
+            name = name.substring(0, name.length() - 1);
+            myPet.setPetName(name);
+            MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
+        }
+        else if (option.equalsIgnoreCase("exp") && args.length >= 3)
+        {
+            String petOwner = args[1];
+            if (!MyPetList.hasMyPet(petOwner))
             {
-                String petOwner = args[1];
-                if (!MyPetList.hasMyPet(petOwner))
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
-                    return true;
-                }
-                MyPet myPet = MyPetList.getMyPet(petOwner);
-                String value = args[2];
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                return true;
+            }
+            MyPet myPet = MyPetList.getMyPet(petOwner);
+            String value = args[2];
 
-                if (args.length == 3 || (args.length >= 4 && args[3].equalsIgnoreCase("set")))
+            if (args.length == 3 || (args.length >= 4 && args[3].equalsIgnoreCase("set")))
+            {
+                if (MyPetUtil.isDouble(value))
                 {
-                    if (MyPetUtil.isDouble(value))
+                    double Exp = Double.parseDouble(value);
+                    Exp = Exp < 0 ? 0 : Exp;
+                    if (myPet.getExperience().getExp() > Exp)
                     {
-                        double Exp = Double.parseDouble(value);
-                        Exp = Exp < 0 ? 0 : Exp;
-                        if (myPet.getExperience().getExp() > Exp)
-                        {
-                            myPet.getSkills().reset();
-                            myPet.getExperience().reset();
-                            myPet.getExperience().addExp(Exp);
-                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
-                        }
-                        else
-                        {
-                            myPet.getExperience().addExp(Exp - myPet.getExperience().getExp());
-                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
-                        }
-                    }
-                }
-                else if (args.length >= 4 && args[3].equalsIgnoreCase("add"))
-                {
-                    if (MyPetUtil.isDouble(value))
-                    {
-                        double Exp = Double.parseDouble(value);
-                        Exp = Exp < 0 ? 0 : Exp;
+                        myPet.getSkills().reset();
+                        myPet.getExperience().reset();
                         myPet.getExperience().addExp(Exp);
-                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
-                    }
-                }
-                else if (args.length >= 4 && args[3].equalsIgnoreCase("remove"))
-                {
-                    if (MyPetUtil.isDouble(value))
-                    {
-                        double Exp = Double.parseDouble(value);
-                        Exp = Exp < 0 ? 0 : Exp;
-                        Exp = Exp <= myPet.getExperience().getExp() ? Exp : myPet.getExperience().getExp();
-                        if (Exp <= myPet.getExperience().getCurrentExp())
-                        {
-                            myPet.getExperience().removeExp(Exp);
-                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
-                        }
-                        else
-                        {
-                            Exp = myPet.getExperience().getExp() - Exp;
-                            myPet.getSkills().reset();
-                            myPet.getExperience().reset();
-                            myPet.getExperience().addExp(Exp);
-                            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
-                        }
-                    }
-                }
-            }
-            else if (option.equalsIgnoreCase("respawn"))
-            {
-                String petOwner = args[1];
-                if (!MyPetList.hasMyPet(petOwner))
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
-                    return true;
-                }
-                MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
-                {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
-                    if (args.length >= 3 && MyPetUtil.isInt(args[2]))
-                    {
-                        int respawnTime = Integer.parseInt(args[2]);
-                        if (respawnTime >= 0)
-                        {
-                            myPet.respawnTime = respawnTime;
-                        }
+                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
                     }
                     else
                     {
-                        myPet.respawnTime = 0;
+                        myPet.getExperience().addExp(Exp - myPet.getExperience().getExp());
+                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
                     }
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
+                }
+            }
+            else if (args.length >= 4 && args[3].equalsIgnoreCase("add"))
+            {
+                if (MyPetUtil.isDouble(value))
+                {
+                    double Exp = Double.parseDouble(value);
+                    Exp = Exp < 0 ? 0 : Exp;
+                    myPet.getExperience().addExp(Exp);
+                    MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
+                }
+            }
+            else if (args.length >= 4 && args[3].equalsIgnoreCase("remove"))
+            {
+                if (MyPetUtil.isDouble(value))
+                {
+                    double Exp = Double.parseDouble(value);
+                    Exp = Exp < 0 ? 0 : Exp;
+                    Exp = Exp <= myPet.getExperience().getExp() ? Exp : myPet.getExperience().getExp();
+                    if (Exp <= myPet.getExperience().getCurrentExp())
+                    {
+                        myPet.getExperience().removeExp(Exp);
+                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
+                    }
+                    else
+                    {
+                        Exp = myPet.getExperience().getExp() - Exp;
+                        myPet.getSkills().reset();
+                        myPet.getExperience().reset();
+                        myPet.getExperience().addExp(Exp);
+                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
+                    }
+                }
+            }
+        }
+        else if (option.equalsIgnoreCase("respawn"))
+        {
+            String petOwner = args[1];
+            if (!MyPetList.hasMyPet(petOwner))
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                return true;
+            }
+            MyPet myPet = MyPetList.getMyPet(petOwner);
+            if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
+            {
+                MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
+            }
+            else if (myPet.getStatus() == PetState.Dead)
+            {
+                if (args.length >= 3 && MyPetUtil.isInt(args[2]))
+                {
+                    int respawnTime = Integer.parseInt(args[2]);
+                    if (respawnTime >= 0)
+                    {
+                        myPet.respawnTime = respawnTime;
+                    }
                 }
                 else
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
+                    myPet.respawnTime = 0;
                 }
+                MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
             }
-            else if (option.equalsIgnoreCase("reload"))
+            else
             {
-                MyPetConfiguration.loadConfiguration();
-                MyPetLogger.write("Config reloaded.");
-                sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
+                MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
             }
-            else if (option.equalsIgnoreCase("build"))
-            {
-                MyPetLogger.write("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
-                sender.sendMessage("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
-            }
-            return true;
+        }
+        else if (option.equalsIgnoreCase("reload"))
+        {
+            MyPetConfiguration.loadConfiguration();
+            MyPetUtil.getDebugLogger().info("Config reloaded.");
+            sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
+        }
+        else if (option.equalsIgnoreCase("build"))
+        {
+            MyPetUtil.getDebugLogger().info("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
+            sender.sendMessage("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
         }
         return true;
     }
