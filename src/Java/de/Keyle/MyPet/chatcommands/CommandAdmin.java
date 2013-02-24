@@ -19,6 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.*;
@@ -168,6 +169,11 @@ public class CommandAdmin implements CommandExecutor
                 MyPetConfiguration.loadConfiguration();
                 MyPetLogger.write("Config reloaded.");
                 sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
+            }
+            else if (option.equalsIgnoreCase("build"))
+            {
+                MyPetLogger.write("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
+                sender.sendMessage("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
             }
             return true;
         }
