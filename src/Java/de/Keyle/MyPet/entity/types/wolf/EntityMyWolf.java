@@ -72,7 +72,7 @@ public class EntityMyWolf extends EntityMyPet
 
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setTamed(((MyWolf) myPet).isTamed());
-            this.setCollarColor(((MyWolf) myPet).getCollarColor().getDyeData());
+            this.setCollarColor(((MyWolf) myPet).getCollarColor());
 
         }
     }
@@ -169,15 +169,20 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).isBaby = flag;
     }
 
-    public int getCollarColor()
+    public DyeColor getCollarColor()
     {
-        return this.datawatcher.getByte(20) & 0xF;
+        return ((MyWolf) myPet).collarColor;
     }
 
-    public void setCollarColor(byte value)
+    public void setCollarColor(DyeColor color)
     {
-        this.datawatcher.watch(20, (byte) (value & 0xF));
-        ((MyWolf) myPet).collarColor = DyeColor.getByDyeData(value);
+        setCollarColor(color.getWoolData());
+    }
+
+    public void setCollarColor(byte color)
+    {
+        this.datawatcher.watch(20, color);
+        ((MyWolf) myPet).collarColor = DyeColor.getByWoolData(color);
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -213,7 +218,7 @@ public class EntityMyWolf extends EntityMyPet
             {
                 if (itemStack.getData() <= 15)
                 {
-                    setCollarColor((byte) itemStack.getData());
+                    setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                     if (!entityhuman.abilities.canInstantlyBuild)
                     {
                         if (--itemStack.count <= 0)

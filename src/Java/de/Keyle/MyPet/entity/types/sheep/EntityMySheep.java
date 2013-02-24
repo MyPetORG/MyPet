@@ -68,7 +68,7 @@ public class EntityMySheep extends EntityMyPet
         {
             super.setMyPet(myPet);
 
-            this.setColor(((MySheep) myPet).getColor().getDyeData());
+            this.setColor(((MySheep) myPet).getColor());
             this.setSheared(((MySheep) myPet).isSheared());
             this.setBaby(((MySheep) myPet).isBaby());
         }
@@ -79,11 +79,15 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getByte(16) & 15;
     }
 
+    public void setColor(DyeColor color)
+    {
+        setColor(color.getWoolData());
+    }
+
     public void setColor(byte color)
     {
-        byte b0 = this.datawatcher.getByte(16);
-        this.datawatcher.watch(16, (byte) (b0 & 240 | color & 15));
-        ((MySheep) myPet).color = DyeColor.getByDyeData(color);
+        this.datawatcher.watch(16, color);
+        ((MySheep) myPet).color = DyeColor.getByWoolData(color);
     }
 
     public boolean isSheared()
@@ -155,7 +159,7 @@ public class EntityMySheep extends EntityMyPet
             {
                 if (itemStack.getData() <= 15)
                 {
-                    setColor((byte) itemStack.getData());
+                    setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                     if (!entityhuman.abilities.canInstantlyBuild)
                     {
                         if (--itemStack.count <= 0)
