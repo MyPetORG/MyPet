@@ -50,10 +50,9 @@ public class CommandCall implements CommandExecutor
                     {
                         myPet.getCraftPet().leaveVehicle();
                     }
-
-                    myPet.removePet();
                     if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
                     {
+                        myPet.removePet();
                         myPet.setLocation(petOwner.getLocation());
                         if (myPet.createPet())
                         {
