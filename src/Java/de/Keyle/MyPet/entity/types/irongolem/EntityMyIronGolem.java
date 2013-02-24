@@ -33,6 +33,7 @@ import net.minecraft.server.v1_4_R1.*;
 public class EntityMyIronGolem extends EntityMyPet
 {
     public static boolean CAN_THROW_UP = true;
+
     public EntityMyIronGolem(World world, MyPet myPet)
     {
         super(world, myPet);
@@ -44,7 +45,7 @@ public class EntityMyIronGolem extends EntityMyPet
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 5, 20));
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 5, 33));
             petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
             petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
