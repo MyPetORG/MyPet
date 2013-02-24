@@ -203,12 +203,15 @@ public class MyPetEntityListener implements Listener
                     event.setCancelled(true);
                 }
             }
-            if (!event.isCancelled() && myPet.getSkills().isSkillActive("Thorns"))
+            if (event.getDamager() instanceof LivingEntity)
             {
-                Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
-                if (thornsSkill.isActivated())
+                if (!event.isCancelled() && myPet.getSkills().isSkillActive("Thorns"))
                 {
-                    ((LivingEntity) event.getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
+                    Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
+                    if (thornsSkill.isActivated())
+                    {
+                        ((LivingEntity) event.getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
+                    }
                 }
             }
         }
