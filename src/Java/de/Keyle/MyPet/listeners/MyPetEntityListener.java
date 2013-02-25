@@ -676,11 +676,10 @@ public class MyPetEntityListener implements Listener
                     Lightning lightningSkill = (Lightning) myPet.getSkills().getSkill("Lightning");
                     if (lightningSkill.getLightning())
                     {
-                        LightningStrike strike = event.getEntity().getLocation().getWorld().strikeLightning(event.getEntity().getLocation());
-                        if (strike != null)
-                        {
-                            Lightning.lightningList.put(strike, myPet);
-                        }
+                        Lightning.isStriking = true;
+                        LightningStrike bolt = event.getEntity().getLocation().getWorld().strikeLightning(event.getEntity().getLocation());
+                        Lightning.lightningList.put(bolt, myPet);
+                        Lightning.isStriking = false;
                     }
                 }
             }

@@ -27,10 +27,10 @@ import org.bukkit.event.weather.LightningStrikeEvent;
 
 public class MyPetWeatherListener implements Listener
 {
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
     public void onLightningStrike(final LightningStrikeEvent event)
     {
-        if (Lightning.isSkillLightning(event.getLightning()))
+        if (Lightning.isStriking)
         {
             if (event.isCancelled())
             {

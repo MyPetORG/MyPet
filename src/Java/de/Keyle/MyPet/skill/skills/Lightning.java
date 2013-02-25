@@ -43,6 +43,7 @@ public class Lightning extends MyPetGenericSkill
     private int chance = 0;
     private static Random random = new Random();
     public static Map<LightningStrike, MyPet> lightningList = new HashMap<LightningStrike, MyPet>();
+    public static boolean isStriking = false;
 
     public Lightning(boolean addedByInheritance)
     {
