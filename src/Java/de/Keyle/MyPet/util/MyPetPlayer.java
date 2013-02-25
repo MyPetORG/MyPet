@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPetPlayer implements Scheduler
+public class MyPetPlayer implements IScheduler
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 

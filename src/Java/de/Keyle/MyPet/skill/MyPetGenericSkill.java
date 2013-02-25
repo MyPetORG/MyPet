@@ -20,10 +20,10 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.Scheduler;
+import de.Keyle.MyPet.util.IScheduler;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
-public abstract class MyPetGenericSkill extends MyPetSkillTreeSkill implements Scheduler
+public abstract class MyPetGenericSkill extends MyPetSkillTreeSkill implements IScheduler
 {
     protected int maxLevel = -1;
     protected MyPet myPet;

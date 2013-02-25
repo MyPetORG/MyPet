@@ -31,7 +31,7 @@ public class MyPetTimer
 
     private static boolean resetTimer = false;
 
-    private final List<Scheduler> tasksToSchedule = new ArrayList<Scheduler>();
+    private final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
 
     public void stopTimer()
     {
@@ -56,7 +56,7 @@ public class MyPetTimer
                 {
                     myPet.scheduleTask();
                 }
-                for (Scheduler task : tasksToSchedule)
+                for (IScheduler task : tasksToSchedule)
                 {
                     task.schedule();
                 }
@@ -83,12 +83,12 @@ public class MyPetTimer
         resetTimer = true;
     }
 
-    public void addTask(Scheduler scheduler)
+    public void addTask(IScheduler scheduler)
     {
         tasksToSchedule.add(scheduler);
     }
 
-    public void removeTask(Scheduler scheduler)
+    public void removeTask(IScheduler scheduler)
     {
         tasksToSchedule.remove(scheduler);
     }

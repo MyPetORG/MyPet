@@ -19,7 +19,7 @@
 
 package de.Keyle.MyPet.util;
 
-public interface Scheduler
+public interface IScheduler
 {
     public void schedule();
 }
