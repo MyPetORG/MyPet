@@ -77,6 +77,11 @@ public abstract class MyPet
         }
     }
 
+    public static enum SpawnFlags
+    {
+        Success, NoSpace, AlreadyHere, Dead, Canceled;
+    }
+
     public static enum PetState
     {
         Dead, Despawned, Here
@@ -194,7 +199,7 @@ public abstract class MyPet
         }
     }
 
-    public boolean createPet()
+    public SpawnFlags createPet()
     {
         if (status != PetState.Here && getOwner().isOnline())
         {
@@ -206,7 +211,7 @@ public abstract class MyPet
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))
                 {
-                    return false;
+                    return SpawnFlags.NoSpace;
                 }
                 if (!petLocation.getChunk().isLoaded())
                 {
@@ -215,14 +220,21 @@ public abstract class MyPet
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     status = PetState.Despawned;
-                    return false;
+                    return SpawnFlags.Canceled;
                 }
                 craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
                 status = PetState.Here;
-                return true;
+                return SpawnFlags.Success;
             }
         }
-        return false;
+        if (status == PetState.Dead)
+        {
+            return SpawnFlags.Dead;
+        }
+        else
+        {
+            return SpawnFlags.AlreadyHere;
+        }
     }
 
     public CraftMyPet getCraftPet()
@@ -233,13 +245,13 @@ public abstract class MyPet
 
     public PetState getStatus()
     {
-        if(status == PetState.Here)
+        if (status == PetState.Here)
         {
-            if(craftMyPet == null || craftMyPet.getHandle() == null)
+            if (craftMyPet == null || craftMyPet.getHandle() == null)
             {
                 status = PetState.Despawned;
             }
-            else if(craftMyPet.getHealth() <= 0 || craftMyPet.isDead())
+            else if (craftMyPet.getHealth() <= 0 || craftMyPet.isDead())
             {
                 status = PetState.Dead;
             }

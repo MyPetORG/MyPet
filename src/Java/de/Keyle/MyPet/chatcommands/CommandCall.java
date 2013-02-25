@@ -19,9 +19,7 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.util.MyPetLanguage;
@@ -44,59 +42,27 @@ public class CommandCall implements CommandExecutor
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getStatus() == PetState.Here)
+
+                myPet.removePet();
+                myPet.setLocation(petOwner.getLocation());
+
+                switch (myPet.createPet())
                 {
-                    if (myPet.getCraftPet().isInsideVehicle())
-                    {
-                        myPet.getCraftPet().leaveVehicle();
-                    }
-                    if (MyPetUtil.canSpawn(petOwner.getLocation(), myPet.getCraftPet().getHandle()))
-                    {
-                        myPet.removePet();
-                        myPet.setLocation(petOwner.getLocation());
-                        if (myPet.createPet())
-                        {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                        }
-                        else
-                        {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
-                        }
-                    }
-                    else
-                    {
+                    case Success:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        break;
+                    case Canceled:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                        break;
+                    case NoSpace:
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                    }
-                    return true;
+                        break;
+                    case Dead:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                        break;
                 }
-                else if (myPet.getStatus() == PetState.Despawned)
-                {
-                    EntitySize es = myPet.getPetType().getEntityClass().getAnnotation(EntitySize.class);
-                    if (es != null && MyPetUtil.canSpawn(petOwner.getLocation(), es.height(), 0.0F, es.width()))
-                    {
-                        myPet.setLocation(petOwner.getLocation());
-                        if (myPet.createPet())
-                        {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                        }
-                        else
-                        {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
-                        }
-                    }
-                    else
-                    {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                    }
-                    return true;
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
-                    return true;
-                }
+                return true;
             }
             else
             {

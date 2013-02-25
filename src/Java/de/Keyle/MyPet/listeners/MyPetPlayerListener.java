@@ -174,9 +174,14 @@ public class MyPetPlayerListener implements Listener
                         {
                             if (myPet.status == PetState.Despawned)
                             {
-                                if (!myPet.createPet())
+                                switch (myPet.createPet())
                                 {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                    case Canceled:
+                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                                        break;
+                                    case NoSpace:
+                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                        break;
                                 }
                             }
                         }
@@ -206,9 +211,14 @@ public class MyPetPlayerListener implements Listener
                         {
                             if (myPet.status == PetState.Despawned)
                             {
-                                if (!myPet.createPet())
+                                switch (myPet.createPet())
                                 {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                    case Canceled:
+                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                                        break;
+                                    case NoSpace:
+                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                        break;
                                 }
                             }
                         }
