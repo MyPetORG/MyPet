@@ -155,22 +155,32 @@ public class MyPetPlayerListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetPlayerMove(final PlayerMoveEvent event)
+    public void onMyPetPlayerChangeWorld(final PlayerChangedWorldEvent event)
     {
-        if(MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if(myPetPlayer.hasMyPet())
+            if (myPetPlayer.hasMyPet())
             {
-                MyPet myPet = myPetPlayer.getMyPet();
-                if(myPet.getStatus() == PetState.Here && event.getPlayer().getLocation().getWorld() != myPet.getLocation().getWorld())
+                final MyPet myPet = myPetPlayer.getMyPet();
+                if (myPet.getStatus() == PetState.Here)
                 {
                     myPet.removePet();
-                    myPet.setLocation(event.getTo());
-                    if(!myPet.createPet())
+                    myPet.setLocation(event.getPlayer().getLocation());
+
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                    }
+                        public void run()
+                        {
+                            if (myPet.status == PetState.Despawned)
+                            {
+                                if (!myPet.createPet())
+                                {
+                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                }
+                            }
+                        }
+                    }, 25L);
                 }
             }
         }
@@ -179,20 +189,30 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onMyPetPlayerTeleport(final PlayerTeleportEvent event)
     {
-        if(MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if(myPetPlayer.hasMyPet())
+            if (myPetPlayer.hasMyPet())
             {
-                MyPet myPet = myPetPlayer.getMyPet();
-                if(myPet.getStatus() == PetState.Here && event.getPlayer().getLocation().getWorld() != myPet.getLocation().getWorld())
+                final MyPet myPet = myPetPlayer.getMyPet();
+                if (myPet.getStatus() == PetState.Here && event.getTo().getWorld() == myPet.getLocation().getWorld() && (event.getPlayer().getLocation().distance(event.getTo()) > 30))
                 {
                     myPet.removePet();
                     myPet.setLocation(event.getTo());
-                    if(!myPet.createPet())
+
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                    }
+                        public void run()
+                        {
+                            if (myPet.status == PetState.Despawned)
+                            {
+                                if (!myPet.createPet())
+                                {
+                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                }
+                            }
+                        }
+                    }, 25L);
                 }
             }
         }
