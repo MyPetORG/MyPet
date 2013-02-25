@@ -50,17 +50,18 @@ public class CommandChooseSkilltree implements CommandExecutor
             }
             else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
-                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.ChooseSkilltree"))
-                {
-                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
-                    return true;
-                }
                 MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
-                if (args.length == 1)
+                if (args.length >= 1)
                 {
-                    if (skillTreeMobType.hasSkillTree(args[0]))
+                    String skilltreeName = "";
+                    for (String arg : args)
                     {
-                        MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(args[0]);
+                        skilltreeName += arg + " ";
+                    }
+                    skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
+                    if (skillTreeMobType.hasSkillTree(skilltreeName))
+                    {
+                        MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(skilltreeName);
                         if (MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
                         {
                             if (myPet.setSkilltree(skillTree))
@@ -74,12 +75,12 @@ public class CommandChooseSkilltree implements CommandExecutor
                         }
                         else
                         {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", args[0])));
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", skilltreeName)));
                         }
                     }
                     else
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", args[0])));
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", skilltreeName)));
                     }
                 }
                 else
