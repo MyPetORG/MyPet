@@ -59,7 +59,7 @@ public class CommandInventory implements CommandExecutor
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_InventoryCreative")).replace("%petname%", myPet.petName));
                         return true;
                     }
-                    if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Inventory"))
+                    if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Inventory") && !MyPetPermissions.has(player, "MyPet.admin", false))
                     {
                         myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
                         return true;
