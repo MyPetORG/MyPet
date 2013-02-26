@@ -70,7 +70,7 @@ public class MyPetLanguage
         addString("Msg_AddDamage", "MyPet.Message.adddamage", "%aqua%%petname%%reset% has now %dmg% bonusdamage.");
         addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%reset% has now a max health of %maxhealth%HP.");
         addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%reset% regenerates now %hp%HP every %sec%sec.");
-        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You take your pet on the leash, he'll be a good pet.");
+        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You took a pet on a lead, it will be a good MyPet.%reset%");
         addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%reset% now can pickup items in a range of %range%.");
         addString("Msg_AddRide", "MyPet.Message.addride", "%aqua%%petname%%reset% can now be ridden.");
         addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%reset% is not here.");
