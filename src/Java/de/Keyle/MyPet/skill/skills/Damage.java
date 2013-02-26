@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011-2013 Keyle
- *
  * This file is part of MyPet
+ *
+ * Copyright (C) 2011-2013 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.Keyle.MyPet.skill.skills;
@@ -67,9 +68,9 @@ public class Damage extends MyPetGenericSkill
                 {
                     damageIncrease = upgrade.getProperties().getInt("damage");
                 }
-                if (damageIncrease > 0 && isPassive )
+                if (damageIncrease > 0 && isPassive)
                 {
-                    if(myPet.getStatus() == PetState.Here)
+                    if (myPet.getStatus() == PetState.Here)
                     {
                         getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                         getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
@@ -79,7 +80,7 @@ public class Damage extends MyPetGenericSkill
                 }
                 else if (damageIncrease <= 0 && !isPassive)
                 {
-                    if(myPet.getStatus() == PetState.Here)
+                    if (myPet.getStatus() == PetState.Here)
                     {
                         getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                         getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();

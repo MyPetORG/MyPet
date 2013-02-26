@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011-2013 Keyle
- *
  * This file is part of MyPet
+ *
+ * Copyright (C) 2011-2013 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.Keyle.MyPet.skill.skills;
@@ -37,7 +38,7 @@ import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 @SkillName("Inventory")
-@SkillProperties(parameterNames = {"add","drop"},
+@SkillProperties(parameterNames = {"add", "drop"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
         parameterDefaultValues = {"1", "false"})
 public class Inventory extends MyPetGenericSkill

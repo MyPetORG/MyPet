@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011-2013 Keyle
- *
  * This file is part of MyPet
+ *
+ * Copyright (C) 2011-2013 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.Keyle.MyPet.entity.ai.target;
@@ -43,7 +44,7 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
     @Override
     public boolean a()
     {
-        if(target != petEntity.aC())
+        if (target != petEntity.aC())
         {
             target = petEntity.aC();
         }
@@ -57,7 +58,7 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
             }
             else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
-                return a(this.target,true);
+                return a(this.target, true);
             }
             return false;
         }
@@ -79,7 +80,7 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
         {
             return false;
         }
-        else if(!super.b())
+        else if (!super.b())
         {
             target = null;
             return false;

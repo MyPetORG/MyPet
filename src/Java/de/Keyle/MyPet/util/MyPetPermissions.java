@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2011-2013 Keyle
- *
  * This file is part of MyPet
+ *
+ * Copyright (C) 2011-2013 Keyle
+ * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MyPet. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package de.Keyle.MyPet.util;
@@ -28,9 +29,9 @@ public class MyPetPermissions
 
     public static boolean has(Player player, String node)
     {
-        if(player != null)
+        if (player != null)
         {
-            if(ENABLED)
+            if (ENABLED)
             {
                 return player.hasPermission(node);
             }
@@ -41,9 +42,9 @@ public class MyPetPermissions
 
     public static boolean has(Player player, String node, boolean defaultValue)
     {
-        if(player != null)
+        if (player != null)
         {
-            if(ENABLED)
+            if (ENABLED)
             {
                 return player.isOp() || player.hasPermission(node);
             }
