@@ -34,30 +34,12 @@ import org.bukkit.entity.Player;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
-import java.util.UUID;
 
 public class MyPetUtil
 {
     public static Server getServer()
     {
         return Bukkit.getServer();
-    }
-
-    public static Player getPlayerByUUID(UUID playerUUID)
-    {
-        for (Player player : getServer().getOnlinePlayers())
-        {
-            if (player.getUniqueId().equals(playerUUID))
-            {
-                return player;
-            }
-        }
-        return null;
-    }
-
-    public static OfflinePlayer getOfflinePlayer(String Name)
-    {
-        return getServer().getOfflinePlayer(Name);
     }
 
     public static DebugLogger getDebugLogger()

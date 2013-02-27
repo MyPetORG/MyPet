@@ -80,7 +80,7 @@ public abstract class MyPet
 
     public static enum SpawnFlags
     {
-        Success, NoSpace, AlreadyHere, Dead, Canceled;
+        Success, NoSpace, AlreadyHere, Dead, Canceled
     }
 
     public static enum PetState

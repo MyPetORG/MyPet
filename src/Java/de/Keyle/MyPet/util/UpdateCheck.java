@@ -176,11 +176,11 @@ public class UpdateCheck
 
         public List<FeedItem> readFeed()
         {
-            feedItemList.clear();
-
             String description;
             String title;
             String pubDate;
+
+            feedItemList.clear();
 
             try
             {
@@ -199,7 +199,6 @@ public class UpdateCheck
             catch (Exception ignored)
             {
             }
-
             return feedItemList;
         }
     }

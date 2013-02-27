@@ -189,7 +189,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             i = (i + 1) / 2;
         }
-
         return super.damageEntity(damagesource, i);
     }
 

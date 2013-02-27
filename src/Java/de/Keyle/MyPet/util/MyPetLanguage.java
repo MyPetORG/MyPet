@@ -27,23 +27,14 @@ import java.util.Map;
 
 public class MyPetLanguage
 {
+    private static final Map<String, String> LV = new HashMap<String, String>();
+
     private final YAML_Configuration yamlConfiguration;
     private boolean save = false;
 
     public MyPetLanguage(YAML_Configuration yamlConfiguration)
     {
         this.yamlConfiguration = yamlConfiguration;
-    }
-
-    private static final Map<String, String> LV = new HashMap<String, String>();
-
-    public static String getString(String Variable)
-    {
-        if (LV.containsKey(Variable))
-        {
-            return LV.get(Variable);
-        }
-        return Variable;
     }
 
     public void addString(String name, String node, String def)
@@ -265,5 +256,14 @@ public class MyPetLanguage
             save = false;
             MyPetUtil.getDebugLogger().info("Added new values to language config");
         }
+    }
+
+    public static String getString(String Variable)
+    {
+        if (LV.containsKey(Variable))
+        {
+            return LV.get(Variable);
+        }
+        return Variable;
     }
 }

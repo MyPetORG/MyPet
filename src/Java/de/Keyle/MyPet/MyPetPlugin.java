@@ -740,7 +740,6 @@ public class MyPetPlugin extends JavaPlugin
                 playerNBTlist.add(playerNBT);
             }
         }
-
         return playerNBTlist;
     }
 

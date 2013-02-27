@@ -100,8 +100,7 @@ public class NBT_Configuration
             {
                 inputStream.close();
                 inputStream = new FileInputStream(NBTFile);
-                DataInputStream F_In;
-                F_In = new DataInputStream(inputStream);
+                DataInputStream F_In = new DataInputStream(inputStream);
                 nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
                 F_In.close();
                 if (MyPetUtil.getDebugLogger() != null)

@@ -227,7 +227,6 @@ public class MyPetList
                 mInctivePets.remove(inactiveMyPet.getPetOwner());
             }
         }
-
     }
 
     public static void addInactiveMyPet(InactiveMyPet inactiveMyPet)

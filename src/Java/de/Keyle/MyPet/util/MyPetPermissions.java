@@ -31,11 +31,7 @@ public class MyPetPermissions
     {
         if (player != null)
         {
-            if (ENABLED)
-            {
-                return player.hasPermission(node);
-            }
-            return true;
+            return !ENABLED || player.hasPermission(node);
         }
         return false;
     }
@@ -55,11 +51,7 @@ public class MyPetPermissions
 
     public static boolean hasExtended(Player player, String node)
     {
-        if (USE_EXTENDET_PERMISSIONS)
-        {
-            return has(player, node);
-        }
-        return true;
+        return !USE_EXTENDET_PERMISSIONS || has(player, node);
     }
 
     public static boolean hasExtended(Player player, String node, boolean defaultValue)
