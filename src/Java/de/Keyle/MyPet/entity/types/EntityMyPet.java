@@ -348,7 +348,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      */
     public boolean m(Entity entity)
     {
-        int damage = isMyPet() ? myPet.getDamage() : MyPet.getStartDamage(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+        int damage = isMyPet() ? myPet.getDamage() : 0;
         if (entity instanceof EntityPlayer)
         {
             Player victim = (Player) entity.getBukkitEntity();

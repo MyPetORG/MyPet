@@ -47,7 +47,6 @@ import static org.bukkit.Bukkit.getServer;
 public abstract class MyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
-    private static Map<Class<? extends MyPet>, Integer> startDamage = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
@@ -57,7 +56,6 @@ public abstract class MyPet
         for (MyPetType petType : MyPetType.values())
         {
             startHP.put(petType.getMyPetClass(), 20);
-            startDamage.put(petType.getMyPetClass(), 4);
         }
     }
 
@@ -327,7 +325,7 @@ public abstract class MyPet
 
     public int getDamage()
     {
-        return MyPet.getStartDamage(this.getClass()) + (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamageIncrease() : 0);
+        return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamageIncrease() : 0);
     }
 
     public MyPetSkills getSkills()
@@ -423,20 +421,6 @@ public abstract class MyPet
     public static void setStartHP(Class<? extends MyPet> myPetClass, int hp)
     {
         startHP.put(myPetClass, hp);
-    }
-
-    public static int getStartDamage(Class<? extends MyPet> myPetClass)
-    {
-        if (startDamage.containsKey(myPetClass))
-        {
-            return startDamage.get(myPetClass);
-        }
-        return 1;
-    }
-
-    public static void setStartDamage(Class<? extends MyPet> myPetClass, int damage)
-    {
-        startDamage.put(myPetClass, damage);
     }
 
     public static float getStartSpeed(Class<? extends MyPet> myPetClass)

@@ -319,7 +319,6 @@ public class MyPetPlugin extends JavaPlugin
         for (MyPetType myPetType : MyPetType.values())
         {
             debugLogger.info("  " + myPetType.getTypeName() + " { " +
-                    "damage:" + MyPet.getStartDamage(myPetType.getMyPetClass()) + ", " +
                     "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
                     "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
                     "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
