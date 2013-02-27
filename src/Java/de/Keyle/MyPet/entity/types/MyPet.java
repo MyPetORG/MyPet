@@ -36,10 +36,7 @@ import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getPluginManager;
 import static org.bukkit.Bukkit.getServer;
@@ -93,6 +90,7 @@ public abstract class MyPet
     public int respawnTime = 0;
     public int hungerTime = 0;
     protected int hunger = 100;
+    public UUID uuid = null;
 
     public PetState status = PetState.Despawned;
 
@@ -528,5 +526,20 @@ public abstract class MyPet
     public String toString()
     {
         return "MyPet{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
+    }
+
+    public void setUuid(UUID uuid)
+    {
+        this.uuid = uuid;
+    }
+
+    public UUID getUuid()
+    {
+        if(this.uuid == null)
+        {
+            this.uuid = UUID.randomUUID();
+        }
+
+        return this.uuid;
     }
 }

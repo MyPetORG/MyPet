@@ -27,9 +27,11 @@ import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.Location;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class InactiveMyPet
 {
+    private UUID uuid = null;
     private String petName = "";
     private final MyPetPlayer petOwner;
     private int health = -1;
@@ -198,4 +200,20 @@ public class InactiveMyPet
     {
         return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getPetOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
     }
+
+    public void setUuid(UUID uuid)
+    {
+        this.uuid = uuid;
+    }
+
+    public UUID getUuid()
+    {
+        if(this.uuid == null)
+        {
+            this.uuid = UUID.randomUUID();
+        }
+
+        return this.uuid;
+    }
+
 }

@@ -77,6 +77,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.UUID;
 
 public class MyPetPlugin extends JavaPlugin
 {
@@ -533,6 +534,11 @@ public class MyPetPlugin extends JavaPlugin
             {
                 petPitch = locationNBT.getFloat("Pitch");
             }
+            UUID petUuid = null;
+            if(myPetNBT.hasKey("UUID"))
+            {
+                petUuid = UUID.fromString(myPetNBT.getString("UUID"));
+            }
             String petWorld = locationNBT.getString("World");
             double petExp = myPetNBT.getDouble("Exp");
             int petHealthNow = myPetNBT.getInt("Health");
@@ -557,6 +563,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
+            inactiveMyPet.setUuid(petUuid);
             inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
@@ -651,6 +658,7 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setFloat("Pitch", myPet.getLocation().getPitch());
             locationNBT.setString("World", myPet.getLocation().getWorld().getName());
 
+            petNBT.setString("UUID", myPet.getUuid().toString());
             petNBT.setString("Type", myPet.getPetType().getTypeName());
             petNBT.setString("Owner", myPet.getOwner().getName());
             petNBT.setCompound("Location", locationNBT);
