@@ -48,6 +48,7 @@ public class MyPetList
         if (inactiveMyPet.getPetOwner().isOnline())
         {
             MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getPetOwner());
+            activeMyPet.setUuid(inactiveMyPet.getUuid());
             activeMyPet.setLocation(inactiveMyPet.getLocation() == null ? inactiveMyPet.getPetOwner().getPlayer().getLocation() : inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
@@ -176,6 +177,7 @@ public class MyPetList
     private static InactiveMyPet getInactiveMyPet(MyPet activeMyPet)
     {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
+        inactiveMyPet.setUuid(activeMyPet.getUuid());
         inactiveMyPet.setPetName(activeMyPet.petName);
         inactiveMyPet.setExp(activeMyPet.getExperience().getExp());
         inactiveMyPet.setHealth(activeMyPet.getHealth());

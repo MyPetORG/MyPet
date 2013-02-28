@@ -224,7 +224,6 @@ public class MyPetConfiguration
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
             MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
-            MyPet.setStartDamage(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".Damage", pi.damage()));
             MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
             seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
