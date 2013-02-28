@@ -186,9 +186,19 @@ public abstract class MyPet
         if (status != PetState.Here && getOwner().isOnline())
         {
             petLocation = getOwner().getPlayer().getLocation();
-            sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
             respawnTime = 0;
-            createPet();
+            switch (createPet())
+            {
+                case Success:
+                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
+                    break;
+                case Canceled:
+                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", petName));
+                    break;
+                case NoSpace:
+                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", petName));
+                    break;
+            }
             if (MyPetConfiguration.USE_HUNGER_SYSTEM)
             {
                 setHealth((int) Math.ceil(getMaxHealth() / 100. * (hunger + 1 - (hunger % 10))));
@@ -212,6 +222,7 @@ public abstract class MyPet
                 petEntity.setLocation(petLocation);
                 if (!MyPetUtil.canSpawn(petLocation, petEntity))
                 {
+                    status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
                 }
                 if (!petLocation.getChunk().isLoaded())
