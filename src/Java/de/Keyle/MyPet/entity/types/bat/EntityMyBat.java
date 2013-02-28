@@ -21,14 +21,14 @@
 package de.Keyle.MyPet.entity.types.bat;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_4_R1.EntityHuman;
+import net.minecraft.server.v1_4_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_4_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_4_R1.World;
 
 
 @EntitySize(width = 0.5F, height = 0.9F)
@@ -42,8 +42,8 @@ public class EntityMyBat extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
+        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 3, 20));
@@ -132,6 +132,9 @@ public class EntityMyBat extends EntityMyPet
     public void j_()
     {
         super.j_();
-        this.locY += 0.65;
+        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid())
+        {
+            this.locY += 0.65;
+        }
     }
 }

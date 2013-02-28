@@ -43,7 +43,7 @@ public class EntityMySheep extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getDamage() > 0)
         {

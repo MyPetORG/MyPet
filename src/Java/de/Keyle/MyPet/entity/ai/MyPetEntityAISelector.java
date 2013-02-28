@@ -32,7 +32,7 @@ public class MyPetEntityAISelector
 {
     private PathfinderGoalSelector entityAISelector;
     private Map<String, PathfinderGoal> AIGoalMap = new HashMap<String, PathfinderGoal>();
-    private int goalPos = 1;
+    private int goalPos = 0;
 
     public MyPetEntityAISelector(PathfinderGoalSelector entityAISelector)
     {

@@ -22,10 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.MyPetEntityAISelector;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.Control;
 import de.Keyle.MyPet.skill.skills.Ride;
@@ -104,7 +101,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
         if (myPet.getDamage() > 0)
         {

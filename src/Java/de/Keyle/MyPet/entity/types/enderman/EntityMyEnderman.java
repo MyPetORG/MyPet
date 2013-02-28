@@ -21,10 +21,7 @@
 package de.Keyle.MyPet.entity.types.enderman;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -42,7 +39,7 @@ public class EntityMyEnderman extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new PathfinderGoalFloat(this));
+        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getDamage() > 0)
         {
