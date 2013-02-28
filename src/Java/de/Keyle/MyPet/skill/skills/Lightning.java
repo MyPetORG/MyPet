@@ -30,9 +30,7 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.entity.LightningStrike;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @SkillName("Lightning")
 @SkillProperties(
@@ -127,25 +125,29 @@ public class Lightning extends MyPetGenericSkill
 
     public static int countLightnings()
     {
-        for (LightningStrike bolt : lightningList.keySet())
-        {
-            if (bolt.isDead())
-            {
-                lightningList.remove(bolt);
-            }
-        }
+        removeDeadLightnings();
         return lightningList.size();
     }
 
     public static boolean isSkillLightning(LightningStrike lightningStrike)
     {
+        removeDeadLightnings();
+        return lightningList.containsKey(lightningStrike);
+    }
+
+    private static void removeDeadLightnings()
+    {
+        List<LightningStrike> deadLightningStrikes = new ArrayList<LightningStrike>();
         for (LightningStrike bolt : lightningList.keySet())
         {
             if (bolt.isDead())
             {
-                lightningList.remove(bolt);
+                deadLightningStrikes.add(bolt);
             }
         }
-        return lightningList.containsKey(lightningStrike);
+        for (LightningStrike bolt : deadLightningStrikes)
+        {
+            lightningList.remove(bolt);
+        }
     }
 }
