@@ -53,9 +53,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -75,6 +78,10 @@ public class MyPetEntityListener implements Listener
             {
                 event.setCancelled(false);
             }
+        }
+        if (event.getSpawnReason() == SpawnReason.SPAWNER)
+        {
+            event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
     }
 
@@ -755,7 +762,19 @@ public class MyPetEntityListener implements Listener
                 }
             }
         }
-        if (MyPetConfiguration.USE_LEVEL_SYSTEM && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+        boolean spawnerMonster = false;
+        if (!MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner"))
+        {
+            for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner"))
+            {
+                if (value.getOwningPlugin() == MyPetPlugin.getPlugin())
+                {
+                    spawnerMonster = value.asBoolean();
+                    break;
+                }
+            }
+        }
+        if (!spawnerMonster && MyPetConfiguration.USE_LEVEL_SYSTEM && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
         {
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof CraftMyPet)
             {

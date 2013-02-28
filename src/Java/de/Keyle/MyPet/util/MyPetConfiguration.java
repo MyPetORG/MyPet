@@ -107,6 +107,7 @@ public class MyPetConfiguration
         setProperty("MyPet.Exp.Loss.Percent", 0);
         setProperty("MyPet.Exp.Loss.Fixed", 0.0);
         setProperty("MyPet.Exp.Loss.Drop", true);
+        setProperty("MyPet.Exp.Gain.MonsterSpawner", true);
         setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
 
         setProperty("MyPet.Skill.Control.Item", Control.ITEM.getId());
@@ -202,6 +203,7 @@ public class MyPetConfiguration
         MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent", 0);
         MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed", 0.0);
         MyPetExperience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
+        MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
 
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
