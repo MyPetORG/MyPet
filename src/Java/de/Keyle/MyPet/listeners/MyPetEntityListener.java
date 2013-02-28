@@ -695,7 +695,7 @@ public class MyPetEntityListener implements Listener
     }
 
     @EventHandler
-    public void onEntityDeath(final EntityDeathEvent event)
+    public void onMyPetEntityDeath(final EntityDeathEvent event)
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
@@ -762,6 +762,11 @@ public class MyPetEntityListener implements Listener
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onEntityDeath(final EntityDeathEvent event)
+    {
         boolean spawnerMonster = false;
         if (!MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner"))
         {
