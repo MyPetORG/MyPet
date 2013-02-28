@@ -921,7 +921,14 @@ public class MyPetEntityListener implements Listener
             }
             else
             {
-                killer = MyPetLanguage.getString("Name_" + event.getEntity().getLastDamageCause().getCause().name());
+                if (event.getEntity().getLastDamageCause() != null)
+                {
+                    killer = MyPetLanguage.getString("Name_" + event.getEntity().getLastDamageCause().getCause().name());
+                }
+                else
+                {
+                    killer = MyPetLanguage.getString("Name_Unknow");
+                }
             }
             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
         }
