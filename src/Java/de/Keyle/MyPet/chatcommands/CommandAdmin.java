@@ -175,6 +175,8 @@ public class CommandAdmin implements CommandExecutor
         }
         else if (option.equalsIgnoreCase("reload"))
         {
+            MyPetPlugin.getPlugin().reloadConfig();
+            MyPetConfiguration.config = MyPetPlugin.getPlugin().getConfig();
             MyPetConfiguration.loadConfiguration();
             MyPetUtil.getDebugLogger().info("Config reloaded.");
             sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
