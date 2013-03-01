@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -211,6 +212,10 @@ public class MyPetPlayer implements IScheduler
         else if (obj instanceof OfflinePlayer)
         {
             return ((OfflinePlayer) obj).getName().equals(playerName);
+        }
+        else if (obj instanceof AnimalTamer)
+        {
+            return ((AnimalTamer) obj).getName().equals(playerName);
         }
         else if (obj instanceof MyPetPlayer)
         {

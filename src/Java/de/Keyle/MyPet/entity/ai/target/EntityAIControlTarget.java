@@ -87,7 +87,20 @@ public class EntityAIControlTarget extends PathfinderGoal
                         {
                             continue;
                         }
-                        if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+                        else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (entityLiving instanceof EntityTameableAnimal)
+                    {
+                        EntityTameableAnimal tameable = (EntityTameableAnimal) entityLiving;
+                        Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
+                        if (myPet.getOwner().equals(tameableOwner))
+                        {
+                            continue;
+                        }
+                        else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), tameableOwner))
                         {
                             continue;
                         }
@@ -108,11 +121,11 @@ public class EntityAIControlTarget extends PathfinderGoal
                             {
                                 continue;
                             }
-                            if (entityLiving instanceof EntityMyPet)
+                            else if (entityLiving instanceof EntityMyPet)
                             {
                                 continue;
                             }
-                            if (entityLiving instanceof EntityPlayer)
+                            else if (entityLiving instanceof EntityPlayer)
                             {
                                 continue;
                             }

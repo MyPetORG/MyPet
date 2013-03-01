@@ -127,6 +127,14 @@ public class MyPetEntityListener implements Listener
                         event.setCancelled(true);
                     }
                 }
+                else if (event.getEntity() instanceof Tameable)
+                {
+                    Tameable tameable = (Tameable) event.getEntity();
+                    if (boltMyPet.getOwner().equals(tameable.getOwner()))
+                    {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
     }
