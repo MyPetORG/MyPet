@@ -25,6 +25,9 @@ import de.Keyle.MyPet.event.MyPetExpEvent;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
+import de.Keyle.MyPet.skill.experience.Default;
+import de.Keyle.MyPet.skill.experience.Experience;
+import de.Keyle.MyPet.skill.experience.JavaScript;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
@@ -38,18 +41,12 @@ public class MyPetExperience
     public static double LOSS_FIXED = 0;
     public static boolean DROP_LOST_EXP = true;
     public static boolean GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = true;
+    public static String CALCULATION_MODE = "Default";
 
     private final MyPet myPet;
 
     private double exp = 0;
-    MyPetJSexp JSexp;
-
-    private short lastLevel = 1;
-    private double lastExpL = Double.NaN;
-    private double lastExpC = Double.NaN;
-    private double lastExpR = Double.NaN;
-    private double lastCurrentExp = 0.0;
-    private double lastRequiredExp = 0.0;
+    Experience expMode;
 
     public static final Map<EntityType, MyPetMonsterExperience> mobExp = new HashMap<EntityType, MyPetMonsterExperience>();
 
@@ -85,7 +82,21 @@ public class MyPetExperience
     public MyPetExperience(MyPet pet)
     {
         this.myPet = pet;
-        JSexp = new MyPetJSexp(pet, this);
+
+
+        if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript"))
+        {
+            expMode = new JavaScript(myPet);
+        }
+        else
+        {
+            expMode = new Default(myPet);
+        }
+        if (!expMode.isUsable())
+        {
+            expMode = new Default(myPet);
+        }
+
         for (short i = 1 ; i <= getLevel() ; i++)
         {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
@@ -236,76 +247,34 @@ public class MyPetExperience
 
     public double getCurrentExp()
     {
-        if (lastExpC == this.exp)
+        double currentExp = expMode.getCurrentExp(this.exp);
+        if (!expMode.isUsable())
         {
-            return lastCurrentExp;
+            expMode = new Default(myPet);
+            return expMode.getCurrentExp(this.exp);
         }
-        lastExpC = this.exp;
-        if (JSexp.isUsable())
-        {
-            lastCurrentExp = JSexp.getCurrentExp();
-            return lastCurrentExp;
-        }
-        else
-        {
-            double tmpExp = this.exp;
-            short tmplvl = 0;
-
-            while (tmpExp >= 7 + (short) (tmplvl * 3.5))
-            {
-                tmpExp -= 7 + (short) (tmplvl * 3.5);
-                tmplvl++;
-            }
-            lastCurrentExp = tmpExp;
-            return lastCurrentExp;
-        }
+        return currentExp;
     }
 
     public short getLevel()
     {
-        if (lastExpL == this.exp)
+        short currentExp = expMode.getLevel(this.exp);
+        if (!expMode.isUsable())
         {
-            return lastLevel;
+            expMode = new Default(myPet);
+            return expMode.getLevel(this.exp);
         }
-        lastExpL = this.exp;
-        if (JSexp.isUsable())
-        {
-            lastLevel = JSexp.getLvl();
-            return lastLevel;
-        }
-        else
-        {
-            // Minecraft:   E = 7 + roundDown( n * 3.5)
-
-            double tmpExp = this.exp;
-            int tmpLvl = 0;
-
-            while (tmpExp >= 7 + (int) (tmpLvl * 3.5))
-            {
-                tmpExp -= 7 + (int) (tmpLvl * 3.5);
-                tmpLvl++;
-            }
-            lastLevel = (short) (tmpLvl + 1);
-            return lastLevel;
-        }
+        return currentExp;
     }
 
     public double getRequiredExp()
     {
-        if (lastExpR == this.exp)
+        double requiredExp = expMode.getRequiredExp(this.exp);
+        if (!expMode.isUsable())
         {
-            return lastRequiredExp;
+            expMode = new Default(myPet);
+            return expMode.getRequiredExp(this.exp);
         }
-        lastExpR = this.exp;
-        if (JSexp.isUsable())
-        {
-            lastRequiredExp = JSexp.getRequiredExp();
-            return lastRequiredExp;
-        }
-        else
-        {
-            lastRequiredExp = 7 + (short) ((this.getLevel() - 1) * 3.5);
-            return lastRequiredExp;
-        }
+        return requiredExp;
     }
 }

@@ -52,7 +52,10 @@ import de.Keyle.MyPet.entity.types.witch.EntityMyWitch;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.MyPetExperience;
+import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
@@ -328,21 +331,6 @@ public class MyPetPlugin extends JavaPlugin
 
         language = new MyPetLanguage(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
         language.load();
-
-
-        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
-        {
-            if (MyPetJSexp.setScriptPath(MyPetPlugin.plugin.getDataFolder().getPath() + File.separator + "exp.js"))
-            {
-                MyPetLogger.write("Custom EXP-Script loaded!");
-                MyPetUtil.getDebugLogger().info("loaded exp.js.");
-            }
-            else
-            {
-                MyPetLogger.write("No custom EXP-Script found (exp.js).");
-                MyPetUtil.getDebugLogger().info("exp.js not loaded.");
-            }
-        }
 
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
         if (NBTPetFile.exists())

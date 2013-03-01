@@ -78,7 +78,8 @@ public class MyPetConfiguration
         setProperty("MyPet.Permissions.Enabled", true);
         setProperty("MyPet.Permissions.UseExtendedPermissions", false);
         setProperty("MyPet.OwnerCanAttackPet", false);
-        setProperty("MyPet.LevelSystem", true);
+        setProperty("MyPet.LevelSystem.Active", true);
+        setProperty("MyPet.LevelSystem.CalculationMode", "Default");
         setProperty("MyPet.HungerSystem.Active", true);
         setProperty("MyPet.HungerSystem.Time", 60);
         setProperty("MyPet.HungerSystem.HungerPointsPerFeed", 6);
@@ -178,7 +179,8 @@ public class MyPetConfiguration
         RESPAWN_COSTS_FIXED = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
         CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
-        USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem", true);
+        USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem.Active", true);
+        MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
