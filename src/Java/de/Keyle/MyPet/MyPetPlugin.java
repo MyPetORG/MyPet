@@ -415,8 +415,8 @@ public class MyPetPlugin extends JavaPlugin
         HeroesDamageFix.reset();
         AncientRpgDamageFix.findAncientRpgPlugin();
 
-        debugLogger.info("version " + MyPetPlugin.plugin.getDescription().getVersion() + " ENABLED");
-        MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.GREEN + " ENABLED");
+        debugLogger.info("version " + MyPetVersion + "-b" + MyPetBuild + " ENABLED");
+        MyPetLogger.write("version " + MyPetVersion + "-b" + MyPetBuild + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())
         {
@@ -535,7 +535,7 @@ public class MyPetPlugin extends JavaPlugin
                 petPitch = locationNBT.getFloat("Pitch");
             }
             UUID petUuid = null;
-            if(myPetNBT.hasKey("UUID"))
+            if (myPetNBT.hasKey("UUID"))
             {
                 petUuid = UUID.fromString(myPetNBT.getString("UUID"));
             }
