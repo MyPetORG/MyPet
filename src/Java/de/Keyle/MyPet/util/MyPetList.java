@@ -43,7 +43,7 @@ public class MyPetList
 
     // Active -------------------------------------------------------------------
 
-    private static MyPet getMyPet(InactiveMyPet inactiveMyPet)
+    private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
         if (inactiveMyPet.getPetOwner().isOnline())
         {
@@ -157,7 +157,7 @@ public class MyPetList
         return MyPetPlayer.isMyPetPlayer(name) && mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
-    private static InactiveMyPet getInactiveMyPet(MyPet activeMyPet)
+    private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet)
     {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
         inactiveMyPet.setUuid(activeMyPet.getUuid());
@@ -254,7 +254,7 @@ public class MyPetList
         {
             return null;
         }
-        MyPet activeMyPet = getMyPet(inactiveMyPet);
+        MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
         addMyPet(activeMyPet);
         removeInactiveMyPet(inactiveMyPet);
         MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
@@ -274,7 +274,7 @@ public class MyPetList
                 return null;
             }
             activeMyPet.removePet();
-            InactiveMyPet inactiveMyPet = getInactiveMyPet(activeMyPet);
+            InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
             MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
