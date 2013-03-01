@@ -40,7 +40,6 @@ public class MyPetInfoTest
             assertNotNull(pi);
             assertTrue(pi.walkSpeed() > 0);
             assertTrue(pi.hp() > 0);
-            assertTrue(pi.damage() >= 0);
         }
     }
 }

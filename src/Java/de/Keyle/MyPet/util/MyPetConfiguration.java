@@ -140,7 +140,6 @@ public class MyPetConfiguration
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".Damage", pi.damage());
             setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));

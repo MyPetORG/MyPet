@@ -36,8 +36,6 @@ public @interface MyPetInfo
 
     public Material[] food() default {};
 
-    public int damage() default 2;
-
     public int hp() default 20;
 
     public float walkSpeed() default 0.3F;
