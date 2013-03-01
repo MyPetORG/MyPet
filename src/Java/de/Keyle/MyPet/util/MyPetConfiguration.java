@@ -36,6 +36,7 @@ import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
+import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.skills.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -146,10 +147,10 @@ public class MyPetConfiguration
             setProperty("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
         }
 
-        for (EntityType entityType : MyPetExperience.mobExp.keySet())
+        for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
         {
-            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetExperience.mobExp.get(entityType).getMin());
-            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Max", MyPetExperience.mobExp.get(entityType).getMax());
+            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetMonsterExperience.getMonsterExperience(entityType).getMin());
+            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Max", MyPetMonsterExperience.getMonsterExperience(entityType).getMax());
         }
 
         MyPetPlugin.getPlugin().saveConfig();
@@ -235,7 +236,7 @@ public class MyPetConfiguration
         {
             double min;
             double max;
-            for (EntityType entityType : MyPetExperience.mobExp.keySet())
+            for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
             {
                 min = 0;
                 max = 0;
@@ -249,12 +250,12 @@ public class MyPetConfiguration
                 }
                 if (min == max)
                 {
-                    MyPetExperience.mobExp.get(entityType).setExp(max);
+                    MyPetMonsterExperience.getMonsterExperience(entityType).setExp(max);
                 }
                 else
                 {
-                    MyPetExperience.mobExp.get(entityType).setMin(min);
-                    MyPetExperience.mobExp.get(entityType).setMax(max);
+                    MyPetMonsterExperience.getMonsterExperience(entityType).setMin(min);
+                    MyPetMonsterExperience.getMonsterExperience(entityType).setMax(max);
                 }
             }
         }

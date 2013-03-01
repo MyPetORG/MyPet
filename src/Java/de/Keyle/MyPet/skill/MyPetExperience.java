@@ -30,9 +30,6 @@ import de.Keyle.MyPet.skill.experience.Experience;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import org.bukkit.entity.EntityType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.bukkit.Bukkit.getServer;
 
 public class MyPetExperience
@@ -47,37 +44,6 @@ public class MyPetExperience
 
     private double exp = 0;
     Experience expMode;
-
-    public static final Map<EntityType, MyPetMonsterExperience> mobExp = new HashMap<EntityType, MyPetMonsterExperience>();
-
-    static
-    {
-        mobExp.put(EntityType.SKELETON, new MyPetMonsterExperience(5., EntityType.SKELETON));
-        mobExp.put(EntityType.ZOMBIE, new MyPetMonsterExperience(5., EntityType.ZOMBIE));
-        mobExp.put(EntityType.SPIDER, new MyPetMonsterExperience(5., EntityType.SPIDER));
-        mobExp.put(EntityType.WOLF, new MyPetMonsterExperience(1., 3., EntityType.WOLF));
-        mobExp.put(EntityType.CREEPER, new MyPetMonsterExperience(5., EntityType.CREEPER));
-        mobExp.put(EntityType.GHAST, new MyPetMonsterExperience(5., EntityType.GHAST));
-        mobExp.put(EntityType.PIG_ZOMBIE, new MyPetMonsterExperience(5., EntityType.PIG_ZOMBIE));
-        mobExp.put(EntityType.ENDERMAN, new MyPetMonsterExperience(5., EntityType.ENDERMAN));
-        mobExp.put(EntityType.CAVE_SPIDER, new MyPetMonsterExperience(5., EntityType.CAVE_SPIDER));
-        mobExp.put(EntityType.MAGMA_CUBE, new MyPetMonsterExperience(1., 4., EntityType.MAGMA_CUBE));
-        mobExp.put(EntityType.SLIME, new MyPetMonsterExperience(1., 4., EntityType.SLIME));
-        mobExp.put(EntityType.SILVERFISH, new MyPetMonsterExperience(5., EntityType.SILVERFISH));
-        mobExp.put(EntityType.BLAZE, new MyPetMonsterExperience(10., EntityType.BLAZE));
-        mobExp.put(EntityType.GIANT, new MyPetMonsterExperience(25., EntityType.GIANT));
-        mobExp.put(EntityType.COW, new MyPetMonsterExperience(1., 3., EntityType.COW));
-        mobExp.put(EntityType.PIG, new MyPetMonsterExperience(1., 3., EntityType.PIG));
-        mobExp.put(EntityType.CHICKEN, new MyPetMonsterExperience(1., 3., EntityType.CHICKEN));
-        mobExp.put(EntityType.SQUID, new MyPetMonsterExperience(1., 3., EntityType.SQUID));
-        mobExp.put(EntityType.SHEEP, new MyPetMonsterExperience(1., 3., EntityType.SHEEP));
-        mobExp.put(EntityType.OCELOT, new MyPetMonsterExperience(1., 3., EntityType.OCELOT));
-        mobExp.put(EntityType.MUSHROOM_COW, new MyPetMonsterExperience(1., 3., EntityType.MUSHROOM_COW));
-        mobExp.put(EntityType.VILLAGER, new MyPetMonsterExperience(0., EntityType.VILLAGER));
-        mobExp.put(EntityType.SNOWMAN, new MyPetMonsterExperience(0., EntityType.SNOWMAN));
-        mobExp.put(EntityType.IRON_GOLEM, new MyPetMonsterExperience(0., EntityType.IRON_GOLEM));
-        mobExp.put(EntityType.ENDER_DRAGON, new MyPetMonsterExperience(20000., EntityType.ENDER_DRAGON));
-    }
 
     public MyPetExperience(MyPet pet)
     {
@@ -166,9 +132,9 @@ public class MyPetExperience
 
     public short addExp(EntityType type)
     {
-        if (mobExp.containsKey(type))
+        if (MyPetMonsterExperience.hasMonsterExperience(type))
         {
-            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, mobExp.get(type).getRandomExp() + this.exp);
+            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, MyPetMonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp);
             getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled())
             {
@@ -191,9 +157,9 @@ public class MyPetExperience
 
     public short addExp(EntityType type, int percent)
     {
-        if (mobExp.containsKey(type))
+        if (MyPetMonsterExperience.hasMonsterExperience(type))
         {
-            double exp = mobExp.get(type).getRandomExp() / 100. * percent;
+            double exp = MyPetMonsterExperience.getMonsterExperience(type).getRandomExp() / 100. * percent;
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
             getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled())

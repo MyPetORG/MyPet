@@ -52,8 +52,8 @@ import de.Keyle.MyPet.entity.types.witch.EntityMyWitch;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.*;
@@ -72,7 +72,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -172,9 +171,9 @@ public class MyPetPlugin extends JavaPlugin
         checkForUpdates(CompatibleMinecraftVersion);
 
         MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
-        for (EntityType ET : MyPetExperience.mobExp.keySet())
+        for (MyPetMonsterExperience monsterExperience : MyPetMonsterExperience.mobExp.values())
         {
-            debugLogger.info("   " + MyPetExperience.mobExp.get(ET).toString());
+            debugLogger.info("   " + monsterExperience.toString());
         }
         MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
 
