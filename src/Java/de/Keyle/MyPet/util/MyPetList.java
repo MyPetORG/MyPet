@@ -102,18 +102,6 @@ public class MyPetList
         }
     }
 
-    public static MyPet getMyPet(int entityID)
-    {
-        for (MyPet pet : lActivePets)
-        {
-            if (pet.getStatus() == PetState.Here && pet.getCraftPet().getEntityId() == entityID)
-            {
-                return pet;
-            }
-        }
-        return null;
-    }
-
     public static MyPet getMyPet(Player owner)
     {
         if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
@@ -145,11 +133,6 @@ public class MyPetList
     public static boolean hasMyPet(String name)
     {
         return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
-    }
-
-    public static boolean isMyPet(int enityID)
-    {
-        return getMyPet(enityID) != null;
     }
 
     // Inactive -----------------------------------------------------------------

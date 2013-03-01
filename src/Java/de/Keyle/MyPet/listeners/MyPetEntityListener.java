@@ -105,7 +105,7 @@ public class MyPetEntityListener implements Listener
                 MyPet boltMyPet = Lightning.lightningList.get(bolt);
                 if (event.getEntity() instanceof CraftMyPet)
                 {
-                    MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+                    MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
                     if (boltMyPet == myPet)
                     {
                         event.setCancelled(true);
@@ -144,7 +144,7 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
-            MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
+            MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player))
             {
                 Player damager;
@@ -792,9 +792,9 @@ public class MyPetEntityListener implements Listener
             if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof CraftMyPet)
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                if (MyPetList.isMyPet(e.getDamager().getEntityId()))
+                if (e.getDamager() instanceof CraftMyPet)
                 {
-                    MyPet myPet = MyPetList.getMyPet(e.getDamager().getEntityId());
+                    MyPet myPet = ((CraftMyPet) e.getDamager()).getMyPet();
                     event.setDroppedExp(myPet.getExperience().addExp(e.getEntity().getType()));
                 }
             }
@@ -820,34 +820,31 @@ public class MyPetEntityListener implements Listener
         {
             if (event.getEntity() instanceof CraftMyPet)
             {
-                if (MyPetList.isMyPet(event.getEntity().getEntityId()))
+                MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
+                if (myPet.getSkills().isSkillActive("Behavior"))
                 {
-                    MyPet myPet = MyPetList.getMyPet(event.getEntity().getEntityId());
-                    if (myPet.getSkills().isSkillActive("Behavior"))
+                    Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+                    if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                     {
-                        Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-                        if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                        event.setCancelled(true);
+                    }
+                    else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                    {
+                        event.setCancelled(true);
+                    }
+                    else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                    {
+                        if (event.getTarget() instanceof Player)
                         {
                             event.setCancelled(true);
                         }
-                        else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                        else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
                         {
                             event.setCancelled(true);
                         }
-                        else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                        else if (event.getTarget() instanceof CraftMyPet)
                         {
-                            if (event.getTarget() instanceof Player)
-                            {
-                                event.setCancelled(true);
-                            }
-                            else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
-                            {
-                                event.setCancelled(true);
-                            }
-                            else if (event.getTarget() instanceof CraftMyPet)
-                            {
-                                event.setCancelled(true);
-                            }
+                            event.setCancelled(true);
                         }
                     }
                 }
