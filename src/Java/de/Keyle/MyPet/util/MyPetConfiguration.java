@@ -138,6 +138,10 @@ public class MyPetConfiguration
 
         for (MyPetType petType : MyPetType.values())
         {
+            if (petType == MyPetType.Wither)
+            {
+                continue;
+            }
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
             setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
