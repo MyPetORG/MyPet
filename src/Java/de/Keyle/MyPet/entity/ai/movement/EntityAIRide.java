@@ -70,12 +70,14 @@ public class EntityAIRide extends PathfinderGoal
     {
         this.currentSpeed = 0.0F;
         this.petEntity.setRidden(true);
+        petEntity.setSize(1);
     }
 
     public void d()
     {
         this.currentSpeed = 0.0F;
         this.petEntity.setRidden(false);
+        petEntity.setSize();
     }
 
     public void e()
@@ -118,24 +120,23 @@ public class EntityAIRide extends PathfinderGoal
         int z = MathHelper.floor(this.petEntity.locZ);
 
         // Calculation of new Pathpoint
-        float f2 = this.currentSpeed;
         float f3 = 0.91F;
         if (this.petEntity.onGround)
         {
             f3 = 0.5460001F;
-            int m = this.petEntity.world.getTypeId(MathHelper.d(x), MathHelper.d(y) - 1, MathHelper.d(z));
-            if (m > 0)
+            int belowEntityBlockID = this.petEntity.world.getTypeId(MathHelper.d(x), MathHelper.d(y) - 1, MathHelper.d(z));
+            if (belowEntityBlockID > 0)
             {
-                f3 = Block.byId[m].frictionFactor * 0.91F;
+                f3 = Block.byId[belowEntityBlockID].frictionFactor * 0.91F;
             }
         }
         float f4 = 0.1627714F / (f3 * f3 * f3);
         float f5 = MathHelper.sin(this.petEntity.yaw * 3.141593F / 180.0F);
         float f6 = MathHelper.cos(this.petEntity.yaw * 3.141593F / 180.0F);
         float f7 = this.petEntity.aF() * f4;
-        float f8 = Math.max(f2, 1.0F);
+        float f8 = Math.max(this.currentSpeed, 1.0F);
         f8 = f7 / f8;
-        float f9 = f2 * f8;
+        float f9 = this.currentSpeed * f8;
         float f10 = -(f9 * f5);
         float f11 = f9 * f6;
 
@@ -181,7 +182,7 @@ public class EntityAIRide extends PathfinderGoal
             }
         }
 
-        this.petEntity.e(0.0F, f2);
+        this.petEntity.e(0.0F, this.currentSpeed);
     }
 
     private boolean checkForStep(int blockId)

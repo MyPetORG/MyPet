@@ -36,6 +36,11 @@ public class EntityMyGiant extends EntityMyPet
         this.texture = "/mob/zombie.png";
     }
 
+    public void setMyPet(MyPet myPet)
+    {
+        this.height *= 6.0F;
+    }
+
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));

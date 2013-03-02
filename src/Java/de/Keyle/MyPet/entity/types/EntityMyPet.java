@@ -65,6 +65,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public EntityMyPet(World world, MyPet myPet)
     {
         super(world);
+
+        setSize();
+
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
 
@@ -73,11 +76,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         this.getNavigation().b(true);
 
-        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-        if (es != null)
-        {
-            this.a(es.height(), es.width());
-        }
         this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
         this.setPathfinder();
     }
@@ -123,6 +121,34 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public MyPet getMyPet()
     {
         return myPet;
+    }
+
+    public void setSize()
+    {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null)
+        {
+            this.a(es.width(), es.height());
+        }
+
+        float f = this.width / 2.0F;
+        float f1 = this.length;
+
+        this.boundingBox.b(locX - f, locY - this.height + this.W, locZ - f, locX + f, locY - this.height + this.W + f1, locZ + f);
+    }
+
+    public void setSize(float extra)
+    {
+        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
+        if (es != null)
+        {
+            this.a(es.width(), es.height() + extra);
+        }
+
+        float f = this.width / 2.0F;
+        float f1 = this.length;
+
+        this.boundingBox.b(locX - f, locY - this.height + this.W, locZ - f, locX + f, locY - this.height + this.W + f1, locZ + f);
     }
 
     public boolean hasRider()
