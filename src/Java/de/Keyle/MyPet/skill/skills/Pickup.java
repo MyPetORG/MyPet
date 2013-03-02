@@ -140,13 +140,13 @@ public class Pickup extends MyPetGenericSkill
     {
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
         {
-            for (Entity e : myPet.getCraftPet().getNearbyEntities(range, range, range))
+            for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range))
             {
-                if (e instanceof Item)
+                if (entity instanceof Item)
                 {
-                    Item item = (Item) e;
+                    Item itemEntity = (Item) entity;
 
-                    PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), item, item.getItemStack().getAmount());
+                    PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemEntity.getItemStack().getAmount());
                     MyPetUtil.getServer().getPluginManager().callEvent(playerPickupEvent);
 
                     if (playerPickupEvent.isCancelled())
@@ -155,22 +155,22 @@ public class Pickup extends MyPetGenericSkill
                     }
 
                     MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
-                    int itemAmount = inv.addItem(item.getItemStack());
+                    int itemAmount = inv.addItem(itemEntity.getItemStack());
                     if (itemAmount == 0)
                     {
-                        for (Entity p : e.getNearbyEntities(20, 20, 20))
+                        for (Entity p : itemEntity.getNearbyEntities(20, 20, 20))
                         {
                             if (p instanceof Player)
                             {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(e.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
                             }
                         }
                         myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
-                        e.remove();
+                        itemEntity.remove();
                     }
                     else
                     {
-                        item.getItemStack().setAmount(itemAmount);
+                        itemEntity.getItemStack().setAmount(itemAmount);
                     }
                 }
             }

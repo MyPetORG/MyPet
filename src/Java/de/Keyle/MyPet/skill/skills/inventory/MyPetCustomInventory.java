@@ -104,71 +104,54 @@ public class MyPetCustomInventory implements IInventory
             return 0;
         }
         itemAdd = itemAdd.clone();
-        int itemID = itemAdd.getTypeId();
-        int itemDuarbility = itemAdd.getDurability();
-        int itemMaxStack = itemAdd.getMaxStackSize();
+
         for (int i = 0 ; i < this.getSize() ; i++)
         {
-            ItemStack item = getItem(i);
-            if (item != null)
+            CraftItemStack craftItem = CraftItemStack.asCraftMirror(getItem(i));
+
+            if (ItemStackComparator.compareItem(itemAdd, craftItem))
             {
-                if (getItem(i).id != itemID)
+                if (craftItem.getAmount() >= craftItem.getMaxStackSize())
                 {
                     continue;
                 }
-                else if (getItem(i).getData() != itemDuarbility)
+                while (craftItem.getAmount() < craftItem.getMaxStackSize() && itemAdd.getAmount() > 0)
                 {
-                    continue;
+                    craftItem.setAmount(craftItem.getAmount() + 1);
+                    itemAdd.setAmount(itemAdd.getAmount() - 1);
                 }
-                else if ((item.getEnchantments() != null && item.getEnchantments().size() > 0) || (itemAdd.getEnchantments() != null && itemAdd.getEnchantments().size() > 0))
+                if (itemAdd.getAmount() == 0)
                 {
-                    continue;
-                }
-                else if (item.count >= itemMaxStack)
-                {
-                    continue;
-                }
-                else if (itemAdd.hasItemMeta())
-                {
-                    continue;
-                }
-                if (itemAdd.getAmount() >= itemMaxStack - item.count)
-                {
-                    itemAdd.setAmount(itemAdd.getAmount() - (itemMaxStack - item.count));
-                    item.count = itemMaxStack;
-                }
-                else
-                {
-                    item.count += itemAdd.getAmount();
-                    itemAdd.setAmount(0);
                     break;
                 }
             }
         }
-        for (int i = 0 ; i < getSize() ; i++)
+        if (itemAdd.getAmount() > 0)
         {
-            if (itemAdd.getAmount() <= 0)
+            for (int i = 0 ; i < this.getSize() ; i++)
             {
-                break;
-            }
-            if (getItem(i) == null)
-            {
-                if (itemAdd.getAmount() <= itemMaxStack)
+                if (getItem(i) == null)
                 {
-                    setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
-                    itemAdd.setAmount(0);
-                    break;
-                }
-                else
-                {
-                    org.bukkit.inventory.ItemStack itemStack = itemAdd.clone();
-                    itemStack.setAmount(itemStack.getMaxStackSize());
-                    setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
-                    itemAdd.setAmount(itemAdd.getAmount() - itemStack.getMaxStackSize());
+                    if (itemAdd.getAmount() <= itemAdd.getMaxStackSize())
+                    {
+                        setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
+                        itemAdd.setAmount(0);
+                        break;
+                    }
+                    else
+                    {
+                        CraftItemStack itemStack = (CraftItemStack) itemAdd.clone();
+                        itemStack.setAmount(itemStack.getMaxStackSize());
+                        setItem(i, CraftItemStack.asNMSCopy(itemStack));
+                        itemAdd.setAmount(itemAdd.getAmount() - itemStack.getMaxStackSize());
+                    }
+                    if (itemAdd.getAmount() == 0)
+                    {
+                        break;
+                    }
                 }
             }
         }
-        update();
         return itemAdd.getAmount();
     }
 
