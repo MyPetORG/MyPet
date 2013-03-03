@@ -125,7 +125,10 @@ public abstract class MyPet implements IMyPet
     public void setPetName(String newName)
     {
         this.petName = newName;
-        getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
+        if (MyPetConfiguration.ENABLE_EVENTS)
+        {
+            getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
+        }
     }
 
     public String getPetName()
@@ -338,8 +341,11 @@ public abstract class MyPet implements IMyPet
         }
         hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
 
-        MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-        getServer().getPluginManager().callEvent(spoutEvent);
+        if (MyPetConfiguration.ENABLE_EVENTS)
+        {
+            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
+            getServer().getPluginManager().callEvent(spoutEvent);
+        }
     }
 
     public int getDamage()
@@ -429,8 +435,11 @@ public abstract class MyPet implements IMyPet
                 hunger--;
                 hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
 
-                MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-                getServer().getPluginManager().callEvent(spoutEvent);
+                if (MyPetConfiguration.ENABLE_EVENTS)
+                {
+                    MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
+                    getServer().getPluginManager().callEvent(spoutEvent);
+                }
             }
         }
     }

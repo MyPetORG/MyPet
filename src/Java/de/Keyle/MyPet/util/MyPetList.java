@@ -246,8 +246,11 @@ public class MyPetList
         addMyPet(activeMyPet);
         removeInactiveMyPet(inactiveMyPet);
 
-        MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
-        getServer().getPluginManager().callEvent(event);
+        if (MyPetConfiguration.ENABLE_EVENTS)
+        {
+            MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
+            getServer().getPluginManager().callEvent(event);
+        }
 
         inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
 
@@ -267,8 +270,11 @@ public class MyPetList
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
 
-            MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
-            getServer().getPluginManager().callEvent(event);
+            if (MyPetConfiguration.ENABLE_EVENTS)
+            {
+                MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
+                getServer().getPluginManager().callEvent(event);
+            }
 
             MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
             MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);

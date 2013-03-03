@@ -565,7 +565,10 @@ public class MyPetEntityListener implements Listener
                         MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                         myPet.createPet();
 
-                        getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                        if (MyPetConfiguration.ENABLE_EVENTS)
+                        {
+                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                        }
                         MyPetUtil.getDebugLogger().info("New Pet leashed:");
                         MyPetUtil.getDebugLogger().info("   " + myPet.toString());
                         MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");

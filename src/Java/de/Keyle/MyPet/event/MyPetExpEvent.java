@@ -84,9 +84,9 @@ public class MyPetExpEvent extends Event implements Cancellable
         return isCancelled;
     }
 
-    public void setCancelled(boolean b)
+    public void setCancelled(boolean flag)
     {
-        isCancelled = b;
+        isCancelled = flag;
     }
 
     public HandlerList getHandlers()
