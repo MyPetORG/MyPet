@@ -77,15 +77,22 @@ public class CommandInventory implements CommandExecutor
             }
             else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
             {
-                if (MyPetList.hasMyPet(args[0]))
+                Player petOwner = MyPetUtil.getServer().getPlayer(args[0]);
+
+                if (petOwner == null || !petOwner.isOnline())
                 {
-                    MyPet myPet = MyPetList.getMyPet(args[0]);
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                }
+                else if (MyPetList.hasMyPet(petOwner))
+                {
+                    MyPet myPet = MyPetList.getMyPet(petOwner);
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
                         ((Inventory) myPet.getSkills().getSkill("Inventory")).openInventory(player);
                     }
                 }
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

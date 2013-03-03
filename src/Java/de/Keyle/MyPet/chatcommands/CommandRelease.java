@@ -295,13 +295,14 @@ public class CommandRelease implements CommandExecutor
                 else
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", myPet.petName));
-                    return false;
+                    return true;
                 }
             }
             else
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return false;

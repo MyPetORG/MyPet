@@ -38,17 +38,27 @@ public class CommandSkill implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player player = (Player) sender;
-            String playerName = sender.getName();
+            Player petOwner = (Player) sender;
             if (args != null && args.length > 0)
             {
-                playerName = args[0];
+                petOwner = MyPetUtil.getServer().getPlayer(args[0]);
+
+                if (petOwner == null || !petOwner.isOnline())
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    return true;
+                }
+                else if (!MyPetList.hasMyPet(petOwner))
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                    return true;
+                }
             }
 
-            if (MyPetList.hasMyPet(playerName))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet myPet = MyPetList.getMyPet(playerName);
-                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
                 Collection<MyPetGenericSkill> skillList = myPet.getSkills().getSkills();
                 if (skillList.size() > 0)
                 {
@@ -56,7 +66,7 @@ public class CommandSkill implements CommandExecutor
                     {
                         if (skill.isActive())
                         {
-                            player.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                            sender.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                         }
                     }
                 }
@@ -64,15 +74,9 @@ public class CommandSkill implements CommandExecutor
             }
             else
             {
-                if (args != null && args.length > 0)
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", playerName)));
-                }
-                else
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
-                }
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

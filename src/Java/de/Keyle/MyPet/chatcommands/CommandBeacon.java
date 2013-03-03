@@ -40,9 +40,22 @@ public class CommandBeacon implements CommandExecutor
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false) && MyPetList.hasMyPet(args[0]))
+            if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
             {
-                MyPet myPet = MyPetList.getMyPet(args[0]);
+                Player petOwner = MyPetUtil.getServer().getPlayer(args[0]);
+
+                if (petOwner == null || !petOwner.isOnline())
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    return true;
+                }
+                else if (!MyPetList.hasMyPet(petOwner))
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                    return true;
+                }
+
+                MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (myPet.getSkills().isSkillActive("Beacon"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).activate(player);
@@ -85,6 +98,7 @@ public class CommandBeacon implements CommandExecutor
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

@@ -43,7 +43,13 @@ public class CommandInfo implements CommandExecutor
                 playerName = args[0];
             }
 
-            if (MyPetList.hasMyPet(playerName))
+            Player petOwner = MyPetUtil.getServer().getPlayer(playerName);
+
+            if (petOwner == null || !petOwner.isOnline())
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+            }
+            else if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
@@ -102,6 +108,7 @@ public class CommandInfo implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
                 }
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

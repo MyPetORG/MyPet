@@ -69,6 +69,7 @@ public class CommandCall implements CommandExecutor
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

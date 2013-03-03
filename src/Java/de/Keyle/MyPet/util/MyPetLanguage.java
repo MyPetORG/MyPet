@@ -124,6 +124,7 @@ public class MyPetLanguage
         addString("Msg_PickButNoInventory", "MyPet.Message.pickupbutnoinventory", "%aqua%%petname%%reset% could pickup items but has no inventoy.");
         addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%reset% pickup: activated");
         addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%petname%%reset% pickup: disabled");
+        addString("Msg_PlayerNotOnline", "MyPet.Message.player not online", "%red%This player is not online.%reset%");
         addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%reset% has now a chance of %chance%% to poison his target for %duration%sec.");
         // --  R  --
         addString("Msg_Release", "MyPet.Message.release", "%aqua%%petname%%reset% is now %green%free%reset% . . .");

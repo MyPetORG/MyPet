@@ -96,9 +96,9 @@ public class CommandRespawn implements CommandExecutor
                             myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnNoMoney").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
                         }
                     }
-                    return true;
                 }
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

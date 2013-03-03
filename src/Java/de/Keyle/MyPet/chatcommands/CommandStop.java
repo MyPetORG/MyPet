@@ -59,12 +59,12 @@ public class CommandStop implements CommandExecutor
                 {
                     myPet.getCraftPet().getHandle().getNavigation().a(myPet.getCraftPet().getHandle().getOwner(), myPet.getCraftPet().getHandle().getWalkSpeed());
                 }
-                return true;
             }
             else
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

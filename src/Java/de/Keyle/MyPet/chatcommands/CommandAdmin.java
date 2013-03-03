@@ -59,10 +59,16 @@ public class CommandAdmin implements CommandExecutor
 
         if (option.equalsIgnoreCase("name") && args.length >= 3)
         {
-            String petOwner = args[1];
-            if (!MyPetList.hasMyPet(petOwner))
+            Player petOwner = MyPetUtil.getServer().getPlayer(args[1]);
+
+            if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                return true;
+            }
+            else if (!MyPetList.hasMyPet(petOwner))
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -79,10 +85,16 @@ public class CommandAdmin implements CommandExecutor
         }
         else if (option.equalsIgnoreCase("exp") && args.length >= 3)
         {
-            String petOwner = args[1];
-            if (!MyPetList.hasMyPet(petOwner))
+            Player petOwner = MyPetUtil.getServer().getPlayer(args[1]);
+
+            if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                return true;
+            }
+            else if (!MyPetList.hasMyPet(petOwner))
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -148,10 +160,16 @@ public class CommandAdmin implements CommandExecutor
         }
         else if (option.equalsIgnoreCase("respawn"))
         {
-            String petOwner = args[1];
-            if (!MyPetList.hasMyPet(petOwner))
+            Player petOwner = MyPetUtil.getServer().getPlayer(args[1]);
+
+            if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner)));
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                return true;
+            }
+            else if (!MyPetList.hasMyPet(petOwner))
+            {
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);

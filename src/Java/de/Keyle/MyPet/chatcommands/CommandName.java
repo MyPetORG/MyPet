@@ -51,14 +51,12 @@ public class CommandName implements CommandExecutor
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
-                return true;
             }
             else
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
-                return true;
             }
-
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;

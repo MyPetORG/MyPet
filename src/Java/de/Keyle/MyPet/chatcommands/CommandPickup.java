@@ -55,12 +55,12 @@ public class CommandPickup implements CommandExecutor
                 {
                     myPet.getSkills().getSkill("Pickup").activate();
                 }
-                return true;
             }
             else
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
+            return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
