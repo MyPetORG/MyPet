@@ -72,28 +72,35 @@ public class MyPetConfiguration
 
     public static void setDefault()
     {
-        setProperty("MyPet.Respawn.Time.Factor", 5);
-        setProperty("MyPet.Respawn.Time.Fixed", 0);
-        setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
-        setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
-        setProperty("MyPet.Permissions.Enabled", true);
-        setProperty("MyPet.Permissions.UseExtendedPermissions", false);
+        setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
         setProperty("MyPet.OwnerCanAttackPet", false);
-        setProperty("MyPet.LevelSystem.Active", true);
-        setProperty("MyPet.LevelSystem.CalculationMode", "Default");
-        setProperty("MyPet.HungerSystem.Active", true);
-        setProperty("MyPet.HungerSystem.Time", 60);
-        setProperty("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         setProperty("MyPet.SendMetrics", true);
         setProperty("MyPet.CheckForUpdates", false);
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
+
+        setProperty("MyPet.Respawn.Time.Factor", 5);
+        setProperty("MyPet.Respawn.Time.Fixed", 0);
+        setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
+        setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
+
+        setProperty("MyPet.Permissions.Enabled", true);
+        setProperty("MyPet.Permissions.UseExtendedPermissions", false);
+
+        setProperty("MyPet.LevelSystem.Active", true);
+        setProperty("MyPet.LevelSystem.CalculationMode", "Default");
+
+        setProperty("MyPet.HungerSystem.Active", true);
+        setProperty("MyPet.HungerSystem.Time", 60);
+        setProperty("MyPet.HungerSystem.HungerPointsPerFeed", 6);
+
         setProperty("MyPet.Skilltree.AutomaticAssignment", true);
         setProperty("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
         setProperty("MyPet.Skilltree.ChooseOnce", true);
         setProperty("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         setProperty("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         setProperty("MyPet.Skilltree.SwitchPenaltyAdmin", false);
+
         setProperty("MyPet.Support.Towny", true);
         setProperty("MyPet.Support.Heroes", true);
         setProperty("MyPet.Support.Factions", true);
@@ -105,12 +112,12 @@ public class MyPetConfiguration
         setProperty("MyPet.Support.Residence", true);
         setProperty("MyPet.Support.AncientRPG", true);
         setProperty("MyPet.Support.Vault.Economy", true);
+
         setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
         setProperty("MyPet.Exp.Loss.Percent", 0);
         setProperty("MyPet.Exp.Loss.Fixed", 0.0);
         setProperty("MyPet.Exp.Loss.Drop", true);
         setProperty("MyPet.Exp.Gain.MonsterSpawner", true);
-        setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
 
         setProperty("MyPet.Skill.Control.Item", Control.ITEM.getId());
         setProperty("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
@@ -184,7 +191,6 @@ public class MyPetConfiguration
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
         CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
         USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem.Active", true);
-        MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
@@ -192,8 +198,10 @@ public class MyPetConfiguration
         SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
+
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
+
         MyPetEconomy.USE_ECONOMY = config.getBoolean("MyPet.Support.Vault.Economy", true);
         MyPetPvP.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
         MyPetPvP.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);
@@ -210,6 +218,7 @@ public class MyPetConfiguration
         MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed", 0.0);
         MyPetExperience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
         MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
+        MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
 
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
@@ -241,16 +250,8 @@ public class MyPetConfiguration
             double max;
             for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
             {
-                min = 0;
-                max = 0;
-                if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Max"))
-                {
-                    max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
-                }
-                if (config.contains("MyPet.Exp.Active." + entityType.getName() + ".Min"))
-                {
-                    min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
-                }
+                max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
+                min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
                 if (min == max)
                 {
                     MyPetMonsterExperience.getMonsterExperience(entityType).setExp(max);
