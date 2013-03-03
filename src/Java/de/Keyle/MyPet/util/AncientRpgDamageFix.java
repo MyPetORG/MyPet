@@ -45,7 +45,7 @@ public class AncientRpgDamageFix implements Listener
     {
         if (event.getDamager() instanceof CraftMyPet)
         {
-            CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
+            CraftMyPet craftMyPet = (CraftMyPet) event.getDamager();
             event.setDamage(craftMyPet.getMyPet().getDamage());
         }
     }
