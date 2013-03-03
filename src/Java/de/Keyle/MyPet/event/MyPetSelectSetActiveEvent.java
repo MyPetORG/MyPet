@@ -45,7 +45,7 @@ public class MyPetSelectSetActiveEvent extends Event implements Cancellable
 
     public MyPetPlayer getOwner()
     {
-        return inactiveMyPet.getPetOwner();
+        return inactiveMyPet.getOwner();
     }
 
     public HandlerList getHandlers()

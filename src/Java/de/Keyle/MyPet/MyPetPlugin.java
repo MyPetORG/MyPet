@@ -553,7 +553,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
-            inactiveMyPet.setUuid(petUuid);
+            inactiveMyPet.setUUID(petUuid);
             inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
@@ -648,7 +648,7 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setFloat("Pitch", myPet.getLocation().getPitch());
             locationNBT.setString("World", myPet.getLocation().getWorld().getName());
 
-            petNBT.setString("UUID", myPet.getUuid().toString());
+            petNBT.setString("UUID", myPet.getUUID().toString());
             petNBT.setString("Type", myPet.getPetType().getTypeName());
             petNBT.setString("Owner", myPet.getOwner().getName());
             petNBT.setCompound("Location", locationNBT);
@@ -693,7 +693,7 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setString("World", inactiveMyPet.getLocation().getWorld().getName());
 
             petNBT.setString("Type", inactiveMyPet.getPetType().getTypeName());
-            petNBT.setString("Owner", inactiveMyPet.getPetOwner().getName());
+            petNBT.setString("Owner", inactiveMyPet.getOwner().getName());
             petNBT.setCompound("Location", locationNBT);
             petNBT.setInt("Health", inactiveMyPet.getHealth());
             petNBT.setInt("Hunger", inactiveMyPet.getHungerValue());

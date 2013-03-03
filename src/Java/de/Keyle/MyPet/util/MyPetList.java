@@ -45,11 +45,11 @@ public class MyPetList
 
     private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
-        if (inactiveMyPet.getPetOwner().isOnline())
+        if (inactiveMyPet.getOwner().isOnline())
         {
-            MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getPetOwner());
-            activeMyPet.setUuid(inactiveMyPet.getUuid());
-            activeMyPet.setLocation(inactiveMyPet.getLocation() == null ? inactiveMyPet.getPetOwner().getPlayer().getLocation() : inactiveMyPet.getLocation());
+            MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getOwner());
+            activeMyPet.setUUID(inactiveMyPet.getUUID());
+            activeMyPet.setLocation(inactiveMyPet.getLocation() == null ? inactiveMyPet.getOwner().getPlayer().getLocation() : inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
             activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
@@ -160,7 +160,7 @@ public class MyPetList
     private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet)
     {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
-        inactiveMyPet.setUuid(activeMyPet.getUuid());
+        inactiveMyPet.setUUID(activeMyPet.getUUID());
         inactiveMyPet.setPetName(activeMyPet.petName);
         inactiveMyPet.setExp(activeMyPet.getExperience().getExp());
         inactiveMyPet.setHealth(activeMyPet.getHealth());
@@ -200,16 +200,16 @@ public class MyPetList
             return;
         }
         lInactivePets.remove(inactiveMyPet);
-        if (mInctivePets.containsKey(inactiveMyPet.getPetOwner()))
+        if (mInctivePets.containsKey(inactiveMyPet.getOwner()))
         {
-            List<InactiveMyPet> myPetList = mInctivePets.get(inactiveMyPet.getPetOwner());
+            List<InactiveMyPet> myPetList = mInctivePets.get(inactiveMyPet.getOwner());
             if (myPetList.contains(inactiveMyPet))
             {
                 myPetList.remove(inactiveMyPet);
             }
             if (myPetList.size() == 0)
             {
-                mInctivePets.remove(inactiveMyPet.getPetOwner());
+                mInctivePets.remove(inactiveMyPet.getOwner());
             }
         }
     }
@@ -217,9 +217,9 @@ public class MyPetList
     public static void addInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
         lInactivePets.add(inactiveMyPet);
-        if (mInctivePets.containsKey(inactiveMyPet.getPetOwner()))
+        if (mInctivePets.containsKey(inactiveMyPet.getOwner()))
         {
-            List<InactiveMyPet> inactiveMyPetList = mInctivePets.get(inactiveMyPet.getPetOwner());
+            List<InactiveMyPet> inactiveMyPetList = mInctivePets.get(inactiveMyPet.getOwner());
             if (!inactiveMyPetList.contains(inactiveMyPet))
             {
                 inactiveMyPetList.add(inactiveMyPet);
@@ -229,7 +229,7 @@ public class MyPetList
         {
             List<InactiveMyPet> inactiveMyPetList = new ArrayList<InactiveMyPet>();
             inactiveMyPetList.add(inactiveMyPet);
-            mInctivePets.put(inactiveMyPet.getPetOwner(), inactiveMyPetList);
+            mInctivePets.put(inactiveMyPet.getOwner(), inactiveMyPetList);
         }
     }
 
@@ -239,14 +239,14 @@ public class MyPetList
     {
         if (hasMyPet(inactiveMyPet.getPetName()))
         {
-            MyPet activeMyPet = getMyPet(inactiveMyPet.getPetOwner().getPlayer());
+            MyPet activeMyPet = getMyPet(inactiveMyPet.getOwner().getPlayer());
             MyPetSelectSetInactiveEvent event = new MyPetSelectSetInactiveEvent(activeMyPet);
             getServer().getPluginManager().callEvent(event);
             if (event.isCancelled())
             {
                 return null;
             }
-            setMyPetInactive(inactiveMyPet.getPetOwner().getPlayer());
+            setMyPetInactive(inactiveMyPet.getOwner().getPlayer());
         }
         MyPetSelectSetActiveEvent event = new MyPetSelectSetActiveEvent(inactiveMyPet);
         getServer().getPluginManager().callEvent(event);

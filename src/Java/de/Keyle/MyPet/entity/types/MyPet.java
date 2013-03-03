@@ -41,7 +41,7 @@ import java.util.*;
 import static org.bukkit.Bukkit.getPluginManager;
 import static org.bukkit.Bukkit.getServer;
 
-public abstract class MyPet
+public abstract class MyPet implements IMyPet
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
@@ -126,6 +126,11 @@ public abstract class MyPet
     {
         this.petName = newName;
         getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
+    }
+
+    public String getPetName()
+    {
+        return this.petName;
     }
 
     public MyPetSkillTree getSkillTree()
@@ -300,6 +305,11 @@ public abstract class MyPet
         return getStartHP(this.getClass()) + (skills.isSkillActive("HP") ? ((HP) skills.getSkill("HP")).getHpIncrease() : 0);
     }
 
+    public int getRespawnTime()
+    {
+        return respawnTime;
+    }
+
     public int getHungerValue()
     {
         if (MyPetConfiguration.USE_HUNGER_SYSTEM)
@@ -347,6 +357,11 @@ public abstract class MyPet
         return experience;
     }
 
+    public double getExp()
+    {
+        return getExperience().getExp();
+    }
+
     public Location getLocation()
     {
         if (status == PetState.Here)
@@ -366,6 +381,21 @@ public abstract class MyPet
         {
             craftMyPet.teleport(loc);
         }
+    }
+
+    public void setUUID(UUID uuid)
+    {
+        this.uuid = uuid;
+    }
+
+    public UUID getUUID()
+    {
+        if (this.uuid == null)
+        {
+            this.uuid = UUID.randomUUID();
+        }
+
+        return this.uuid;
     }
 
     public void scheduleTask()
@@ -537,20 +567,5 @@ public abstract class MyPet
     public String toString()
     {
         return "MyPet{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + skillTree.getName() + "}";
-    }
-
-    public void setUuid(UUID uuid)
-    {
-        this.uuid = uuid;
-    }
-
-    public UUID getUuid()
-    {
-        if(this.uuid == null)
-        {
-            this.uuid = UUID.randomUUID();
-        }
-
-        return this.uuid;
     }
 }

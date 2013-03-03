@@ -29,7 +29,7 @@ import org.bukkit.Location;
 import java.util.Collection;
 import java.util.UUID;
 
-public class InactiveMyPet
+public class InactiveMyPet implements IMyPet
 {
     private UUID uuid = null;
     private String petName = "";
@@ -190,7 +190,7 @@ public class InactiveMyPet
         this.skillTree = skillTree;
     }
 
-    public MyPetPlayer getPetOwner()
+    public MyPetPlayer getOwner()
     {
         return petOwner;
     }
@@ -198,17 +198,17 @@ public class InactiveMyPet
     @Override
     public String toString()
     {
-        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getPetOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
+        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
     }
 
-    public void setUuid(UUID uuid)
+    public void setUUID(UUID uuid)
     {
         this.uuid = uuid;
     }
 
-    public UUID getUuid()
+    public UUID getUUID()
     {
-        if(this.uuid == null)
+        if (this.uuid == null)
         {
             this.uuid = UUID.randomUUID();
         }
