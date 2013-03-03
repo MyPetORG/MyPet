@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_4_R1.EntityLiving;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
+import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
 import net.minecraft.server.v1_4_R1.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
@@ -56,20 +57,27 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
             {
                 return false;
             }
-            else if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+            else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
-                return a(this.target, true);
+                return false;
             }
-            return false;
         }
         else if (target instanceof EntityMyPet)
         {
             MyPet targetMyPet = ((EntityMyPet) d.aC()).getMyPet();
-            if (MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
+            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
-                return a(this.target, true);
+                return false;
             }
-            return false;
+        }
+        else if (target instanceof EntityTameableAnimal)
+        {
+            EntityTameableAnimal tameable = (EntityTameableAnimal) target;
+            Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
+            if (myPet.getOwner().equals(tameableOwner))
+            {
+                return false;
+            }
         }
         return a(this.target, true);
     }

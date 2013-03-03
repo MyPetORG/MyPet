@@ -816,47 +816,56 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityTarget(final EntityTargetEvent event)
     {
-        if (!event.isCancelled())
+        if (event.getEntity() instanceof CraftMyPet)
         {
-            if (event.getEntity() instanceof CraftMyPet)
+            MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
+            if (myPet.getSkills().isSkillActive("Behavior"))
             {
-                MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-                if (myPet.getSkills().isSkillActive("Behavior"))
+                Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
-                    Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-                    if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
+                    event.setCancelled(true);
+                }
+                else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                {
+                    event.setCancelled(true);
+                }
+                else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                {
+                    if (event.getTarget() instanceof Player)
                     {
                         event.setCancelled(true);
                     }
-                    else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
+                    else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
                     {
                         event.setCancelled(true);
                     }
-                    else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
+                    else if (event.getTarget() instanceof CraftMyPet)
                     {
-                        if (event.getTarget() instanceof Player)
-                        {
-                            event.setCancelled(true);
-                        }
-                        else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
-                        {
-                            event.setCancelled(true);
-                        }
-                        else if (event.getTarget() instanceof CraftMyPet)
-                        {
-                            event.setCancelled(true);
-                        }
+                        event.setCancelled(true);
                     }
                 }
             }
-            else if (event.getEntity() instanceof IronGolem)
+        }
+        else if (event.getEntity() instanceof Tameable)
+        {
+            if (event.getTarget() instanceof CraftMyPet)
             {
-                if (event.getTarget() instanceof CraftMyPet)
+                Tameable tameable = ((Tameable) event.getEntity());
+                MyPet myPet = ((CraftMyPet) event.getTarget()).getMyPet();
+                if (myPet.getOwner().equals(tameable.getOwner()))
                 {
-                    if (event.getReason() == TargetReason.RANDOM_TARGET)
-                    {
-                        event.setCancelled(true);
-                    }
+                    event.setCancelled(true);
+                }
+            }
+        }
+        else if (event.getEntity() instanceof IronGolem)
+        {
+            if (event.getTarget() instanceof CraftMyPet)
+            {
+                if (event.getReason() == TargetReason.RANDOM_TARGET)
+                {
+                    event.setCancelled(true);
                 }
             }
         }
