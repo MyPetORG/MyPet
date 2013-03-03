@@ -38,7 +38,13 @@ public class EntityMyGiant extends EntityMyPet
 
     public void setMyPet(MyPet myPet)
     {
-        this.height *= 6.0F;
+
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.height *= 6.0F;
+        }
     }
 
     public void setPathfinder()
