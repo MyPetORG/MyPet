@@ -158,7 +158,7 @@ public class CommandAdmin implements CommandExecutor
                 }
             }
         }
-        else if (option.equalsIgnoreCase("respawn"))
+        else if (option.equalsIgnoreCase("respawn") && args.length >= 2)
         {
             Player petOwner = MyPetUtil.getServer().getPlayer(args[1]);
 
