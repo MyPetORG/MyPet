@@ -20,32 +20,46 @@
 
 package de.Keyle.MyPet.event;
 
-import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetSelectSetInactiveEvent extends Event implements Cancellable
+public class MyPetSelectEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
-    private final MyPet myPet;
-    private boolean isCanceled = false;
-
-    public MyPetSelectSetInactiveEvent(MyPet myPet)
+    public enum NewStatus
     {
-        this.myPet = myPet;
+        Active, Inactive
     }
 
-    public MyPet getPet()
+    private final IMyPet myPet;
+    private final NewStatus newStatus;
+
+    public MyPetSelectEvent(IMyPet myPet, NewStatus newStatus)
+    {
+        this.myPet = myPet;
+        this.newStatus = newStatus;
+    }
+
+    public IMyPet getMyPet()
     {
         return myPet;
     }
 
+    public NewStatus getNewStatus()
+    {
+        return newStatus;
+    }
+
     public MyPetPlayer getOwner()
     {
-        return myPet.getOwner();
+        if (myPet != null)
+        {
+            return myPet.getOwner();
+        }
+        return null;
     }
 
     public HandlerList getHandlers()
@@ -57,15 +71,5 @@ public class MyPetSelectSetInactiveEvent extends Event implements Cancellable
     public static HandlerList getHandlerList()
     {
         return handlers;
-    }
-
-    public boolean isCancelled()
-    {
-        return isCanceled;
-    }
-
-    public void setCancelled(boolean flag)
-    {
-        isCanceled = flag;
     }
 }
