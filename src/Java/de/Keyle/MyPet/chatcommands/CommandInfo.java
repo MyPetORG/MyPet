@@ -103,6 +103,7 @@ public class CommandInfo implements CommandExecutor
                 }
             }
         }
+        sender.sendMessage("You can't use this command from server console!");
         return true;
     }
 }

@@ -87,6 +87,7 @@ public class CommandInventory implements CommandExecutor
                 }
             }
         }
+        sender.sendMessage("You can't use this command from server console!");
         return true;
     }
 }

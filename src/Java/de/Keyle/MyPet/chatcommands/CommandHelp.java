@@ -70,6 +70,7 @@ public class CommandHelp implements CommandExecutor
             player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Cmd_moreinfo") + "mypet.keyle.de"));
             player.sendMessage("-----------------------------------------------------");
         }
+        sender.sendMessage("You can't use this command from server console!");
         return true;
     }
 }

@@ -86,6 +86,7 @@ public class CommandBeacon implements CommandExecutor
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
         }
+        sender.sendMessage("You can't use this command from server console!");
         return true;
     }
 }

@@ -35,6 +35,7 @@ public class CommandChooseSkilltree implements CommandExecutor
     {
         if (!(sender instanceof Player))
         {
+            sender.sendMessage("You can't use this command from server console!");
             return false;
         }
         Player player = (Player) sender;
