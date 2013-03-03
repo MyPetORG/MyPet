@@ -96,14 +96,17 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
                                 else if (entityLiving instanceof EntityTameableAnimal)
                                 {
                                     EntityTameableAnimal tameable = (EntityTameableAnimal) entityLiving;
-                                    Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-                                    if (myPet.getOwner().equals(tameableOwner))
+                                    if (tameable.isTamed())
                                     {
-                                        continue;
-                                    }
-                                    else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), tameableOwner))
-                                    {
-                                        continue;
+                                        Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
+                                        if (myPet.getOwner().equals(tameableOwner))
+                                        {
+                                            continue;
+                                        }
+                                        else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), tameableOwner))
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
                                 this.target = entityLiving;

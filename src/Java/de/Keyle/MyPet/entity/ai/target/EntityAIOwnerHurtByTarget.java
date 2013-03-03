@@ -79,10 +79,13 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
         else if (lastDamager instanceof EntityTameableAnimal)
         {
             EntityTameableAnimal tameable = (EntityTameableAnimal) lastDamager;
-            Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-            if (myPet.getOwner().equals(tameableOwner))
+            if (tameable.isTamed())
             {
-                return false;
+                Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
+                if (myPet.getOwner().equals(tameableOwner))
+                {
+                    return false;
+                }
             }
         }
         if (myPet.getSkills().isSkillActive("Behavior"))
