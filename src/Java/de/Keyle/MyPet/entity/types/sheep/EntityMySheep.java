@@ -189,18 +189,25 @@ public class EntityMySheep extends EntityMyPet
                     makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 }
                 itemStack.damage(1, entityhuman);
+                return true;
             }
-            if (isBaby())
+            else if (entityhuman == getOwner())
             {
-                if (!entityhuman.abilities.canInstantlyBuild)
+                if (itemStack.id == GROW_UP_ITEM.getId())
                 {
-                    if (--itemStack.count <= 0)
+                    if (isBaby())
                     {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
+                        return true;
                     }
                 }
-                this.setBaby(false);
-                return true;
             }
         }
         return false;
