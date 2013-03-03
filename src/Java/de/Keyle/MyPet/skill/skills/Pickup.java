@@ -28,6 +28,7 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.Packet22Collect;
@@ -138,6 +139,11 @@ public class Pickup extends MyPetGenericSkill
     @Override
     public void schedule()
     {
+        if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
+        {
+            pickup = false;
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickUpStop")).replace("%petname%", myPet.petName));
+        }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
         {
             for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range))
