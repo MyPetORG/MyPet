@@ -143,8 +143,8 @@ public class CommandAdmin implements CommandExecutor
                     if (Exp <= myPet.getExperience().getCurrentExp())
                     {
                         myPet.getExperience().removeExp(Exp);
-                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
-                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp.");
+                        MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + "exp.");
+                        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + "exp.");
                     }
                     else
                     {
