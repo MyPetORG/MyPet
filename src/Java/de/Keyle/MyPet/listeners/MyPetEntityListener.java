@@ -144,7 +144,8 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
-            MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
+            CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
+            MyPet myPet = craftMyPet.getMyPet();
             if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player))
             {
                 Player damager;
@@ -156,14 +157,14 @@ public class MyPetEntityListener implements Listener
                 {
                     damager = (Player) event.getDamager();
                 }
-                if (myPet.getCraftPet().getHandle().hasRider())
+                if (craftMyPet.getHandle().hasRider())
                 {
                     event.setCancelled(true);
                     if (myPet.getSkills().hasSkill("Ride"))
                     {
-                        if (myPet.getCraftPet().getHandle().petPathfinderSelector.hasGoal("Ride"))
+                        if (craftMyPet.getHandle().petPathfinderSelector.hasGoal("Ride"))
                         {
-                            ((EntityAIRide) myPet.getCraftPet().getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
+                            ((EntityAIRide) craftMyPet.getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
                         }
                     }
                 }
