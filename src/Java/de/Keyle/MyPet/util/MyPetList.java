@@ -249,6 +249,8 @@ public class MyPetList
         MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
         getServer().getPluginManager().callEvent(event);
 
+        inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
+
         MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
         MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
         return activeMyPet;

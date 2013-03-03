@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MyPetPlayer implements IScheduler
 {
@@ -39,6 +40,7 @@ public class MyPetPlayer implements IScheduler
 
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
+    private UUID lastActiveMyPetUUID;
 
     private MyPetPlayer(String playerName)
     {
@@ -54,6 +56,8 @@ public class MyPetPlayer implements IScheduler
     {
         return customData;
     }
+
+    // Custom Data -----------------------------------------------------------------
 
     public void setAutoRespawnEnabled(boolean flag)
     {
@@ -76,6 +80,19 @@ public class MyPetPlayer implements IScheduler
     {
         return autoRespawnMin;
     }
+
+    public void setLastActiveMyPetUUID(UUID myPetUUID)
+    {
+        lastActiveMyPetUUID = myPetUUID;
+        customData = true;
+    }
+
+    public UUID getLastActiveMyPetUUID()
+    {
+        return lastActiveMyPetUUID;
+    }
+
+    // -----------------------------------------------------------------------------
 
     public boolean isOnline()
     {
