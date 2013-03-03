@@ -40,10 +40,7 @@ import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.Inventory;
-import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_R1.EntityItem;
 import net.minecraft.server.v1_4_R1.Item;
 import net.minecraft.server.v1_4_R1.ItemStack;
@@ -111,180 +108,182 @@ public class CommandRelease implements CommandExecutor
                             }
                         }
                     }
-                    LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
-                    if (myPet instanceof MyChicken)
+                    if (!MyPetConfiguration.REMOVE_PETS_AFTER_RELEASE)
                     {
-                        if (((MyChicken) myPet).isBaby())
-                        {
-                            ((Chicken) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Chicken) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyCow)
-                    {
-                        if (((MyCow) myPet).isBaby())
-                        {
-                            ((Cow) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Cow) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyCreeper)
-                    {
-                        ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
-                    }
-                    else if (myPet instanceof MyEnderman)
-                    {
-                        MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlockID(), (byte) ((MyEnderman) myPet).getBlockData());
-                        ((Enderman) normalEntity).setCarriedMaterial(materialData);
-                    }
-                    else if (myPet instanceof MyIronGolem)
-                    {
-                        ((IronGolem) normalEntity).setPlayerCreated(true);
-                    }
-                    else if (myPet instanceof MyMooshroom)
-                    {
-                        if (((MyMooshroom) myPet).isBaby())
-                        {
-                            ((MushroomCow) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((MushroomCow) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyMagmaCube)
-                    {
-                        ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
-                    }
-                    else if (myPet instanceof MyOcelot)
-                    {
-                        ((Ocelot) normalEntity).setCatType(Type.WILD_OCELOT);
-                        ((Ocelot) normalEntity).setTamed(false);
-                        if (((MyOcelot) myPet).isBaby())
-                        {
-                            ((Ocelot) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Ocelot) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyPig)
-                    {
-                        ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
-                        if (((MyPig) myPet).isBaby())
-                        {
-                            ((Pig) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Pig) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MySheep)
-                    {
-                        ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
-                        ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
-                        if (((MySheep) myPet).isBaby())
-                        {
-                            ((Sheep) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Sheep) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyVillager)
-                    {
-                        ((Villager) normalEntity).setProfession(Profession.getProfession(((MyVillager) myPet).getProfession()));
-                        if (((MyVillager) myPet).isBaby())
-                        {
-                            ((Villager) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Villager) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MyWolf)
-                    {
-                        ((Wolf) normalEntity).setTamed(false);
-                        if (((MyWolf) myPet).isBaby())
-                        {
-                            ((Wolf) normalEntity).setBaby();
-                        }
-                        else
-                        {
-                            ((Wolf) normalEntity).setAdult();
-                        }
-                    }
-                    else if (myPet instanceof MySlime)
-                    {
-                        ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
-                    }
-                    else if (myPet instanceof MyZombie)
-                    {
-                        ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-                        World world = myPet.getCraftPet().getHandle().world;
-                        Location petLocation = myPet.getLocation();
-                        for (ItemStack is : ((MyZombie) myPet).getEquipment())
-                        {
-                            if (is != null)
-                            {
-                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                itemEntity.pickupDelay = 10;
-                                world.addEntity(itemEntity);
-                            }
-                        }
-                    }
-                    else if (myPet instanceof MySkeleton)
-                    {
-                        if (((MySkeleton) myPet).isWither())
-                        {
-                            ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
-                            ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.STONE_SWORD));
-                        }
-                        else
-                        {
-                            ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
-                        }
-                        World world = myPet.getCraftPet().getHandle().world;
-                        Location petLocation = myPet.getLocation();
-                        for (ItemStack is : ((MySkeleton) myPet).getEquipment())
-                        {
-                            if (is != null)
-                            {
-                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                itemEntity.pickupDelay = 10;
-                                world.addEntity(itemEntity);
-                            }
-                        }
-                    }
-                    else if (myPet instanceof MyPigZombie)
-                    {
-                        ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
-                        World world = myPet.getCraftPet().getHandle().world;
-                        Location petLocation = myPet.getLocation();
-                        for (ItemStack is : ((MyPigZombie) myPet).getEquipment())
-                        {
-                            if (is != null)
-                            {
-                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                itemEntity.pickupDelay = 10;
-                                world.addEntity(itemEntity);
-                            }
-                        }
-                    }
+                        LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
+                        if (myPet instanceof MyChicken)
+                        {
+                            if (((MyChicken) myPet).isBaby())
+                            {
+                                ((Chicken) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Chicken) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyCow)
+                        {
+                            if (((MyCow) myPet).isBaby())
+                            {
+                                ((Cow) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Cow) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyCreeper)
+                        {
+                            ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
+                        }
+                        else if (myPet instanceof MyEnderman)
+                        {
+                            MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlockID(), (byte) ((MyEnderman) myPet).getBlockData());
+                            ((Enderman) normalEntity).setCarriedMaterial(materialData);
+                        }
+                        else if (myPet instanceof MyIronGolem)
+                        {
+                            ((IronGolem) normalEntity).setPlayerCreated(true);
+                        }
+                        else if (myPet instanceof MyMooshroom)
+                        {
+                            if (((MyMooshroom) myPet).isBaby())
+                            {
+                                ((MushroomCow) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((MushroomCow) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyMagmaCube)
+                        {
+                            ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
+                        }
+                        else if (myPet instanceof MyOcelot)
+                        {
+                            ((Ocelot) normalEntity).setCatType(Type.WILD_OCELOT);
+                            ((Ocelot) normalEntity).setTamed(false);
+                            if (((MyOcelot) myPet).isBaby())
+                            {
+                                ((Ocelot) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Ocelot) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyPig)
+                        {
+                            ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
+                            if (((MyPig) myPet).isBaby())
+                            {
+                                ((Pig) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Pig) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MySheep)
+                        {
+                            ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
+                            ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
+                            if (((MySheep) myPet).isBaby())
+                            {
+                                ((Sheep) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Sheep) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyVillager)
+                        {
+                            ((Villager) normalEntity).setProfession(Profession.getProfession(((MyVillager) myPet).getProfession()));
+                            if (((MyVillager) myPet).isBaby())
+                            {
+                                ((Villager) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Villager) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MyWolf)
+                        {
+                            ((Wolf) normalEntity).setTamed(false);
+                            if (((MyWolf) myPet).isBaby())
+                            {
+                                ((Wolf) normalEntity).setBaby();
+                            }
+                            else
+                            {
+                                ((Wolf) normalEntity).setAdult();
+                            }
+                        }
+                        else if (myPet instanceof MySlime)
+                        {
+                            ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
+                        }
+                        else if (myPet instanceof MyZombie)
+                        {
+                            ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
+                            World world = myPet.getCraftPet().getHandle().world;
+                            Location petLocation = myPet.getLocation();
+                            for (ItemStack is : ((MyZombie) myPet).getEquipment())
+                            {
+                                if (is != null)
+                                {
+                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                    itemEntity.pickupDelay = 10;
+                                    world.addEntity(itemEntity);
+                                }
+                            }
+                        }
+                        else if (myPet instanceof MySkeleton)
+                        {
+                            if (((MySkeleton) myPet).isWither())
+                            {
+                                ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
+                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.STONE_SWORD));
+                            }
+                            else
+                            {
+                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
+                            }
+                            World world = myPet.getCraftPet().getHandle().world;
+                            Location petLocation = myPet.getLocation();
+                            for (ItemStack is : ((MySkeleton) myPet).getEquipment())
+                            {
+                                if (is != null)
+                                {
+                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                    itemEntity.pickupDelay = 10;
+                                    world.addEntity(itemEntity);
+                                }
+                            }
+                        }
+                        else if (myPet instanceof MyPigZombie)
+                        {
+                            ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+                            World world = myPet.getCraftPet().getHandle().world;
+                            Location petLocation = myPet.getLocation();
+                            for (ItemStack is : ((MyPigZombie) myPet).getEquipment())
+                            {
+                                if (is != null)
+                                {
+                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                    itemEntity.pickupDelay = 10;
+                                    world.addEntity(itemEntity);
+                                }
+                            }
+                        }
+                    }
                     myPet.removePet();
-
 
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner().getPlayer()));

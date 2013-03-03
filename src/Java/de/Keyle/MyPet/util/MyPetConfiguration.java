@@ -70,6 +70,7 @@ public class MyPetConfiguration
     public static boolean USE_DEBUG_LOGGER = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
+    public static boolean REMOVE_PETS_AFTER_RELEASE = false;
 
     public static void setDefault()
     {
@@ -80,6 +81,7 @@ public class MyPetConfiguration
         setProperty("MyPet.DebugLogger", true);
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.EnableEvents", false);
+        setProperty("MyPet.RemovePetsAfterRelease", false);
 
         setProperty("MyPet.Respawn.Time.Factor", 5);
         setProperty("MyPet.Respawn.Time.Fixed", 0);
@@ -201,6 +203,7 @@ public class MyPetConfiguration
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
+        REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
