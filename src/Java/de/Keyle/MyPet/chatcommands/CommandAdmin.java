@@ -21,10 +21,8 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
@@ -237,18 +235,6 @@ public class CommandAdmin implements CommandExecutor
                 }
             }
             sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!"));
-        }
-        else if (option.equalsIgnoreCase("withertest"))
-        {
-            if (sender instanceof Player && !MyPetList.hasActiveMyPets(sender.getName()))
-            {
-                InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(sender.getName()));
-                inactiveMyPet.setPetType(MyPetType.Wither);
-                inactiveMyPet.setPetName("The Boss");
-                inactiveMyPet.setLocation(((Player) sender).getLocation());
-                MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
-                myPet.createPet();
-            }
         }
         return true;
     }
