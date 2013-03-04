@@ -189,8 +189,17 @@ public class MyPetEntityListener implements Listener
                     {
                         damager.sendMessage(MyPetUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
                     }
+                    int lvl = myPet.getExperience().getLevel();
+                    damager.sendMessage(MyPetUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+
                     if (myPet.getOwner().equals(damager) || myPet.getOwner().isMyPetAdmin())
                     {
+                        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
+                        {
+                            double exp = myPet.getExperience().getCurrentExp();
+                            double reqEXP = myPet.getExperience().getRequiredExp();
+                            damager.sendMessage(MyPetUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                        }
                         if (!myPet.isPassiv())
                         {
                             int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
@@ -199,14 +208,6 @@ public class MyPetEntityListener implements Listener
                         if (MyPetConfiguration.USE_HUNGER_SYSTEM)
                         {
                             damager.sendMessage(MyPetUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
-                        }
-                        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
-                        {
-                            int lvl = myPet.getExperience().getLevel();
-                            double exp = myPet.getExperience().getCurrentExp();
-                            double reqEXP = myPet.getExperience().getRequiredExp();
-                            damager.sendMessage(MyPetUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
-                            damager.sendMessage(MyPetUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
                         }
                     }
                     event.setCancelled(true);
