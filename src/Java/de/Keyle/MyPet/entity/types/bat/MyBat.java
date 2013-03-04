@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 
 import static org.bukkit.Material.SPIDER_EYE;
 
@@ -53,6 +52,7 @@ public class MyBat extends MyPet
         return hanging;
     }
 
+    /*
     @Override
     public NBTTagCompound getExtendedInfo()
     {
@@ -66,6 +66,7 @@ public class MyBat extends MyPet
     {
         setHanging(info.getBoolean("Hanging"));
     }
+    */
 
     @Override
     public MyPetType getPetType()

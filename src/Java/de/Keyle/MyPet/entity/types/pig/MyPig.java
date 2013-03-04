@@ -80,8 +80,14 @@ public class MyPig extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setSaddle(info.getBoolean("Saddle"));
-        setBaby(info.getBoolean("Baby"));
+        if (info.hasKey("Saddle"))
+        {
+            setSaddle(info.getBoolean("Saddle"));
+        }
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
     }
 
     @Override

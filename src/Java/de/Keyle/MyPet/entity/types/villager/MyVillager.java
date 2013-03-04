@@ -80,8 +80,14 @@ public class MyVillager extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setProfession(info.getInt("Profession"));
-        setBaby(info.getBoolean("Baby"));
+        if (info.hasKey("Profession"))
+        {
+            setProfession(info.getInt("Profession"));
+        }
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
     }
 
     @Override

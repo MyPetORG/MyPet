@@ -64,7 +64,10 @@ public class MySlime extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setSize(info.getInt("Size"));
+        if (info.hasKey("Size"))
+        {
+            setSize(info.getInt("Size"));
+        }
     }
 
     @Override

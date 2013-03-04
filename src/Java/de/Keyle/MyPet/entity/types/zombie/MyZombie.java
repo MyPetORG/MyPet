@@ -125,8 +125,14 @@ public class MyZombie extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setBaby(info.getBoolean("Baby"));
-        setVillager(info.getBoolean("Villager"));
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
+        if (info.hasKey("Villager"))
+        {
+            setVillager(info.getBoolean("Villager"));
+        }
         if (info.hasKey("Equipment"))
         {
             NBTTagList equipment = info.getList("Equipment");

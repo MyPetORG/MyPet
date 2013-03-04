@@ -90,16 +90,29 @@ public class MyEnderman extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        int id, data;
-        if (info.get("BlockID").getTypeId() == 2)
+        int id = 0;
+        int data = 0;
+        if (info.hasKey("BlockID"))
         {
-            id = info.getShort("BlockID");
-            data = info.getShort("BlockData");
+            if (info.get("BlockID").getTypeId() == 2)
+            {
+                id = info.getShort("BlockID");
+            }
+            else
+            {
+                id = info.getInt("BlockID");
+            }
         }
-        else
+        if (info.hasKey("BlockData"))
         {
-            id = info.getInt("BlockID");
-            data = info.getInt("BlockData");
+            if (info.get("BlockData").getTypeId() == 2)
+            {
+                data = info.getShort("BlockData");
+            }
+            else
+            {
+                data = info.getInt("BlockData");
+            }
         }
         setBlock(id, data);
         //setScreaming(info.getBoolean("Screaming"));

@@ -64,7 +64,10 @@ public class MyBlaze extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setOnFire(info.getBoolean("Fire"));
+        if (info.hasKey("Fire"))
+        {
+            setOnFire(info.getBoolean("Fire"));
+        }
     }
 
     @Override

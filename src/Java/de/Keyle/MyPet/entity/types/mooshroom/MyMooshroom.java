@@ -64,7 +64,10 @@ public class MyMooshroom extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setBaby(info.getBoolean("Baby"));
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
     }
 
     @Override

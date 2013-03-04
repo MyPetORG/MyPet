@@ -97,9 +97,18 @@ public class MySheep extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setColor(DyeColor.getByDyeData((byte) info.getInt("Color")));
-        setSheared(info.getBoolean("Sheared"));
-        setBaby(info.getBoolean("Baby"));
+        if (info.hasKey("Color"))
+        {
+            setColor(DyeColor.getByDyeData((byte) info.getInt("Color")));
+        }
+        if (info.hasKey("Sheared"))
+        {
+            setSheared(info.getBoolean("Sheared"));
+        }
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
     }
 
     @Override

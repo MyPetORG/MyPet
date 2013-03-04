@@ -98,9 +98,18 @@ public class MyOcelot extends MyPet
     @Override
     public void setExtendedInfo(NBTTagCompound info)
     {
-        setCatType(Type.getType(info.getInt("CatType")));
-        setSitting(info.getBoolean("Sitting"));
-        setBaby(info.getBoolean("Baby"));
+        if (info.hasKey("CatType"))
+        {
+            setCatType(Type.getType(info.getInt("CatType")));
+        }
+        if (info.hasKey("Sitting"))
+        {
+            setSitting(info.getBoolean("Sitting"));
+        }
+        if (info.hasKey("Baby"))
+        {
+            setBaby(info.getBoolean("Baby"));
+        }
     }
 
     @Override
