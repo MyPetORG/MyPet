@@ -243,7 +243,7 @@ public class MyPetEntityListener implements Listener
             {
                 Player damager = (Player) event.getDamager();
 
-                if (!MyPetList.hasMyPet(damager))
+                if (!MyPetList.hasActiveMyPets(damager))
                 {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
                     if (damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
@@ -623,12 +623,14 @@ public class MyPetEntityListener implements Listener
                 {
                     return;
                 }
-                if (MyPetList.hasMyPet(damager))
+                if (MyPetList.hasActiveMyPets(damager))
                 {
-                    MyPet myPet = MyPetList.getMyPet(damager);
-                    if (myPet.getStatus() == PetState.Here && event.getEntity() != myPet.getCraftPet())
+                    for (MyPet myPet : MyPetList.getActiveMyPets(damager))
                     {
-                        myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        if (myPet.getStatus() == PetState.Here && event.getEntity() != myPet.getCraftPet())
+                        {
+                            myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) event.getEntity()).getHandle();
+                        }
                     }
                 }
             }
@@ -805,12 +807,14 @@ public class MyPetEntityListener implements Listener
             else if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Player)
             {
                 Player owner = (Player) ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
-                if (MyPetList.hasMyPet(owner))
+                if (MyPetList.hasActiveMyPets(owner))
                 {
-                    MyPet myPet = MyPetList.getMyPet(owner);
-                    if (myPet.isPassiv())
+                    for (MyPet myPet : MyPetList.getActiveMyPets(owner))
                     {
-                        myPet.getExperience().addExp(event.getEntity().getType(), MyPetConfiguration.PASSIVE_PERCENT_PER_MONSTER);
+                        if (myPet.isPassiv())
+                        {
+                            myPet.getExperience().addExp(event.getEntity().getType(), MyPetConfiguration.PASSIVE_PERCENT_PER_MONSTER);
+                        }
                     }
                 }
             }

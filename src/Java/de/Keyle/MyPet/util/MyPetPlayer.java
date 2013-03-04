@@ -104,14 +104,14 @@ public class MyPetPlayer implements IScheduler
         return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin", false);
     }
 
-    public boolean hasMyPet()
+    public boolean hasMyPets()
     {
-        return MyPetList.hasMyPet(playerName);
+        return MyPetList.hasActiveMyPets(playerName);
     }
 
-    public MyPet getMyPet()
+    public List<MyPet> getMyPets()
     {
-        return MyPetList.getMyPet(playerName);
+        return MyPetList.getActiveMyPets(playerName);
     }
 
     public boolean hasInactiveMyPets()
@@ -177,15 +177,18 @@ public class MyPetPlayer implements IScheduler
         {
             return;
         }
-        if (hasMyPet())
+        if (hasMyPets())
         {
-            if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + getMyPet().getPetType().getTypeName()))
+            for (MyPet myPet : getMyPets())
             {
-                MyPetUtil.getDebugLogger().info("set MyPet of " + this.getName() + " to inactive");
-                MyPetList.setMyPetInactive(this.getPlayer());
+                if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + myPet.getPetType().getTypeName()))
+                {
+                    MyPetUtil.getDebugLogger().info("set MyPet of " + this.getName() + " to inactive");
+                    MyPetList.setMyPetInactive(myPet);
+                }
             }
         }
-        if (!hasMyPet() && hasInactiveMyPets())
+        if (!hasMyPets() && hasInactiveMyPets())
         {
             for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
             {
@@ -197,17 +200,19 @@ public class MyPetPlayer implements IScheduler
                 }
             }
         }
-        if (hasMyPet())
+        if (hasMyPets())
         {
-            MyPet myPet = getMyPet();
-            if (myPet.getStatus() == PetState.Here)
+            for (MyPet myPet : getMyPets())
             {
-                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
+                if (myPet.getStatus() == PetState.Here)
                 {
-                    if (!myPet.getCraftPet().canMove())
+                    if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
                     {
-                        myPet.removePet();
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
+                        if (!myPet.getCraftPet().canMove())
+                        {
+                            myPet.removePet();
+                            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
+                        }
                     }
                 }
             }

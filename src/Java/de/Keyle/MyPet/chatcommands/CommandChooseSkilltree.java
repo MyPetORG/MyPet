@@ -39,9 +39,9 @@ public class CommandChooseSkilltree implements CommandExecutor
             return true;
         }
         Player player = (Player) sender;
-        if (MyPetList.hasMyPet(player))
+        if (MyPetList.hasActiveMyPets(player))
         {
-            MyPet myPet = MyPetList.getMyPet(player);
+            MyPet myPet = MyPetList.getActiveMyPets(player).get(0);
             if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AutomaticSkilltreeAssignment")));

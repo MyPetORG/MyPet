@@ -66,12 +66,12 @@ public class CommandAdmin implements CommandExecutor
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                 return true;
             }
-            else if (!MyPetList.hasMyPet(petOwner))
+            else if (!MyPetList.hasActiveMyPets(petOwner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
-            MyPet myPet = MyPetList.getMyPet(petOwner);
+            MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
 
             String name = "";
             for (int i = 2 ; i < args.length ; i++)
@@ -92,12 +92,12 @@ public class CommandAdmin implements CommandExecutor
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                 return true;
             }
-            else if (!MyPetList.hasMyPet(petOwner))
+            else if (!MyPetList.hasActiveMyPets(petOwner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
-            MyPet myPet = MyPetList.getMyPet(petOwner);
+            MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
             String value = args[2];
 
             if (args.length == 3 || (args.length >= 4 && args[3].equalsIgnoreCase("set")))
@@ -167,12 +167,12 @@ public class CommandAdmin implements CommandExecutor
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                 return true;
             }
-            else if (!MyPetList.hasMyPet(petOwner))
+            else if (!MyPetList.hasActiveMyPets(petOwner))
             {
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                 return true;
             }
-            MyPet myPet = MyPetList.getMyPet(petOwner);
+            MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
             if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
             {
                 MyPetUtil.getDebugLogger().info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
@@ -240,7 +240,7 @@ public class CommandAdmin implements CommandExecutor
         }
         else if (option.equalsIgnoreCase("withertest"))
         {
-            if (sender instanceof Player && !MyPetList.hasMyPet(sender.getName()))
+            if (sender instanceof Player && !MyPetList.hasActiveMyPets(sender.getName()))
             {
                 InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(sender.getName()));
                 inactiveMyPet.setPetType(MyPetType.Wither);

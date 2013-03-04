@@ -43,7 +43,7 @@ public class CommandHelp implements CommandExecutor
             {
                 player.sendMessage(MyPetUtil.setColors("/petadmin" + MyPetLanguage.getString("Msg_Cmd_petadmin")));
             }
-            if (MyPetList.hasMyPet(player))
+            if (MyPetList.hasActiveMyPets(player))
             {
                 player.sendMessage(MyPetUtil.setColors("/petname" + MyPetLanguage.getString("Msg_Cmd_petname")));
                 player.sendMessage(MyPetUtil.setColors("/petrelease" + MyPetLanguage.getString("Msg_Cmd_petrelease")));
@@ -53,15 +53,18 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage(MyPetUtil.setColors("/petskill" + MyPetLanguage.getString("Msg_Cmd_petskill")));
                 player.sendMessage(MyPetUtil.setColors("/petchooseskilltree" + MyPetLanguage.getString("Msg_Cmd_petchooseskilltree")));
 
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
+                // TODO
+                //if (MyPetList.getActiveMyPets(player).getSkills().isSkillActive("Inventory"))
                 {
                     player.sendMessage(MyPetUtil.setColors("/petinventory" + MyPetLanguage.getString("Msg_Cmd_petinventory")));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
+                // TODO
+                //if (MyPetList.getActiveMyPets(player).getSkills().isSkillActive("Pickup"))
                 {
                     player.sendMessage(MyPetUtil.setColors("/petpickup" + MyPetLanguage.getString("Msg_Cmd_petpickup")));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Behavior"))
+                // TODO
+                //if (MyPetList.getActiveMyPets(player).getSkills().isSkillActive("Behavior"))
                 {
                     player.sendMessage(MyPetUtil.setColors("/petbehavior" + MyPetLanguage.getString("Msg_Cmd_petbehavior")));
                 }

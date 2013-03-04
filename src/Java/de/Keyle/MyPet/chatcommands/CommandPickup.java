@@ -36,24 +36,25 @@ public class CommandPickup implements CommandExecutor
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasActiveMyPets(petOwner))
             {
-                MyPet myPet = MyPetList.getMyPet(owner);
-
-                if (myPet.getStatus() == PetState.Despawned)
+                for (MyPet myPet : MyPetList.getActiveMyPets(petOwner))
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
-                    return true;
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
-                    return true;
-                }
-                if (myPet.getSkills().hasSkill("Pickup"))
-                {
-                    myPet.getSkills().getSkill("Pickup").activate();
+                    if (myPet.getStatus() == PetState.Despawned)
+                    {
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                        return true;
+                    }
+                    else if (myPet.getStatus() == PetState.Dead)
+                    {
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                        return true;
+                    }
+                    if (myPet.getSkills().hasSkill("Pickup"))
+                    {
+                        myPet.getSkills().getSkill("Pickup").activate();
+                    }
                 }
             }
             else

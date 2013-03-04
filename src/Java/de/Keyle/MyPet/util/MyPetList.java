@@ -36,7 +36,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public class MyPetList
 {
-    private static final Map<MyPetPlayer, MyPet> mActivePets = new HashMap<MyPetPlayer, MyPet>();
+    private static final Map<MyPetPlayer, List<MyPet>> mActivePets = new HashMap<MyPetPlayer, List<MyPet>>();
     private static final List<MyPet> lActivePets = new ArrayList<MyPet>();
 
     private static final Map<MyPetPlayer, List<InactiveMyPet>> mInctivePets = new HashMap<MyPetPlayer, List<InactiveMyPet>>();
@@ -44,7 +44,27 @@ public class MyPetList
 
     // Active -------------------------------------------------------------------
 
-    private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet)
+    public static List<MyPet> getAllActiveMyPets()
+    {
+        return lActivePets;
+    }
+
+    public static boolean hasActiveMyPets(Player player)
+    {
+        return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(player));
+    }
+
+    public static boolean hasActiveMyPets(MyPetPlayer myPetPlayer)
+    {
+        return mActivePets.containsKey(myPetPlayer);
+    }
+
+    public static boolean hasActiveMyPets(String name)
+    {
+        return MyPetPlayer.isMyPetPlayer(name) && mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
+    }
+
+    private static MyPet getActiveFromInactive(InactiveMyPet inactiveMyPet)
     {
         if (inactiveMyPet.getOwner().isOnline())
         {
@@ -84,10 +104,22 @@ public class MyPetList
         return null;
     }
 
-    private static void addMyPet(MyPet myPet)
+    public static List<MyPet> getActiveMyPets(Player owner)
     {
-        mActivePets.put(myPet.getOwner(), myPet);
-        lActivePets.add(myPet);
+        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        {
+            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+        }
+        return null;
+    }
+
+    public static List<MyPet> getActiveMyPets(String owner)
+    {
+        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        {
+            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+        }
+        return null;
     }
 
     private static void removeMyPet(MyPet myPet)
@@ -99,41 +131,35 @@ public class MyPetList
         lActivePets.remove(myPet);
         if (mActivePets.containsKey(myPet.getOwner()))
         {
-            mActivePets.remove(myPet.getOwner());
+            List<MyPet> myPetList = mActivePets.get(myPet.getOwner());
+            if (myPetList.contains(myPet))
+            {
+                myPetList.remove(myPet);
+            }
+            if (myPetList.size() == 0)
+            {
+                mActivePets.remove(myPet.getOwner());
+            }
         }
     }
 
-    public static MyPet getMyPet(Player owner)
+    private static void addMyPet(MyPet myPet)
     {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        lActivePets.add(myPet);
+        if (mActivePets.containsKey(myPet.getOwner()))
         {
-            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+            List<MyPet> inactiveMyPetList = mActivePets.get(myPet.getOwner());
+            if (!inactiveMyPetList.contains(myPet))
+            {
+                inactiveMyPetList.add(myPet);
+            }
         }
-        return null;
-    }
-
-    public static MyPet getMyPet(String owner)
-    {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        else
         {
-            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+            List<MyPet> activeMyPetList = new ArrayList<MyPet>();
+            activeMyPetList.add(myPet);
+            mActivePets.put(myPet.getOwner(), activeMyPetList);
         }
-        return null;
-    }
-
-    public static List<MyPet> getAllActiveMyPets()
-    {
-        return lActivePets;
-    }
-
-    public static boolean hasMyPet(Player player)
-    {
-        return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(player));
-    }
-
-    public static boolean hasMyPet(String name)
-    {
-        return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
     // Inactive -----------------------------------------------------------------
@@ -158,7 +184,7 @@ public class MyPetList
         return MyPetPlayer.isMyPetPlayer(name) && mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
-    private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet)
+    private static InactiveMyPet getInactiveFromActive(MyPet activeMyPet)
     {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
         inactiveMyPet.setUUID(activeMyPet.getUUID());
@@ -238,12 +264,7 @@ public class MyPetList
 
     public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet)
     {
-        if (hasMyPet(inactiveMyPet.getPetName()))
-        {
-            setMyPetInactive(inactiveMyPet.getOwner().getPlayer());
-        }
-
-        MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
+        MyPet activeMyPet = getActiveFromInactive(inactiveMyPet);
         addMyPet(activeMyPet);
         removeInactiveMyPet(inactiveMyPet);
 
@@ -260,28 +281,21 @@ public class MyPetList
         return activeMyPet;
     }
 
-    public static InactiveMyPet setMyPetInactive(Player owner)
+    public static InactiveMyPet setMyPetInactive(MyPet myPet)
     {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        InactiveMyPet inactiveMyPet = getInactiveFromActive(myPet);
+        addInactiveMyPet(inactiveMyPet);
+        removeMyPet(myPet);
+
+        if (MyPetConfiguration.ENABLE_EVENTS)
         {
-            MyPet activeMyPet = getMyPet(owner);
-
-            activeMyPet.removePet();
-            InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
-            removeMyPet(activeMyPet);
-            addInactiveMyPet(inactiveMyPet);
-
-            if (MyPetConfiguration.ENABLE_EVENTS)
-            {
-                MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
-                getServer().getPluginManager().callEvent(event);
-            }
-
-            MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
-            MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
-            return inactiveMyPet;
+            MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Inactive);
+            getServer().getPluginManager().callEvent(event);
         }
-        return null;
+
+        MyPetUtil.getDebugLogger().info("   A: " + inactiveMyPet);
+        MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
+        return inactiveMyPet;
     }
 
     public IMyPet[] getAllMyPets()

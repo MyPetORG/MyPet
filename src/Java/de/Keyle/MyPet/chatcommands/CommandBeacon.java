@@ -49,21 +49,21 @@ public class CommandBeacon implements CommandExecutor
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                     return true;
                 }
-                else if (!MyPetList.hasMyPet(petOwner))
+                else if (!MyPetList.hasActiveMyPets(petOwner))
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
                     return true;
                 }
 
-                MyPet myPet = MyPetList.getMyPet(petOwner);
+                MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
                 if (myPet.getSkills().isSkillActive("Beacon"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).activate(player);
                 }
             }
-            else if (MyPetList.hasMyPet(player))
+            else if (MyPetList.hasActiveMyPets(player))
             {
-                MyPet myPet = MyPetList.getMyPet(player);
+                MyPet myPet = MyPetList.getActiveMyPets(player).get(0);
                 if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon"))
                 {
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
