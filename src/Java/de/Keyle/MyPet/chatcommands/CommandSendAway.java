@@ -49,9 +49,9 @@ public class CommandSendAway implements CommandExecutor
                     if (myPet.getStatus() == PetState.Here)
                     {
                         myPet.removePet();
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
                         if (MyPetConfiguration.ENABLE_EVENTS)
                         {
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
                             getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
                         }
                     }
