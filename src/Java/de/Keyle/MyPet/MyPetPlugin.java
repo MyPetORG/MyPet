@@ -694,6 +694,7 @@ public class MyPetPlugin extends JavaPlugin
             locationNBT.setFloat("Pitch", inactiveMyPet.getLocation().getPitch());
             locationNBT.setString("World", inactiveMyPet.getLocation().getWorld().getName());
 
+            petNBT.setString("UUID", inactiveMyPet.getUUID().toString());
             petNBT.setString("Type", inactiveMyPet.getPetType().getTypeName());
             petNBT.setString("Owner", inactiveMyPet.getOwner().getName());
             petNBT.setCompound("Location", locationNBT);
