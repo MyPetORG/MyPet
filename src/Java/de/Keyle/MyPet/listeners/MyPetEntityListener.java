@@ -157,7 +157,7 @@ public class MyPetEntityListener implements Listener
                 {
                     damager = (Player) event.getDamager();
                 }
-                if (craftMyPet.getHandle().hasRider())
+                if (craftMyPet.getHandle().hasRider() && myPet.getOwner().equals(damager))
                 {
                     event.setCancelled(true);
                     if (myPet.getSkills().hasSkill("Ride"))
