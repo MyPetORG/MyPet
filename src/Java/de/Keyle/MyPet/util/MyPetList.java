@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -120,7 +121,7 @@ public class MyPetList
         return null;
     }
 
-    public static List<MyPet> getAllMyPets()
+    public static List<MyPet> getAllActiveMyPets()
     {
         return lActivePets;
     }
@@ -281,6 +282,21 @@ public class MyPetList
             return inactiveMyPet;
         }
         return null;
+    }
+
+    public IMyPet[] getAllMyPets()
+    {
+        IMyPet[] allMyPets = new IMyPet[countMyPets()];
+        int i = 0;
+        for (MyPet myPet : lActivePets)
+        {
+            allMyPets[i++] = myPet;
+        }
+        for (InactiveMyPet inactiveMyPet : lInactivePets)
+        {
+            allMyPets[i++] = inactiveMyPet;
+        }
+        return allMyPets;
     }
 
     public static void clearList()

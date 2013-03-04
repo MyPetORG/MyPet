@@ -221,7 +221,7 @@ public class CommandAdmin implements CommandExecutor
             MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
             MyPetUtil.getDebugLogger().info("Skilltrees reloaded.");
 
-            for (MyPet myPet : MyPetList.getAllMyPets())
+            for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
                 myPet.getSkills().reset();
 

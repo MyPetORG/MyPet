@@ -110,7 +110,7 @@ public class MyPetPlugin extends JavaPlugin
         if (isReady)
         {
             debugLogger.info(savePets(true) + " pet/pets saved.");
-            for (MyPet myPet : MyPetList.getAllMyPets())
+            for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
                 myPet.removePet();
             }
@@ -636,7 +636,7 @@ public class MyPetPlugin extends JavaPlugin
         NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
         NBTTagList petNBTlist = new NBTTagList();
 
-        for (MyPet myPet : MyPetList.getAllMyPets())
+        for (MyPet myPet : MyPetList.getAllActiveMyPets())
         {
             NBTTagCompound petNBT = new NBTTagCompound();
             NBTTagCompound locationNBT = new NBTTagCompound("Location");
