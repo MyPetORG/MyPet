@@ -619,7 +619,7 @@ public class MyPetPlugin extends JavaPlugin
             inactiveMyPet.setHealth(wolfHealthNow);
             inactiveMyPet.setPetName(wolfName);
             inactiveMyPet.setExp(wolfExp);
-            inactiveMyPet.setPetType(MyPetType.valueOf("Wolf"));
+            inactiveMyPet.setPetType(MyPetType.Wolf);
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
 
