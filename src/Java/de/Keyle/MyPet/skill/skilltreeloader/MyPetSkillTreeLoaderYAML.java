@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
-import de.Keyle.MyPet.skill.MyPetSkills;
+import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
+import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.Set;
 
 public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 {
-    public static MyPetSkillTreeLoader getSkilltreeLoader()
+    public static MyPetSkillTreeLoaderYAML getSkilltreeLoader()
     {
         return new MyPetSkillTreeLoaderYAML();
     }
@@ -46,7 +45,13 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
     {
     }
 
+    @Override
     public void loadSkillTrees(String configPath)
+    {
+        loadSkillTrees(configPath, true);
+    }
+
+    public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
     {
         YAML_Configuration skilltreeConfig;
         if (MyPetUtil.getDebugLogger() != null)
@@ -60,8 +65,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         if (skillFile.exists())
         {
             skilltreeConfig = new YAML_Configuration(skillFile);
-            loadSkillTree(skilltreeConfig, skillTreeMobType);
-            skillFile.renameTo(new File(configPath + File.separator + "old_default.yml"));
+            loadSkillTree(skilltreeConfig, skillTreeMobType, false);
             if (MyPetUtil.getDebugLogger() != null)
             {
                 MyPetUtil.getDebugLogger().info("  default.yml");
@@ -76,74 +80,274 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
             if (!skillFile.exists())
             {
+                if (applyDefaultAndInheritance)
+                {
+                    if (!skillTreeMobType.getMobTypeName().equals("default"))
+                    {
+                        addDefault(skillTreeMobType);
+                    }
+                    manageInheritance(skillTreeMobType);
+                }
                 continue;
             }
 
             skilltreeConfig = new YAML_Configuration(skillFile);
-            loadSkillTree(skilltreeConfig, skillTreeMobType);
-            skillFile.renameTo(new File(configPath + File.separator + "old_" + mobType.getTypeName().toLowerCase() + ".yml"));
+            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
             if (MyPetUtil.getDebugLogger() != null)
             {
                 MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".yml");
             }
         }
+    }
 
+    private void loadSkillTree(YAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
+    {
+        FileConfiguration config = yamlConfiguration.getConfig();
+        ConfigurationSection sec = config.getConfigurationSection("Skilltrees");
+        if (sec == null)
+        {
+            return;
+        }
+        for (String skillTreeName : sec.getKeys(false))
+        {
+            MyPetSkillTree skillTree;
+            if (config.contains("Skilltrees." + skillTreeName + ".Inherit"))
+            {
+                String inherit = config.getString("Skilltrees." + skillTreeName + ".Inherit");
+                skillTree = new MyPetSkillTree(skillTreeName, inherit);
+            }
+            else
+            {
+                skillTree = new MyPetSkillTree(skillTreeName);
+            }
+            if (config.contains("Skilltrees." + skillTreeName + ".Permission"))
+            {
+                String permission = config.getString("Skilltrees." + skillTreeName + ".Permission");
+                skillTree.setPermission(permission);
+            }
+            if (config.contains("Skilltrees." + skillTreeName + ".Display"))
+            {
+                String display = config.getString("Skilltrees." + skillTreeName + ".Display");
+                skillTree.setDisplayName(display);
+            }
+
+            Set<String> level = config.getConfigurationSection("Skilltrees." + skillTreeName + ".Level").getKeys(false);
+            for (String thisLevel : level)
+            {
+                if (MyPetUtil.isInt(thisLevel))
+                {
+                    short shortLevel = Short.parseShort(thisLevel);
+
+                    Set<String> skillsOfThisLevel = config.getConfigurationSection("Skilltrees." + skillTreeName + ".Level." + thisLevel).getKeys(false);
+                    for (String thisSkill : skillsOfThisLevel)
+                    {
+                        if (MyPetSkills.isValidSkill(thisSkill))
+                        {
+                            MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(thisSkill);
+
+                            SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
+                            if (sp != null)
+                            {
+                                NBTTagCompound propertiesCompound = skill.getProperties();
+                                for (int i = 0 ; i < sp.parameterNames().length ; i++)
+                                {
+                                    String propertyName = sp.parameterNames()[i];
+                                    NBTdatatypes propertyType = sp.parameterTypes()[i];
+                                    if (!propertiesCompound.hasKey(propertyName) && config.contains("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName))
+                                    {
+                                        String value = String.valueOf(config.getString("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName));
+                                        switch (propertyType)
+                                        {
+                                            case Short:
+                                                if (MyPetUtil.isShort(value))
+                                                {
+                                                    propertiesCompound.setShort(propertyName, Short.parseShort(value));
+                                                }
+                                                break;
+                                            case Int:
+                                                if (MyPetUtil.isInt(value))
+                                                {
+                                                    propertiesCompound.setInt(propertyName, Integer.parseInt(value));
+                                                }
+                                                break;
+                                            case Long:
+                                                if (MyPetUtil.isLong(value))
+                                                {
+                                                    propertiesCompound.setLong(propertyName, Long.parseLong(value));
+                                                }
+                                                break;
+                                            case Float:
+                                                if (MyPetUtil.isFloat(value))
+                                                {
+                                                    propertiesCompound.setFloat(propertyName, Float.parseFloat(value));
+                                                }
+                                                break;
+                                            case Double:
+                                                if (MyPetUtil.isDouble(value))
+                                                {
+                                                    propertiesCompound.setDouble(propertyName, Double.parseDouble(value));
+                                                }
+                                                break;
+                                            case Byte:
+                                                if (MyPetUtil.isByte(value))
+                                                {
+                                                    propertiesCompound.setByte(propertyName, Byte.parseByte(value));
+                                                }
+                                                break;
+                                            case Boolean:
+                                                if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
+                                                {
+                                                    propertiesCompound.setBoolean(propertyName, false);
+                                                }
+                                                else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
+                                                {
+                                                    propertiesCompound.setBoolean(propertyName, true);
+                                                }
+                                                break;
+                                            case String:
+                                                propertiesCompound.setString(propertyName, value);
+                                                break;
+                                        }
+                                    }
+                                }
+                                skill.setProperties(propertiesCompound);
+                                skill.setDefaultProperties();
+                                skillTree.addSkillToLevel(shortLevel, skill);
+                            }
+                        }
+                    }
+                }
+            }
+            skillTreeMobType.addSkillTree(skillTree);
+        }
+        if (applyDefaultAndInheritance)
+        {
+            if (!skillTreeMobType.getMobTypeName().equals("default"))
+            {
+                addDefault(skillTreeMobType);
+            }
+            manageInheritance(skillTreeMobType);
+        }
     }
 
     @Override
     public List<String> saveSkillTrees(String configPath)
     {
-        return new ArrayList<String>();
+        YAML_Configuration yamlConfiguration;
+        File skillFile;
+        List<String> savedPetTypes = new ArrayList<String>();
+
+        for (MyPetType petType : MyPetType.values())
+        {
+            skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".yml");
+            yamlConfiguration = new YAML_Configuration(skillFile);
+            if (saveSkillTree(yamlConfiguration, petType.getTypeName()))
+            {
+                savedPetTypes.add(petType.getTypeName());
+            }
+        }
+
+        skillFile = new File(configPath + File.separator + "default.yml");
+        yamlConfiguration = new YAML_Configuration(skillFile);
+        if (saveSkillTree(yamlConfiguration, "default"))
+        {
+            savedPetTypes.add("default");
+        }
+
+        return savedPetTypes;
     }
 
-    private void loadSkillTree(YAML_Configuration MWConfig, MyPetSkillTreeMobType skillTreeMobType)
+    //"Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName
+    protected boolean saveSkillTree(YAML_Configuration yamlConfiguration, String petTypeName)
     {
-        ConfigurationSection sec = MWConfig.getConfig().getConfigurationSection("skilltrees");
-        if (sec == null)
+        boolean saveMobType = false;
+
+        yamlConfiguration.clearConfig();
+        FileConfiguration config = yamlConfiguration.getConfig();
+
+        if (MyPetSkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0)
         {
-            return;
-        }
-        Set<String> SkillTreeNames = sec.getKeys(false);
-        if (SkillTreeNames.size() > 0)
-        {
-            for (String skillTreeName : SkillTreeNames)
+            MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(petTypeName);
+            mobType.cleanupPlaces();
+
+            for (MyPetSkillTree skillTree : mobType.getSkillTrees())
             {
-                String inherit = MWConfig.getConfig().getString("skilltrees." + skillTreeName + ".inherit", "%#_DeFaUlT_#%");
-                MyPetSkillTree skillTree;
-                if (!inherit.equals("%#_DeFaUlT_#%"))
+                config.set("Skilltrees." + skillTree.getName() + ".Place", mobType.getSkillTreePlace(skillTree));
+                if (skillTree.hasInheritance())
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName, inherit);
+                    config.set("Skilltrees." + skillTree.getName() + ".Inherits", skillTree.getInheritance());
                 }
-                else
+                if (skillTree.hasCustomPermissions())
                 {
-                    skillTree = new MyPetSkillTree(skillTreeName);
+                    config.set("Skilltrees." + skillTree.getName() + ".Permission", skillTree.getPermission());
+                }
+                if (skillTree.hasDisplayName())
+                {
+                    config.set("Skilltrees." + skillTree.getName() + ".Display", skillTree.getDisplayName());
                 }
 
-                Set<String> level = MWConfig.getConfig().getConfigurationSection("skilltrees." + skillTreeName).getKeys(false);
-                if (level.size() > 0)
+                for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                 {
-                    for (String thisLevel : level)
+                    for (MyPetSkillTreeSkill skill : skillTree.getLevel(level.getLevel()).getSkills())
                     {
-                        if (MyPetUtil.isInt(thisLevel))
+                        if (!skill.isAddedByInheritance())
                         {
-                            List<String> skillsOfThisLevel = MWConfig.getConfig().getStringList("skilltrees." + skillTreeName + "." + thisLevel);
-                            if (skillsOfThisLevel.size() > 0)
+                            SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
+                            if (sp != null)
                             {
-                                for (String thisSkill : skillsOfThisLevel)
+                                for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                 {
-                                    if (MyPetSkills.isValidSkill(thisSkill))
+                                    String propertyName = sp.parameterNames()[i];
+                                    NBTdatatypes propertyType = sp.parameterTypes()[i];
+                                    NBTTagCompound propertiesCompound = skill.getProperties();
+                                    if (propertiesCompound.hasKey(propertyName))
                                     {
-                                        MyPetSkillTreeSkill skillTreeSkill = MyPetSkills.getNewSkillInstance(thisSkill);
-                                        skillTreeSkill.setDefaultProperties();
-                                        skillTree.addSkillToLevel(Short.parseShort(thisLevel), skillTreeSkill);
+                                        switch (propertyType)
+                                        {
+                                            case Short:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getShort(propertyName));
+                                                break;
+                                            case Int:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getInt(propertyName));
+                                                break;
+                                            case Long:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getLong(propertyName));
+                                                break;
+                                            case Float:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getFloat(propertyName));
+                                                break;
+                                            case Double:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getDouble(propertyName));
+                                                break;
+                                            case Byte:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getByte(propertyName));
+                                                break;
+                                            case Boolean:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getBoolean(propertyName));
+                                                break;
+                                            case String:
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getString(propertyName));
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, sp.parameterDefaultValues()[i]);
                                     }
                                 }
                             }
                         }
                     }
-                    skillTreeMobType.addSkillTree(skillTree);
                 }
             }
+
+            if (mobType.getSkillTreeNames().size() > 0)
+            {
+                System.out.println("save");
+                yamlConfiguration.saveConfig();
+                saveMobType = true;
+            }
         }
+        return saveMobType;
     }
 }

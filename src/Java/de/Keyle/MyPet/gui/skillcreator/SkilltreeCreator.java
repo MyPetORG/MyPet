@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -53,6 +54,7 @@ public class SkilltreeCreator
     JPopupMenu saveButtonRightclickMenu;
     JMenuItem asNBTMenuItem;
     JMenuItem asJSONMenuItem;
+    JMenuItem asYAMLMenuItem;
     JMenuItem asAllMenuItem;
     JPopupMenu skilltreeListRightclickMenu;
     JMenuItem copyMenuItem;
@@ -280,6 +282,12 @@ public class SkilltreeCreator
                     savedPetsString += "\n   " + petType.toLowerCase() + ".st";
                 }
 
+                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                for (String petType : savedPetTypes)
+                {
+                    savedPetsString += "\n   " + petType.toLowerCase() + ".yml";
+                }
+
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -310,6 +318,22 @@ public class SkilltreeCreator
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".json";
+                }
+
+                JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        asYAMLMenuItem.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                String savedPetsString = "";
+                List<String> savedPetTypes;
+
+                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                for (String petType : savedPetTypes)
+                {
+                    savedPetsString += "\n   " + petType.toLowerCase() + ".yml";
                 }
 
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
@@ -483,11 +507,16 @@ public class SkilltreeCreator
 
         saveButtonRightclickMenu = new JPopupMenu();
 
+        asNBTMenuItem = new JMenuItem("NBT format (default)");
+        saveButtonRightclickMenu.add(asNBTMenuItem);
+
         asJSONMenuItem = new JMenuItem("JSON format");
         saveButtonRightclickMenu.add(asJSONMenuItem);
 
-        asNBTMenuItem = new JMenuItem("NBT format (default)");
-        saveButtonRightclickMenu.add(asNBTMenuItem);
+        asYAMLMenuItem = new JMenuItem("YAML format");
+        saveButtonRightclickMenu.add(asYAMLMenuItem);
+
+        saveButtonRightclickMenu.addSeparator();
 
         asAllMenuItem = new JMenuItem("All formats");
         saveButtonRightclickMenu.add(asAllMenuItem);

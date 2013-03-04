@@ -218,14 +218,16 @@ public class MyPetPlugin extends JavaPlugin
 
         registerSkills();
 
-        File defaultSkillConfig = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
+        File defaultSkillConfigNBT = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
+        File defaultSkillConfigYAML = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
+        File defaultSkillConfigJSON = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.json");
 
-        if (!defaultSkillConfig.exists())
+        if (!defaultSkillConfigNBT.exists() && !defaultSkillConfigYAML.exists() && !defaultSkillConfigJSON.exists())
         {
             try
             {
                 InputStream template = getPlugin().getResource("skilltrees/default.st");
-                OutputStream out = new FileOutputStream(defaultSkillConfig);
+                OutputStream out = new FileOutputStream(defaultSkillConfigNBT);
 
                 byte[] buf = new byte[1024];
                 int len;
@@ -240,16 +242,14 @@ public class MyPetPlugin extends JavaPlugin
             }
             catch (IOException ex)
             {
-                MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.yml!");
-                debugLogger.info("unable to create default.yml");
+                MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.st!");
+                debugLogger.info("unable to create default.st");
             }
         }
 
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-
         MyPetSkillTreeMobType.clearMobTypes();
         MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
         MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
 
         try
