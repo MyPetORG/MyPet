@@ -811,7 +811,7 @@ public class MyPetEntityListener implements Listener
                 {
                     for (MyPet myPet : MyPetList.getActiveMyPets(owner))
                     {
-                        if (myPet.isPassiv())
+                        if (myPet.getStatus() == PetState.Here && myPet.isPassiv())
                         {
                             myPet.getExperience().addExp(event.getEntity().getType(), MyPetConfiguration.PASSIVE_PERCENT_PER_MONSTER);
                         }
