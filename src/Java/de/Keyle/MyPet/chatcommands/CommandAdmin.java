@@ -23,11 +23,10 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -36,7 +35,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.List;
 
 public class CommandAdmin implements CommandExecutor
 {
@@ -216,8 +214,8 @@ public class CommandAdmin implements CommandExecutor
         {
             MyPetSkillTreeMobType.clearMobTypes();
             MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+            MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
             MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-            MyPetUtil.getDebugLogger().info("Skilltrees reloaded.");
 
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
@@ -225,16 +223,31 @@ public class CommandAdmin implements CommandExecutor
 
                 short lvl = myPet.getExperience().getLevel();
                 MyPetSkillTree skillTree = myPet.getSkillTree();
-                if (skillTree != null && skillTree.hasLevel(lvl))
+
+                if (skillTree != null)
                 {
-                    List<MyPetSkillTreeSkill> skillList = skillTree.getLevel(lvl).getSkills();
-                    for (MyPetSkillTreeSkill skill : skillList)
+                    for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                     {
-                        myPet.getSkills().getSkill(skill.getName()).upgrade(skill);
+                        if (level.getLevel() > lvl)
+                        {
+                            continue;
+                        }
+                        for (MyPetSkillTreeSkill skill : level.getSkills())
+                        {
+                            myPet.getSkills().getSkill(skill.getName()).upgrade(skill, true);
+                        }
+                    }
+                    for (MyPetGenericSkill skill : myPet.getSkills().getSkills())
+                    {
+                        if (skill.isActive())
+                        {
+                            myPet.sendMessageToOwner(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                        }
                     }
                 }
             }
             sender.sendMessage(MyPetUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!"));
+            MyPetUtil.getDebugLogger().info("Skilltrees reloaded.");
         }
         return true;
     }

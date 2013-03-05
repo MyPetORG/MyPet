@@ -30,8 +30,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-
 public class CommandSkill implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -59,15 +57,12 @@ public class CommandSkill implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
-                Collection<MyPetGenericSkill> skillList = myPet.getSkills().getSkills();
-                if (skillList.size() > 0)
+
+                for (MyPetGenericSkill skill : myPet.getSkills().getSkills())
                 {
-                    for (MyPetGenericSkill skill : skillList)
+                    if (skill.isActive())
                     {
-                        if (skill.isActive())
-                        {
-                            sender.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
-                        }
+                        sender.sendMessage(MyPetUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                     }
                 }
                 return true;
