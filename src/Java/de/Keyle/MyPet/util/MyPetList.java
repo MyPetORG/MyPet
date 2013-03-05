@@ -284,7 +284,26 @@ public class MyPetList
         return null;
     }
 
-    public IMyPet[] getAllMyPets()
+    public static IMyPet getLastActiveMyPet(MyPetPlayer petPlayer)
+    {
+        if (petPlayer.hasCustomData())
+        {
+            UUID lastActiveMyPetUUID = petPlayer.getLastActiveMyPetUUID();
+            if (lastActiveMyPetUUID != null)
+            {
+                for (IMyPet myPet : getAllMyPets())
+                {
+                    if (myPet.getUUID().equals(lastActiveMyPetUUID))
+                    {
+                        return myPet;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static IMyPet[] getAllMyPets()
     {
         IMyPet[] allMyPets = new IMyPet[countMyPets()];
         int i = 0;

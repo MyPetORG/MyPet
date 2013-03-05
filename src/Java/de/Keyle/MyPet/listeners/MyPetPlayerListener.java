@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -90,47 +91,57 @@ public class MyPetPlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent event)
+    public void onMyPetPlayerJoin(final PlayerJoinEvent event)
     {
-        MyPetUtil.getDebugLogger().info("PlayerJoin: " + event.getPlayer().getName() + "     ----------------------------------");
-        MyPetUtil.getDebugLogger().info("   - MyPetPlayer: " + (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()) ? MyPetPlayer.getMyPetPlayer(event.getPlayer().getName()).toString() : "false"));
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        {
+            MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
 
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
-            if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + MyPetList.getMyPet(event.getPlayer()).getPetType().getTypeName()))
+            if (joinedPlayer.hasMyPet())
             {
-                MyPetUtil.getDebugLogger().info("set MyPet of " + event.getPlayer().getName() + " to inactive");
-                MyPetList.setMyPetInactive(event.getPlayer());
-            }
-            MyPetUtil.getDebugLogger().info("   - has still an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
-        }
-        if (!MyPetList.hasMyPet(event.getPlayer()) && MyPetList.hasInactiveMyPets(event.getPlayer()))
-        {
-            for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
-            {
-                if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + joinedPlayer.getMyPet().getPetType().getTypeName()))
                 {
-                    MyPetList.setMyPetActive(inactiveMyPet);
-                    break;
+                    MyPetList.setMyPetInactive(event.getPlayer());
                 }
             }
-        }
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
-            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
-            MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getStatus() == PetState.Dead)
+            if (!joinedPlayer.hasMyPet() && joinedPlayer.hasInactiveMyPets())
             {
-                event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                IMyPet myPet = MyPetList.getLastActiveMyPet(joinedPlayer);
+                if (myPet == null || myPet instanceof MyPet)
+                {
+                    for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
+                    {
+                        if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                        {
+                            MyPetList.setMyPetActive(inactiveMyPet);
+                            break;
+                        }
+                    }
+                }
+                else if (myPet instanceof InactiveMyPet)
+                {
+                    if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + myPet.getPetType().getTypeName()))
+                    {
+                        MyPetList.setMyPetActive((InactiveMyPet) myPet);
+                    }
+                }
             }
-            else if (myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
+            if (joinedPlayer.hasMyPet())
             {
-                myPet.createPet();
-            }
-            else
-            {
-                myPet.status = PetState.Despawned;
+                MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
+                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+                if (myPet.getStatus() == PetState.Dead)
+                {
+                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                }
+                else if (myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
+                {
+                    myPet.createPet();
+                }
+                else
+                {
+                    myPet.status = PetState.Despawned;
+                }
             }
         }
     }

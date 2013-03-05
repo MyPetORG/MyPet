@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -40,7 +41,7 @@ public class MyPetPlayer implements IScheduler
 
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
-    private UUID lastActiveMyPetUUID;
+    private UUID lastActiveMyPetUUID = null;
 
     private MyPetPlayer(String playerName)
     {
@@ -160,6 +161,18 @@ public class MyPetPlayer implements IScheduler
         return false;
     }
 
+    public static boolean isMyPetPlayer(Player player)
+    {
+        for (MyPetPlayer myPetPlayer : playerList)
+        {
+            if (myPetPlayer.equals(player))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static MyPetPlayer[] getMyPetPlayers()
     {
         MyPetPlayer[] playerArray = new MyPetPlayer[playerList.size()];
@@ -181,35 +194,46 @@ public class MyPetPlayer implements IScheduler
         {
             if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + getMyPet().getPetType().getTypeName()))
             {
-                MyPetUtil.getDebugLogger().info("set MyPet of " + this.getName() + " to inactive");
                 MyPetList.setMyPetInactive(this.getPlayer());
             }
         }
         if (!hasMyPet() && hasInactiveMyPets())
         {
-            for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
+            IMyPet myPet = MyPetList.getLastActiveMyPet(this);
+            if (myPet == null || myPet instanceof MyPet)
             {
-                if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
                 {
-                    MyPetUtil.getDebugLogger().info("set MyPet " + inactiveMyPet.getPetName() + " of " + this.getName() + " to active");
-                    MyPetList.setMyPetActive(inactiveMyPet);
-                    break;
+                    if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                    {
+                        MyPetList.setMyPetActive(inactiveMyPet);
+                        break;
+                    }
+                }
+            }
+            else if (myPet instanceof InactiveMyPet)
+            {
+                if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + myPet.getPetType().getTypeName()))
+                {
+                    MyPetList.setMyPetActive((InactiveMyPet) myPet);
                 }
             }
         }
         if (hasMyPet())
         {
+            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + hasMyPet());
             MyPet myPet = getMyPet();
-            if (myPet.getStatus() == PetState.Here)
+            if (myPet.getStatus() == PetState.Dead)
             {
-                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
-                {
-                    if (!myPet.getCraftPet().canMove())
-                    {
-                        myPet.removePet();
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
-                    }
-                }
+                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+            }
+            else if (myPet.getLocation().getWorld() == this.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(this.getPlayer().getLocation()) < 75)
+            {
+                myPet.createPet();
+            }
+            else
+            {
+                myPet.status = PetState.Despawned;
             }
         }
     }
