@@ -309,7 +309,7 @@ public class MyPetList
 
     public static int countMyPets()
     {
-        return mActivePets.size() + mInctivePets.size();
+        return lActivePets.size() + lInactivePets.size();
     }
 
     public static int countMyPets(MyPetType myPetType)
