@@ -116,6 +116,7 @@ public class MyPetLanguage
         addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
         addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%petname%%reset% doesn't have an inventory.");
         addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%reset% doesn't know the skill %skill%.");
+        addString("Msg_NotAllowed", "MyPet.Message.notallowed", "%red%You are not allowed to use this!%reset%");
         // --  O  --
         addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%reset% only once!");
         addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%reset% respawned!");
