@@ -121,9 +121,15 @@ public class MyPetList
         return null;
     }
 
-    public static List<MyPet> getAllActiveMyPets()
+    public static MyPet[] getAllActiveMyPets()
     {
-        return lActivePets;
+        MyPet[] allActiveMyPets = new MyPet[lActivePets.size()];
+        int i = 0;
+        for (MyPet myPet : lActivePets)
+        {
+            allActiveMyPets[i++] = myPet;
+        }
+        return allActiveMyPets;
     }
 
     public static boolean hasMyPet(Player player)
@@ -185,11 +191,17 @@ public class MyPetList
         return null;
     }
 
-    public static List<InactiveMyPet> getInactiveMyPets(String owner)
+    public static InactiveMyPet[] getInactiveMyPets(String owner)
     {
         if (mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
         {
-            return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+            InactiveMyPet[] allInactiveMyPets = new InactiveMyPet[mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner)).size()];
+            int i = 0;
+            for (InactiveMyPet myPet : mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner)))
+            {
+                allInactiveMyPets[i++] = myPet;
+            }
+            return allInactiveMyPets;
         }
         return null;
     }

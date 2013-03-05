@@ -120,7 +120,7 @@ public class MyPetPlayer implements IScheduler
         return MyPetList.hasInactiveMyPets(playerName);
     }
 
-    public List<InactiveMyPet> getInactiveMyPets()
+    public InactiveMyPet[] getInactiveMyPets()
     {
         return MyPetList.getInactiveMyPets(playerName);
     }
