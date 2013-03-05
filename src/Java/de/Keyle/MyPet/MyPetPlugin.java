@@ -180,25 +180,25 @@ public class MyPetPlugin extends JavaPlugin
         MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
 
         MyPetPlayerListener playerListener = new MyPetPlayerListener();
-        getServer().getPluginManager().registerEvents(playerListener, getPlugin());
+        getServer().getPluginManager().registerEvents(playerListener, this);
 
         MyPetVehicleListener vehicleListener = new MyPetVehicleListener();
-        getServer().getPluginManager().registerEvents(vehicleListener, getPlugin());
+        getServer().getPluginManager().registerEvents(vehicleListener, this);
 
         MyPetWorldListener worldListener = new MyPetWorldListener();
-        getServer().getPluginManager().registerEvents(worldListener, getPlugin());
+        getServer().getPluginManager().registerEvents(worldListener, this);
 
         MyPetEntityListener entityListener = new MyPetEntityListener();
-        getServer().getPluginManager().registerEvents(entityListener, getPlugin());
+        getServer().getPluginManager().registerEvents(entityListener, this);
 
         MyPetLevelUpListener levelupListener = new MyPetLevelUpListener();
-        getServer().getPluginManager().registerEvents(levelupListener, getPlugin());
+        getServer().getPluginManager().registerEvents(levelupListener, this);
 
         MyPetWeatherListener weatherListener = new MyPetWeatherListener();
-        getServer().getPluginManager().registerEvents(weatherListener, getPlugin());
+        getServer().getPluginManager().registerEvents(weatherListener, this);
 
         MyPetBlockListener blockListener = new MyPetBlockListener();
-        getServer().getPluginManager().registerEvents(blockListener, getPlugin());
+        getServer().getPluginManager().registerEvents(blockListener, this);
 
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
