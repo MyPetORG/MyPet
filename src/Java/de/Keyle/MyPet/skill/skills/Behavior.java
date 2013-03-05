@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
@@ -254,19 +255,19 @@ public class Behavior extends MyPetGenericSkill
         {
             if (behavior == BehaviorState.Normal)
             {
-                if (BehaviorState.Friendly.isActive())
+                if (BehaviorState.Friendly.isActive() && behaviorActive.get(BehaviorState.Friendly) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Friendly"))
                 {
                     behavior = BehaviorState.Friendly;
                     myPet.getCraftPet().setTarget(null);
                 }
-                else if (BehaviorState.Aggressive.isActive())
+                else if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
                 {
                     behavior = BehaviorState.Aggressive;
                 }
             }
             else if (behavior == BehaviorState.Friendly)
             {
-                if (BehaviorState.Aggressive.isActive())
+                if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
                 {
                     behavior = BehaviorState.Aggressive;
                 }
