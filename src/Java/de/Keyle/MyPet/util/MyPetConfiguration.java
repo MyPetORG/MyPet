@@ -62,6 +62,7 @@ public class MyPetConfiguration
     public static boolean SKILLTREE_SWITCH_PENALTY_ADMIN = false;
     public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = true;
     public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
+    public static boolean PREVENT_LEVELLING_WITHOUT_SKILLTREE = true;
     public static boolean OWNER_CAN_ATTACK_PET = false;
     public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
@@ -101,6 +102,7 @@ public class MyPetConfiguration
         setProperty("MyPet.Skilltree.AutomaticAssignment", true);
         setProperty("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
         setProperty("MyPet.Skilltree.ChooseOnce", true);
+        setProperty("MyPet.Skilltree.PreventLevellingWithout", true);
         setProperty("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         setProperty("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         setProperty("MyPet.Skilltree.SwitchPenaltyAdmin", false);
@@ -190,6 +192,7 @@ public class MyPetConfiguration
         RESPAWN_COSTS_FIXED = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);
         CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
+        PREVENT_LEVELLING_WITHOUT_SKILLTREE = config.getBoolean("MyPet.Skilltree.PreventLevellingWithout", true);
         USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem.Active", true);
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);

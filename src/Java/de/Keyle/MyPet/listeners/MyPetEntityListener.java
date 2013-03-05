@@ -800,6 +800,10 @@ public class MyPetEntityListener implements Listener
                 if (e.getDamager() instanceof CraftMyPet)
                 {
                     MyPet myPet = ((CraftMyPet) e.getDamager()).getMyPet();
+                    if (MyPetConfiguration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
+                    {
+                        return;
+                    }
                     event.setDroppedExp(myPet.getExperience().addExp(e.getEntity().getType()));
                 }
             }
@@ -809,6 +813,10 @@ public class MyPetEntityListener implements Listener
                 if (MyPetList.hasMyPet(owner))
                 {
                     MyPet myPet = MyPetList.getMyPet(owner);
+                    if (MyPetConfiguration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
+                    {
+                        return;
+                    }
                     if (myPet.isPassiv())
                     {
                         if (myPet.getStatus() == PetState.Here && myPet.isPassiv())
