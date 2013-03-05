@@ -95,7 +95,7 @@ public class EntityAIControlTarget extends PathfinderGoal
                     else if (entityLiving instanceof EntityTameableAnimal)
                     {
                         EntityTameableAnimal tameable = (EntityTameableAnimal) entityLiving;
-                        if (tameable.isTamed())
+                        if (tameable.isTamed() && tameable.getOwner() != null)
                         {
                             Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                             if (myPet.getOwner().equals(tameableOwner))
