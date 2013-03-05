@@ -42,27 +42,25 @@ public class CommandSendAway implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                for (MyPet myPet : MyPetList.getActiveMyPets(petOwner))
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                if (myPet.getStatus() == PetState.Here)
                 {
-                    if (myPet.getStatus() == PetState.Here)
+                    myPet.removePet();
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
+                    if (MyPetConfiguration.ENABLE_EVENTS)
                     {
-                        myPet.removePet();
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SendAway")).replace("%petname%", myPet.petName));
-                        if (MyPetConfiguration.ENABLE_EVENTS)
-                        {
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
-                        }
+                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
                     }
-                    else if (myPet.getStatus() == PetState.Despawned)
-                    {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AlreadyAway")).replace("%petname%", myPet.petName));
-                    }
-                    else if (myPet.getStatus() == PetState.Dead)
-                    {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
-                    }
+                }
+                else if (myPet.getStatus() == PetState.Despawned)
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AlreadyAway")).replace("%petname%", myPet.petName));
+                }
+                else if (myPet.getStatus() == PetState.Dead)
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                 }
             }
             else

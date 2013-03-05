@@ -64,9 +64,9 @@ public class CommandRelease implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
 
                 if (!MyPetPermissions.has(petOwner, "MyPet.user.release"))
                 {
@@ -286,7 +286,7 @@ public class CommandRelease implements CommandExecutor
                     myPet.removePet();
 
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
-                    MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet));
+                    MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner().getPlayer()));
                     MyPetUtil.getDebugLogger().info(sender.getName() + " released pet.");
                     MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
                     return true;

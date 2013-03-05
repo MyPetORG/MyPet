@@ -37,28 +37,27 @@ public class CommandStop implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                for (MyPet myPet : MyPetList.getActiveMyPets(petOwner))
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+
+                if (myPet.getStatus() == PetState.Despawned)
                 {
-                    if (myPet.getStatus() == PetState.Despawned)
-                    {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
-                        return true;
-                    }
-                    else if (myPet.getStatus() == PetState.Dead)
-                    {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
-                        return true;
-                    }
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
-                    myPet.getCraftPet().getHandle().setTarget(null);
-                    myPet.getCraftPet().getHandle().setGoalTarget(null);
-                    myPet.getCraftPet().getHandle().goalTarget = null;
-                    if (myPet.getCraftPet().getHandle().canMove())
-                    {
-                        myPet.getCraftPet().getHandle().getNavigation().a(myPet.getCraftPet().getHandle().getOwner(), myPet.getCraftPet().getHandle().getWalkSpeed());
-                    }
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    return true;
+                }
+                else if (myPet.getStatus() == PetState.Dead)
+                {
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                    return true;
+                }
+                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
+                myPet.getCraftPet().getHandle().setTarget(null);
+                myPet.getCraftPet().getHandle().setGoalTarget(null);
+                myPet.getCraftPet().getHandle().goalTarget = null;
+                if (myPet.getCraftPet().getHandle().canMove())
+                {
+                    myPet.getCraftPet().getHandle().getNavigation().a(myPet.getCraftPet().getHandle().getOwner(), myPet.getCraftPet().getHandle().getWalkSpeed());
                 }
             }
             else

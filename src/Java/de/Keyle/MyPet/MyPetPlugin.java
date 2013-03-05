@@ -418,20 +418,18 @@ public class MyPetPlugin extends JavaPlugin
                     {
                         MyPetList.setMyPetActive(inactiveMyPet);
 
-                        for (MyPet myPet : MyPetList.getActiveMyPets(player))
+                        MyPet myPet = MyPetList.getMyPet(player);
+                        if (myPet.getStatus() == PetState.Dead)
                         {
-                            if (myPet.getStatus() == PetState.Dead)
-                            {
-                                player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
-                            }
-                            else if (player.getLocation().getWorld() == myPet.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
-                            {
-                                myPet.createPet();
-                            }
-                            else
-                            {
-                                myPet.status = PetState.Despawned;
-                            }
+                            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                        }
+                        else if (player.getLocation().getWorld() == myPet.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
+                        {
+                            myPet.createPet();
+                        }
+                        else
+                        {
+                            myPet.status = PetState.Despawned;
                         }
                         break;
                     }

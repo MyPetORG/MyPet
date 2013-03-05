@@ -36,7 +36,7 @@ public class CommandName implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
                 if (args.length < 1)
                 {
@@ -48,7 +48,7 @@ public class CommandName implements CommandExecutor
                     name += arg + " ";
                 }
                 name = name.substring(0, name.length() - 1);
-                MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
+                MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
             }

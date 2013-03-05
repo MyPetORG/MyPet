@@ -40,70 +40,69 @@ public class CommandBehavior implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                for (MyPet myPet : MyPetList.getActiveMyPets(petOwner))
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+
+                if (myPet.getStatus() == PetState.Despawned)
                 {
-                    if (myPet.getStatus() == PetState.Despawned)
+                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    return true;
+                }
+                else if (myPet.getSkills().hasSkill("Behavior"))
+                {
+                    Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+                    if (args.length == 1)
                     {
-                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
-                        return true;
-                    }
-                    else if (myPet.getSkills().hasSkill("Behavior"))
-                    {
-                        Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-                        if (args.length == 1)
+                        if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend")) && BehaviorState.Friendly.isActive())
                         {
-                            if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend")) && BehaviorState.Friendly.isActive())
+                            if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.friendly"))
                             {
-                                if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.friendly"))
-                                {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
-                                    return true;
-                                }
-                                behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
+                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                                return true;
                             }
-                            else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("aggro")) && BehaviorState.Aggressive.isActive())
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
+                        }
+                        else if ((args[0].equalsIgnoreCase("aggressive") || args[0].equalsIgnoreCase("aggro")) && BehaviorState.Aggressive.isActive())
+                        {
+                            if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.aggressive"))
                             {
-                                if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.aggressive"))
-                                {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
-                                    return true;
-                                }
-                                behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
+                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                                return true;
                             }
-                            else if (args[0].equalsIgnoreCase("farm") && BehaviorState.Farm.isActive())
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
+                        }
+                        else if (args[0].equalsIgnoreCase("farm") && BehaviorState.Farm.isActive())
+                        {
+                            if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.farm"))
                             {
-                                if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.farm"))
-                                {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
-                                    return true;
-                                }
-                                behaviorSkill.activateBehavior(BehaviorState.Farm);
+                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                                return true;
                             }
-                            else if (args[0].equalsIgnoreCase("raid") && BehaviorState.Raid.isActive())
+                            behaviorSkill.activateBehavior(BehaviorState.Farm);
+                        }
+                        else if (args[0].equalsIgnoreCase("raid") && BehaviorState.Raid.isActive())
+                        {
+                            if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.raid"))
                             {
-                                if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.raid"))
-                                {
-                                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
-                                    return true;
-                                }
-                                behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
+                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                                return true;
                             }
-                            else if (args[0].equalsIgnoreCase("normal"))
-                            {
-                                behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
-                            }
-                            else
-                            {
-                                behaviorSkill.activate();
-                                return false;
-                            }
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
+                        }
+                        else if (args[0].equalsIgnoreCase("normal"))
+                        {
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
                         }
                         else
                         {
                             behaviorSkill.activate();
+                            return false;
                         }
+                    }
+                    else
+                    {
+                        behaviorSkill.activate();
                     }
                 }
                 return true;

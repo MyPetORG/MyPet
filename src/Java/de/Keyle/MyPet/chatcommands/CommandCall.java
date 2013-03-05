@@ -41,32 +41,31 @@ public class CommandCall implements CommandExecutor
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasActiveMyPets(petOwner))
+            if (MyPetList.hasMyPet(petOwner))
             {
-                for (MyPet myPet : MyPetList.getActiveMyPets(petOwner))
-                {
-                    myPet.removePet();
-                    myPet.setLocation(petOwner.getLocation());
+                MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                    switch (myPet.createPet())
-                    {
-                        case Success:
-                            if (MyPetConfiguration.ENABLE_EVENTS)
-                            {
-                                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
-                                getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                            }
-                            break;
-                        case Canceled:
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
-                            break;
-                        case NoSpace:
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
-                            break;
-                        case Dead:
-                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
-                            break;
-                    }
+                myPet.removePet();
+                myPet.setLocation(petOwner.getLocation());
+
+                switch (myPet.createPet())
+                {
+                    case Success:
+                        if (MyPetConfiguration.ENABLE_EVENTS)
+                        {
+                            sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                        }
+                        break;
+                    case Canceled:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                        break;
+                    case NoSpace:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        break;
+                    case Dead:
+                        sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                        break;
                 }
                 return true;
             }

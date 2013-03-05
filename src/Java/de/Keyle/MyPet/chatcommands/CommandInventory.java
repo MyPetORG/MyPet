@@ -42,9 +42,9 @@ public class CommandInventory implements CommandExecutor
             Player player = (Player) sender;
             if (args.length == 0)
             {
-                if (MyPetList.hasActiveMyPets(player))
+                if (MyPetList.hasMyPet(player))
                 {
-                    MyPet myPet = MyPetList.getActiveMyPets(player).get(0);
+                    MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned)
                     {
                         sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
@@ -83,9 +83,9 @@ public class CommandInventory implements CommandExecutor
                 {
                     sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                 }
-                else if (MyPetList.hasActiveMyPets(petOwner))
+                else if (MyPetList.hasMyPet(petOwner))
                 {
-                    MyPet myPet = MyPetList.getActiveMyPets(petOwner).get(0);
+                    MyPet myPet = MyPetList.getMyPet(petOwner);
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
                         ((Inventory) myPet.getSkills().getSkill("Inventory")).openInventory(player);
