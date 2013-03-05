@@ -160,7 +160,7 @@ public class MyPetPlayerListener implements Listener
     {
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
-            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (myPetPlayer.hasMyPet())
             {
                 final MyPet myPet = myPetPlayer.getMyPet();
@@ -173,15 +173,28 @@ public class MyPetPlayerListener implements Listener
                     {
                         public void run()
                         {
-                            if (myPet.status == PetState.Despawned)
+                            if (myPetPlayer.hasMyPet())
                             {
-                                switch (myPet.createPet())
+                                MyPet runMyPet = myPetPlayer.getMyPet();
+                                switch (runMyPet.createPet())
                                 {
                                     case Canceled:
-                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", runMyPet.petName));
                                         break;
                                     case NoSpace:
-                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", runMyPet.petName));
+                                        break;
+                                    case Dead:
+                                        if (runMyPet != myPet)
+                                        {
+                                            runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", runMyPet.petName).replace("%time%", "" + runMyPet.respawnTime));
+                                        }
+                                        break;
+                                    case Success:
+                                        if (runMyPet != myPet)
+                                        {
+                                            runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", runMyPet.petName));
+                                        }
                                         break;
                                 }
                             }
