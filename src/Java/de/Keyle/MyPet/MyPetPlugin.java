@@ -762,6 +762,7 @@ public class MyPetPlugin extends JavaPlugin
                 playerNBT.setBoolean("AutoRespawn", myPetPlayer.hasAutoRespawnEnabled());
                 playerNBT.setInt("AutoRespawnMin", myPetPlayer.getAutoRespawnMin());
                 playerNBT.setString("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString());
+                playerNBT.setCompound("ExtendedInfo", myPetPlayer.getExtendedInfo());
 
                 playerNBTlist.add(playerNBT);
             }
@@ -791,6 +792,10 @@ public class MyPetPlugin extends JavaPlugin
             if (myplayerNBT.hasKey("LastActiveMyPetUUID"))
             {
                 petPlayer.setLastActiveMyPetUUID(UUID.fromString(myplayerNBT.getString("LastActiveMyPetUUID")));
+            }
+            if (myplayerNBT.hasKey("ExtendedInfo"))
+            {
+                petPlayer.setExtendedInfo(myplayerNBT.getCompound("ExtendedInfo"));
             }
         }
     }
