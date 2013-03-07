@@ -25,9 +25,9 @@ import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.spout.nbt.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -148,12 +148,12 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                             SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                             if (sp != null)
                             {
-                                NBTTagCompound propertiesCompound = skill.getProperties();
+                                CompoundTag propertiesCompound = skill.getProperties();
                                 for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                 {
                                     String propertyName = sp.parameterNames()[i];
                                     NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    if (!propertiesCompound.hasKey(propertyName) && config.contains("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName))
+                                    if (!propertiesCompound.getValue().containsKey(propertyName) && config.contains("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName))
                                     {
                                         String value = String.valueOf(config.getString("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName));
                                         switch (propertyType)
@@ -161,51 +161,51 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                             case Short:
                                                 if (MyPetUtil.isShort(value))
                                                 {
-                                                    propertiesCompound.setShort(propertyName, Short.parseShort(value));
+                                                    propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
                                                 }
                                                 break;
                                             case Int:
                                                 if (MyPetUtil.isInt(value))
                                                 {
-                                                    propertiesCompound.setInt(propertyName, Integer.parseInt(value));
+                                                    propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
                                                 }
                                                 break;
                                             case Long:
                                                 if (MyPetUtil.isLong(value))
                                                 {
-                                                    propertiesCompound.setLong(propertyName, Long.parseLong(value));
+                                                    propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
                                                 }
                                                 break;
                                             case Float:
                                                 if (MyPetUtil.isFloat(value))
                                                 {
-                                                    propertiesCompound.setFloat(propertyName, Float.parseFloat(value));
+                                                    propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
                                                 }
                                                 break;
                                             case Double:
                                                 if (MyPetUtil.isDouble(value))
                                                 {
-                                                    propertiesCompound.setDouble(propertyName, Double.parseDouble(value));
+                                                    propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
                                                 }
                                                 break;
                                             case Byte:
                                                 if (MyPetUtil.isByte(value))
                                                 {
-                                                    propertiesCompound.setByte(propertyName, Byte.parseByte(value));
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
                                                 }
                                                 break;
                                             case Boolean:
                                                 if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
                                                 {
-                                                    propertiesCompound.setBoolean(propertyName, false);
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
                                                 }
                                                 else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
                                                 {
-                                                    propertiesCompound.setBoolean(propertyName, true);
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
                                                 }
                                                 break;
                                             case String:
-                                                propertiesCompound.setString(propertyName, value);
+                                                propertiesCompound.getValue().put(propertyName, new StringTag(propertyName, value));
                                                 break;
                                         }
                                     }
@@ -299,34 +299,34 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                 {
                                     String propertyName = sp.parameterNames()[i];
                                     NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    NBTTagCompound propertiesCompound = skill.getProperties();
-                                    if (propertiesCompound.hasKey(propertyName))
+                                    CompoundTag propertiesCompound = skill.getProperties();
+                                    if (propertiesCompound.getValue().containsKey(propertyName))
                                     {
                                         switch (propertyType)
                                         {
                                             case Short:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getShort(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ShortTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Int:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getInt(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((IntTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Long:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getLong(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((LongTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Float:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getFloat(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((FloatTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Double:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getDouble(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((DoubleTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Byte:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getByte(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Boolean:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getBoolean(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getBooleanValue());
                                                 break;
                                             case String:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, propertiesCompound.getString(propertyName));
+                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((StringTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                         }
                                     }

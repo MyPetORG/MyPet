@@ -23,14 +23,14 @@ package de.Keyle.MyPet.skill;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.*;
 
 import java.io.InputStream;
 
 public abstract class MyPetSkillTreeSkill
 {
     private boolean addedByInheritance = false;
-    private NBTTagCompound propertiesCompound;
+    private CompoundTag propertiesCompound;
 
     public MyPetSkillTreeSkill(boolean addedByInheritance)
     {
@@ -47,16 +47,16 @@ public abstract class MyPetSkillTreeSkill
         return "BadSkillClass";
     }
 
-    public void setProperties(NBTTagCompound propertiesCompound)
+    public void setProperties(CompoundTag propertiesCompound)
     {
-        this.propertiesCompound = (NBTTagCompound) propertiesCompound.clone();
+        this.propertiesCompound = propertiesCompound.clone();
     }
 
-    public NBTTagCompound getProperties()
+    public CompoundTag getProperties()
     {
         if (propertiesCompound == null)
         {
-            propertiesCompound = new NBTTagCompound("Properties");
+            propertiesCompound = new CompoundTag("Properties", new CompoundMap());
             return propertiesCompound;
         }
         return propertiesCompound;
@@ -73,33 +73,41 @@ public abstract class MyPetSkillTreeSkill
                 String propertyName = sp.parameterNames()[i];
                 String defaultPropertyValue = sp.parameterDefaultValues()[i];
                 NBTdatatypes propertyType = sp.parameterTypes()[i];
-                if (!getProperties().hasKey(propertyName))
+                if (!getProperties().getValue().containsKey(propertyName))
                 {
                     switch (propertyType)
                     {
                         case Short:
-                            propertiesCompound.setShort(propertyName, Short.parseShort(defaultPropertyValue));
+                            ShortTag shortTag = new ShortTag(propertyName, Short.parseShort(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, shortTag);
                             break;
                         case Int:
-                            propertiesCompound.setInt(propertyName, Integer.parseInt(defaultPropertyValue));
+                            IntTag intTag = new IntTag(propertyName, Integer.parseInt(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, intTag);
                             break;
                         case Long:
-                            propertiesCompound.setLong(propertyName, Long.parseLong(defaultPropertyValue));
+                            LongTag longTag = new LongTag(propertyName, Long.parseLong(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, longTag);
                             break;
                         case Float:
-                            propertiesCompound.setFloat(propertyName, Float.parseFloat(defaultPropertyValue));
+                            FloatTag floatTag = new FloatTag(propertyName, Float.parseFloat(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, floatTag);
                             break;
                         case Double:
-                            propertiesCompound.setDouble(propertyName, Double.parseDouble(defaultPropertyValue));
+                            DoubleTag doubleTag = new DoubleTag(propertyName, Double.parseDouble(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, doubleTag);
                             break;
                         case Byte:
-                            propertiesCompound.setByte(propertyName, Byte.parseByte(defaultPropertyValue));
+                            ByteTag byteTag = new ByteTag(propertyName, Byte.parseByte(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, byteTag);
                             break;
                         case Boolean:
-                            propertiesCompound.setBoolean(propertyName, Boolean.parseBoolean(defaultPropertyValue));
+                            ByteTag booleanTag = new ByteTag(propertyName, Boolean.parseBoolean(defaultPropertyValue));
+                            propertiesCompound.getValue().put(propertyName, booleanTag);
                             break;
                         case String:
-                            propertiesCompound.setString(propertyName, defaultPropertyValue);
+                            StringTag stringTag = new StringTag(propertyName, defaultPropertyValue);
+                            propertiesCompound.getValue().put(propertyName, stringTag);
                             break;
                     }
                 }

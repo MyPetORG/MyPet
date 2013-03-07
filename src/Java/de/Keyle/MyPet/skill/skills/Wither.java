@@ -27,6 +27,8 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -58,27 +60,27 @@ public class Wither extends MyPetGenericSkill
         if (upgrade instanceof Wither)
         {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().hasKey("chance"))
+            if (upgrade.getProperties().getValue().containsKey("chance"))
             {
-                if (!upgrade.getProperties().hasKey("addset_chance") || upgrade.getProperties().getString("addset_chance").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add"))
                 {
-                    chance += upgrade.getProperties().getInt("chance");
+                    chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 else
                 {
-                    chance = upgrade.getProperties().getInt("chance");
+                    chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("duration"))
+            if (upgrade.getProperties().getValue().containsKey("duration"))
             {
-                if (!upgrade.getProperties().hasKey("addset_duration") || upgrade.getProperties().getString("addset_duration").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add"))
                 {
-                    duration += upgrade.getProperties().getInt("duration");
+                    duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
                 else
                 {
-                    duration = upgrade.getProperties().getInt("duration");
+                    duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
                 valuesEdit = true;
             }
@@ -105,24 +107,26 @@ public class Wither extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("chance"))
+        if (getProperties().getValue().containsKey("chance"))
         {
-            html = html.replace("chance\" value=\"0\"", "chance\" value=\"" + getProperties().getInt("chance") + "\"");
-            if (getProperties().hasKey("addset_chance"))
+            int chance = ((IntTag) getProperties().getValue().get("chance")).getValue();
+            html = html.replace("chance\" value=\"0\"", "chance\" value=\"" + chance + "\"");
+            if (getProperties().getValue().containsKey("addset_chance"))
             {
-                if (getProperties().getString("addset_chance").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_chance")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_chance\" value=\"add\" checked", "name=\"addset_chance\" value=\"add\"");
                     html = html.replace("name=\"addset_chance\" value=\"set\"", "name=\"addset_chance\" value=\"set\" checked");
                 }
             }
         }
-        if (getProperties().hasKey("duration"))
+        if (getProperties().getValue().containsKey("duration"))
         {
-            html = html.replace("duration\" value=\"0\"", "duration\" value=\"" + getProperties().getInt("duration") + "\"");
-            if (getProperties().hasKey("addset_duration"))
+            int duration = ((IntTag) getProperties().getValue().get("duration")).getValue();
+            html = html.replace("duration\" value=\"0\"", "duration\" value=\"" + duration + "\"");
+            if (getProperties().getValue().containsKey("addset_duration"))
             {
-                if (getProperties().getString("addset_duration").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_duration")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_duration\" value=\"add\" checked", "name=\"addset_duration\" value=\"add\"");
                     html = html.replace("name=\"addset_duration\" value=\"set\"", "name=\"addset_duration\" value=\"set\" checked");

@@ -30,13 +30,13 @@ import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import net.minecraft.server.v1_4_R1.Packet22Collect;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.spout.nbt.*;
 
 import java.util.Locale;
 
@@ -66,15 +66,15 @@ public class Pickup extends MyPetGenericSkill
     {
         if (upgrade instanceof Pickup)
         {
-            if (upgrade.getProperties().hasKey("range"))
+            if (upgrade.getProperties().getValue().containsKey("range"))
             {
-                if (!upgrade.getProperties().hasKey("addset_range") || upgrade.getProperties().getString("addset_range").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add"))
                 {
-                    range += upgrade.getProperties().getDouble("range");
+                    range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
                 else
                 {
-                    range = upgrade.getProperties().getDouble("range");
+                    range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
                 if (!quiet)
                 {
@@ -100,12 +100,13 @@ public class Pickup extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("range"))
+        if (getProperties().getValue().containsKey("range"))
         {
-            html = html.replace("value=\"0.00\"", "value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
-            if (getProperties().hasKey("addset_range"))
+            double range = ((DoubleTag) getProperties().getValue().get("range")).getValue();
+            html = html.replace("value=\"0.00\"", "value=\"" + String.format(Locale.ENGLISH, "%1.2f", range) + "\"");
+            if (getProperties().getValue().containsKey("addset_range"))
             {
-                if (getProperties().getString("addset_range").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_range")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
                     html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
@@ -184,16 +185,16 @@ public class Pickup extends MyPetGenericSkill
     }
 
     @Override
-    public void load(NBTTagCompound nbtTagCompound)
+    public void load(CompoundTag compound)
     {
-        pickup = nbtTagCompound.getBoolean("Active");
+        pickup = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
     }
 
     @Override
-    public NBTTagCompound save()
+    public CompoundTag save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
-        nbtTagCompound.setBoolean("Active", pickup);
+        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
+        nbtTagCompound.getValue().put("Active", new ByteTag("Active", pickup));
         return nbtTagCompound;
 
     }

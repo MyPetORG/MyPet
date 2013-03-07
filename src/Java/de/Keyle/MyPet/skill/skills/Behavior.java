@@ -29,8 +29,11 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.StringTag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,18 +73,18 @@ public class Behavior extends MyPetGenericSkill
             active = true;
             boolean valuesEdit = false;
             String activeModes = "";
-            if (upgrade.getProperties().hasKey("friend"))
+            if (upgrade.getProperties().getValue().containsKey("friend"))
             {
-                behaviorActive.put(BehaviorState.Friendly, upgrade.getProperties().getBoolean("friend"));
+                behaviorActive.put(BehaviorState.Friendly, ((ByteTag) upgrade.getProperties().getValue().get("friend")).getBooleanValue());
                 if (behaviorActive.get(BehaviorState.Friendly) && BehaviorState.Friendly.isActive())
                 {
                     activeModes = ChatColor.GOLD + "Friendly" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("aggro"))
+            if (upgrade.getProperties().getValue().containsKey("aggro"))
             {
-                behaviorActive.put(BehaviorState.Aggressive, upgrade.getProperties().getBoolean("aggro"));
+                behaviorActive.put(BehaviorState.Aggressive, ((ByteTag) upgrade.getProperties().getValue().get("aggro")).getBooleanValue());
                 if (behaviorActive.get(BehaviorState.Aggressive) && BehaviorState.Aggressive.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
@@ -92,9 +95,9 @@ public class Behavior extends MyPetGenericSkill
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("farm"))
+            if (upgrade.getProperties().getValue().containsKey("farm"))
             {
-                behaviorActive.put(BehaviorState.Farm, upgrade.getProperties().getBoolean("farm"));
+                behaviorActive.put(BehaviorState.Farm, ((ByteTag) upgrade.getProperties().getValue().get("farm")).getBooleanValue());
                 if (behaviorActive.get(BehaviorState.Farm) && BehaviorState.Farm.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
@@ -105,9 +108,9 @@ public class Behavior extends MyPetGenericSkill
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("raid"))
+            if (upgrade.getProperties().getValue().containsKey("raid"))
             {
-                behaviorActive.put(BehaviorState.Raid, upgrade.getProperties().getBoolean("raid"));
+                behaviorActive.put(BehaviorState.Raid, ((ByteTag) upgrade.getProperties().getValue().get("raid")).getBooleanValue());
                 if (behaviorActive.get(BehaviorState.Raid) && BehaviorState.Raid.isActive())
                 {
                     if (!activeModes.equalsIgnoreCase(""))
@@ -179,9 +182,9 @@ public class Behavior extends MyPetGenericSkill
         String html = super.getHtml();
         for (String name : getClass().getAnnotation(SkillProperties.class).parameterNames())
         {
-            if (getProperties().hasKey(name))
+            if (getProperties().getValue().containsKey(name))
             {
-                if (!getProperties().getBoolean(name))
+                if (!((ByteTag) getProperties().getValue().get(name)).getBooleanValue())
                 {
                     html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
                 }
@@ -289,16 +292,19 @@ public class Behavior extends MyPetGenericSkill
     }
 
     @Override
-    public void load(NBTTagCompound nbtTagCompound)
+    public void load(CompoundTag compound)
     {
-        behavior = BehaviorState.valueOf(nbtTagCompound.getString("Mode"));
+        if (compound.getValue().containsKey("Mode"))
+        {
+            behavior = BehaviorState.valueOf(((StringTag) compound.getValue().get("Mode")).getValue());
+        }
     }
 
     @Override
-    public NBTTagCompound save()
+    public CompoundTag save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
-        nbtTagCompound.setString("Mode", behavior.name());
+        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
+        nbtTagCompound.getValue().put("Mode", new StringTag("Mode", behavior.name()));
         return nbtTagCompound;
     }
 

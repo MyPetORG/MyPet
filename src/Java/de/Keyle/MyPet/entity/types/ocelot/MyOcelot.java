@@ -24,8 +24,10 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.entity.Ocelot.Type;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_FISH;
@@ -86,29 +88,29 @@ public class MyOcelot extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setInt("CatType", getCatType().getId());
-        info.setBoolean("Sitting", isSitting());
-        info.setBoolean("Baby", isBaby());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("CatType", new IntTag("CatType", getCatType().getId()));
+        info.getValue().put("Sitting", new ByteTag("Sitting", isSitting()));
+        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        if (info.hasKey("CatType"))
+        if (info.getValue().containsKey("CatType"))
         {
-            setCatType(Type.getType(info.getInt("CatType")));
+            setCatType(Type.getType(((IntTag) info.getValue().get("CatType")).getValue()));
         }
-        if (info.hasKey("Sitting"))
+        if (info.getValue().containsKey("Sitting"))
         {
-            setSitting(info.getBoolean("Sitting"));
+            setSitting(((ByteTag) info.getValue().get("Sitting")).getBooleanValue());
         }
-        if (info.hasKey("Baby"))
+        if (info.getValue().containsKey("Baby"))
         {
-            setBaby(info.getBoolean("Baby"));
+            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 

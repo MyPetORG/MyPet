@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.*;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -63,7 +63,7 @@ public class SkillPropertyEditor
                         {
                             return;
                         }
-                        NBTTagCompound tagCompound = skill.getProperties();
+                        CompoundTag tagCompound = skill.getProperties();
                         System.out.println(((FormSubmitEvent) e).getData());
                         Map<String, String> parameterMap = seperateParameter(((FormSubmitEvent) e).getData());
                         for (int i = 0 ; i < ph.parameterNames().length ; i++)
@@ -80,51 +80,51 @@ public class SkillPropertyEditor
                                 case Short:
                                     if (MyPetUtil.isShort(value))
                                     {
-                                        tagCompound.setShort(name, Short.parseShort(value));
+                                        tagCompound.getValue().put(name, new ShortTag(name, Short.parseShort(value)));
                                     }
                                     break;
                                 case Int:
                                     if (MyPetUtil.isInt(value))
                                     {
-                                        tagCompound.setInt(name, Integer.parseInt(value));
+                                        tagCompound.getValue().put(name, new IntTag(name, Integer.parseInt(value)));
                                     }
                                     break;
                                 case Long:
                                     if (MyPetUtil.isLong(value))
                                     {
-                                        tagCompound.setLong(name, Long.parseLong(value));
+                                        tagCompound.getValue().put(name, new LongTag(name, Long.parseLong(value)));
                                     }
                                     break;
                                 case Float:
                                     if (MyPetUtil.isFloat(value))
                                     {
-                                        tagCompound.setFloat(name, Float.parseFloat(value));
+                                        tagCompound.getValue().put(name, new FloatTag(name, Float.parseFloat(value)));
                                     }
                                     break;
                                 case Double:
                                     if (MyPetUtil.isDouble(value))
                                     {
-                                        tagCompound.setDouble(name, Double.parseDouble(value));
+                                        tagCompound.getValue().put(name, new DoubleTag(name, Double.parseDouble(value)));
                                     }
                                     break;
                                 case Byte:
                                     if (MyPetUtil.isByte(value))
                                     {
-                                        tagCompound.setByte(name, Byte.parseByte(value));
+                                        tagCompound.getValue().put(name, new ByteTag(name, Byte.parseByte(value)));
                                     }
                                     break;
                                 case Boolean:
                                     if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off"))
                                     {
-                                        tagCompound.setBoolean(name, false);
+                                        tagCompound.getValue().put(name, new ByteTag(name, false));
                                     }
                                     else if (value.equalsIgnoreCase("on"))
                                     {
-                                        tagCompound.setBoolean(name, true);
+                                        tagCompound.getValue().put(name, new ByteTag(name, true));
                                     }
                                     break;
                                 case String:
-                                    tagCompound.setString(name, value);
+                                    tagCompound.getValue().put(name, new StringTag(name, value));
                                     break;
                             }
                         }
@@ -185,11 +185,11 @@ public class SkillPropertyEditor
 
         String[] splittedParameters = parameterString.split("&");
 
-        for (int i = 0 ; i < splittedParameters.length ; i++)
+        for (String splittedParameter : splittedParameters)
         {
-            if (splittedParameters[i].contains("="))
+            if (splittedParameter.contains("="))
             {
-                String[] parameters = splittedParameters[i].split("=", 2);
+                String[] parameters = splittedParameter.split("=", 2);
                 parameterMap.put(parameters[0], parameters[1]);
             }
         }

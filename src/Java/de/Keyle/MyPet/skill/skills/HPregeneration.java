@@ -29,6 +29,8 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 @SkillName("HPregeneration")
 @SkillProperties(
@@ -59,27 +61,27 @@ public class HPregeneration extends MyPetGenericSkill
         if (upgrade instanceof HPregeneration)
         {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().hasKey("hp"))
+            if (upgrade.getProperties().getValue().containsKey("hp"))
             {
-                if (!upgrade.getProperties().hasKey("addset_hp") || upgrade.getProperties().getString("addset_hp").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
                 {
-                    increaseHpBy += upgrade.getProperties().getInt("hp");
+                    increaseHpBy += ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 }
                 else
                 {
-                    increaseHpBy = upgrade.getProperties().getInt("hp");
+                    increaseHpBy = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().hasKey("time"))
+            if (upgrade.getProperties().getValue().containsKey("time"))
             {
-                if (!upgrade.getProperties().hasKey("addset_time") || upgrade.getProperties().getString("addset_time").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_time") || ((StringTag) upgrade.getProperties().getValue().get("addset_time")).getValue().equals("add"))
                 {
-                    timeDecrease += upgrade.getProperties().getInt("time");
+                    timeDecrease += ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
                 }
                 else
                 {
-                    timeDecrease = upgrade.getProperties().getInt("time");
+                    timeDecrease = ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
                 }
                 if (timeDecrease < 1)
                 {
@@ -112,24 +114,26 @@ public class HPregeneration extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("hp"))
+        if (getProperties().getValue().containsKey("hp"))
         {
-            html = html.replace("hp\" value=\"0\"", "hp\" value=\"" + getProperties().getInt("hp") + "\"");
-            if (getProperties().hasKey("addset_hp"))
+            int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
+            html = html.replace("hp\" value=\"0\"", "hp\" value=\"" + hp + "\"");
+            if (getProperties().getValue().containsKey("addset_hp"))
             {
-                if (getProperties().getString("addset_hp").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_hp")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_hp\" value=\"add\" checked", "name=\"addset_hp\" value=\"add\"");
                     html = html.replace("name=\"addset_hp\" value=\"set\"", "name=\"addset_hp\" value=\"set\" checked");
                 }
             }
         }
-        if (getProperties().hasKey("time"))
+        if (getProperties().getValue().containsKey("time"))
         {
-            html = html.replace("time\" value=\"0\"", "time\" value=\"" + getProperties().getInt("time") + "\"");
-            if (getProperties().hasKey("addset_time"))
+            int time = ((IntTag) getProperties().getValue().get("time")).getValue();
+            html = html.replace("time\" value=\"0\"", "time\" value=\"" + time + "\"");
+            if (getProperties().getValue().containsKey("addset_time"))
             {
-                if (getProperties().getString("addset_time").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_time")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_time\" value=\"add\" checked", "name=\"addset_time\" value=\"add\"");
                     html = html.replace("name=\"addset_time\" value=\"set\"", "name=\"addset_time\" value=\"set\" checked");

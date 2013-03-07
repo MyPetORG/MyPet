@@ -24,6 +24,8 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
 
 import static org.bukkit.Material.SPIDER_EYE;
 
@@ -52,21 +54,22 @@ public class MyBat extends MyPet
         return hanging;
     }
 
-    /*
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setBoolean("Hanging", ishanging());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Hanging", new ByteTag("Hanging", ishanging()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        setHanging(info.getBoolean("Hanging"));
+        if (info.getValue().containsKey("Hanging"))
+        {
+            setHanging(((ByteTag) info.getValue().get("Hanging")).getBooleanValue());
+        }
     }
-    */
 
     @Override
     public MyPetType getPetType()

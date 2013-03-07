@@ -26,10 +26,10 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.JSON_Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.spout.nbt.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -151,12 +151,12 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                             SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                             if (sp != null)
                             {
-                                NBTTagCompound propertiesCompound = skill.getProperties();
+                                CompoundTag propertiesCompound = skill.getProperties();
                                 for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                 {
                                     String propertyName = sp.parameterNames()[i];
                                     NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    if (!propertiesCompound.hasKey(propertyName) && skillPropertyObject.containsKey(propertyName))
+                                    if (!propertiesCompound.getValue().containsKey(propertyName) && skillPropertyObject.containsKey(propertyName))
                                     {
                                         String value = String.valueOf(skillPropertyObject.get(propertyName));
                                         switch (propertyType)
@@ -164,51 +164,51 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                                             case Short:
                                                 if (MyPetUtil.isShort(value))
                                                 {
-                                                    propertiesCompound.setShort(propertyName, Short.parseShort(value));
+                                                    propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
                                                 }
                                                 break;
                                             case Int:
                                                 if (MyPetUtil.isInt(value))
                                                 {
-                                                    propertiesCompound.setInt(propertyName, Integer.parseInt(value));
+                                                    propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
                                                 }
                                                 break;
                                             case Long:
                                                 if (MyPetUtil.isLong(value))
                                                 {
-                                                    propertiesCompound.setLong(propertyName, Long.parseLong(value));
+                                                    propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
                                                 }
                                                 break;
                                             case Float:
                                                 if (MyPetUtil.isFloat(value))
                                                 {
-                                                    propertiesCompound.setFloat(propertyName, Float.parseFloat(value));
+                                                    propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
                                                 }
                                                 break;
                                             case Double:
                                                 if (MyPetUtil.isDouble(value))
                                                 {
-                                                    propertiesCompound.setDouble(propertyName, Double.parseDouble(value));
+                                                    propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
                                                 }
                                                 break;
                                             case Byte:
                                                 if (MyPetUtil.isByte(value))
                                                 {
-                                                    propertiesCompound.setByte(propertyName, Byte.parseByte(value));
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
                                                 }
                                                 break;
                                             case Boolean:
                                                 if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
                                                 {
-                                                    propertiesCompound.setBoolean(propertyName, false);
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
                                                 }
                                                 else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
                                                 {
-                                                    propertiesCompound.setBoolean(propertyName, true);
+                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
                                                 }
                                                 break;
                                             case String:
-                                                propertiesCompound.setString(propertyName, value);
+                                                propertiesCompound.getValue().put(propertyName, new StringTag(propertyName, value));
                                                 break;
                                         }
                                     }
@@ -324,34 +324,34 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                                 {
                                     String propertyName = sp.parameterNames()[i];
                                     NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    NBTTagCompound propertiesCompound = skill.getProperties();
-                                    if (propertiesCompound.hasKey(propertyName))
+                                    CompoundTag propertiesCompound = skill.getProperties();
+                                    if (propertiesCompound.getValue().containsKey(propertyName))
                                     {
                                         switch (propertyType)
                                         {
                                             case Short:
-                                                skillProperties.put(propertyName, propertiesCompound.getShort(propertyName));
+                                                skillProperties.put(propertyName, ((ShortTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Int:
-                                                skillProperties.put(propertyName, propertiesCompound.getInt(propertyName));
+                                                skillProperties.put(propertyName, ((IntTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Long:
-                                                skillProperties.put(propertyName, propertiesCompound.getLong(propertyName));
+                                                skillProperties.put(propertyName, ((LongTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Float:
-                                                skillProperties.put(propertyName, propertiesCompound.getFloat(propertyName));
+                                                skillProperties.put(propertyName, ((FloatTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Double:
-                                                skillProperties.put(propertyName, propertiesCompound.getDouble(propertyName));
+                                                skillProperties.put(propertyName, ((DoubleTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Byte:
-                                                skillProperties.put(propertyName, propertiesCompound.getByte(propertyName));
+                                                skillProperties.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Boolean:
-                                                skillProperties.put(propertyName, propertiesCompound.getBoolean(propertyName));
+                                                skillProperties.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getBooleanValue());
                                                 break;
                                             case String:
-                                                skillProperties.put(propertyName, propertiesCompound.getString(propertyName));
+                                                skillProperties.put(propertyName, ((StringTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                         }
                                     }

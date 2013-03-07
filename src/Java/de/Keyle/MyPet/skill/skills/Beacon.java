@@ -29,6 +29,7 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.beacon.ContainerBeacon;
 import de.Keyle.MyPet.skill.skills.beacon.MyPetCustomBeaconInventory;
 import de.Keyle.MyPet.skill.skills.beacon.TileEntityBeacon;
+import de.Keyle.MyPet.skill.skills.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.*;
@@ -36,6 +37,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
+import org.spout.nbt.*;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -123,25 +125,28 @@ public class Beacon extends MyPetGenericSkill
             level = 4;
             for (int primaryBuffId : primaryBuffs)
             {
-                if (upgrade.getProperties().hasKey("1_" + primaryBuffId))
+                if (upgrade.getProperties().getValue().containsKey("1_" + primaryBuffId))
                 {
-                    primaryActive.put(primaryBuffId, upgrade.getProperties().getBoolean("1_" + primaryBuffId));
+                    boolean active = ((ByteTag) upgrade.getProperties().getValue().get("1_" + primaryBuffId)).getBooleanValue();
+                    primaryActive.put(primaryBuffId, active);
                 }
             }
 
             for (int secundaryBuffId : secundaryBuffs)
             {
-                if (upgrade.getProperties().hasKey("2_" + secundaryBuffId))
+                if (upgrade.getProperties().getValue().containsKey("2_" + secundaryBuffId))
                 {
                     if (secundaryBuffId == 10)
                     {
-                        secundaryActive.put(secundaryBuffId, upgrade.getProperties().getBoolean("2_" + secundaryBuffId));
+                        boolean active = ((ByteTag) upgrade.getProperties().getValue().get("2_" + secundaryBuffId)).getBooleanValue();
+                        secundaryActive.put(secundaryBuffId, active);
                     }
                     else
                     {
                         if (primaryActive.get(secundaryBuffId))
                         {
-                            secundaryActive.put(secundaryBuffId, upgrade.getProperties().getBoolean("2_" + secundaryBuffId));
+                            boolean active = ((ByteTag) upgrade.getProperties().getValue().get("2_" + secundaryBuffId)).getBooleanValue();
+                            secundaryActive.put(secundaryBuffId, active);
                         }
                         else
                         {
@@ -150,26 +155,26 @@ public class Beacon extends MyPetGenericSkill
                     }
                 }
             }
-            if (upgrade.getProperties().hasKey("duration"))
+            if (upgrade.getProperties().getValue().containsKey("duration"))
             {
-                if (!upgrade.getProperties().hasKey("addset_duration") || upgrade.getProperties().getString("addset_duration").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add"))
                 {
-                    duration += upgrade.getProperties().getInt("duration");
+                    duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
                 else
                 {
-                    duration = upgrade.getProperties().getInt("duration");
+                    duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
             }
-            if (upgrade.getProperties().hasKey("range"))
+            if (upgrade.getProperties().getValue().containsKey("range"))
             {
-                if (!upgrade.getProperties().hasKey("addset_range") || upgrade.getProperties().getString("addset_range").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add"))
                 {
-                    range += upgrade.getProperties().getDouble("range");
+                    range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
                 else
                 {
-                    range = upgrade.getProperties().getDouble("range");
+                    range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
             }
             if (!quiet)
@@ -223,32 +228,34 @@ public class Beacon extends MyPetGenericSkill
         for (int i = 0 ; i < 11 ; i++)
         {
             String name = getClass().getAnnotation(SkillProperties.class).parameterNames()[i];
-            if (getProperties().hasKey(name))
+            if (getProperties().getValue().containsKey(name))
             {
-                if (!getProperties().getBoolean(name))
+                if (!((ByteTag) getProperties().getValue().get(name)).getBooleanValue())
                 {
                     html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
                 }
             }
         }
-        if (getProperties().hasKey("duration"))
+        if (getProperties().getValue().containsKey("duration"))
         {
-            html = html.replace("name=\"duration\" value=\"0\"", "name=\"duration\" value=\"" + getProperties().getInt("duration") + "\"");
-            if (getProperties().hasKey("addset_duration"))
+            int duration = ((IntTag) getProperties().getValue().get("duration")).getValue();
+            html = html.replace("name=\"duration\" value=\"0\"", "name=\"duration\" value=\"" + duration + "\"");
+            if (getProperties().getValue().containsKey("addset_duration"))
             {
-                if (getProperties().getString("addset_duration").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_duration")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_duration\" value=\"add\" checked", "name=\"addset_duration\" value=\"add\"");
                     html = html.replace("name=\"addset_duration\" value=\"set\"", "name=\"addset_duration\" value=\"set\" checked");
                 }
             }
         }
-        if (getProperties().hasKey("range"))
+        if (getProperties().getValue().containsKey("range"))
         {
-            html = html.replace("name=\"range\" value=\"0.00\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", getProperties().getDouble("range")) + "\"");
-            if (getProperties().hasKey("addset_range"))
+            double range = ((DoubleTag) getProperties().getValue().get("range")).getValue();
+            html = html.replace("name=\"range\" value=\"0.00\"", "name=\"range\" value=\"" + String.format(Locale.ENGLISH, "%1.2f", range) + "\"");
+            if (getProperties().getValue().containsKey("addset_range"))
             {
-                if (getProperties().getString("addset_range").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_range")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
                     html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
@@ -360,39 +367,37 @@ public class Beacon extends MyPetGenericSkill
     }
 
     @Override
-    public void load(NBTTagCompound nbtTagCompound)
+    public void load(CompoundTag compound)
     {
-        if (nbtTagCompound.hasKey("Primary"))
+        if (compound.getValue().containsKey("Primary"))
         {
-            this.primaryEffectId = nbtTagCompound.getInt("Primary");
+            this.primaryEffectId = ((IntTag) compound.getValue().get("Primary")).getValue();
         }
-        if (nbtTagCompound.hasKey("Secondary"))
+        if (compound.getValue().containsKey("Secondary"))
         {
-            this.secondaryEffectId = nbtTagCompound.getInt("Secondary");
+            this.secondaryEffectId = ((IntTag) compound.getValue().get("Secondary")).getValue();
         }
-        if (nbtTagCompound.hasKey("Active"))
+        if (compound.getValue().containsKey("Active"))
         {
-            this.active = nbtTagCompound.getBoolean("Active");
+            this.active = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
         }
-        if (nbtTagCompound.hasKey("Item"))
+        if (compound.getValue().containsKey("Item"))
         {
-            setTributeItem(ItemStack.createStack(nbtTagCompound.getCompound("Item")));
+            setTributeItem(ItemStackNBTConverter.CompundToItemStack((CompoundTag) compound.getValue().get("Item")));
         }
     }
 
     @Override
-    public NBTTagCompound save()
+    public CompoundTag save()
     {
 
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        nbtTagCompound.setInt("Primary", this.primaryEffectId);
-        nbtTagCompound.setInt("Secondary", this.secondaryEffectId);
-        nbtTagCompound.setBoolean("Active", this.active);
+        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
+        nbtTagCompound.getValue().put("Primary", new IntTag("Primary", this.primaryEffectId));
+        nbtTagCompound.getValue().put("Secondary", new IntTag("Secondary", this.secondaryEffectId));
+        nbtTagCompound.getValue().put("Active", new ByteTag("Active", this.active));
         if (tributeItem != null)
         {
-            NBTTagCompound item = new NBTTagCompound();
-            tributeItem.save(item);
-            nbtTagCompound.setCompound("Item", item);
+            nbtTagCompound.getValue().put("Item", ItemStackNBTConverter.ItemStackToCompund(tributeItem));
         }
         return nbtTagCompound;
     }

@@ -24,8 +24,11 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.DyeColor;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.WHEAT;
 
@@ -85,29 +88,38 @@ public class MySheep extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setInt("Color", getColor().getDyeData());
-        info.setBoolean("Sheared", isSheared());
-        info.setBoolean("Baby", isBaby());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Color", new ByteTag("Color", getColor().getDyeData()));
+        info.getValue().put("Sheared", new ByteTag("Sheared", isSheared()));
+        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        if (info.hasKey("Color"))
+        if (info.getValue().containsKey("Color"))
         {
-            setColor(DyeColor.getByDyeData((byte) info.getInt("Color")));
+            byte data;
+            if (info.getValue().get("BlockData").getType() == TagType.TAG_INT)
+            {
+                data = ((IntTag) info.getValue().get("Color")).getValue().byteValue();
+            }
+            else
+            {
+                data = ((ByteTag) info.getValue().get("Color")).getValue();
+            }
+            setColor(DyeColor.getByDyeData(data));
         }
-        if (info.hasKey("Sheared"))
+        if (info.getValue().containsKey("Sheared"))
         {
-            setSheared(info.getBoolean("Sheared"));
+            setSheared(((ByteTag) info.getValue().get("Sheared")).getBooleanValue());
         }
-        if (info.hasKey("Baby"))
+        if (info.getValue().containsKey("Baby"))
         {
-            setBaby(info.getBoolean("Baby"));
+            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 

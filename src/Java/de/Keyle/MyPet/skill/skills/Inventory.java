@@ -31,11 +31,14 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
 
 @SkillName("Inventory")
 @SkillProperties(parameterNames = {"add", "drop"},
@@ -57,13 +60,14 @@ public class Inventory extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("add"))
+        if (getProperties().getValue().containsKey("add"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("add") + "\"");
+            int add = ((IntTag) getProperties().getValue().get("add")).getValue();
+            html = html.replace("value=\"0\"", "value=\"" + add + "\"");
         }
-        if (getProperties().hasKey("drop"))
+        if (getProperties().getValue().containsKey("drop"))
         {
-            if (!getProperties().getBoolean("drop"))
+            if (!((ByteTag) getProperties().getValue().get("drop")).getBooleanValue())
             {
                 html = html.replace("name=\"drop\" checked", "name=\"drop\"");
             }
@@ -76,9 +80,9 @@ public class Inventory extends MyPetGenericSkill
     {
         if (upgrade instanceof Inventory)
         {
-            if (upgrade.getProperties().hasKey("add"))
+            if (upgrade.getProperties().getValue().containsKey("add"))
             {
-                rows += upgrade.getProperties().getInt("add");
+                rows += ((IntTag) upgrade.getProperties().getValue().get("add")).getValue();
                 if (rows > 6)
                 {
                     rows = 6;
@@ -89,9 +93,9 @@ public class Inventory extends MyPetGenericSkill
                     myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
                 }
             }
-            if (upgrade.getProperties().hasKey("drop"))
+            if (upgrade.getProperties().getValue().containsKey("drop"))
             {
-                dropOnDeath = upgrade.getProperties().getBoolean("drop");
+                dropOnDeath = ((ByteTag) upgrade.getProperties().getValue().get("drop")).getBooleanValue();
             }
         }
     }
@@ -145,15 +149,15 @@ public class Inventory extends MyPetGenericSkill
     }
 
     @Override
-    public void load(NBTTagCompound nbtTagCompound)
+    public void load(CompoundTag compound)
     {
-        inv.load(nbtTagCompound);
+        inv.load(compound);
     }
 
     @Override
-    public NBTTagCompound save()
+    public CompoundTag save()
     {
-        NBTTagCompound nbtTagCompound = new NBTTagCompound(getName());
+        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }

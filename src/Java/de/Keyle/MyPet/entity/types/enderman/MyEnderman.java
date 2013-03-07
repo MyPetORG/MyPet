@@ -25,7 +25,10 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.ShortTag;
+import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.SOUL_SAND;
 
@@ -78,44 +81,44 @@ public class MyEnderman extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setInt("BlockID", getBlockID());
-        info.setInt("BlockData", getBlockData());
-        //info.setBoolean("Screaming", isScreaming());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("BlockID", new IntTag("BlockID", getBlockID()));
+        info.getValue().put("BlockData", new IntTag("BlockData", getBlockData()));
+        //info.getValue().put("Screaming", new ByteTag("Screaming", isScreaming()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
         int id = 0;
         int data = 0;
-        if (info.hasKey("BlockID"))
+        if (info.getValue().containsKey("BlockID"))
         {
-            if (info.get("BlockID").getTypeId() == 2)
+            if (info.getValue().get("BlockID").getType() == TagType.TAG_SHORT)
             {
-                id = info.getShort("BlockID");
+                id = ((ShortTag) info.getValue().get("BlockID")).getValue();
             }
             else
             {
-                id = info.getInt("BlockID");
+                id = ((IntTag) info.getValue().get("BlockID")).getValue();
             }
         }
-        if (info.hasKey("BlockData"))
+        if (info.getValue().containsKey("BlockData"))
         {
-            if (info.get("BlockData").getTypeId() == 2)
+            if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT)
             {
-                data = info.getShort("BlockData");
+                data = ((ShortTag) info.getValue().get("BlockData")).getValue();
             }
             else
             {
-                data = info.getInt("BlockData");
+                data = ((IntTag) info.getValue().get("BlockData")).getValue();
             }
         }
         setBlock(id, data);
-        //setScreaming(info.getBoolean("Screaming"));
+        //setScreaming((()info.getValue().get("Screaming")).getBooleanValue());
     }
 
     @Override

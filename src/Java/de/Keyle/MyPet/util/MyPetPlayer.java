@@ -24,10 +24,11 @@ import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class MyPetPlayer implements IScheduler
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
     private UUID lastActiveMyPetUUID = null;
-    private NBTTagCompound extendedInfo = new NBTTagCompound("Info");
+    private CompoundTag extendedInfo = new CompoundTag("Info", new CompoundMap());
 
     private MyPetPlayer(String playerName)
     {
@@ -95,38 +96,38 @@ public class MyPetPlayer implements IScheduler
         return lastActiveMyPetUUID;
     }
 
-    public void setExtendedInfo(NBTTagCompound compound)
+    public void setExtendedInfo(CompoundTag compound)
     {
-        if (extendedInfo.isEmpty())
+        if (extendedInfo.getValue().size() == 0)
         {
             extendedInfo = compound;
         }
-        if (!extendedInfo.isEmpty())
+        if (extendedInfo.getValue().size() != 0)
         {
             customData = true;
         }
     }
 
-    public void addExtendedInfo(String key, NBTTagCompound compound)
+    public void addExtendedInfo(String key, CompoundTag compound)
     {
-        extendedInfo.setCompound(key, compound);
+        extendedInfo.getValue().put(key, compound);
         customData = true;
     }
 
-    public NBTTagCompound getExtendedInfo(String key)
+    public CompoundTag getExtendedInfo(String key)
     {
-        if (!extendedInfo.isEmpty())
+        if (extendedInfo.getValue().size() != 0)
         {
             customData = true;
         }
-        if (extendedInfo.hasKey(key))
+        if (extendedInfo.getValue().containsKey(key))
         {
-            return extendedInfo.getCompound(key);
+            return (CompoundTag) extendedInfo.getValue().get(key);
         }
-        return new NBTTagCompound();
+        return new CompoundTag(null, new CompoundMap());
     }
 
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
         return extendedInfo;
     }

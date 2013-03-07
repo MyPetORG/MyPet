@@ -23,8 +23,9 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.Location;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -42,8 +43,8 @@ public class InactiveMyPet implements IMyPet
     private MyPetType petType = MyPetType.Wolf;
     private MyPetSkillTree skillTree = null;
 
-    private NBTTagCompound NBTSkills;
-    private NBTTagCompound NBTextendetInfo;
+    private CompoundTag NBTSkills;
+    private CompoundTag NBTextendetInfo;
 
     public InactiveMyPet(MyPetPlayer petOwner)
     {
@@ -54,42 +55,42 @@ public class InactiveMyPet implements IMyPet
     {
         if (NBTSkills == null)
         {
-            NBTSkills = new NBTTagCompound("Skills");
+            NBTSkills = new CompoundTag("Skills", new CompoundMap());
         }
         for (MyPetGenericSkill skill : skills)
         {
-            NBTTagCompound s = skill.save();
+            CompoundTag s = skill.save();
             if (s != null)
             {
-                this.NBTSkills.set(skill.getName(), s);
+                this.NBTSkills.getValue().put(skill.getName(), s);
             }
         }
     }
 
-    public void setSkills(NBTTagCompound skills)
+    public void setSkills(CompoundTag skills)
     {
         NBTSkills = skills;
     }
 
-    public void setInfo(NBTTagCompound info)
+    public void setInfo(CompoundTag info)
     {
         NBTextendetInfo = info;
     }
 
-    public NBTTagCompound getInfo()
+    public CompoundTag getInfo()
     {
         if (NBTextendetInfo == null)
         {
-            NBTextendetInfo = new NBTTagCompound("Info");
+            NBTextendetInfo = new CompoundTag("Info", new CompoundMap());
         }
         return NBTextendetInfo;
     }
 
-    public NBTTagCompound getSkills()
+    public CompoundTag getSkills()
     {
         if (NBTSkills == null)
         {
-            NBTSkills = new NBTTagCompound("Skills");
+            NBTSkills = new CompoundTag("Skills", new CompoundMap());
         }
         return NBTSkills;
     }

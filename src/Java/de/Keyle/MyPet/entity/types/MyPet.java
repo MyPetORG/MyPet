@@ -29,12 +29,13 @@ import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.Damage;
 import de.Keyle.MyPet.skill.skills.HP;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
 
 import java.util.*;
 
@@ -563,12 +564,12 @@ public abstract class MyPet implements IMyPet
 
     public abstract MyPetType getPetType();
 
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        return new NBTTagCompound("Info");
+        return new CompoundTag("Info", new CompoundMap());
     }
 
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
     }
 

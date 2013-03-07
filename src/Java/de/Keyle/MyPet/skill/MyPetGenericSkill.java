@@ -22,7 +22,7 @@ package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.IScheduler;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.CompoundTag;
 
 public abstract class MyPetGenericSkill extends MyPetSkillTreeSkill implements IScheduler
 {
@@ -55,12 +55,12 @@ public abstract class MyPetGenericSkill extends MyPetSkillTreeSkill implements I
 
     public abstract String getFormattedValue();
 
-    public NBTTagCompound save()
+    public CompoundTag save()
     {
         return null;
     }
 
-    public void load(NBTTagCompound nbtTagCompound)
+    public void load(CompoundTag compound)
     {
     }
 

@@ -29,6 +29,7 @@ import de.Keyle.MyPet.event.MyPetSelectEvent;
 import de.Keyle.MyPet.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.skill.MyPetGenericSkill;
 import org.bukkit.entity.Player;
+import org.spout.nbt.CompoundTag;
 
 import java.util.*;
 
@@ -71,9 +72,9 @@ public class MyPetList
             {
                 for (MyPetGenericSkill skill : skills)
                 {
-                    if (inactiveMyPet.getSkills().hasKey(skill.getName()))
+                    if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName()))
                     {
-                        skill.load(inactiveMyPet.getSkills().getCompound(skill.getName()));
+                        skill.load((CompoundTag) inactiveMyPet.getSkills().getValue().get(skill.getName()));
                     }
                 }
             }

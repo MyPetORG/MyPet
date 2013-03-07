@@ -21,26 +21,32 @@
 package de.Keyle.MyPet.util.configuration;
 
 import de.Keyle.MyPet.util.MyPetUtil;
-import net.minecraft.server.v1_4_R1.NBTBase;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.Tag;
+import org.spout.nbt.stream.NBTInputStream;
+import org.spout.nbt.stream.NBTOutputStream;
 
 import java.io.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NBT_Configuration
 {
     private File NBTFile;
-    private NBTTagCompound nbtTagCompound = new NBTTagCompound();
+    private CompoundTag nbtTagCompound;
 
     public NBT_Configuration(File file)
     {
         NBTFile = file;
     }
 
-    public NBTTagCompound getNBTTagCompound()
+    public CompoundTag getNBTCompound()
     {
+        if (nbtTagCompound == null)
+        {
+            nbtTagCompound = new CompoundTag("root", new CompoundMap());
+        }
         return nbtTagCompound;
     }
 
@@ -48,10 +54,10 @@ public class NBT_Configuration
     {
         try
         {
-            DataOutputStream outputStream = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(NBTFile)));
-
-            NBTBase.a(nbtTagCompound, outputStream);
-            outputStream.close();
+            OutputStream os = new FileOutputStream(NBTFile);
+            NBTOutputStream nbtOutputStream = new NBTOutputStream(os);
+            nbtOutputStream.writeTag(nbtTagCompound);
+            nbtOutputStream.close();
             return true;
         }
         catch (IOException e)
@@ -61,66 +67,73 @@ public class NBT_Configuration
         }
     }
 
+    private List<Tag<?>> readRawNBT(File f, boolean compressed)
+    {
+        List<Tag<?>> tags = new ArrayList<Tag<?>>();
+        try
+        {
+            InputStream is = new FileInputStream(f);
+            NBTInputStream ns = new NBTInputStream(is, compressed);
+            try
+            {
+                boolean eof = false;
+                while (!eof)
+                {
+                    try
+                    {
+                        tags.add(ns.readTag());
+                    }
+                    catch (EOFException e)
+                    {
+                        eof = true;
+                    }
+                }
+            }
+            finally
+            {
+                try
+                {
+                    ns.close();
+                }
+                catch (IOException ignored)
+                {
+                }
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            return null;
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
+        return tags;
+    }
+
     public void load()
     {
-        try
+        List<Tag<?>> tags = readRawNBT(NBTFile, true);
+        if (tags != null)
         {
-            FileInputStream inputStream = new FileInputStream(NBTFile);
-            inputStream.read();
-            if (inputStream.read() != -1)
+            MyPetUtil.getDebugLogger().info("loaded compressed NBT file (" + NBTFile.getName() + ")");
+        }
+        else
+        {
+            tags = readRawNBT(NBTFile, false);
+            if (tags != null)
             {
-                inputStream.close();
-                inputStream = new FileInputStream(NBTFile);
-                DataInputStream F_In = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputStream)));
-                nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
-                F_In.close();
-                if (MyPetUtil.getDebugLogger() != null)
-                {
-                    MyPetUtil.getDebugLogger().info("loaded GZIP NBT file (" + NBTFile.getName() + ")");
-                }
+                MyPetUtil.getDebugLogger().info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
             }
-            inputStream.close();
-            return;
         }
-        catch (ZipException ignored)
+        if (tags != null && tags.size() > 0)
         {
-        }
-        catch (FileNotFoundException ignored)
-        {
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
-            FileInputStream inputStream = new FileInputStream(NBTFile);
-            inputStream.read();
-            if (inputStream.read() != -1)
-            {
-                inputStream.close();
-                inputStream = new FileInputStream(NBTFile);
-                DataInputStream F_In = new DataInputStream(inputStream);
-                nbtTagCompound = (NBTTagCompound) NBTBase.b(F_In);
-                F_In.close();
-                if (MyPetUtil.getDebugLogger() != null)
-                {
-                    MyPetUtil.getDebugLogger().info("loaded unziped NBT file (" + NBTFile.getName() + ")");
-                }
-            }
-            inputStream.close();
-        }
-        catch (FileNotFoundException ignored)
-        {
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            nbtTagCompound = (CompoundTag) tags.get(0);
         }
     }
 
     public void clearConfig()
     {
-        nbtTagCompound = new NBTTagCompound();
+        nbtTagCompound = new CompoundTag("root", new CompoundMap());
     }
 }

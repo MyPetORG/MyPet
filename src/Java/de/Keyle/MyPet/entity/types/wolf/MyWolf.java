@@ -24,8 +24,9 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
 import org.bukkit.DyeColor;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_BEEF;
@@ -117,39 +118,39 @@ public class MyWolf extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setBoolean("Sitting", isSitting());
-        info.setBoolean("Baby", isBaby());
-        info.setBoolean("Tamed", isTamed());
-        info.setBoolean("Angry", isAngry());
-        info.setByte("CollarColor", getCollarColor().getDyeData());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Sitting", new ByteTag("Sitting", isSitting()));
+        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+        info.getValue().put("Tamed", new ByteTag("Tamed", isTamed()));
+        info.getValue().put("Angry", new ByteTag("Angry", isAngry()));
+        info.getValue().put("CollarColor", new ByteTag("CollarColor", getCollarColor().getDyeData()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        if (info.hasKey("Sitting"))
+        if (info.getValue().containsKey("Sitting"))
         {
-            setSitting(info.getBoolean("Sitting"));
+            setSitting(((ByteTag) info.getValue().get("Sitting")).getBooleanValue());
         }
-        if (info.hasKey("CollarColor"))
+        if (info.getValue().containsKey("CollarColor"))
         {
-            setCollarColor(DyeColor.getByDyeData(info.getByte("CollarColor")));
+            setCollarColor(DyeColor.getByDyeData(((ByteTag) info.getValue().get("CollarColor")).getValue()));
         }
-        if (info.hasKey("Tamed"))
+        if (info.getValue().containsKey("Tamed"))
         {
-            setTamed(info.getBoolean("Tamed"));
+            setTamed(((ByteTag) info.getValue().get("Tamed")).getBooleanValue());
         }
-        if (info.hasKey("Baby"))
+        if (info.getValue().containsKey("Baby"))
         {
-            setBaby(info.getBoolean("Baby"));
+            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
-        if (info.hasKey("Angry"))
+        if (info.getValue().containsKey("Angry"))
         {
-            setAngry(info.getBoolean("Angry"));
+            setAngry(((ByteTag) info.getValue().get("Angry")).getBooleanValue());
         }
     }
 

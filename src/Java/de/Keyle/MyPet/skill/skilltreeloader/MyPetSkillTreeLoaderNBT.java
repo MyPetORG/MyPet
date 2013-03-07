@@ -25,8 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
-import net.minecraft.server.v1_4_R1.NBTTagList;
+import org.spout.nbt.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,41 +99,46 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
 
     protected void loadSkillTree(NBT_Configuration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
     {
-        nbtConfiguration.load();
-        NBTTagList skilltreeList = nbtConfiguration.getNBTTagCompound().getList("Skilltrees");
-        for (int i_skilltree = 0 ; i_skilltree < skilltreeList.size() ; i_skilltree++)
-        {
-            NBTTagCompound skilltreeCompound = (NBTTagCompound) skilltreeList.get(i_skilltree);
-            MyPetSkillTree skillTree = new MyPetSkillTree(skilltreeCompound.getString("Name"));
-            int place = skilltreeCompound.getInt("Place");
+        IntTag intTag;
 
-            if (skilltreeCompound.hasKey("Inherits"))
+        nbtConfiguration.load();
+        ListTag skilltreeList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Skilltrees");
+        for (int i_skilltree = 0 ; i_skilltree < skilltreeList.getValue().size() ; i_skilltree++)
+        {
+            CompoundTag skilltreeCompound = (CompoundTag) skilltreeList.getValue().get(i_skilltree);
+            MyPetSkillTree skillTree = new MyPetSkillTree(((StringTag) skilltreeCompound.getValue().get("Name")).getValue());
+
+            intTag = (IntTag) skilltreeCompound.getValue().get("Place");
+            int place = intTag.getValue();
+
+            if (skilltreeCompound.getValue().containsKey("Inherits"))
             {
-                skillTree.setInheritance(skilltreeCompound.getString("Inherits"));
+                skillTree.setInheritance(((StringTag) skilltreeCompound.getValue().get("Inherits")).getValue());
             }
-            if (skilltreeCompound.hasKey("Permission"))
+            if (skilltreeCompound.getValue().containsKey("Permission"))
             {
-                skillTree.setPermission(skilltreeCompound.getString("Permission"));
+                skillTree.setPermission(((StringTag) skilltreeCompound.getValue().get("Permission")).getValue());
             }
-            if (skilltreeCompound.hasKey("Display"))
+            if (skilltreeCompound.getValue().containsKey("Display"))
             {
-                skillTree.setDisplayName(skilltreeCompound.getString("Display"));
+                skillTree.setDisplayName(((StringTag) skilltreeCompound.getValue().get("Display")).getValue());
             }
-            NBTTagList levelList = skilltreeCompound.getList("Level");
-            for (int i_level = 0 ; i_level < levelList.size() ; i_level++)
+
+            ListTag levelList = (ListTag) skilltreeCompound.getValue().get("Level");
+            for (int i_level = 0 ; i_level < levelList.getValue().size() ; i_level++)
             {
-                NBTTagCompound levelCompound = (NBTTagCompound) levelList.get(i_level);
-                short thisLevel = levelCompound.getShort("Level");
+                CompoundTag levelCompound = (CompoundTag) levelList.getValue().get(i_level);
+                short thisLevel = ((ShortTag) levelCompound.getValue().get("Level")).getValue();
                 skillTree.addLevel(thisLevel);
 
-                NBTTagList skillList = levelCompound.getList("Skills");
-                for (int i_skill = 0 ; i_skill < skillList.size() ; i_skill++)
+                ListTag skillList = (ListTag) levelCompound.getValue().get("Skills");
+                for (int i_skill = 0 ; i_skill < skillList.getValue().size() ; i_skill++)
                 {
-                    NBTTagCompound skillCompound = (NBTTagCompound) skillList.get(i_skill);
-                    String skillName = skillCompound.getString("Name");
+                    CompoundTag skillCompound = (CompoundTag) skillList.getValue().get(i_skill);
+                    String skillName = ((StringTag) skillCompound.getValue().get("Name")).getValue();
                     if (MyPetSkills.isValidSkill(skillName))
                     {
-                        NBTTagCompound skillPropertyCompound = skillCompound.getCompound("Properties");
+                        CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
                         MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(skillName);
                         skill.setProperties(skillPropertyCompound);
                         skill.setDefaultProperties();
@@ -189,50 +193,50 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
             MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(petTypeName);
             mobType.cleanupPlaces();
 
-            NBTTagList skilltreeTagList = new NBTTagList();
+            List<CompoundTag> skilltreeList = new ArrayList<CompoundTag>();
             for (MyPetSkillTree skillTree : mobType.getSkillTrees())
             {
-                NBTTagCompound skilltreeCompound = new NBTTagCompound();
-                skilltreeCompound.setString("Name", skillTree.getName());
-                skilltreeCompound.setInt("Place", mobType.getSkillTreePlace(skillTree));
+                CompoundTag skilltreeCompound = new CompoundTag(skillTree.getName(), new CompoundMap());
+                skilltreeCompound.getValue().put("Name", new StringTag("Name", skillTree.getName()));
+                skilltreeCompound.getValue().put("Place", new IntTag("Place", mobType.getSkillTreePlace(skillTree)));
                 if (skillTree.hasInheritance())
                 {
-                    skilltreeCompound.setString("Inherits", skillTree.getInheritance());
+                    skilltreeCompound.getValue().put("Inherits", new StringTag("Inherits", skillTree.getInheritance()));
                 }
                 if (skillTree.hasCustomPermissions())
                 {
-                    skilltreeCompound.setString("Permission", skillTree.getPermission());
+                    skilltreeCompound.getValue().put("Permission", new StringTag("Permission", skillTree.getPermission()));
                 }
                 if (skillTree.hasDisplayName())
                 {
-                    skilltreeCompound.setString("Display", skillTree.getDisplayName());
+                    skilltreeCompound.getValue().put("Display", new StringTag("Display", skillTree.getDisplayName()));
                 }
 
-                NBTTagList levelTagList = new NBTTagList();
+                List<CompoundTag> levelList = new ArrayList<CompoundTag>();
                 for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                 {
-                    NBTTagCompound levelCompound = new NBTTagCompound();
-                    levelCompound.setShort("Level", level.getLevel());
+                    CompoundTag levelCompound = new CompoundTag("" + level.getLevel(), new CompoundMap());
+                    levelCompound.getValue().put("Level", new ShortTag("Level", level.getLevel()));
 
-                    NBTTagList skillTagList = new NBTTagList();
+                    List<CompoundTag> skillList = new ArrayList<CompoundTag>();
                     for (MyPetSkillTreeSkill skill : skillTree.getLevel(level.getLevel()).getSkills())
                     {
                         if (!skill.isAddedByInheritance())
                         {
-                            NBTTagCompound skillCompound = new NBTTagCompound();
-                            skillCompound.setString("Name", skill.getName());
-                            skillCompound.set("Properties", skill.getProperties());
+                            CompoundTag skillCompound = new CompoundTag(skill.getName(), new CompoundMap());
+                            skillCompound.getValue().put("Name", new StringTag("Name", skill.getName()));
+                            skillCompound.getValue().put("Properties", skill.getProperties());
 
-                            skillTagList.add(skillCompound);
+                            skillList.add(skillCompound);
                         }
                     }
-                    levelCompound.set("Skills", skillTagList);
-                    levelTagList.add(levelCompound);
+                    levelCompound.getValue().put("Name", new ListTag<CompoundTag>("Skills", CompoundTag.class, skillList));
+                    levelList.add(levelCompound);
                 }
-                skilltreeCompound.set("Level", levelTagList);
-                skilltreeTagList.add(skilltreeCompound);
+                skilltreeCompound.getValue().put("Level", new ListTag<CompoundTag>("Levels", CompoundTag.class, levelList));
+                skilltreeList.add(skilltreeCompound);
             }
-            nbtConfiguration.getNBTTagCompound().set("Skilltrees", skilltreeTagList);
+            nbtConfiguration.getNBTCompound().getValue().put("Skilltrees", new ListTag<CompoundTag>("Skilltrees", CompoundTag.class, skilltreeList));
 
             if (mobType.getSkillTreeNames().size() > 0)
             {

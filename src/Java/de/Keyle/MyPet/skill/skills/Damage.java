@@ -28,6 +28,8 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 @SkillName("Damage")
 @SkillProperties(
@@ -58,15 +60,15 @@ public class Damage extends MyPetGenericSkill
             {
                 isPassive = false;
             }
-            if (upgrade.getProperties().hasKey("damage"))
+            if (upgrade.getProperties().getValue().containsKey("damage"))
             {
-                if (!upgrade.getProperties().hasKey("addset_damage") || upgrade.getProperties().getString("addset_damage").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
                 {
-                    damageIncrease += upgrade.getProperties().getInt("damage");
+                    damageIncrease += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 }
                 else
                 {
-                    damageIncrease = upgrade.getProperties().getInt("damage");
+                    damageIncrease = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 }
                 if (damageIncrease > 0 && isPassive)
                 {
@@ -116,12 +118,13 @@ public class Damage extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("damage"))
+        if (getProperties().getValue().containsKey("damage"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("damage") + "\"");
-            if (getProperties().hasKey("addset_damage"))
+            int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
+            html = html.replace("value=\"0\"", "value=\"" + damage + "\"");
+            if (getProperties().getValue().containsKey("addset_damage"))
             {
-                if (getProperties().getString("addset_damage").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_damage")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_damage\" value=\"add\" checked", "name=\"addset_damage\" value=\"add\"");
                     html = html.replace("name=\"addset_damage\" value=\"set\"", "name=\"addset_damage\" value=\"set\" checked");

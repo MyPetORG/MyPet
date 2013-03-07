@@ -27,6 +27,8 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -56,15 +58,15 @@ public class Thorns extends MyPetGenericSkill
     {
         if (upgrade instanceof Thorns)
         {
-            if (upgrade.getProperties().hasKey("chance"))
+            if (upgrade.getProperties().getValue().containsKey("chance"))
             {
-                if (!upgrade.getProperties().hasKey("addset_chance") || upgrade.getProperties().getString("addset_chance").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add"))
                 {
-                    chance += upgrade.getProperties().getInt("chance");
+                    chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 else
                 {
-                    chance = upgrade.getProperties().getInt("chance");
+                    chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 if (!quiet)
                 {
@@ -89,12 +91,13 @@ public class Thorns extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("chance"))
+        if (getProperties().getValue().containsKey("chance"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("chance") + "\"");
-            if (getProperties().hasKey("addset_chance"))
+            int chance = ((IntTag) getProperties().getValue().get("chance")).getValue();
+            html = html.replace("value=\"0\"", "value=\"" + chance + "\"");
+            if (getProperties().getValue().containsKey("addset_chance"))
             {
-                if (getProperties().getString("addset_chance").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_chance")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_chance\" value=\"add\" checked", "name=\"addset_chance\" value=\"add\"");
                     html = html.replace("name=\"addset_chance\" value=\"set\"", "name=\"addset_chance\" value=\"set\" checked");

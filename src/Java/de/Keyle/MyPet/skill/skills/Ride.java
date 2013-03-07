@@ -28,6 +28,8 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.Material;
+import org.spout.nbt.FloatTag;
+import org.spout.nbt.StringTag;
 
 import java.util.Locale;
 
@@ -59,15 +61,15 @@ public class Ride extends MyPetGenericSkill
         if (upgrade instanceof Ride)
         {
             active = true;
-            if (upgrade.getProperties().hasKey("speed"))
+            if (upgrade.getProperties().getValue().containsKey("speed"))
             {
-                if (!upgrade.getProperties().hasKey("addset_speed") || upgrade.getProperties().getString("addset_speed").equals("speed"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add"))
                 {
-                    speed += upgrade.getProperties().getFloat("speed");
+                    speed += ((FloatTag) upgrade.getProperties().getValue().get("speed")).getValue();
                 }
                 else
                 {
-                    speed = upgrade.getProperties().getFloat("speed");
+                    speed = ((FloatTag) upgrade.getProperties().getValue().get("speed")).getValue();
                 }
                 if (!quiet)
                 {
@@ -98,12 +100,13 @@ public class Ride extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("speed"))
+        if (getProperties().getValue().containsKey("speed"))
         {
-            html = html.replace("value=\"0.000\"", "value=\"" + String.format(Locale.ENGLISH, "%1.3f", getProperties().getFloat("speed")) + "\"");
-            if (getProperties().hasKey("addset_speed"))
+            float speed = ((FloatTag) getProperties().getValue().get("speed")).getValue();
+            html = html.replace("value=\"0.000\"", "value=\"" + String.format(Locale.ENGLISH, "%1.3f", speed) + "\"");
+            if (getProperties().getValue().containsKey("addset_speed"))
             {
-                if (getProperties().getString("addset_speed").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_speed")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_speed\" value=\"add\" checked", "name=\"addset_speed\" value=\"add\"");
                     html = html.replace("name=\"addset_speed\" value=\"set\"", "name=\"addset_speed\" value=\"set\" checked");

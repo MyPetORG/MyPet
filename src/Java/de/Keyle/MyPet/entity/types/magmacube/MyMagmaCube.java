@@ -24,7 +24,8 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
 
 import static org.bukkit.Material.REDSTONE;
 
@@ -54,19 +55,19 @@ public class MyMagmaCube extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setInt("Size", getSize());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Size", new IntTag("Size", getSize()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        if (info.hasKey("Size"))
+        if (info.getValue().containsKey("Size"))
         {
-            setSize(info.getInt("Size"));
+            setSize(((IntTag) info.getValue().get("Size")).getValue());
         }
     }
 

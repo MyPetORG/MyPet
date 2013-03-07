@@ -24,7 +24,8 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_4_R1.NBTTagCompound;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
 
 import static org.bukkit.Material.CARROT_ITEM;
 
@@ -69,24 +70,24 @@ public class MyPig extends MyPet
     }
 
     @Override
-    public NBTTagCompound getExtendedInfo()
+    public CompoundTag getExtendedInfo()
     {
-        NBTTagCompound info = super.getExtendedInfo();
-        info.setBoolean("Saddle", hasSaddle());
-        info.setBoolean("Baby", isBaby());
+        CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Saddle", new ByteTag("Saddle", hasSaddle()));
+        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(NBTTagCompound info)
+    public void setExtendedInfo(CompoundTag info)
     {
-        if (info.hasKey("Saddle"))
+        if (info.getValue().containsKey("Saddle"))
         {
-            setSaddle(info.getBoolean("Saddle"));
+            setSaddle(((ByteTag) info.getValue().get("Saddle")).getBooleanValue());
         }
-        if (info.hasKey("Baby"))
+        if (info.getValue().containsKey("Baby"))
         {
-            setBaby(info.getBoolean("Baby"));
+            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 

@@ -29,6 +29,8 @@ import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 @SkillName("HP")
 @SkillProperties(
@@ -55,15 +57,15 @@ public class HP extends MyPetGenericSkill
     {
         if (upgrade instanceof HP)
         {
-            if (upgrade.getProperties().hasKey("hp"))
+            if (upgrade.getProperties().getValue().containsKey("hp"))
             {
-                if (!upgrade.getProperties().hasKey("addset_hp") || upgrade.getProperties().getString("addset_hp").equals("add"))
+                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
                 {
-                    hpIncrease += upgrade.getProperties().getInt("hp");
+                    hpIncrease += ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 }
                 else
                 {
-                    hpIncrease = upgrade.getProperties().getInt("hp");
+                    hpIncrease = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 }
 
                 if (getMyPet().getStatus() == PetState.Here)
@@ -99,12 +101,13 @@ public class HP extends MyPetGenericSkill
     public String getHtml()
     {
         String html = super.getHtml();
-        if (getProperties().hasKey("hp"))
+        if (getProperties().getValue().containsKey("hp"))
         {
-            html = html.replace("value=\"0\"", "value=\"" + getProperties().getInt("hp") + "\"");
-            if (getProperties().hasKey("addset_hp"))
+            int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
+            html = html.replace("value=\"0\"", "value=\"" + hp + "\"");
+            if (getProperties().getValue().containsKey("addset_hp"))
             {
-                if (getProperties().getString("addset_hp").equals("set"))
+                if (((StringTag) getProperties().getValue().get("addset_hp")).getValue().equals("set"))
                 {
                     html = html.replace("name=\"addset_hp\" value=\"add\" checked", "name=\"addset_hp\" value=\"add\"");
                     html = html.replace("name=\"addset_hp\" value=\"set\"", "name=\"addset_hp\" value=\"set\" checked");
