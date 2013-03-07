@@ -259,19 +259,17 @@ public class MyPetPlayer implements IScheduler
         }
         if (hasMyPet())
         {
-            MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + hasMyPet());
             MyPet myPet = getMyPet();
-            if (myPet.getStatus() == PetState.Dead)
+            if (myPet.getStatus() == PetState.Here)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
-            }
-            else if (myPet.getLocation().getWorld() == this.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(this.getPlayer().getLocation()) < 75)
-            {
-                myPet.createPet();
-            }
-            else
-            {
-                myPet.status = PetState.Despawned;
+                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
+                {
+                    if (!myPet.getCraftPet().canMove())
+                    {
+                        myPet.removePet();
+                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
+                    }
+                }
             }
         }
     }
