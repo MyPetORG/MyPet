@@ -26,7 +26,6 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -37,7 +36,6 @@ public class MyPetLevelUpListener implements Listener
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent event)
     {
-        MyPetLogger.write("LevelUP: " + event.getLevel());
         MyPet myPet = event.getPet();
         if (!event.isQuiet())
         {
@@ -48,7 +46,6 @@ public class MyPetLevelUpListener implements Listener
         if (skillTree != null && skillTree.hasLevel(lvl))
         {
             List<ISkillInfo> skillList = skillTree.getLevel(lvl).getSkills();
-            MyPetLogger.write("  skills: " + skillList.toString());
             for (ISkillInfo skill : skillList)
             {
                 myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
