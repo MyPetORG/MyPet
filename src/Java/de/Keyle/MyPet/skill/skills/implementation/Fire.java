@@ -22,9 +22,6 @@ package de.Keyle.MyPet.skill.skills.implementation;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
-import de.Keyle.MyPet.skill.SkillName;
-import de.Keyle.MyPet.skill.SkillProperties;
-import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.FireInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetLanguage;
@@ -34,11 +31,6 @@ import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
-@SkillName("Fire")
-@SkillProperties(
-        parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
-        parameterDefaultValues = {"5", "3", "add", "add"})
 public class Fire extends FireInfo implements ISkillInstance, ISkillActive
 {
     private static Random random = new Random();
@@ -51,11 +43,12 @@ public class Fire extends FireInfo implements ISkillInstance, ISkillActive
 
     public void setMyPet(MyPet myPet)
     {
+        this.myPet = myPet;
     }
 
     public MyPet getMyPet()
     {
-        return null;
+        return myPet;
     }
 
     public boolean isActive()
