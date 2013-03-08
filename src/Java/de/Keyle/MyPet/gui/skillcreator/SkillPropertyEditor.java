@@ -22,9 +22,9 @@ package de.Keyle.MyPet.gui.skillcreator;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import org.spout.nbt.*;
 
@@ -46,7 +46,7 @@ public class SkillPropertyEditor
     protected JButton cancelButton;
     protected JFrame skillPropertyEditorFrame;
 
-    private MyPetSkillTreeSkill skill;
+    private ISkillInfo skill;
 
     public SkillPropertyEditor()
     {
@@ -168,7 +168,7 @@ public class SkillPropertyEditor
         return skillPropertyEditorFrame;
     }
 
-    public boolean setHTML(MyPetSkillTreeSkill skill)
+    public boolean setHTML(ISkillInfo skill)
     {
         SkillProperties ph = skill.getClass().getAnnotation(SkillProperties.class);
         if (ph != null)

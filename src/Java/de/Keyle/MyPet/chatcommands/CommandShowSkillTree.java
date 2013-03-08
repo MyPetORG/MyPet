@@ -23,7 +23,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -66,7 +66,7 @@ public class CommandShowSkillTree implements CommandExecutor
                         for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ":");
-                            for (MyPetSkillTreeSkill skill : lvl.getSkills())
+                            for (ISkillInfo skill : lvl.getSkills())
                             {
                                 if (skill.isAddedByInheritance())
                                 {

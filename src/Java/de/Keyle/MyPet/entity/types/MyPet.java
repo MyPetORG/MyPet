@@ -25,9 +25,13 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
-import de.Keyle.MyPet.skill.*;
-import de.Keyle.MyPet.skill.skills.Damage;
-import de.Keyle.MyPet.skill.skills.HP;
+import de.Keyle.MyPet.skill.MyPetExperience;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkills;
+import de.Keyle.MyPet.skill.skills.implementation.Damage;
+import de.Keyle.MyPet.skill.skills.implementation.HP;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -409,9 +413,12 @@ public abstract class MyPet implements IMyPet
     {
         if (status != PetState.Despawned && getOwner().isOnline())
         {
-            for (MyPetGenericSkill skill : skills.getSkills())
+            for (ISkillInstance skill : skills.getSkills())
             {
-                skill.schedule();
+                if (skill instanceof IScheduler)
+                {
+                    ((IScheduler) skill).schedule();
+                }
             }
             if (status == PetState.Dead)
             {

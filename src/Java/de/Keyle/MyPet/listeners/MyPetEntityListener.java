@@ -33,10 +33,10 @@ import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.skills.*;
-import de.Keyle.MyPet.skill.skills.Wither;
-import de.Keyle.MyPet.skill.skills.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.skill.skills.inventory.MyPetCustomInventory;
+import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.skill.skills.implementation.Wither;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
 import net.minecraft.server.v1_4_R1.EntityItem;
 import net.minecraft.server.v1_4_R1.MathHelper;
@@ -231,7 +231,7 @@ public class MyPetEntityListener implements Listener
                 if (!event.isCancelled() && myPet.getSkills().isSkillActive("Thorns"))
                 {
                     Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
-                    if (thornsSkill.isActivated())
+                    if (thornsSkill.activate())
                     {
                         ((LivingEntity) event.getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
                     }
@@ -636,7 +636,7 @@ public class MyPetEntityListener implements Listener
                 if (myPet.getSkills().hasSkill("Poison"))
                 {
                     Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
-                    if (poisonSkill.getPoison())
+                    if (poisonSkill.activate())
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.POISON, poisonSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
@@ -646,7 +646,7 @@ public class MyPetEntityListener implements Listener
                 if (!skillUsed && myPet.getSkills().hasSkill("Wither"))
                 {
                     Wither witherSkill = (Wither) myPet.getSkills().getSkill("Wither");
-                    if (witherSkill.getWither())
+                    if (witherSkill.activate())
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, witherSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
@@ -656,7 +656,7 @@ public class MyPetEntityListener implements Listener
                 if (!skillUsed && myPet.getSkills().hasSkill("Fire"))
                 {
                     Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
-                    if (fireSkill.getFire())
+                    if (fireSkill.activate())
                     {
                         event.getEntity().setFireTicks(fireSkill.getDuration() * 20);
                         skillUsed = true;
@@ -665,7 +665,7 @@ public class MyPetEntityListener implements Listener
                 if (!skillUsed && myPet.getSkills().hasSkill("Slow"))
                 {
                     Slow slowSkill = (Slow) myPet.getSkills().getSkill("Slow");
-                    if (slowSkill.getSlow())
+                    if (slowSkill.activate())
                     {
                         PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, slowSkill.getDuration() * 20, 1);
                         ((LivingEntity) event.getEntity()).addPotionEffect(effect);
@@ -675,7 +675,7 @@ public class MyPetEntityListener implements Listener
                 if (!skillUsed && myPet.getSkills().hasSkill("Knockback"))
                 {
                     Knockback knockbackSkill = (Knockback) myPet.getSkills().getSkill("Knockback");
-                    if (knockbackSkill.isActivated())
+                    if (knockbackSkill.activate())
                     {
                         ((CraftEntity) event.getEntity()).getHandle().g(-MathHelper.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F, 0.1D, MathHelper.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F);
                         skillUsed = true;
@@ -684,7 +684,7 @@ public class MyPetEntityListener implements Listener
                 if (!skillUsed && myPet.getSkills().hasSkill("Lightning"))
                 {
                     Lightning lightningSkill = (Lightning) myPet.getSkills().getSkill("Lightning");
-                    if (lightningSkill.getLightning())
+                    if (lightningSkill.activate())
                     {
                         Lightning.isStriking = true;
                         LightningStrike bolt = event.getEntity().getLocation().getWorld().strikeLightning(event.getEntity().getLocation());

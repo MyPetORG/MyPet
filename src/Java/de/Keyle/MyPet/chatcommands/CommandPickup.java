@@ -22,6 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -59,7 +60,7 @@ public class CommandPickup implements CommandExecutor
                 }
                 if (myPet.getSkills().hasSkill("Pickup"))
                 {
-                    myPet.getSkills().getSkill("Pickup").activate();
+                    ((ISkillActive) myPet.getSkills().getSkill("Pickup")).activate();
                 }
             }
             else

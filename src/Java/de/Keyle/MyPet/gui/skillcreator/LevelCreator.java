@@ -23,6 +23,7 @@ package de.Keyle.MyPet.gui.skillcreator;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 
 import javax.swing.*;
@@ -137,7 +138,7 @@ public class LevelCreator
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null)
                 {
-                    MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(choosenSkill);
+                    ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(choosenSkill);
                     skillTree.addSkillToLevel(level, skill);
                     SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
                     skill.setDefaultProperties();
@@ -317,7 +318,7 @@ public class LevelCreator
                     {
                         if (skillTreeTree.getSelectionPath().getPathComponent(2) instanceof SkillTreeSkillNode)
                         {
-                            MyPetSkillTreeSkill skill = ((SkillTreeSkillNode) skillTreeTree.getSelectionPath().getPathComponent(2)).getSkill();
+                            ISkillInfo skill = ((SkillTreeSkillNode) skillTreeTree.getSelectionPath().getPathComponent(2)).getSkill();
                             if (skill.getClass().getAnnotation(SkillProperties.class) == null)
                             {
                                 JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
@@ -325,7 +326,7 @@ public class LevelCreator
                             }
                             if (MyPetSkills.isValidSkill(skill.getName()))
                             {
-                                GuiMain.skillPropertyEditor.setHTML(skill);
+                                GuiMain.skillPropertyEditor.setHTML((ISkillInfo) skill);
                             }
                             GuiMain.skillPropertyEditor.getFrame().setVisible(true);
                             getFrame().setEnabled(false);
@@ -401,7 +402,7 @@ public class LevelCreator
         {
             if (skillTreeLevel.getLevel() <= level)
             {
-                for (MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
+                for (ISkillInfo skill : skillTreeLevel.getSkills())
                 {
                     if (skillCount.containsKey(skill.getName()))
                     {
@@ -420,7 +421,7 @@ public class LevelCreator
             {
                 if (skillTreeLevel.getLevel() <= level)
                 {
-                    for (MyPetSkillTreeSkill skill : skillTreeLevel.getSkills())
+                    for (ISkillInfo skill : skillTreeLevel.getSkills())
                     {
                         if (skillCount.containsKey(skill.getName()))
                         {
@@ -537,7 +538,7 @@ public class LevelCreator
         {
             DefaultMutableTreeNode levelNode = new DefaultMutableTreeNode(level.getLevel());
             rootNode.add(levelNode);
-            for (MyPetSkillTreeSkill skill : level.getSkills())
+            for (ISkillInfo skill : level.getSkills())
             {
                 SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
                 levelNode.add(skillNode);
@@ -586,15 +587,15 @@ public class LevelCreator
 
     private class SkillTreeSkillNode extends DefaultMutableTreeNode
     {
-        private MyPetSkillTreeSkill skill;
+        private ISkillInfo skill;
 
-        public SkillTreeSkillNode(MyPetSkillTreeSkill skill)
+        public SkillTreeSkillNode(ISkillInfo skill)
         {
             super(skill.getName());
             this.skill = skill;
         }
 
-        public MyPetSkillTreeSkill getSkill()
+        public ISkillInfo getSkill()
         {
             return skill;
         }

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.skill.skilltreeloader;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public abstract class MyPetSkillTreeLoader
                 MyPetSkillTree newSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName).clone();
                 for (MyPetSkillTreeLevel level : newSkillTree.getLevelList())
                 {
-                    for (MyPetSkillTreeSkill skill : level.getSkills())
+                    for (ISkillInfo skill : level.getSkills())
                     {
                         skill.setIsInherited(true);
                     }
@@ -98,9 +98,9 @@ public abstract class MyPetSkillTreeLoader
                     MyPetSkillTree skillTreeClone = clones.get(skillTreeInherit);
                     for (MyPetSkillTreeLevel level : skillTreeClone.getLevelList())
                     {
-                        for (MyPetSkillTreeSkill skill : level.getSkills())
+                        for (ISkillInfo skill : level.getSkills())
                         {
-                            MyPetSkillTreeSkill skillClone = skill.cloneSkill();
+                            ISkillInfo skillClone = skill.cloneSkill();
                             skillClone.setIsInherited(true);
                             startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
                         }

@@ -22,7 +22,8 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.skills.Inventory;
+import de.Keyle.MyPet.skill.ISkillActive;
+import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -67,7 +68,7 @@ public class CommandInventory implements CommandExecutor
                     }
                     if (myPet.getSkills().hasSkill("Inventory"))
                     {
-                        myPet.getSkills().getSkill("Inventory").activate();
+                        ((ISkillActive) myPet.getSkills().getSkill("Inventory")).activate();
                     }
                 }
                 else

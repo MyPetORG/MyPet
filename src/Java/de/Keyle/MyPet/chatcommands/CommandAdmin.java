@@ -23,7 +23,11 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
@@ -232,12 +236,12 @@ public class CommandAdmin implements CommandExecutor
                         {
                             continue;
                         }
-                        for (MyPetSkillTreeSkill skill : level.getSkills())
+                        for (ISkillInfo skill : level.getSkills())
                         {
                             myPet.getSkills().getSkill(skill.getName()).upgrade(skill, true);
                         }
                     }
-                    for (MyPetGenericSkill skill : myPet.getSkills().getSkills())
+                    for (ISkillInstance skill : myPet.getSkills().getSkills())
                     {
                         if (skill.isActive())
                         {

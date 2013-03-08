@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.test.skill.skills;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.SkillProperties;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class SkillPropertiesTest
     public void testSkillProperties()
     {
         MyPetPlugin.registerSkills();
-        for (Class<? extends MyPetGenericSkill> registeredSkills : MyPetSkills.getRegisteredSkills())
+        for (Class<? extends MyPetSkillTreeSkill> registeredSkills : MyPetSkills.getRegisteredSkills())
         {
             SkillProperties sn = registeredSkills.getAnnotation(SkillProperties.class);
             if (sn != null)

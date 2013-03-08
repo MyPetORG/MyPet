@@ -128,7 +128,7 @@ public class GuiMain
             }
             return;
         }
-
+        MyPetPlugin.registerSkillsInfo();
         MyPetPlugin.registerSkills();
 
 

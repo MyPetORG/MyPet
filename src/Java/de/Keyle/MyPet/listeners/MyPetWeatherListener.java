@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.skill.skills.Lightning;
+import de.Keyle.MyPet.skill.skills.implementation.Lightning;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

@@ -22,8 +22,8 @@ package de.Keyle.MyPet.entity.ai.target;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.Behavior;
-import de.Keyle.MyPet.skill.skills.Behavior.BehaviorState;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
 

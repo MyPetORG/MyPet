@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -58,7 +58,7 @@ public class CommandSkill implements CommandExecutor
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
 
-                for (MyPetGenericSkill skill : myPet.getSkills().getSkills())
+                for (ISkillInstance skill : myPet.getSkills().getSkills())
                 {
                     if (skill.isActive())
                     {

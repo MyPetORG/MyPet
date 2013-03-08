@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skilltreeloader;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.JSON_Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -146,7 +147,7 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
 
                         if (MyPetSkills.isValidSkill(skillName))
                         {
-                            MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(skillName);
+                            ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
 
                             SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                             if (sp != null)
@@ -310,7 +311,7 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                     levelObject.put("Level", level.getLevel());
 
                     JSONArray skillList = new JSONArray();
-                    for (MyPetSkillTreeSkill skill : skillTree.getLevel(level.getLevel()).getSkills())
+                    for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills())
                     {
                         if (!skill.isAddedByInheritance())
                         {

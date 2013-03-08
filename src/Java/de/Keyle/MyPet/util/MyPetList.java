@@ -27,7 +27,8 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.event.MyPetSelectEvent;
 import de.Keyle.MyPet.event.MyPetSelectEvent.NewStatus;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.ISkillStorage;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundTag;
 
@@ -67,14 +68,18 @@ public class MyPetList
             }
 
             activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
-            Collection<MyPetGenericSkill> skills = activeMyPet.getSkills().getSkills();
+            Collection<ISkillInstance> skills = activeMyPet.getSkills().getSkills();
             if (skills.size() > 0)
             {
-                for (MyPetGenericSkill skill : skills)
+                for (ISkillInstance skill : skills)
                 {
-                    if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName()))
+                    if (skill instanceof ISkillStorage)
                     {
-                        skill.load((CompoundTag) inactiveMyPet.getSkills().getValue().get(skill.getName()));
+                        ISkillStorage storageSkill = (ISkillStorage) skill;
+                        if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName()))
+                        {
+                            storageSkill.load((CompoundTag) inactiveMyPet.getSkills().getValue().get(skill.getName()));
+                        }
                     }
                 }
             }

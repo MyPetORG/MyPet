@@ -37,7 +37,7 @@ import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetMonsterExperience;
-import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

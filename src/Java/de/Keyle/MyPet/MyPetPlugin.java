@@ -54,11 +54,9 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
-import de.Keyle.MyPet.skill.MyPetMonsterExperience;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkills;
-import de.Keyle.MyPet.skill.skills.*;
+import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
@@ -216,6 +214,7 @@ public class MyPetPlugin extends JavaPlugin
         getCommand("petbeacon").setExecutor(new CommandBeacon());
         getCommand("petrespawn").setExecutor(new CommandRespawn());
 
+        registerSkillsInfo();
         registerSkills();
 
         File defaultSkillConfigNBT = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
@@ -486,6 +485,26 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Knockback.class);
     }
 
+    public static void registerSkillsInfo()
+    {
+        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
+        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
+        MyPetSkillsInfo.registerSkill(PickupInfo.class);
+        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
+        MyPetSkillsInfo.registerSkill(DamageInfo.class);
+        MyPetSkillsInfo.registerSkill(ControlInfo.class);
+        MyPetSkillsInfo.registerSkill(HPInfo.class);
+        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
+        MyPetSkillsInfo.registerSkill(RideInfo.class);
+        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
+        MyPetSkillsInfo.registerSkill(FireInfo.class);
+        MyPetSkillsInfo.registerSkill(BeaconInfo.class);
+        MyPetSkillsInfo.registerSkill(WitherInfo.class);
+        MyPetSkillsInfo.registerSkill(LightningInfo.class);
+        MyPetSkillsInfo.registerSkill(SlowInfo.class);
+        MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
+    }
+
     public static boolean checkForUpdates(String compatibleMinecraftVersion)
     {
         UpdateCheck updateCheck = new UpdateCheck();
@@ -697,15 +716,19 @@ public class MyPetPlugin extends JavaPlugin
             }
 
             CompoundTag skillsNBT = new CompoundTag("Skills", new CompoundMap());
-            Collection<MyPetGenericSkill> skillList = myPet.getSkills().getSkills();
+            Collection<ISkillInstance> skillList = myPet.getSkills().getSkills();
             if (skillList.size() > 0)
             {
-                for (MyPetGenericSkill skill : skillList)
+                for (ISkillInstance skill : skillList)
                 {
-                    CompoundTag s = skill.save();
-                    if (s != null)
+                    if (skill instanceof ISkillStorage)
                     {
-                        skillsNBT.getValue().put(skill.getName(), s);
+                        ISkillStorage storageSkill = (ISkillStorage) skill;
+                        CompoundTag s = storageSkill.save();
+                        if (s != null)
+                        {
+                            skillsNBT.getValue().put(skill.getName(), s);
+                        }
                     }
                 }
             }

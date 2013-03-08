@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.skills.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_4_R1.ItemStack;
 import org.spout.nbt.CompoundTag;

@@ -20,12 +20,8 @@
 
 package de.Keyle.MyPet.skill;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.spout.nbt.*;
-
-import java.io.InputStream;
 
 public abstract class MyPetSkillTreeSkill
 {
@@ -123,22 +119,6 @@ public abstract class MyPetSkillTreeSkill
     public void setIsInherited(boolean flag)
     {
         addedByInheritance = flag;
-    }
-
-    public abstract MyPetSkillTreeSkill cloneSkill();
-
-    public String getHtml()
-    {
-        InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-        if (htmlStream == null)
-        {
-            htmlStream = MyPetPlugin.class.getClassLoader().getResourceAsStream("html/skills/_default.html");
-            if (htmlStream == null)
-            {
-                return "NoSkillPropertieViewFoundError";
-            }
-        }
-        return MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
     }
 
     @Override

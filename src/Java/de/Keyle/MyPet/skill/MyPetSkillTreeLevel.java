@@ -20,13 +20,17 @@
 
 package de.Keyle.MyPet.skill;
 
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MyPetSkillTreeLevel
 {
     short level;
-    List<MyPetSkillTreeSkill> skillList = new ArrayList<MyPetSkillTreeSkill>();
+    List<ISkillInfo> skillList = new ArrayList<ISkillInfo>();
 
     public MyPetSkillTreeLevel(short level)
     {
@@ -38,8 +42,13 @@ public class MyPetSkillTreeLevel
         return level;
     }
 
-    public void addSkill(MyPetSkillTreeSkill skill)
+    public void addSkill(ISkillInfo skill)
     {
+        if (skill == null)
+        {
+            MyPetLogger.write("Skills->null: ende");
+            MyPetLogger.write(Arrays.toString(Thread.currentThread().getStackTrace()));
+        }
         skillList.add(skill);
     }
 
@@ -48,7 +57,7 @@ public class MyPetSkillTreeLevel
         skillList.remove(index);
     }
 
-    public List<MyPetSkillTreeSkill> getSkills()
+    public List<ISkillInfo> getSkills()
     {
         return skillList;
     }
@@ -57,7 +66,7 @@ public class MyPetSkillTreeLevel
     {
         MyPetSkillTreeLevel newLevel = new MyPetSkillTreeLevel(level);
 
-        for (MyPetSkillTreeSkill skill : skillList)
+        for (ISkillInfo skill : skillList)
         {
             newLevel.addSkill(skill.cloneSkill());
         }

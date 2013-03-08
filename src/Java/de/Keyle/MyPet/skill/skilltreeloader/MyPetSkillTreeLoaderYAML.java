@@ -23,8 +23,10 @@ package de.Keyle.MyPet.skill.skilltreeloader;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.SnakeYAML_Configuration;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.spout.nbt.*;
 
 import java.io.File;
@@ -168,7 +170,12 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                             if (MyPetSkills.isValidSkill(thisSkill))
                             {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
-                                MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(thisSkill);
+                                ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(thisSkill);
+
+                                if (skill == null)
+                                {
+                                    MyPetLogger.write("Skills->null: " + thisSkill);
+                                }
 
                                 SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                                 if (sp != null)
@@ -180,8 +187,8 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                         NBTdatatypes propertyType = sp.parameterTypes()[i];
                                         if (!propertiesCompound.getValue().containsKey(propertyName) && propertyMap.containsKey(propertyName))
                                         {
-                                            //System.out.println("      " + propertyName);
                                             String value = String.valueOf(propertyMap.get(propertyName));
+                                            //System.out.println("      " + propertyName + " : " + value);
                                             switch (propertyType)
                                             {
                                                 case Short:
@@ -238,8 +245,8 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                     }
                                     skill.setProperties(propertiesCompound);
                                     skill.setDefaultProperties();
-                                    skillTree.addSkillToLevel(shortLevel, skill);
                                 }
+                                skillTree.addSkillToLevel(shortLevel, skill);
                             }
                         }
                     }
@@ -330,7 +337,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                 {
                     Map<String, Object> skillMap = new LinkedHashMap<String, Object>();
                     levelsMap.put("" + level.getLevel(), skillMap);
-                    for (MyPetSkillTreeSkill skill : skillTree.getLevel(level.getLevel()).getSkills())
+                    for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills())
                     {
                         if (!skill.isAddedByInheritance())
                         {

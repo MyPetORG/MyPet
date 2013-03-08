@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.test.skill.skills;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.SkillName;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class SkillNameTest
     public void testSkillNames()
     {
         MyPetPlugin.registerSkills();
-        for (Class<? extends MyPetGenericSkill> registeredSkills : MyPetSkills.getRegisteredSkills())
+        for (Class<? extends MyPetSkillTreeSkill> registeredSkills : MyPetSkills.getRegisteredSkills())
         {
             SkillName sn = registeredSkills.getAnnotation(SkillName.class);
             assertNotNull(sn);

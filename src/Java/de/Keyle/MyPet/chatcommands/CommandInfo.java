@@ -22,7 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.skills.Damage;
+import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

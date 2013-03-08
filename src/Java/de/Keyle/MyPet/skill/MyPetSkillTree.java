@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.skill;
 
+import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -92,15 +95,19 @@ public class MyPetSkillTree
         }
     }
 
-    public void addSkillToLevel(short level, MyPetSkillTreeSkill skill)
+    public void addSkillToLevel(short level, ISkillInfo skill)
     {
+        if (skill == null)
+        {
+            MyPetLogger.write("Skills->null:level " + level);
+        }
         addLevel(level).addSkill(skill);
     }
 
-    public void addSkillToLevel(short level, List<MyPetSkillTreeSkill> skillList)
+    public void addSkillToLevel(short level, List<ISkillInfo> skillList)
     {
         MyPetSkillTreeLevel myPetSkillTreeLevel = addLevel(level);
-        for (MyPetSkillTreeSkill skill : skillList)
+        for (ISkillInfo skill : skillList)
         {
             myPetSkillTreeLevel.addSkill(skill);
         }

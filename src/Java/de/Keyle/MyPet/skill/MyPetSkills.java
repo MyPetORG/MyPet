@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -30,15 +31,15 @@ import java.util.*;
 
 public class MyPetSkills
 {
-    private static List<Class<? extends MyPetGenericSkill>> skillClassList = new ArrayList<Class<? extends MyPetGenericSkill>>();
+    private static List<Class<? extends MyPetSkillTreeSkill>> skillClassList = new ArrayList<Class<? extends MyPetSkillTreeSkill>>();
     private static List<String> skillNames = new ArrayList<String>();
-    private static Map<String, Class<? extends MyPetGenericSkill>> skillMap = new HashMap<String, Class<? extends MyPetGenericSkill>>();
+    private static Map<String, Class<? extends MyPetSkillTreeSkill>> skillMap = new HashMap<String, Class<? extends MyPetSkillTreeSkill>>();
 
     private MyPet myPet;
 
-    private Map<String, MyPetGenericSkill> skills = new HashMap<String, MyPetGenericSkill>();
+    private Map<String, ISkillInstance> skills = new HashMap<String, ISkillInstance>();
 
-    public static void registerSkill(Class<? extends MyPetGenericSkill> clazz)
+    public static void registerSkill(Class<? extends MyPetSkillTreeSkill> clazz)
     {
         if (!skillClassList.contains(clazz))
         {
@@ -46,9 +47,10 @@ public class MyPetSkills
             {
                 Constructor<?> ctor = clazz.getConstructor(boolean.class);
                 Object obj = ctor.newInstance(false);
-                if (clazz.getAnnotation(SkillName.class) != null && obj instanceof MyPetGenericSkill)
+                //MyPetLogger.write("Annotations2: " + Arrays.toString(clazz.getAnnotations()));
+                if (clazz.getAnnotation(SkillName.class) != null && obj instanceof ISkillInstance)
                 {
-                    MyPetGenericSkill skill = (MyPetGenericSkill) obj;
+                    MyPetSkillTreeSkill skill = (MyPetSkillTreeSkill) obj;
                     skillNames.add(skill.getName().toLowerCase());
                     skillClassList.add(clazz);
                     skillMap.put(skill.getName().toLowerCase(), clazz);
@@ -56,6 +58,10 @@ public class MyPetSkills
                     {
                         MyPetUtil.getDebugLogger().info("registered skill: " + clazz.getName());
                     }
+                }
+                else
+                {
+                    System.out.println("Don't worry - be happy");
                 }
             }
             catch (Exception e)
@@ -71,7 +77,7 @@ public class MyPetSkills
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Class<? extends MyPetGenericSkill>> getRegisteredSkills()
+    public static List<Class<? extends MyPetSkillTreeSkill>> getRegisteredSkills()
     {
         return skillClassList;
     }
@@ -81,7 +87,7 @@ public class MyPetSkills
         return skillNames.contains(name.toLowerCase());
     }
 
-    public static Class<? extends MyPetGenericSkill> getSkillClass(String name)
+    public static Class<? extends MyPetSkillTreeSkill> getSkillClass(String name)
     {
         if (isValidSkill(name))
         {
@@ -90,12 +96,12 @@ public class MyPetSkills
         return null;
     }
 
-    public static MyPetSkillTreeSkill getNewSkillInstance(String name)
+    public static ISkillInstance getNewSkillInstance(String name)
     {
         return getNewSkillInstance(name, false);
     }
 
-    public static MyPetSkillTreeSkill getNewSkillInstance(String name, boolean is)
+    public static ISkillInstance getNewSkillInstance(String name, boolean is)
     {
         try
         {
@@ -103,7 +109,7 @@ public class MyPetSkills
             Object obj = ctor.newInstance(is);
             if (obj instanceof MyPetSkillTreeSkill)
             {
-                return (MyPetSkillTreeSkill) obj;
+                return (ISkillInstance) obj;
             }
         }
         catch (Exception e)
@@ -121,18 +127,18 @@ public class MyPetSkills
         addSkills(skillClassList);
     }
 
-    public void addSkill(Class<? extends MyPetGenericSkill> skillClass)
+    public void addSkill(Class<? extends MyPetSkillTreeSkill> skillClass)
     {
         String skillName;
-        MyPetGenericSkill skill;
+        ISkillInstance skill;
 
         try
         {
             Constructor<?> ctor = skillClass.getConstructor(boolean.class);
             Object obj = ctor.newInstance(false);
-            if (obj instanceof MyPetGenericSkill)
+            if (obj instanceof ISkillInstance)
             {
-                skill = (MyPetGenericSkill) obj;
+                skill = (ISkillInstance) obj;
                 skillName = skill.getName();
 
                 if (!skills.containsKey(skillName))
@@ -150,15 +156,15 @@ public class MyPetSkills
         }
     }
 
-    public void addSkills(List<Class<? extends MyPetGenericSkill>> classList)
+    public void addSkills(List<Class<? extends MyPetSkillTreeSkill>> classList)
     {
-        for (Class<? extends MyPetGenericSkill> clazz : classList)
+        for (Class<? extends MyPetSkillTreeSkill> clazz : classList)
         {
             addSkill(clazz);
         }
     }
 
-    public MyPetGenericSkill getSkill(String skillName)
+    public ISkillInstance getSkill(String skillName)
     {
         if (skills.containsKey(skillName))
         {
@@ -167,7 +173,7 @@ public class MyPetSkills
         return null;
     }
 
-    public Collection<MyPetGenericSkill> getSkills()
+    public Collection<ISkillInstance> getSkills()
     {
         return skills.values();
     }
@@ -189,7 +195,7 @@ public class MyPetSkills
 
     public void reset()
     {
-        for (MyPetGenericSkill skill : skills.values())
+        for (ISkillInstance skill : skills.values())
         {
             skill.reset();
         }

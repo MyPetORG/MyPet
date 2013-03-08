@@ -22,7 +22,8 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.skills.Beacon;
+import de.Keyle.MyPet.skill.ISkillActive;
+import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
@@ -91,7 +92,7 @@ public class CommandBeacon implements CommandExecutor
                 }
                 if (myPet.getSkills().hasSkill("Beacon"))
                 {
-                    myPet.getSkills().getSkill("Beacon").activate();
+                    ((ISkillActive) myPet.getSkills().getSkill("Beacon")).activate();
                 }
             }
             else

@@ -20,8 +20,9 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.skill.MyPetGenericSkill;
+import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.Location;
 import org.spout.nbt.CompoundMap;
@@ -51,18 +52,22 @@ public class InactiveMyPet implements IMyPet
         this.petOwner = petOwner;
     }
 
-    public void setSkills(Collection<MyPetGenericSkill> skills)
+    public void setSkills(Collection<ISkillInstance> skills)
     {
         if (NBTSkills == null)
         {
             NBTSkills = new CompoundTag("Skills", new CompoundMap());
         }
-        for (MyPetGenericSkill skill : skills)
+        for (ISkillInstance skill : skills)
         {
-            CompoundTag s = skill.save();
-            if (s != null)
+            if (skill instanceof ISkillStorage)
             {
-                this.NBTSkills.getValue().put(skill.getName(), s);
+                ISkillStorage storageSkill = (ISkillStorage) skill;
+                CompoundTag s = storageSkill.save();
+                if (s != null)
+                {
+                    this.NBTSkills.getValue().put(skill.getName(), s);
+                }
             }
         }
     }
