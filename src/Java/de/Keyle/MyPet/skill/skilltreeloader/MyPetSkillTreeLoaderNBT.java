@@ -141,9 +141,12 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                     {
                         CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
                         ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
-                        skill.setProperties(skillPropertyCompound);
-                        skill.setDefaultProperties();
-                        skillTree.addSkillToLevel(thisLevel, skill);
+                        if (skill != null)
+                        {
+                            skill.setProperties(skillPropertyCompound);
+                            skill.setDefaultProperties();
+                            skillTree.addSkillToLevel(thisLevel, skill);
+                        }
                     }
                 }
             }

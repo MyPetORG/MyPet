@@ -101,8 +101,11 @@ public abstract class MyPetSkillTreeLoader
                         for (ISkillInfo skill : level.getSkills())
                         {
                             ISkillInfo skillClone = skill.cloneSkill();
-                            skillClone.setIsInherited(true);
-                            startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
+                            if (skillClone != null)
+                            {
+                                skillClone.setIsInherited(true);
+                                startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
+                            }
                         }
                     }
                 }

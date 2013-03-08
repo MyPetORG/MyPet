@@ -96,6 +96,19 @@ public class MyPetSkillsInfo
 
     public static ISkillInfo getNewSkillInstance(String name, boolean is)
     {
+        if (getSkillInfoClass(name) == null)
+        {
+            if (MyPetUtil.getDebugLogger() != null)
+            {
+                MyPetUtil.getDebugLogger().warning(name + " skill is null when creating new instance!");
+                for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace())
+                {
+                    MyPetUtil.getDebugLogger().warning("  " + stackTraceElement.toString());
+                }
+                MyPetUtil.getDebugLogger().warning("------------------");
+            }
+            return null;
+        }
         try
         {
             Constructor<?> ctor = getSkillInfoClass(name).getConstructor(boolean.class);
