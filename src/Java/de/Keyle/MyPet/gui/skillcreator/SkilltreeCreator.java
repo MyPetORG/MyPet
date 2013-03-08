@@ -248,7 +248,7 @@ public class SkilltreeCreator
         {
             public void mouseClicked(MouseEvent evt)
             {
-                if (evt.getClickCount() == 2)
+                if (evt.getClickCount() == 2 && skilltreeTree.getSelectionPath() != null)
                 {
                     if (skilltreeTree.getSelectionPath().getPath().length == 2)
                     {
