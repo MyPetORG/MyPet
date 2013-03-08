@@ -24,15 +24,14 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.configuration.YAML_Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import de.Keyle.MyPet.util.configuration.SnakeYAML_Configuration;
 import org.spout.nbt.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 {
@@ -53,18 +52,14 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
     public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
     {
-        YAML_Configuration skilltreeConfig;
-        if (MyPetUtil.getDebugLogger() != null)
-        {
-            MyPetUtil.getDebugLogger().info("Loading yaml skill configs in: " + configPath);
-        }
+        SnakeYAML_Configuration skilltreeConfig;
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.yml");
         MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName("default");
         if (skillFile.exists())
         {
-            skilltreeConfig = new YAML_Configuration(skillFile);
+            skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, false);
             if (MyPetUtil.getDebugLogger() != null)
             {
@@ -91,7 +86,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                 continue;
             }
 
-            skilltreeConfig = new YAML_Configuration(skillFile);
+            skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
             if (MyPetUtil.getDebugLogger() != null)
             {
@@ -100,125 +95,164 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         }
     }
 
-    private void loadSkillTree(YAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
+    @SuppressWarnings("unchecked")
+    private void loadSkillTree(SnakeYAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
     {
-        FileConfiguration config = yamlConfiguration.getConfig();
-        ConfigurationSection sec = config.getConfigurationSection("Skilltrees");
-        if (sec == null)
+        yamlConfiguration.load();
+        Map<String, Object> config = yamlConfiguration.getConfig();
+        if (config == null || config.size() == 0)
         {
             return;
         }
-        for (String skillTreeName : sec.getKeys(false))
+        Map<String, Object> skilltrees = (Map<String, Object>) config.get("Skilltrees");
+        for (String skillTreeName : skilltrees.keySet())
         {
+            Integer place = null;
+            //System.out.println(skillTreeName);
             MyPetSkillTree skillTree;
-            if (config.contains("Skilltrees." + skillTreeName + ".Inherit"))
+            Map<String, Object> skilltreeMap = (Map<String, Object>) skilltrees.get(skillTreeName);
+            if (skilltreeMap.containsKey("Inherit"))
             {
-                String inherit = config.getString("Skilltrees." + skillTreeName + ".Inherit");
+                String inherit = (String) skilltreeMap.get("Inherit");
                 skillTree = new MyPetSkillTree(skillTreeName, inherit);
             }
             else
             {
                 skillTree = new MyPetSkillTree(skillTreeName);
             }
-            if (config.contains("Skilltrees." + skillTreeName + ".Permission"))
+            if (skilltreeMap.containsKey("Permission"))
             {
-                String permission = config.getString("Skilltrees." + skillTreeName + ".Permission");
+                String permission = (String) skilltreeMap.get("Permission");
                 skillTree.setPermission(permission);
             }
-            if (config.contains("Skilltrees." + skillTreeName + ".Display"))
+            if (skilltreeMap.containsKey("Display"))
             {
-                String display = config.getString("Skilltrees." + skillTreeName + ".Display");
+                String display = (String) skilltreeMap.get("Display");
                 skillTree.setDisplayName(display);
             }
-
-            Set<String> level = config.getConfigurationSection("Skilltrees." + skillTreeName + ".Level").getKeys(false);
-            for (String thisLevel : level)
+            if (skilltreeMap.containsKey("Place"))
             {
-                if (MyPetUtil.isInt(thisLevel))
+                if (skilltreeMap.get("Place") instanceof Integer)
                 {
-                    short shortLevel = Short.parseShort(thisLevel);
-
-                    Set<String> skillsOfThisLevel = config.getConfigurationSection("Skilltrees." + skillTreeName + ".Level." + thisLevel).getKeys(false);
-                    for (String thisSkill : skillsOfThisLevel)
+                    place = (Integer) skilltreeMap.get("Place");
+                }
+                else if (skilltreeMap.get("Place") instanceof String)
+                {
+                    if (MyPetUtil.isInt((String) skilltreeMap.get("Place")))
                     {
-                        if (MyPetSkills.isValidSkill(thisSkill))
-                        {
-                            MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(thisSkill);
+                        place = Integer.parseInt((String) skilltreeMap.get("Place"));
+                    }
+                }
+            }
 
-                            SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
-                            if (sp != null)
+            if (skilltreeMap.containsKey("Level"))
+            {
+                Map<String, Object> levelMap = (Map<String, Object>) skilltreeMap.get("Level");
+                for (String thisLevel : levelMap.keySet())
+                {
+                    //System.out.println("  " + thisLevel);
+                    if (MyPetUtil.isInt(thisLevel))
+                    {
+                        short shortLevel = Short.parseShort(thisLevel);
+
+                        Map<String, Object> skillMap = (Map<String, Object>) levelMap.get(thisLevel);
+
+                        if (skillMap.size() == 0)
+                        {
+                            skillTree.addLevel(shortLevel);
+                            continue;
+                        }
+                        for (String thisSkill : skillMap.keySet())
+                        {
+                            //System.out.println("    " + thisSkill);
+                            if (MyPetSkills.isValidSkill(thisSkill))
                             {
-                                CompoundTag propertiesCompound = skill.getProperties();
-                                for (int i = 0 ; i < sp.parameterNames().length ; i++)
+                                Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
+                                MyPetSkillTreeSkill skill = MyPetSkills.getNewSkillInstance(thisSkill);
+
+                                SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
+                                if (sp != null)
                                 {
-                                    String propertyName = sp.parameterNames()[i];
-                                    NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    if (!propertiesCompound.getValue().containsKey(propertyName) && config.contains("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName))
+                                    CompoundTag propertiesCompound = skill.getProperties();
+                                    for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                     {
-                                        String value = String.valueOf(config.getString("Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName));
-                                        switch (propertyType)
+                                        String propertyName = sp.parameterNames()[i];
+                                        NBTdatatypes propertyType = sp.parameterTypes()[i];
+                                        if (!propertiesCompound.getValue().containsKey(propertyName) && propertyMap.containsKey(propertyName))
                                         {
-                                            case Short:
-                                                if (MyPetUtil.isShort(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
-                                                }
-                                                break;
-                                            case Int:
-                                                if (MyPetUtil.isInt(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
-                                                }
-                                                break;
-                                            case Long:
-                                                if (MyPetUtil.isLong(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
-                                                }
-                                                break;
-                                            case Float:
-                                                if (MyPetUtil.isFloat(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
-                                                }
-                                                break;
-                                            case Double:
-                                                if (MyPetUtil.isDouble(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
-                                                }
-                                                break;
-                                            case Byte:
-                                                if (MyPetUtil.isByte(value))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
-                                                }
-                                                break;
-                                            case Boolean:
-                                                if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
-                                                }
-                                                else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
-                                                {
-                                                    propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
-                                                }
-                                                break;
-                                            case String:
-                                                propertiesCompound.getValue().put(propertyName, new StringTag(propertyName, value));
-                                                break;
+                                            //System.out.println("      " + propertyName);
+                                            String value = String.valueOf(propertyMap.get(propertyName));
+                                            switch (propertyType)
+                                            {
+                                                case Short:
+                                                    if (MyPetUtil.isShort(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
+                                                    }
+                                                    break;
+                                                case Int:
+                                                    if (MyPetUtil.isInt(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
+                                                    }
+                                                    break;
+                                                case Long:
+                                                    if (MyPetUtil.isLong(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
+                                                    }
+                                                    break;
+                                                case Float:
+                                                    if (MyPetUtil.isFloat(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
+                                                    }
+                                                    break;
+                                                case Double:
+                                                    if (MyPetUtil.isDouble(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
+                                                    }
+                                                    break;
+                                                case Byte:
+                                                    if (MyPetUtil.isByte(value))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
+                                                    }
+                                                    break;
+                                                case Boolean:
+                                                    if (value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
+                                                    }
+                                                    else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
+                                                    {
+                                                        propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
+                                                    }
+                                                    break;
+                                                case String:
+                                                    propertiesCompound.getValue().put(propertyName, new StringTag(propertyName, value));
+                                                    break;
+                                            }
                                         }
                                     }
+                                    skill.setProperties(propertiesCompound);
+                                    skill.setDefaultProperties();
+                                    skillTree.addSkillToLevel(shortLevel, skill);
                                 }
-                                skill.setProperties(propertiesCompound);
-                                skill.setDefaultProperties();
-                                skillTree.addSkillToLevel(shortLevel, skill);
                             }
                         }
                     }
                 }
             }
-            skillTreeMobType.addSkillTree(skillTree);
+            if (place != null)
+            {
+                skillTreeMobType.addSkillTree(skillTree, place);
+            }
+            else
+            {
+                skillTreeMobType.addSkillTree(skillTree);
+            }
         }
         if (applyDefaultAndInheritance)
         {
@@ -233,14 +267,14 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
     @Override
     public List<String> saveSkillTrees(String configPath)
     {
-        YAML_Configuration yamlConfiguration;
+        SnakeYAML_Configuration yamlConfiguration;
         File skillFile;
         List<String> savedPetTypes = new ArrayList<String>();
 
         for (MyPetType petType : MyPetType.values())
         {
             skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".yml");
-            yamlConfiguration = new YAML_Configuration(skillFile);
+            yamlConfiguration = new SnakeYAML_Configuration(skillFile);
             if (saveSkillTree(yamlConfiguration, petType.getTypeName()))
             {
                 savedPetTypes.add(petType.getTypeName());
@@ -248,7 +282,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         }
 
         skillFile = new File(configPath + File.separator + "default.yml");
-        yamlConfiguration = new YAML_Configuration(skillFile);
+        yamlConfiguration = new SnakeYAML_Configuration(skillFile);
         if (saveSkillTree(yamlConfiguration, "default"))
         {
             savedPetTypes.add("default");
@@ -257,13 +291,14 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         return savedPetTypes;
     }
 
-    //"Skilltrees." + skillTreeName + ".Level." + thisLevel + "." + thisSkill + "." + propertyName
-    protected boolean saveSkillTree(YAML_Configuration yamlConfiguration, String petTypeName)
+    protected boolean saveSkillTree(SnakeYAML_Configuration yamlConfiguration, String petTypeName)
     {
         boolean saveMobType = false;
 
         yamlConfiguration.clearConfig();
-        FileConfiguration config = yamlConfiguration.getConfig();
+        Map<String, Object> config = yamlConfiguration.getConfig();
+        Map<String, Object> skilltreesMap = new LinkedHashMap<String, Object>();
+        config.put("Skilltrees", skilltreesMap);
 
         if (MyPetSkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0)
         {
@@ -272,22 +307,29 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
             for (MyPetSkillTree skillTree : mobType.getSkillTrees())
             {
-                config.set("Skilltrees." + skillTree.getName() + ".Place", mobType.getSkillTreePlace(skillTree));
+                Map<String, Object> skilltreeMap = new LinkedHashMap<String, Object>();
+                skilltreesMap.put(skillTree.getName(), skilltreeMap);
+
+                skilltreeMap.put("Place", mobType.getSkillTreePlace(skillTree));
                 if (skillTree.hasInheritance())
                 {
-                    config.set("Skilltrees." + skillTree.getName() + ".Inherits", skillTree.getInheritance());
+                    skilltreeMap.put("Inherits", skillTree.getInheritance());
                 }
                 if (skillTree.hasCustomPermissions())
                 {
-                    config.set("Skilltrees." + skillTree.getName() + ".Permission", skillTree.getPermission());
+                    skilltreeMap.put("Permission", skillTree.getPermission());
                 }
                 if (skillTree.hasDisplayName())
                 {
-                    config.set("Skilltrees." + skillTree.getName() + ".Display", skillTree.getDisplayName());
+                    skilltreeMap.put("Display", skillTree.getDisplayName());
                 }
 
+                Map<String, Object> levelsMap = new LinkedHashMap<String, Object>();
+                skilltreeMap.put("Level", levelsMap);
                 for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                 {
+                    Map<String, Object> skillMap = new LinkedHashMap<String, Object>();
+                    levelsMap.put("" + level.getLevel(), skillMap);
                     for (MyPetSkillTreeSkill skill : skillTree.getLevel(level.getLevel()).getSkills())
                     {
                         if (!skill.isAddedByInheritance())
@@ -295,6 +337,8 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                             SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                             if (sp != null)
                             {
+                                Map<String, Object> propertyMap = new LinkedHashMap<String, Object>();
+                                skillMap.put(skill.getName(), propertyMap);
                                 for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                 {
                                     String propertyName = sp.parameterNames()[i];
@@ -305,34 +349,34 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                         switch (propertyType)
                                         {
                                             case Short:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ShortTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((ShortTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Int:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((IntTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((IntTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Long:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((LongTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((LongTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Float:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((FloatTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((FloatTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Double:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((DoubleTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((DoubleTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Byte:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                             case Boolean:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getBooleanValue());
+                                                propertyMap.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getBooleanValue());
                                                 break;
                                             case String:
-                                                config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, ((StringTag) propertiesCompound.getValue().get(propertyName)).getValue());
+                                                propertyMap.put(propertyName, ((StringTag) propertiesCompound.getValue().get(propertyName)).getValue());
                                                 break;
                                         }
                                     }
                                     else
                                     {
-                                        config.set("Skilltrees." + skillTree.getName() + ".Level." + level.getLevel() + "." + skill.getName() + "." + propertyName, sp.parameterDefaultValues()[i]);
+                                        propertyMap.put(propertyName, sp.parameterDefaultValues()[i]);
                                     }
                                 }
                             }
@@ -344,7 +388,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             if (mobType.getSkillTreeNames().size() > 0)
             {
                 System.out.println("save");
-                yamlConfiguration.saveConfig();
+                yamlConfiguration.save();
                 saveMobType = true;
             }
         }

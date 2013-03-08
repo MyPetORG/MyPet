@@ -133,8 +133,9 @@ public class GuiMain
 
 
         new File(configPath + "skilltrees" + File.separator).mkdirs();
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
+
         MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
+        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
         MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
 
         skilltreeCreator = new SkilltreeCreator();
