@@ -122,13 +122,14 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
 
     public void schedule()
     {
+        if (pickup && !MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
+        {
+            pickup = false;
+            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickUpStop")).replace("%petname%", myPet.petName));
+            return;
+        }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
         {
-            if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
-            {
-                pickup = false;
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_PickUpStop")).replace("%petname%", myPet.petName));
-            }
             for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range))
             {
                 if (entity instanceof Item)
