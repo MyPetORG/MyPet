@@ -98,12 +98,12 @@ public class MyPetEconomy
 
     public static void setupEconomy()
     {
-        if (!MyPetUtil.getServer().getPluginManager().isPluginEnabled("Vault"))
+        if (!MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Vault"))
         {
             searchedVaultEconomy = true;
             return;
         }
-        RegisteredServiceProvider<Economy> economyProvider = MyPetUtil.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        RegisteredServiceProvider<Economy> economyProvider = MyPetBukkitUtil.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null)
         {
             economy = economyProvider.getProvider();

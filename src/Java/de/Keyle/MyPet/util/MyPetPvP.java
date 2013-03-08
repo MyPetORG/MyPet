@@ -105,7 +105,7 @@ public class MyPetPvP
         if (!searchedCitizens)
         {
             searchedCitizens = true;
-            pluginCitizens = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Citizens");
+            pluginCitizens = MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Citizens");
         }
         if (USE_Citizens && pluginCitizens)
         {
@@ -123,9 +123,9 @@ public class MyPetPvP
         if (!searchedWorldGuard)
         {
             searchedWorldGuard = true;
-            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("WorldGuard"))
+            if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("WorldGuard"))
             {
-                pluginWorldGuard = (WorldGuardPlugin) MyPetUtil.getServer().getPluginManager().getPlugin("WorldGuard");
+                pluginWorldGuard = (WorldGuardPlugin) MyPetBukkitUtil.getServer().getPluginManager().getPlugin("WorldGuard");
             }
         }
         if (USE_WorldGuard && pluginWorldGuard != null)
@@ -144,7 +144,7 @@ public class MyPetPvP
         if (!searchedFactions)
         {
             searchedFactions = true;
-            pluginFactions = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Factions");
+            pluginFactions = MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Factions");
         }
         if (USE_Factions && pluginFactions)
         {
@@ -159,7 +159,7 @@ public class MyPetPvP
         if (!searchedTowny)
         {
             searchedTowny = true;
-            pluginTowny = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Towny");
+            pluginTowny = MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Towny");
         }
         if (USE_Towny && pluginTowny)
         {
@@ -176,9 +176,9 @@ public class MyPetPvP
         if (!searchedHeroes)
         {
             searchedHeroes = true;
-            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
+            if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
             {
-                pluginHeroes = (Heroes) MyPetUtil.getServer().getPluginManager().getPlugin("Heroes");
+                pluginHeroes = (Heroes) MyPetBukkitUtil.getServer().getPluginManager().getPlugin("Heroes");
             }
         }
         if (USE_Heroes && pluginHeroes != null)
@@ -210,9 +210,9 @@ public class MyPetPvP
         if (!searchedRegios)
         {
             searchedRegios = true;
-            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("Regios"))
+            if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Regios"))
             {
-                pluginRegios = (RegiosAPI) MyPetUtil.getServer().getPluginManager().getPlugin("Regios");
+                pluginRegios = (RegiosAPI) MyPetBukkitUtil.getServer().getPluginManager().getPlugin("Regios");
             }
         }
         if (USE_Regios && pluginRegios != null)
@@ -234,7 +234,7 @@ public class MyPetPvP
         if (!searchedResidence)
         {
             searchedResidence = true;
-            pluginResidence = MyPetUtil.getServer().getPluginManager().isPluginEnabled("Residence");
+            pluginResidence = MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Residence");
         }
         if (USE_Residence && pluginResidence)
         {
@@ -249,7 +249,7 @@ public class MyPetPvP
         if (!searchedMobArena)
         {
             searchedMobArena = true;
-            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("MobArena"))
+            if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("MobArena"))
             {
                 pluginMobArena = new MobArenaHandler();
             }
@@ -269,7 +269,7 @@ public class MyPetPvP
         if (!searchedMcMMO)
         {
             searchedMcMMO = true;
-            pluginMcMMO = MyPetUtil.getServer().getPluginManager().isPluginEnabled("mcMMO");
+            pluginMcMMO = MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("mcMMO");
         }
         if (USE_McMMO && pluginMcMMO)
         {
@@ -283,7 +283,7 @@ public class MyPetPvP
         if (!searchedAncientRPG)
         {
             searchedAncientRPG = true;
-            if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
+            if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
             {
                 pluginAncientRPG = ApiManager.getApiManager();
             }

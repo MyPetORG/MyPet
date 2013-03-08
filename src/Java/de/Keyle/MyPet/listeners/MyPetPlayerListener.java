@@ -29,6 +29,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -56,7 +57,7 @@ public class MyPetPlayerListener implements Listener
                         Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
                         if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                         {
-                            event.getPlayer().sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
+                            event.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_ControlAggroFarm").replace("%petname%", myPet.petName).replace("%mode%", "" + behavior.getBehavior().name())));
                             return;
                         }
                     }
@@ -69,7 +70,7 @@ public class MyPetPlayerListener implements Listener
                     }
                     if (!MyPetPermissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control"))
                     {
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
@@ -128,11 +129,11 @@ public class MyPetPlayerListener implements Listener
             }
             if (joinedPlayer.hasMyPet())
             {
-                MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
+                DebugLogger.info("   - has an active MyPet: " + MyPetList.hasMyPet(event.getPlayer()));
                 MyPet myPet = MyPetList.getMyPet(event.getPlayer());
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                 }
                 else if (myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
                 {
@@ -190,21 +191,21 @@ public class MyPetPlayerListener implements Listener
                                 switch (runMyPet.createPet())
                                 {
                                     case Canceled:
-                                        runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", runMyPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", runMyPet.petName));
                                         break;
                                     case NoSpace:
-                                        runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", runMyPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", runMyPet.petName));
                                         break;
                                     case Dead:
                                         if (runMyPet != myPet)
                                         {
-                                            runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", runMyPet.petName).replace("%time%", "" + runMyPet.respawnTime));
+                                            runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", runMyPet.petName).replace("%time%", "" + runMyPet.respawnTime));
                                         }
                                         break;
                                     case Success:
                                         if (runMyPet != myPet)
                                         {
-                                            runMyPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", runMyPet.petName));
+                                            runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", runMyPet.petName));
                                         }
                                         break;
                                 }
@@ -239,10 +240,10 @@ public class MyPetPlayerListener implements Listener
                                 switch (myPet.createPet())
                                 {
                                     case Canceled:
-                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
                                         break;
                                     case NoSpace:
-                                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
                                         break;
                                 }
                             }

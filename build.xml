@@ -33,7 +33,6 @@
 
     <!-- Setting some vars -->
     <property name="MyPet.bukkit.version" value="1.0" />
-    <property name="MyPet.craftbukkit.download" value="http://dl.bukkit.org/downloads/craftbukkit/get/01845_1.4.7-R1.0/craftbukkit.jar" />
     <property name="MyPet.minecraft.version" value="1.4.7" />
     <property name="MyPet.minecraft.version.package" value="1_4_R1" />
     <property name="MyPet.mypet.version" value="1.0.7" />
@@ -55,12 +54,6 @@
     <echo message="Buildnumber: ${MyPet.build.number}" />
 
     <!-- Adding classpathes -->
-    <path id="MyPet.manifest.classpath">
-        <pathelement location="craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
-        <pathelement location="craftbukkit-1.4.7-R0.2.jar" />
-        <pathelement location="craftbukkit-1.4.7-R0.1.jar" />
-        <pathelement location="craftbukkit.jar" />
-    </path>
 
     <path id="MyPet.module.classpath">
         <pathelement location="${MyPet.lib.dir}/Factions.jar" />
@@ -92,29 +85,6 @@
         <pathelement location="${idea.lib.dir}/asm-commons.jar" />
     </path>
     <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath" />
-
-    <!-- Construct Class-Path for the MANIFEST -->
-    <pathconvert property="MyPet.manifest.classpath.dot" pathsep=" ">
-        <path refid="MyPet.manifest.classpath" />
-        <chainedmapper>
-            <flattenmapper />
-            <globmapper from="*" to="./*" />
-        </chainedmapper>
-    </pathconvert>
-    <pathconvert property="MyPet.manifest.classpath.dotdot" pathsep=" ">
-        <path refid="MyPet.manifest.classpath" />
-        <chainedmapper>
-            <flattenmapper />
-            <globmapper from="*" to="../*" />
-        </chainedmapper>
-    </pathconvert>
-    <pathconvert property="MyPet.manifest.classpath.MyPet" pathsep=" ">
-        <path refid="MyPet.manifest.classpath" />
-        <chainedmapper>
-            <flattenmapper />
-            <globmapper from="*" to="./MyPet/*" />
-        </chainedmapper>
-    </pathconvert>
 
     <!-- Deletes the existing directories -->
     <target name="1_clean">
@@ -167,7 +137,6 @@
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/GuiMain.java" token="{@MINECRAFT_VERSION_UNDERSCORE@}" value="${MyPet.minecraft.version.package}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/skillcreator/BukkitDownloader.java" token="{@BUKKIT_DOWNLOAD@}" value="${MyPet.craftbukkit.download}" />
     </target>
 
     <!-- Compiles the java code -->
@@ -201,7 +170,6 @@
                 <attribute name="Created-By" value="Keyle" />
                 <attribute name="Build" value="${MyPet.build.number}" />
                 <attribute name="Main-Class" value="de.Keyle.MyPet.gui.GuiMain" />
-                <attribute name="Class-Path" value="${MyPet.manifest.classpath.dot} ${MyPet.manifest.classpath.dotdot} ${MyPet.manifest.classpath.MyPet}" />
             </manifest>
         </jar>
     </target>

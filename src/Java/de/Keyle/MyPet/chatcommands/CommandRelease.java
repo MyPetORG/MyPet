@@ -41,6 +41,7 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_4_R1.EntityItem;
 import net.minecraft.server.v1_4_R1.Item;
 import net.minecraft.server.v1_4_R1.ItemStack;
@@ -74,12 +75,12 @@ public class CommandRelease implements CommandExecutor
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                     return true;
                 }
                 if (args.length < 1)
@@ -285,21 +286,21 @@ public class CommandRelease implements CommandExecutor
                     }
                     myPet.removePet();
 
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner().getPlayer()));
-                    MyPetUtil.getDebugLogger().info(sender.getName() + " released pet.");
-                    MyPetUtil.getDebugLogger().info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
+                    DebugLogger.info(sender.getName() + " released pet.");
+                    DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
                     return true;
                 }
                 else
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Name")).replace("%petname%", myPet.petName));
                     return true;
                 }
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
             return true;
         }

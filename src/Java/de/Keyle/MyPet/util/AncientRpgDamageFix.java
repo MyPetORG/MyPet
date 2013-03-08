@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import com.ancientshores.AncientRPG.API.ARPGEntityDamageByEntityEvent;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,12 +33,12 @@ public class AncientRpgDamageFix implements Listener
     public static void findAncientRpgPlugin()
     {
         boolean active = false;
-        if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
+        if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
         {
             Bukkit.getPluginManager().registerEvents(new AncientRpgDamageFix(), MyPetPlugin.getPlugin());
             active = true;
         }
-        MyPetUtil.getDebugLogger().info("AncientRPG DamageFix " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("AncientRPG DamageFix " + (active ? "" : "not ") + "activated.");
     }
 
     @EventHandler

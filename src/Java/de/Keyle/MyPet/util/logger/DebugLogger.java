@@ -20,65 +20,74 @@
 
 package de.Keyle.MyPet.util.logger;
 
-import de.Keyle.MyPet.MyPetPlugin;
-
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
 public class DebugLogger
 {
-    private final Logger debugLogger = Logger.getLogger("MyPet");
-    private boolean enabled = false;
+    private static final Logger debugLogger = Logger.getLogger("MyPet");
+    private static boolean isEnabled = false;
 
-    public DebugLogger(boolean enabled)
-    {
-        this.enabled = enabled;
-        setup();
-    }
-
-    public boolean setup()
+    public static boolean setup(boolean enabled)
     {
         if (enabled)
         {
             try
             {
-                Handler fileHandler = new FileHandler(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "MyPet.log");
+                String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                path = path.replace("/", File.separator);
+                path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
+                File pluginDirFile = new File(path);
+                Handler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "MyPet.log");
                 debugLogger.setUseParentHandlers(false);
                 fileHandler.setFormatter(new LogFormat());
                 debugLogger.addHandler(fileHandler);
+                isEnabled = true;
                 return true;
             }
             catch (IOException e)
             {
-                this.enabled = false;
+                isEnabled = false;
                 e.printStackTrace();
+                return false;
+            }
+            catch (URISyntaxException e)
+            {
+                isEnabled = false;
+                e.printStackTrace();
+                return false;
             }
         }
-        return false;
+        else
+        {
+            isEnabled = false;
+            return false;
+        }
     }
 
-    public void info(String text)
+    public static void info(String text)
     {
-        if (enabled)
+        if (isEnabled)
         {
             debugLogger.info(text);
         }
     }
 
-    public void warning(String text)
+    public static void warning(String text)
     {
-        if (enabled)
+        if (isEnabled)
         {
             debugLogger.warning(text);
         }
     }
 
-    public void severe(String text)
+    public static void severe(String text)
     {
-        if (enabled)
+        if (isEnabled)
         {
             debugLogger.severe(text);
         }

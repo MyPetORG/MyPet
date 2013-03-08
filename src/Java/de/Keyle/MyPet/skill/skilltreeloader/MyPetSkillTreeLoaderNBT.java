@@ -21,11 +21,13 @@
 package de.Keyle.MyPet.skill.skilltreeloader;
 
 
-import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.spout.nbt.*;
 
 import java.io.File;
@@ -43,18 +45,15 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
     {
     }
 
-    public void loadSkillTrees(String configPath)
+    public void loadSkillTrees(String configPath, String[] mobtypes)
     {
-        loadSkillTrees(configPath, true);
+        loadSkillTrees(configPath, mobtypes, true);
     }
 
-    public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
+    public void loadSkillTrees(String configPath, String[] mobtypes, boolean applyDefaultAndInheritance)
     {
         NBT_Configuration skilltreeConfig;
-        if (MyPetUtil.getDebugLogger() != null)
-        {
-            MyPetUtil.getDebugLogger().info("Loading nbt skill configs in: " + configPath);
-        }
+        DebugLogger.info("Loading nbt skill configs in: " + configPath);
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.st");
@@ -63,17 +62,14 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
         {
             skilltreeConfig = new NBT_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  default.st");
-            }
+            DebugLogger.info("  default.st");
         }
 
-        for (MyPetType mobType : MyPetType.values())
+        for (String mobType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".st");
+            skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".st");
 
-            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {
@@ -90,10 +86,7 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
 
             skilltreeConfig = new NBT_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".st");
-            }
+            DebugLogger.info("  " + mobType.toLowerCase() + ".st");
             skillTreeMobType.cleanupPlaces();
         }
     }
@@ -125,27 +118,30 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                 skillTree.setDisplayName(((StringTag) skilltreeCompound.getValue().get("Display")).getValue());
             }
 
-            ListTag levelList = (ListTag) skilltreeCompound.getValue().get("Level");
-            for (int i_level = 0 ; i_level < levelList.getValue().size() ; i_level++)
+            if (skilltreeCompound.getValue().containsKey("Levels"))
             {
-                CompoundTag levelCompound = (CompoundTag) levelList.getValue().get(i_level);
-                short thisLevel = ((ShortTag) levelCompound.getValue().get("Level")).getValue();
-                skillTree.addLevel(thisLevel);
-
-                ListTag skillList = (ListTag) levelCompound.getValue().get("Skills");
-                for (int i_skill = 0 ; i_skill < skillList.getValue().size() ; i_skill++)
+                ListTag levelList = (ListTag) skilltreeCompound.getValue().get("Levels");
+                for (int i_level = 0 ; i_level < levelList.getValue().size() ; i_level++)
                 {
-                    CompoundTag skillCompound = (CompoundTag) skillList.getValue().get(i_skill);
-                    String skillName = ((StringTag) skillCompound.getValue().get("Name")).getValue();
-                    if (MyPetSkills.isValidSkill(skillName))
+                    CompoundTag levelCompound = (CompoundTag) levelList.getValue().get(i_level);
+                    short thisLevel = ((ShortTag) levelCompound.getValue().get("Level")).getValue();
+                    skillTree.addLevel(thisLevel);
+
+                    ListTag skillList = (ListTag) levelCompound.getValue().get("Skills");
+                    for (int i_skill = 0 ; i_skill < skillList.getValue().size() ; i_skill++)
                     {
-                        CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
-                        ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
-                        if (skill != null)
+                        CompoundTag skillCompound = (CompoundTag) skillList.getValue().get(i_skill);
+                        String skillName = ((StringTag) skillCompound.getValue().get("Name")).getValue();
+                        if (MyPetSkillsInfo.isValidSkill(skillName))
                         {
-                            skill.setProperties(skillPropertyCompound);
-                            skill.setDefaultProperties();
-                            skillTree.addSkillToLevel(thisLevel, skill);
+                            CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
+                            ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
+                            if (skill != null)
+                            {
+                                skill.setProperties(skillPropertyCompound);
+                                skill.setDefaultProperties();
+                                skillTree.addSkillToLevel(thisLevel, skill);
+                            }
                         }
                     }
                 }
@@ -162,19 +158,19 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
         }
     }
 
-    public List<String> saveSkillTrees(String configPath)
+    public List<String> saveSkillTrees(String configPath, String[] mobtypes)
     {
         NBT_Configuration nbtConfig;
         File skillFile;
         List<String> savedPetTypes = new ArrayList<String>();
 
-        for (MyPetType petType : MyPetType.values())
+        for (String petType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".st");
+            skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".st");
             nbtConfig = new NBT_Configuration(skillFile);
-            if (saveSkillTree(nbtConfig, petType.getTypeName()))
+            if (saveSkillTree(nbtConfig, petType))
             {
-                savedPetTypes.add(petType.getTypeName());
+                savedPetTypes.add(petType);
             }
         }
 

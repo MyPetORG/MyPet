@@ -25,8 +25,8 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.HPregenerationInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
@@ -95,7 +95,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%hp%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%hp%", "" + increaseHpBy));
             }
         }
     }

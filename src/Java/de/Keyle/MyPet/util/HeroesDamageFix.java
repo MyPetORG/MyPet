@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import com.herocraftonline.heroes.Heroes;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Method;
@@ -32,12 +33,12 @@ public class HeroesDamageFix
 
     private static void findHeroesPlugin()
     {
-        if (MyPetUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
+        if (MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Heroes"))
         {
-            heroesPlugin = (Heroes) MyPetUtil.getServer().getPluginManager().getPlugin("Heroes");
+            heroesPlugin = (Heroes) MyPetBukkitUtil.getServer().getPluginManager().getPlugin("Heroes");
         }
         heroesSearched = true;
-        MyPetUtil.getDebugLogger().info("HeroesDamageFix " + (heroesPlugin != null ? "" : "not ") + "activated.");
+        DebugLogger.info("HeroesDamageFix " + (heroesPlugin != null ? "" : "not ") + "activated.");
     }
 
     public static void reset()

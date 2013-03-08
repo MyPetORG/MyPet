@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.SnakeYAML_Configuration;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.spout.nbt.*;
 
 import java.io.File;
@@ -46,12 +47,12 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
     }
 
     @Override
-    public void loadSkillTrees(String configPath)
+    public void loadSkillTrees(String configPath, String[] mobtypes)
     {
-        loadSkillTrees(configPath, true);
+        loadSkillTrees(configPath, mobtypes, true);
     }
 
-    public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
+    public void loadSkillTrees(String configPath, String[] mobtypes, boolean applyDefaultAndInheritance)
     {
         SnakeYAML_Configuration skilltreeConfig;
         File skillFile;
@@ -62,17 +63,14 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         {
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, false);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  default.yml");
-            }
+            DebugLogger.info("  default.yml");
         }
 
-        for (MyPetType mobType : MyPetType.values())
+        for (String mobType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".yml");
+            skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".yml");
 
-            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {
@@ -89,10 +87,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".yml");
-            }
+            DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
         }
     }
 
@@ -166,7 +161,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                         for (String thisSkill : skillMap.keySet())
                         {
                             //System.out.println("    " + thisSkill);
-                            if (MyPetSkills.isValidSkill(thisSkill))
+                            if (MyPetSkillsInfo.isValidSkill(thisSkill))
                             {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
                                 ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(thisSkill);
@@ -244,6 +239,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                     }
                                     skillTree.addSkillToLevel(shortLevel, skill);
                                 }
+                                else
+                                {
+                                    System.out.println("null: " + thisSkill);
+                                }
                             }
                         }
                     }
@@ -269,7 +268,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
     }
 
     @Override
-    public List<String> saveSkillTrees(String configPath)
+    public List<String> saveSkillTrees(String configPath, String[] mobtypes)
     {
         SnakeYAML_Configuration yamlConfiguration;
         File skillFile;

@@ -29,6 +29,7 @@ import de.Keyle.MyPet.event.MyPetSelectEvent;
 import de.Keyle.MyPet.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundTag;
 
@@ -273,8 +274,8 @@ public class MyPetList
 
         inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
 
-        MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
-        MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
+        DebugLogger.info("   A: " + activeMyPet);
+        DebugLogger.info("   I: " + inactiveMyPet);
         return activeMyPet;
     }
 
@@ -295,8 +296,8 @@ public class MyPetList
                 getServer().getPluginManager().callEvent(event);
             }
 
-            MyPetUtil.getDebugLogger().info("   I: " + inactiveMyPet);
-            MyPetUtil.getDebugLogger().info("   A: " + activeMyPet);
+            DebugLogger.info("   I: " + inactiveMyPet);
+            DebugLogger.info("   A: " + activeMyPet);
             return inactiveMyPet;
         }
         return null;

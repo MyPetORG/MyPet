@@ -166,7 +166,7 @@ public class MyPetPlayer implements IScheduler
 
     public Player getPlayer()
     {
-        return MyPetUtil.getServer().getPlayer(playerName);
+        return MyPetBukkitUtil.getServer().getPlayer(playerName);
     }
 
     public static MyPetPlayer getMyPetPlayer(String name)
@@ -268,7 +268,7 @@ public class MyPetPlayer implements IScheduler
                     if (!myPet.getCraftPet().canMove())
                     {
                         myPet.removePet();
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Despawn")).replace("%petname%", myPet.petName));
                     }
                 }
             }

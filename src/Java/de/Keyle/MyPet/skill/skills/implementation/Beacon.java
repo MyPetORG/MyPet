@@ -31,8 +31,8 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.info.BeaconInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
@@ -181,7 +181,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             }
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddBeacon").replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration).replace("%petname%", myPet.petName)));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddBeacon").replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration).replace("%petname%", myPet.petName)));
                 myPet.sendMessageToOwner("  " + getFormattedValue());
             }
         }
@@ -231,7 +231,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
             return false;
         }
     }
@@ -244,7 +244,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+            player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
     }
 
@@ -261,7 +261,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
                     return false;
                 }
             }
@@ -276,11 +276,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 {
                     if (effectId != 10)
                     {
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconImprovedBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconImprovedBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
                     }
                     else
                     {
-                        myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconBuffNotActive")).replace("%buff%", MyPetLanguage.getString("Name_" + buffNames.get(effectId))));
                     }
                     return false;
                 }
@@ -288,7 +288,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
         }
         return false;
     }

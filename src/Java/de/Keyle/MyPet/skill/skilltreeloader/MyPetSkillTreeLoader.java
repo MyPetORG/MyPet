@@ -113,7 +113,7 @@ public abstract class MyPetSkillTreeLoader
         }
     }
 
-    public abstract void loadSkillTrees(String configPath);
+    public abstract void loadSkillTrees(String configPath, String[] mobtypes);
 
-    public abstract List<String> saveSkillTrees(String configPath);
+    public abstract List<String> saveSkillTrees(String configPath, String[] mobtypes);
 }

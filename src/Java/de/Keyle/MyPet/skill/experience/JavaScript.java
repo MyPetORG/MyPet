@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.experience;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
@@ -55,12 +56,12 @@ public class JavaScript extends Experience
             if (setScriptPath(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "exp.js"))
             {
                 MyPetLogger.write("Custom EXP-Script loaded!");
-                MyPetUtil.getDebugLogger().info("loaded exp.js.");
+                DebugLogger.info("loaded exp.js.");
             }
             else
             {
                 MyPetLogger.write("No custom EXP-Script found (exp.js).");
-                MyPetUtil.getDebugLogger().info("exp.js not loaded.");
+                DebugLogger.info("exp.js not loaded.");
                 isUsable = false;
                 return;
             }
@@ -73,7 +74,7 @@ public class JavaScript extends Experience
         catch (ScriptException e)
         {
             MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
-            MyPetUtil.getDebugLogger().warning("Error in EXP-Script!");
+            DebugLogger.warning("Error in EXP-Script!");
             isUsable = false;
             return;
         }
@@ -106,13 +107,13 @@ public class JavaScript extends Experience
             catch (ScriptException e)
             {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
-                MyPetUtil.getDebugLogger().warning("Error in EXP-Script!");
+                DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
             }
             catch (NoSuchMethodException e)
             {
                 MyPetLogger.write(ChatColor.RED + "getRequiredExp(exp) Method is missing!");
-                MyPetUtil.getDebugLogger().warning("getRequiredExp(exp) Method is missing!");
+                DebugLogger.warning("getRequiredExp(exp) Method is missing!");
                 isUsable = false;
             }
         }
@@ -136,13 +137,13 @@ public class JavaScript extends Experience
             catch (ScriptException e)
             {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
-                MyPetUtil.getDebugLogger().warning("Error in EXP-Script!");
+                DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
             }
             catch (NoSuchMethodException e)
             {
                 MyPetLogger.write(ChatColor.RED + "getRequiredExp(exp) Method is missing!");
-                MyPetUtil.getDebugLogger().warning("getRequiredExp(exp) Method is missing!");
+                DebugLogger.warning("getRequiredExp(exp) Method is missing!");
                 isUsable = false;
             }
         }
@@ -166,13 +167,13 @@ public class JavaScript extends Experience
             catch (ScriptException e)
             {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
-                MyPetUtil.getDebugLogger().warning("Error in EXP-Script!");
+                DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
             }
             catch (NoSuchMethodException e)
             {
                 MyPetLogger.write(ChatColor.RED + "getCurrentExp(exp) Method is missing!");
-                MyPetUtil.getDebugLogger().warning("getCurrentExp(exp) Method is missing!");
+                DebugLogger.warning("getCurrentExp(exp) Method is missing!");
                 isUsable = false;
             }
 

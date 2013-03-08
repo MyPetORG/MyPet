@@ -20,17 +20,16 @@
 
 package de.Keyle.MyPet.gui;
 
-import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.gui.skillcreator.BukkitDownloader;
 import de.Keyle.MyPet.gui.skillcreator.LevelCreator;
 import de.Keyle.MyPet.gui.skillcreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator;
+import de.Keyle.MyPet.skill.MyPetSkillsInfo;
+import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -41,7 +40,6 @@ public class GuiMain
 {
     public static LevelCreator levelCreator;
     public static SkilltreeCreator skilltreeCreator;
-    public static BukkitDownloader bukkitDownloader;
     public static SkillPropertyEditor skillPropertyEditor;
     public static String configPath;
 
@@ -69,74 +67,16 @@ public class GuiMain
         {
         }
         Image logoImage = new ImageIcon(ClassLoader.getSystemResource("resources/logo.png")).getImage();
-        if (!canFindBukkit())
-        {
-            String[] buttons = {"Exit", "Download CraftBukkit", "Choose a CraftBukkit.jar"};
-            int result = JOptionPane.showOptionDialog(null, "Can't find a CraftBukkit executable\n" +
-                    "\nin one of these folders:" +
-                    "\n   " + pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator +
-                    "\n   " + pluginDirFile.getAbsolutePath() + File.separator +
-                    "\n   " + pluginDirFile.getParent() + File.separator, "Skilltree-Creator", JOptionPane.ERROR_MESSAGE, 0, null, buttons, buttons[1]);
 
-            if (result == 0)
-            {
-                System.exit(0);
-            }
-            else if (result == 1)
-            {
-                bukkitDownloader = new BukkitDownloader();
-                JFrame bukkitDownloaderFrame = bukkitDownloader.getFrame();
-                bukkitDownloaderFrame.setContentPane(bukkitDownloader.getMainPanel());
-                bukkitDownloaderFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                bukkitDownloaderFrame.setIconImage(logoImage);
-                bukkitDownloaderFrame.pack();
-                bukkitDownloaderFrame.setVisible(true);
-                bukkitDownloaderFrame.setLocationRelativeTo(null);
-
-                bukkitDownloader.startDownload();
-            }
-            else if (result == 2)
-            {
-                JFileChooser fileChooser = new JFileChooser(new File(path));
-                fileChooser.setAcceptAllFileFilterUsed(false);
-                fileChooser.setFileFilter(new FileFilter()
-                {
-                    @Override
-                    public boolean accept(File f)
-                    {
-                        return f.isDirectory() || f.getName().matches(".*\\.(jar)");
-                    }
-
-                    @Override
-                    public String getDescription()
-                    {
-                        return "Craftbukkit (*.jar)";
-                    }
-                });
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-                {
-                    try
-                    {
-                        Runtime.getRuntime().exec("java -cp \"" + fileChooser.getSelectedFile().getAbsolutePath() + "\"" + System.getProperties().getProperty("path.separator") + "\"" + (SkilltreeCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + "\" de.Keyle.MyPet.gui.skillcreator.SkilltreeCreator");
-                    }
-                    catch (Exception e1)
-                    {
-                        e1.printStackTrace();
-                    }
-                }
-                System.exit(0);
-            }
-            return;
-        }
-        MyPetPlugin.registerSkillsInfo();
-        MyPetPlugin.registerSkills();
-
+        registerSkillsInfo();
 
         new File(configPath + "skilltrees" + File.separator).mkdirs();
 
-        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
-        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", false);
+        String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Giant", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
+
+        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes, false);
+        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes, false);
+        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes, false);
 
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
@@ -261,16 +201,23 @@ public class GuiMain
         });
     }
 
-    private static boolean canFindBukkit()
+    public static void registerSkillsInfo()
     {
-        try
-        {
-            Class.forName("net.minecraft.server.v{@MINECRAFT_VERSION_UNDERSCORE@}.NBTBase");
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
+        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
+        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
+        MyPetSkillsInfo.registerSkill(PickupInfo.class);
+        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
+        MyPetSkillsInfo.registerSkill(DamageInfo.class);
+        MyPetSkillsInfo.registerSkill(ControlInfo.class);
+        MyPetSkillsInfo.registerSkill(HPInfo.class);
+        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
+        MyPetSkillsInfo.registerSkill(RideInfo.class);
+        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
+        MyPetSkillsInfo.registerSkill(FireInfo.class);
+        MyPetSkillsInfo.registerSkill(BeaconInfo.class);
+        MyPetSkillsInfo.registerSkill(WitherInfo.class);
+        MyPetSkillsInfo.registerSkill(LightningInfo.class);
+        MyPetSkillsInfo.registerSkill(SlowInfo.class);
+        MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
     }
 }

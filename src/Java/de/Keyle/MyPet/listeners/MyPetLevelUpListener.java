@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -39,7 +39,7 @@ public class MyPetLevelUpListener implements Listener
         MyPet myPet = event.getPet();
         if (!event.isQuiet())
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
         }
         short lvl = event.getLevel();
         MyPetSkillTree skillTree = myPet.getSkillTree();

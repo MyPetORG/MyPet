@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.util.configuration;
 
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.Tag;
@@ -120,20 +120,14 @@ public class NBT_Configuration
         List<Tag<?>> tags = readRawNBT(NBTFile, true);
         if (tags != null)
         {
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("loaded compressed NBT file (" + NBTFile.getName() + ")");
-            }
+            DebugLogger.info("loaded compressed NBT file (" + NBTFile.getName() + ")");
         }
         else
         {
             tags = readRawNBT(NBTFile, false);
             if (tags != null)
             {
-                if (MyPetUtil.getDebugLogger() != null)
-                {
-                    MyPetUtil.getDebugLogger().info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
-                }
+                DebugLogger.info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
             }
         }
         if (tags != null && tags.size() > 0)

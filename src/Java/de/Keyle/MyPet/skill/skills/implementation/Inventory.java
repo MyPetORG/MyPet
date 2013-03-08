@@ -26,9 +26,9 @@ import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
 import net.minecraft.server.v1_4_R1.EntityPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -75,7 +75,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Inventory")).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -119,7 +119,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%petname%", myPet.petName));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NoInventory")).replace("%petname%", myPet.petName));
             return false;
         }
     }

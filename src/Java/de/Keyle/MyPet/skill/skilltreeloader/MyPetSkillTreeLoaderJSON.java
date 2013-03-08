@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.JSON_Configuration;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONArray;
@@ -49,18 +49,15 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
     }
 
     @Override
-    public void loadSkillTrees(String configPath)
+    public void loadSkillTrees(String configPath, String[] mobtypes)
     {
-        loadSkillTrees(configPath, true);
+        loadSkillTrees(configPath, mobtypes, true);
     }
 
-    public void loadSkillTrees(String configPath, boolean applyDefaultAndInheritance)
+    public void loadSkillTrees(String configPath, String[] mobtypes, boolean applyDefaultAndInheritance)
     {
         JSON_Configuration skilltreeConfig;
-        if (MyPetUtil.getDebugLogger() != null)
-        {
-            MyPetUtil.getDebugLogger().info("Loading json skill configs in: " + configPath);
-        }
+        DebugLogger.info("Loading json skill configs in: " + configPath);
         File skillFile;
 
         skillFile = new File(configPath + File.separator + "default.json");
@@ -70,17 +67,14 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
             skilltreeConfig = new JSON_Configuration(skillFile);
             skilltreeConfig.load();
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  default.json");
-            }
+            DebugLogger.info("  default.json");
         }
 
-        for (MyPetType mobType : MyPetType.values())
+        for (String mobType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + mobType.getTypeName().toLowerCase() + ".json");
+            skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".json");
 
-            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+            skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {
@@ -97,10 +91,7 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
 
             skilltreeConfig = new JSON_Configuration(skillFile);
             loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().info("  " + mobType.getTypeName().toLowerCase() + ".json");
-            }
+            DebugLogger.info("  " + mobType.toLowerCase() + ".json");
             skillTreeMobType.cleanupPlaces();
         }
     }
@@ -145,7 +136,7 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                         String skillName = (String) skillObject.get("Name");
                         JSONObject skillPropertyObject = (JSONObject) skillObject.get("Properties");
 
-                        if (MyPetSkills.isValidSkill(skillName))
+                        if (MyPetSkillsInfo.isValidSkill(skillName))
                         {
                             ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
 
@@ -229,15 +220,9 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
             }
             catch (Exception ignored)
             {
-                if (MyPetUtil.getDebugLogger() != null)
-                {
-                    MyPetUtil.getDebugLogger().info("Problem in" + skillTreeMobType.getMobTypeName());
-                    MyPetUtil.getDebugLogger().info(Arrays.toString(ignored.getStackTrace()));
-                }
-                else
-                {
-                    ignored.printStackTrace();
-                }
+                DebugLogger.info("Problem in" + skillTreeMobType.getMobTypeName());
+                DebugLogger.info(Arrays.toString(ignored.getStackTrace()));
+                ignored.printStackTrace();
                 MyPetLogger.write(ChatColor.RED + "Error in " + skillTreeMobType.getMobTypeName().toLowerCase() + ".json -> Skilltree not loaded.");
             }
         }
@@ -252,19 +237,19 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
     }
 
     @Override
-    public List<String> saveSkillTrees(String configPath)
+    public List<String> saveSkillTrees(String configPath, String[] mobtypes)
     {
         JSON_Configuration jsonConfig;
         File skillFile;
         List<String> savedPetTypes = new ArrayList<String>();
 
-        for (MyPetType petType : MyPetType.values())
+        for (String petType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".json");
+            skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".json");
             jsonConfig = new JSON_Configuration(skillFile);
-            if (saveSkillTree(jsonConfig, petType.getTypeName()))
+            if (saveSkillTree(jsonConfig, petType))
             {
-                savedPetTypes.add(petType.getTypeName());
+                savedPetTypes.add(petType);
             }
         }
 

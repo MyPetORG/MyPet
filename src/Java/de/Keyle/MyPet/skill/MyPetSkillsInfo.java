@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
@@ -51,19 +51,13 @@ public class MyPetSkillsInfo
                     skillNames.add(skill.getName().toLowerCase());
                     skillClassList.add(clazz);
                     skillMap.put(skill.getName().toLowerCase(), clazz);
-                    if (MyPetUtil.getDebugLogger() != null)
-                    {
-                        MyPetUtil.getDebugLogger().info("registered info skill: " + clazz.getName());
-                    }
+                    DebugLogger.info("registered info skill: " + clazz.getName());
                 }
             }
             catch (Exception e)
             {
                 MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid info skill!");
-                if (MyPetUtil.getDebugLogger() != null)
-                {
-                    MyPetUtil.getDebugLogger().warning(clazz.getName() + " is not a valid info skill!");
-                }
+                DebugLogger.warning(clazz.getName() + " is not a valid info skill!");
             }
 
         }
@@ -98,15 +92,12 @@ public class MyPetSkillsInfo
     {
         if (getSkillInfoClass(name) == null)
         {
-            if (MyPetUtil.getDebugLogger() != null)
+            DebugLogger.warning(name + " skill is null when creating new instance!");
+            for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace())
             {
-                MyPetUtil.getDebugLogger().warning(name + " skill is null when creating new instance!");
-                for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace())
-                {
-                    MyPetUtil.getDebugLogger().warning("  " + stackTraceElement.toString());
-                }
-                MyPetUtil.getDebugLogger().warning("------------------");
+                DebugLogger.warning("  " + stackTraceElement.toString());
             }
+            DebugLogger.warning("------------------");
             return null;
         }
         try
@@ -121,10 +112,7 @@ public class MyPetSkillsInfo
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + getSkillInfoClass(name).getName() + " is no valid Skill)!");
-            if (MyPetUtil.getDebugLogger() != null)
-            {
-                MyPetUtil.getDebugLogger().warning(getSkillInfoClass(name).getName() + " is no valid Skill!");
-            }
+            DebugLogger.warning(getSkillInfoClass(name).getName() + " is no valid Skill!");
             e.printStackTrace();
         }
         return null;

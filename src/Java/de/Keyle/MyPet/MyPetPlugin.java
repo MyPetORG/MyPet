@@ -86,7 +86,6 @@ public class MyPetPlugin extends JavaPlugin
     public static MyPetLanguage language;
     private final MyPetTimer timer = new MyPetTimer();
     private File NBTPetFile;
-    private DebugLogger debugLogger = null;
     private boolean isReady = false;
 
     public static final String MyPetVersion = "{@MYPET_VERSION@}";
@@ -107,7 +106,7 @@ public class MyPetPlugin extends JavaPlugin
     {
         if (isReady)
         {
-            debugLogger.info(savePets(true) + " pet/pets saved.");
+            DebugLogger.info(savePets(true) + " pet/pets saved.");
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
                 myPet.removePet();
@@ -117,7 +116,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetList.clearList();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
-        debugLogger.info("MyPet disabled!");
+        DebugLogger.info("MyPet disabled!");
     }
 
     public void onEnable()
@@ -137,10 +136,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetConfiguration.setDefault();
         MyPetConfiguration.loadConfiguration();
 
-        if (debugLogger == null)
-        {
-            debugLogger = new DebugLogger(MyPetConfiguration.USE_DEBUG_LOGGER);
-        }
+        DebugLogger.setup(MyPetConfiguration.USE_DEBUG_LOGGER);
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
 
@@ -151,30 +147,30 @@ public class MyPetPlugin extends JavaPlugin
             MyPetLogger.write(ChatColor.RED + "   Minecraft " + CompatibleMinecraftVersion);
             MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
-            MyPetUtil.getDebugLogger().warning("This version of MyPet only work with:");
-            MyPetUtil.getDebugLogger().warning("   Minecraft " + CompatibleMinecraftVersion);
-            MyPetUtil.getDebugLogger().warning("MyPet disabled!");
-            MyPetUtil.getDebugLogger().warning("---------------------------------------------------------");
+            DebugLogger.warning("---------------------------------------------------------");
+            DebugLogger.warning("This version of MyPet only work with:");
+            DebugLogger.warning("   Minecraft " + CompatibleMinecraftVersion);
+            DebugLogger.warning("MyPet disabled!");
+            DebugLogger.warning("---------------------------------------------------------");
             checkForUpdates(minecraftVersion);
             this.setEnabled(false);
             return;
         }
 
-        debugLogger.info("----------- loading MyPet ... -----------");
-        debugLogger.info("MyPet " + MyPetVersion + " build: " + MyPetBuild);
-        debugLogger.info("Bukkit " + getServer().getVersion());
+        DebugLogger.info("----------- loading MyPet ... -----------");
+        DebugLogger.info("MyPet " + MyPetVersion + " build: " + MyPetBuild);
+        DebugLogger.info("Bukkit " + getServer().getVersion());
 
-        debugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
+        DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
         checkForUpdates(CompatibleMinecraftVersion);
 
-        MyPetUtil.getDebugLogger().info("MobEXP table: -------------------------");
+        DebugLogger.info("MobEXP table: -------------------------");
         for (MyPetMonsterExperience monsterExperience : MyPetMonsterExperience.mobExp.values())
         {
-            debugLogger.info("   " + monsterExperience.toString());
+            DebugLogger.info("   " + monsterExperience.toString());
         }
-        MyPetUtil.getDebugLogger().info("MobEXP table end ----------------------");
+        DebugLogger.info("MobEXP table end ----------------------");
 
         MyPetPlayerListener playerListener = new MyPetPlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);
@@ -237,19 +233,25 @@ public class MyPetPlugin extends JavaPlugin
                 template.close();
                 out.close();
                 MyPetLogger.write("Default skilltree configfile created.");
-                debugLogger.info("created default.st");
+                DebugLogger.info("created default.st");
             }
             catch (IOException ex)
             {
                 MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.st!");
-                debugLogger.info("unable to create default.st");
+                DebugLogger.info("unable to create default.st");
             }
         }
 
+        String[] petTypes = new String[MyPetType.values().length];
+        for (int i = 0 ; i < MyPetType.values().length ; i++)
+        {
+            petTypes[i] = MyPetType.values()[i].getTypeName();
+        }
+
         MyPetSkillTreeMobType.clearMobTypes();
-        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
-        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees");
+        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
         try
         {
@@ -308,22 +310,22 @@ public class MyPetPlugin extends JavaPlugin
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
 
-            debugLogger.info("registered MyPet entities.");
+            DebugLogger.info("registered MyPet entities.");
         }
         catch (Exception e)
         {
             MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.RED + " NOT ENABLED");
             e.printStackTrace();
-            debugLogger.severe("error while registering MyPet entity.");
-            debugLogger.severe(e.getMessage());
+            DebugLogger.severe("error while registering MyPet entity.");
+            DebugLogger.severe(e.getMessage());
             setEnabled(false);
             return;
         }
 
-        debugLogger.info("Pet type: ----------");
+        DebugLogger.info("Pet type: ----------");
         for (MyPetType myPetType : MyPetType.values())
         {
-            debugLogger.info("  " + myPetType.getTypeName() + " { " +
+            DebugLogger.info("  " + myPetType.getTypeName() + " { " +
                     "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
                     "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
                     "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
@@ -345,16 +347,16 @@ public class MyPetPlugin extends JavaPlugin
 
         timer.startTimer();
 
-        debugLogger.info("MyPetPlayer: ---------------");
+        DebugLogger.info("MyPetPlayer: ---------------");
         for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
         {
-            debugLogger.info("   " + myPetPlayer.toString());
+            DebugLogger.info("   " + myPetPlayer.toString());
         }
-        debugLogger.info("----------------------------");
+        DebugLogger.info("----------------------------");
 
         if (MyPetConfiguration.SEND_METRICS)
         {
-            debugLogger.info("Metrics is activated");
+            DebugLogger.info("Metrics is activated");
             try
             {
                 Metrics metrics = new Metrics(this);
@@ -398,13 +400,13 @@ public class MyPetPlugin extends JavaPlugin
         }
         else
         {
-            debugLogger.info("Metrics not activated");
+            DebugLogger.info("Metrics not activated");
         }
 
         HeroesDamageFix.reset();
         AncientRpgDamageFix.findAncientRpgPlugin();
 
-        debugLogger.info("version " + MyPetVersion + "-b" + MyPetBuild + " ENABLED");
+        DebugLogger.info("version " + MyPetVersion + "-b" + MyPetBuild + " ENABLED");
         MyPetLogger.write("version " + MyPetVersion + "-b" + MyPetBuild + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())
@@ -444,11 +446,11 @@ public class MyPetPlugin extends JavaPlugin
                 }
                 if (myPetPlayer.hasMyPet())
                 {
-                    MyPetUtil.getDebugLogger().info("   - has an active MyPet: " + MyPetList.hasMyPet(player));
+                    DebugLogger.info("   - has an active MyPet: " + MyPetList.hasMyPet(player));
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        player.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                        player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                     }
                     else if (myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {
@@ -462,7 +464,7 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
         this.isReady = true;
-        debugLogger.info("----------- MyPet ready -----------");
+        DebugLogger.info("----------- MyPet ready -----------");
     }
 
     public static void registerSkills()
@@ -513,20 +515,20 @@ public class MyPetPlugin extends JavaPlugin
             if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion))
             {
                 MyPetLogger.write(ChatColor.RED + "Update available!: " + ChatColor.RESET + updateCheck.getLastAvailableUpdate().getTitle());
-                MyPetUtil.getDebugLogger().info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
+                DebugLogger.info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
                 return true;
             }
             else
             {
                 MyPetLogger.write(ChatColor.GREEN + "No" + ChatColor.RESET + " Update available.");
-                MyPetUtil.getDebugLogger().info("No Update available");
+                DebugLogger.info("No Update available");
                 return false;
             }
         }
         else
         {
             MyPetLogger.write("Update-Check " + ChatColor.YELLOW + "disabled" + ChatColor.RESET + ".");
-            MyPetUtil.getDebugLogger().info("Updates not activated");
+            DebugLogger.info("Updates not activated");
             return false;
         }
     }
@@ -535,7 +537,7 @@ public class MyPetPlugin extends JavaPlugin
     {
         if (!f.exists())
         {
-            debugLogger.info("0 pet/pets loaded -------------------------");
+            DebugLogger.info("0 pet/pets loaded -------------------------");
             MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet/pets loaded");
             return 0;
         }
@@ -547,17 +549,17 @@ public class MyPetPlugin extends JavaPlugin
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown"))
         {
 
-            debugLogger.info("Clean shutdown: " + ((ByteTag) nbtConfiguration.getNBTCompound().getValue().get("CleanShutdown")).getBooleanValue());
+            DebugLogger.info("Clean shutdown: " + ((ByteTag) nbtConfiguration.getNBTCompound().getValue().get("CleanShutdown")).getBooleanValue());
         }
 
-        debugLogger.info("Loading players -------------------------");
+        DebugLogger.info("Loading players -------------------------");
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players"))
         {
             loadPlayers(nbtConfiguration);
         }
-        debugLogger.info("Players loaded -------------------------");
+        DebugLogger.info("Players loaded -------------------------");
 
-        debugLogger.info("loading Pets: -----------------------------");
+        DebugLogger.info("loading Pets: -----------------------------");
         for (int i = 0 ; i < petList.getValue().size() ; i++)
         {
             CompoundTag myPetNBT = (CompoundTag) petList.getValue().get(i);
@@ -606,7 +608,7 @@ public class MyPetPlugin extends JavaPlugin
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
             inactiveMyPet.setUUID(petUuid);
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetUtil.getServer().getWorld(petWorld) : MyPetUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetBukkitUtil.getServer().getWorld(petWorld) : MyPetBukkitUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
             inactiveMyPet.setRespawnTime(petRespawnTime);
@@ -630,11 +632,11 @@ public class MyPetPlugin extends JavaPlugin
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
 
-            debugLogger.info("   " + inactiveMyPet.toString());
+            DebugLogger.info("   " + inactiveMyPet.toString());
 
             petCount++;
         }
-        debugLogger.info(petCount + " pet/pets loaded -------------------------");
+        DebugLogger.info(petCount + " pet/pets loaded -------------------------");
         MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet/pets loaded");
         return petCount;
     }
@@ -647,7 +649,7 @@ public class MyPetPlugin extends JavaPlugin
         nbtConfiguration.load();
         ListTag wolfList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Wolves");
 
-        debugLogger.info("loading Wolves: -----------------------------");
+        DebugLogger.info("loading Wolves: -----------------------------");
         for (int i = 0 ; i < wolfList.getValue().size() ; i++)
         {
             CompoundTag myMolfNBT = (CompoundTag) wolfList.getValue().get(i);
@@ -665,7 +667,7 @@ public class MyPetPlugin extends JavaPlugin
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(wolfOwner));
 
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? MyPetUtil.getServer().getWorld(wolfWorld) : MyPetUtil.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? MyPetBukkitUtil.getServer().getWorld(wolfWorld) : MyPetBukkitUtil.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
             inactiveMyPet.setHealth(wolfHealthNow);
             inactiveMyPet.setPetName(wolfName);
             inactiveMyPet.setExp(wolfExp);
@@ -673,11 +675,11 @@ public class MyPetPlugin extends JavaPlugin
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
 
-            debugLogger.info("   " + inactiveMyPet.toString());
+            DebugLogger.info("   " + inactiveMyPet.toString());
 
             wolfCount++;
         }
-        debugLogger.info(wolfCount + " wolf/wolves converted -------------------------");
+        DebugLogger.info(wolfCount + " wolf/wolves converted -------------------------");
         MyPetLogger.write("" + ChatColor.YELLOW + wolfCount + ChatColor.RESET + " wolf/wolves converted");
         return wolfCount;
     }
@@ -825,10 +827,5 @@ public class MyPetPlugin extends JavaPlugin
                 petPlayer.setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
             }
         }
-    }
-
-    public DebugLogger getDebugLogger()
-    {
-        return debugLogger;
     }
 }

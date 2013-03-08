@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.DamageInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -94,7 +94,7 @@ public class Damage extends DamageInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + damageIncrease));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + damageIncrease));
                 }
             }
         }

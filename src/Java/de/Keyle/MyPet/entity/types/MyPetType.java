@@ -71,7 +71,7 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.EntityCreature;
 import net.minecraft.server.v1_4_R1.World;
@@ -205,7 +205,7 @@ public enum MyPetType
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + entityClass.getName() + " is no valid MyPet(Entity)!");
-            MyPetUtil.getDebugLogger().warning(entityClass.getName() + " is no valid MyPet(Entity)!");
+            DebugLogger.warning(entityClass.getName() + " is no valid MyPet(Entity)!");
             e.printStackTrace();
         }
         return petEntity;
@@ -228,7 +228,7 @@ public enum MyPetType
         {
             e.printStackTrace();
             MyPetLogger.write(ChatColor.RED + myPetClass.getName() + " is no valid MyPet!");
-            MyPetUtil.getDebugLogger().warning(myPetClass.getName() + " is no valid MyPet!");
+            DebugLogger.warning(myPetClass.getName() + " is no valid MyPet!");
         }
         return pet;
     }

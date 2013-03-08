@@ -199,13 +199,13 @@ public abstract class MyPet implements IMyPet
             switch (createPet())
             {
                 case Success:
-                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", petName));
                     break;
             }
             if (MyPetConfiguration.USE_HUNGER_SYSTEM)
@@ -229,7 +229,7 @@ public abstract class MyPet implements IMyPet
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 petEntity.setLocation(petLocation);
-                if (!MyPetUtil.canSpawn(petLocation, petEntity))
+                if (!MyPetBukkitUtil.canSpawn(petLocation, petEntity))
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
@@ -388,7 +388,7 @@ public abstract class MyPet implements IMyPet
     public void setLocation(Location loc)
     {
         this.petLocation = loc;
-        if (status == PetState.Here && MyPetUtil.canSpawn(loc, this.craftMyPet.getHandle()))
+        if (status == PetState.Here && MyPetBukkitUtil.canSpawn(loc, this.craftMyPet.getHandle()))
         {
             craftMyPet.teleport(loc);
         }
@@ -429,7 +429,7 @@ public abstract class MyPet implements IMyPet
                     if (MyPetEconomy.canPay(getOwner(), cost))
                     {
                         MyPetEconomy.pay(getOwner(), cost);
-                        sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
+                        sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
                         respawnTime = 1;
                     }
                 }

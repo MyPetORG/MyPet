@@ -324,9 +324,9 @@ public class LevelCreator
                                 JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
                                 return;
                             }
-                            if (MyPetSkills.isValidSkill(skill.getName()))
+                            if (MyPetSkillsInfo.isValidSkill(skill.getName()))
                             {
-                                GuiMain.skillPropertyEditor.setHTML((ISkillInfo) skill);
+                                GuiMain.skillPropertyEditor.setHTML(skill);
                             }
                             GuiMain.skillPropertyEditor.getFrame().setVisible(true);
                             getFrame().setEnabled(false);

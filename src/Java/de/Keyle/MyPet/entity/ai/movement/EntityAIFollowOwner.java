@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import net.minecraft.server.v1_4_R1.Navigation;
 import net.minecraft.server.v1_4_R1.PathfinderGoal;
 import org.bukkit.Location;
@@ -144,7 +144,7 @@ public class EntityAIFollowOwner extends PathfinderGoal
 
                 if (!this.nav.a(this.petEntity.getOwner(), this.walkSpeed))
                 {
-                    if (this.petEntity.getOwner().onGround && this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetUtil.canSpawn(ownerLocation, this.petEntity))
+                    if (this.petEntity.getOwner().onGround && this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetBukkitUtil.canSpawn(ownerLocation, this.petEntity))
                     {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.a(this.petEntity.getOwner(), this.walkSpeed);

@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,11 +50,11 @@ public class CommandName implements CommandExecutor
                 name = name.substring(0, name.length() - 1);
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
             return true;
         }

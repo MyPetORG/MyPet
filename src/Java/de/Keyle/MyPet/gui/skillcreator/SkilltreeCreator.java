@@ -62,6 +62,8 @@ public class SkilltreeCreator
 
     DefaultTreeModel skilltreeTreeModel;
 
+    String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Giant", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
+
     private MyPetSkillTree skilltreeCopyPaste;
     MyPetSkillTreeMobType selectedMobtype;
 
@@ -270,19 +272,19 @@ public class SkilltreeCreator
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
-                savedPetTypes = MyPetSkillTreeLoaderJSON.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderJSON.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".json";
                 }
 
-                savedPetTypes = MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".st";
                 }
 
-                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".yml";
@@ -298,7 +300,7 @@ public class SkilltreeCreator
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
-                savedPetTypes = MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".st";
@@ -314,7 +316,7 @@ public class SkilltreeCreator
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
-                savedPetTypes = MyPetSkillTreeLoaderJSON.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderJSON.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".json";
@@ -330,7 +332,7 @@ public class SkilltreeCreator
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
-                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees");
+                savedPetTypes = MyPetSkillTreeLoaderYAML.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", petTypes);
                 for (String petType : savedPetTypes)
                 {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".yml";

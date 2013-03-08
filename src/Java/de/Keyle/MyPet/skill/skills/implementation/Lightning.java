@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.LightningInfo;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.entity.LightningStrike;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
@@ -78,7 +78,7 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_LightningChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_LightningChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
             }
         }
     }

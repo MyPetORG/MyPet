@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,7 +46,7 @@ public class CommandBehavior implements CommandExecutor
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
                     return true;
                 }
                 else if (myPet.getSkills().hasSkill("Behavior"))
@@ -58,7 +58,7 @@ public class CommandBehavior implements CommandExecutor
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Friendly"))
                             {
-                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
@@ -67,7 +67,7 @@ public class CommandBehavior implements CommandExecutor
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.aggressive"))
                             {
-                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
@@ -76,7 +76,7 @@ public class CommandBehavior implements CommandExecutor
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Farm"))
                             {
-                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
@@ -85,7 +85,7 @@ public class CommandBehavior implements CommandExecutor
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Raid"))
                             {
-                                myPet.sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
@@ -109,7 +109,7 @@ public class CommandBehavior implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyPetUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
             }
             return true;
         }

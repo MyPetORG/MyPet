@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_4_R1.*;
 import org.bukkit.ChatColor;
@@ -59,7 +60,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         super(world);
         MyPetLogger.write(ChatColor.RED + "Don't try to get a MyPet this way!");
-        MyPetUtil.getDebugLogger().severe("Default Entity constructor called!!!");
+        DebugLogger.severe("Default Entity constructor called!!!");
     }
 
     public EntityMyPet(World world, MyPet myPet)
@@ -285,7 +286,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                     else
                     {
-                        getMyPet().sendMessageToOwner(MyPetUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                        getMyPet().sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
                     }
                 }
             }

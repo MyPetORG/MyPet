@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.logger;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -38,10 +37,6 @@ public class MyPetLogger
         if (consoleCommandSender != null)
         {
             consoleCommandSender.sendMessage("[" + ChatColor.AQUA + ChatColor.MAGIC + "MyPet" + ChatColor.RESET + "] " + msg);
-        }
-        else if (MyPetPlugin.getPlugin() == null)
-        {
-            System.out.println(msg);
         }
     }
 }

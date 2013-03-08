@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -256,7 +257,7 @@ public class MyPetLanguage
         {
             yamlConfiguration.saveConfig();
             save = false;
-            MyPetUtil.getDebugLogger().info("Added new values to language config");
+            DebugLogger.info("Added new values to language config");
         }
     }
 

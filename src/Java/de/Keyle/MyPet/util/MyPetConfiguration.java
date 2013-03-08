@@ -38,6 +38,7 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -170,9 +171,9 @@ public class MyPetConfiguration
 
     public static void loadConfiguration()
     {
-        LEASH_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
-        Control.ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
-        Ride.ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
+        LEASH_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
+        Control.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
+        Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         HPregeneration.START_REGENERATION_TIME = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
@@ -229,15 +230,15 @@ public class MyPetConfiguration
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
-        EntityMyChicken.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyCow.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyMooshroom.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyOcelot.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyPig.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMySheep.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyVillager.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyWolf.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId()), Material.POTION);
-        EntityMyZombie.GROW_UP_ITEM = MyPetUtil.checkMaterial(config.getInt("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyChicken.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyCow.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyMooshroom.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyOcelot.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyPig.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMySheep.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyVillager.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyWolf.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyZombie.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId()), Material.POTION);
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -302,7 +303,7 @@ public class MyPetConfiguration
                 if (MyPetUtil.isInt(foodIDString))
                 {
                     int itemID = Integer.parseInt(foodIDString);
-                    if (MyPetUtil.isValidMaterial(itemID) && itemID != 0)
+                    if (MyPetBukkitUtil.isValidMaterial(itemID) && itemID != 0)
                     {
                         MyPet.setFood(myPetClass, Material.getMaterial(itemID));
                     }
@@ -314,7 +315,7 @@ public class MyPetConfiguration
             if (MyPetUtil.isInt(foodString))
             {
                 int itemID = Integer.parseInt(foodString);
-                if (MyPetUtil.isValidMaterial(itemID) && itemID != 0)
+                if (MyPetBukkitUtil.isValidMaterial(itemID) && itemID != 0)
                 {
                     MyPet.setFood(myPetClass, Material.getMaterial(itemID));
                 }
@@ -350,7 +351,7 @@ public class MyPetConfiguration
                 else
                 {
                     MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
-                    MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                    DebugLogger.info(leashFlagString + " is not a valid LeashFlag!");
                 }
             }
         }
@@ -363,7 +364,7 @@ public class MyPetConfiguration
             else
             {
                 MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
-                MyPetUtil.getDebugLogger().info(leashFlagString + " is not a valid LeashFlag!");
+                DebugLogger.info(leashFlagString + " is not a valid LeashFlag!");
             }
         }
     }

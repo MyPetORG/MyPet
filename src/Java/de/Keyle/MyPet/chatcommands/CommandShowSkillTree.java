@@ -24,7 +24,7 @@ import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -47,7 +47,7 @@ public class CommandShowSkillTree implements CommandExecutor
                     {
                         MyPetLogger.write("   " + skillTreeName);
                     }
-                    MyPetUtil.getDebugLogger().info("----- MyPet Skilltrees for " + args[0] + " end -----");
+                    DebugLogger.info("----- MyPet Skilltrees for " + args[0] + " end -----");
                 }
                 else
                 {
@@ -62,7 +62,7 @@ public class CommandShowSkillTree implements CommandExecutor
                     {
                         MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
                         MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : "none") + " -----");
-                        MyPetUtil.getDebugLogger().info("----- Console: MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
+                        DebugLogger.info("----- Console: MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
                         for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ":");
@@ -71,17 +71,17 @@ public class CommandShowSkillTree implements CommandExecutor
                                 if (skill.isAddedByInheritance())
                                 {
                                     MyPetLogger.write("   " + ChatColor.DARK_GRAY + skill.getName());
-                                    MyPetUtil.getDebugLogger().info("   (i) " + skill.getName());
+                                    DebugLogger.info("   (i) " + skill.getName());
                                 }
                                 else
                                 {
                                     MyPetLogger.write("   " + skill.getName());
-                                    MyPetUtil.getDebugLogger().info("   " + skill.getName());
+                                    DebugLogger.info("   " + skill.getName());
                                 }
                             }
                         }
                         MyPetLogger.write("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");
-                        MyPetUtil.getDebugLogger().info("----- MyPet Skilltree end -----");
+                        DebugLogger.info("----- MyPet Skilltree end -----");
                     }
                     else
                     {
