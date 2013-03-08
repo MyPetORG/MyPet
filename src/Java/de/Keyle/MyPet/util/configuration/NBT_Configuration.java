@@ -45,7 +45,7 @@ public class NBT_Configuration
     {
         if (nbtTagCompound == null)
         {
-            nbtTagCompound = new CompoundTag("root", new CompoundMap());
+            clearConfig();
         }
         return nbtTagCompound;
     }
@@ -113,17 +113,27 @@ public class NBT_Configuration
 
     public void load()
     {
+        if (!NBTFile.exists())
+        {
+            return;
+        }
         List<Tag<?>> tags = readRawNBT(NBTFile, true);
         if (tags != null)
         {
-            MyPetUtil.getDebugLogger().info("loaded compressed NBT file (" + NBTFile.getName() + ")");
+            if (MyPetUtil.getDebugLogger() != null)
+            {
+                MyPetUtil.getDebugLogger().info("loaded compressed NBT file (" + NBTFile.getName() + ")");
+            }
         }
         else
         {
             tags = readRawNBT(NBTFile, false);
             if (tags != null)
             {
-                MyPetUtil.getDebugLogger().info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
+                if (MyPetUtil.getDebugLogger() != null)
+                {
+                    MyPetUtil.getDebugLogger().info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
+                }
             }
         }
         if (tags != null && tags.size() > 0)
