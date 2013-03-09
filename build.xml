@@ -34,7 +34,6 @@
     <!-- Setting some vars -->
     <property name="MyPet.bukkit.version" value="1.0" />
     <property name="MyPet.minecraft.version" value="1.4.7" />
-    <property name="MyPet.minecraft.version.package" value="1_4_R1" />
     <property name="MyPet.mypet.version" value="1.0.7" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/Java" />
@@ -136,7 +135,6 @@
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${MyPet.build.number}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
         <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/gui/GuiMain.java" token="{@MINECRAFT_VERSION_UNDERSCORE@}" value="${MyPet.minecraft.version.package}" />
     </target>
 
     <!-- Compiles the java code -->
