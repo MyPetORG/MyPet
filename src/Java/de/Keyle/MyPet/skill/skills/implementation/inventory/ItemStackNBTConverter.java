@@ -34,9 +34,9 @@ public class ItemStackNBTConverter
     {
         CompoundTag compound = new CompoundTag(null, new CompoundMap());
 
-        compound.getValue().put("id", new IntTag("id", itemStack.id));
-        compound.getValue().put("Count", new IntTag("Count", itemStack.count));
-        compound.getValue().put("Damage", new IntTag("Damage", itemStack.getData()));
+        compound.getValue().put("id", new ShortTag("id", (short) itemStack.id));
+        compound.getValue().put("Count", new ByteTag("Count", (byte) itemStack.count));
+        compound.getValue().put("Damage", new ShortTag("Damage", (short) itemStack.getData()));
 
         if (itemStack.tag != null)
         {
@@ -47,9 +47,9 @@ public class ItemStackNBTConverter
 
     public static ItemStack CompundToItemStack(CompoundTag compound)
     {
-        int id = ((IntTag) compound.getValue().get("id")).getValue();
-        int count = ((IntTag) compound.getValue().get("Count")).getValue();
-        int damage = ((IntTag) compound.getValue().get("Damage")).getValue();
+        int id = ((ShortTag) compound.getValue().get("id")).getValue();
+        int count = ((ByteTag) compound.getValue().get("Count")).getValue();
+        int damage = ((ShortTag) compound.getValue().get("Damage")).getValue();
 
         ItemStack itemstack = new ItemStack(id, count, damage);
         if (compound.getValue().containsKey("tag"))
