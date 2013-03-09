@@ -66,7 +66,7 @@ public class GuiMain
         catch (Exception ignored)
         {
         }
-        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("resources/logo.png")).getImage();
+        Image logoImage = new ImageIcon(ClassLoader.getSystemResource("images/logo.png")).getImage();
 
         registerSkillsInfo();
 

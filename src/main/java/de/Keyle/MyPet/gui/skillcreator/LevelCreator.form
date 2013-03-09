@@ -40,7 +40,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <icon value="resources/add.png"/>
+              <icon value="images/add.png"/>
               <text value="Add Level"/>
             </properties>
           </component>
@@ -50,7 +50,7 @@
             </constraints>
             <properties>
               <enabled value="false"/>
-              <icon value="resources/add.png"/>
+              <icon value="images/add.png"/>
               <text value="Add Skill"/>
             </properties>
           </component>
@@ -62,7 +62,7 @@
         </constraints>
         <properties>
           <enabled value="false"/>
-          <icon value="resources/delete.png"/>
+          <icon value="images/delete.png"/>
           <text value="Delete Level/Skill"/>
         </properties>
       </component>
@@ -97,7 +97,7 @@
           <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <icon value="resources/back.png"/>
+          <icon value="images/back.png"/>
           <text value="Back"/>
         </properties>
       </component>
