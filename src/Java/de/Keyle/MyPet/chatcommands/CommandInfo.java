@@ -49,7 +49,7 @@ public class CommandInfo implements CommandExecutor
             {
                 sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
             }
-            else if (MyPetList.hasMyPet(petOwner))
+            else if (MyPetList.hasMyPet(playerName))
             {
                 MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
