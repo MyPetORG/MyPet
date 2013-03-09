@@ -178,9 +178,6 @@ public class MyPetPlugin extends JavaPlugin
         MyPetVehicleListener vehicleListener = new MyPetVehicleListener();
         getServer().getPluginManager().registerEvents(vehicleListener, this);
 
-        MyPetWorldListener worldListener = new MyPetWorldListener();
-        getServer().getPluginManager().registerEvents(worldListener, this);
-
         MyPetEntityListener entityListener = new MyPetEntityListener();
         getServer().getPluginManager().registerEvents(entityListener, this);
 
