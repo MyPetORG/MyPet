@@ -118,9 +118,9 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                 skillTree.setDisplayName(((StringTag) skilltreeCompound.getValue().get("Display")).getValue());
             }
 
-            if (skilltreeCompound.getValue().containsKey("Levels"))
+            if (skilltreeCompound.getValue().containsKey("Level"))
             {
-                ListTag levelList = (ListTag) skilltreeCompound.getValue().get("Levels");
+                ListTag levelList = (ListTag) skilltreeCompound.getValue().get("Level");
                 for (int i_level = 0 ; i_level < levelList.getValue().size() ; i_level++)
                 {
                     CompoundTag levelCompound = (CompoundTag) levelList.getValue().get(i_level);
