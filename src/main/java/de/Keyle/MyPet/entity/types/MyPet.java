@@ -52,6 +52,8 @@ public abstract class MyPet implements IMyPet
     private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
+    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
+    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
 
     static
     {
@@ -578,6 +580,35 @@ public abstract class MyPet implements IMyPet
 
     public void setExtendedInfo(CompoundTag info)
     {
+    }
+
+    public static int getCustomRespawnTimeFactor (Class<? extends MyPet> myPetClass)
+    {
+        if (customRespawnTimeFactor.containsKey(myPetClass))
+        {
+            return customRespawnTimeFactor.get(myPetClass);
+        }
+        return 0;
+    }
+
+    public static void setCustomRespawnTimeFactor(Class<? extends MyPet> myPetClass, int factor)
+    {
+        customRespawnTimeFactor.put(myPetClass, factor);
+    }
+
+
+    public static int getCustomRespawnTimeFixed (Class<? extends MyPet> myPetClass)
+    {
+        if (customRespawnTimeFixed.containsKey(myPetClass))
+        {
+            return customRespawnTimeFixed.get(myPetClass);
+        }
+        return 0;
+    }
+
+    public static void setCustomRespawnTimeFixed(Class<? extends MyPet> myPetClass, int factor)
+    {
+        customRespawnTimeFixed.put(myPetClass, factor);
     }
 
     @Override

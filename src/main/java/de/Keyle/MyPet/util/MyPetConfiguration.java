@@ -160,6 +160,8 @@ public class MyPetConfiguration
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
             setProperty("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor",0);
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed",0);
         }
 
         for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
@@ -251,6 +253,8 @@ public class MyPetConfiguration
             MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
             seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
+            MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor",0));
+            MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed",0));
         }
 
         if (config.getStringList("MyPet.exp.active") != null)

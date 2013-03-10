@@ -708,7 +708,7 @@ public class MyPetEntityListener implements Listener
                 return;
             }
             myPet.status = PetState.Dead;
-            myPet.respawnTime = MyPetConfiguration.RESPAWN_TIME_FIXED + (myPet.getExperience().getLevel() * MyPetConfiguration.RESPAWN_TIME_FACTOR);
+            myPet.respawnTime = (MyPetConfiguration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass())));
             event.setDroppedExp(0);
 
             if (MyPetConfiguration.USE_LEVEL_SYSTEM && MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
