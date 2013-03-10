@@ -73,6 +73,7 @@ public class MyPetConfiguration
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
+    public static boolean DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = false;
 
     public static void setDefault()
     {
@@ -84,6 +85,7 @@ public class MyPetConfiguration
         setProperty("MyPet.AutoSaveTime", 60);
         setProperty("MyPet.EnableEvents", false);
         setProperty("MyPet.RemovePetsAfterRelease", false);
+        setProperty("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
         setProperty("MyPet.Respawn.Time.Factor", 5);
         setProperty("MyPet.Respawn.Time.Fixed", 0);
@@ -204,6 +206,7 @@ public class MyPetConfiguration
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
+        DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

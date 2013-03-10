@@ -28,14 +28,21 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
+import de.Keyle.MyPet.skill.skills.implementation.Inventory;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import net.minecraft.server.v1_4_R1.EntityItem;
+import net.minecraft.server.v1_4_R1.World;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 public class MyPetPlayerListener implements Listener
@@ -249,6 +256,39 @@ public class MyPetPlayerListener implements Listener
                             }
                         }
                     }, 25L);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent event)
+    {
+        System.out.println(event.getEntity().getPlayer().getName());
+        if (MyPetPlayer.isMyPetPlayer(event.getEntity().getPlayer().getName()))
+        {
+            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getEntity().getPlayer().getName());
+            if (myPetPlayer.hasMyPet())
+            {
+                System.out.println(MyPetConfiguration.DROP_PET_INVENTORY_AFTER_PLAYER_DEATH);
+                final MyPet myPet = myPetPlayer.getMyPet();
+                if (myPet.getStatus() == PetState.Here && MyPetConfiguration.DROP_PET_INVENTORY_AFTER_PLAYER_DEATH)
+                {
+                    System.out.println("Da isser tot");
+                    World world = ((CraftWorld) event.getEntity().getLocation().getWorld()).getHandle();
+                    Location petLocation = event.getEntity().getLocation();
+                    MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                    for (int i = 0 ; i < inv.getSize() ; i++)
+                    {
+                        net.minecraft.server.v1_4_R1.ItemStack is = inv.splitWithoutUpdate(i);
+                        if (is != null)
+                        {
+                            is = is.cloneItemStack();
+                            EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                            itemEntity.pickupDelay = 10;
+                            world.addEntity(itemEntity);
+                        }
+                    }
                 }
             }
         }
