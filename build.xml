@@ -180,7 +180,7 @@
     <!-- Does all the other steps and copy jar to testfolder -->
     <target name="Test" depends="Main">
         <description>Test target</description>
-        <copyfile src="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" dest="${MyPet.test.output.dir}/MyPet.jar" />
+        <copyfile src="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" dest="${MyPet.test.output.dir}/MyPet-${MyPet.mypet.version}.jar" />
     </target>
 
     <!-- Does all the other steps and copy jar to testfolder -->
