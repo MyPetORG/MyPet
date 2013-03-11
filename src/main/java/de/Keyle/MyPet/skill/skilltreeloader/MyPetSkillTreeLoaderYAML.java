@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
@@ -274,13 +273,13 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         File skillFile;
         List<String> savedPetTypes = new ArrayList<String>();
 
-        for (MyPetType petType : MyPetType.values())
+        for (String petType : mobtypes)
         {
-            skillFile = new File(configPath + File.separator + petType.getTypeName().toLowerCase() + ".yml");
+            skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".yml");
             yamlConfiguration = new SnakeYAML_Configuration(skillFile);
-            if (saveSkillTree(yamlConfiguration, petType.getTypeName()))
+            if (saveSkillTree(yamlConfiguration, petType))
             {
-                savedPetTypes.add(petType.getTypeName());
+                savedPetTypes.add(petType);
             }
         }
 
