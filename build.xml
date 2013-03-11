@@ -68,6 +68,7 @@
         <pathelement location="${MyPet.lib.dir}/AncientRPG.jar" />
         <pathelement location="${MyPet.lib.dir}/simplenbt-1.0.5-SNAPSHOT.jar" />
         <pathelement location="${MyPet.lib.dir}/snakeyaml-1.12.jar" />
+        <pathelement location="${MyPet.lib.dir}/json-simple-1.1.1.jar" />
         <pathelement location="${MyPet.lib.dir}/bukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
         <pathelement location="${MyPet.lib.dir}/craftbukkit-${MyPet.minecraft.version}-R${MyPet.bukkit.version}.jar" />
     </path>
@@ -113,6 +114,11 @@
         <unjar src="${MyPet.lib.dir}/snakeyaml-1.12.jar" dest="${MyPet.output.dir.build}">
             <patternset>
                 <include name="org/yaml/snakeyaml/" />
+            </patternset>
+        </unjar>
+        <unjar src="${MyPet.lib.dir}/json-simple-1.1.1.jar" dest="${MyPet.output.dir.build}">
+            <patternset>
+                <include name="org/json/simple/" />
             </patternset>
         </unjar>
         <replace file="${MyPet.output.dir.build}/plugin.yml" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
