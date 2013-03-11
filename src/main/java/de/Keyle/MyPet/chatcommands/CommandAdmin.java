@@ -82,7 +82,6 @@ public class CommandAdmin implements CommandExecutor
             }
             name = name.substring(0, name.length() - 1);
             myPet.setPetName(name);
-            DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
         }
         else if (option.equalsIgnoreCase("exp") && args.length >= 3)
@@ -113,13 +112,11 @@ public class CommandAdmin implements CommandExecutor
                         myPet.getSkills().reset();
                         myPet.getExperience().reset();
                         myPet.getExperience().addExp(Exp);
-                        DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
                         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
                     }
                     else
                     {
                         myPet.getExperience().addExp(Exp - myPet.getExperience().getExp());
-                        DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
                         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
                     }
                 }
@@ -131,7 +128,6 @@ public class CommandAdmin implements CommandExecutor
                     double Exp = Double.parseDouble(value);
                     Exp = Exp < 0 ? 0 : Exp;
                     myPet.getExperience().addExp(Exp);
-                    DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
                 }
             }
@@ -145,7 +141,6 @@ public class CommandAdmin implements CommandExecutor
                     if (Exp <= myPet.getExperience().getCurrentExp())
                     {
                         myPet.getExperience().removeExp(Exp);
-                        DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + "exp.");
                         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + "exp.");
                     }
                     else
@@ -154,7 +149,6 @@ public class CommandAdmin implements CommandExecutor
                         myPet.getSkills().reset();
                         myPet.getExperience().reset();
                         myPet.getExperience().addExp(Exp);
-                        DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
                         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
                     }
                 }
@@ -177,7 +171,6 @@ public class CommandAdmin implements CommandExecutor
             MyPet myPet = MyPetList.getMyPet(petOwner);
             if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
             {
-                DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
             }
             else if (myPet.getStatus() == PetState.Dead)
@@ -194,12 +187,10 @@ public class CommandAdmin implements CommandExecutor
                 {
                     myPet.respawnTime = 0;
                 }
-                DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
             }
             else
             {
-                DebugLogger.info("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
             }
         }
