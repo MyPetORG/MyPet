@@ -29,6 +29,7 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
+import org.spout.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class MyPetPlayer implements IScheduler
         }
     }
 
-    public void addExtendedInfo(String key, CompoundTag compound)
+    public void addExtendedInfo(String key, Tag<?> compound)
     {
         extendedInfo.getValue().put(key, compound);
         customData = true;
