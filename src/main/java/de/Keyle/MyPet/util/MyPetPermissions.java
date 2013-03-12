@@ -20,7 +20,9 @@
 
 package de.Keyle.MyPet.util;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissibleBase;
 
 public class MyPetPermissions
 {
@@ -55,6 +57,58 @@ public class MyPetPermissions
     }
 
     public static boolean hasExtended(Player player, String node, boolean defaultValue)
+    {
+        if (USE_EXTENDET_PERMISSIONS)
+        {
+            return has(player, node, defaultValue);
+        }
+        return defaultValue;
+    }
+
+    public static boolean has(OfflinePlayer player, String node)
+    {
+        if (player != null)
+        {
+            if(!ENABLED || player.isOp())
+            {
+                return true;
+            }
+            else
+            {
+                PermissibleBase pb = new PermissibleBase(player);
+                return pb.hasPermission(node);
+            }
+        }
+        return false;
+    }
+
+    public static boolean has(OfflinePlayer player, String node, boolean defaultValue)
+    {
+        if (player != null)
+        {
+            if(player.isOp())
+            {
+                return true;
+            }
+            else if(ENABLED)
+            {
+                PermissibleBase pb = new PermissibleBase(player);
+                return pb.hasPermission(node);
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasExtended(OfflinePlayer player, String node)
+    {
+        return !USE_EXTENDET_PERMISSIONS || has(player, node);
+    }
+
+    public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue)
     {
         if (USE_EXTENDET_PERMISSIONS)
         {
