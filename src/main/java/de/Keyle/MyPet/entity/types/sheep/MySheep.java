@@ -103,7 +103,7 @@ public class MySheep extends MyPet
         if (info.getValue().containsKey("Color"))
         {
             byte data;
-            if (info.getValue().get("BlockData").getType() == TagType.TAG_INT)
+            if (info.getValue().get("Color").getType() == TagType.TAG_INT)
             {
                 data = ((IntTag) info.getValue().get("Color")).getValue().byteValue();
             }
