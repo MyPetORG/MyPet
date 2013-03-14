@@ -35,12 +35,6 @@ public class EntityMyChicken extends EntityMyPet
     public static boolean CAN_LAY_EGGS = true;
     public static Material GROW_UP_ITEM = Material.POTION;
 
-    // Variables for flying of the chicken
-    public float b = 0.0F;
-    public float c = 0.0F;
-    public float g;
-    public float h;
-    public float i = 1.0F;
     private int nextEggTimer;
 
     public EntityMyChicken(World world, MyPet myPet)
@@ -151,31 +145,11 @@ public class EntityMyChicken extends EntityMyPet
     public void c()
     {
         super.c();
-        this.h = this.b;
-        this.g = this.c;
-        this.c = (float) ((double) this.c + (double) (this.onGround ? -1 : 4) * 0.3D);
-        if (this.c < 0.0F)
-        {
-            this.c = 0.0F;
-        }
 
-        if (this.c > 1.0F)
-        {
-            this.c = 1.0F;
-        }
-
-        if (!this.onGround && this.i < 1.0F)
-        {
-            this.i = 1.0F;
-        }
-
-        this.i = (float) ((double) this.i * 0.9D);
         if (!this.onGround && this.motY < 0.0D)
         {
             this.motY *= 0.6D;
         }
-
-        this.b += this.i * 2.0F;
 
         if (CAN_LAY_EGGS && !world.isStatic && --nextEggTimer <= 0)
         {
