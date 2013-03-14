@@ -233,7 +233,7 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                     levelCompound.getValue().put("Name", new ListTag<CompoundTag>("Skills", CompoundTag.class, skillList));
                     levelList.add(levelCompound);
                 }
-                skilltreeCompound.getValue().put("Level", new ListTag<CompoundTag>("Levels", CompoundTag.class, levelList));
+                skilltreeCompound.getValue().put("Level", new ListTag<CompoundTag>("Level", CompoundTag.class, levelList));
                 skilltreeList.add(skilltreeCompound);
             }
             nbtConfiguration.getNBTCompound().getValue().put("Skilltrees", new ListTag<CompoundTag>("Skilltrees", CompoundTag.class, skilltreeList));
