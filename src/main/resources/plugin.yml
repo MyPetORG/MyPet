@@ -19,6 +19,7 @@ commands:
   petrelease:
     description: Release your MyPet.
     usage: '/<command> <PetName>'
+    permission: MyPet.user.release
   petstop:
     aliases: [pets, ps]
     description: your MyPet stop attacking.
@@ -43,6 +44,7 @@ commands:
   petadmin:
     description: Set the Exp or Name of a MyPet
     usage: '/<command> [PlayerName] name/exp [Value]'
+    permission: MyPet.admin
   petskilltree:
     aliases: [pst, petst]
     description: Shows a fully configured skilltree
@@ -59,6 +61,7 @@ commands:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
+    permission: MyPet.user.respawn
 
 permissions:
   MyPet.user.leash.*:
@@ -122,7 +125,6 @@ permissions:
   MyPet.user.*:
     description: Gives access to MyPet features for normal user.
     children:
-      MyPet.admin: false
       MyPet.user.leash.*: true
       MyPet.user.keep.*: true
       MyPet.user.release: true
@@ -131,3 +133,4 @@ permissions:
     description: Allows usage of /petrelease
   MyPet.admin:
     description: Gives access to admin MyPet features.
+    default: op
