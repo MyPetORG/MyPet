@@ -61,7 +61,7 @@ public class EntityMyCow extends EntityMyPet
     {
         if (flag)
         {
-            this.datawatcher.watch(12, new Integer(-24000));
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
         }
         else
         {
