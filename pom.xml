@@ -99,10 +99,6 @@
             <id>MyPet</id>
             <url>http://localhost:8081/content/repositories/MyPet/</url>
         </repository>
-        <snapshotRepository>
-            <id>MyPet-SNAPSHOT</id>
-            <url>http://localhost:8081/content/repositories/MyPet-SNAPSHOT/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
