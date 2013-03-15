@@ -159,7 +159,9 @@ public class EntityMyPigZombie extends EntityMyPet
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                setPetEquipment(b(itemStack), itemStack.cloneItemStack());
+                ItemStack itemStackClone = itemStack.cloneItemStack();
+                itemStackClone.count = 1;
+                setPetEquipment(b(itemStack), itemStackClone);
                 if (!entityhuman.abilities.canInstantlyBuild)
                 {
                     --itemStack.count;
