@@ -171,6 +171,7 @@ public class MyPetLanguage
         addString("Name_Dead", "MyPet.Name.Dead", "Dead");
         addString("Name_Disabled", "MyPet.Name.Disabled", "Disabled");
         addString("Name_DROWNING", "MyPet.Name.Drowning", "Drowning");
+        addString("Name_Duel", "MyPet.Name.Duel", "Duel");
         // --  E  --
         addString("Name_EGG", "MyPet.Name.Egg", "Egg");
         addString("Name_Enabled", "MyPet.Name.Enabled", "Enabled");
