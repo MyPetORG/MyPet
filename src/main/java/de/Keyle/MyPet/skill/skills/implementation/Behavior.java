@@ -50,6 +50,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         behaviorActive.put(BehaviorState.Farm, false);
         behaviorActive.put(BehaviorState.Friendly, false);
         behaviorActive.put(BehaviorState.Raid, false);
+        behaviorActive.put(BehaviorState.Duel,false);
     }
 
     public void setMyPet(MyPet myPet)
@@ -122,6 +123,19 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
                 }
                 valuesEdit = true;
             }
+            if (upgrade.getProperties().getValue().containsKey("duel"))
+            {
+                behaviorActive.put(BehaviorState.Duel, ((ByteTag) upgrade.getProperties().getValue().get("duel")).getBooleanValue());
+                if (behaviorActive.get(BehaviorState.Duel) && BehaviorState.Duel.isActive())
+                {
+                    if (!activeModes.equalsIgnoreCase(""))
+                    {
+                        activeModes += ", ";
+                    }
+                    activeModes += ChatColor.GOLD + "Duel" + ChatColor.RESET;
+                }
+                valuesEdit = true;
+            }
             if (!quiet && valuesEdit)
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddBehavior").replace("%petname%", myPet.petName)));
@@ -162,6 +176,14 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             }
             activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Raid") + ChatColor.RESET;
         }
+        if (behaviorActive.get(BehaviorState.Duel) && BehaviorState.Duel.isActive())
+        {
+            if (!activeModes.equalsIgnoreCase(""))
+            {
+                activeModes += ", ";
+            }
+            activeModes += ChatColor.GOLD + MyPetLanguage.getString("Name_Duel") + ChatColor.RESET;
+        }
         return MyPetLanguage.getString("Name_Modes") + ": " + activeModes;
     }
 
@@ -173,12 +195,13 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         behaviorActive.put(BehaviorState.Farm, false);
         behaviorActive.put(BehaviorState.Friendly, false);
         behaviorActive.put(BehaviorState.Raid, false);
+        behaviorActive.put(BehaviorState.Duel,false);
         active = false;
     }
 
     public static enum BehaviorState
     {
-        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true);
+        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
 
         boolean active;
 

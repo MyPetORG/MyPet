@@ -34,9 +34,9 @@ import java.util.Map;
 
 @SkillName("Behavior")
 @SkillProperties(
-        parameterNames = {"friend", "aggro", "farm", "raid"},
-        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},
-        parameterDefaultValues = {"true", "true", "true", "true"})
+        parameterNames = {"friend", "aggro", "farm", "raid", "duel"},
+        parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},
+        parameterDefaultValues = {"true", "true", "true", "true", "true"})
 public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;

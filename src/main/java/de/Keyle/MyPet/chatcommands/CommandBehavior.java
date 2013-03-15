@@ -90,6 +90,15 @@ public class CommandBehavior implements CommandExecutor
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
                         }
+                        else if (args[0].equalsIgnoreCase("duel") && BehaviorState.Duel.isActive())
+                        {
+                            if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Duel"))
+                            {
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                return true;
+                            }
+                            behaviorSkill.activateBehavior(Behavior.BehaviorState.Duel);
+                        }
                         else if (args[0].equalsIgnoreCase("normal"))
                         {
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Normal);
