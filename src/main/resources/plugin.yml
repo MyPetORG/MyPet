@@ -1,6 +1,6 @@
 name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
-version: {@MYPET_VERSION@}
+version: ${project.version}
 author: Keyle
 website: http://dev.bukkit.org/server-mods/mywolf/
 softdepend: [Vault, Heroes, AncientRPG]

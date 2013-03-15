@@ -204,8 +204,8 @@ public class CommandAdmin implements CommandExecutor
         }
         else if (option.equalsIgnoreCase("build"))
         {
-            DebugLogger.info("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
-            sender.sendMessage("MyPet-" + MyPetPlugin.MyPetVersion + "-b#" + MyPetPlugin.MyPetBuild);
+            DebugLogger.info("MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
+            sender.sendMessage("MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
         }
         else if (option.equalsIgnoreCase("reloadskills"))
         {

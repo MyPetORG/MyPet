@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.MyPetVersion;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -454,7 +454,7 @@ public class LevelCreator
     {
         if (levelCreatorFrame == null)
         {
-            levelCreatorFrame = new JFrame("LevelCreator - MyPet " + MyPetPlugin.MyPetVersion);
+            levelCreatorFrame = new JFrame("LevelCreator - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return levelCreatorFrame;
     }

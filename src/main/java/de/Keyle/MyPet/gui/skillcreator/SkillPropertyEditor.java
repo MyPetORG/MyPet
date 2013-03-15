@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.MyPetVersion;
 import org.spout.nbt.*;
 
 import javax.swing.*;
@@ -163,7 +163,7 @@ public class SkillPropertyEditor
     {
         if (skillPropertyEditorFrame == null)
         {
-            skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetPlugin.MyPetVersion);
+            skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return skillPropertyEditorFrame;
     }

@@ -49,6 +49,10 @@
         <isset property="env.BUILD_NUMBER" />
     </condition>
 
+    <condition property="project.version" value="${project.version}" else="${MyPet.mypet.version}">
+        <isset property="project.version" />
+    </condition>
+
     <echo message="Buildnumber: ${MyPet.build.number}" />
 
     <!-- Adding classpathes -->
@@ -98,7 +102,7 @@
 
     <!-- Copies resources to build dir -->
     <target name="3_copyresources" depends="1_clean, 2_makedir">
-        <copy todir="${MyPet.output.dir.build}/">
+        <copy todir="${MyPet.output.dir.build}">
             <fileset dir="${MyPet.resources.dir}" />
         </copy>
         <unjar src="${idea.lib.dir}/forms_rt.jar" dest="${MyPet.output.dir.build}">
@@ -121,7 +125,7 @@
                 <include name="org/json/simple/" />
             </patternset>
         </unjar>
-        <replace file="${MyPet.output.dir.build}/plugin.yml" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
+        <replace file="${MyPet.output.dir.build}/plugin.yml" token="${project.version}" value="${MyPet.mypet.version}" />
     </target>
 
     <!-- Copies source to src dir -->
@@ -132,9 +136,6 @@
         <copy todir="${MyPet.output.dir.src}">
             <fileset dir="${MyPet.test.dir}" />
         </copy>
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@BUILD_NUMBER@}" value="${MyPet.build.number}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MYPET_VERSION@}" value="${MyPet.mypet.version}" />
-        <replace file="${MyPet.output.dir.src}/de/Keyle/MyPet/MyPetPlugin.java" token="{@MINECRAFT_VERSION@}" value="${MyPet.minecraft.version}" />
     </target>
 
     <!-- Compiles the java code -->
@@ -165,8 +166,11 @@
         <property name="version.num" value="1.00" />
         <jar destfile="${MyPet.output.dir}/MyPet/MyPet-${MyPet.mypet.version}.jar" basedir="${MyPet.output.dir.build}">
             <manifest>
-                <attribute name="Created-By" value="Keyle" />
-                <attribute name="Build" value="${MyPet.build.number}" />
+                <attribute name="Project-Author" value="Keyle" />
+                <attribute name="Project-Name" value="MyPet" />
+                <attribute name="Project-Build" value="${MyPet.build.number}" />
+                <attribute name="Project-Version" value="${MyPet.mypet.version}" />
+                <attribute name="Project-Minecraft-Version" value="${MyPet.minecraft.version}" />
                 <attribute name="Main-Class" value="de.Keyle.MyPet.gui.GuiMain" />
             </manifest>
         </jar>

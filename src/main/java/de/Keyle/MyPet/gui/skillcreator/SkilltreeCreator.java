@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.gui.skillcreator;
 
-import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
+import de.Keyle.MyPet.util.MyPetVersion;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -412,7 +412,7 @@ public class SkilltreeCreator
     {
         if (skilltreeCreatorFrame == null)
         {
-            skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetPlugin.MyPetVersion);
+            skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return skilltreeCreatorFrame;
     }

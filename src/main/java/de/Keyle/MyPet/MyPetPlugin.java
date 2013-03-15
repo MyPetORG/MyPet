@@ -88,10 +88,6 @@ public class MyPetPlugin extends JavaPlugin
     private File NBTPetFile;
     private boolean isReady = false;
 
-    public static final String MyPetVersion = "{@MYPET_VERSION@}";
-    public static final String MyPetBuild = "{@BUILD_NUMBER@}";
-    public static final String CompatibleMinecraftVersion = "{@MINECRAFT_VERSION@}";
-
     public static MyPetPlugin getPlugin()
     {
         return plugin;
@@ -122,6 +118,7 @@ public class MyPetPlugin extends JavaPlugin
     public void onEnable()
     {
         plugin = this;
+        MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
 
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
@@ -140,16 +137,16 @@ public class MyPetPlugin extends JavaPlugin
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
 
-        if (!CompatibleMinecraftVersion.equalsIgnoreCase(minecraftVersion))
+        if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion))
         {
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
             MyPetLogger.write(ChatColor.RED + "This version of MyPet only work with:");
-            MyPetLogger.write(ChatColor.RED + "   Minecraft " + CompatibleMinecraftVersion);
+            MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
             MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
             DebugLogger.warning("---------------------------------------------------------");
             DebugLogger.warning("This version of MyPet only work with:");
-            DebugLogger.warning("   Minecraft " + CompatibleMinecraftVersion);
+            DebugLogger.warning("   Minecraft " + MyPetVersion.getMinecraftVersion());
             DebugLogger.warning("MyPet disabled!");
             DebugLogger.warning("---------------------------------------------------------");
             checkForUpdates(minecraftVersion);
@@ -158,12 +155,12 @@ public class MyPetPlugin extends JavaPlugin
         }
 
         DebugLogger.info("----------- loading MyPet ... -----------");
-        DebugLogger.info("MyPet " + MyPetVersion + " build: " + MyPetBuild);
+        DebugLogger.info("MyPet " + MyPetVersion.getMyPetVersion() + " build: " + MyPetVersion.getMyPetBuild());
         DebugLogger.info("Bukkit " + getServer().getVersion());
 
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
-        checkForUpdates(CompatibleMinecraftVersion);
+        checkForUpdates(MyPetVersion.getMinecraftVersion());
 
         DebugLogger.info("MobEXP table: -------------------------");
         for (MyPetMonsterExperience monsterExperience : MyPetMonsterExperience.mobExp.values())
@@ -403,8 +400,8 @@ public class MyPetPlugin extends JavaPlugin
         HeroesDamageFix.reset();
         AncientRpgDamageFix.findAncientRpgPlugin();
 
-        DebugLogger.info("version " + MyPetVersion + "-b" + MyPetBuild + " ENABLED");
-        MyPetLogger.write("version " + MyPetVersion + "-b" + MyPetBuild + ChatColor.GREEN + " ENABLED");
+        DebugLogger.info("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + " ENABLED");
+        MyPetLogger.write("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())
         {
@@ -509,7 +506,7 @@ public class MyPetPlugin extends JavaPlugin
         UpdateCheck updateCheck = new UpdateCheck();
         if (MyPetConfiguration.CHECK_FOR_UPDATES)
         {
-            if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion))
+            if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion.getMyPetVersion()))
             {
                 MyPetLogger.write(ChatColor.RED + "Update available!: " + ChatColor.RESET + updateCheck.getLastAvailableUpdate().getTitle());
                 DebugLogger.info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
@@ -767,8 +764,8 @@ public class MyPetPlugin extends JavaPlugin
             petList.add(petNBT);
             petCount++;
         }
-        nbtConfiguration.getNBTCompound().getValue().put("Version", new StringTag("Version", MyPetVersion));
-        nbtConfiguration.getNBTCompound().getValue().put("Build", new StringTag("Build", MyPetBuild));
+        nbtConfiguration.getNBTCompound().getValue().put("Version", new StringTag("Version", MyPetVersion.getMyPetVersion()));
+        nbtConfiguration.getNBTCompound().getValue().put("Build", new StringTag("Build", MyPetVersion.getMyPetBuild()));
         nbtConfiguration.getNBTCompound().getValue().put("CleanShutdown", new ByteTag("CleanShutdown", shutdown));
         nbtConfiguration.getNBTCompound().getValue().put("Pets", new ListTag<CompoundTag>("Pets", CompoundTag.class, petList));
         nbtConfiguration.getNBTCompound().getValue().put("Players", savePlayers());
