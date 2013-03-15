@@ -130,10 +130,20 @@ public class EntityMyBat extends EntityMyPet
         return "mob.bat.death";
     }
 
+    public void c()
+    {
+        super.c();
+
+        if (!this.onGround && this.motY < 0.0D)
+        {
+            this.motY *= 0.6D;
+        }
+    }
+
     public void j_()
     {
         super.j_();
-        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY+0.65), (int) locZ).isSolid())
+        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY+1.), (int) locZ).isSolid())
         {
             this.locY += 0.65;
         }
