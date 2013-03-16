@@ -459,6 +459,7 @@ public class MyPetPlugin extends JavaPlugin
             }
         }
         this.isReady = true;
+        savePets(false);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
