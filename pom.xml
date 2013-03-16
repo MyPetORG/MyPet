@@ -315,7 +315,7 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>org.json.simple</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.configuration.json-simple</shadedPattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.configuration.jsonsimple</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.yaml.snakeyaml</pattern>
