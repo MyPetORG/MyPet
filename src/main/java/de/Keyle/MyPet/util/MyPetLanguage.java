@@ -79,6 +79,7 @@ public class MyPetLanguage
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%reset% first.");
         addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %name%.");
         addString("Msg_CantUse", "MyPet.Message.cantuse", "%red%You can not use this now.");
+        addString("Msg_CantViewPetInfo", "MyPet.Message.cantviewpetinfo","%red%Nothing to see here, move along!");
         addString("Msg_Cmd_petinfo", "MyPet.Message.petinfo", " [player] | Display info about a MyPet  (alias: /pinfo)");
         addString("Msg_Cmd_petname", "MyPet.Message.petname", " <new pet name> | Set the name of your pet");
         addString("Msg_Cmd_petrelease", "MyPet.Message.petrelease", " <petname> | Release your pet");

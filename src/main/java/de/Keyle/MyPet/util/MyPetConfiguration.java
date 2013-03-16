@@ -74,6 +74,14 @@ public class MyPetConfiguration
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = false;
+    public static boolean ADMIN_ONLY_PETNAME_INFO = false;
+    public static boolean ADMIN_ONLY_PETHP_INFO = false;
+    public static boolean ADMIN_ONLY_PETDAMAGE_INFO = false;
+    public static boolean ADMIN_ONLY_PETHUNGER_INFO = false;
+    public static boolean ADMIN_ONLY_PETLEVEL_INFO = false;
+    public static boolean ADMIN_ONLY_PETEXP_INFO = false;
+    public static boolean ADMIN_ONLY_PETOWNER_INFO = false;
+
 
     public static void setDefault()
     {
@@ -152,6 +160,16 @@ public class MyPetConfiguration
         setProperty("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
         setProperty("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
 
+
+        setProperty("MyPet.Info.AdminOnly.PetName", false);
+        setProperty("MyPet.Info.AdminOnly.PetOwner", false);
+        setProperty("MyPet.Info.AdminOnly.PetHP", false);
+        setProperty("MyPet.Info.AdminOnly.PetDamage", false);
+        setProperty("MyPet.Info.AdminOnly.PetHunger", true);
+        setProperty("MyPet.Info.AdminOnly.PetLevel", true);
+        setProperty("MyPet.Info.AdminOnly.PetEXP", true);
+
+
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
@@ -209,6 +227,13 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
+        ADMIN_ONLY_PETNAME_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
+        ADMIN_ONLY_PETHP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
+        ADMIN_ONLY_PETDAMAGE_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetDamage", false);
+        ADMIN_ONLY_PETHUNGER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHunger", false);
+        ADMIN_ONLY_PETLEVEL_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", false);
+        ADMIN_ONLY_PETEXP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", false);
+        ADMIN_ONLY_PETOWNER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", false);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

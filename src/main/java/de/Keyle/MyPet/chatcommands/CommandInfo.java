@@ -51,6 +51,7 @@ public class CommandInfo implements CommandExecutor
             }
             else if (MyPetList.hasMyPet(playerName))
             {
+                MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
                 MyPet myPet = MyPetList.getMyPet(playerName);
                 String msg;
                 if (myPet.getStatus() == PetState.Dead)
@@ -71,30 +72,47 @@ public class CommandInfo implements CommandExecutor
                 }
 
 
-                player.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
-                player.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
-
-                if (!myPet.isPassiv())
+                if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETNAME_INFO,myPetPlayer,myPet))
+                {
+                    player.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
+                }
+                if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!MyPetConfiguration.ADMIN_ONLY_PETOWNER_INFO,myPetPlayer,myPet))
+                {
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
+                }
+                if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETHP_INFO,myPetPlayer,myPet))
+                {
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
+                }
+                if (!myPet.isPassiv() && canSee(!MyPetConfiguration.ADMIN_ONLY_PETDAMAGE_INFO,myPetPlayer,myPet))
                 {
                     int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                 }
-                if (MyPetConfiguration.USE_HUNGER_SYSTEM)
+                if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(!MyPetConfiguration.ADMIN_ONLY_PETHUNGER_INFO,myPetPlayer,myPet))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                 }
                 if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                 {
-                    int lvl = myPet.getExperience().getLevel();
-                    double exp = myPet.getExperience().getCurrentExp();
-                    double reqEXP = myPet.getExperience().getRequiredExp();
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                    if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETLEVEL_INFO,myPetPlayer,myPet))
+                    {
+                        int lvl = myPet.getExperience().getLevel();
+                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                    }
+                    if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETEXP_INFO,myPetPlayer,myPet))
+                    {
+                        double exp = myPet.getExperience().getCurrentExp();
+                        double reqEXP = myPet.getExperience().getRequiredExp();
+                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                    }
                 }
-                if (!playerName.equalsIgnoreCase(sender.getName()))
+                if(MyPetConfiguration.ADMIN_ONLY_PETNAME_INFO && MyPetConfiguration.ADMIN_ONLY_PETDAMAGE_INFO && MyPetConfiguration.ADMIN_ONLY_PETHP_INFO && MyPetConfiguration.ADMIN_ONLY_PETOWNER_INFO && MyPetConfiguration.ADMIN_ONLY_PETEXP_INFO
+                   && MyPetConfiguration.ADMIN_ONLY_PETHUNGER_INFO && MyPetConfiguration.ADMIN_ONLY_PETLEVEL_INFO && !myPetPlayer.isMyPetAdmin() && !(myPet.getOwner() == player))
                 {
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantViewPetInfo")));
                 }
+
                 return true;
             }
             else
@@ -112,5 +130,14 @@ public class CommandInfo implements CommandExecutor
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    public static boolean canSee(boolean flag, MyPetPlayer myPetPlayer, MyPet myPet)
+    {
+        if(flag || myPetPlayer.isMyPetAdmin() || myPet.getOwner() == myPetPlayer.getPlayer())
+        {
+            return true;
+        }
+        return false;
     }
 }
