@@ -20,10 +20,9 @@
 
 package de.Keyle.MyPet.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -32,37 +31,28 @@ public class MyPetVersion
 {
     private static boolean updated = false;
 
-    private static String MyPetVersion = "0.0.0";
-    private static String MyPetBuild = "0";
-    private static String MinecraftVersion = "0.0.0";
+    private static String myPetVersion = "0.0.0";
+    private static String myPetBuild = "0";
+    private static String minecraftVersion = "0.0.0";
 
     private static void getManifestVersion()
     {
         try
         {
-            Enumeration<URL> e = MyPetVersion.class.getClassLoader().getResources(JarFile.MANIFEST_NAME);
-            while(e.hasMoreElements())
+            String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
+
+            if(attr.getValue("Project-Version") != null)
             {
-                URL u = e.nextElement();
-
-                if(u.getPath().contains(MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()))
-                {
-                    Manifest mf = new Manifest(u.openStream());
-                    Attributes attr = mf.getMainAttributes();
-
-                    if(attr.getValue("Project-Version") != null)
-                    {
-                        MyPetVersion = attr.getValue("Project-Version");
-                    }
-                    if(attr.getValue("Project-Build") != null)
-                    {
-                        MyPetBuild = attr.getValue("Project-Build");
-                    }
-                    if(attr.getValue("Project-Minecraft-Version") != null)
-                    {
-                        MinecraftVersion = attr.getValue("Project-Minecraft-Version");
-                    }
-                }
+                myPetVersion = attr.getValue("Project-Version");
+            }
+            if(attr.getValue("Project-Build") != null)
+            {
+                myPetBuild = attr.getValue("Project-Build");
+            }
+            if(attr.getValue("Project-Minecraft-Version") != null)
+            {
+                minecraftVersion = attr.getValue("Project-Minecraft-Version");
             }
         }
         catch (IOException e)
@@ -75,6 +65,16 @@ public class MyPetVersion
         }
     }
 
+    public static Manifest getClassLoaderForExtraModule(String filepath) throws IOException
+    {
+        File jar = new File(filepath);
+        JarFile jf = new JarFile(jar);
+        Manifest mf = jf.getManifest();
+        jf.close();
+        return mf;
+
+    }
+
     public static String getMyPetVersion()
     {
         if(!updated)
@@ -82,7 +82,7 @@ public class MyPetVersion
             getManifestVersion();
             updated = true;
         }
-        return MyPetVersion;
+        return myPetVersion;
     }
 
     public static String getMyPetBuild()
@@ -92,7 +92,7 @@ public class MyPetVersion
             getManifestVersion();
             updated = true;
         }
-        return MyPetBuild;
+        return myPetBuild;
     }
 
     public static String getMinecraftVersion()
@@ -102,7 +102,7 @@ public class MyPetVersion
             getManifestVersion();
             updated = true;
         }
-        return MinecraftVersion;
+        return minecraftVersion;
     }
 
     public static void reset()
