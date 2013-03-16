@@ -51,9 +51,9 @@ public class CommandCall implements CommandExecutor
                 switch (myPet.createPet())
                 {
                     case Success:
+                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
                         if (MyPetConfiguration.ENABLE_EVENTS)
                         {
-                            sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
                             getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         break;
