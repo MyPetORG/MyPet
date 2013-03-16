@@ -125,7 +125,7 @@
                 <include name="org/json/simple/" />
             </patternset>
         </unjar>
-        <replace file="${MyPet.output.dir.build}/plugin.yml" token="${project.version}" value="${MyPet.mypet.version}" />
+        <replace file="${MyPet.output.dir.build}/plugin.yml" token="$${project.version}" value="${MyPet.mypet.version}" />
     </target>
 
     <!-- Copies source to src dir -->
