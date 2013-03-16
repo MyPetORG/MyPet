@@ -118,6 +118,7 @@ public class MyPetPlugin extends JavaPlugin
     public void onEnable()
     {
         plugin = this;
+        this.isReady = false;
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
 
@@ -680,6 +681,12 @@ public class MyPetPlugin extends JavaPlugin
 
     public int savePets(boolean shutdown)
     {
+        if(!isReady)
+        {
+            DebugLogger.warning("Tried to save MyPets but Plugin isn't ready!");
+            MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");
+            return 0;
+        }
         int petCount = 0;
         NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
         List<CompoundTag> petList = new ArrayList<CompoundTag>();
