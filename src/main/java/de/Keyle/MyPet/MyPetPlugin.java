@@ -410,13 +410,6 @@ public class MyPetPlugin extends JavaPlugin
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
 
-                if (myPetPlayer.hasMyPet())
-                {
-                    if (!MyPetPermissions.has(player, "MyPet.user.keep." + MyPetList.getMyPet(player).getPetType().getTypeName()))
-                    {
-                        MyPetList.setMyPetInactive(player);
-                    }
-                }
                 if (!myPetPlayer.hasMyPet() && myPetPlayer.hasInactiveMyPets())
                 {
                     IMyPet myPet = MyPetList.getLastActiveMyPet(myPetPlayer);
