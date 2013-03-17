@@ -107,9 +107,9 @@ public class MyPetPlugin extends JavaPlugin
             {
                 myPet.removePet();
             }
+            MyPetList.clearList();
         }
         getTimer().stopTimer();
-        MyPetList.clearList();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
