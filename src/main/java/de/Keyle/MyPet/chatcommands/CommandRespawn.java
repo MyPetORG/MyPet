@@ -27,10 +27,24 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandRespawn implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandRespawn implements CommandExecutor, TabCompleter
 {
+    private static List<String> optionsList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<String>();
+
+    static
+    {
+        optionsList.add("show");
+        optionsList.add("pay");
+        optionsList.add("auto");
+    }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -96,11 +110,32 @@ public class CommandRespawn implements CommandExecutor
                             myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnNoMoney").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
                         }
                     }
+                    else if(args[0].equalsIgnoreCase("show"))
+                    {
+                        if (myPet.getStatus() != PetState.Dead)
+                        {
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnShow").replace("%costs%", "-").replace("%petname%", myPet.petName).replace("%color%", (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString())));
+                        }
+                        else
+                        {
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnShow").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                        }
+                    }
                 }
             }
             return true;
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(strings.length == 1)
+        {
+            return optionsList;
+        }
+        return emptyList;
     }
 }

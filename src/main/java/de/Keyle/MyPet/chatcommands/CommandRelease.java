@@ -50,6 +50,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPigZombie;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftSkeleton;
 import org.bukkit.entity.*;
@@ -58,8 +59,13 @@ import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.material.MaterialData;
 
-public class CommandRelease implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandRelease implements CommandExecutor, TabCompleter
 {
+    private static List<String> emptyList = new ArrayList<String>();
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -306,5 +312,17 @@ public class CommandRelease implements CommandExecutor
         }
         sender.sendMessage("You can't use this command from server console!");
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(MyPetList.hasMyPet((Player) commandSender))
+        {
+            List<String> petnameList = new ArrayList<String>();
+            petnameList.add(MyPetPlayer.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
+            return petnameList;
+        }
+        return emptyList;
     }
 }

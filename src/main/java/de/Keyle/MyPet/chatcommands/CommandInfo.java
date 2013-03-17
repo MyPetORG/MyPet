@@ -28,10 +28,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandInfo implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandInfo implements CommandExecutor, TabCompleter
 {
+    private static List<String> emptyList = new ArrayList<String>();
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -130,6 +136,16 @@ public class CommandInfo implements CommandExecutor
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(strings.length == 1 && MyPetPermissions.has((Player) commandSender,"MyPet.admin",false))
+        {
+            return null;
+        }
+        return emptyList;
     }
 
     public static boolean canSee(boolean flag, MyPetPlayer myPetPlayer, MyPet myPet)

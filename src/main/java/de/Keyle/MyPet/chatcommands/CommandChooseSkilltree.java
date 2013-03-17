@@ -27,10 +27,16 @@ import de.Keyle.MyPet.util.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandChooseSkilltree implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
 {
+    private static List<String> emptyList = new ArrayList<String>();
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (!(sender instanceof Player))
@@ -103,5 +109,38 @@ public class CommandChooseSkilltree implements CommandExecutor
             sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        Player player = (Player) commandSender;
+        if (MyPetList.hasMyPet(player))
+        {
+            MyPet myPet = MyPetList.getMyPet(player);
+            if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
+            {
+                return emptyList;
+            }
+            else if (myPet.getSkillTree() != null && MyPetConfiguration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
+            {
+                return emptyList;
+            }
+            else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
+            {
+                MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
+
+                List<String> skilltreeList = new ArrayList<String>();
+                for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
+                {
+                    if (MyPetPermissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
+                    {
+                        skilltreeList.add(skillTree.getName());
+                    }
+                }
+                return skilltreeList;
+            }
+        }
+        return emptyList;
     }
 }

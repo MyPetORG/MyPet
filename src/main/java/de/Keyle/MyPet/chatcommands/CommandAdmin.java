@@ -38,12 +38,37 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CommandAdmin implements CommandExecutor
+public class CommandAdmin implements CommandExecutor, TabCompleter
 {
+    private static List<String> optionsList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> addSetRemoveList = new ArrayList<String>();
+    private static List<String> showList = new ArrayList<String>();
+
+    static
+    {
+        optionsList.add("name");
+        optionsList.add("exp");
+        optionsList.add("respawn");
+        optionsList.add("reload");
+        optionsList.add("reloadskills");
+        optionsList.add("build");
+
+        addSetRemoveList.add("add");
+        addSetRemoveList.add("set");
+        addSetRemoveList.add("remove");
+
+        showList.add("show");
+        showList.add("<number>");
+    }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -254,5 +279,59 @@ public class CommandAdmin implements CommandExecutor
             DebugLogger.info("Skilltrees reloaded.");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(!MyPetPermissions.has((Player) commandSender,"MyPet.admin",false))
+        {
+            return emptyList;
+        }
+        if(strings.length == 1)
+        {
+            return optionsList;
+        }
+        else if(strings.length >= 1)
+        {
+            if(strings[0].equalsIgnoreCase("name"))
+            {
+                if(strings.length == 2)
+                {
+                    return null;
+                }
+                if(strings.length > 2)
+                {
+                    return emptyList;
+                }
+            }
+            else if(strings[0].equalsIgnoreCase("exp"))
+            {
+                if(strings.length == 2)
+                {
+                    return null;
+                }
+                else if(strings.length == 3)
+                {
+                    return emptyList;
+                }
+                else if (strings.length == 4)
+                {
+                    return addSetRemoveList;
+                }
+            }
+            else if(strings[0].equalsIgnoreCase("respawn"))
+            {
+                if(strings.length == 2)
+                {
+                    return null;
+                }
+                if(strings.length == 3)
+                {
+                    return showList;
+                }
+            }
+        }
+        return emptyList;
     }
 }

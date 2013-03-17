@@ -32,10 +32,16 @@ import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandInventory implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandInventory implements CommandExecutor, TabCompleter
 {
+    private static List<String> emptyList = new ArrayList<String>();
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -97,5 +103,15 @@ public class CommandInventory implements CommandExecutor
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(strings.length == 1 && MyPetPermissions.has((Player) commandSender,"MyPet.admin",false))
+        {
+            return null;
+        }
+        return emptyList;
     }
 }

@@ -31,10 +31,27 @@ import de.Keyle.MyPet.util.MyPetPermissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class CommandBehavior implements CommandExecutor
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandBehavior implements CommandExecutor, TabCompleter
 {
+    private static List<String> behaviorList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<String>();
+
+    static
+    {
+        behaviorList.add("normal");
+        behaviorList.add("friendly");
+        behaviorList.add("aggressive");
+        behaviorList.add("raid");
+        behaviorList.add("farm");
+        behaviorList.add("duel");
+    }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -124,5 +141,15 @@ public class CommandBehavior implements CommandExecutor
         }
         sender.sendMessage("You can't use this command from server console!");
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
+    {
+        if(strings.length == 1)
+        {
+            return behaviorList;
+        }
+        return emptyList;
     }
 }
