@@ -246,6 +246,12 @@ public class MyPetExperience
             return;
         }
         this.exp = expEvent.getExp();
+
+        if (MyPetConfiguration.ENABLE_EVENTS)
+        {
+            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
+            getServer().getPluginManager().callEvent(spoutEvent);
+        }
     }
 
     public double getCurrentExp()
