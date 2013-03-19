@@ -72,7 +72,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
                 MyPet myPet = MyPetList.getMyPet(playerName);
 
-                if (canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
+                if (canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet) && myPet.getOwner() != myPetPlayer)
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
                 }
