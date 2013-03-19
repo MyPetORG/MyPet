@@ -160,6 +160,7 @@ public class MyPetConfiguration
         setProperty("MyPet.Info.AdminOnly.PetHunger", true);
         setProperty("MyPet.Info.AdminOnly.PetLevel", true);
         setProperty("MyPet.Info.AdminOnly.PetEXP", true);
+        setProperty("MyPet.Info.AdminOnly.PetSkilltree", true);
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -226,6 +227,7 @@ public class MyPetConfiguration
         PetInfoDisplay.Level.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", true);
         PetInfoDisplay.Exp.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
         PetInfoDisplay.Owner.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
+        PetInfoDisplay.Skilltree.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

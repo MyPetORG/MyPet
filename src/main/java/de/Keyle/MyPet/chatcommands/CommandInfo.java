@@ -40,7 +40,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
     public enum PetInfoDisplay
     {
-        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false);
+        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true);
 
         public boolean adminOnly = false;
 
@@ -109,6 +109,10 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
+                }
+                if (canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree().getDisplayName() != null)
+                {
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
                 }
                 if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                 {
