@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
@@ -74,14 +75,6 @@ public class MyPetConfiguration
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = false;
-    public static boolean ADMIN_ONLY_PETNAME_INFO = false;
-    public static boolean ADMIN_ONLY_PETHP_INFO = false;
-    public static boolean ADMIN_ONLY_PETDAMAGE_INFO = false;
-    public static boolean ADMIN_ONLY_PETHUNGER_INFO = false;
-    public static boolean ADMIN_ONLY_PETLEVEL_INFO = false;
-    public static boolean ADMIN_ONLY_PETEXP_INFO = false;
-    public static boolean ADMIN_ONLY_PETOWNER_INFO = false;
-
 
     public static void setDefault()
     {
@@ -226,13 +219,13 @@ public class MyPetConfiguration
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
-        ADMIN_ONLY_PETNAME_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
-        ADMIN_ONLY_PETHP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
-        ADMIN_ONLY_PETDAMAGE_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetDamage", false);
-        ADMIN_ONLY_PETHUNGER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHunger", false);
-        ADMIN_ONLY_PETLEVEL_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", true);
-        ADMIN_ONLY_PETEXP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
-        ADMIN_ONLY_PETOWNER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
+        PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
+        PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
+        PetInfoDisplay.Damage.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetDamage", false);
+        PetInfoDisplay.Hunger.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHunger", false);
+        PetInfoDisplay.Level.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", true);
+        PetInfoDisplay.Exp.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
+        PetInfoDisplay.Owner.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

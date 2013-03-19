@@ -38,6 +38,18 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 {
     private static List<String> emptyList = new ArrayList<String>();
 
+    public enum PetInfoDisplay
+    {
+        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false);
+
+        public boolean adminOnly = false;
+
+        PetInfoDisplay(boolean adminOnly)
+        {
+            this.adminOnly = adminOnly;
+        }
+    }
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
@@ -59,66 +71,67 @@ public class CommandInfo implements CommandExecutor, TabCompleter
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
                 MyPet myPet = MyPetList.getMyPet(playerName);
-                String msg;
-                if (myPet.getStatus() == PetState.Dead)
-                {
-                    msg = ChatColor.RED + MyPetLanguage.getString("Name_Dead");
-                }
-                else if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
-                {
-                    msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
-                }
-                else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
-                {
-                    msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
-                }
-                else
-                {
-                    msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
-                }
 
-
-                if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETNAME_INFO,myPetPlayer,myPet))
+                if (canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
                 }
-                if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!MyPetConfiguration.ADMIN_ONLY_PETOWNER_INFO,myPetPlayer,myPet))
+                if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
                 }
-                if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETHP_INFO,myPetPlayer,myPet))
+                if (canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
                 {
+                    String msg;
+                    if (myPet.getStatus() == PetState.Dead)
+                    {
+                        msg = ChatColor.RED + MyPetLanguage.getString("Name_Dead");
+                    }
+                    else if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
+                    {
+                        msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                    }
+                    else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
+                    {
+                        msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                    }
+                    else
+                    {
+                        msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                    }
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
                 }
-                if (!myPet.isPassiv() && canSee(!MyPetConfiguration.ADMIN_ONLY_PETDAMAGE_INFO,myPetPlayer,myPet))
+                if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                 {
                     int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
                 }
-                if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(!MyPetConfiguration.ADMIN_ONLY_PETHUNGER_INFO,myPetPlayer,myPet))
+                if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                 }
                 if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                 {
-                    if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETLEVEL_INFO,myPetPlayer,myPet))
+                    if (canSee(PetInfoDisplay.Level.adminOnly, myPetPlayer, myPet))
                     {
                         int lvl = myPet.getExperience().getLevel();
                         player.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
                     }
-                    if(canSee(!MyPetConfiguration.ADMIN_ONLY_PETEXP_INFO,myPetPlayer,myPet))
+                    if (canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
                     {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
                         player.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
                     }
                 }
-                if(MyPetConfiguration.ADMIN_ONLY_PETNAME_INFO && MyPetConfiguration.ADMIN_ONLY_PETDAMAGE_INFO && MyPetConfiguration.ADMIN_ONLY_PETHP_INFO && MyPetConfiguration.ADMIN_ONLY_PETOWNER_INFO && MyPetConfiguration.ADMIN_ONLY_PETEXP_INFO
-                   && MyPetConfiguration.ADMIN_ONLY_PETHUNGER_INFO && MyPetConfiguration.ADMIN_ONLY_PETLEVEL_INFO && !myPetPlayer.isMyPetAdmin() && !(myPet.getOwner() == player))
+                for (PetInfoDisplay info : PetInfoDisplay.values())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantViewPetInfo")));
+                    if (!info.adminOnly)
+                    {
+                        return true;
+                    }
                 }
-
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantViewPetInfo")));
                 return true;
             }
             else
@@ -141,19 +154,15 @@ public class CommandInfo implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(strings.length == 1 && MyPetPermissions.has((Player) commandSender,"MyPet.admin",false))
+        if (strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
         {
             return null;
         }
         return emptyList;
     }
 
-    public static boolean canSee(boolean flag, MyPetPlayer myPetPlayer, MyPet myPet)
+    public static boolean canSee(boolean adminOnly, MyPetPlayer myPetPlayer, MyPet myPet)
     {
-        if(flag || myPetPlayer.isMyPetAdmin() || myPet.getOwner() == myPetPlayer.getPlayer())
-        {
-            return true;
-        }
-        return false;
+        return !adminOnly || myPet.getOwner() == myPetPlayer || myPetPlayer.isMyPetAdmin();
     }
 }
