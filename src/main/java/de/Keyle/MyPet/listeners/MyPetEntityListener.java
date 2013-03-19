@@ -180,13 +180,16 @@ public class MyPetEntityListener implements Listener
                 {
                     MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(damager);
 
+                    boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
+                        infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet) && myPet.getOwner() != myPetPlayer)
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
+                        infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
                     {
@@ -204,19 +207,23 @@ public class MyPetEntityListener implements Listener
                             msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
+                        infoShown = true;
                     }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                     {
                         int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
+                        infoShown = true;
                     }
                     if (MyPetConfiguration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
+                        infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree().getName() != null)
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getDisplayName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
+                        infoShown = true;
                     }
                     if (MyPetConfiguration.USE_LEVEL_SYSTEM)
                     {
@@ -224,17 +231,19 @@ public class MyPetEntityListener implements Listener
                         {
                             int lvl = myPet.getExperience().getLevel();
                             damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                            infoShown = true;
                         }
                         if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
                         {
                             double exp = myPet.getExperience().getCurrentExp();
                             double reqEXP = myPet.getExperience().getRequiredExp();
                             damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                            infoShown = true;
                         }
                     }
-                    if (PetInfoDisplay.Name.adminOnly && PetInfoDisplay.Damage.adminOnly && PetInfoDisplay.HP.adminOnly && PetInfoDisplay.Owner.adminOnly && PetInfoDisplay.Exp.adminOnly && PetInfoDisplay.Hunger.adminOnly && PetInfoDisplay.Level.adminOnly && !myPetPlayer.isMyPetAdmin() && !(myPet.getOwner() == damager))
+                    if (!infoShown)
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantViewPetInfo")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NothingToSeeHere")));
                     }
 
                     event.setCancelled(true);
