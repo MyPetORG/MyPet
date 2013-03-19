@@ -160,7 +160,6 @@ public class MyPetConfiguration
         setProperty("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
         setProperty("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
 
-
         setProperty("MyPet.Info.AdminOnly.PetName", false);
         setProperty("MyPet.Info.AdminOnly.PetOwner", false);
         setProperty("MyPet.Info.AdminOnly.PetHP", false);
@@ -168,7 +167,6 @@ public class MyPetConfiguration
         setProperty("MyPet.Info.AdminOnly.PetHunger", true);
         setProperty("MyPet.Info.AdminOnly.PetLevel", true);
         setProperty("MyPet.Info.AdminOnly.PetEXP", true);
-
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -178,8 +176,8 @@ public class MyPetConfiguration
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
             setProperty("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
             setProperty("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor",0);
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed",0);
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
+            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
         }
 
         for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
@@ -227,13 +225,14 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
+
         ADMIN_ONLY_PETNAME_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         ADMIN_ONLY_PETHP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
         ADMIN_ONLY_PETDAMAGE_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetDamage", false);
         ADMIN_ONLY_PETHUNGER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetHunger", false);
-        ADMIN_ONLY_PETLEVEL_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", false);
-        ADMIN_ONLY_PETEXP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", false);
-        ADMIN_ONLY_PETOWNER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", false);
+        ADMIN_ONLY_PETLEVEL_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetLevel", true);
+        ADMIN_ONLY_PETEXP_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
+        ADMIN_ONLY_PETOWNER_INFO = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
@@ -278,8 +277,8 @@ public class MyPetConfiguration
             MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
             seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
-            MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor",0));
-            MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed",0));
+            MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0));
+            MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0));
         }
 
         if (config.getStringList("MyPet.exp.active") != null)
