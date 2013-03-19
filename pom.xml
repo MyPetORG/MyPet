@@ -97,7 +97,7 @@
     <distributionManagement>
         <repository>
             <id>MyPet</id>
-            <url>http://localhost:8081/content/repositories/MyPet/</url>
+            <url>http://localhost:8081/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
