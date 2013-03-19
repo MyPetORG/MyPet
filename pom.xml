@@ -47,7 +47,7 @@
         <regiosapi.version>5.9.6</regiosapi.version>
         <residence.version>2.6.6.3</residence.version>
         <towny.version>0.82.1.0</towny.version>
-        <heroes.version>1.5.1-dev-b1691</heroes.version>
+        <heroes.version>1.5.1</heroes.version>
 
         <snakeyaml.version>1.11</snakeyaml.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
@@ -188,6 +188,7 @@
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>${heroes.version}</version>
+            <classifier>b1691</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
