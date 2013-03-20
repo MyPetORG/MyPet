@@ -103,6 +103,15 @@ public class MyPetUtil
         }
     }
 
+    public static String cutString(String string, int length)
+    {
+        if (string.length() > length)
+        {
+            return string.substring(0, length);
+        }
+        return string;
+    }
+
     public static String readFileAsString(String filePath) throws java.io.IOException
     {
         StringBuilder fileData = new StringBuilder(1000);

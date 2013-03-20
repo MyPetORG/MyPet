@@ -132,6 +132,14 @@ public abstract class MyPet implements IMyPet
     public void setPetName(String newName)
     {
         this.petName = newName;
+        if (status == PetState.Here)
+        {
+            if (MyPetConfiguration.PET_INFO_OVERHEAD_NAME)
+            {
+                getCraftPet().getHandle().setCustomNameVisible(true);
+                getCraftPet().getHandle().setCustomName(MyPetUtil.cutString(MyPetConfiguration.PET_INFO_OVERHEAD_PREFIX + petName + MyPetConfiguration.PET_INFO_OVERHEAD_SUFFIX, 64));
+            }
+        }
         if (MyPetConfiguration.ENABLE_EVENTS)
         {
             getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));

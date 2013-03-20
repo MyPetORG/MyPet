@@ -95,6 +95,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
             ((LivingEntity) this.getBukkitEntity()).setMaxHealth(myPet.getMaxHealth());
             this.setHealth(myPet.getHealth());
+            if (MyPetConfiguration.PET_INFO_OVERHEAD_NAME)
+            {
+                this.setCustomNameVisible(true);
+                this.setCustomName(MyPetUtil.cutString(MyPetConfiguration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + MyPetConfiguration.PET_INFO_OVERHEAD_SUFFIX, 64));
+            }
         }
     }
 

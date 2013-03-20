@@ -51,6 +51,8 @@ public class MyPetConfiguration
     public static FileConfiguration config;
 
     public static Material LEASH_ITEM = Material.STRING;
+    public static String PET_INFO_OVERHEAD_PREFIX = "" + ChatColor.AQUA;
+    public static String PET_INFO_OVERHEAD_SUFFIX = "";
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
@@ -75,6 +77,7 @@ public class MyPetConfiguration
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = false;
+    public static boolean PET_INFO_OVERHEAD_NAME = true;
 
     public static void setDefault()
     {
@@ -162,6 +165,10 @@ public class MyPetConfiguration
         setProperty("MyPet.Info.AdminOnly.PetEXP", true);
         setProperty("MyPet.Info.AdminOnly.PetSkilltree", true);
 
+        setProperty("MyPet.Info.OverHead.Name", true);
+        setProperty("MyPet.Info.OverHead.Prefix", "%aqua%");
+        setProperty("MyPet.Info.OverHead.Suffix", "");
+
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
@@ -228,6 +235,10 @@ public class MyPetConfiguration
         PetInfoDisplay.Exp.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetEXP", true);
         PetInfoDisplay.Owner.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
         PetInfoDisplay.Skilltree.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
+
+        PET_INFO_OVERHEAD_NAME = config.getBoolean("MyPet.Info.OverHead.Name", true);
+        PET_INFO_OVERHEAD_PREFIX = MyPetBukkitUtil.setColors(config.getString("MyPet.Info.OverHead.Prefix", "%aqua%"));
+        PET_INFO_OVERHEAD_SUFFIX = MyPetBukkitUtil.setColors(config.getString("MyPet.Info.OverHead.Suffix", ""));
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
