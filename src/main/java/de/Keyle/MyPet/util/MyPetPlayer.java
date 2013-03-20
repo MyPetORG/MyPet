@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -229,35 +228,6 @@ public class MyPetPlayer implements IScheduler
         if (!isOnline())
         {
             return;
-        }
-        if (hasMyPet())
-        {
-            if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + getMyPet().getPetType().getTypeName()))
-            {
-                MyPetList.setMyPetInactive(this);
-            }
-        }
-        if (!hasMyPet() && hasInactiveMyPets())
-        {
-            IMyPet myPet = MyPetList.getLastActiveMyPet(this);
-            if (myPet == null || myPet instanceof MyPet)
-            {
-                for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
-                {
-                    if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
-                    {
-                        MyPetList.setMyPetActive(inactiveMyPet);
-                        break;
-                    }
-                }
-            }
-            else if (myPet instanceof InactiveMyPet)
-            {
-                if (MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + myPet.getPetType().getTypeName()))
-                {
-                    MyPetList.setMyPetActive((InactiveMyPet) myPet);
-                }
-            }
         }
         if (hasMyPet())
         {

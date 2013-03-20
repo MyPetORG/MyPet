@@ -105,34 +105,10 @@ public class MyPetPlayerListener implements Listener
         {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
 
-            if (joinedPlayer.hasMyPet())
-            {
-                if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + joinedPlayer.getMyPet().getPetType().getTypeName()))
-                {
-                    MyPetList.setMyPetInactive(joinedPlayer);
-                }
-            }
             if (!joinedPlayer.hasMyPet() && joinedPlayer.hasInactiveMyPets())
             {
                 IMyPet myPet = MyPetList.getLastActiveMyPet(joinedPlayer);
-                if (myPet == null || myPet instanceof MyPet)
-                {
-                    for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(event.getPlayer()))
-                    {
-                        if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
-                        {
-                            MyPetList.setMyPetActive(inactiveMyPet);
-                            break;
-                        }
-                    }
-                }
-                else if (myPet instanceof InactiveMyPet)
-                {
-                    if (MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + myPet.getPetType().getTypeName()))
-                    {
-                        MyPetList.setMyPetActive((InactiveMyPet) myPet);
-                    }
-                }
+                MyPetList.setMyPetActive((InactiveMyPet) myPet);
             }
             if (joinedPlayer.hasMyPet())
             {
