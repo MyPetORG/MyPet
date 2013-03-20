@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import net.minecraft.server.v1_5_R1.EntityLiving;
-import net.minecraft.server.v1_5_R1.PathfinderGoal;
-import net.minecraft.server.v1_5_R1.World;
-import org.bukkit.craftbukkit.v1_5_R1.event.CraftEventFactory;
+import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R2.PathfinderGoal;
+import net.minecraft.server.v1_5_R2.World;
+import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class EntityAIMeleeAttack extends PathfinderGoal

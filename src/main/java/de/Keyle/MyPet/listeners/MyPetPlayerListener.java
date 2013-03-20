@@ -32,13 +32,13 @@ import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_5_R1.EntityItem;
-import net.minecraft.server.v1_5_R1.World;
+import net.minecraft.server.v1_5_R2.EntityItem;
+import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -253,7 +253,7 @@ public class MyPetPlayerListener implements Listener
                     MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
                     for (int i = 0 ; i < inv.getSize() ; i++)
                     {
-                        net.minecraft.server.v1_5_R1.ItemStack is = inv.splitWithoutUpdate(i);
+                        net.minecraft.server.v1_5_R2.ItemStack is = inv.splitWithoutUpdate(i);
                         if (is != null)
                         {
                             is = is.cloneItemStack();

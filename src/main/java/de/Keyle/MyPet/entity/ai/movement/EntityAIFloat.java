@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_5_R1.EntityLiving;
-import net.minecraft.server.v1_5_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R2.PathfinderGoal;
 
 public class EntityAIFloat extends PathfinderGoal
 {

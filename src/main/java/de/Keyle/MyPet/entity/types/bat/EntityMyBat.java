@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R1.EntityHuman;
-import net.minecraft.server.v1_5_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_5_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_5_R1.World;
+import net.minecraft.server.v1_5_R2.EntityHuman;
+import net.minecraft.server.v1_5_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_5_R2.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_5_R2.World;
 
 
 @EntitySize(width = 0.5F, height = 0.9F)

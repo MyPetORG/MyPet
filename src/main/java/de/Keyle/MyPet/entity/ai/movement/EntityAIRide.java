@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
-import net.minecraft.server.v1_5_R1.*;
+import net.minecraft.server.v1_5_R2.*;
 
 public class EntityAIRide extends PathfinderGoal
 {

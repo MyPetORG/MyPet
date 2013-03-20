@@ -33,14 +33,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.5</minecraft.version>
+        <minecraft.version>1.5.1</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.7-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.4.03</mcmmo.version>
         <vault.version>1.2.25-SNAPSHOT</vault.version>
         <worldguard.version>5.7.3</worldguard.version>
-        <worldedit.version>5.5.4</worldedit.version>
+        <worldedit.version>5.5.5</worldedit.version>
         <ancientrpg.version>1.0</ancientrpg.version>
         <factions.version>1.6.9.4</factions.version>
         <mobarena.version>0.94.4.95</mobarena.version>

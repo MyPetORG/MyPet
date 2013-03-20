@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_5_R1.EntityLiving;
-import net.minecraft.server.v1_5_R1.EntityPlayer;
-import net.minecraft.server.v1_5_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_5_R1.PathfinderGoalTarget;
+import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R2.EntityPlayer;
+import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
+import net.minecraft.server.v1_5_R2.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
 public class EntityAIHurtByTarget extends PathfinderGoalTarget

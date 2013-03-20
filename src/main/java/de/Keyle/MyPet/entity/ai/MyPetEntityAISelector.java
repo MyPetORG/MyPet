@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.entity.ai;
 
-import net.minecraft.server.v1_5_R1.PathfinderGoal;
-import net.minecraft.server.v1_5_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_5_R2.PathfinderGoal;
+import net.minecraft.server.v1_5_R2.PathfinderGoalSelector;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
