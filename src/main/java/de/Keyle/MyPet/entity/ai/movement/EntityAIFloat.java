@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
 
 public class EntityAIFloat extends PathfinderGoal
 {
@@ -41,7 +41,7 @@ public class EntityAIFloat extends PathfinderGoal
 
     public void e()
     {
-        if (entityMyPet.aB().nextFloat() < 0.9D)
+        if (entityMyPet.aE().nextFloat() < 0.9D)
         {
             entityMyPet.motY += 0.05D;
         }

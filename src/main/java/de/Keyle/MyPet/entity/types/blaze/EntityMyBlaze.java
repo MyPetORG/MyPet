@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.blaze;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.World;
 
 @EntitySize(width = 0.6F, height = 0.7F)
 public class EntityMyBlaze extends EntityMyPet
@@ -65,7 +65,7 @@ public class EntityMyBlaze extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.blaze.breathe";
     }
@@ -74,7 +74,7 @@ public class EntityMyBlaze extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.blaze.hit";
     }
@@ -83,7 +83,7 @@ public class EntityMyBlaze extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.blaze.death";
     }

@@ -32,8 +32,8 @@
     -->
 
     <!-- Setting some vars -->
-    <property name="MyPet.bukkit.version" value="1.0" />
-    <property name="MyPet.minecraft.version" value="1.4.7" />
+    <property name="MyPet.bukkit.version" value="0.1" />
+    <property name="MyPet.minecraft.version" value="1.5" />
     <property name="MyPet.mypet.version" value="1.0.7" />
 
     <property name="MyPet.src.dir" location="${basedir}/src/main/java" />

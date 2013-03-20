@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_5_R1.event.CraftEventFactory;
 
 public class EntityAIEatGrass extends PathfinderGoal
 {
@@ -45,7 +45,7 @@ public class EntityAIEatGrass extends PathfinderGoal
         {
             return false;
         }
-        else if (entityMyPet.aB().nextDouble() > chanceToEat / 100.)
+        else if (entityMyPet.aE().nextDouble() > chanceToEat / 100.)
         {
             return false;
         }
@@ -87,8 +87,8 @@ public class EntityAIEatGrass extends PathfinderGoal
                 if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMyPet.getBukkitEntity(), this.entityMyPet.world.getWorld().getBlockAt(blockLocX, blockLocY, blockLocZ), Material.AIR).isCancelled())
                 {
                     this.world.triggerEffect(2001, blockLocX, blockLocY, blockLocZ, Block.LONG_GRASS.id + 4096);
-                    this.world.setTypeId(blockLocX, blockLocY, blockLocZ, 0);
-                    this.entityMyPet.aH();
+                    this.world.setAir(blockLocX, blockLocY, blockLocZ);
+                    this.entityMyPet.aK();
                 }
             }
             else if (this.world.getTypeId(blockLocX, blockLocY - 1, blockLocZ) == Block.GRASS.id)
@@ -96,8 +96,8 @@ public class EntityAIEatGrass extends PathfinderGoal
                 if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMyPet.getBukkitEntity(), this.entityMyPet.world.getWorld().getBlockAt(blockLocX, blockLocY - 1, blockLocZ), Material.DIRT).isCancelled())
                 {
                     this.world.triggerEffect(2001, blockLocX, blockLocY - 1, blockLocZ, Block.GRASS.id);
-                    this.world.setTypeId(blockLocX, blockLocY - 1, blockLocZ, Block.DIRT.id);
-                    this.entityMyPet.aH();
+                    this.world.setTypeIdAndData(blockLocX, blockLocY - 1, blockLocZ, Block.DIRT.id, 0, 2);
+                    this.entityMyPet.aK();
                 }
             }
         }

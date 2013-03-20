@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.9F)
 public class EntityMyPigZombie extends EntityMyPet
@@ -121,9 +121,9 @@ public class EntityMyPigZombie extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -179,7 +179,7 @@ public class EntityMyPigZombie extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.zombiepig.zpig";
     }
@@ -188,7 +188,7 @@ public class EntityMyPigZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.zombiepig.zpighurt";
     }
@@ -197,7 +197,7 @@ public class EntityMyPigZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.zombiepig.zpigdeath";
     }

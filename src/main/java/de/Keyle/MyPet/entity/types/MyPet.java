@@ -35,7 +35,7 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.spout.nbt.CompoundMap;
@@ -227,7 +227,7 @@ public abstract class MyPet implements IMyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_4_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_5_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 petEntity.setLocation(petLocation);
@@ -582,7 +582,7 @@ public abstract class MyPet implements IMyPet
     {
     }
 
-    public static int getCustomRespawnTimeFactor (Class<? extends MyPet> myPetClass)
+    public static int getCustomRespawnTimeFactor(Class<? extends MyPet> myPetClass)
     {
         if (customRespawnTimeFactor.containsKey(myPetClass))
         {
@@ -597,7 +597,7 @@ public abstract class MyPet implements IMyPet
     }
 
 
-    public static int getCustomRespawnTimeFixed (Class<? extends MyPet> myPetClass)
+    public static int getCustomRespawnTimeFixed(Class<? extends MyPet> myPetClass)
     {
         if (customRespawnTimeFixed.containsKey(myPetClass))
         {

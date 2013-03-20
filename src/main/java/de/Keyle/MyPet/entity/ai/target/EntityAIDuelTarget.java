@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.EntityPlayer;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftPlayer;
 
 public class EntityAIDuelTarget extends PathfinderGoal
 {
@@ -65,13 +65,13 @@ public class EntityAIDuelTarget extends PathfinderGoal
                             EntityMyPet entityMyPet = ((EntityMyPet) entityObj);
                             MyPet targetMyPet = entityMyPet.getMyPet();
 
-                            if (petEntity.aA().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
+                            if (petEntity.aD().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
                             {
                                 if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
                                 {
                                     continue;
                                 }
-                                if(!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
+                                if (!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
                                 {
                                     continue;
                                 }

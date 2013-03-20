@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import net.minecraft.server.v1_5_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -89,9 +89,9 @@ public class EntityMyVillager extends EntityMyPet
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -122,7 +122,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.villager.default";
     }
@@ -130,7 +130,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aZ()
+    protected String bc()
     {
         return "mob.villager.defaulthurt";
     }
@@ -138,7 +138,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String ba()
+    protected String bd()
     {
         return "mob.villager.defaultdeath";
     }

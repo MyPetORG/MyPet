@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_4_R1.PathfinderGoalTarget;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.EntityPlayer;
+import net.minecraft.server.v1_5_R1.EntityTameableAnimal;
+import net.minecraft.server.v1_5_R1.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
 public class EntityAIHurtByTarget extends PathfinderGoalTarget
@@ -45,9 +45,9 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
     @Override
     public boolean a()
     {
-        if (target != petEntity.aC())
+        if (target != petEntity.aF())
         {
-            target = petEntity.aC();
+            target = petEntity.aF();
         }
         if (target instanceof EntityPlayer)
         {
@@ -64,7 +64,7 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
         }
         else if (target instanceof EntityMyPet)
         {
-            MyPet targetMyPet = ((EntityMyPet) d.aC()).getMyPet();
+            MyPet targetMyPet = ((EntityMyPet) d.aF()).getMyPet();
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
                 return false;

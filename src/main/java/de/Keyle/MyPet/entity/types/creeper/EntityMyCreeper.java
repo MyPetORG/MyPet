@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.creeper;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.World;
 
 
 @EntitySize(width = 0.6F, height = 0.9F)
@@ -73,7 +73,7 @@ public class EntityMyCreeper extends EntityMyPet
     }
 
     @Override
-    protected String aY()
+    protected String bb()
     {
         return "";
     }
@@ -82,7 +82,7 @@ public class EntityMyCreeper extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.creeper.say";
     }
@@ -91,7 +91,7 @@ public class EntityMyCreeper extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.creeper.death";
     }

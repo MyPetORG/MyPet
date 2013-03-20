@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.Item;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.Item;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import net.minecraft.server.v1_5_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.3F, height = 0.7F)
@@ -81,9 +81,9 @@ public class EntityMyChicken extends EntityMyPet
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -119,7 +119,7 @@ public class EntityMyChicken extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.chicken.say";
     }
@@ -128,7 +128,7 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.chicken.hurt";
     }
@@ -137,7 +137,7 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.chicken.hurt";
     }

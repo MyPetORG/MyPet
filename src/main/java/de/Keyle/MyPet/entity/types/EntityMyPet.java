@@ -29,11 +29,11 @@ import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -112,7 +112,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
             petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet,5));
+            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
         }
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
@@ -253,9 +253,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -348,22 +348,22 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     /**
      * Returns the default sound of the MyPet
      */
-    protected abstract String aY();
+    protected abstract String bb();
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected abstract String aZ();
+    protected abstract String bc();
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected abstract String ba();
+    protected abstract String bd();
 
     /**
      * Set weather the "new" AI is used
      */
-    public boolean be()
+    public boolean bh()
     {
         return true;
     }

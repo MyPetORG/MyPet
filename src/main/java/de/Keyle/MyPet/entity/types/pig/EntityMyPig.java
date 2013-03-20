@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet
@@ -99,9 +99,9 @@ public class EntityMyPig extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -166,7 +166,7 @@ public class EntityMyPig extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.pig.say";
     }
@@ -175,7 +175,7 @@ public class EntityMyPig extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.pig.say";
     }
@@ -184,7 +184,7 @@ public class EntityMyPig extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.pig.death";
     }

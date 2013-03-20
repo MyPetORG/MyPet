@@ -67,11 +67,11 @@ import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_4_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_5_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spout.nbt.*;
@@ -675,7 +675,7 @@ public class MyPetPlugin extends JavaPlugin
 
     public int savePets(boolean shutdown)
     {
-        if(!isReady)
+        if (!isReady)
         {
             DebugLogger.warning("Tried to save MyPets but Plugin isn't ready!");
             MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");

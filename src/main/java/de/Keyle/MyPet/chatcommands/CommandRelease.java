@@ -42,17 +42,17 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_4_R1.EntityItem;
-import net.minecraft.server.v1_4_R1.Item;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EntityItem;
+import net.minecraft.server.v1_5_R1.Item;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import net.minecraft.server.v1_5_R1.World;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPigZombie;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftPigZombie;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftSkeleton;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -317,7 +317,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(MyPetList.hasMyPet((Player) commandSender))
+        if (MyPetList.hasMyPet((Player) commandSender))
         {
             List<String> petnameList = new ArrayList<String>();
             petnameList.add(MyPetPlayer.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());

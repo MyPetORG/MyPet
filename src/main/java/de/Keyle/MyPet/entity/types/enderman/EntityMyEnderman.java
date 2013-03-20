@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
@@ -50,7 +50,7 @@ public class EntityMyEnderman extends EntityMyPet
             petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
             petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet,5));
+            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
         }
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
@@ -115,9 +115,9 @@ public class EntityMyEnderman extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -157,7 +157,7 @@ public class EntityMyEnderman extends EntityMyPet
     }
 
     @Override
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
@@ -166,7 +166,7 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.endermen.hit";
     }
@@ -175,7 +175,7 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.endermen.death";
     }

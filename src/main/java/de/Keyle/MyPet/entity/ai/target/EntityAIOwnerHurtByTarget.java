@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.EntityPlayer;
+import net.minecraft.server.v1_5_R1.EntityTameableAnimal;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
 import org.bukkit.entity.Player;
 
 public class EntityAIOwnerHurtByTarget extends PathfinderGoal
@@ -54,7 +54,7 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
         {
             return false;
         }
-        this.lastDamager = localEntityLiving.aC();
+        this.lastDamager = localEntityLiving.aF();
         if (this.lastDamager == null || !lastDamager.isAlive())
         {
             return false;

@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.IInventory;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.IInventory;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -151,12 +151,22 @@ public class MyPetCustomBeaconInventory implements IInventory
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public boolean a_(EntityHuman entityHuman)
+    public boolean a(EntityHuman entityHuman)
     {
         return true;
     }
 
-    public void f()
+    public boolean b(int paramInt, ItemStack paramItemStack)
+    {
+        return true;
+    }
+
+    public boolean c()
+    {
+        return true;
+    }
+
+    public void g()
     {
     }
 }

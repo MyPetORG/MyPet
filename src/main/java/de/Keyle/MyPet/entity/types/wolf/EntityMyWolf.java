@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -56,7 +56,7 @@ public class EntityMyWolf extends EntityMyPet
             petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
             petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet,5));
+            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
         }
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
@@ -82,7 +82,7 @@ public class EntityMyWolf extends EntityMyPet
     public void setHealth(int i)
     {
         super.setHealth(i);
-        this.bm();
+        this.bp();
     }
 
     public boolean canMove()
@@ -193,11 +193,11 @@ public class EntityMyWolf extends EntityMyPet
     {
         super.a();
         this.datawatcher.a(16, new Byte((byte) 0));               // tamed/angry/sitting
-        this.datawatcher.a(17, new String(""));                   // wolf owner name
+        this.datawatcher.a(17, "");                   // wolf owner name
         this.datawatcher.a(18, new Integer(this.getHealth()));    // tail height
         this.datawatcher.a(12, new Integer(0));                   // age
         this.datawatcher.a(19, new Byte((byte) 0));
-        this.datawatcher.a(20, new Byte((byte) BlockCloth.e_(1))); // collar color
+        this.datawatcher.a(20, new Byte((byte) BlockCloth.g_(1))); // collar color
     }
 
     /**
@@ -206,9 +206,9 @@ public class EntityMyWolf extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -250,7 +250,7 @@ public class EntityMyWolf extends EntityMyPet
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
-            this.bF = false;
+            this.bG = false;
             return true;
         }
         return false;
@@ -265,7 +265,7 @@ public class EntityMyWolf extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
@@ -274,7 +274,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.wolf.hurt";
     }
@@ -283,13 +283,13 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bm()
+    protected void bp()
     {
         this.datawatcher.watch(18, (int) (25. * getHealth() / getMaxHealth())); // update tail height
     }
@@ -308,9 +308,9 @@ public class EntityMyWolf extends EntityMyPet
     }
 
     @Override
-    public void j_()
+    public void l_()
     {
-        super.j_();
+        super.l_();
 
         if (G())
         {
@@ -323,7 +323,7 @@ public class EntityMyWolf extends EntityMyPet
         {
             if (this.i == 0.0F)
             {
-                makeSound("mob.wolf.shake", aX(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.j = this.i;

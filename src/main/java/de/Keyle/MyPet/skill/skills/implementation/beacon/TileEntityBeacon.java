@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_4_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.EntityHuman;
 
-public class TileEntityBeacon extends net.minecraft.server.v1_4_R1.TileEntityBeacon
+public class TileEntityBeacon extends net.minecraft.server.v1_5_R1.TileEntityBeacon
 {
     private Beacon beaconSkill;
     private boolean primaryBuffCheck = false;
@@ -40,7 +40,7 @@ public class TileEntityBeacon extends net.minecraft.server.v1_4_R1.TileEntityBea
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         return true;
     }

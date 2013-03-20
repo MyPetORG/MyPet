@@ -25,12 +25,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.EntityPlayer;
-import net.minecraft.server.v1_4_R1.EntityTameableAnimal;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.EntityPlayer;
+import net.minecraft.server.v1_5_R1.EntityTameableAnimal;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -71,7 +71,7 @@ public class EntityAIAggressiveTarget extends PathfinderGoal
 
                             Location loc1 = livingEntity.getLocation();
                             Location loc2 = petEntity.getBukkitEntity().getLocation();
-                            if (petEntity.aA().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && loc1.distance(loc2) < 10)
+                            if (petEntity.aD().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && loc1.distance(loc2) < 10)
                             {
                                 if (entityLiving instanceof EntityPlayer)
                                 {

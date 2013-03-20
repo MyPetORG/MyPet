@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.util;
 
-import net.minecraft.server.v1_4_R1.AxisAlignedBB;
-import net.minecraft.server.v1_4_R1.Block;
-import net.minecraft.server.v1_4_R1.Entity;
-import net.minecraft.server.v1_4_R1.MathHelper;
+import net.minecraft.server.v1_5_R1.AxisAlignedBB;
+import net.minecraft.server.v1_5_R1.Block;
+import net.minecraft.server.v1_5_R1.Entity;
+import net.minecraft.server.v1_5_R1.MathHelper;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_4_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R1.util.UnsafeList;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public class MyPetBukkitUtil
 
     public static Boolean canSpawn(Location loc, float width, float height, float length)
     {
-        net.minecraft.server.v1_4_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_5_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 

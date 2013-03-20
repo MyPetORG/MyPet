@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.wither;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.World;
 
 @EntitySize(width = 0.9F, height = 4.0F)
 public class EntityMyWither extends EntityMyPet
@@ -50,7 +50,7 @@ public class EntityMyWither extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.wither.idle";
     }
@@ -59,7 +59,7 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.wither.hurt";
     }
@@ -68,13 +68,13 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.wither.death";
     }
 
     @Override
-    protected void bm()
+    protected void bp()
     {
         this.datawatcher.watch(16, (int) (300. * getHealth() / getMaxHealth())); // update healthbar
     }

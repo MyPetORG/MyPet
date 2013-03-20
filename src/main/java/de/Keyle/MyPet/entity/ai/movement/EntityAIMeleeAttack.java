@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import net.minecraft.server.v1_4_R1.EntityLiving;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
-import net.minecraft.server.v1_4_R1.World;
-import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
+import net.minecraft.server.v1_5_R1.EntityLiving;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R1.World;
+import org.bukkit.craftbukkit.v1_5_R1.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class EntityAIMeleeAttack extends PathfinderGoal
@@ -58,7 +58,7 @@ public class EntityAIMeleeAttack extends PathfinderGoal
             return false;
         }
         this.targetEntity = targetEntity;
-        return this.petEntity.aA().canSee(targetEntity);
+        return this.petEntity.aD().canSee(targetEntity);
     }
 
     public boolean b()
@@ -96,17 +96,17 @@ public class EntityAIMeleeAttack extends PathfinderGoal
     public void e()
     {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
-        if (((this.petEntity.aA().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
+        if (((this.petEntity.aD().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
         {
-            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aB().nextInt(7));
+            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aE().nextInt(7));
             this.petEntity.getNavigation().a(targetEntity, this.walkSpeed);
         }
         if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0))
         {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
-            if (this.petEntity.bD() != null)
+            if (this.petEntity.bG() != null)
             {
-                this.petEntity.bH();
+                this.petEntity.bK();
             }
             this.petEntity.m(targetEntity);
         }

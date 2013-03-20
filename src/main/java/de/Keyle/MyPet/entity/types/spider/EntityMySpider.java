@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.spider;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.EnumMonsterType;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EnumMonsterType;
+import net.minecraft.server.v1_5_R1.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
 public class EntityMySpider extends EntityMyPet
@@ -57,7 +57,7 @@ public class EntityMySpider extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.spider.say";
     }
@@ -66,7 +66,7 @@ public class EntityMySpider extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.spider.say";
     }
@@ -75,12 +75,12 @@ public class EntityMySpider extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.spider.death";
     }
 
-    public void f(boolean flag)
+    public void a(boolean flag)
     {
         byte b0 = this.datawatcher.getByte(16);
 
@@ -95,9 +95,9 @@ public class EntityMySpider extends EntityMyPet
         this.datawatcher.watch(16, b0);
     }
 
-    public void j_()
+    public void l_()
     {
-        super.j_();
+        super.l_();
         if (!this.world.isStatic)
         {
             f(this.positionChanged);

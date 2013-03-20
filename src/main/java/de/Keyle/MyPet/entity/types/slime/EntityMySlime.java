@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.slime;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.PathEntity;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.PathEntity;
+import net.minecraft.server.v1_5_R1.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySlime extends EntityMyPet
@@ -77,7 +77,7 @@ public class EntityMySlime extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return "";
     }
@@ -86,16 +86,16 @@ public class EntityMySlime extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
-        return ba();
+        return bd();
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.slime." + (getSize() > 1 ? "big" : "small");
 
@@ -105,16 +105,16 @@ public class EntityMySlime extends EntityMyPet
      * Method is called when pet moves
      * Is used to create the hopping motion
      */
-    public void j_()
+    public void l_()
     {
-        super.j_();
+        super.l_();
 
         if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
         {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 10);
             lastPathEntity = getNavigation().d();
-            makeSound("mob.slime." + (getSize() > 1 ? "big" : "small"), aX(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            makeSound("mob.slime." + (getSize() > 1 ? "big" : "small"), ba(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 }

@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.types.mooshroom;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import net.minecraft.server.v1_5_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
@@ -76,9 +76,9 @@ public class EntityMyMooshroom extends EntityMyPet
         this.datawatcher.a(12, new Integer(0));
     }
 
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -114,7 +114,7 @@ public class EntityMyMooshroom extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.cow.say";
     }
@@ -123,7 +123,7 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.cow.hurt";
     }
@@ -132,7 +132,7 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.cow.hurt";
     }

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import net.minecraft.server.v1_4_R1.PathfinderGoal;
+import net.minecraft.server.v1_5_R1.PathfinderGoal;
 
 public class EntityAISit extends PathfinderGoal
 {

@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_4_R1.*;
-import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftInventoryView;
+import net.minecraft.server.v1_5_R1.*;
+import org.bukkit.craftbukkit.v1_5_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 
-public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeacon
+public class ContainerBeacon extends net.minecraft.server.v1_5_R1.ContainerBeacon
 {
     private final SlotBeacon slotBeacon;
     private CraftInventoryView bukkitEntity = null;
@@ -154,7 +154,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_4_R1.ContainerBeaco
     }
 
     @Override
-    public TileEntityBeacon d()
+    public TileEntityBeacon e()
     {
         return tileEntityBeacon;
     }

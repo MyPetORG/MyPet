@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.silverfish;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.World;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMySilverfish extends EntityMyPet
@@ -50,7 +50,7 @@ public class EntityMySilverfish extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.silverfish.say";
     }
@@ -59,7 +59,7 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.silverfish.hit";
     }
@@ -68,7 +68,7 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.silverfish.kill";
     }

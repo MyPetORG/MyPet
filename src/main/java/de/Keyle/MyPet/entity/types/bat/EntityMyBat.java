@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_4_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_5_R1.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_5_R1.World;
 
 
 @EntitySize(width = 0.5F, height = 0.9F)
@@ -53,7 +53,7 @@ public class EntityMyBat extends EntityMyPet
             petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
             petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet,5));
+            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
         }
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 10.0F, 5.0F, 20F));
@@ -101,13 +101,13 @@ public class EntityMyBat extends EntityMyPet
     /**
      * Returns the speed of played sounds
      */
-    protected float aV()
+    protected float aY()
     {
-        return super.aV() * 0.95F;
+        return super.aY() * 0.95F;
     }
 
     @Override
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.bat.idle";
     }
@@ -116,7 +116,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aZ()
+    protected String bc()
     {
         return "mob.bat.hurt";
     }
@@ -125,7 +125,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String ba()
+    protected String bd()
     {
         return "mob.bat.death";
     }
@@ -140,10 +140,10 @@ public class EntityMyBat extends EntityMyPet
         }
     }
 
-    public void j_()
+    public void l_()
     {
-        super.j_();
-        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY+1.), (int) locZ).isSolid())
+        super.l_();
+        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY + 1.), (int) locZ).isSolid())
         {
             this.locY += 0.65;
         }

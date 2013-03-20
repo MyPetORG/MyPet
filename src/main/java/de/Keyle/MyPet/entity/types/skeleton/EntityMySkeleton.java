@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySkeleton extends EntityMyPet
@@ -140,9 +140,9 @@ public class EntityMySkeleton extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a(entityhuman))
+        if (super.a_(entityhuman))
         {
             return true;
         }
@@ -203,7 +203,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String aY()
+    protected String bb()
     {
         return !playIdleSound() ? "" : "mob.skeleton.say";
     }
@@ -211,7 +211,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aZ()
+    protected String bc()
     {
         return "mob.skeleton.hurt";
     }
@@ -219,7 +219,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String ba()
+    protected String bd()
     {
         return "mob.skeleton.death";
     }

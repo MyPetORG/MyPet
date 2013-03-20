@@ -33,10 +33,10 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import net.minecraft.server.v1_4_R1.*;
+import net.minecraft.server.v1_5_R1.*;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_4_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_5_R1.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
@@ -372,7 +372,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
 
         int containerCounter = entityPlayer.nextContainerCounter();
-        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, myPet.petName + "'s - Beacon", beaconInv.getSize()));
+        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, myPet.petName + "'s - Beacon", beaconInv.getSize(), true));
         entityPlayer.activeContainer = container;
         entityPlayer.activeContainer.windowId = containerCounter;
         entityPlayer.activeContainer.addSlotListener(entityPlayer);

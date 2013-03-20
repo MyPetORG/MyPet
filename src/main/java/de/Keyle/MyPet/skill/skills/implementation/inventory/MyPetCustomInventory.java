@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import net.minecraft.server.v1_4_R1.EntityHuman;
-import net.minecraft.server.v1_4_R1.IInventory;
-import net.minecraft.server.v1_4_R1.ItemStack;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_4_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_5_R1.EntityHuman;
+import net.minecraft.server.v1_5_R1.IInventory;
+import net.minecraft.server.v1_5_R1.ItemStack;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_5_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 import org.spout.nbt.ByteTag;
@@ -224,7 +224,7 @@ public class MyPetCustomInventory implements IInventory
         }
     }
 
-    public boolean a_(EntityHuman entityHuman)
+    public boolean a(EntityHuman entityHuman)
     {
         return true;
     }
@@ -308,7 +308,17 @@ public class MyPetCustomInventory implements IInventory
     {
     }
 
-    public void f()
+    public boolean b(int paramInt, ItemStack paramItemStack)
+    {
+        return true;
+    }
+
+    public boolean c()
+    {
+        return true;
+    }
+
+    public void g()
     {
     }
 }
