@@ -109,7 +109,7 @@ public class MyPetPlayerListener implements Listener
             {
                 if (!MyPetPermissions.has(event.getPlayer(), "MyPet.user.keep." + joinedPlayer.getMyPet().getPetType().getTypeName()))
                 {
-                    MyPetList.setMyPetInactive(event.getPlayer());
+                    MyPetList.setMyPetInactive(joinedPlayer);
                 }
             }
             if (!joinedPlayer.hasMyPet() && joinedPlayer.hasInactiveMyPets())

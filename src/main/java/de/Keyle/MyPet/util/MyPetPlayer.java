@@ -234,7 +234,7 @@ public class MyPetPlayer implements IScheduler
         {
             if (!MyPetPermissions.has(this.getPlayer(), "MyPet.user.keep." + getMyPet().getPetType().getTypeName()))
             {
-                MyPetList.setMyPetInactive(this.getPlayer());
+                MyPetList.setMyPetInactive(this);
             }
         }
         if (!hasMyPet() && hasInactiveMyPets())

@@ -259,7 +259,7 @@ public class MyPetList
     {
         if (hasMyPet(inactiveMyPet.getPetName()))
         {
-            setMyPetInactive(inactiveMyPet.getOwner().getPlayer());
+            setMyPetInactive(inactiveMyPet.getOwner());
         }
 
         boolean isCancelled = false;
@@ -286,11 +286,11 @@ public class MyPetList
         return null;
     }
 
-    public static InactiveMyPet setMyPetInactive(Player owner)
+    public static InactiveMyPet setMyPetInactive(MyPetPlayer owner)
     {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
+        if (mActivePets.containsKey(owner))
         {
-            MyPet activeMyPet = getMyPet(owner);
+            MyPet activeMyPet = owner.getMyPet();
 
             boolean isCancelled = false;
             if (MyPetConfiguration.ENABLE_EVENTS)
