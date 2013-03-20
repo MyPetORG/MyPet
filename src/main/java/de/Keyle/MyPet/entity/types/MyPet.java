@@ -198,6 +198,10 @@ public abstract class MyPet implements IMyPet
             craftMyPet.remove();
             craftMyPet = null;
         }
+        if (status != PetState.Dead)
+        {
+            status = PetState.Despawned;
+        }
     }
 
     public void respawnPet()
