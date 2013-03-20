@@ -37,8 +37,8 @@
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.7-SNAPSHOT</citizensapi.version>
-        <mcmmo.version>1.4.02</mcmmo.version>
-        <vault.version>1.2.24-SNAPSHOT</vault.version>
+        <mcmmo.version>1.4.03</mcmmo.version>
+        <vault.version>1.2.25-SNAPSHOT</vault.version>
         <worldguard.version>5.7.3</worldguard.version>
         <worldedit.version>5.5.4</worldedit.version>
         <ancientrpg.version>1.0</ancientrpg.version>
@@ -47,7 +47,8 @@
         <regiosapi.version>5.9.6</regiosapi.version>
         <residence.version>2.6.6.3</residence.version>
         <towny.version>0.82.1.0</towny.version>
-        <heroes.version>1.5.1</heroes.version>
+        <heroes.version>1.5.2</heroes.version>
+        <heroes.build>b1713</heroes.build>
 
         <snakeyaml.version>1.11</snakeyaml.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
@@ -188,7 +189,7 @@
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>${heroes.version}</version>
-            <classifier>b1691</classifier>
+            <classifier>${heroes.build}</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
