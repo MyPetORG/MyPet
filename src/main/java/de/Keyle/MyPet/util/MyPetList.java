@@ -262,21 +262,28 @@ public class MyPetList
             setMyPetInactive(inactiveMyPet.getOwner().getPlayer());
         }
 
-        MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
-        addMyPet(activeMyPet);
-        removeInactiveMyPet(inactiveMyPet);
-
+        boolean isCancelled = false;
         if (MyPetConfiguration.ENABLE_EVENTS)
         {
             MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
             getServer().getPluginManager().callEvent(event);
+            isCancelled = event.isCancelled();
         }
 
-        inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
+        if (!isCancelled)
+        {
+            MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
+            addMyPet(activeMyPet);
+            removeInactiveMyPet(inactiveMyPet);
 
-        DebugLogger.info("   A: " + activeMyPet);
-        DebugLogger.info("   I: " + inactiveMyPet);
-        return activeMyPet;
+            inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
+
+            DebugLogger.info("   A: " + activeMyPet);
+            DebugLogger.info("   I: " + inactiveMyPet);
+
+            return activeMyPet;
+        }
+        return null;
     }
 
     public static InactiveMyPet setMyPetInactive(Player owner)
@@ -285,19 +292,26 @@ public class MyPetList
         {
             MyPet activeMyPet = getMyPet(owner);
 
+            boolean isCancelled = false;
+            if (MyPetConfiguration.ENABLE_EVENTS)
+            {
+                MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
+                getServer().getPluginManager().callEvent(event);
+                isCancelled = event.isCancelled();
+            }
+
+            if (isCancelled)
+            {
+                return null;
+            }
             activeMyPet.removePet();
             InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
 
-            if (MyPetConfiguration.ENABLE_EVENTS)
-            {
-                MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
-                getServer().getPluginManager().callEvent(event);
-            }
-
             DebugLogger.info("   I: " + inactiveMyPet);
             DebugLogger.info("   A: " + activeMyPet);
+
             return inactiveMyPet;
         }
         return null;
