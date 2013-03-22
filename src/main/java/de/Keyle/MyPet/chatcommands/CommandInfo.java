@@ -116,7 +116,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                     infoShown = true;
                 }
-                if (canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree().getDisplayName() != null)
+                if (canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
                     infoShown = true;

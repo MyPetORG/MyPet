@@ -220,7 +220,7 @@ public class MyPetEntityListener implements Listener
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree().getName() != null)
+                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getDisplayName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
                         infoShown = true;
