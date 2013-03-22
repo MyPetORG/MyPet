@@ -56,7 +56,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
         {
             Player player = (Player) sender;
             String playerName = sender.getName();
-            if (args != null && args.length > 0 && MyPetPermissions.has(player, "MyPet.admin", false))
+            if (args.length > 0 && MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 playerName = args[0];
             }

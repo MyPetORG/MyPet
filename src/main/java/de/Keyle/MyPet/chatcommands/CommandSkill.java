@@ -44,7 +44,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
-            if (args != null && args.length > 0 && MyPetPermissions.has(petOwner, "MyPet.admin", false))
+            if (args.length > 0 && MyPetPermissions.has(petOwner, "MyPet.admin", false))
             {
                 petOwner = MyPetBukkitUtil.getServer().getPlayer(args[0]);
 
@@ -87,7 +87,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
+        if (strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
         {
             return null;
         }
