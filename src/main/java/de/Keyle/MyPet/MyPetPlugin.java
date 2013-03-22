@@ -141,12 +141,12 @@ public class MyPetPlugin extends JavaPlugin
         if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion))
         {
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            MyPetLogger.write(ChatColor.RED + "This version of MyPet only work with:");
+            MyPetLogger.write(ChatColor.RED + "This version of MyPet only works with:");
             MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
             MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
             DebugLogger.warning("---------------------------------------------------------");
-            DebugLogger.warning("This version of MyPet only work with:");
+            DebugLogger.warning("This version of MyPet only works with:");
             DebugLogger.warning("   Minecraft " + MyPetVersion.getMinecraftVersion());
             DebugLogger.warning("MyPet disabled!");
             DebugLogger.warning("---------------------------------------------------------");
