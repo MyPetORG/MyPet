@@ -146,7 +146,7 @@ public class MyPetPlayerListener implements Listener
             if (myPet.getSkills().isSkillActive("Behavior"))
             {
                 Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-                if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
+                if (behavior.getBehavior() != BehaviorState.Normal && behavior.getBehavior() != BehaviorState.Friendly)
                 {
                     behavior.setBehavior(BehaviorState.Normal);
                 }
