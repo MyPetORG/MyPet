@@ -298,7 +298,15 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
             {
-                return true;
+                return false;
+            }
+            if (this.petTargetSelector.hasGoal("DuelTarget"))
+            {
+                EntityAIDuelTarget duelTarget = (EntityAIDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
+                if (duelTarget.getDuelOpponent() != null)
+                {
+                    return true;
+                }
             }
             int addHunger = MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED;
             if (getHealth() < getMaxHealth())

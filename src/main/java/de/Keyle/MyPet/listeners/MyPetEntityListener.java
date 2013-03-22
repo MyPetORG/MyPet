@@ -25,17 +25,16 @@ import de.Keyle.MyPet.chatcommands.CommandInfo;
 import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
-import de.Keyle.MyPet.entity.types.CraftMyPet;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
-import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.ai.target.EntityAIDuelTarget;
+import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
@@ -738,7 +737,36 @@ public class MyPetEntityListener implements Listener
                 return;
             }
             myPet.status = PetState.Dead;
+
             myPet.respawnTime = (MyPetConfiguration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass())));
+
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
+            {
+                EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+
+                if (e.getDamager() instanceof CraftMyPet)
+                {
+                    MyPet killerMyPet = ((CraftMyPet) e.getDamager()).getMyPet();
+                    if (myPet.getSkills().isSkillActive("Behavior") && killerMyPet.getSkills().isSkillActive("Behavior"))
+                    {
+                        Behavior killerBehaviorSkill = (Behavior) killerMyPet.getSkills().getSkill("Behavior");
+                        Behavior deadBehaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+                        if (deadBehaviorSkill.getBehavior() == BehaviorState.Duel && killerBehaviorSkill.getBehavior() == BehaviorState.Duel)
+                        {
+                            EntityMyPet myPetEntity = ((CraftMyPet) event.getEntity()).getHandle();
+                            EntityMyPet duelKiller = ((CraftMyPet) e.getDamager()).getHandle();
+                            if (myPetEntity.petTargetSelector.hasGoal("DuelTarget"))
+                            {
+                                EntityAIDuelTarget duelTarget = (EntityAIDuelTarget) myPetEntity.petTargetSelector.getGoal("DuelTarget");
+                                if (duelTarget.getDuelOpponent() == duelKiller)
+                                {
+                                    myPet.respawnTime = 10;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             event.setDroppedExp(0);
 
             if (MyPetConfiguration.USE_LEVEL_SYSTEM && MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
