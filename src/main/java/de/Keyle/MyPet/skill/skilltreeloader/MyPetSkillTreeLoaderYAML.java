@@ -336,11 +336,11 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                     {
                         if (!skill.isAddedByInheritance())
                         {
+                            Map<String, Object> propertyMap = new LinkedHashMap<String, Object>();
+                            skillMap.put(skill.getName(), propertyMap);
                             SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                             if (sp != null)
                             {
-                                Map<String, Object> propertyMap = new LinkedHashMap<String, Object>();
-                                skillMap.put(skill.getName(), propertyMap);
                                 for (int i = 0 ; i < sp.parameterNames().length ; i++)
                                 {
                                     String propertyName = sp.parameterNames()[i];
