@@ -49,18 +49,23 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
         {
             return false;
         }
-        EntityLiving localEntityLiving = this.petEntity.getOwner();
-        if (localEntityLiving == null)
+        EntityLiving owner = this.petEntity.getOwner();
+        if (owner == null)
         {
             return false;
         }
-        this.lastDamager = localEntityLiving.aF();
+        this.lastDamager = owner.aF();
         if (this.lastDamager == null || !lastDamager.isAlive())
         {
             return false;
         }
         if (lastDamager instanceof EntityPlayer)
         {
+            if (this.petEntity.getOwner() == lastDamager)
+            {
+                return false;
+            }
+
             Player targetPlayer = (Player) lastDamager.getBukkitEntity();
 
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
