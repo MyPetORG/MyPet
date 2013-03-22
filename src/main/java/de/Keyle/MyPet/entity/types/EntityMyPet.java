@@ -137,11 +137,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             this.a(es.width(), es.height());
         }
-
-        float f = this.width / 2.0F;
-        float f1 = this.length;
-
-        this.boundingBox.b(locX - f, locY - this.height + this.W, locZ - f, locX + f, locY - this.height + this.W + f1, locZ + f);
     }
 
     public void setSize(float extra)
@@ -151,11 +146,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             this.a(es.width(), es.height() + extra);
         }
-
-        float f = this.width / 2.0F;
-        float f1 = this.length;
-
-        this.boundingBox.b(locX - f, locY - this.height + this.W, locZ - f, locX + f, locY - this.height + this.W + f1, locZ + f);
     }
 
     public boolean hasRider()
