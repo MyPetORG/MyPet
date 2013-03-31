@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import net.minecraft.server.v1_5_R2.AxisAlignedBB;
 import net.minecraft.server.v1_5_R2.Block;
 import net.minecraft.server.v1_5_R2.Entity;
@@ -29,6 +30,7 @@ import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_5_R2.util.UnsafeList;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyPetBukkitUtil
@@ -115,5 +117,35 @@ public class MyPetBukkitUtil
             }
         }
         return unsafeList;
+    }
+
+    public List<org.bukkit.entity.Entity> getMyPetsInLineOfSight(Player player)
+    {
+        List<org.bukkit.entity.Entity> entityList = new ArrayList<org.bukkit.entity.Entity>();
+
+        for (org.bukkit.block.Block b : player.getLineOfSight(null, 100))
+        {
+            Location blockLoc = b.getLocation();
+            double bx = blockLoc.getX();
+            double by = blockLoc.getY();
+            double bz = blockLoc.getZ();
+
+            for (org.bukkit.entity.Entity e : player.getNearbyEntities(100, 100, 100))
+            {
+                if (e instanceof CraftMyPet)
+                {
+                    Location loc = e.getLocation();
+                    double ex = loc.getX();
+                    double ey = loc.getY();
+                    double ez = loc.getZ();
+
+                    if ((bx - 1.5 <= ex && ex <= bx + 2) && (bz - 1.5 <= ez && ez <= bz + 2) && (by - 1 <= ey && ey <= by + 2.5))
+                    {
+                        entityList.add(e);
+                    }
+                }
+            }
+        }
+        return entityList;
     }
 }
