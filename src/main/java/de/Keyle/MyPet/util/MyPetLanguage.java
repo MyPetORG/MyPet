@@ -237,6 +237,7 @@ public class MyPetLanguage
         addString("Name_SPLASH_POTION", "MyPet.Name.SplashPotion", "Splash Potion");
         addString("Name_Squid", "MyPet.Name.Squid", "Squid");
         addString("Name_Strength", "MyPet.Name.Strength", "Strength");
+        addString("Name_SUFFOCATION", "MyPet.Name.Suffocation", "Suffocation");
         // --  T  --
         addString("Name_Tier", "MyPet.Name.Tier", "Tier");
         // --  U  --
