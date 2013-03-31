@@ -55,7 +55,9 @@ public class MyPetConfiguration
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
     public static int RESPAWN_TIME_FACTOR = 5;
+    public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
+    public static int RESPAWN_TIME_PLAYER_FIXED = 0;
     public static int AUTOSAVE_TIME = 60;
     public static int HUNGER_SYSTEM_TIME = 60;
     public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
@@ -91,8 +93,10 @@ public class MyPetConfiguration
         setProperty("MyPet.RemovePetsAfterRelease", false);
         setProperty("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
-        setProperty("MyPet.Respawn.Time.Factor", 5);
-        setProperty("MyPet.Respawn.Time.Fixed", 0);
+        setProperty("MyPet.Respawn.Time.Default.Factor", 5);
+        setProperty("MyPet.Respawn.Time.Player.Factor", 5);
+        setProperty("MyPet.Respawn.Time.Default.Fixed", 0);
+        setProperty("MyPet.Respawn.Time.Player.Fixed", 0);
         setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
 
@@ -208,8 +212,10 @@ public class MyPetConfiguration
         SKILLTREE_SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
         PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
-        RESPAWN_TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Factor", 5);
-        RESPAWN_TIME_FIXED = config.getInt("MyPet.Respawn.Time.Fixed", 0);
+        RESPAWN_TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Default.Factor", 5);
+        RESPAWN_TIME_PLAYER_FACTOR = config.getInt("MyPet.Respawn.Time.Player.Factor", 5);
+        RESPAWN_TIME_FIXED = config.getInt("MyPet.Respawn.Time.Default.Fixed", 0);
+        RESPAWN_TIME_PLAYER_FIXED = config.getInt("MyPet.Respawn.Time.Player.Fixed", 0);
         RESPAWN_COSTS_FACTOR = config.getDouble("MyPet.Respawn.EconomyCost.Factor", 1.0);
         RESPAWN_COSTS_FIXED = config.getDouble("MyPet.Respawn.EconomyCost.Fixed", 0.0);
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", true);

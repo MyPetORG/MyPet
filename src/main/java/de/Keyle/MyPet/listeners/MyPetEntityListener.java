@@ -744,7 +744,11 @@ public class MyPetEntityListener implements Listener
             {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
-                if (e.getDamager() instanceof CraftMyPet)
+                if (e.getDamager() instanceof Player)
+                {
+                    myPet.respawnTime = (MyPetConfiguration.RESPAWN_TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass())));
+                }
+                else if (e.getDamager() instanceof CraftMyPet)
                 {
                     MyPet killerMyPet = ((CraftMyPet) e.getDamager()).getMyPet();
                     if (myPet.getSkills().isSkillActive("Behavior") && killerMyPet.getSkills().isSkillActive("Behavior"))
