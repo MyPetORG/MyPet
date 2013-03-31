@@ -786,8 +786,11 @@ public class MyPetPlugin extends JavaPlugin
                 playerNBT.getValue().put("Name", new StringTag("Name", myPetPlayer.getName()));
                 playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", myPetPlayer.hasAutoRespawnEnabled()));
                 playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", myPetPlayer.getAutoRespawnMin()));
-                playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString()));
                 playerNBT.getValue().put("ExtendedInfo", myPetPlayer.getExtendedInfo());
+                if (myPetPlayer.getLastActiveMyPetUUID() != null)
+                {
+                    playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString()));
+                }
 
                 playerList.add(playerNBT);
             }
