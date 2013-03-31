@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import net.minecraft.server.v1_5_R2.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
@@ -153,6 +154,10 @@ public class EntityMySkeleton extends EntityMyPet
         {
             if (itemStack.id == Item.SHEARS.id)
             {
+                if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip"))
+                {
+                    return false;
+                }
                 for (EquipmentSlot slot : EquipmentSlot.values())
                 {
                     ItemStack itemInSlot = ((MySkeleton) myPet).getEquipment(slot);
@@ -169,6 +174,10 @@ public class EntityMySkeleton extends EntityMyPet
             }
             else if (checkForEquipment(itemStack) && getOwner().isSneaking())
             {
+                if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip"))
+                {
+                    return false;
+                }
                 EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
                 ItemStack itemInSlot = ((MySkeleton) myPet).getEquipment(slot);
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
