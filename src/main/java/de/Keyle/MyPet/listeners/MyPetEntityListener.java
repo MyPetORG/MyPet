@@ -620,6 +620,26 @@ public class MyPetEntityListener implements Listener
                     event.setCancelled(true);
                 }
             }
+            else if (event.getCause() == DamageCause.SUFFOCATION)
+            {
+                MyPet myPet = craftMyPet.getMyPet();
+
+                myPet.removePet();
+                myPet.setLocation(myPet.getOwner().getPlayer().getLocation());
+
+                switch (myPet.createPet())
+                {
+                    case Success:
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                        break;
+                    case Canceled:
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                        break;
+                    case NoSpace:
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        break;
+                }
+            }
         }
     }
 
