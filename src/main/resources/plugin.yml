@@ -43,7 +43,7 @@ commands:
     usage: '/<command> <Playername>'
   petadmin:
     description: Set the Exp or Name of a MyPet
-    usage: '/<command> [PlayerName] name/exp [Value]'
+    usage: '/<command> -> http://mypet.keyle.de/doku.php?id=en:commands'
     permission: MyPet.admin
   petskilltree:
     aliases: [pst, petst]
