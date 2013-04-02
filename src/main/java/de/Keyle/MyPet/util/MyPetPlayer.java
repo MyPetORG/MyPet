@@ -108,13 +108,13 @@ public class MyPetPlayer implements IScheduler
         }
     }
 
-    public void addExtendedInfo(String key, Tag<?> compound)
+    public void addExtendedInfo(String key, Tag<?> tag)
     {
-        extendedInfo.getValue().put(key, compound);
+        extendedInfo.getValue().put(key, tag);
         customData = true;
     }
 
-    public CompoundTag getExtendedInfo(String key)
+    public Tag<?> getExtendedInfo(String key)
     {
         if (extendedInfo.getValue().size() != 0)
         {
@@ -122,9 +122,9 @@ public class MyPetPlayer implements IScheduler
         }
         if (extendedInfo.getValue().containsKey(key))
         {
-            return (CompoundTag) extendedInfo.getValue().get(key);
+            return extendedInfo.getValue().get(key);
         }
-        return new CompoundTag(null, new CompoundMap());
+        return null;
     }
 
     public CompoundTag getExtendedInfo()
