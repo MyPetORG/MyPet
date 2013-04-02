@@ -24,7 +24,7 @@
 
     <groupId>de.Keyle</groupId>
     <artifactId>MyPet</artifactId>
-    <version>1.0.7</version>
+    <version>${mypet.version}-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MyPet</name>
@@ -33,6 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <mypet.version>1.0.7</mypet.version>
         <minecraft.version>1.5.1</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
@@ -53,9 +54,9 @@
         <snakeyaml.version>1.11</snakeyaml.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
         <json-simple.version>1.1.1</json-simple.version>
+        <forms_rt.version>7.0.3</forms_rt.version>
 
         <junit.version>4.8.2</junit.version>
-        <forms_rt.version>7.0.3</forms_rt.version>
         <javac2.version>5.1</javac2.version>
         <ideauidesigner.version>1.0-alpha-2</ideauidesigner.version>
     </properties>
@@ -98,8 +99,12 @@
     <distributionManagement>
         <repository>
             <id>MyPet</id>
-            <url>http://localhost:8081/content/repositories/releases/</url>
+            <url>http://nexus.keyle.de/content/repositories/releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>MyPet-snapshot</id>
+            <url>http://nexus.keyle.de/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
@@ -229,6 +234,7 @@
         <url>https://github.com/xXKeyleXx/MyPet/tree/master/</url>
     </scm>
     <build>
+        <defaultGoal>clean install</defaultGoal>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -254,9 +260,9 @@
                     <archive>
                         <manifestEntries>
                             <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
-                            <Project-Author>MyPet</Project-Author>
+                            <Project-Author>Keyle</Project-Author>
                             <Project-Name>MyPet</Project-Name>
-                            <Project-Version>${project.version}</Project-Version>
+                            <Project-Version>${mypet.version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>
