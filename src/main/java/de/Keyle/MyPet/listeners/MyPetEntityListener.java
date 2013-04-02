@@ -752,7 +752,7 @@ public class MyPetEntityListener implements Listener
         if (event.getEntity() instanceof CraftMyPet)
         {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-            if (myPet == null)
+            if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
             {
                 return;
             }
