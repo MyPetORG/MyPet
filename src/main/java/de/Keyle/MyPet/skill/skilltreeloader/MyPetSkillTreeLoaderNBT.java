@@ -47,11 +47,6 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
 
     public void loadSkillTrees(String configPath, String[] mobtypes)
     {
-        loadSkillTrees(configPath, mobtypes, true);
-    }
-
-    public void loadSkillTrees(String configPath, String[] mobtypes, boolean applyDefaultAndInheritance)
-    {
         NBT_Configuration skilltreeConfig;
         DebugLogger.info("Loading nbt skill configs in: " + configPath);
         File skillFile;
@@ -63,7 +58,7 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
             skilltreeConfig = new NBT_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                loadSkillTree(skilltreeConfig, skillTreeMobType);
                 DebugLogger.info("  default.st");
             }
         }
@@ -76,28 +71,20 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
 
             if (!skillFile.exists())
             {
-                if (applyDefaultAndInheritance)
-                {
-                    if (!skillTreeMobType.getMobTypeName().equals("default"))
-                    {
-                        addDefault(skillTreeMobType);
-                    }
-                    manageInheritance(skillTreeMobType);
-                }
                 continue;
             }
 
             skilltreeConfig = new NBT_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                loadSkillTree(skilltreeConfig, skillTreeMobType);
                 DebugLogger.info("  " + mobType.toLowerCase() + ".st");
             }
             skillTreeMobType.cleanupPlaces();
         }
     }
 
-    protected void loadSkillTree(NBT_Configuration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
+    protected void loadSkillTree(NBT_Configuration nbtConfiguration, MyPetSkillTreeMobType skillTreeMobType)
     {
         IntTag intTag;
         ListTag skilltreeList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Skilltrees");
@@ -151,14 +138,6 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                 }
             }
             skillTreeMobType.addSkillTree(skillTree, place);
-        }
-        if (applyDefaultAndInheritance)
-        {
-            if (!skillTreeMobType.getMobTypeName().equals("default"))
-            {
-                addDefault(skillTreeMobType);
-            }
-            manageInheritance(skillTreeMobType);
         }
     }
 

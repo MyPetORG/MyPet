@@ -33,9 +33,9 @@ import java.util.Map;
 
 public abstract class MyPetSkillTreeLoader
 {
-    protected List<MyPetSkillTree> alreadyLoadedInheritance = new ArrayList<MyPetSkillTree>();
+    protected static List<MyPetSkillTree> alreadyLoadedInheritance = new ArrayList<MyPetSkillTree>();
 
-    protected void addDefault(MyPetSkillTreeMobType skillTreeMobType)
+    public static void addDefault(MyPetSkillTreeMobType skillTreeMobType)
     {
         if (!MyPetSkillTreeMobType.hasMobType("default"))
         {
@@ -59,7 +59,7 @@ public abstract class MyPetSkillTreeLoader
         }
     }
 
-    protected void manageInheritance(MyPetSkillTreeMobType skillTreeMobType)
+    public static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType)
     {
         Map<MyPetSkillTree, MyPetSkillTree> skillTreeClones = new HashMap<MyPetSkillTree, MyPetSkillTree>();
         for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
@@ -77,7 +77,7 @@ public abstract class MyPetSkillTreeLoader
         }
     }
 
-    protected void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int depth)
+    protected static void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int depth)
     {
         if (skillTree.hasInheritance() && depth < 20)
         {

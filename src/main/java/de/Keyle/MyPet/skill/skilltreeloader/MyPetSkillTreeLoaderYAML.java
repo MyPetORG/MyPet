@@ -45,13 +45,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
     {
     }
 
-    @Override
     public void loadSkillTrees(String configPath, String[] mobtypes)
-    {
-        loadSkillTrees(configPath, mobtypes, true);
-    }
-
-    public void loadSkillTrees(String configPath, String[] mobtypes, boolean applyDefaultAndInheritance)
     {
         SnakeYAML_Configuration skilltreeConfig;
         File skillFile;
@@ -63,7 +57,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType, false);
+                loadSkillTree(skilltreeConfig, skillTreeMobType);
                 DebugLogger.info("  default.yml");
             }
         }
@@ -76,28 +70,20 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
             if (!skillFile.exists())
             {
-                if (applyDefaultAndInheritance)
-                {
-                    if (!skillTreeMobType.getMobTypeName().equals("default"))
-                    {
-                        addDefault(skillTreeMobType);
-                    }
-                    manageInheritance(skillTreeMobType);
-                }
                 continue;
             }
 
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                loadSkillTree(skilltreeConfig, skillTreeMobType);
                 DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void loadSkillTree(SnakeYAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
+    private void loadSkillTree(SnakeYAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType)
     {
         Map<String, Object> config = yamlConfiguration.getConfig();
         if (config == null || config.size() == 0)
@@ -260,14 +246,6 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             {
                 skillTreeMobType.addSkillTree(skillTree);
             }
-        }
-        if (applyDefaultAndInheritance)
-        {
-            if (!skillTreeMobType.getMobTypeName().equals("default"))
-            {
-                addDefault(skillTreeMobType);
-            }
-            manageInheritance(skillTreeMobType);
         }
     }
 

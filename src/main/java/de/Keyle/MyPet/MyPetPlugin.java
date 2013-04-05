@@ -57,6 +57,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.info.*;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoader;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
@@ -247,6 +248,13 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+
+        for (MyPetType mobType : MyPetType.values())
+        {
+            MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+            MyPetSkillTreeLoader.addDefault(skillTreeMobType);
+            MyPetSkillTreeLoader.manageInheritance(skillTreeMobType);
+        }
 
         try
         {
