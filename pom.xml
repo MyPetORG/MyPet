@@ -201,21 +201,25 @@
             <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
             <version>${forms_rt.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spout</groupId>
             <artifactId>simplenbt</artifactId>
             <version>${simplenbt.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>${json-simple.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
