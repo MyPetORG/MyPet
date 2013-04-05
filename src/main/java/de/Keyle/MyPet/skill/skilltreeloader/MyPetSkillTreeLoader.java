@@ -77,9 +77,9 @@ public abstract class MyPetSkillTreeLoader
         }
     }
 
-    protected void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int tiefe)
+    protected void manageInheritance(MyPetSkillTreeMobType skillTreeMobType, MyPetSkillTree startSkillTree, MyPetSkillTree skillTree, Map<MyPetSkillTree, MyPetSkillTree> clones, int depth)
     {
-        if (skillTree.hasInheritance() && tiefe < 20)
+        if (skillTree.hasInheritance() && depth < 20)
         {
             if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
             {
@@ -89,7 +89,7 @@ public abstract class MyPetSkillTreeLoader
                     if (skillTreeInherit.hasInheritance() && MyPetConfiguration.INHERIT_ALREADY_INHERITED_SKILLS)
                     {
                         alreadyLoadedInheritance.add(skillTreeInherit);
-                        manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, tiefe + 1);
+                        manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, depth + 1);
                     }
                     else
                     {
