@@ -123,8 +123,11 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
         {
             if (timeCounter-- <= 0)
             {
-                addPotionGraphicalEffect(myPet.getCraftPet(), 0x00FF00, 40); //Green Potion Effect
-                myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
+                if (myPet.getHealth() < myPet.getMaxHealth())
+                {
+                    addPotionGraphicalEffect(myPet.getCraftPet(), 0x00FF00, 40); //Green Potion Effect
+                    myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
+                }
                 timeCounter = START_REGENERATION_TIME - timeDecrease;
             }
         }
