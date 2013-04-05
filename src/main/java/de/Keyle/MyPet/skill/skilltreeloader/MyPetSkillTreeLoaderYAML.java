@@ -315,7 +315,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                 skilltreeMap.put("Place", mobType.getSkillTreePlace(skillTree));
                 if (skillTree.hasInheritance())
                 {
-                    skilltreeMap.put("Inherits", skillTree.getInheritance());
+                    skilltreeMap.put("Inherit", skillTree.getInheritance());
                 }
                 if (skillTree.hasCustomPermissions())
                 {
