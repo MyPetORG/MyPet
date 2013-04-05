@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.util.configuration;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
@@ -58,16 +61,23 @@ public class SnakeYAML_Configuration
     }
 
     @SuppressWarnings("unchecked")
-    public void load()
+    public boolean load()
     {
         try
         {
             config = (Map<String, Object>) yaml.load(new FileInputStream(yamlFile));
-
+            return true;
+        }
+        catch (ClassCastException e)
+        {
+            MyPetLogger.write(ChatColor.RED + "Could not parse/load " + yamlFile.getName());
+            DebugLogger.warning("Could not parse/load " + yamlFile.getName());
+            return false;
         }
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
+            return false;
         }
     }
 

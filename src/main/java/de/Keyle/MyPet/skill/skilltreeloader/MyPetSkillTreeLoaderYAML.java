@@ -61,8 +61,11 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
         if (skillFile.exists())
         {
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
-            loadSkillTree(skilltreeConfig, skillTreeMobType, false);
-            DebugLogger.info("  default.yml");
+            if (skilltreeConfig.load())
+            {
+                loadSkillTree(skilltreeConfig, skillTreeMobType, false);
+                DebugLogger.info("  default.yml");
+            }
         }
 
         for (String mobType : mobtypes)
@@ -85,15 +88,17 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             }
 
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
-            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
+            if (skilltreeConfig.load())
+            {
+                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
+            }
         }
     }
 
     @SuppressWarnings("unchecked")
     private void loadSkillTree(SnakeYAML_Configuration yamlConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
     {
-        yamlConfiguration.load();
         Map<String, Object> config = yamlConfiguration.getConfig();
         if (config == null || config.size() == 0)
         {
