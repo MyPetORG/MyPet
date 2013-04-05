@@ -21,6 +21,8 @@
 package de.Keyle.MyPet.util.configuration;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.Tag;
@@ -111,11 +113,11 @@ public class NBT_Configuration
         return tags;
     }
 
-    public void load()
+    public boolean load()
     {
         if (!NBTFile.exists())
         {
-            return;
+            return false;
         }
         List<Tag<?>> tags = readRawNBT(NBTFile, true);
         if (tags != null)
@@ -133,7 +135,11 @@ public class NBT_Configuration
         if (tags != null && tags.size() > 0)
         {
             nbtTagCompound = (CompoundTag) tags.get(0);
+            return true;
         }
+        MyPetLogger.write(ChatColor.RED + "Could not parse/load " + NBTFile.getName());
+        DebugLogger.warning("Could not parse/load " + NBTFile.getName());
+        return false;
     }
 
     public void clearConfig()
