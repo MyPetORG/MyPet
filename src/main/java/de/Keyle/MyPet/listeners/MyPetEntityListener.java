@@ -30,7 +30,6 @@ import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
-import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
 import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -649,9 +648,8 @@ public class MyPetEntityListener implements Listener
         // --  fix unwanted screaming of Endermen --
         if (event.getEntity() instanceof CraftMyPet && ((CraftMyPet) event.getEntity()).getPetType() == MyPetType.Enderman)
         {
-            MyEnderman myEnderman = (MyEnderman) ((CraftMyPet) event.getEntity()).getMyPet();
-            ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(true);
-            ((EntityMyEnderman) myEnderman.getCraftPet().getHandle()).setScreaming(false);
+            ((EntityMyEnderman) ((CraftMyPet) event.getEntity()).getHandle()).setScreaming(true);
+            ((EntityMyEnderman) ((CraftMyPet) event.getEntity()).getHandle()).setScreaming(false);
         }
 
         if (event.getEntity() instanceof LivingEntity)
