@@ -65,9 +65,11 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
         if (skillFile.exists())
         {
             skilltreeConfig = new JSON_Configuration(skillFile);
-            skilltreeConfig.load();
-            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            DebugLogger.info("  default.json");
+            if (skilltreeConfig.load())
+            {
+                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                DebugLogger.info("  default.json");
+            }
         }
 
         for (String mobType : mobtypes)
@@ -88,17 +90,18 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                 }
                 continue;
             }
-
             skilltreeConfig = new JSON_Configuration(skillFile);
-            loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
-            DebugLogger.info("  " + mobType.toLowerCase() + ".json");
+            if (skilltreeConfig.load())
+            {
+                loadSkillTree(skilltreeConfig, skillTreeMobType, applyDefaultAndInheritance);
+                DebugLogger.info("  " + mobType.toLowerCase() + ".json");
+            }
             skillTreeMobType.cleanupPlaces();
         }
     }
 
     protected void loadSkillTree(JSON_Configuration jsonConfiguration, MyPetSkillTreeMobType skillTreeMobType, boolean applyDefaultAndInheritance)
     {
-        jsonConfiguration.load();
         JSONArray skilltreeList = (JSONArray) jsonConfiguration.getJSONObject().get("Skilltrees");
         for (Object st_object : skilltreeList)
         {

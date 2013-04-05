@@ -20,8 +20,12 @@
 
 package de.Keyle.MyPet.util.configuration;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 
@@ -49,7 +53,7 @@ public class JSON_Configuration
         return config;
     }
 
-    public void load()
+    public boolean load()
     {
         config = new JSONObject();
         try
@@ -59,12 +63,20 @@ public class JSON_Configuration
             Object obj = parser.parse(reader);
             config = (JSONObject) obj;
         }
-        catch (Exception ignored)
+        catch (ParseException e)
         {
-            ignored.printStackTrace();
+            MyPetLogger.write(ChatColor.RED + "Could not parse/load " + jsonFile.getName());
+            DebugLogger.warning("Could not parse/load " + jsonFile.getName());
+            return false;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
         }
         jsonFile.setWritable(true);
         jsonFile.setReadable(true);
+        return true;
     }
 
     public boolean save()
