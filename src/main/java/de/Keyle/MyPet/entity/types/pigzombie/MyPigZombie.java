@@ -89,7 +89,7 @@ public class MyPigZombie extends MyPet
                 itemList.add(item);
             }
         }
-        info.getValue().put("Equipment", new ListTag<CompoundTag>("Items", CompoundTag.class, itemList));
+        info.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, itemList));
         return info;
     }
 
