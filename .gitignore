@@ -15,8 +15,11 @@
 # vim
 .*.sw[a-p]
 
-# Mac filesystem dust
+# Mac
 /.DS_Store
 
-#Ant
+# Ant
 build.number
+
+# Maven
+/target
