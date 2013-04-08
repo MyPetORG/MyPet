@@ -238,7 +238,7 @@
         <url>https://github.com/xXKeyleXx/MyPet/tree/master/</url>
     </scm>
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>clean package</defaultGoal>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
