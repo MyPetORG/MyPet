@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
 import net.minecraft.server.v1_5_R2.World;
@@ -29,7 +30,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 public class EntityAIMeleeAttack extends PathfinderGoal
 {
     private World petWorld;
-    EntityLiving petEntity;
+    EntityMyPet petEntity;
     EntityLiving targetEntity;
     double range;
     float walkSpeed;
@@ -37,7 +38,7 @@ public class EntityAIMeleeAttack extends PathfinderGoal
     private int ticksUntilNextHit;
     private int timeUntilNextNavigationUpdate;
 
-    public EntityAIMeleeAttack(EntityLiving petEntity, float walkSpeed, double range, int ticksUntilNextHit)
+    public EntityAIMeleeAttack(EntityMyPet petEntity, float walkSpeed, double range, int ticksUntilNextHit)
     {
         this.petEntity = petEntity;
         this.petWorld = petEntity.world;
@@ -57,6 +58,10 @@ public class EntityAIMeleeAttack extends PathfinderGoal
         {
             return false;
         }
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
+        {
+            return false;
+        }
         this.targetEntity = targetEntity;
         return this.petEntity.aD().canSee(targetEntity);
     }
@@ -72,6 +77,10 @@ public class EntityAIMeleeAttack extends PathfinderGoal
             return false;
         }
         else if (!this.targetEntity.isAlive())
+        {
+            return false;
+        }
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
         {
             return false;
         }

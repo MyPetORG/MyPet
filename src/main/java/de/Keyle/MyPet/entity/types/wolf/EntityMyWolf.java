@@ -46,6 +46,10 @@ public class EntityMyWolf extends EntityMyPet
         petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Sit", sitPathfinder);
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
+        if (myPet.getRangedDamage() > 0)
+        {
+            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedTarget(myPet, 0.25F, 20, 12.0F));
+        }
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));
@@ -75,7 +79,6 @@ public class EntityMyWolf extends EntityMyPet
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setTamed(((MyWolf) myPet).isTamed());
             this.setCollarColor(((MyWolf) myPet).getCollarColor());
-
         }
     }
 

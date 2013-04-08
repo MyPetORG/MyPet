@@ -40,7 +40,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
     public enum PetInfoDisplay
     {
-        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true);
+        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false);
 
         public boolean adminOnly = false;
 
@@ -109,6 +109,12 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 {
                     int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
+                    infoShown = true;
+                }
+                if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
+                {
+                    int damage = myPet.getDamage();
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLanguage.getString("Name_RangedDamage")));
                     infoShown = true;
                 }
                 if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))

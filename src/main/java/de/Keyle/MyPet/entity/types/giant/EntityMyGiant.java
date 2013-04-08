@@ -51,6 +51,10 @@ public class EntityMyGiant extends EntityMyPet
     {
         petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
+        if (myPet.getRangedDamage() > 0)
+        {
+            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedTarget(myPet, 0.25F, 35, 12.0F));
+        }
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("LeapAtTarget", new PathfinderGoalLeapAtTarget(this, this.walkSpeed + 0.1F));

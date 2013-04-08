@@ -32,6 +32,7 @@ import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.skill.skills.implementation.HP;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
+import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -370,6 +371,11 @@ public abstract class MyPet implements IMyPet
     public int getDamage()
     {
         return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamageIncrease() : 0);
+    }
+
+    public int getRangedDamage()
+    {
+        return (getSkills().hasSkill("Ranged") ? ((Ranged) getSkills().getSkill("Ranged")).getDamage() : 0);
     }
 
     public MyPetSkills getSkills()

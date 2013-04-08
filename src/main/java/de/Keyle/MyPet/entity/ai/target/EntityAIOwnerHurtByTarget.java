@@ -55,7 +55,13 @@ public class EntityAIOwnerHurtByTarget extends PathfinderGoal
             return false;
         }
         this.lastDamager = owner.aF();
+
+
         if (this.lastDamager == null || !lastDamager.isAlive())
+        {
+            return false;
+        }
+        if (lastDamager == petEntity)
         {
             return false;
         }

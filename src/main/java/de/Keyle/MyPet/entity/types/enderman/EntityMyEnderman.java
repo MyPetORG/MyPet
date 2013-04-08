@@ -41,6 +41,10 @@ public class EntityMyEnderman extends EntityMyPet
     {
         petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
+        if (myPet.getRangedDamage() > 0)
+        {
+            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedTarget(myPet, 0.25F, 35, 12.0F));
+        }
         if (myPet.getDamage() > 0)
         {
             petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 3, 20));

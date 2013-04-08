@@ -49,6 +49,10 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
         {
             target = petEntity.aF();
         }
+        if (target == petEntity)
+        {
+            return false;
+        }
         if (target instanceof EntityPlayer)
         {
             Player targetPlayer = (Player) target.getBukkitEntity();

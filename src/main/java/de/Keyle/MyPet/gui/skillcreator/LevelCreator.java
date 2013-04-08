@@ -69,7 +69,7 @@ public class LevelCreator
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
-    String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ride", "Slow", "Thorns", "Wither"};
+    String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ranged", "Ride", "Slow", "Thorns", "Wither"};
 
     public LevelCreator()
     {

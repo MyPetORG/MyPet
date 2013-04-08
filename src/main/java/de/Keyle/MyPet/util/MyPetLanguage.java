@@ -220,6 +220,7 @@ public class MyPetLanguage
         // --  R  --
         addString("Name_Raid", "MyPet.Name.Raid", "Raid");
         addString("Name_Range", "MyPet.Name.Range", "Range");
+        addString("Name_RangedDamage", "MyPet.Name.RangedDamage", "Ranged Damage");
         addString("Name_Regeneration", "MyPet.Name.Regeneration", "Regeneration");
         addString("Name_Resistance", "MyPet.Name.Resistance", "Resistance");
         addString("Name_Rows", "MyPet.Name.Rows", "Row(s)");

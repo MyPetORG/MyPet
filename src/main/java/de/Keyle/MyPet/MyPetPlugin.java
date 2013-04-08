@@ -482,6 +482,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkills.registerSkill(Lightning.class);
         MyPetSkills.registerSkill(Slow.class);
         MyPetSkills.registerSkill(Knockback.class);
+        MyPetSkills.registerSkill(Ranged.class);
     }
 
     public static void registerSkillsInfo()
@@ -502,6 +503,7 @@ public class MyPetPlugin extends JavaPlugin
         MyPetSkillsInfo.registerSkill(LightningInfo.class);
         MyPetSkillsInfo.registerSkill(SlowInfo.class);
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
+        MyPetSkillsInfo.registerSkill(RangedInfo.class);
     }
 
     public static boolean checkForUpdates(String compatibleMinecraftVersion)

@@ -219,5 +219,6 @@ public class GuiMain
         MyPetSkillsInfo.registerSkill(LightningInfo.class);
         MyPetSkillsInfo.registerSkill(SlowInfo.class);
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
+        MyPetSkillsInfo.registerSkill(RangedInfo.class);
     }
 }
