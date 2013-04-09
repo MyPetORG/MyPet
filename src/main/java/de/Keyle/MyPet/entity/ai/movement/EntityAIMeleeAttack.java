@@ -20,16 +20,14 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
-import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityAIMeleeAttack extends PathfinderGoal
+public class EntityAIMeleeAttack extends EntityAIGoal
 {
-    private World petWorld;
     EntityMyPet petEntity;
     EntityLiving targetEntity;
     double range;
@@ -41,13 +39,12 @@ public class EntityAIMeleeAttack extends PathfinderGoal
     public EntityAIMeleeAttack(EntityMyPet petEntity, float walkSpeed, double range, int ticksUntilNextHit)
     {
         this.petEntity = petEntity;
-        this.petWorld = petEntity.world;
         this.walkSpeed = walkSpeed;
         this.range = range * range;
         this.ticksUntilNextHit = ticksUntilNextHit;
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         EntityLiving targetEntity = this.petEntity.getGoalTarget();
         if (targetEntity == null)
@@ -66,7 +63,8 @@ public class EntityAIMeleeAttack extends PathfinderGoal
         return this.petEntity.aD().canSee(targetEntity);
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         if (this.petEntity.getGoalTarget() == null)
         {
@@ -87,13 +85,15 @@ public class EntityAIMeleeAttack extends PathfinderGoal
         return true;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         this.petEntity.getNavigation().a(this.targetEntity, this.walkSpeed);
         this.timeUntilNextNavigationUpdate = 0;
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         EntityTargetEvent.TargetReason reason = targetEntity.isAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
         CraftEventFactory.callEntityTargetEvent(this.petEntity, null, reason);
@@ -102,7 +102,8 @@ public class EntityAIMeleeAttack extends PathfinderGoal
         this.petEntity.getNavigation().g();
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
         if (((this.petEntity.aD().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))

@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
@@ -28,10 +29,9 @@ import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 import org.bukkit.entity.Player;
 
-public class EntityAIOwnerHurtTarget extends PathfinderGoal
+public class EntityAIOwnerHurtTarget extends EntityAIGoal
 {
 
     EntityMyPet petEntity;
@@ -47,7 +47,7 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
     /**
      * Checks whether this ai goal should be activated
      */
-    public boolean a()
+    public boolean shouldStart()
     {
         if (!petEntity.canMove())
         {
@@ -136,7 +136,8 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         return true;
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         EntityLiving entityliving = petEntity.getGoalTarget();
 
@@ -155,12 +156,14 @@ public class EntityAIOwnerHurtTarget extends PathfinderGoal
         return true;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         petEntity.setGoalTarget(this.target);
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         petEntity.setGoalTarget(null);
     }

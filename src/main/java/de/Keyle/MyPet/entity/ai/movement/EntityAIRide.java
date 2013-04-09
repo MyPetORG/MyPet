@@ -20,12 +20,13 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import net.minecraft.server.v1_5_R2.*;
 
-public class EntityAIRide extends PathfinderGoal
+public class EntityAIRide extends EntityAIGoal
 {
     private final EntityMyPet petEntity;
     private final float startSpeed;
@@ -38,10 +39,9 @@ public class EntityAIRide extends PathfinderGoal
         this.petEntity = entityMyPet;
         this.startSpeed = startSpeed;
         myPet = petEntity.getMyPet();
-        a(7);
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         if (!myPet.getSkills().isSkillActive("Ride"))
         {
@@ -66,21 +66,24 @@ public class EntityAIRide extends PathfinderGoal
         return true;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         this.currentSpeed = 0.0F;
         this.petEntity.setRidden(true);
         petEntity.setSize(1);
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         this.currentSpeed = 0.0F;
         this.petEntity.setRidden(false);
         petEntity.setSize();
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 

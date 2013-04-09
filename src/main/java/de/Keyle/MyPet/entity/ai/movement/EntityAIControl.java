@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.util.IScheduler;
 import net.minecraft.server.v1_5_R2.Navigation;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 import org.bukkit.Location;
 
-public class EntityAIControl extends PathfinderGoal implements IScheduler
+public class EntityAIControl extends EntityAIGoal implements IScheduler
 {
     private MyPet myPet;
     private float speed;
@@ -36,19 +35,20 @@ public class EntityAIControl extends PathfinderGoal implements IScheduler
     private int timeToMove = 0;
     private Navigation nav;
     private boolean stopControl = false;
+    private Control controlSkill;
 
-
-    public EntityAIControl(MyPet myPet, float f)
+    public EntityAIControl(MyPet myPet, float speed)
     {
         this.myPet = myPet;
-        speed = f;
+        this.speed = speed;
         nav = this.myPet.getCraftPet().getHandle().getNavigation();
+        controlSkill = (Control) myPet.getSkills().getSkill("Control");
     }
 
     /**
      * Checks whether this ai should be activated
      */
-    public boolean a()
+    public boolean shouldStart()
     {
         if (stopControl)
         {
@@ -56,7 +56,6 @@ public class EntityAIControl extends PathfinderGoal implements IScheduler
         }
         if (myPet.getSkills().isSkillActive("Control"))
         {
-            Control controlSkill = (Control) myPet.getSkills().getSkill("Control");
             return controlSkill.getLocation(false) != null;
         }
         return false;
@@ -65,20 +64,18 @@ public class EntityAIControl extends PathfinderGoal implements IScheduler
     /**
      * Checks whether this ai should be stopped
      */
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         boolean stop = false;
-        Control control = (Control) myPet.getSkills().getSkill("Control");
 
-        if (control.getLocation(false) != null && moveTo != control.getLocation(false))
+        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false))
         {
-            moveTo = control.getLocation();
+            moveTo = controlSkill.getLocation();
             timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
             timeToMove = timeToMove < 3 ? 3 : timeToMove;
-            MyPetPlugin.getPlugin().getTimer().addTask(this);
             if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
             {
-                MyPetPlugin.getPlugin().getTimer().removeTask(this);
                 moveTo = null;
                 stop = true;
                 stopControl = false;
@@ -88,7 +85,6 @@ public class EntityAIControl extends PathfinderGoal implements IScheduler
         if (!this.myPet.getCraftPet().canMove() || moveTo != null && myPet.getLocation().distance(moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
         {
             moveTo = null;
-            MyPetPlugin.getPlugin().getTimer().removeTask(this);
             stop = true;
             stopControl = false;
         }
@@ -100,6 +96,7 @@ public class EntityAIControl extends PathfinderGoal implements IScheduler
         this.stopControl = true;
     }
 
+    @Override
     public void schedule()
     {
         timeToMove--;

@@ -20,16 +20,16 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_5_R2.EntityArrow;
 import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityAIRangedTarget extends PathfinderGoal
+public class EntityAIRangedTarget extends EntityAIGoal
 {
     private MyPet myPet;
     private final EntityMyPet entityMyPet;
@@ -51,7 +51,7 @@ public class EntityAIRangedTarget extends PathfinderGoal
         this.rangeSquared = (range * range);
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         EntityLiving goalTarget = this.entityMyPet.goalTarget;
 
@@ -68,7 +68,8 @@ public class EntityAIRangedTarget extends PathfinderGoal
         return true;
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         if (target == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
         {
@@ -81,7 +82,8 @@ public class EntityAIRangedTarget extends PathfinderGoal
         return true;
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         EntityTargetEvent.TargetReason reason = this.target.isAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
         CraftEventFactory.callEntityTargetEvent(this.entityMyPet, null, reason);
@@ -91,7 +93,8 @@ public class EntityAIRangedTarget extends PathfinderGoal
         this.shootTimer = -1;
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.boundingBox.b, this.target.locZ);
         boolean canSee = this.entityMyPet.aD().canSee(this.target);

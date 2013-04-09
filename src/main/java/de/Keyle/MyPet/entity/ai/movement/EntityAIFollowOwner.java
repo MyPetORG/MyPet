@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import net.minecraft.server.v1_5_R2.Navigation;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 import org.bukkit.Location;
 
-public class EntityAIFollowOwner extends PathfinderGoal
+public class EntityAIFollowOwner extends EntityAIGoal
 {
     private EntityMyPet petEntity;
     private float walkSpeed;
@@ -51,7 +51,7 @@ public class EntityAIFollowOwner extends PathfinderGoal
     /**
      * Checks whether this ai should be activated
      */
-    public boolean a()
+    public boolean shouldStart()
     {
         if (petEntity.petPathfinderSelector.hasGoal("Control"))
         {
@@ -83,7 +83,8 @@ public class EntityAIFollowOwner extends PathfinderGoal
         return true;
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         if (controlPathfinderGoal.moveTo != null)
         {
@@ -112,20 +113,23 @@ public class EntityAIFollowOwner extends PathfinderGoal
         return true;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         this.setPathTimer = 0;
         this.nav_a_save = this.nav.a();
         this.nav.a(false);
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         this.nav.f();
         this.nav.a(this.nav_a_save);
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
         Location petLocation = this.petEntity.getMyPet().getLocation();

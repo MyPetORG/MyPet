@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 
-public class EntityAIFloat extends PathfinderGoal
+public class EntityAIFloat extends EntityAIGoal
 {
     private EntityLiving entityMyPet;
 
@@ -34,12 +34,13 @@ public class EntityAIFloat extends PathfinderGoal
         entityMyPet.getNavigation().e(true);
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         return entityMyPet.world.getMaterial((int) entityMyPet.locX, (int) entityMyPet.locY, (int) entityMyPet.locZ).isLiquid();
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         if (entityMyPet.aE().nextFloat() < 0.9D)
         {

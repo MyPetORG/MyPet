@@ -20,16 +20,16 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
-import net.minecraft.server.v1_5_R2.PathfinderGoalTarget;
 import org.bukkit.entity.Player;
 
-public class EntityAIHurtByTarget extends PathfinderGoalTarget
+public class EntityAIHurtByTarget extends EntityAIGoal
 {
     EntityMyPet petEntity;
     MyPet myPet;
@@ -37,14 +37,16 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
 
     public EntityAIHurtByTarget(EntityMyPet petEntity)
     {
-        super(petEntity, 16.0F, false);
         this.petEntity = petEntity;
         myPet = petEntity.getMyPet();
     }
 
-    @Override
-    public boolean a()
+    public boolean shouldStart()
     {
+        if (petEntity.aF() == null)
+        {
+            return false;
+        }
         if (target != petEntity.aF())
         {
             target = petEntity.aF();
@@ -68,7 +70,7 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
         }
         else if (target instanceof EntityMyPet)
         {
-            MyPet targetMyPet = ((EntityMyPet) d.aF()).getMyPet();
+            MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
                 return false;
@@ -86,29 +88,37 @@ public class EntityAIHurtByTarget extends PathfinderGoalTarget
                 }
             }
         }
-        return a(this.target, true);
+        return true;
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
+        EntityLiving entityliving = petEntity.getGoalTarget();
+
         if (!petEntity.canMove())
         {
             return false;
         }
-        else if (!super.b())
+        else if (entityliving == null)
         {
-            target = null;
+            return false;
+        }
+        else if (!entityliving.isAlive())
+        {
             return false;
         }
         return true;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         petEntity.setGoalTarget(this.target);
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         petEntity.setGoalTarget(null);
     }

@@ -20,12 +20,16 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_5_R2.*;
+import net.minecraft.server.v1_5_R2.Block;
+import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R2.MathHelper;
+import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 
-public class EntityAIEatGrass extends PathfinderGoal
+public class EntityAIEatGrass extends EntityAIGoal
 {
     private EntityLiving entityMyPet;
     private World world;
@@ -39,7 +43,7 @@ public class EntityAIEatGrass extends PathfinderGoal
         this.world = entityliving.world;
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         if (this.entityMyPet.getGoalTarget() != null && this.entityMyPet.getGoalTarget().isAlive())
         {
@@ -56,24 +60,28 @@ public class EntityAIEatGrass extends PathfinderGoal
         return this.world.getTypeId(blockLocX, blockLocY, blockLocZ) == Block.LONG_GRASS.id && this.world.getData(blockLocX, blockLocY, blockLocZ) == 1;
     }
 
-    public boolean b()
+    @Override
+    public boolean shouldFinish()
     {
         return this.eatTicks > 0;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         this.eatTicks = 40;
         this.world.broadcastEntityEffect(this.entityMyPet, (byte) 10);
         this.entityMyPet.getNavigation().g();
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
         this.eatTicks = 0;
     }
 
-    public void e()
+    @Override
+    public void schedule()
     {
         this.eatTicks--;
         if (this.eatTicks == 4)

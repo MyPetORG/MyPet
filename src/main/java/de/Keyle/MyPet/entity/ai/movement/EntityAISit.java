@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
+import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
 
-public class EntityAISit extends PathfinderGoal
+public class EntityAISit extends EntityAIGoal
 {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
@@ -33,10 +33,9 @@ public class EntityAISit extends PathfinderGoal
     public EntityAISit(EntityMyPet entityMyPet)
     {
         this.entityMyPet = entityMyPet;
-        a(5);
     }
 
-    public boolean a()
+    public boolean shouldStart()
     {
         if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf))
         {
@@ -53,7 +52,8 @@ public class EntityAISit extends PathfinderGoal
         return this.sitting;
     }
 
-    public void c()
+    @Override
+    public void start()
     {
         this.entityMyPet.getNavigation().g();
         if (this.entityMyPet instanceof EntityMyOcelot)
@@ -67,7 +67,8 @@ public class EntityAISit extends PathfinderGoal
         entityMyPet.setGoalTarget(null);
     }
 
-    public void d()
+    @Override
+    public void finish()
     {
 
         if (this.entityMyPet instanceof EntityMyOcelot)
