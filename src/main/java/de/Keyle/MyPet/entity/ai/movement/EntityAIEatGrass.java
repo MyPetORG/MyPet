@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_5_R2.Block;
-import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.MathHelper;
 import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.Material;
@@ -31,16 +30,16 @@ import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 
 public class EntityAIEatGrass extends EntityAIGoal
 {
-    private EntityLiving entityMyPet;
+    private EntityMyPet entityMyPet;
     private World world;
     private double chanceToEat;
     int eatTicks = 0;
 
-    public EntityAIEatGrass(EntityMyPet entityliving, double chanceToEat)
+    public EntityAIEatGrass(EntityMyPet entityMyPet, double chanceToEat)
     {
-        this.entityMyPet = entityliving;
+        this.entityMyPet = entityMyPet;
         this.chanceToEat = chanceToEat;
-        this.world = entityliving.world;
+        this.world = entityMyPet.world;
     }
 
     public boolean shouldStart()
