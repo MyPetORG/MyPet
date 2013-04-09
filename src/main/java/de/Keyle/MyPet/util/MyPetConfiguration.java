@@ -83,114 +83,115 @@ public class MyPetConfiguration
 
     public static void setDefault()
     {
-        setProperty("MyPet.Leash.Item", LEASH_ITEM.getId());
-        setProperty("MyPet.OwnerCanAttackPet", false);
-        setProperty("MyPet.SendMetrics", true);
-        setProperty("MyPet.CheckForUpdates", false);
-        setProperty("MyPet.DebugLogger", true);
-        setProperty("MyPet.AutoSaveTime", 60);
-        setProperty("MyPet.EnableEvents", false);
-        setProperty("MyPet.RemovePetsAfterRelease", false);
-        setProperty("MyPet.DropPetInventoryAfterPlayerDeath", false);
+        config.addDefault("MyPet.Leash.Item", LEASH_ITEM.getId());
+        config.addDefault("MyPet.OwnerCanAttackPet", false);
+        config.addDefault("MyPet.SendMetrics", true);
+        config.addDefault("MyPet.CheckForUpdates", false);
+        config.addDefault("MyPet.DebugLogger", true);
+        config.addDefault("MyPet.AutoSaveTime", 60);
+        config.addDefault("MyPet.EnableEvents", false);
+        config.addDefault("MyPet.RemovePetsAfterRelease", false);
+        config.addDefault("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
-        setProperty("MyPet.Respawn.Time.Default.Factor", 5);
-        setProperty("MyPet.Respawn.Time.Player.Factor", 5);
-        setProperty("MyPet.Respawn.Time.Default.Fixed", 0);
-        setProperty("MyPet.Respawn.Time.Player.Fixed", 0);
-        setProperty("MyPet.Respawn.EconomyCost.Fixed", 0.0);
-        setProperty("MyPet.Respawn.EconomyCost.Factor", 1.0);
+        config.addDefault("MyPet.Respawn.Time.Default.Factor", 5);
+        config.addDefault("MyPet.Respawn.Time.Player.Factor", 5);
+        config.addDefault("MyPet.Respawn.Time.Default.Fixed", 0);
+        config.addDefault("MyPet.Respawn.Time.Player.Fixed", 0);
+        config.addDefault("MyPet.Respawn.EconomyCost.Fixed", 0.0);
+        config.addDefault("MyPet.Respawn.EconomyCost.Factor", 1.0);
 
-        setProperty("MyPet.Permissions.Enabled", true);
-        setProperty("MyPet.Permissions.UseExtendedPermissions", false);
+        config.addDefault("MyPet.Permissions.Enabled", true);
+        config.addDefault("MyPet.Permissions.UseExtendedPermissions", false);
 
-        setProperty("MyPet.LevelSystem.Active", true);
-        setProperty("MyPet.LevelSystem.CalculationMode", "Default");
+        config.addDefault("MyPet.LevelSystem.Active", true);
+        config.addDefault("MyPet.LevelSystem.CalculationMode", "Default");
 
-        setProperty("MyPet.HungerSystem.Active", true);
-        setProperty("MyPet.HungerSystem.Time", 60);
-        setProperty("MyPet.HungerSystem.HungerPointsPerFeed", 6);
+        config.addDefault("MyPet.HungerSystem.Active", true);
+        config.addDefault("MyPet.HungerSystem.Time", 60);
+        config.addDefault("MyPet.HungerSystem.HungerPointsPerFeed", 6);
 
-        setProperty("MyPet.Skilltree.AutomaticAssignment", true);
-        setProperty("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
-        setProperty("MyPet.Skilltree.ChooseOnce", true);
-        setProperty("MyPet.Skilltree.PreventLevellingWithout", true);
-        setProperty("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
-        setProperty("MyPet.Skilltree.SwitchPenaltyPercent", 5);
-        setProperty("MyPet.Skilltree.SwitchPenaltyAdmin", false);
+        config.addDefault("MyPet.Skilltree.AutomaticAssignment", true);
+        config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
+        config.addDefault("MyPet.Skilltree.ChooseOnce", true);
+        config.addDefault("MyPet.Skilltree.PreventLevellingWithout", true);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", 5);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", false);
 
-        setProperty("MyPet.Support.Towny", true);
-        setProperty("MyPet.Support.Heroes", true);
-        setProperty("MyPet.Support.Factions", true);
-        setProperty("MyPet.Support.WorldGuard", true);
-        setProperty("MyPet.Support.Citizens", true);
-        setProperty("MyPet.Support.mcMMO", true);
-        setProperty("MyPet.Support.Regios", true);
-        setProperty("MyPet.Support.MobArena", true);
-        setProperty("MyPet.Support.Residence", true);
-        setProperty("MyPet.Support.AncientRPG", true);
-        setProperty("MyPet.Support.Vault.Economy", true);
+        config.addDefault("MyPet.Support.Towny", true);
+        config.addDefault("MyPet.Support.Heroes", true);
+        config.addDefault("MyPet.Support.Factions", true);
+        config.addDefault("MyPet.Support.WorldGuard", true);
+        config.addDefault("MyPet.Support.Citizens", true);
+        config.addDefault("MyPet.Support.mcMMO", true);
+        config.addDefault("MyPet.Support.Regios", true);
+        config.addDefault("MyPet.Support.MobArena", true);
+        config.addDefault("MyPet.Support.Residence", true);
+        config.addDefault("MyPet.Support.AncientRPG", true);
+        config.addDefault("MyPet.Support.Vault.Economy", true);
 
-        setProperty("MyPet.Exp.Passive.PercentPerMonster", 25);
-        setProperty("MyPet.Exp.Loss.Percent", 0);
-        setProperty("MyPet.Exp.Loss.Fixed", 0.0);
-        setProperty("MyPet.Exp.Loss.Drop", true);
-        setProperty("MyPet.Exp.Gain.MonsterSpawner", true);
+        config.addDefault("MyPet.Exp.Passive.PercentPerMonster", 25);
+        config.addDefault("MyPet.Exp.Loss.Percent", 0);
+        config.addDefault("MyPet.Exp.Loss.Fixed", 0.0);
+        config.addDefault("MyPet.Exp.Loss.Drop", true);
+        config.addDefault("MyPet.Exp.Gain.MonsterSpawner", true);
 
-        setProperty("MyPet.Skill.Control.Item", Control.ITEM.getId());
-        setProperty("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
-        setProperty("MyPet.Skill.HPregeneration.Time", 60);
-        setProperty("MyPet.Skill.Inventory.Creative", true);
-        setProperty("MyPet.Skill.Behavior.Aggro", true);
-        setProperty("MyPet.Skill.Behavior.Farm", true);
-        setProperty("MyPet.Skill.Behavior.Friendly", true);
-        setProperty("MyPet.Skill.Behavior.Raid", true);
-        setProperty("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
+        config.addDefault("MyPet.Skill.Control.Item", Control.ITEM.getId());
+        config.addDefault("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
+        config.addDefault("MyPet.Skill.HPregeneration.Time", 60);
+        config.addDefault("MyPet.Skill.Inventory.Creative", true);
+        config.addDefault("MyPet.Skill.Behavior.Aggro", true);
+        config.addDefault("MyPet.Skill.Behavior.Farm", true);
+        config.addDefault("MyPet.Skill.Behavior.Friendly", true);
+        config.addDefault("MyPet.Skill.Behavior.Raid", true);
+        config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
 
-        setProperty("MyPet.Pets.Chicken.CanLayEggs", true);
-        setProperty("MyPet.Pets.Cow.CanGiveMilk", true);
-        setProperty("MyPet.Pets.Sheep.CanBeSheared", true);
-        setProperty("MyPet.Pets.IronGolem.CanThrowUp", true);
-        setProperty("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
-        setProperty("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", true);
+        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", true);
+        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", true);
+        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
+        config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
 
-        setProperty("MyPet.Info.AdminOnly.PetName", false);
-        setProperty("MyPet.Info.AdminOnly.PetOwner", false);
-        setProperty("MyPet.Info.AdminOnly.PetHP", false);
-        setProperty("MyPet.Info.AdminOnly.PetDamage", false);
-        setProperty("MyPet.Info.AdminOnly.PetHunger", true);
-        setProperty("MyPet.Info.AdminOnly.PetLevel", true);
-        setProperty("MyPet.Info.AdminOnly.PetEXP", true);
-        setProperty("MyPet.Info.AdminOnly.PetSkilltree", true);
+        config.addDefault("MyPet.Info.AdminOnly.PetName", false);
+        config.addDefault("MyPet.Info.AdminOnly.PetOwner", false);
+        config.addDefault("MyPet.Info.AdminOnly.PetHP", false);
+        config.addDefault("MyPet.Info.AdminOnly.PetDamage", false);
+        config.addDefault("MyPet.Info.AdminOnly.PetHunger", true);
+        config.addDefault("MyPet.Info.AdminOnly.PetLevel", true);
+        config.addDefault("MyPet.Info.AdminOnly.PetEXP", true);
+        config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", true);
 
-        setProperty("MyPet.Info.OverHead.Name", true);
-        setProperty("MyPet.Info.OverHead.Prefix", "%aqua%");
-        setProperty("MyPet.Info.OverHead.Suffix", "");
+        config.addDefault("MyPet.Info.OverHead.Name", true);
+        config.addDefault("MyPet.Info.OverHead.Prefix", "%aqua%");
+        config.addDefault("MyPet.Info.OverHead.Suffix", "");
 
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
-            setProperty("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food()));
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
         }
 
         for (EntityType entityType : MyPetMonsterExperience.mobExp.keySet())
         {
-            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetMonsterExperience.getMonsterExperience(entityType).getMin());
-            setProperty("MyPet.Exp.Active." + entityType.getName() + ".Max", MyPetMonsterExperience.getMonsterExperience(entityType).getMax());
+            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MyPetMonsterExperience.getMonsterExperience(entityType).getMin());
+            config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Max", MyPetMonsterExperience.getMonsterExperience(entityType).getMax());
         }
 
+        config.options().copyDefaults(true);
         MyPetPlugin.getPlugin().saveConfig();
     }
 
@@ -311,14 +312,6 @@ public class MyPetConfiguration
                     MyPetMonsterExperience.getMonsterExperience(entityType).setMax(max);
                 }
             }
-        }
-    }
-
-    public static void setProperty(String key, Object value)
-    {
-        if (!config.contains(key))
-        {
-            config.set(key, value);
         }
     }
 
