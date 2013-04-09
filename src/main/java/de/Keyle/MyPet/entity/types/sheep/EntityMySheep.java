@@ -223,14 +223,6 @@ public class EntityMySheep extends EntityMyPet
     }
 
     /**
-     * Called when the sheeps eat grass
-     */
-    public void aK()
-    {
-        ((MySheep) myPet).setSheared(false);
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String bb()
