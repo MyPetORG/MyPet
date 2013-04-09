@@ -27,10 +27,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_5_R2.*;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftEntity;
@@ -54,14 +51,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected boolean isMyPet = false;
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
-
-    // This Constructor should be never called!!!
-    public EntityMyPet(World world)
-    {
-        super(world);
-        MyPetLogger.write(ChatColor.RED + "Don't try to get a MyPet this way!");
-        DebugLogger.severe("Default Entity constructor called!!!");
-    }
 
     public EntityMyPet(World world, MyPet myPet)
     {
