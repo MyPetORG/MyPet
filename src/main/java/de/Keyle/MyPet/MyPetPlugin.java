@@ -120,10 +120,11 @@ public class MyPetPlugin extends JavaPlugin
     {
         plugin = this;
         this.isReady = false;
+        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
+
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
 
-        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
         File delCraftBukkit = new File(getPlugin().getDataFolder().getPath() + File.separator + "craftbukkit.jar");
         if (delCraftBukkit.exists())
         {
