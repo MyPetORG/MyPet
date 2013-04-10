@@ -22,35 +22,35 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyPetTimer
 {
-    private int timer = -1;
+    private static int timerID = -1;
+    private static final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
 
-    private static boolean resetTimer = false;
-
-    private final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
-
-    public void stopTimer()
+    private MyPetTimer()
     {
-        if (timer != -1)
+    }
+
+    public static void stopTimer()
+    {
+        if (timerID != -1)
         {
-            MyPetPlugin.getPlugin().getServer().getScheduler().cancelTask(timer);
-            timer = -1;
+            Bukkit.getScheduler().cancelTask(timerID);
+            timerID = -1;
         }
     }
 
-    public void startTimer()
+    public static void startTimer()
     {
         stopTimer();
 
-        timer = MyPetPlugin.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
+        timerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
         {
-            int autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
-
             public void run()
             {
                 for (MyPet myPet : MyPetList.getAllActiveMyPets())
@@ -65,32 +65,23 @@ public class MyPetTimer
                 {
                     player.schedule();
                 }
-                if (resetTimer && MyPetConfiguration.AUTOSAVE_TIME > 0)
-                {
-                    autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
-                    resetTimer = false;
-                }
-                if (MyPetConfiguration.AUTOSAVE_TIME > 0 && autoSaveTimer-- < 0)
-                {
-                    MyPetPlugin.getPlugin().savePets(false);
-                    autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
-                }
             }
         }, 0L, 20L);
     }
 
-    public void resetTimer()
+    public static void reset()
     {
-        resetTimer = true;
+        tasksToSchedule.clear();
+        stopTimer();
     }
 
-    public void addTask(IScheduler scheduler)
+    public static void addTask(IScheduler task)
     {
-        tasksToSchedule.add(scheduler);
+        tasksToSchedule.add(task);
     }
 
-    public void removeTask(IScheduler scheduler)
+    public static void removeTask(IScheduler task)
     {
-        tasksToSchedule.remove(scheduler);
+        tasksToSchedule.remove(task);
     }
 }

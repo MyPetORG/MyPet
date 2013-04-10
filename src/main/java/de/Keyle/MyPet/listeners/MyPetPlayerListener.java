@@ -153,7 +153,6 @@ public class MyPetPlayerListener implements Listener
             }
             myPet.removePet();
             MyPetPlugin.getPlugin().savePets(false);
-            MyPetPlugin.getPlugin().getTimer().resetTimer();
         }
     }
 

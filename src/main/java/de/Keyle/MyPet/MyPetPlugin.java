@@ -81,22 +81,17 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class MyPetPlugin extends JavaPlugin
+public class MyPetPlugin extends JavaPlugin implements IScheduler
 {
     private static MyPetPlugin plugin;
     public static MyPetLanguage language;
-    private final MyPetTimer timer = new MyPetTimer();
     private File NBTPetFile;
     private boolean isReady = false;
+    private int autoSaveTimer = 0;
 
     public static MyPetPlugin getPlugin()
     {
         return plugin;
-    }
-
-    public MyPetTimer getTimer()
-    {
-        return timer;
     }
 
     public void onDisable()
@@ -112,7 +107,7 @@ public class MyPetPlugin extends JavaPlugin
             }
             MyPetList.clearList();
         }
-        getTimer().stopTimer();
+        MyPetTimer.reset();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -345,7 +340,7 @@ public class MyPetPlugin extends JavaPlugin
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
         loadPets(NBTPetFile);
 
-        timer.startTimer();
+        MyPetTimer.startTimer();
 
         DebugLogger.info("MyPetPlayer: ---------------");
         for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
@@ -458,6 +453,7 @@ public class MyPetPlugin extends JavaPlugin
         }
         this.isReady = true;
         savePets(false);
+        MyPetTimer.addTask(this);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
@@ -688,6 +684,7 @@ public class MyPetPlugin extends JavaPlugin
             MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");
             return 0;
         }
+        autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
         int petCount = 0;
         NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
         List<CompoundTag> petList = new ArrayList<CompoundTag>();
@@ -831,6 +828,16 @@ public class MyPetPlugin extends JavaPlugin
             {
                 petPlayer.setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
             }
+        }
+    }
+
+    @Override
+    public void schedule()
+    {
+        if (MyPetConfiguration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0)
+        {
+            MyPetPlugin.getPlugin().savePets(false);
+            autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
         }
     }
 }
