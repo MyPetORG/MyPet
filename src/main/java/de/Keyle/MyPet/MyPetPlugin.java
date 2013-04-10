@@ -103,7 +103,9 @@ public class MyPetPlugin extends JavaPlugin
     {
         if (isReady)
         {
-            DebugLogger.info(savePets(true) + " pet/pets saved.");
+            int petCount = savePets(true);
+            DebugLogger.info(petCount + " pet(s) saved.");
+            MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) saved");
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
                 myPet.removePet();
@@ -531,8 +533,8 @@ public class MyPetPlugin extends JavaPlugin
     {
         if (!f.exists())
         {
-            DebugLogger.info("0 pet/pets loaded -------------------------");
-            MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet/pets loaded");
+            DebugLogger.info("0 pet(s) loaded -------------------------");
+            MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet(s) loaded");
             return 0;
         }
         int petCount = 0;
@@ -630,8 +632,8 @@ public class MyPetPlugin extends JavaPlugin
 
             petCount++;
         }
-        DebugLogger.info(petCount + " pet/pets loaded -------------------------");
-        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet/pets loaded");
+        DebugLogger.info(petCount + " pet(s) loaded -------------------------");
+        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
         return petCount;
     }
 

@@ -295,7 +295,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Release")).replace("%petname%", myPet.petName));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
-                    DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet/pets saved.");
+                    DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                     return true;
                 }
                 else
