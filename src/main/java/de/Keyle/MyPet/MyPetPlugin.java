@@ -124,12 +124,6 @@ public class MyPetPlugin extends JavaPlugin
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
-
-        File delCraftBukkit = new File(getPlugin().getDataFolder().getPath() + File.separator + "craftbukkit.jar");
-        if (delCraftBukkit.exists())
-        {
-            delCraftBukkit.delete();
-        }
         MyPetPvP.reset();
         MyPetEconomy.reset();
         MyPetConfiguration.config = this.getConfig();
