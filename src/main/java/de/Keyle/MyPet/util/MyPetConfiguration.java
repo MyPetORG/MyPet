@@ -229,7 +229,7 @@ public class MyPetConfiguration
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
-        USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", false);
+        USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", true);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
