@@ -256,7 +256,6 @@ public class EntityMyWolf extends EntityMyPet
         if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
-            this.bG = false;
             return true;
         }
         return false;
