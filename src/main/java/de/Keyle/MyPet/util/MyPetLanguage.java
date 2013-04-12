@@ -150,6 +150,7 @@ public class MyPetLanguage
         addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%reset% has now a chance of %chance%% to reflect damage.");
         // --  U  --
         addString("Msg_UserDontHavePet", "MyPet.Message.userdonthavepet", "%gold%%playername%%reset% doesn't have a MyPet!");
+        addString("Msg_UnknownPetType", "MyPet.Message.unknownpettype", "%red% Unknown Pettype");
         // --  W  --
         addString("Msg_WitherChance", "MyPet.Message.witherchance", "%aqua%%petname%%reset% has now a chance of %chance%% to wither his target for %duration%sec.");
 

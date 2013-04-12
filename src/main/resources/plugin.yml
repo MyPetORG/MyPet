@@ -62,6 +62,9 @@ commands:
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
     permission: MyPet.user.respawn
+  pettype:
+    description: Infos for Pettype
+    usage: '/<command> <Pettype>'
 
 permissions:
   MyPet.user.leash.*:
