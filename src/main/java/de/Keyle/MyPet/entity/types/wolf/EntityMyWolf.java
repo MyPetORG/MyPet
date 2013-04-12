@@ -304,7 +304,7 @@ public class EntityMyWolf extends EntityMyPet
     public void c()
     {
         super.c();
-        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround))
+        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround)) // k -> has pathentity
         {
             this.shaking = true;
             this.shakeCounter = 0.0F;
@@ -317,7 +317,7 @@ public class EntityMyWolf extends EntityMyPet
     {
         super.l_();
 
-        if (G())
+        if (G()) // G() -> is in water
         {
             this.isWet = true;
             this.shaking = false;
