@@ -74,7 +74,7 @@ public class MCNavigation extends AbstractNavigation
     @Override
     public boolean navigateTo(EntityLiving entity)
     {
-        if (this.nav.a(entity, entityMyPet.getWalkSpeed()))
+        if (this.nav.a(entity, parameters.speed() + parameters.speedModifier()))
         {
             applyNavigationParameters();
             return true;
