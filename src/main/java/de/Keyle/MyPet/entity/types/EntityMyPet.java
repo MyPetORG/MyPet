@@ -39,11 +39,6 @@ import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
-    protected float e;
-    protected boolean h;
-    protected boolean g;
-    protected float j;
-    protected float i;
     public MyPetEntityAISelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected float walkSpeed = 0.3F;

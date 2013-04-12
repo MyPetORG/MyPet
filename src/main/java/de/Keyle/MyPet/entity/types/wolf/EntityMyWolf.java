@@ -33,6 +33,10 @@ public class EntityMyWolf extends EntityMyPet
 {
     public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
 
+    protected boolean shaking;
+    protected boolean isWet;
+    protected float shakeCounter;
+
     private EntityAISit sitPathfinder;
 
     public EntityMyWolf(World world, MyPet myPet)
@@ -300,11 +304,10 @@ public class EntityMyWolf extends EntityMyPet
     public void c()
     {
         super.c();
-        if ((!this.world.isStatic) && (this.g) && (!this.h) && (!k()) && (this.onGround))
+        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround))
         {
-            this.h = true;
-            this.i = 0.0F;
-            this.j = 0.0F;
+            this.shaking = true;
+            this.shakeCounter = 0.0F;
             this.world.broadcastEntityEffect(this, (byte) 8);
         }
     }
@@ -316,39 +319,36 @@ public class EntityMyWolf extends EntityMyPet
 
         if (G())
         {
-            this.g = true;
-            this.h = false;
-            this.i = 0.0F;
-            this.j = 0.0F;
+            this.isWet = true;
+            this.shaking = false;
+            this.shakeCounter = 0.0F;
         }
-        else if (((this.g) || (this.h)) && (this.h))
+        else if ((this.isWet || this.shaking) && this.shaking)
         {
-            if (this.i == 0.0F)
+            if (this.shakeCounter == 0.0F)
             {
                 makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
-            this.j = this.i;
-            this.i += 0.05F;
-            if (this.j >= 2.0F)
+            this.shakeCounter += 0.05F;
+            if (this.shakeCounter - 0.05F >= 2.0F)
             {
-                this.g = false;
-                this.h = false;
-                this.j = 0.0F;
-                this.i = 0.0F;
+                this.isWet = false;
+                this.shaking = false;
+                this.shakeCounter = 0.0F;
             }
 
-            if (this.i > 0.4F)
+            if (this.shakeCounter > 0.4F)
             {
-                float f = (float) this.boundingBox.b;
-                int i = (int) (MathHelper.sin((this.i - 0.4F) * 3.141593F) * 7.0F);
+                float locY = (float) this.boundingBox.b;
+                int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
 
                 for (int j = 0 ; j < i ; j++)
                 {
-                    float f1 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                    float f2 = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
 
-                    this.world.addParticle("splash", this.locX + f1, f + 0.8F, this.locZ + f2, this.motX, this.motY, this.motZ);
+                    this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
                 }
             }
         }
