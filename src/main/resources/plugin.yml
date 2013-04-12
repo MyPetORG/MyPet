@@ -32,7 +32,7 @@ commands:
   petbehavior:
     aliases: [petb, pb]
     description: Switch the behavior mode of your MyPet.
-    usage: '/<command> [<friendly/friend/aggressive/aggro/normal/farm/raid>]'
+    usage: '/<command> [<friendly/friend/aggressive/aggro/normal/farm/raid/duel>]'
   petinfo:
     aliases: [pinfo]
     description: Shows HP and Exp of your MyPet
