@@ -38,5 +38,5 @@ public @interface MyPetInfo
 
     public int hp() default 20;
 
-    public float walkSpeed() default 0.3F;
+    public float walkSpeed() default 0.35F;
 }
