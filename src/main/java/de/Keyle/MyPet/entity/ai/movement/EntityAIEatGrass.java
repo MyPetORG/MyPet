@@ -74,7 +74,7 @@ public class EntityAIEatGrass extends EntityAIGoal
     {
         this.eatTicks = 40;
         this.world.broadcastEntityEffect(this.entityMySheep, (byte) 10);
-        this.entityMySheep.getNavigation().g();
+        this.entityMySheep.petNavigation.stop();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class EntityAIEatGrass extends EntityAIGoal
     }
 
     @Override
-    public void schedule()
+    public void tick()
     {
         this.eatTicks--;
         if (this.eatTicks == 4)

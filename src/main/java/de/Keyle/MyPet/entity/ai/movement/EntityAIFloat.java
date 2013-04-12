@@ -40,7 +40,7 @@ public class EntityAIFloat extends EntityAIGoal
     }
 
     @Override
-    public void schedule()
+    public void tick()
     {
         if (entityMyPet.aE().nextFloat() < 0.9D)
         {

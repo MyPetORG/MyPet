@@ -55,7 +55,7 @@ public class EntityAISit extends EntityAIGoal
     @Override
     public void start()
     {
-        this.entityMyPet.getNavigation().g();
+        this.entityMyPet.petNavigation.stop();
         if (this.entityMyPet instanceof EntityMyOcelot)
         {
             ((EntityMyOcelot) this.entityMyPet).applySitting(true);

@@ -39,7 +39,7 @@ public abstract class EntityAIGoal extends PathfinderGoal
     {
     }
 
-    public void schedule()
+    public void tick()
     {
     }
 
@@ -75,6 +75,6 @@ public abstract class EntityAIGoal extends PathfinderGoal
     public void e()
     {
         //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " schedule");
-        schedule();
+        tick();
     }
 }

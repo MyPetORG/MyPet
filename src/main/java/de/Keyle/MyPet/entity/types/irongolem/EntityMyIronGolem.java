@@ -21,10 +21,7 @@
 package de.Keyle.MyPet.entity.types.irongolem;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIFollowOwner;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
+import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -46,11 +43,11 @@ public class EntityMyIronGolem extends EntityMyPet
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
         if (myPet.getRangedDamage() > 0)
         {
-            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedTarget(myPet, 0.25F, 35, 12.0F));
+            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
         }
         if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, this.walkSpeed, 5, 33));
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5, 33));
             petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
             petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
@@ -59,8 +56,8 @@ public class EntityMyIronGolem extends EntityMyPet
             petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
             petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
         }
-        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, this.walkSpeed + 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, this.walkSpeed, 7.0F, 5.0F, 20F));
+        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, 0F, 7.0F, 5.0F, 20F));
         petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }

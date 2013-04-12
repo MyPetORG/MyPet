@@ -21,28 +21,28 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import net.minecraft.server.v1_5_R2.Navigation;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 
 public class EntityAIFollowOwner extends EntityAIGoal
 {
     private EntityMyPet petEntity;
-    private float walkSpeed;
-    private Navigation nav;
+    private float walkSpeedModifier;
+    private AbstractNavigation nav;
     private int setPathTimer = 0;
     private float stopDistance;
     private float startDistance;
     private float teleportDistance;
-    private boolean nav_a_save;
     private EntityAIControl controlPathfinderGoal;
 
-    public EntityAIFollowOwner(EntityMyPet entityMyPet, float walkSpeed, float startDistance, float stopDistance, float teleportDistance)
+    public EntityAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, float startDistance, float stopDistance, float teleportDistance)
     {
         this.petEntity = entityMyPet;
-        this.walkSpeed = walkSpeed;
-        this.nav = entityMyPet.getNavigation();
+        this.walkSpeedModifier = walkSpeedModifier;
+        this.nav = entityMyPet.petNavigation;
         this.startDistance = startDistance * startDistance;
         this.stopDistance = stopDistance * stopDistance;
         this.teleportDistance = teleportDistance * teleportDistance;
@@ -90,10 +90,6 @@ public class EntityAIFollowOwner extends EntityAIGoal
         {
             return false;
         }
-        else if (this.nav.f())
-        {
-            return false;
-        }
         else if (this.petEntity.getOwner() == null)
         {
             return false;
@@ -116,20 +112,19 @@ public class EntityAIFollowOwner extends EntityAIGoal
     @Override
     public void start()
     {
+        nav.getParameters().addSpeedModifier("FollowOwner", walkSpeedModifier);
         this.setPathTimer = 0;
-        this.nav_a_save = this.nav.a();
-        this.nav.a(false);
     }
 
     @Override
     public void finish()
     {
-        this.nav.f();
-        this.nav.a(this.nav_a_save);
+        nav.getParameters().removeSpeedModifier("FollowOwner");
+        this.nav.stop();
     }
 
     @Override
-    public void schedule()
+    public void tick()
     {
         Location ownerLocation = this.petEntity.getMyPet().getOwner().getPlayer().getLocation();
         Location petLocation = this.petEntity.getMyPet().getLocation();
@@ -146,12 +141,12 @@ public class EntityAIFollowOwner extends EntityAIGoal
             {
                 this.setPathTimer = 10;
 
-                if (!this.nav.a(this.petEntity.getOwner(), this.walkSpeed))
+                if (!this.nav.navigateTo((LivingEntity) this.petEntity.getOwner().getBukkitEntity()))
                 {
                     if (this.petEntity.getOwner().onGround && this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetBukkitUtil.canSpawn(ownerLocation, this.petEntity))
                     {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
-                        this.nav.a(this.petEntity.getOwner(), this.walkSpeed);
+                        this.nav.navigateTo((LivingEntity) this.petEntity.getOwner().getBukkitEntity());
                     }
                 }
             }

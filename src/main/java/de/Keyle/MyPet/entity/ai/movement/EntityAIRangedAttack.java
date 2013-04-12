@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.ai.target;
+package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
@@ -29,24 +29,24 @@ import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityAIRangedTarget extends EntityAIGoal
+public class EntityAIRangedAttack extends EntityAIGoal
 {
     private MyPet myPet;
     private final EntityMyPet entityMyPet;
     private EntityLiving target;
     private int shootTimer;
-    private float walkSpeed;
+    private float walkSpeedModifier;
     private int lastSeenTimer;
     private int fireRate;
     private float rangeSquared;
 
-    public EntityAIRangedTarget(MyPet myPet, float walkSpeed, int fireRate, float range)
+    public EntityAIRangedAttack(MyPet myPet, float walkSpeedModifier, int fireRate, float range)
     {
         this.myPet = myPet;
         this.shootTimer = -1;
         this.lastSeenTimer = 0;
         this.entityMyPet = myPet.getCraftPet().getHandle();
-        this.walkSpeed = walkSpeed;
+        this.walkSpeedModifier = walkSpeedModifier;
         this.fireRate = fireRate;
         this.rangeSquared = (range * range);
     }
@@ -94,7 +94,7 @@ public class EntityAIRangedTarget extends EntityAIGoal
     }
 
     @Override
-    public void schedule()
+    public void tick()
     {
         double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.boundingBox.b, this.target.locZ);
         boolean canSee = this.entityMyPet.aD().canSee(this.target);
@@ -110,11 +110,13 @@ public class EntityAIRangedTarget extends EntityAIGoal
 
         if ((distanceToTarget <= this.rangeSquared) && (this.lastSeenTimer >= 20))
         {
-            this.entityMyPet.getNavigation().g();
+            this.entityMyPet.petNavigation.getParameters().removeSpeedModifier("RangedAttack");
+            this.entityMyPet.petNavigation.stop();
         }
         else
         {
-            this.entityMyPet.getNavigation().a(this.target, this.walkSpeed);
+            this.entityMyPet.petNavigation.getParameters().addSpeedModifier("RangedAttack", walkSpeedModifier);
+            this.entityMyPet.petNavigation.navigateTo(this.target);
         }
 
         this.entityMyPet.getControllerLook().a(this.target, 30.0F, 30.0F);

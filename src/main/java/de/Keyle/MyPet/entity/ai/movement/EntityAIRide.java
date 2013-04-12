@@ -83,7 +83,7 @@ public class EntityAIRide extends EntityAIGoal
     }
 
     @Override
-    public void schedule()
+    public void tick()
     {
         EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 

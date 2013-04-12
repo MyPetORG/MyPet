@@ -21,27 +21,29 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.util.IScheduler;
-import net.minecraft.server.v1_5_R2.Navigation;
+import de.Keyle.MyPet.util.MyPetTimer;
 import org.bukkit.Location;
 
 public class EntityAIControl extends EntityAIGoal implements IScheduler
 {
     private MyPet myPet;
-    private float speed;
+    private float speedModifier;
     public Location moveTo = null;
     private int timeToMove = 0;
-    private Navigation nav;
+    private AbstractNavigation nav;
     private boolean stopControl = false;
     private Control controlSkill;
+    private boolean isRunning = false;
 
-    public EntityAIControl(MyPet myPet, float speed)
+    public EntityAIControl(MyPet myPet, float speedModifier)
     {
         this.myPet = myPet;
-        this.speed = speed;
-        nav = this.myPet.getCraftPet().getHandle().getNavigation();
+        this.speedModifier = speedModifier;
+        nav = this.myPet.getCraftPet().getHandle().petNavigation;
         controlSkill = (Control) myPet.getSkills().getSkill("Control");
     }
 
@@ -50,9 +52,9 @@ public class EntityAIControl extends EntityAIGoal implements IScheduler
      */
     public boolean shouldStart()
     {
-        if (stopControl)
+        if (!this.myPet.getCraftPet().canMove())
         {
-            stopControl = false;
+            return false;
         }
         if (myPet.getSkills().isSkillActive("Control"))
         {
@@ -67,28 +69,56 @@ public class EntityAIControl extends EntityAIGoal implements IScheduler
     @Override
     public boolean shouldFinish()
     {
-        boolean stop = false;
-
-        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false))
+        if (!this.myPet.getCraftPet().canMove())
         {
-            moveTo = controlSkill.getLocation();
-            timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
-            timeToMove = timeToMove < 3 ? 3 : timeToMove;
-            if (!nav.a(this.moveTo.getX(), this.moveTo.getY(), this.moveTo.getZ(), this.speed))
-            {
-                moveTo = null;
-                stop = true;
-                stopControl = false;
-            }
+            return false;
         }
+        if (moveTo == null)
+        {
+            return false;
+        }
+        if (myPet.getLocation().distance(moveTo) < 1)
+        {
+            return false;
+        }
+        if (timeToMove <= 0)
+        {
+            return false;
+        }
+        if (this.stopControl)
+        {
+            return false;
+        }
+        return true;
+    }
 
-        if (!this.myPet.getCraftPet().canMove() || moveTo != null && myPet.getLocation().distance(moveTo) < 1 || timeToMove <= 0 || moveTo == null || stopControl)
+    @Override
+    public void start()
+    {
+        nav.getParameters().addSpeedModifier("Control", speedModifier);
+        moveTo = controlSkill.getLocation();
+        timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
+        timeToMove = timeToMove < 3 ? 3 : timeToMove;
+        if (!isRunning)
+        {
+            MyPetTimer.addTask(this);
+            isRunning = true;
+        }
+        if (!nav.navigateTo(moveTo))
         {
             moveTo = null;
-            stop = true;
-            stopControl = false;
         }
-        return !stop;
+    }
+
+    @Override
+    public void finish()
+    {
+        nav.getParameters().removeSpeedModifier("Control");
+        nav.stop();
+        moveTo = null;
+        stopControl = false;
+        MyPetTimer.removeTask(this);
+        isRunning = false;
     }
 
     public void stopControl()
@@ -99,6 +129,10 @@ public class EntityAIControl extends EntityAIGoal implements IScheduler
     @Override
     public void schedule()
     {
+        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false))
+        {
+            start();
+        }
         timeToMove--;
     }
 }
