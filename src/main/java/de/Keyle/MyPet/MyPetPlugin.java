@@ -62,8 +62,6 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.Metrics.Graph;
-import de.Keyle.MyPet.util.Metrics.Plotter;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -75,6 +73,9 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_5_R2.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
+import org.mcstats.Metrics.Graph;
+import org.mcstats.Metrics.Plotter;
 import org.spout.nbt.*;
 
 import java.io.*;

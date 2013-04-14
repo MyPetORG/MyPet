@@ -51,6 +51,7 @@
         <heroes.version>1.5.2</heroes.version>
         <heroes.build>b1713</heroes.build>
 
+        <metrics.version>R6</metrics.version>
         <snakeyaml.version>1.12</snakeyaml.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
         <json-simple.version>1.1.1</json-simple.version>
@@ -89,6 +90,10 @@
         <repository>
             <id>snakeyaml-repo</id>
             <url>http://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>metrics-repo</id>
+            <url>http://repo.mcstats.org/content/repositories/releases/</url>
         </repository>
         <repository>
             <id>mypet-repo</id>
@@ -222,6 +227,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.mcstats.bukkit</groupId>
+            <artifactId>metrics</artifactId>
+            <version>${metrics.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
@@ -320,10 +331,15 @@
                                     <include>org.spout:simplenbt:jar:*</include>
                                     <include>org.yaml:snakeyaml:*</include>
                                     <include>com.googlecode.json-simple:json-simple:*</include>
+                                    <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
+                                <relocation>
+                                    <pattern>org.mcstats</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
+                                </relocation>
                                 <relocation>
                                     <pattern>org.spout.nbt</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.configuration.nbt</shadedPattern>
