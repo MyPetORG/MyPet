@@ -30,15 +30,30 @@ public class MyPetLanguage
 {
     private static final Map<String, String> LV = new HashMap<String, String>();
 
-    private final YAML_Configuration yamlConfiguration;
-    private boolean save = false;
+    private static YAML_Configuration yamlConfiguration;
+    private static boolean save = false;
 
-    public MyPetLanguage(YAML_Configuration yamlConfiguration)
+    private MyPetLanguage()
     {
-        this.yamlConfiguration = yamlConfiguration;
     }
 
-    public void addString(String name, String node, String def)
+    public static void load(YAML_Configuration yamlConfiguration)
+    {
+        MyPetLanguage.yamlConfiguration = yamlConfiguration;
+        addDefault();
+    }
+
+    public static void save()
+    {
+        if (save)
+        {
+            yamlConfiguration.saveConfig();
+            save = false;
+            DebugLogger.info("Added new values to language config");
+        }
+    }
+
+    public static void addString(String name, String node, String def)
     {
         if (yamlConfiguration.getConfig().contains(node) && !yamlConfiguration.getConfig().isConfigurationSection(node))
         {
@@ -52,7 +67,7 @@ public class MyPetLanguage
         }
     }
 
-    public void load()
+    private static void addDefault()
     {
         // -- Messages -- -----------------------------------------------------------------------------------------------------------------------------------
         // --  A  --
@@ -259,12 +274,7 @@ public class MyPetLanguage
         // --  Z  --
         addString("Name_Zombie", "MyPet.Name.Zombie", "Zombie");
 
-        if (save)
-        {
-            yamlConfiguration.saveConfig();
-            save = false;
-            DebugLogger.info("Added new values to language config");
-        }
+        save();
     }
 
     public static String getString(String Variable)

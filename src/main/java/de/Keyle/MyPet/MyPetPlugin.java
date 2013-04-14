@@ -328,8 +328,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
-        language = new MyPetLanguage(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
-        language.load();
+        MyPetLanguage.load(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
 
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
         if (NBTPetFile.exists())
