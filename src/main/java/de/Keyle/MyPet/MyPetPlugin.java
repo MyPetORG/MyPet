@@ -100,7 +100,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         if (isReady)
         {
             int petCount = savePets(true);
-            DebugLogger.info(petCount + " pet(s) saved.");
             MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) saved");
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
@@ -139,11 +138,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
             MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            DebugLogger.warning("---------------------------------------------------------");
-            DebugLogger.warning("This version of MyPet only works with:");
-            DebugLogger.warning("   Minecraft " + MyPetVersion.getMinecraftVersion());
-            DebugLogger.warning("MyPet disabled!");
-            DebugLogger.warning("---------------------------------------------------------");
             checkForUpdates(minecraftVersion);
             this.setEnabled(false);
             return;
@@ -402,7 +396,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         HeroesDamageFix.reset();
         AncientRpgDamageFix.findAncientRpgPlugin();
 
-        DebugLogger.info("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + " ENABLED");
         MyPetLogger.write("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())
@@ -503,20 +496,17 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion.getMyPetVersion()))
             {
                 MyPetLogger.write(ChatColor.RED + "Update available!: " + ChatColor.RESET + updateCheck.getLastAvailableUpdate().getTitle());
-                DebugLogger.info("Update available!: " + updateCheck.getLastAvailableUpdate().getTitle());
                 return true;
             }
             else
             {
                 MyPetLogger.write(ChatColor.GREEN + "No" + ChatColor.RESET + " Update available.");
-                DebugLogger.info("No Update available");
                 return false;
             }
         }
         else
         {
             MyPetLogger.write("Update-Check " + ChatColor.YELLOW + "disabled" + ChatColor.RESET + ".");
-            DebugLogger.info("Updates not activated");
             return false;
         }
     }
@@ -525,7 +515,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     {
         if (!f.exists())
         {
-            DebugLogger.info("0 pet(s) loaded -------------------------");
             MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet(s) loaded");
             return 0;
         }
@@ -623,7 +612,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
             petCount++;
         }
-        DebugLogger.info(petCount + " pet(s) loaded -------------------------");
         MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
         return petCount;
     }
@@ -666,7 +654,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
             wolfCount++;
         }
-        DebugLogger.info(wolfCount + " wolf/wolves converted -------------------------");
         MyPetLogger.write("" + ChatColor.YELLOW + wolfCount + ChatColor.RESET + " wolf/wolves converted");
         return wolfCount;
     }
@@ -675,7 +662,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     {
         if (!isReady)
         {
-            DebugLogger.warning("Tried to save MyPets but Plugin isn't ready!");
             MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");
             return 0;
         }
