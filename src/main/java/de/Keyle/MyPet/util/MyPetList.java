@@ -257,7 +257,7 @@ public class MyPetList
 
     public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet)
     {
-        if (hasMyPet(inactiveMyPet.getPetName()))
+        if (inactiveMyPet.getOwner().hasMyPet())
         {
             setMyPetInactive(inactiveMyPet.getOwner());
         }
