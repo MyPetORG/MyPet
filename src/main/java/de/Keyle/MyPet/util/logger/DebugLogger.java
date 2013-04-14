@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.util.logger;
 
+import org.bukkit.ChatColor;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -73,7 +75,7 @@ public class DebugLogger
     {
         if (isEnabled)
         {
-            debugLogger.info(text);
+            debugLogger.info("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
@@ -81,7 +83,7 @@ public class DebugLogger
     {
         if (isEnabled)
         {
-            debugLogger.warning(text);
+            debugLogger.warning("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
@@ -89,7 +91,32 @@ public class DebugLogger
     {
         if (isEnabled)
         {
-            debugLogger.severe(text);
+            debugLogger.severe("[MyPet] " + ChatColor.stripColor(text));
+        }
+    }
+
+
+    public static void info(String text, String source)
+    {
+        if (isEnabled)
+        {
+            debugLogger.info("[" + source + "] " + ChatColor.stripColor(text));
+        }
+    }
+
+    public static void warning(String text, String source)
+    {
+        if (isEnabled)
+        {
+            debugLogger.warning("[" + source + "] " + ChatColor.stripColor(text));
+        }
+    }
+
+    public static void severe(String text, String source)
+    {
+        if (isEnabled)
+        {
+            debugLogger.severe("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 }

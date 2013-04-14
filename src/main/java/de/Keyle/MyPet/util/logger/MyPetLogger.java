@@ -36,7 +36,17 @@ public class MyPetLogger
     {
         if (consoleCommandSender != null)
         {
-            consoleCommandSender.sendMessage("[" + ChatColor.AQUA + ChatColor.MAGIC + "MyPet" + ChatColor.RESET + "] " + msg);
+            consoleCommandSender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + msg);
+            DebugLogger.info("(L) " + msg);
+        }
+    }
+
+    public static void write(String msg, String source)
+    {
+        if (consoleCommandSender != null)
+        {
+            consoleCommandSender.sendMessage("[" + ChatColor.AQUA + source + ChatColor.RESET + "] " + msg);
+            DebugLogger.info("(L) " + msg, source);
         }
     }
 }
