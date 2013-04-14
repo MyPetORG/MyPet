@@ -305,6 +305,7 @@ public class MyPetList
                 return null;
             }
             activeMyPet.removePet();
+            activeMyPet.getOwner().setLastActiveMyPetUUID(null);
             InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);

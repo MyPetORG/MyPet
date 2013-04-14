@@ -414,20 +414,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 if (!myPetPlayer.hasMyPet() && myPetPlayer.hasInactiveMyPets())
                 {
                     IMyPet myPet = MyPetList.getLastActiveMyPet(myPetPlayer);
-                    if (myPet == null || myPet instanceof MyPet)
+                    if (!(myPetPlayer.hasLastActiveMyPet() && myPetPlayer.getLastActiveMyPetUUID() == null))
                     {
-                        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(player))
+                        if (myPetPlayer.getLastActiveMyPetUUID() == null)
                         {
-                            if (MyPetPermissions.has(player, "MyPet.user.keep." + inactiveMyPet.getPetType().getTypeName()))
+                            if (myPetPlayer.hasInactiveMyPets())
                             {
-                                MyPetList.setMyPetActive(inactiveMyPet);
-                                break;
+                                MyPetList.setMyPetActive(myPetPlayer.getInactiveMyPets()[0]);
                             }
                         }
-                    }
-                    else if (myPet instanceof InactiveMyPet)
-                    {
-                        if (MyPetPermissions.has(player, "MyPet.user.keep." + myPet.getPetType().getTypeName()))
+                        else if (myPet != null && myPet instanceof InactiveMyPet)
                         {
                             MyPetList.setMyPetActive((InactiveMyPet) myPet);
                         }
@@ -435,7 +431,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 }
                 if (myPetPlayer.hasMyPet())
                 {
-                    DebugLogger.info("   - has an active MyPet: " + MyPetList.hasMyPet(player));
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
@@ -541,7 +536,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         ListTag petList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Pets");
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown"))
         {
-
             DebugLogger.info("Clean shutdown: " + ((ByteTag) nbtConfiguration.getNBTCompound().getValue().get("CleanShutdown")).getBooleanValue());
         }
 
@@ -796,6 +790,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 {
                     playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString()));
                 }
+                else
+                {
+                    playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", ""));
+                }
 
                 playerList.add(playerNBT);
             }
@@ -823,7 +821,15 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
             if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
             {
-                petPlayer.setLastActiveMyPetUUID(UUID.fromString(((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue()));
+                String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
+                if (!lastActive.equalsIgnoreCase(""))
+                {
+                    petPlayer.setLastActiveMyPetUUID(UUID.fromString(lastActive));
+                }
+                else
+                {
+                    petPlayer.setLastActiveMyPetUUID(null);
+                }
             }
             if (myplayerNBT.getValue().containsKey("ExtendedInfo"))
             {

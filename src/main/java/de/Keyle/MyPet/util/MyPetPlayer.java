@@ -44,7 +44,8 @@ public class MyPetPlayer implements IScheduler
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
     private UUID lastActiveMyPetUUID = null;
-    private CompoundTag extendedInfo = new CompoundTag("Info", new CompoundMap());
+    private boolean lastActiveMyPet = false;
+    private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
 
     private MyPetPlayer(String playerName)
     {
@@ -89,11 +90,17 @@ public class MyPetPlayer implements IScheduler
     {
         lastActiveMyPetUUID = myPetUUID;
         customData = true;
+        lastActiveMyPet = true;
     }
 
     public UUID getLastActiveMyPetUUID()
     {
         return lastActiveMyPetUUID;
+    }
+
+    public boolean hasLastActiveMyPet()
+    {
+        return lastActiveMyPet;
     }
 
     public void setExtendedInfo(CompoundTag compound)
