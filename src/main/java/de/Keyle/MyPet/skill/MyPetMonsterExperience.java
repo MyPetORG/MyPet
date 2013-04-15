@@ -56,6 +56,10 @@ public class MyPetMonsterExperience
         mobExp.put(EntityType.SNOWMAN, new MyPetMonsterExperience(0., EntityType.SNOWMAN));
         mobExp.put(EntityType.IRON_GOLEM, new MyPetMonsterExperience(0., EntityType.IRON_GOLEM));
         mobExp.put(EntityType.ENDER_DRAGON, new MyPetMonsterExperience(20000., EntityType.ENDER_DRAGON));
+        mobExp.put(EntityType.WITCH, new MyPetMonsterExperience(10., EntityType.WITCH));
+        mobExp.put(EntityType.BAT, new MyPetMonsterExperience(1., EntityType.BAT));
+        mobExp.put(EntityType.ENDER_CRYSTAL, new MyPetMonsterExperience(10., EntityType.ENDER_CRYSTAL));
+        mobExp.put(EntityType.WITHER, new MyPetMonsterExperience(100., EntityType.WITHER));
     }
 
     private double min;

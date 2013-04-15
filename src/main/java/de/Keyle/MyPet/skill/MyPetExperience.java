@@ -40,6 +40,7 @@ public class MyPetExperience
     public static boolean DROP_LOST_EXP = true;
     public static boolean GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = true;
     public static String CALCULATION_MODE = "Default";
+    public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
 
     private final MyPet myPet;
 
