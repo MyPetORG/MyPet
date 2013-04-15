@@ -203,6 +203,27 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return super.damageEntity(damagesource, i);
     }
 
+    /**
+     * Is called when a MyPet attemps to do damge to another entity
+     */
+    public boolean attack(Entity entity)
+    {
+        int damage = isMyPet() ? myPet.getDamage() : 0;
+        if (entity instanceof EntityPlayer)
+        {
+            Player victim = (Player) entity.getBukkitEntity();
+            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), victim))
+            {
+                if (myPet.hasTarget())
+                {
+                    myPet.getCraftPet().getHandle().setGoalTarget(null);
+                }
+                return false;
+            }
+        }
+        return entity.damageEntity(DamageSource.mobAttack(this), damage);
+    }
+
     @Override
     public int getMaxHealth()
     {
@@ -360,26 +381,5 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public boolean bh()
     {
         return true;
-    }
-
-    /**
-     * Is called when a MyPet attemps to do damge to another entity
-     */
-    public boolean m(Entity entity)
-    {
-        int damage = isMyPet() ? myPet.getDamage() : 0;
-        if (entity instanceof EntityPlayer)
-        {
-            Player victim = (Player) entity.getBukkitEntity();
-            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), victim))
-            {
-                if (myPet.hasTarget())
-                {
-                    myPet.getCraftPet().getHandle().setGoalTarget(null);
-                }
-                return false;
-            }
-        }
-        return entity.damageEntity(DamageSource.mobAttack(this), damage);
     }
 }

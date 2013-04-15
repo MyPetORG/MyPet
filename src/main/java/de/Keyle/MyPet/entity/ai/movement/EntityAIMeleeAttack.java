@@ -120,7 +120,7 @@ public class EntityAIMeleeAttack extends EntityAIGoal
             {
                 this.petEntity.bK();
             }
-            this.petEntity.m(targetEntity);
+            this.petEntity.attack(targetEntity);
         }
     }
 }

@@ -117,10 +117,10 @@ public class EntityMyIronGolem extends EntityMyPet
         return "mob.irongolem.death";
     }
 
-    public boolean m(Entity entity)
+    public boolean attack(Entity entity)
     {
         this.world.broadcastEntityEffect(this, (byte) 4);
-        boolean flag = super.m(entity);
+        boolean flag = super.attack(entity);
         if (CAN_THROW_UP && flag)
         {
             entity.motY += 0.4000000059604645D;
