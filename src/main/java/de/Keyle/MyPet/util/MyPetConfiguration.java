@@ -62,6 +62,7 @@ public class MyPetConfiguration
     public static int HUNGER_SYSTEM_TIME = 60;
     public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
     public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
+    public static float MYPET_FOLLOW_DISTANCE = 7.0F;
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
     public static double RESPAWN_COSTS_FIXED = 0.0;
@@ -147,6 +148,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Skill.Behavior.Raid", true);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
 
+        config.addDefault("MyPet.Pets.FollowDistance", 7.0D);
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", true);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", true);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", true);
@@ -234,6 +236,7 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
+        MYPET_FOLLOW_DISTANCE = (float)config.getDouble("MyPet.Pets.FollowDistance", 7.0D);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
