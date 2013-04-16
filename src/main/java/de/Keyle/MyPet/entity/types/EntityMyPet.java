@@ -83,11 +83,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
             ((LivingEntity) this.getBukkitEntity()).setMaxHealth(myPet.getMaxHealth());
             this.setHealth(myPet.getHealth());
-            if (MyPetConfiguration.PET_INFO_OVERHEAD_NAME)
-            {
-                this.setCustomNameVisible(true);
-                this.setCustomName(MyPetUtil.cutString(MyPetConfiguration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + MyPetConfiguration.PET_INFO_OVERHEAD_SUFFIX, 64));
-            }
+            this.setCustomName("");
         }
     }
 
@@ -153,6 +149,28 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setLocation(Location loc)
     {
         this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
+    }
+
+    @Override
+    public void setCustomName(String ignored)
+    {
+        if (getCustomNameVisible())
+        {
+            super.setCustomName(MyPetUtil.cutString(MyPetConfiguration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + MyPetConfiguration.PET_INFO_OVERHEAD_SUFFIX, 64));
+            this.setCustomNameVisible(false);
+        }
+    }
+
+    @Override
+    public boolean getCustomNameVisible()
+    {
+        return MyPetConfiguration.PET_INFO_OVERHEAD_NAME;
+    }
+
+    @Override
+    public void setCustomNameVisible(boolean ignored)
+    {
+        this.datawatcher.watch(6, Byte.valueOf((byte) (MyPetConfiguration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
     }
 
     public boolean canMove()
