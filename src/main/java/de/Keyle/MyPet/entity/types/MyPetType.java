@@ -34,6 +34,8 @@ import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
+import de.Keyle.MyPet.entity.types.ghast.MyGhast;
 import de.Keyle.MyPet.entity.types.giant.EntityMyGiant;
 import de.Keyle.MyPet.entity.types.giant.MyGiant;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
@@ -89,6 +91,7 @@ public enum MyPetType
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
+    Ghast(EntityType.GHAST, "Ghast", EntityMyGhast.class, MyGhast.class),
     Giant(EntityType.GIANT, "Giant", EntityMyGiant.class, MyGiant.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube", EntityMyMagmaCube.class, MyMagmaCube.class),
