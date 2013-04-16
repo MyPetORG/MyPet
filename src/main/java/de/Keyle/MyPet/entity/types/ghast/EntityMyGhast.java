@@ -21,8 +21,14 @@
 package de.Keyle.MyPet.entity.types.ghast;
 
 import de.Keyle.MyPet.entity.EntitySize;
+import de.Keyle.MyPet.entity.ai.movement.*;
+import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.MyPetConfiguration;
+import net.minecraft.server.v1_5_R2.EntityHuman;
+import net.minecraft.server.v1_5_R2.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_5_R2.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_5_R2.World;
 
 @EntitySize(width = 4.F, height = 4.F)
@@ -32,35 +38,35 @@ public class EntityMyGhast extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/ghast.png";
+        this.height = 3.5F;
     }
 
-    public void setMyPet(MyPet myPet)
+    public void setPathfinder()
     {
-        if (myPet != null)
+        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
+        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
+        if (myPet.getRangedDamage() > 0)
         {
-            super.setMyPet(myPet);
-            setAngry(((MyGhast) myPet).isAngry());
+            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
         }
-    }
-
-    public boolean isAngry()
-    {
-        return this.datawatcher.getByte(16) == 1;
-    }
-
-    public void setAngry(boolean flag)
-    {
-        this.datawatcher.watch(16, (byte) (flag ? 1 : 0));
-        ((MyGhast) myPet).isAngry = flag;
+        if (myPet.getDamage() > 0)
+        {
+            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5.5, 20));
+            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
+            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
+            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
+            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
+            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
+            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
+            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
+        }
+        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, 0F, MyPetConfiguration.MYPET_FOLLOW_DISTANCE, 5.0F, 20F));
+        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
-    {
-        super.a();
-        datawatcher.a(16, Byte.valueOf((byte) 0)); // Eyes/Mouth open
-    }
 
     /**
      * Returns the default sound of the MyPet

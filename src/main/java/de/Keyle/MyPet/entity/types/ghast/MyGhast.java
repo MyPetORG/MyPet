@@ -20,54 +20,73 @@
 
 package de.Keyle.MyPet.entity.types.ghast;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.CraftMyPet;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
+import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Impossible;
 import static org.bukkit.Material.SULPHUR;
 
-@MyPetInfo(food = {SULPHUR})
+@MyPetInfo(food = {SULPHUR}, leashFlags = {Impossible})
 public class MyGhast extends MyPet
 {
-    protected boolean isAngry = false;
-
     public MyGhast(MyPetPlayer petOwner)
     {
         super(petOwner);
         this.petName = "Ghast";
     }
 
-    public boolean isAngry()
+    @Override
+    public SpawnFlags createPet()
     {
-        return isAngry;
-    }
-
-    public void setAngry(boolean flag)
-    {
-        if (status == PetState.Here)
+        if (status != PetState.Here && getOwner().isOnline())
         {
-            ((EntityMyGhast) getCraftPet().getHandle()).setAngry(flag);
+            if (respawnTime <= 0)
+            {
+                net.minecraft.server.v1_5_R2.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
+                craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                petEntity.setLocation(petLocation);
+                if (!MyPetBukkitUtil.canSpawn(petLocation, petEntity))
+                {
+                    Location l = petLocation.add(0, 4, 0);
+                    if (!MyPetBukkitUtil.canSpawn(l, petEntity))
+                    {
+                        status = PetState.Despawned;
+                        return SpawnFlags.NoSpace;
+                    }
+                    petEntity.setLocation(l);
+                }
+                if (!petLocation.getChunk().isLoaded())
+                {
+                    petLocation.getChunk().load();
+                }
+                if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.Canceled;
+                }
+                craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
+                status = PetState.Here;
+                return SpawnFlags.Success;
+            }
         }
-        isAngry = flag;
-    }
-
-    @Override
-    public CompoundTag getExtendedInfo()
-    {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Angry", new ByteTag("Angry", isAngry()));
-        return info;
-    }
-
-    @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Angry"))
+        if (status == PetState.Dead)
         {
-            setAngry(((ByteTag) info.getValue().get("Angry")).getBooleanValue());
+            return SpawnFlags.Dead;
+        }
+        else
+        {
+            return SpawnFlags.AlreadyHere;
         }
     }
 
@@ -80,6 +99,6 @@ public class MyGhast extends MyPet
     @Override
     public String toString()
     {
-        return "MyGhast{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", isAngry=" + isAngry + "}";
+        return "MyGhast{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + "}";
     }
 }
