@@ -50,7 +50,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         behaviorActive.put(BehaviorState.Farm, false);
         behaviorActive.put(BehaviorState.Friendly, false);
         behaviorActive.put(BehaviorState.Raid, false);
-        behaviorActive.put(BehaviorState.Duel,false);
+        behaviorActive.put(BehaviorState.Duel, false);
     }
 
     public void setMyPet(MyPet myPet)
@@ -195,7 +195,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         behaviorActive.put(BehaviorState.Farm, false);
         behaviorActive.put(BehaviorState.Friendly, false);
         behaviorActive.put(BehaviorState.Raid, false);
-        behaviorActive.put(BehaviorState.Duel,false);
+        behaviorActive.put(BehaviorState.Duel, false);
         active = false;
     }
 

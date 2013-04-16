@@ -110,7 +110,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                             myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnNoMoney").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
                         }
                     }
-                    else if(args[0].equalsIgnoreCase("show"))
+                    else if (args[0].equalsIgnoreCase("show"))
                     {
                         if (myPet.getStatus() != PetState.Dead)
                         {
@@ -132,7 +132,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(strings.length == 1)
+        if (strings.length == 1)
         {
             return optionsList;
         }

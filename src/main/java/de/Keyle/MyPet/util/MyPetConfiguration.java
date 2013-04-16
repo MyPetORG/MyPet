@@ -236,7 +236,7 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
-        MYPET_FOLLOW_DISTANCE = (float)config.getDouble("MyPet.Pets.FollowDistance", 7.0D);
+        MYPET_FOLLOW_DISTANCE = (float) config.getDouble("MyPet.Pets.FollowDistance", 7.0D);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);

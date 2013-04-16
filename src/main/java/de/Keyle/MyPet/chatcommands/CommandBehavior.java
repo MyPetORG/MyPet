@@ -146,7 +146,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(strings.length == 1)
+        if (strings.length == 1)
         {
             return behaviorList;
         }

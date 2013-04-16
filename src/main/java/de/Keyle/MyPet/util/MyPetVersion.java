@@ -42,15 +42,15 @@ public class MyPetVersion
             String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
 
-            if(attr.getValue("Project-Version") != null)
+            if (attr.getValue("Project-Version") != null)
             {
                 myPetVersion = attr.getValue("Project-Version");
             }
-            if(attr.getValue("Project-Build") != null)
+            if (attr.getValue("Project-Build") != null)
             {
                 myPetBuild = attr.getValue("Project-Build");
             }
-            if(attr.getValue("Project-Minecraft-Version") != null)
+            if (attr.getValue("Project-Minecraft-Version") != null)
             {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
             }
@@ -77,7 +77,7 @@ public class MyPetVersion
 
     public static String getMyPetVersion()
     {
-        if(!updated)
+        if (!updated)
         {
             getManifestVersion();
             updated = true;
@@ -87,7 +87,7 @@ public class MyPetVersion
 
     public static String getMyPetBuild()
     {
-        if(!updated)
+        if (!updated)
         {
             getManifestVersion();
             updated = true;
@@ -97,7 +97,7 @@ public class MyPetVersion
 
     public static String getMinecraftVersion()
     {
-        if(!updated)
+        if (!updated)
         {
             getManifestVersion();
             updated = true;

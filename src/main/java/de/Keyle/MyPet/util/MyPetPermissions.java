@@ -69,7 +69,7 @@ public class MyPetPermissions
     {
         if (player != null)
         {
-            if(!ENABLED || player.isOp())
+            if (!ENABLED || player.isOp())
             {
                 return true;
             }
@@ -86,11 +86,11 @@ public class MyPetPermissions
     {
         if (player != null)
         {
-            if(player.isOp())
+            if (player.isOp())
             {
                 return true;
             }
-            else if(ENABLED)
+            else if (ENABLED)
             {
                 PermissibleBase pb = new PermissibleBase(player);
                 return pb.hasPermission(node);

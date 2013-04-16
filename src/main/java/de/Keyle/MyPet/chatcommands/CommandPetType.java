@@ -6,7 +6,6 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,7 +33,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
             {
                 leashFlagString += leashFlag.name() + ", ";
             }
-            leashFlagString = leashFlagString.substring(0,leashFlagString.lastIndexOf(","));
+            leashFlagString = leashFlagString.substring(0, leashFlagString.lastIndexOf(","));
             commandSender.sendMessage("Leash Flags: " + leashFlagString);
 
 
@@ -43,13 +42,13 @@ public class CommandPetType implements CommandExecutor, TabCompleter
             {
                 foodString += material.name() + ", ";
             }
-            foodString = foodString.substring(0,foodString.lastIndexOf(","));
-            commandSender.sendMessage("Food: "+ foodString);
+            foodString = foodString.substring(0, foodString.lastIndexOf(","));
+            commandSender.sendMessage("Food: " + foodString);
 
             commandSender.sendMessage("Start HP: " + MyPet.getStartHP(myPetType.getMyPetClass()));
             return true;
         }
-         commandSender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UnknownPetType")));
+        commandSender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UnknownPetType")));
 
         return true;
     }

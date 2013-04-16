@@ -108,7 +108,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if(strings.length == 1 && MyPetPermissions.has((Player) commandSender,"MyPet.admin",false))
+        if (strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
         {
             return null;
         }
