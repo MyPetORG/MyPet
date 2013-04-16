@@ -468,6 +468,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetSkills.registerSkill(Slow.class);
         MyPetSkills.registerSkill(Knockback.class);
         MyPetSkills.registerSkill(Ranged.class);
+        MyPetSkills.registerSkill(Sprint.class);
     }
 
     public static void registerSkillsInfo()
@@ -489,6 +490,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetSkillsInfo.registerSkill(SlowInfo.class);
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
         MyPetSkillsInfo.registerSkill(RangedInfo.class);
+        MyPetSkillsInfo.registerSkill(SprintInfo.class);
     }
 
     public static boolean checkForUpdates(String compatibleMinecraftVersion)

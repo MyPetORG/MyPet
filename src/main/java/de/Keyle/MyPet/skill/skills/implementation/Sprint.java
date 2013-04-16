@@ -21,22 +21,17 @@
 package de.Keyle.MyPet.skill.skills.implementation;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.info.ControlInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.skill.skills.info.SprintInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
-import org.bukkit.Location;
-import org.bukkit.Material;
 
-public class Control extends ControlInfo implements ISkillInstance
+public class Sprint extends SprintInfo implements ISkillInstance
 {
-    public static Material ITEM = Material.STRING;
-    private Location moveTo;
-    private Location prevMoveTo;
     private boolean active = false;
     private MyPet myPet;
 
-    public Control(boolean addedByInheritance)
+    public Sprint(boolean addedByInheritance)
     {
         super(addedByInheritance);
     }
@@ -58,12 +53,12 @@ public class Control extends ControlInfo implements ISkillInstance
 
     public void upgrade(ISkillInfo upgrade, boolean quiet)
     {
-        if (upgrade instanceof ControlInfo)
+        if (upgrade instanceof SprintInfo)
         {
             active = true;
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddControl")).replace("%petname%", myPet.petName).replace("%item%", ITEM.name()).replace("%ITEM%", ITEM.name()));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddSprint")).replace("%petname%", myPet.petName));
 
             }
         }
@@ -74,54 +69,15 @@ public class Control extends ControlInfo implements ISkillInstance
         return "";
     }
 
-    public Location getLocation()
-    {
-        Location tmpMoveTo = moveTo;
-        moveTo = null;
-        return tmpMoveTo;
-    }
-
-    public Location getLocation(boolean delete)
-    {
-        Location tmpMoveTo = moveTo;
-        if (delete)
-        {
-            moveTo = null;
-        }
-        return tmpMoveTo;
-    }
-
-    public void setMoveTo(Location loc)
-    {
-        if (!active)
-        {
-            return;
-        }
-        if (prevMoveTo != null)
-        {
-            if (loc.distance(prevMoveTo) > 1)
-            {
-                moveTo = loc;
-                prevMoveTo = loc;
-            }
-        }
-        else
-        {
-            moveTo = loc;
-        }
-    }
-
     public void reset()
     {
         active = false;
-        moveTo = null;
-        prevMoveTo = null;
     }
 
     @Override
     public ISkillInstance cloneSkill()
     {
-        Control newSkill = new Control(this.isAddedByInheritance());
+        Sprint newSkill = new Sprint(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }

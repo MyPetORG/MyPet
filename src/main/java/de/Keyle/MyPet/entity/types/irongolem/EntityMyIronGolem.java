@@ -48,6 +48,7 @@ public class EntityMyIronGolem extends EntityMyPet
         }
         if (myPet.getDamage() > 0)
         {
+            petPathfinderSelector.addGoal("Sprint", new EntityAISprint(this, 0.25F));
             petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5, 33));
             petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
             petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));

@@ -220,5 +220,6 @@ public class GuiMain
         MyPetSkillsInfo.registerSkill(SlowInfo.class);
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
         MyPetSkillsInfo.registerSkill(RangedInfo.class);
+        MyPetSkillsInfo.registerSkill(SprintInfo.class);
     }
 }
