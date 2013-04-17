@@ -73,7 +73,6 @@ public class MyPetConfiguration
     public static boolean OWNER_CAN_ATTACK_PET = false;
     public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
-    public static boolean SEND_METRICS = true;
     public static boolean CHECK_FOR_UPDATES = false;
     public static boolean USE_DEBUG_LOGGER = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
@@ -86,7 +85,6 @@ public class MyPetConfiguration
     {
         config.addDefault("MyPet.Leash.Item", LEASH_ITEM.getId());
         config.addDefault("MyPet.OwnerCanAttackPet", false);
-        config.addDefault("MyPet.SendMetrics", true);
         config.addDefault("MyPet.CheckForUpdates", false);
         config.addDefault("MyPet.DebugLogger", true);
         config.addDefault("MyPet.AutoSaveTime", 60);
@@ -230,7 +228,6 @@ public class MyPetConfiguration
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
-        SEND_METRICS = config.getBoolean("MyPet.SendMetrics", true);
         CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", true);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);

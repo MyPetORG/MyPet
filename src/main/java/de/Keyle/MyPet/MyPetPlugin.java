@@ -347,53 +347,46 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         }
         DebugLogger.info("----------------------------");
 
-        if (MyPetConfiguration.SEND_METRICS)
+        try
         {
-            DebugLogger.info("Metrics is activated");
-            try
+            Metrics metrics = new Metrics(this);
+
+            Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
+            Graph graphCount = metrics.createGraph("Counted MyPets per type");
+            Graph graphTotalCount = metrics.createGraph("Total MyPets");
+
+            for (final MyPetType petType : MyPetType.values())
             {
-                Metrics metrics = new Metrics(this);
-
-                Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
-                Graph graphCount = metrics.createGraph("Counted MyPets per type");
-                Graph graphTotalCount = metrics.createGraph("Total MyPets");
-
-                for (final MyPetType petType : MyPetType.values())
+                Plotter plotter = new Metrics.Plotter(petType.getTypeName())
                 {
-                    Plotter plotter = new Metrics.Plotter(petType.getTypeName())
-                    {
-                        final MyPetType type = petType;
+                    final MyPetType type = petType;
 
-                        @Override
-                        public int getValue()
-                        {
-                            return MyPetList.countMyPets(type);
-                        }
-                    };
-                    graphPercent.addPlotter(plotter);
-                    graphCount.addPlotter(plotter);
-                }
-
-                Plotter plotter = new Metrics.Plotter("Total MyPets")
-                {
                     @Override
                     public int getValue()
                     {
-                        return MyPetList.countMyPets();
+                        return MyPetList.countMyPets(type);
                     }
                 };
-                graphTotalCount.addPlotter(plotter);
+                graphPercent.addPlotter(plotter);
+                graphCount.addPlotter(plotter);
+            }
 
-                metrics.start();
-            }
-            catch (IOException e)
+            Plotter plotter = new Metrics.Plotter("Total MyPets")
             {
-                MyPetLogger.write(e.getMessage());
-            }
+                @Override
+                public int getValue()
+                {
+                    return MyPetList.countMyPets();
+                }
+            };
+            graphTotalCount.addPlotter(plotter);
+
+            boolean metricsActive = metrics.start();
+            DebugLogger.info("Metrics " + (metricsActive ? "" : "not ") + "activated");
         }
-        else
+        catch (IOException e)
         {
-            DebugLogger.info("Metrics not activated");
+            MyPetLogger.write(e.getMessage());
         }
 
         HeroesDamageFix.reset();
