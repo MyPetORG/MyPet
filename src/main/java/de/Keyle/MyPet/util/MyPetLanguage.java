@@ -80,6 +80,7 @@ public class MyPetLanguage
         addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You took a pet on a lead, it will be a good MyPet.%reset%");
         addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%reset% now can pickup items in a range of %range%.");
         addString("Msg_AddRide", "MyPet.Message.addride", "%aqua%%petname%%reset% can now be ridden.");
+        addString("Msg_AddSprint", "MyPet.Message.addsprint", "%aqua%%petname%%reset% can now sprint towards new targets.");
         addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%reset% is not here.");
         addString("Msg_AutomaticSkilltreeAssignment", "MyPet.Message.automaticskilltreeassignment", "Skilltrees will be assigned automatically!");
         addString("Msg_AvailableSkilltrees", "MyPet.Message.availableskilltrees", "Available skilltrees for %aqua%%petname%%reset%:");
