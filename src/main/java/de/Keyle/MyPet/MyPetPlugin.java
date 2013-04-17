@@ -86,7 +86,6 @@ import java.util.*;
 public class MyPetPlugin extends JavaPlugin implements IScheduler
 {
     private static MyPetPlugin plugin;
-    public static MyPetLanguage language;
     private File NBTPetFile;
     private boolean isReady = false;
     private int autoSaveTimer = 0;
