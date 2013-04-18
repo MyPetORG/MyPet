@@ -22,12 +22,14 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class EntityAIMeleeAttack extends EntityAIGoal
 {
+    MyPet myPet;
     EntityMyPet petEntity;
     EntityLiving targetEntity;
     double range;
@@ -39,6 +41,7 @@ public class EntityAIMeleeAttack extends EntityAIGoal
     public EntityAIMeleeAttack(EntityMyPet petEntity, float walkSpeedModifier, double range, int ticksUntilNextHit)
     {
         this.petEntity = petEntity;
+        myPet = petEntity.getMyPet();
         this.walkSpeedModifier = walkSpeedModifier;
         this.range = range * range;
         this.ticksUntilNextHit = ticksUntilNextHit;
@@ -46,6 +49,10 @@ public class EntityAIMeleeAttack extends EntityAIGoal
 
     public boolean shouldStart()
     {
+        if (myPet.getDamage() <= 0)
+        {
+            return false;
+        }
         EntityLiving targetEntity = this.petEntity.getGoalTarget();
         if (targetEntity == null)
         {

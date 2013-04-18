@@ -21,12 +21,10 @@
 package de.Keyle.MyPet.entity.types.irongolem;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.*;
-import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetConfiguration;
-import net.minecraft.server.v1_5_R2.*;
+import net.minecraft.server.v1_5_R2.Entity;
+import net.minecraft.server.v1_5_R2.World;
 
 @EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet
@@ -41,27 +39,8 @@ public class EntityMyIronGolem extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed + 0.15F));
-        if (myPet.getRangedDamage() > 0)
-        {
-            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
-        }
-        if (myPet.getDamage() > 0)
-        {
-            petPathfinderSelector.addGoal("Sprint", new EntityAISprint(this, 0.25F));
-            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5, 33));
-            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
-            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
-            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
-            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
-            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
-        }
-        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, 0F, MyPetConfiguration.MYPET_FOLLOW_DISTANCE, 2.5F, 20F));
-        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
+        super.setPathfinder();
+        petPathfinderSelector.removeGoal("Float");
     }
 
     protected void setPlayerCreated(boolean flag)

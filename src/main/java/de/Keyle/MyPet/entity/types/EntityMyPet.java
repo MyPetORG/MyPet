@@ -59,8 +59,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
 
-        this.petPathfinderSelector = new MyPetEntityAISelector(this.goalSelector);
-        this.petTargetSelector = new MyPetEntityAISelector(this.targetSelector);
+        this.petPathfinderSelector = new MyPetEntityAISelector();
+        this.petTargetSelector = new MyPetEntityAISelector();
 
         this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
 
@@ -91,26 +91,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
         petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
-        if (myPet.getRangedDamage() > 0)
-        {
-            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
-        }
-        if (myPet.getDamage() > 0)
-        {
-            petPathfinderSelector.addGoal("Sprint", new EntityAISprint(this, 0.25F));
-            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 3, 20));
-            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
-            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
-            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
-            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
-            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
-        }
+        petPathfinderSelector.addGoal("Sprint", new EntityAISprint(this, 0.25F));
+        petPathfinderSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
+        petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 3, 20));
         petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, 0.1F));
         petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, 0F, MyPetConfiguration.MYPET_FOLLOW_DISTANCE, 2.0F, 20F));
-        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+        petPathfinderSelector.addGoal("LookAtPlayer", new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
         petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
+        petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
+        petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
+        petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
+        petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
+        petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
+        petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
+        petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
     }
 
     public MyPet getMyPet()
@@ -400,5 +394,26 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public boolean bh()
     {
         return true;
+    }
+
+
+    /**
+     * Entity AI tick method
+     */
+    @Override
+    protected void bo()
+    {
+        bC += 1; // N/A
+
+        aD().a(); // sensing
+        petTargetSelector.tick(); // target selector
+        petPathfinderSelector.tick(); // pathfinder selector
+        getNavigation().e(); // navigation
+        bp(); // "mob tick"
+
+        // controls
+        getControllerMove().c(); // move
+        getControllerLook().a(); // look
+        getControllerJump().b(); // jump
     }
 }

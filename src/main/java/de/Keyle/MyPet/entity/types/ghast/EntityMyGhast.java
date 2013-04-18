@@ -21,14 +21,9 @@
 package de.Keyle.MyPet.entity.types.ghast;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.*;
-import de.Keyle.MyPet.entity.ai.target.*;
+import de.Keyle.MyPet.entity.ai.movement.EntityAIMeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetConfiguration;
-import net.minecraft.server.v1_5_R2.EntityHuman;
-import net.minecraft.server.v1_5_R2.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_5_R2.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_5_R2.World;
 
 @EntitySize(width = 4.F, height = 4.F)
@@ -43,28 +38,8 @@ public class EntityMyGhast extends EntityMyPet
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new EntityAIFloat(this));
-        petPathfinderSelector.addGoal("Ride", new EntityAIRide(this, this.walkSpeed));
-        if (myPet.getRangedDamage() > 0)
-        {
-            petTargetSelector.addGoal("RangedTarget", new EntityAIRangedAttack(myPet, -0.1F, 35, 12.0F));
-        }
-        if (myPet.getDamage() > 0)
-        {
-            petPathfinderSelector.addGoal("Sprint", new EntityAISprint(this, 0.25F));
-            petPathfinderSelector.addGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5.5, 20));
-            petTargetSelector.addGoal("OwnerHurtByTarget", new EntityAIOwnerHurtByTarget(this));
-            petTargetSelector.addGoal("OwnerHurtTarget", new EntityAIOwnerHurtTarget(myPet));
-            petTargetSelector.addGoal("HurtByTarget", new EntityAIHurtByTarget(this));
-            petTargetSelector.addGoal("ControlTarget", new EntityAIControlTarget(myPet, 1));
-            petTargetSelector.addGoal("AggressiveTarget", new EntityAIAggressiveTarget(myPet, 15));
-            petTargetSelector.addGoal("FarmTarget", new EntityAIFarmTarget(myPet, 15));
-            petTargetSelector.addGoal("DuelTarget", new EntityAIDuelTarget(myPet, 5));
-        }
-        petPathfinderSelector.addGoal("Control", new EntityAIControl(myPet, 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new EntityAIFollowOwner(this, 0F, MyPetConfiguration.MYPET_FOLLOW_DISTANCE, 5.0F, 20F));
-        petPathfinderSelector.addGoal("LookAtPlayer", false, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-        petPathfinderSelector.addGoal("RandomLockaround", new PathfinderGoalRandomLookaround(this));
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new EntityAIMeleeAttack(this, 0.1F, 5.5, 20));
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------

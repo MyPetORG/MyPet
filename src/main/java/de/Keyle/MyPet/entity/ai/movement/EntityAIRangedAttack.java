@@ -53,6 +53,10 @@ public class EntityAIRangedAttack extends EntityAIGoal
 
     public boolean shouldStart()
     {
+        if (myPet.getRangedDamage() <= 0)
+        {
+            return false;
+        }
         EntityLiving goalTarget = this.entityMyPet.goalTarget;
 
         if (goalTarget == null || !goalTarget.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
@@ -134,9 +138,9 @@ public class EntityAIRangedAttack extends EntityAIGoal
     public void shootProjectile(EntityLiving target, float damage)
     {
         World world = target.world;
-        EntityArrow entityarrow = new EntityArrow(world, entityMyPet, target, 1.6F, 14 - world.difficulty * 4);
-        entityarrow.b(damage);
+        EntityArrow entityArrow = new EntityArrow(world, entityMyPet, target, 1.6F, 14 - world.difficulty * 4);
+        entityArrow.b(damage);
         entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.aE().nextFloat() * 0.4F + 0.8F));
-        world.addEntity(entityarrow);
+        world.addEntity(entityArrow);
     }
 }

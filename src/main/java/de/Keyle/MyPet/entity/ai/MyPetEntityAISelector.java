@@ -21,23 +21,14 @@
 package de.Keyle.MyPet.entity.ai;
 
 import net.minecraft.server.v1_5_R2.PathfinderGoal;
-import net.minecraft.server.v1_5_R2.PathfinderGoalSelector;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyPetEntityAISelector
 {
-    private PathfinderGoalSelector entityAISelector;
     private Map<String, PathfinderGoal> AIGoalMap = new HashMap<String, PathfinderGoal>();
-    private int goalPos = 0;
-
-    public MyPetEntityAISelector(PathfinderGoalSelector entityAISelector)
-    {
-        this.entityAISelector = entityAISelector;
-    }
+    private List<PathfinderGoal> AIGoalList = new LinkedList<PathfinderGoal>();
+    private List<PathfinderGoal> activeAIGoalList = new LinkedList<PathfinderGoal>();
 
     public void addGoal(String name, PathfinderGoal entityAIgoal)
     {
@@ -46,31 +37,42 @@ public class MyPetEntityAISelector
             return;
         }
         AIGoalMap.put(name, entityAIgoal);
-        this.entityAISelector.a(goalPos, entityAIgoal);
-        goalPos++;
+        AIGoalList.add(entityAIgoal);
     }
 
-    public void addGoal(String name, int pos, PathfinderGoal goalSelector)
+    public void addGoal(String name, int pos, PathfinderGoal entityAIgoal)
     {
         if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        AIGoalMap.put(name, goalSelector);
-        this.entityAISelector.a(pos, goalSelector);
+        AIGoalMap.put(name, entityAIgoal);
+        AIGoalList.add(pos, entityAIgoal);
     }
 
-    public void addGoal(String name, boolean increment, PathfinderGoal goalSelector)
+    public void replaceGoal(String name, PathfinderGoal entityAIgoal)
     {
         if (AIGoalMap.containsKey(name))
         {
-            return;
+            PathfinderGoal oldGoal = AIGoalMap.get(name);
+            int index = AIGoalList.indexOf(oldGoal);
+            AIGoalList.add(index, entityAIgoal);
+            AIGoalList.remove(oldGoal);
+            AIGoalMap.put(name, entityAIgoal);
         }
-        AIGoalMap.put(name, goalSelector);
-        this.entityAISelector.a(goalPos, goalSelector);
-        if (increment)
+        else
         {
-            goalPos++;
+            addGoal(name, entityAIgoal);
+        }
+    }
+
+    public void removeGoal(String name)
+    {
+        if (AIGoalMap.containsKey(name))
+        {
+            PathfinderGoal goal = AIGoalMap.get(name);
+            AIGoalList.remove(goal);
+            AIGoalMap.remove(name);
         }
     }
 
@@ -84,24 +86,47 @@ public class MyPetEntityAISelector
         return AIGoalMap.get(name);
     }
 
-    public boolean clearGoals()
+    public void clearGoals()
     {
-        try
+        AIGoalList.clear();
+        AIGoalMap.clear();
+    }
+
+    public void tick()
+    {
+        // add goals
+        ListIterator iterator = AIGoalList.listIterator();
+        while (iterator.hasNext())
         {
-            Field goalSelector_a = entityAISelector.getClass().getDeclaredField("a");
-            goalSelector_a.setAccessible(true);
-            if (goalSelector_a.get(this.entityAISelector) instanceof List)
+            PathfinderGoal goal = (PathfinderGoal) iterator.next();
+            if (!activeAIGoalList.contains(goal))
             {
-                ((List) goalSelector_a.get(this.entityAISelector)).clear();
-                AIGoalMap.clear();
-                goalPos = 1;
-                return true;
+                if (goal.a())
+                {
+                    goal.c();
+                    activeAIGoalList.add(goal);
+                }
             }
         }
-        catch (Exception e)
+
+        // remove goals
+        iterator = activeAIGoalList.listIterator();
+        while (iterator.hasNext())
         {
-            return false;
+            PathfinderGoal goal = (PathfinderGoal) iterator.next();
+            if (!goal.b())
+            {
+                goal.d();
+                iterator.remove();
+            }
         }
-        return false;
+
+        // tick goals
+        iterator = activeAIGoalList.listIterator();
+        while (iterator.hasNext())
+        {
+            PathfinderGoal goal = (PathfinderGoal) iterator.next();
+            goal.e();
+        }
     }
 }
