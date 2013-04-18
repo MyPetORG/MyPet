@@ -25,7 +25,6 @@ import de.Keyle.MyPet.entity.ai.EntityAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 
 public class EntityAISprint extends EntityAIGoal
@@ -34,7 +33,6 @@ public class EntityAISprint extends EntityAIGoal
     private final EntityMyPet petEntity;
     private float walkSpeedModifier;
     private AbstractNavigation nav;
-    private int setPathTimer = 0;
     private EntityLiving lastTarget = null;
 
     public EntityAISprint(EntityMyPet entityMyPet, float walkSpeedModifier)
@@ -51,6 +49,10 @@ public class EntityAISprint extends EntityAIGoal
     public boolean shouldStart()
     {
         if (!myPet.getSkills().isSkillActive("Sprint"))
+        {
+            return false;
+        }
+        if (petEntity.getMyPet().getDamage() <= 0)
         {
             return false;
         }
@@ -83,15 +85,11 @@ public class EntityAISprint extends EntityAIGoal
         {
             return false;
         }
-        else if (this.petEntity.e(this.lastTarget) < 2)
+        else if (this.petEntity.e(this.lastTarget) < 4)
         {
             return false;
         }
         else if (!this.petEntity.canMove())
-        {
-            return false;
-        }
-        else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
         {
             return false;
         }
@@ -103,12 +101,12 @@ public class EntityAISprint extends EntityAIGoal
     {
         nav.getParameters().addSpeedModifier("Sprint", walkSpeedModifier);
         petEntity.setSprinting(true);
-        MyPetLogger.write("sprint");
     }
 
     @Override
     public void finish()
     {
+        nav.getParameters().removeSpeedModifier("Sprint");
         MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
         {
             public void run()
