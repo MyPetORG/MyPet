@@ -33,7 +33,7 @@ public class MyPetBlockListener implements Listener
     {
         if (event.getCause() == IgniteCause.LIGHTNING)
         {
-            if (Lightning.countLightnings() > 0)
+            if (Lightning.isStriking || Lightning.countLightnings() > 0)
             {
                 event.setCancelled(true);
             }
