@@ -138,7 +138,6 @@ public class MyPetConfiguration
 
         config.addDefault("MyPet.Skill.Control.Item", Control.ITEM.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
-        config.addDefault("MyPet.Skill.HPregeneration.Time", 60);
         config.addDefault("MyPet.Skill.Inventory.Creative", true);
         config.addDefault("MyPet.Skill.Behavior.Aggro", true);
         config.addDefault("MyPet.Skill.Behavior.Farm", true);
@@ -202,7 +201,6 @@ public class MyPetConfiguration
         Control.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
         Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
-        HPregeneration.START_REGENERATION_TIME = config.getInt("MyPet.Skill.HPregeneration.Time", 60);
         Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));

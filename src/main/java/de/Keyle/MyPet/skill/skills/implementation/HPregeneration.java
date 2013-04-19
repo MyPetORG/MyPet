@@ -38,9 +38,8 @@ import org.spout.nbt.StringTag;
 
 public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler
 {
-    public static int START_REGENERATION_TIME = 60;
-    private int timeCounter = START_REGENERATION_TIME;
-    private int timeDecrease = 0;
+    private int timeCounter = 0;
+    private int regenTime = 0;
     private int increaseHpBy = 0;
     private MyPet myPet;
 
@@ -85,36 +84,36 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_time") || ((StringTag) upgrade.getProperties().getValue().get("addset_time")).getValue().equals("add"))
                 {
-                    timeDecrease += ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
+                    regenTime -= ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
                 }
                 else
                 {
-                    timeDecrease = ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
+                    regenTime = ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
                 }
-                if (timeDecrease < 1)
+                if (regenTime < 1)
                 {
-                    timeDecrease = 1;
+                    regenTime = 1;
                 }
-                timeCounter = START_REGENERATION_TIME - timeDecrease;
+                timeCounter = regenTime;
                 valuesEdit = true;
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + (START_REGENERATION_TIME - timeDecrease)).replace("%hp%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddHPregeneration")).replace("%petname%", myPet.petName).replace("%sec%", "" + regenTime).replace("%hp%", "" + increaseHpBy));
             }
         }
     }
 
     public String getFormattedValue()
     {
-        return "+" + increaseHpBy + MyPetLanguage.getString("Name_HP") + " ->" + (START_REGENERATION_TIME - timeDecrease) + "sec";
+        return "+" + increaseHpBy + MyPetLanguage.getString("Name_HP") + " ->" + regenTime + "sec";
     }
 
     public void reset()
     {
-        timeDecrease = 0;
+        regenTime = 0;
         increaseHpBy = 0;
-        timeCounter = START_REGENERATION_TIME;
+        timeCounter = 0;
     }
 
     public void schedule()
@@ -128,7 +127,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
                     addPotionGraphicalEffect(myPet.getCraftPet(), 0x00FF00, 40); //Green Potion Effect
                     myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
                 }
-                timeCounter = START_REGENERATION_TIME - timeDecrease;
+                timeCounter = regenTime;
             }
         }
     }
