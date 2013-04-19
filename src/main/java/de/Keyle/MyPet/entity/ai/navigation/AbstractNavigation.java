@@ -67,4 +67,6 @@ public abstract class AbstractNavigation
     {
         return parameters;
     }
+
+    public abstract void tick();
 }

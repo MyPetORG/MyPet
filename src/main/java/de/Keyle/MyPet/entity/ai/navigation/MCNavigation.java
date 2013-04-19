@@ -82,6 +82,12 @@ public class MCNavigation extends AbstractNavigation
         return false;
     }
 
+    @Override
+    public void tick()
+    {
+        nav.e();
+    }
+
     public void applyNavigationParameters()
     {
         this.nav.a(parameters.avoidWater());

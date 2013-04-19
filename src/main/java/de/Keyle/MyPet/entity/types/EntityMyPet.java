@@ -408,7 +408,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         aD().a(); // sensing
         petTargetSelector.tick(); // target selector
         petPathfinderSelector.tick(); // pathfinder selector
-        getNavigation().e(); // navigation
+        petNavigation.tick(); // navigation
         bp(); // "mob tick"
 
         // controls
