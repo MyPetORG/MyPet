@@ -97,6 +97,12 @@ public class EntityAIControl extends EntityAIGoal implements IScheduler
     {
         nav.getParameters().addSpeedModifier("Control", speedModifier);
         moveTo = controlSkill.getLocation();
+        if (moveTo.getWorld() != myPet.getLocation().getWorld())
+        {
+            stopControl = true;
+            moveTo = null;
+            return;
+        }
         timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
         timeToMove = timeToMove < 3 ? 3 : timeToMove;
         if (!isRunning)
