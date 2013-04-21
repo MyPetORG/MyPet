@@ -37,16 +37,11 @@ import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_5_R2.EntityItem;
 import net.minecraft.server.v1_5_R2.MathHelper;
-import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftEnderman;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftLivingEntity;
@@ -856,20 +851,7 @@ public class MyPetEntityListener implements Listener
                 inventorySkill.closeInventory();
                 if (inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin())
                 {
-                    World world = ((CraftWorld) event.getEntity().getLocation().getWorld()).getHandle();
-                    Location petLocation = event.getEntity().getLocation();
-                    MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
-                    for (int i = 0 ; i < inv.getSize() ; i++)
-                    {
-                        net.minecraft.server.v1_5_R2.ItemStack is = inv.splitWithoutUpdate(i);
-                        if (is != null)
-                        {
-                            is = is.cloneItemStack();
-                            EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                            itemEntity.pickupDelay = 10;
-                            world.addEntity(itemEntity);
-                        }
-                    }
+                    inventorySkill.inv.dropContentAt(myPet.getLocation());
                 }
             }
             SendDeathMessage(event);

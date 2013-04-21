@@ -40,6 +40,7 @@ import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_5_R2.EntityItem;
@@ -103,17 +104,8 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 {
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
-                        World world = myPet.getCraftPet().getHandle().world;
-                        Location petLocation = myPet.getLocation();
-                        for (ItemStack is : ((Inventory) myPet.getSkills().getSkill("Inventory")).inv.getContents())
-                        {
-                            if (is != null)
-                            {
-                                EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                itemEntity.pickupDelay = 10;
-                                world.addEntity(itemEntity);
-                            }
-                        }
+                        MyPetCustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                        inv.dropContentAt(myPet.getLocation());
                     }
 
                     if (!MyPetConfiguration.REMOVE_PETS_AFTER_RELEASE)

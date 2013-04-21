@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import net.minecraft.server.v1_5_R2.EntityHuman;
-import net.minecraft.server.v1_5_R2.IInventory;
-import net.minecraft.server.v1_5_R2.ItemStack;
+import net.minecraft.server.v1_5_R2.*;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_5_R2.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
@@ -158,6 +158,22 @@ public class MyPetCustomInventory implements IInventory
             }
         }
         return itemAdd.getAmount();
+    }
+
+    public void dropContentAt(Location loc)
+    {
+        World world = ((CraftWorld) loc.getWorld()).getHandle();
+        for (int i = 0 ; i < this.getSize() ; i++)
+        {
+            ItemStack is = this.splitWithoutUpdate(i);
+            if (is != null)
+            {
+                is = is.cloneItemStack();
+                EntityItem itemEntity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
+                itemEntity.pickupDelay = 20;
+                world.addEntity(itemEntity);
+            }
+        }
     }
 
     public ItemStack splitStack(int i, int j)
