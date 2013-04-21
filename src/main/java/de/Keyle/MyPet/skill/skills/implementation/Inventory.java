@@ -43,6 +43,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 {
     public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
     public static boolean OPEN_IN_CREATIVEMODE = true;
+    public static boolean DROP_WHEN_OWNER_DIES = true;
     private MyPet myPet;
 
     public Inventory(boolean addedByInheritance)

@@ -250,13 +250,13 @@ public class MyPetPlayerListener implements Listener
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent event)
     {
-        if (MyPetPlayer.isMyPetPlayer(event.getEntity().getPlayer().getName()))
+        if (MyPetPlayer.isMyPetPlayer(event.getEntity()))
         {
-            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getEntity().getPlayer().getName());
+            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getEntity());
             if (myPetPlayer.hasMyPet())
             {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here && MyPetConfiguration.DROP_PET_INVENTORY_AFTER_PLAYER_DEATH)
+                if (myPet.getStatus() == PetState.Here && Inventory.DROP_WHEN_OWNER_DIES)
                 {
                     World world = ((CraftWorld) event.getEntity().getLocation().getWorld()).getHandle();
                     Location petLocation = event.getEntity().getLocation();

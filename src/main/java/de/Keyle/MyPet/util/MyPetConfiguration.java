@@ -78,7 +78,6 @@ public class MyPetConfiguration
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
-    public static boolean DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = false;
     public static boolean PET_INFO_OVERHEAD_NAME = true;
 
     public static void setDefault()
@@ -90,7 +89,6 @@ public class MyPetConfiguration
         config.addDefault("MyPet.AutoSaveTime", 60);
         config.addDefault("MyPet.EnableEvents", false);
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
-        config.addDefault("MyPet.DropPetInventoryAfterPlayerDeath", false);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", 5);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", 5);
@@ -139,6 +137,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Skill.Control.Item", Control.ITEM.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Ride.ITEM.getId());
         config.addDefault("MyPet.Skill.Inventory.Creative", true);
+        config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         config.addDefault("MyPet.Skill.Behavior.Aggro", true);
         config.addDefault("MyPet.Skill.Behavior.Farm", true);
         config.addDefault("MyPet.Skill.Behavior.Friendly", true);
@@ -202,6 +201,7 @@ public class MyPetConfiguration
         Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
+        Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
@@ -230,7 +230,6 @@ public class MyPetConfiguration
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", true);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
-        DROP_PET_INVENTORY_AFTER_PLAYER_DEATH = config.getBoolean("MyPet.DropPetInventoryAfterPlayerDeath", false);
         MYPET_FOLLOW_DISTANCE = (float) config.getDouble("MyPet.Pets.FollowDistance", 7.0D);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
