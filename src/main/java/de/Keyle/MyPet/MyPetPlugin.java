@@ -388,9 +388,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetLogger.write(e.getMessage());
         }
 
-        HeroesDamageFix.reset();
-        AncientRpgDamageFix.findAncientRpgPlugin();
-
         MyPetLogger.write("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers())

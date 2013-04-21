@@ -719,12 +719,10 @@ public class MyPetEntityListener implements Listener
             }
             else if (event.getDamager() instanceof CraftMyPet)
             {
-                //  --  Heroes Damage fix  --
                 MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
-                if (HeroesDamageFix.damageFaked(myPet.getDamage()))
-                {
-                    event.setDamage(myPet.getDamage());
-                }
+
+                // fix influence of other plugins
+                event.setDamage(myPet.getDamage());
 
                 //  --  Skills  --
                 boolean skillUsed = false;
