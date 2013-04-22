@@ -74,10 +74,7 @@ public class MyPetEntityListener implements Listener
     {
         if (event.getEntity() instanceof CraftMyPet)
         {
-            if (event.isCancelled())
-            {
-                event.setCancelled(false);
-            }
+            event.setCancelled(false);
         }
         if (MyPetConfiguration.USE_LEVEL_SYSTEM && event.getSpawnReason() == SpawnReason.SPAWNER)
         {

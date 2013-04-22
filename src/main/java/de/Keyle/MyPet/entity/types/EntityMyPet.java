@@ -289,7 +289,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         Player owner = (Player) this.getOwner().getBukkitEntity();
 
-        if (isMyPet() && entityhuman.name.equalsIgnoreCase(myPet.getOwner().getName()))
+        if (isMyPet() && entityhuman.getBukkitEntity() == owner)
         {
             if (this.hasRider())
             {
@@ -311,7 +311,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                 }
             }
-            else if (myPet.getSkills().isSkillActive("Control"))
+            if (myPet.getSkills().isSkillActive("Control"))
             {
                 if (itemStack.id == Control.ITEM.getId())
                 {

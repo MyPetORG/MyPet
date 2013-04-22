@@ -64,7 +64,7 @@ public class CraftMyPet extends CraftCreature
                     return;
                 }
             }
-            petEntity.setTarget(((CraftLivingEntity) target).getHandle());
+            petEntity.setGoalTarget(((CraftLivingEntity) target).getHandle());
         }
     }
 
@@ -100,7 +100,7 @@ public class CraftMyPet extends CraftCreature
     {
         if (petOwner == null)
         {
-            petOwner = getHandle().myPet.getOwner();
+            petOwner = getMyPet().getOwner();
         }
         return petOwner;
     }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
@@ -51,7 +52,7 @@ public class MyPetLevelUpListener implements Listener
                 myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
             }
         }
-        if (!event.isQuiet())
+        if (myPet.getStatus() == PetState.Here)
         {
             myPet.setHealth(myPet.getMaxHealth());
             myPet.setHungerValue(100);
