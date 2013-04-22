@@ -79,7 +79,7 @@ public class MyPetEntityListener implements Listener
                 event.setCancelled(false);
             }
         }
-        if (event.getSpawnReason() == SpawnReason.SPAWNER)
+        if (MyPetConfiguration.USE_LEVEL_SYSTEM && event.getSpawnReason() == SpawnReason.SPAWNER)
         {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
@@ -878,25 +878,26 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDeath(final EntityDeathEvent event)
     {
-        boolean spawnerMonster = false;
-        if (!MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner"))
+        if (MyPetConfiguration.USE_LEVEL_SYSTEM)
         {
-            for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner"))
+            if (!MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner"))
             {
-                if (value.getOwningPlugin() == MyPetPlugin.getPlugin())
+                for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner"))
                 {
-                    spawnerMonster = value.asBoolean();
-                    break;
+                    if (value.getOwningPlugin() == MyPetPlugin.getPlugin())
+                    {
+                        if (value.asBoolean())
+                        {
+                            return;
+                        }
+                        break;
+                    }
                 }
             }
-        }
-        if (!spawnerMonster && MyPetConfiguration.USE_LEVEL_SYSTEM && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
-        {
             if (MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION)
             {
                 if (event.getEntity().hasMetadata("DamageCount"))
                 {
-                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
                     for (MetadataValue value : event.getEntity().getMetadata("DamageCount"))
                     {
                         if (value.getOwningPlugin() == MyPetPlugin.getPlugin())
@@ -913,7 +914,7 @@ public class MyPetEntityListener implements Listener
                                     }
                                     double damage = damageMap.get(entity);
                                     double allDamage = 0;
-                                    double randomExp = MyPetMonsterExperience.getMonsterExperience(e.getEntityType()).getRandomExp();
+                                    double randomExp = MyPetMonsterExperience.getMonsterExperience(event.getEntity().getType()).getRandomExp();
                                     for (Integer d : damageMap.values())
                                     {
                                         allDamage += d;
@@ -937,7 +938,7 @@ public class MyPetEntityListener implements Listener
                                             {
                                                 double damage = damageMap.get(entity);
                                                 double allDamage = 0;
-                                                double randomExp = MyPetMonsterExperience.getMonsterExperience(e.getEntityType()).getRandomExp();
+                                                double randomExp = MyPetMonsterExperience.getMonsterExperience(event.getEntity().getType()).getRandomExp();
                                                 for (Integer d : damageMap.values())
                                                 {
                                                     allDamage += d;
@@ -949,29 +950,26 @@ public class MyPetEntityListener implements Listener
                                     }
                                 }
                             }
-                            break;
+                            return;
                         }
                     }
                 }
             }
-            else
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
-                if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof CraftMyPet)
+                EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
+                if (edbee.getDamager() instanceof CraftMyPet)
                 {
-                    EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
-                    if (e.getDamager() instanceof CraftMyPet)
+                    MyPet myPet = ((CraftMyPet) edbee.getDamager()).getMyPet();
+                    if (myPet.getSkillTree() == null && MyPetConfiguration.PREVENT_LEVELLING_WITHOUT_SKILLTREE)
                     {
-                        MyPet myPet = ((CraftMyPet) e.getDamager()).getMyPet();
-                        if (MyPetConfiguration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
-                        {
-                            return;
-                        }
-                        myPet.getExperience().addExp(e.getEntity().getType());
+                        return;
                     }
+                    myPet.getExperience().addExp(edbee.getEntity().getType());
                 }
-                else if (((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager() instanceof Player)
+                else if (edbee.getDamager() instanceof Player)
                 {
-                    Player owner = (Player) ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
+                    Player owner = (Player) edbee.getDamager();
                     if (MyPetList.hasMyPet(owner))
                     {
                         MyPet myPet = MyPetList.getMyPet(owner);
