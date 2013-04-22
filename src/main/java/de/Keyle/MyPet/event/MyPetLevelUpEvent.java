@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import org.bukkit.entity.Player;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -47,9 +47,9 @@ public class MyPetLevelUpEvent extends Event
         this.beQuiet = beQuiet;
     }
 
-    public Player getOwner()
+    public MyPetPlayer getOwner()
     {
-        return myPet.getOwner().getPlayer();
+        return myPet.getOwner();
     }
 
     public boolean isQuiet()

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import org.bukkit.entity.Player;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -36,9 +36,9 @@ public class MyPetLeashEvent extends Event
         this.myPet = myPet;
     }
 
-    public Player getLeasher()
+    public MyPetPlayer getLeasher()
     {
-        return myPet.getOwner().getPlayer();
+        return myPet.getOwner();
     }
 
     public MyPet getPet()
