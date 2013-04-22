@@ -91,6 +91,10 @@ public class MyPetConfiguration
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
         config.addDefault("MyPet.FollowStartDistance", 7.0D);
 
+        config.addDefault("MyPet.Backup.Active", MyPetBackup.MAKE_BACKUPS);
+        config.addDefault("MyPet.Backup.SaveInterval", MyPetBackup.SAVE_INTERVAL);
+        config.addDefault("MyPet.Backup.DateFormat", MyPetBackup.DATE_FORMAT);
+
         config.addDefault("MyPet.Respawn.Time.Default.Factor", 5);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", 5);
         config.addDefault("MyPet.Respawn.Time.Default.Fixed", 0);
@@ -207,6 +211,10 @@ public class MyPetConfiguration
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
+
+        MyPetBackup.MAKE_BACKUPS = config.getBoolean("MyPet.Backup.Active", MyPetBackup.MAKE_BACKUPS);
+        MyPetBackup.SAVE_INTERVAL = config.getInt("MyPet.Backup.SaveInterval", MyPetBackup.SAVE_INTERVAL);
+        MyPetBackup.DATE_FORMAT = config.getString("MyPet.Backup.DateFormat", MyPetBackup.DATE_FORMAT);
 
         SKILLTREE_SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);

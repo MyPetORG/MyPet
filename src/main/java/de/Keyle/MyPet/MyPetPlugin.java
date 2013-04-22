@@ -118,6 +118,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         plugin = this;
         this.isReady = false;
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
+        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
@@ -335,6 +336,12 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             loadMyWolfWolves(NBTPetFile);
         }
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
+
+        if (MyPetBackup.MAKE_BACKUPS)
+        {
+            new MyPetBackup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
+        }
+
         loadPets(NBTPetFile);
 
         MyPetTimer.startTimer();
@@ -515,7 +522,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         int petCount = 0;
 
         NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
-        nbtConfiguration.load();
+        if (!nbtConfiguration.load())
+        {
+            return 0;
+        }
         ListTag petList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Pets");
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown"))
         {
@@ -615,7 +625,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         int wolfCount = 0;
 
         NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
-        nbtConfiguration.load();
+        if (!nbtConfiguration.load())
+        {
+            return 0;
+        }
         ListTag wolfList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Wolves");
 
         DebugLogger.info("loading Wolves: -----------------------------");
@@ -654,11 +667,13 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
     public int savePets(boolean shutdown)
     {
+        /*
         if (!isReady)
         {
             MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");
             return 0;
         }
+        */
         autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
         int petCount = 0;
         NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
