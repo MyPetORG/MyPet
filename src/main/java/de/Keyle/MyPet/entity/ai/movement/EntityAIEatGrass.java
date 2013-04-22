@@ -44,7 +44,11 @@ public class EntityAIEatGrass extends EntityAIGoal
 
     public boolean shouldStart()
     {
-        if (!this.entityMySheep.isSheared())
+        if (!EntityMySheep.CAN_REGROW_WOOL)
+        {
+            return false;
+        }
+        else if (!this.entityMySheep.isSheared())
         {
             return false;
         }

@@ -148,6 +148,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", true);
         config.addDefault("MyPet.Pets.Cow.CanGiveMilk", true);
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", true);
+        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", true);
         config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
@@ -270,6 +271,7 @@ public class MyPetConfiguration
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);
         EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
+        EntityMySheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
         EntityMyChicken.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyCow.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);

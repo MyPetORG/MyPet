@@ -32,6 +32,7 @@ import org.bukkit.Material;
 public class EntityMySheep extends EntityMyPet
 {
     public static boolean CAN_BE_SHEARED = true;
+    public static boolean CAN_REGROW_WOOL = true;
     public static Material GROW_UP_ITEM = Material.POTION;
 
     public EntityMySheep(World world, MyPet myPet)
