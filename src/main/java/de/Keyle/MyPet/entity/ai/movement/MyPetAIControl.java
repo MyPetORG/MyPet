@@ -54,17 +54,21 @@ public class MyPetAIControl extends MyPetAIGoal implements IScheduler
         {
             return false;
         }
-        if (myPet.getSkills().isSkillActive("Control"))
+        else if (controlSkill == null || !controlSkill.isActive())
         {
-            return controlSkill.getLocation(false) != null;
+            return false;
         }
-        return false;
+        return controlSkill.getLocation(false) != null;
     }
 
     @Override
     public boolean shouldFinish()
     {
         if (!this.myPet.getCraftPet().canMove())
+        {
+            return true;
+        }
+        if (!controlSkill.isActive())
         {
             return true;
         }
