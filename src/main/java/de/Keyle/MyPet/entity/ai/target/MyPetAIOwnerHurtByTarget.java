@@ -50,6 +50,11 @@ public class MyPetAIOwnerHurtByTarget extends MyPetAIGoal
         {
             return false;
         }
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
+        {
+            return false;
+        }
+
         EntityLiving owner = this.petEntity.getOwner();
         if (owner == null)
         {

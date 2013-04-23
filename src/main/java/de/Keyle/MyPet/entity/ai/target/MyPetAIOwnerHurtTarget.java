@@ -51,7 +51,7 @@ public class MyPetAIOwnerHurtTarget extends MyPetAIGoal
         {
             return false;
         }
-        else if (this.petEntity.goalTarget == null)
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
         {
             return false;
         }

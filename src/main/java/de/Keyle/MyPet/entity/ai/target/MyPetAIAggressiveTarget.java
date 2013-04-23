@@ -58,7 +58,7 @@ public class MyPetAIAggressiveTarget extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
-        if (myPet.getDamage() < 0 && myPet.getRangedDamage() < 0)
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
         {
             return false;
         }

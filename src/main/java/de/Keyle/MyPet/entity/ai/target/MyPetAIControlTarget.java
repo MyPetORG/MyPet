@@ -61,6 +61,10 @@ public class MyPetAIControlTarget extends MyPetAIGoal
         {
             return false;
         }
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
+        {
+            return false;
+        }
         if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
         {
             Behavior behaviorSkill = null;

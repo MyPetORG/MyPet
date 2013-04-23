@@ -44,6 +44,11 @@ public class MyPetAIHurtByTarget extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
+
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
+        {
+            return false;
+        }
         if (petEntity.aF() == null)
         {
             return false;
