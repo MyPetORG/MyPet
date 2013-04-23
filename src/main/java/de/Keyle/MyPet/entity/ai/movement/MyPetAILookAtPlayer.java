@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_5_R2.Entity;
 
-public class EntityAILookAtPlayer extends EntityAIGoal
+public class MyPetAILookAtPlayer extends MyPetAIGoal
 {
     private EntityMyPet petEntity;
     protected Entity targetPlayer;
@@ -32,14 +32,14 @@ public class EntityAILookAtPlayer extends EntityAIGoal
     private int ticksUntilStopLooking;
     private float lookAtPlayerChance;
 
-    public EntityAILookAtPlayer(EntityMyPet petEntity, float range)
+    public MyPetAILookAtPlayer(EntityMyPet petEntity, float range)
     {
         this.petEntity = petEntity;
         this.range = range;
         this.lookAtPlayerChance = 0.02F;
     }
 
-    public EntityAILookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance)
+    public MyPetAILookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance)
     {
         this.petEntity = petEntity;
         this.range = range;

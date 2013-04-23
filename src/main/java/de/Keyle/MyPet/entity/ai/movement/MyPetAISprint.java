@@ -21,13 +21,13 @@
 package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 
-public class EntityAISprint extends EntityAIGoal
+public class MyPetAISprint extends MyPetAIGoal
 {
     private MyPet myPet;
     private final EntityMyPet petEntity;
@@ -35,7 +35,7 @@ public class EntityAISprint extends EntityAIGoal
     private AbstractNavigation nav;
     private EntityLiving lastTarget = null;
 
-    public EntityAISprint(EntityMyPet entityMyPet, float walkSpeedModifier)
+    public MyPetAISprint(EntityMyPet entityMyPet, float walkSpeedModifier)
     {
         this.petEntity = entityMyPet;
         this.walkSpeedModifier = walkSpeedModifier;

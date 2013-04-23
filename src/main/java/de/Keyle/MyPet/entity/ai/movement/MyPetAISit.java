@@ -20,17 +20,17 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 
-public class EntityAISit extends EntityAIGoal
+public class MyPetAISit extends MyPetAIGoal
 {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
 
-    public EntityAISit(EntityMyPet entityMyPet)
+    public MyPetAISit(EntityMyPet entityMyPet)
     {
         this.entityMyPet = entityMyPet;
     }

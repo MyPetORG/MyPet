@@ -24,8 +24,8 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.chatcommands.CommandInfo;
 import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.EquipmentSlot;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIRide;
-import de.Keyle.MyPet.entity.ai.target.EntityAIDuelTarget;
+import de.Keyle.MyPet.entity.ai.movement.MyPetAIRide;
+import de.Keyle.MyPet.entity.ai.target.MyPetAIDuelTarget;
 import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -167,7 +167,7 @@ public class MyPetEntityListener implements Listener
                     {
                         if (craftMyPet.getHandle().petPathfinderSelector.hasGoal("Ride"))
                         {
-                            ((EntityAIRide) craftMyPet.getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
+                            ((MyPetAIRide) craftMyPet.getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
                         }
                     }
                 }
@@ -816,7 +816,7 @@ public class MyPetEntityListener implements Listener
                             EntityMyPet duelKiller = ((CraftMyPet) e.getDamager()).getHandle();
                             if (myPetEntity.petTargetSelector.hasGoal("DuelTarget"))
                             {
-                                EntityAIDuelTarget duelTarget = (EntityAIDuelTarget) myPetEntity.petTargetSelector.getGoal("DuelTarget");
+                                MyPetAIDuelTarget duelTarget = (MyPetAIDuelTarget) myPetEntity.petTargetSelector.getGoal("DuelTarget");
                                 if (duelTarget.getDuelOpponent() == duelKiller)
                                 {
                                     myPet.respawnTime = 10;

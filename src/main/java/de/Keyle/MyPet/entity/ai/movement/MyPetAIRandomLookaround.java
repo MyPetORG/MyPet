@@ -20,17 +20,17 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 
-public class EntityAIRandomLookaround extends EntityAIGoal
+public class MyPetAIRandomLookaround extends MyPetAIGoal
 {
     private EntityMyPet petEntity;
     private double directionX;
     private double directionZ;
     private int ticksUntilStopLookingAround = 0;
 
-    public EntityAIRandomLookaround(EntityMyPet petEntity)
+    public MyPetAIRandomLookaround(EntityMyPet petEntity)
     {
         this.petEntity = petEntity;
     }

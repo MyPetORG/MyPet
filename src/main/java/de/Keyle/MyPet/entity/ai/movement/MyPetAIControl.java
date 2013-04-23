@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
@@ -28,7 +28,7 @@ import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetTimer;
 import org.bukkit.Location;
 
-public class EntityAIControl extends EntityAIGoal implements IScheduler
+public class MyPetAIControl extends MyPetAIGoal implements IScheduler
 {
     private MyPet myPet;
     private float speedModifier;
@@ -39,7 +39,7 @@ public class EntityAIControl extends EntityAIGoal implements IScheduler
     private Control controlSkill;
     private boolean isRunning = false;
 
-    public EntityAIControl(MyPet myPet, float speedModifier)
+    public MyPetAIControl(MyPet myPet, float speedModifier)
     {
         this.myPet = myPet;
         this.speedModifier = speedModifier;

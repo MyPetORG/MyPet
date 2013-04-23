@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import net.minecraft.server.v1_5_R2.Block;
 import net.minecraft.server.v1_5_R2.MathHelper;
@@ -28,14 +28,14 @@ import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 
-public class EntityAIEatGrass extends EntityAIGoal
+public class MyPetAIEatGrass extends MyPetAIGoal
 {
     private EntityMySheep entityMySheep;
     private World world;
     private double chanceToEat;
     int eatTicks = 0;
 
-    public EntityAIEatGrass(EntityMySheep entityMySheep, double chanceToEat)
+    public MyPetAIEatGrass(EntityMySheep entityMySheep, double chanceToEat)
     {
         this.entityMySheep = entityMySheep;
         this.chanceToEat = chanceToEat;

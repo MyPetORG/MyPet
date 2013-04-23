@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
@@ -29,9 +29,8 @@ import net.minecraft.server.v1_5_R2.Entity;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityMonster;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 
-public class EntityAIFarmTarget extends EntityAIGoal
+public class MyPetAIFarmTarget extends MyPetAIGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -39,11 +38,11 @@ public class EntityAIFarmTarget extends EntityAIGoal
     private EntityLiving target;
     private float range;
 
-    public EntityAIFarmTarget(MyPet myPet, float range)
+    public MyPetAIFarmTarget(EntityMyPet petEntity, float range)
     {
-        this.petEntity = myPet.getCraftPet().getHandle();
-        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
-        this.myPet = myPet;
+        this.petEntity = petEntity;
+        this.petOwnerEntity = (EntityPlayer) petEntity.getOwner();
+        this.myPet = petEntity.getMyPet();
         this.range = range;
     }
 

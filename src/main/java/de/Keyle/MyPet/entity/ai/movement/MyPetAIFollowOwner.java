@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
-public class EntityAIFollowOwner extends EntityAIGoal
+public class MyPetAIFollowOwner extends MyPetAIGoal
 {
     private EntityMyPet petEntity;
     private float walkSpeedModifier;
@@ -36,9 +36,9 @@ public class EntityAIFollowOwner extends EntityAIGoal
     private float stopDistance;
     private float startDistance;
     private float teleportDistance;
-    private EntityAIControl controlPathfinderGoal;
+    private MyPetAIControl controlPathfinderGoal;
 
-    public EntityAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, float startDistance, float stopDistance, float teleportDistance)
+    public MyPetAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, float startDistance, float stopDistance, float teleportDistance)
     {
         this.petEntity = entityMyPet;
         this.walkSpeedModifier = walkSpeedModifier;
@@ -57,7 +57,7 @@ public class EntityAIFollowOwner extends EntityAIGoal
         {
             if (controlPathfinderGoal == null)
             {
-                controlPathfinderGoal = (EntityAIControl) petEntity.petPathfinderSelector.getGoal("Control");
+                controlPathfinderGoal = (MyPetAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
         if (!this.petEntity.canMove())

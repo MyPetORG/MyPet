@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
@@ -34,7 +34,7 @@ import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-public class EntityAIAggressiveTarget extends EntityAIGoal
+public class MyPetAIAggressiveTarget extends MyPetAIGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -42,17 +42,15 @@ public class EntityAIAggressiveTarget extends EntityAIGoal
     private EntityLiving target;
     private float range;
 
-    public EntityAIAggressiveTarget(MyPet myPet, float range)
+    public MyPetAIAggressiveTarget(EntityMyPet petEntity, float range)
     {
-        this.petEntity = myPet.getCraftPet().getHandle();
+        this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
-        this.myPet = myPet;
+        this.myPet = petEntity.getMyPet();
         this.range = range;
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (myPet.getSkills().isSkillActive("Behavior"))

@@ -20,13 +20,13 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import net.minecraft.server.v1_5_R2.*;
 
-public class EntityAIRide extends EntityAIGoal
+public class MyPetAIRide extends MyPetAIGoal
 {
     private final EntityMyPet petEntity;
     private final float startSpeed;
@@ -34,7 +34,7 @@ public class EntityAIRide extends EntityAIGoal
     private float currentSpeed = 0.0F;
     private boolean stopRiding = true;
 
-    public EntityAIRide(EntityMyPet entityMyPet, float startSpeed)
+    public MyPetAIRide(EntityMyPet entityMyPet, float startSpeed)
     {
         this.petEntity = entityMyPet;
         this.startSpeed = startSpeed;

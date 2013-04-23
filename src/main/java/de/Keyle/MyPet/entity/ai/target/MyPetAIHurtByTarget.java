@@ -20,103 +20,69 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
-public class EntityAIOwnerHurtByTarget extends EntityAIGoal
+public class MyPetAIHurtByTarget extends MyPetAIGoal
 {
-    private EntityMyPet petEntity;
-    private EntityLiving lastDamager;
-    private MyPet myPet;
+    EntityMyPet petEntity;
+    MyPet myPet;
+    EntityLiving target = null;
 
-    public EntityAIOwnerHurtByTarget(EntityMyPet entityMyPet)
+    public MyPetAIHurtByTarget(EntityMyPet petEntity)
     {
-        this.petEntity = entityMyPet;
-        myPet = entityMyPet.getMyPet();
+        this.petEntity = petEntity;
+        myPet = petEntity.getMyPet();
     }
 
     public boolean shouldStart()
     {
-        if (!petEntity.canMove())
+        if (petEntity.aF() == null)
         {
             return false;
         }
-        EntityLiving owner = this.petEntity.getOwner();
-        if (owner == null)
+        if (target != petEntity.aF())
+        {
+            target = petEntity.aF();
+        }
+        if (target == petEntity)
         {
             return false;
         }
-        this.lastDamager = owner.aF();
+        if (target instanceof EntityPlayer)
+        {
+            Player targetPlayer = (Player) target.getBukkitEntity();
 
-
-        if (this.lastDamager == null || !lastDamager.isAlive())
-        {
-            return false;
-        }
-        if (lastDamager == petEntity)
-        {
-            return false;
-        }
-        if (lastDamager instanceof EntityPlayer)
-        {
-            if (this.petEntity.getOwner() == lastDamager)
+            if (targetPlayer == myPet.getOwner().getPlayer())
             {
                 return false;
             }
-
-            Player targetPlayer = (Player) lastDamager.getBukkitEntity();
-
-            if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
+            else if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
             {
                 return false;
             }
         }
-        else if (lastDamager instanceof EntityMyPet)
+        else if (target instanceof EntityMyPet)
         {
-            MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
+            MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
             if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
             {
                 return false;
             }
         }
-        else if (lastDamager instanceof EntityTameableAnimal)
+        else if (target instanceof EntityTameableAnimal)
         {
-            EntityTameableAnimal tameable = (EntityTameableAnimal) lastDamager;
+            EntityTameableAnimal tameable = (EntityTameableAnimal) target;
             if (tameable.isTamed() && tameable.getOwner() != null)
             {
                 Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                 if (myPet.getOwner().equals(tameableOwner))
-                {
-                    return false;
-                }
-            }
-        }
-        if (myPet.getSkills().isSkillActive("Behavior"))
-        {
-            Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
-            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-            {
-                return false;
-            }
-            if (behaviorSkill.getBehavior() == BehaviorState.Raid)
-            {
-                if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed())
-                {
-                    return false;
-                }
-                if (lastDamager instanceof EntityMyPet)
-                {
-                    return false;
-                }
-                if (lastDamager instanceof EntityPlayer)
                 {
                     return false;
                 }
@@ -148,7 +114,7 @@ public class EntityAIOwnerHurtByTarget extends EntityAIGoal
     @Override
     public void start()
     {
-        petEntity.setGoalTarget(this.lastDamager);
+        petEntity.setGoalTarget(this.target);
     }
 
     @Override

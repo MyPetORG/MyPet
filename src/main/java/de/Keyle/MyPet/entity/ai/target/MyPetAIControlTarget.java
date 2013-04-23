@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
-import de.Keyle.MyPet.entity.ai.movement.EntityAIControl;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
+import de.Keyle.MyPet.entity.ai.movement.MyPetAIControl;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
@@ -32,18 +32,18 @@ import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
-public class EntityAIControlTarget extends EntityAIGoal
+public class MyPetAIControlTarget extends MyPetAIGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityLiving target;
     private float range;
-    private EntityAIControl controlPathfinderGoal;
+    private MyPetAIControl controlPathfinderGoal;
 
-    public EntityAIControlTarget(MyPet myPet, float range)
+    public MyPetAIControlTarget(EntityMyPet petEntity, float range)
     {
-        this.petEntity = myPet.getCraftPet().getHandle();
-        this.myPet = myPet;
+        this.petEntity = petEntity;
+        this.myPet = petEntity.getMyPet();
         this.range = range;
     }
 
@@ -56,7 +56,7 @@ public class EntityAIControlTarget extends EntityAIGoal
         {
             if (controlPathfinderGoal == null)
             {
-                controlPathfinderGoal = (EntityAIControl) petEntity.petPathfinderSelector.getGoal("Control");
+                controlPathfinderGoal = (MyPetAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
         else

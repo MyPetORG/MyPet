@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 
-public class EntityAIDuelTarget extends EntityAIGoal
+public class MyPetAIDuelTarget extends MyPetAIGoal
 {
     private MyPet myPet;
     private EntityMyPet petEntity;
@@ -37,11 +36,11 @@ public class EntityAIDuelTarget extends EntityAIGoal
     private EntityMyPet duelOpponent = null;
     private float range;
 
-    public EntityAIDuelTarget(MyPet myPet, float range)
+    public MyPetAIDuelTarget(EntityMyPet petEntity, float range)
     {
-        this.petEntity = myPet.getCraftPet().getHandle();
-        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
-        this.myPet = myPet;
+        this.petEntity = petEntity;
+        this.petOwnerEntity = (EntityPlayer) petEntity.getOwner();
+        this.myPet = petEntity.getMyPet();
         this.range = range;
     }
 
@@ -124,7 +123,7 @@ public class EntityAIDuelTarget extends EntityAIGoal
         setDuelOpponent(this.target);
         if (target.petTargetSelector.hasGoal("DuelTarget"))
         {
-            EntityAIDuelTarget duelGoal = (EntityAIDuelTarget) target.petTargetSelector.getGoal("DuelTarget");
+            MyPetAIDuelTarget duelGoal = (MyPetAIDuelTarget) target.petTargetSelector.getGoal("DuelTarget");
             duelGoal.setDuelOpponent(this.petEntity);
         }
     }

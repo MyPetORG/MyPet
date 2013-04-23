@@ -18,26 +18,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.entity.ai;
+package de.Keyle.MyPet.entity.ai.movement;
 
-public abstract class EntityAIGoal
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
+import de.Keyle.MyPet.entity.types.EntityMyPet;
+import net.minecraft.server.v1_5_R2.EntityLiving;
+
+public class MyPetAIFloat extends MyPetAIGoal
 {
-    public abstract boolean shouldStart();
+    private EntityLiving entityMyPet;
 
-    public boolean shouldFinish()
+    public MyPetAIFloat(EntityMyPet entityMyPet)
     {
-        return shouldStart();
+        this.entityMyPet = entityMyPet;
+        entityMyPet.getNavigation().e(true);
     }
 
-    public void start()
+    public boolean shouldStart()
     {
+        return entityMyPet.world.getMaterial((int) entityMyPet.locX, (int) entityMyPet.locY, (int) entityMyPet.locZ).isLiquid();
     }
 
-    public void finish()
-    {
-    }
-
+    @Override
     public void tick()
     {
+        if (entityMyPet.aE().nextFloat() < 0.9D)
+        {
+            entityMyPet.motY += 0.05D;
+        }
     }
 }

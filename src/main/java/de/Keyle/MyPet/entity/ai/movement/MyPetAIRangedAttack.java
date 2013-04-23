@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.movement;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_5_R2.EntityArrow;
@@ -29,7 +29,7 @@ import net.minecraft.server.v1_5_R2.World;
 import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityAIRangedAttack extends EntityAIGoal
+public class MyPetAIRangedAttack extends MyPetAIGoal
 {
     private MyPet myPet;
     private final EntityMyPet entityMyPet;
@@ -40,12 +40,12 @@ public class EntityAIRangedAttack extends EntityAIGoal
     private int fireRate;
     private float rangeSquared;
 
-    public EntityAIRangedAttack(MyPet myPet, float walkSpeedModifier, int fireRate, float range)
+    public MyPetAIRangedAttack(EntityMyPet entityMyPet, float walkSpeedModifier, int fireRate, float range)
     {
-        this.myPet = myPet;
+        this.entityMyPet = entityMyPet;
+        this.myPet = entityMyPet.getMyPet();
         this.shootTimer = -1;
         this.lastSeenTimer = 0;
-        this.entityMyPet = myPet.getCraftPet().getHandle();
         this.walkSpeedModifier = walkSpeedModifier;
         this.fireRate = fireRate;
         this.rangeSquared = (range * range);

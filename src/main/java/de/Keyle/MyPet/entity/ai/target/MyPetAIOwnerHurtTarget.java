@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai.target;
 
-import de.Keyle.MyPet.entity.ai.EntityAIGoal;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
@@ -31,17 +31,17 @@ import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
-public class EntityAIOwnerHurtTarget extends EntityAIGoal
+public class MyPetAIOwnerHurtTarget extends MyPetAIGoal
 {
 
     EntityMyPet petEntity;
     EntityLiving target;
     MyPet myPet;
 
-    public EntityAIOwnerHurtTarget(MyPet myPet)
+    public MyPetAIOwnerHurtTarget(EntityMyPet petEntity)
     {
-        this.petEntity = myPet.getCraftPet().getHandle();
-        this.myPet = myPet;
+        this.petEntity = petEntity;
+        this.myPet = petEntity.getMyPet();
     }
 
     /**

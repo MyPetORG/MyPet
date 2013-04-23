@@ -22,45 +22,45 @@ package de.Keyle.MyPet.entity.ai;
 
 import java.util.*;
 
-public class MyPetEntityAISelector
+public class MyPetAISelector
 {
-    private Map<String, EntityAIGoal> AIGoalMap = new HashMap<String, EntityAIGoal>();
-    private List<EntityAIGoal> AIGoalList = new LinkedList<EntityAIGoal>();
-    private List<EntityAIGoal> activeAIGoalList = new LinkedList<EntityAIGoal>();
+    private Map<String, MyPetAIGoal> AIGoalMap = new HashMap<String, MyPetAIGoal>();
+    private List<MyPetAIGoal> AIGoalList = new LinkedList<MyPetAIGoal>();
+    private List<MyPetAIGoal> activeAIGoalList = new LinkedList<MyPetAIGoal>();
 
-    public void addGoal(String name, EntityAIGoal entityAIgoal)
+    public void addGoal(String name, MyPetAIGoal myPetAIgoal)
     {
         if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        AIGoalMap.put(name, entityAIgoal);
-        AIGoalList.add(entityAIgoal);
+        AIGoalMap.put(name, myPetAIgoal);
+        AIGoalList.add(myPetAIgoal);
     }
 
-    public void addGoal(String name, int pos, EntityAIGoal entityAIgoal)
+    public void addGoal(String name, int pos, MyPetAIGoal myPetAIgoal)
     {
         if (AIGoalMap.containsKey(name))
         {
             return;
         }
-        AIGoalMap.put(name, entityAIgoal);
-        AIGoalList.add(pos, entityAIgoal);
+        AIGoalMap.put(name, myPetAIgoal);
+        AIGoalList.add(pos, myPetAIgoal);
     }
 
-    public void replaceGoal(String name, EntityAIGoal entityAIgoal)
+    public void replaceGoal(String name, MyPetAIGoal myPetAIgoal)
     {
         if (AIGoalMap.containsKey(name))
         {
-            EntityAIGoal oldGoal = AIGoalMap.get(name);
+            MyPetAIGoal oldGoal = AIGoalMap.get(name);
             int index = AIGoalList.indexOf(oldGoal);
-            AIGoalList.add(index, entityAIgoal);
+            AIGoalList.add(index, myPetAIgoal);
             AIGoalList.remove(oldGoal);
-            AIGoalMap.put(name, entityAIgoal);
+            AIGoalMap.put(name, myPetAIgoal);
         }
         else
         {
-            addGoal(name, entityAIgoal);
+            addGoal(name, myPetAIgoal);
         }
     }
 
@@ -68,7 +68,7 @@ public class MyPetEntityAISelector
     {
         if (AIGoalMap.containsKey(name))
         {
-            EntityAIGoal goal = AIGoalMap.get(name);
+            MyPetAIGoal goal = AIGoalMap.get(name);
             AIGoalList.remove(goal);
             AIGoalMap.remove(name);
         }
@@ -79,7 +79,7 @@ public class MyPetEntityAISelector
         return AIGoalMap.containsKey(name);
     }
 
-    public EntityAIGoal getGoal(String name)
+    public MyPetAIGoal getGoal(String name)
     {
         return AIGoalMap.get(name);
     }
@@ -96,7 +96,7 @@ public class MyPetEntityAISelector
         ListIterator iterator = AIGoalList.listIterator();
         while (iterator.hasNext())
         {
-            EntityAIGoal goal = (EntityAIGoal) iterator.next();
+            MyPetAIGoal goal = (MyPetAIGoal) iterator.next();
             if (!activeAIGoalList.contains(goal))
             {
                 if (goal.shouldStart())
@@ -111,7 +111,7 @@ public class MyPetEntityAISelector
         iterator = activeAIGoalList.listIterator();
         while (iterator.hasNext())
         {
-            EntityAIGoal goal = (EntityAIGoal) iterator.next();
+            MyPetAIGoal goal = (MyPetAIGoal) iterator.next();
             if (!goal.shouldFinish())
             {
                 goal.finish();
@@ -123,7 +123,7 @@ public class MyPetEntityAISelector
         iterator = activeAIGoalList.listIterator();
         while (iterator.hasNext())
         {
-            EntityAIGoal goal = (EntityAIGoal) iterator.next();
+            MyPetAIGoal goal = (MyPetAIGoal) iterator.next();
             goal.tick();
         }
     }
