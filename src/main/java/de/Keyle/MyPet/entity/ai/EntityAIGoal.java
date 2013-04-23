@@ -20,9 +20,7 @@
 
 package de.Keyle.MyPet.entity.ai;
 
-import net.minecraft.server.v1_5_R2.PathfinderGoal;
-
-public abstract class EntityAIGoal extends PathfinderGoal
+public abstract class EntityAIGoal
 {
     public abstract boolean shouldStart();
 
@@ -41,40 +39,5 @@ public abstract class EntityAIGoal extends PathfinderGoal
 
     public void tick()
     {
-    }
-
-    @Override
-    public boolean a()
-    {
-        //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " shouldStart");
-        return shouldStart();
-    }
-
-    @Override
-    public boolean b()
-    {
-        //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " shouldFinish");
-        return shouldFinish();
-    }
-
-    @Override
-    public void c()
-    {
-        //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " start");
-        start();
-    }
-
-    @Override
-    public void d()
-    {
-        //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " finish");
-        finish();
-    }
-
-    @Override
-    public void e()
-    {
-        //MyPetLogger.write("GT:" + this.getClass().getSimpleName() + " schedule");
-        tick();
     }
 }
