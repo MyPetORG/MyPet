@@ -41,6 +41,7 @@ public class MyPetAIAggressiveTarget extends MyPetAIGoal
     private EntityPlayer petOwnerEntity;
     private EntityLiving target;
     private float range;
+    private Behavior behaviorSkill = null;
 
     public MyPetAIAggressiveTarget(EntityMyPet petEntity, float range)
     {
@@ -48,15 +49,22 @@ public class MyPetAIAggressiveTarget extends MyPetAIGoal
         this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
+        if (myPet.getSkills().hasSkill("Behavior"))
+        {
+            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+        }
     }
 
     @Override
     public boolean shouldStart()
     {
-        if (myPet.getSkills().isSkillActive("Behavior"))
+        if (myPet.getDamage() < 0 && myPet.getRangedDamage() < 0)
         {
-            Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
-            if (behavior.getBehavior() == BehaviorState.Aggressive && myPet.getCraftPet().canMove())
+            return false;
+        }
+        if (behaviorSkill != null && behaviorSkill.isActive())
+        {
+            if (behaviorSkill.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
             {
                 if (petEntity.getGoalTarget() == null || !petEntity.getGoalTarget().isAlive())
                 {
