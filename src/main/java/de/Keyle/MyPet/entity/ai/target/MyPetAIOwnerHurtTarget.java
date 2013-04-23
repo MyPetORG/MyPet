@@ -37,11 +37,16 @@ public class MyPetAIOwnerHurtTarget extends MyPetAIGoal
     EntityMyPet petEntity;
     EntityLiving target;
     MyPet myPet;
+    private Behavior behaviorSkill = null;
 
     public MyPetAIOwnerHurtTarget(EntityMyPet petEntity)
     {
         this.petEntity = petEntity;
         this.myPet = petEntity.getMyPet();
+        if (myPet.getSkills().hasSkill("Behavior"))
+        {
+            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+        }
     }
 
     @Override
@@ -55,9 +60,12 @@ public class MyPetAIOwnerHurtTarget extends MyPetAIGoal
         {
             return false;
         }
-        if (myPet.getSkills().isSkillActive("Behavior"))
+        if (this.petEntity.goalTarget == null)
         {
-            Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            return false;
+        }
+        if (behaviorSkill != null && behaviorSkill.isActive())
+        {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
             {
                 this.petEntity.goalTarget = null;
