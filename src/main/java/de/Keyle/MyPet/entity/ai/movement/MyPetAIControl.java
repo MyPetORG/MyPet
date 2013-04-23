@@ -66,25 +66,25 @@ public class MyPetAIControl extends MyPetAIGoal implements IScheduler
     {
         if (!this.myPet.getCraftPet().canMove())
         {
-            return false;
+            return true;
         }
         if (moveTo == null)
         {
-            return false;
+            return true;
         }
         if (myPet.getLocation().distance(moveTo) < 1)
         {
-            return false;
+            return true;
         }
         if (timeToMove <= 0)
         {
-            return false;
+            return true;
         }
         if (this.stopControl)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

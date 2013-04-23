@@ -76,21 +76,21 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
     {
         if (this.petEntity.getGoalTarget() == null)
         {
-            return false;
+            return true;
         }
         else if (this.targetEntity != this.petEntity.getGoalTarget())
         {
-            return false;
+            return true;
         }
         else if (!this.targetEntity.isAlive())
         {
-            return false;
+            return true;
         }
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

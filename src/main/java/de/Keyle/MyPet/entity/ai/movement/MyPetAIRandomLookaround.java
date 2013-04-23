@@ -44,7 +44,7 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
     @Override
     public boolean shouldFinish()
     {
-        return this.ticksUntilStopLookingAround >= 0;
+        return this.ticksUntilStopLookingAround <= 0;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
     @Override
     public void tick()
     {
-        this.ticksUntilStopLookingAround -= 1;
+        this.ticksUntilStopLookingAround--;
         this.petEntity.getControllerLook().a(this.petEntity.locX + this.directionX, this.petEntity.locY + this.petEntity.getHeadHeight(), this.petEntity.locZ + this.directionZ, 10.0F, this.petEntity.bs());
     }
 }

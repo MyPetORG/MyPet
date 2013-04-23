@@ -85,17 +85,17 @@ public class MyPetAIFarmTarget extends MyPetAIGoal
 
         if (!petEntity.canMove())
         {
-            return false;
+            return true;
         }
         else if (entityliving == null)
         {
-            return false;
+            return true;
         }
         else if (!entityliving.isAlive())
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

@@ -62,13 +62,13 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
     {
         if (!this.targetPlayer.isAlive())
         {
-            return false;
+            return true;
         }
         if (this.petEntity.e(this.targetPlayer) > this.range * this.range)
         {
-            return false;
+            return true;
         }
-        return this.ticksUntilStopLooking > 0;
+        return this.ticksUntilStopLooking <= 0;
     }
 
     @Override

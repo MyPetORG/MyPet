@@ -86,25 +86,25 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
     {
         if (controlPathfinderGoal.moveTo != null)
         {
-            return false;
+            return true;
         }
         else if (this.petEntity.getOwner() == null)
         {
-            return false;
+            return true;
         }
         else if (this.petEntity.e(this.petEntity.getOwner()) < this.stopDistance)
         {
-            return false;
+            return true;
         }
         else if (!this.petEntity.canMove())
         {
-            return false;
+            return true;
         }
         else if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

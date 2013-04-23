@@ -81,17 +81,17 @@ public class MyPetAISprint extends MyPetAIGoal
     {
         if (this.petEntity.getOwner() == null)
         {
-            return false;
+            return true;
         }
         else if (this.petEntity.e(this.lastTarget) < 4)
         {
-            return false;
+            return true;
         }
         else if (!this.petEntity.canMove())
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

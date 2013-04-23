@@ -101,17 +101,17 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
     {
         if (!petEntity.canMove())
         {
-            return false;
+            return true;
         }
         else if (petEntity.getGoalTarget() == null)
         {
-            return false;
+            return true;
         }
         else if (!petEntity.getGoalTarget().isAlive())
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

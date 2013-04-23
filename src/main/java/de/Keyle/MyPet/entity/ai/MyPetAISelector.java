@@ -112,7 +112,7 @@ public class MyPetAISelector
         while (iterator.hasNext())
         {
             MyPetAIGoal goal = (MyPetAIGoal) iterator.next();
-            if (!goal.shouldFinish())
+            if (goal.shouldFinish())
             {
                 goal.finish();
                 iterator.remove();

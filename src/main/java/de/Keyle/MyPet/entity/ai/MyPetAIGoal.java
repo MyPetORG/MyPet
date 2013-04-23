@@ -26,7 +26,7 @@ public abstract class MyPetAIGoal
 
     public boolean shouldFinish()
     {
-        return shouldStart();
+        return !shouldStart();
     }
 
     public void start()

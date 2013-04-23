@@ -71,7 +71,7 @@ public class MyPetAIEatGrass extends MyPetAIGoal
     @Override
     public boolean shouldFinish()
     {
-        return this.eatTicks > 0;
+        return this.eatTicks <= 0;
     }
 
     @Override

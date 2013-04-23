@@ -78,13 +78,13 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
     {
         if (target == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
         {
-            return false;
+            return true;
         }
         if (myPet.getDamage() > 0 && this.entityMyPet.e(target.locX, target.boundingBox.b, target.locZ) < 16)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
