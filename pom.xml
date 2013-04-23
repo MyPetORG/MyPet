@@ -70,10 +70,6 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>citizens-repo</id>
-            <url>http://repo.citizensnpcs.com</url>
-        </repository>
-        <repository>
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
@@ -96,6 +92,10 @@
         <repository>
             <id>metrics-repo</id>
             <url>http://repo.mcstats.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>citizens-repo</id>
+            <url>http://repo.citizensnpcs.com</url>
         </repository>
     </repositories>
 
