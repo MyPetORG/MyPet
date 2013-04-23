@@ -47,9 +47,7 @@ public class MyPetAIControl extends MyPetAIGoal implements IScheduler
         controlSkill = (Control) myPet.getSkills().getSkill("Control");
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (!this.myPet.getCraftPet().canMove())
@@ -63,9 +61,6 @@ public class MyPetAIControl extends MyPetAIGoal implements IScheduler
         return false;
     }
 
-    /**
-     * Checks whether this ai should be stopped
-     */
     @Override
     public boolean shouldFinish()
     {

@@ -48,9 +48,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
         this.teleportDistance = teleportDistance * teleportDistance;
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (petEntity.petPathfinderSelector.hasGoal("Control"))

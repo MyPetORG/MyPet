@@ -44,9 +44,7 @@ public class MyPetAIOwnerHurtTarget extends MyPetAIGoal
         this.myPet = petEntity.getMyPet();
     }
 
-    /**
-     * Checks whether this ai goal should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (!petEntity.canMove())

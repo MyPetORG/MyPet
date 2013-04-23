@@ -47,9 +47,7 @@ public class MyPetAIControlTarget extends MyPetAIGoal
         this.range = range;
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (petEntity.petPathfinderSelector.hasGoal("Control"))

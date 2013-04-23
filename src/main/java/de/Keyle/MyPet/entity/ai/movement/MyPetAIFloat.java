@@ -34,6 +34,7 @@ public class MyPetAIFloat extends MyPetAIGoal
         entityMyPet.getNavigation().e(true);
     }
 
+    @Override
     public boolean shouldStart()
     {
         return entityMyPet.world.getMaterial((int) entityMyPet.locX, (int) entityMyPet.locY, (int) entityMyPet.locZ).isLiquid();

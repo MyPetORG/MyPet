@@ -42,6 +42,7 @@ public class MyPetAIEatGrass extends MyPetAIGoal
         this.world = entityMySheep.world;
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (!EntityMySheep.CAN_REGROW_WOOL)

@@ -41,6 +41,7 @@ public class MyPetAIRide extends MyPetAIGoal
         myPet = petEntity.getMyPet();
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (!myPet.getSkills().isSkillActive("Ride"))

@@ -41,6 +41,7 @@ public class MyPetAIHurtByTarget extends MyPetAIGoal
         myPet = petEntity.getMyPet();
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (petEntity.aF() == null)

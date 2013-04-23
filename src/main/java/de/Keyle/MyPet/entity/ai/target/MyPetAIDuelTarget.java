@@ -44,9 +44,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
         this.range = range;
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (myPet.getDamage() == 0)

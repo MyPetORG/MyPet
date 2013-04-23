@@ -43,9 +43,7 @@ public class MyPetAISprint extends MyPetAIGoal
         myPet = entityMyPet.getMyPet();
     }
 
-    /**
-     * Checks whether this ai should be activated
-     */
+    @Override
     public boolean shouldStart()
     {
         if (!myPet.getSkills().isSkillActive("Sprint"))

@@ -35,6 +35,7 @@ public class MyPetAISit extends MyPetAIGoal
         this.entityMyPet = entityMyPet;
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf))

@@ -51,6 +51,7 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
         this.rangeSquared = (range * range);
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (myPet.getRangedDamage() <= 0)

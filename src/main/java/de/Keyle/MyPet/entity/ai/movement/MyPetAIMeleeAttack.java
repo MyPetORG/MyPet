@@ -47,6 +47,7 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
         this.ticksUntilNextHit = ticksUntilNextHit;
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (myPet.getDamage() <= 0)

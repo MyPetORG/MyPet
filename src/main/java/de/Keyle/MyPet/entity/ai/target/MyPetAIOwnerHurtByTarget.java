@@ -43,6 +43,7 @@ public class MyPetAIOwnerHurtByTarget extends MyPetAIGoal
         myPet = entityMyPet.getMyPet();
     }
 
+    @Override
     public boolean shouldStart()
     {
         if (!petEntity.canMove())
