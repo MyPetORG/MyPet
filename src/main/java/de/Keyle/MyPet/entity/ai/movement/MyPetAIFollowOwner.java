@@ -51,12 +51,16 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
-        if (petEntity.petPathfinderSelector.hasGoal("Control"))
+        if (controlPathfinderGoal == null)
         {
-            if (controlPathfinderGoal == null)
+            if (petEntity.petPathfinderSelector.hasGoal("Control"))
             {
                 controlPathfinderGoal = (MyPetAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
+        }
+        if (controlPathfinderGoal == null)
+        {
+            return false;
         }
         if (!this.petEntity.canMove())
         {
