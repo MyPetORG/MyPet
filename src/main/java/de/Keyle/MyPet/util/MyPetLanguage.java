@@ -71,29 +71,29 @@ public class MyPetLanguage
     {
         // -- Messages -- -----------------------------------------------------------------------------------------------------------------------------------
         // --  A  --
-        addString("Msg_AddBeacon", "MyPet.Message.addbeacon", "%aqua%%petname%%reset% can now now use these buffs (range: %range% - duration: %duration%sec):");
+        addString("Msg_AddBeacon", "MyPet.Message.addbeacon", "%aqua%%petname%%reset% can now now use these buffs (range: %gold%%range%%reset% - duration: %gold%%duration%%reset%sec):");
         addString("Msg_AddBehavior", "MyPet.Message.addbehavior", "%aqua%%petname%%reset% can now now use these behavior modes:");
-        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%reset% can now be controlled with a %item%.");
-        addString("Msg_AddDamage", "MyPet.Message.adddamage", "%aqua%%petname%%reset% has now %dmg% bonusdamage.");
-        addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%reset% has now a max health of %maxhealth%HP.");
-        addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%reset% regenerates now %hp%HP every %sec%sec.");
-        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You took a pet on a lead, it will be a good MyPet.%reset%");
-        addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%reset% now can pickup items in a range of %range%.");
+        addString("Msg_AddControl", "MyPet.Message.addcontrol", "%aqua%%petname%%reset% can now be controlled with a %gold%%item%%reset%.");
+        addString("Msg_AddDamage", "MyPet.Message.adddamage", "%aqua%%petname%%reset% has now %gold%%dmg%%reset% damage.");
+        addString("Msg_AddHP", "MyPet.Message.addhp", "%aqua%%petname%%reset% has now a max health of %gold%%maxhealth%%reset%HP.");
+        addString("Msg_AddHPregeneration", "MyPet.Message.addhpreg", "%aqua%%petname%%reset% regenerates now %gold%%hp%%reset%HP every %gold%%sec%%reset%sec.");
+        addString("Msg_AddLeash", "MyPet.Message.addleash", "%green%You took a pet on a lead, it will be a good MyPet.");
+        addString("Msg_AddPickup", "MyPet.Message.addpickup", "%aqua%%petname%%reset% now can pickup items in a range of %gold%%range%%reset%.");
         addString("Msg_AddRide", "MyPet.Message.addride", "%aqua%%petname%%reset% can now be ridden.");
         addString("Msg_AddSprint", "MyPet.Message.addsprint", "%aqua%%petname%%reset% can now sprint towards new targets.");
-        addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%reset% is not here.");
+        addString("Msg_AlreadyAway", "MyPet.Message.alreadyaway", "%aqua%%petname%%reset% is %red%not%reset% here.");
         addString("Msg_AutomaticSkilltreeAssignment", "MyPet.Message.automaticskilltreeassignment", "Skilltrees will be assigned automatically!");
         addString("Msg_AvailableSkilltrees", "MyPet.Message.availableskilltrees", "Available skilltrees for %aqua%%petname%%reset%:");
         // --  B  --
         addString("Msg_BeaconCreative", "MyPet.Message.beaconwhileincreative", "You can't open the beacon window while you are in creative mode.");
         addString("Msg_BeaconBuffNotActive", "MyPet.Message.beaconbuffnotactive", "You %red%can't%reset% use the %gold%%buff%%reset% buff.");
         addString("Msg_BeaconImprovedBuffNotActive", "MyPet.Message.beaconimprovedbuffnotactive", "You %red%can't%reset% use the improved %gold%%buff%%reset% buff.");
-        addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%reset% is now in %mode% mode.");
+        addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%reset% is now in %gold%%mode%%reset% mode.");
         // --  C  --
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%reset% comes to you.");
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%reset% is %red%dead%reset% and will respawn in %gold%%time%%reset% sec.");
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%reset% first.");
-        addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %name%.");
+        addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %gold%%name%%reset%.");
         addString("Msg_CantUse", "MyPet.Message.cantuse", "%red%You can not use this now.");
         addString("Msg_Cmd_petinfo", "MyPet.Message.petinfo", " [player] | Display info about a MyPet  (alias: /pinfo)");
         addString("Msg_Cmd_petname", "MyPet.Message.petname", " <new pet name> | Set the name of your pet");
@@ -108,67 +108,67 @@ public class MyPetLanguage
         addString("Msg_Cmd_petbehavior", "MyPet.Message.petbehavior", " | Toggles the behaivior  (alias: /pb or /petb)");
         addString("Msg_Cmd_moreinfo", "MyPet.Message.moreinfo", "For more info read the command page on: ");
         addString("Msg_Cmd_petadmin", "MyPet.Message.petadmin", " [PlayerName] name/exp/respawn [Value]");
-        addString("Msg_ControlAggroFarm", "MyPet.Message.controlaggrofarm", "You can't control %aqua%%petname%%reset% when in %mode% mode!");
+        addString("Msg_ControlAggroFarm", "MyPet.Message.controlaggrofarm", "You can't control %aqua%%petname%%reset% when in %gold%%mode%%reset% mode!");
         // --  D  --
         addString("Msg_DeathMessage", "MyPet.Message.deathmessage", "%aqua%%petname%%reset% was killed by: ");
         addString("Msg_Despawn", "MyPet.Message.despawn", "%aqua%%petname%%reset% despawned.");
-        addString("Msg_DontHavePet", "MyPet.Message.donthavepet", "You don't have a MyPet!");
+        addString("Msg_DontHavePet", "MyPet.Message.donthavepet", "You %red%don't%reset% have a MyPet!");
         // --  F  --
-        addString("Msg_FireChance", "MyPet.Message.firechance", "%aqua%%petname%%reset% has now a chance of %chance%% to set enemies on fire for %duration%sec.");
+        addString("Msg_FireChance", "MyPet.Message.firechance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to set enemies on fire for %gold%%duration%%reset%sec.");
         // --  H  --
         addString("Msg_Home", "MyPet.Message.call", "%aqua%%petname%%reset% go to home.");
         addString("Msg_HPinfo", "MyPet.Message.hpinfo", "%aqua%%petname%%reset% HP:%hp%");
         // --  I  --
-        addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%petname%%reset% has now an inventory with %size%slots.");
+        addString("Msg_Inventory", "MyPet.Message.inventory", "%aqua%%petname%%reset% has now an inventory with %gold%%size%%reset%slots.");
         addString("Msg_InventoryCreative", "MyPet.Message.inventorywhileincreative", "You can't open the inventory while you are in creative mode.");
         addString("Msg_InventorySwimming", "MyPet.Message.inventorywhileswimming", "You can't open the inventory while %aqua%%petname%%reset% is swimming!");
         // --  K  --
-        addString("Msg_KnockbackChance", "MyPet.Message.knockbackchance", "%aqua%%petname%%reset% has now a chance of %chance%% to knock his target back.");
+        addString("Msg_KnockbackChance", "MyPet.Message.knockbackchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to knock his target back.");
         // --  L  --
-        addString("Msg_LearnedSkill", "MyPet.Message.learnskill", "%aqua%%petname%%reset% learned the skill %skill%.");
-        addString("Msg_LightningChance", "MyPet.Message.lightningchance", "%aqua%%petname%%reset% has now a chance of %chance%% to shoot a lightning at his enemies.");
-        addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%reset% is now Lv%lvl%");
+        addString("Msg_LearnedSkill", "MyPet.Message.learnskill", "%aqua%%petname%%reset% learned the skill %gold%%skill%%reset%.");
+        addString("Msg_LightningChance", "MyPet.Message.lightningchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to shoot a lightning at his enemies.");
+        addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%reset% is now Lv%gold%%lvl%%reset%");
         // --  N  --
         addString("Msg_Name", "MyPet.Message.name", "The name of your pet is: %aqua%%petname%");
         addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
         addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%petname%%reset% doesn't have an inventory.");
-        addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%reset% doesn't know the skill %skill%.");
-        addString("Msg_NotAllowed", "MyPet.Message.notallowed", "%red%You are not allowed to use this!%reset%");
+        addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%reset% doesn't know the skill %gold%%skill%%reset%.");
+        addString("Msg_NotAllowed", "MyPet.Message.notallowed", "%red%You are %red%not%reset% allowed to use this!%reset%");
         addString("Msg_NothingToSeeHere", "MyPet.Message.nothingtoseehere", "%red%Nothing to see here, move along!");
         // --  O  --
-        addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%reset% only once!");
+        addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%reset% only %red%once%reset%!");
         addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%reset% respawned!");
         // --  P  --
         addString("Msg_PetIsGone", "MyPet.Message.petisgone", "%aqua%%petname%%reset% is %red%gone%reset% and will never come back . . .");
         addString("Msg_PickButNoInventory", "MyPet.Message.pickupbutnoinventory", "%aqua%%petname%%reset% could pickup items but has no inventoy.");
-        addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%reset% pickup: activated");
-        addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%petname%%reset% pickup: disabled");
-        addString("Msg_PlayerNotOnline", "MyPet.Message.player not online", "%red%This player is not online.%reset%");
-        addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%reset% has now a chance of %chance%% to poison his target for %duration%sec.");
+        addString("Msg_PickUpStart", "MyPet.Message.pickupstart", "%aqua%%petname%%reset% pickup: %gold%activated%reset%");
+        addString("Msg_PickUpStop", "MyPet.Message.pickupstop", "%aqua%%petname%%reset% pickup: %gold%disabled%reset%");
+        addString("Msg_PlayerNotOnline", "MyPet.Message.player not online", "%red%This player is not online.");
+        addString("Msg_PoisonChance", "MyPet.Message.poisonchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to poison his target for %gold%%duration%%reset%sec.");
         // --  R  --
         addString("Msg_Release", "MyPet.Message.release", "%aqua%%petname%%reset% is now %green%free%reset% . . .");
         addString("Msg_RespawnAuto", "MyPet.Message.respawnauto", "Auto respawn: %gold%%status%%reset%.");
         addString("Msg_RespawnAutoMin", "MyPet.Message.respawnautomin", "Set minimal auto respawn time to %gold%%time%%reset%.");
         addString("Msg_RespawnIn", "MyPet.Message.respawnin", "%aqua%%petname%%reset% will respawn in %gold%%time%%reset% sec.");
-        addString("Msg_RespawnNoMoney", "MyPet.Message.respawnnomoney", "You need %red%%costs%%reset% to let respawn %aqua%%petname%%reset%!");
+        addString("Msg_RespawnNoMoney", "MyPet.Message.respawnnomoney", "You need %red%%costs%%reset% to let %aqua%%petname%%reset% respawn!");
         addString("Msg_RespawnPaid", "MyPet.Message.respawnpaid", "Respawn fee (%gold%%costs%%reset%) for %aqua%%petname%%reset% paid.");
         addString("Msg_RespawnShow", "MyPet.Message.respawnshow", "Respawn fee for %aqua%%petname%%reset%: %gold%%costs%%reset% (%color%auto%reset%)");
         // --  S  --
         addString("Msg_SendAway", "MyPet.Message.sendaway", "You sent %aqua%%petname%%reset% away.");
-        addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%petname%%reset%'s skills: %skilltree%");
+        addString("Msg_Skills", "MyPet.Message.skills", "%aqua%%petname%%reset%'s skills: %aqua%%skilltree%%reset%");
         addString("Msg_SkilltreeNotSwitched", "MyPet.Message.skilltreesnotwitched", "Skilltree hasn't changed!");
-        addString("Msg_SkilltreeSwitchedTo", "MyPet.Message.skilltreeswitchedto", "You have selected the %aqua%%name%%reset% skilltree.");
-        addString("Msg_SlowChance", "MyPet.Message.slowchance", "%aqua%%petname%%reset% has now a chance of %chance%% to slow target down for %duration%sec.");
-        addString("Msg_SpawnNoSpace", "MyPet.Message.spawnnospace", "%aqua%%petname%%reset% can not come to you because there is not enough space.");
+        addString("Msg_SkilltreeSwitchedTo", "MyPet.Message.skilltreeswitchedto", "You have selected the %gold%%name%%reset% skilltree.");
+        addString("Msg_SlowChance", "MyPet.Message.slowchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to slow target down for %gold%%duration%%reset%sec.");
+        addString("Msg_SpawnNoSpace", "MyPet.Message.spawnnospace", "%aqua%%petname%%reset% can not come to you because there is %red%not%reset% enough space.");
         addString("Msg_SpawnPrevent", "MyPet.Message.spawnprevent", "Something prevents %aqua%%petname%%reset% from coming to you.");
         addString("Msg_StopAttack", "MyPet.Message.stopattack", "Your pet should now %green%stop%reset% attacking!");
         // --  T  --
-        addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%reset% has now a chance of %chance%% to reflect damage.");
+        addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to reflect damage.");
         // --  U  --
         addString("Msg_UserDontHavePet", "MyPet.Message.userdonthavepet", "%gold%%playername%%reset% doesn't have a MyPet!");
-        addString("Msg_UnknownPetType", "MyPet.Message.unknownpettype", "%red% Unknown Pettype");
+        addString("Msg_UnknownPetType", "MyPet.Message.unknownpettype", "%red% Unknown Pettype!");
         // --  W  --
-        addString("Msg_WitherChance", "MyPet.Message.witherchance", "%aqua%%petname%%reset% has now a chance of %chance%% to wither his target for %duration%sec.");
+        addString("Msg_WitherChance", "MyPet.Message.witherchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to wither his target for %gold%%duration%%reset%sec.");
 
         // -- Names -- --------------------------------------------------------------------------------------------------------------------------------------
         // --  A  --
