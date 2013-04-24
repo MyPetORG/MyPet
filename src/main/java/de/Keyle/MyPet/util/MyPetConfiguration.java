@@ -147,6 +147,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Skill.Behavior.Farm", true);
         config.addDefault("MyPet.Skill.Behavior.Friendly", true);
         config.addDefault("MyPet.Skill.Behavior.Raid", true);
+        config.addDefault("MyPet.Skill.Behavior.Duel", true);
         config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
 
         config.addDefault("MyPet.Pets.Chicken.CanLayEggs", true);
@@ -211,6 +212,7 @@ public class MyPetConfiguration
         Behavior.BehaviorState.Farm.setActive(config.getBoolean("MyPet.Skill.Behavior.Farm", true));
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
+        Behavior.BehaviorState.Duel.setActive(config.getBoolean("MyPet.Skill.Behavior.Duel", true));
 
         MyPetBackup.MAKE_BACKUPS = config.getBoolean("MyPet.Backup.Active", MyPetBackup.MAKE_BACKUPS);
         MyPetBackup.SAVE_INTERVAL = config.getInt("MyPet.Backup.SaveInterval", MyPetBackup.SAVE_INTERVAL);
