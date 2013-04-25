@@ -31,7 +31,6 @@ import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.ByteTag;
@@ -106,7 +105,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
                 return false;
             }
-            if (myPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && myPet.getLocation().getBlock().getType() != Material.WATER)
+            if (myPet.getLocation().getBlock().isLiquid())
             {
                 inv.setName(myPet.petName);
                 openInventory(myPet.getOwner().getPlayer());
