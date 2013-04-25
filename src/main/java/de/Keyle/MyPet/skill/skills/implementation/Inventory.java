@@ -99,13 +99,13 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public boolean activate()
     {
-        if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
+        if (rows > 0)
         {
-            myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
-            return false;
-        }
-        else if (rows > 0)
-        {
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
+            {
+                myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
+                return false;
+            }
             if (myPet.getLocation().getBlock().getType() != Material.STATIONARY_WATER && myPet.getLocation().getBlock().getType() != Material.WATER)
             {
                 inv.setName(myPet.petName);
