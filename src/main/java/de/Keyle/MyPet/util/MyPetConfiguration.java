@@ -43,8 +43,11 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
+
+import java.util.List;
 
 public class MyPetConfiguration
 {
@@ -412,6 +415,22 @@ public class MyPetConfiguration
             {
                 MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
                 DebugLogger.info(leashFlagString + " is not a valid LeashFlag!");
+            }
+        }
+    }
+
+    public static void getConfigOptionList(List<String> list, String startnode)
+    {
+        ConfigurationSection cs = config.getConfigurationSection(startnode);
+        for (String node : cs.getKeys(false))
+        {
+            if (config.get(startnode + "." + node) instanceof ConfigurationSection)
+            {
+                getConfigOptionList(list, startnode + "." + node);
+            }
+            else
+            {
+                list.add(startnode + "." + node + ": " + config.get(startnode + "." + node));
             }
         }
     }

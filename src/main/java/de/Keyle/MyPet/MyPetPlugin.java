@@ -152,6 +152,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         checkForUpdates(MyPetVersion.getMinecraftVersion());
 
+        List<String> nodeList = new ArrayList<String>();
+        String allNodes = "";
+        MyPetConfiguration.getConfigOptionList(nodeList, "MyPet");
+        for (String node : nodeList)
+        {
+            allNodes += "\n   " + node;
+        }
+        DebugLogger.info("Config: -------------------------------" + allNodes);
+        DebugLogger.info("---------------------------------------");
+
         DebugLogger.info("MobEXP table: -------------------------");
         for (MyPetMonsterExperience monsterExperience : MyPetMonsterExperience.mobExp.values())
         {
