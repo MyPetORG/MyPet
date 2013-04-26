@@ -139,7 +139,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
             MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            checkForUpdates(minecraftVersion);
             this.setEnabled(false);
             return;
         }
@@ -149,8 +148,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.info("Bukkit " + getServer().getVersion());
 
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
-
-        checkForUpdates(MyPetVersion.getMinecraftVersion());
 
         List<String> nodeList = new ArrayList<String>();
         String allNodes = "";
@@ -497,29 +494,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
         MyPetSkillsInfo.registerSkill(RangedInfo.class);
         MyPetSkillsInfo.registerSkill(SprintInfo.class);
-    }
-
-    public static boolean checkForUpdates(String compatibleMinecraftVersion)
-    {
-        UpdateCheck updateCheck = new UpdateCheck();
-        if (MyPetConfiguration.CHECK_FOR_UPDATES)
-        {
-            if (updateCheck.isUpdateAvailable(compatibleMinecraftVersion, MyPetVersion.getMyPetVersion()))
-            {
-                MyPetLogger.write(ChatColor.RED + "Update available!: " + ChatColor.RESET + updateCheck.getLastAvailableUpdate().getTitle());
-                return true;
-            }
-            else
-            {
-                MyPetLogger.write(ChatColor.GREEN + "No" + ChatColor.RESET + " Update available.");
-                return false;
-            }
-        }
-        else
-        {
-            MyPetLogger.write("Update-Check " + ChatColor.YELLOW + "disabled" + ChatColor.RESET + ".");
-            return false;
-        }
     }
 
     int loadPets(File f)

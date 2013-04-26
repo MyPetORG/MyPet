@@ -76,7 +76,6 @@ public class MyPetConfiguration
     public static boolean OWNER_CAN_ATTACK_PET = false;
     public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
-    public static boolean CHECK_FOR_UPDATES = false;
     public static boolean USE_DEBUG_LOGGER = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
@@ -240,7 +239,6 @@ public class MyPetConfiguration
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
-        CHECK_FOR_UPDATES = config.getBoolean("MyPet.CheckForUpdates", false);
         USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", true);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
