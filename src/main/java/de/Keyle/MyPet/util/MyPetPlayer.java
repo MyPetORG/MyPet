@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_5_R2.EntityPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
@@ -174,7 +175,7 @@ public class MyPetPlayer implements IScheduler
 
     public Player getPlayer()
     {
-        return MyPetBukkitUtil.getServer().getPlayer(playerName);
+        return Bukkit.getServer().getPlayer(playerName);
     }
 
     public static MyPetPlayer getMyPetPlayer(String name)

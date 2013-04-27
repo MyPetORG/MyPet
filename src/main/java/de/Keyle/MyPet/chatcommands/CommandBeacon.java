@@ -28,6 +28,7 @@ import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -49,7 +50,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
             Player player = (Player) sender;
             if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
             {
-                Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[0]);
+                Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
                 if (petOwner == null || !petOwner.isOnline())
                 {

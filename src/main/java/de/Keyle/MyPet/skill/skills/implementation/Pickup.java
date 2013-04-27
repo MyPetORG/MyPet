@@ -32,6 +32,7 @@ import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import net.minecraft.server.v1_5_R2.Packet22Collect;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -137,7 +138,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                     Item itemEntity = (Item) entity;
 
                     PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemEntity.getItemStack().getAmount());
-                    MyPetBukkitUtil.getServer().getPluginManager().callEvent(playerPickupEvent);
+                    Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
                     if (playerPickupEvent.isCancelled())
                     {

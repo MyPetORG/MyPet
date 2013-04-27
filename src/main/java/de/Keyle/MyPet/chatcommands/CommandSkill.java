@@ -26,6 +26,7 @@ import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,7 +47,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             Player petOwner = (Player) sender;
             if (args.length > 0 && MyPetPermissions.has(petOwner, "MyPet.admin", false))
             {
-                petOwner = MyPetBukkitUtil.getServer().getPlayer(args[0]);
+                petOwner = Bukkit.getServer().getPlayer(args[0]);
 
                 if (petOwner == null || !petOwner.isOnline())
                 {

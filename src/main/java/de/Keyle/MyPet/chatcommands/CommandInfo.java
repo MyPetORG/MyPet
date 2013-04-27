@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -61,7 +62,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 playerName = args[0];
             }
 
-            Player petOwner = MyPetBukkitUtil.getServer().getPlayer(playerName);
+            Player petOwner = Bukkit.getServer().getPlayer(playerName);
 
             if (petOwner == null || !petOwner.isOnline())
             {

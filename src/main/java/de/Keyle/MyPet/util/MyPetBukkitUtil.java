@@ -25,7 +25,10 @@ import net.minecraft.server.v1_5_R2.AxisAlignedBB;
 import net.minecraft.server.v1_5_R2.Block;
 import net.minecraft.server.v1_5_R2.Entity;
 import net.minecraft.server.v1_5_R2.MathHelper;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_5_R2.util.UnsafeList;
 import org.bukkit.entity.Player;
@@ -35,11 +38,6 @@ import java.util.List;
 
 public class MyPetBukkitUtil
 {
-    public static Server getServer()
-    {
-        return Bukkit.getServer();
-    }
-
     public static String setColors(String text)
     {
         for (ChatColor color : ChatColor.values())

@@ -96,7 +96,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
         if (option.equalsIgnoreCase("name") && args.length >= 3)
         {
-            Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -121,7 +121,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("exp") && args.length >= 3)
         {
-            Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -191,7 +191,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("respawn") && args.length >= 2)
         {
-            Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -294,7 +294,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 return false;
             }
-            Player petOwner = MyPetBukkitUtil.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
 
             if (petOwner == null || !petOwner.isOnline())
             {

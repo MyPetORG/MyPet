@@ -572,7 +572,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
             inactiveMyPet.setUUID(petUuid);
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? MyPetBukkitUtil.getServer().getWorld(petWorld) : MyPetBukkitUtil.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? Bukkit.getServer().getWorld(petWorld) : Bukkit.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
             inactiveMyPet.setHealth(petHealthNow);
             inactiveMyPet.setHungerValue(petHunger);
             inactiveMyPet.setRespawnTime(petRespawnTime);
@@ -633,7 +633,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(wolfOwner));
 
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? MyPetBukkitUtil.getServer().getWorld(wolfWorld) : MyPetBukkitUtil.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
+            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? Bukkit.getServer().getWorld(wolfWorld) : Bukkit.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
             inactiveMyPet.setHealth(wolfHealthNow);
             inactiveMyPet.setPetName(wolfName);
             inactiveMyPet.setExp(wolfExp);

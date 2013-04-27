@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class MyPetEconomy
@@ -98,12 +99,12 @@ public class MyPetEconomy
 
     public static void setupEconomy()
     {
-        if (!MyPetBukkitUtil.getServer().getPluginManager().isPluginEnabled("Vault"))
+        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("Vault"))
         {
             searchedVaultEconomy = true;
             return;
         }
-        RegisteredServiceProvider<Economy> economyProvider = MyPetBukkitUtil.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null)
         {
             economy = economyProvider.getProvider();
