@@ -108,6 +108,7 @@ public class MyPetLanguage
         addString("Msg_Cmd_petbehavior", "MyPet.Message.petbehavior", " | Toggles the behaivior  (alias: /pb or /petb)");
         addString("Msg_Cmd_moreinfo", "MyPet.Message.moreinfo", "For more info read the command page on: ");
         addString("Msg_Cmd_petadmin", "MyPet.Message.petadmin", " [PlayerName] name/exp/respawn [Value]");
+        addString("Msg_Cmd_pettype", "MyPet.Message.pettype", " [Pet-Type] | shows info about MyPet-Types");
         addString("Msg_ControlAggroFarm", "MyPet.Message.controlaggrofarm", "You can't control %aqua%%petname%%reset% when in %gold%%mode%%reset% mode!");
         // --  D  --
         addString("Msg_DeathMessage", "MyPet.Message.deathmessage", "%aqua%%petname%%reset% was killed by: ");
