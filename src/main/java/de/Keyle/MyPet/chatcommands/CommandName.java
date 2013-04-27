@@ -29,6 +29,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class CommandName implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -45,12 +48,24 @@ public class CommandName implements CommandExecutor
                 String name = "";
                 for (String arg : args)
                 {
-                    name += arg + " ";
+                    if (!name.equals(""))
+                    {
+                        name += " ";
+                    }
+                    name += arg;
                 }
-                name = name.substring(0, name.length() - 1);
+                name = MyPetBukkitUtil.setColors(name);
+
+                Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
+                Matcher regexMatcher = regex.matcher(name);
+                if (regexMatcher.find())
+                {
+                    name += MyPetBukkitUtil.setColors("%reset%");
+                }
+
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", name));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NewName")).replace("%petname%", myPet.getPetName()));
             }
             else
             {

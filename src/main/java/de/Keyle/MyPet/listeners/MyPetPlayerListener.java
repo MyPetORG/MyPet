@@ -120,7 +120,7 @@ public class MyPetPlayerListener implements Listener
             }
             if (joinedPlayer.hasMyPet())
             {
-                MyPet myPet = MyPetList.getMyPet(event.getPlayer());
+                MyPet myPet = joinedPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Dead)
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));

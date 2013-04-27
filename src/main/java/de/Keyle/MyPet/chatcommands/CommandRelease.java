@@ -97,10 +97,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 String name = "";
                 for (String arg : args)
                 {
-                    name += arg + " ";
+                    if (!name.equals(""))
+                    {
+                        name += " ";
+                    }
+                    name += arg;
                 }
-                name = name.substring(0, name.length() - 1);
-                if (myPet.petName.equalsIgnoreCase(name))
+                if (myPet.petName.replaceAll("§[abcdefklmnor0-9]", "").equalsIgnoreCase(name))
                 {
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
