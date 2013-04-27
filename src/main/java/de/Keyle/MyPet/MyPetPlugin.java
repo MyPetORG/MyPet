@@ -782,7 +782,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
     private void loadPlayers(NBT_Configuration nbtConfiguration)
     {
-        nbtConfiguration.load();
         ListTag playerList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Players");
 
         for (int i = 0 ; i < playerList.getValue().size() ; i++)
