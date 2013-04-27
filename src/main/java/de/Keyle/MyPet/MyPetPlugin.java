@@ -519,9 +519,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.info("Loading players -------------------------");
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players"))
         {
-            loadPlayers(nbtConfiguration);
+            DebugLogger.info(loadPlayers(nbtConfiguration) + " PetPlayer(s) loaded");
+            ;
         }
-        DebugLogger.info("Players loaded -------------------------");
+        DebugLogger.info("-----------------------------------------");
 
         DebugLogger.info("loading Pets: -----------------------------");
         for (int i = 0 ; i < petList.getValue().size() ; i++)
@@ -780,8 +781,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
     }
 
-    private void loadPlayers(NBT_Configuration nbtConfiguration)
+    private int loadPlayers(NBT_Configuration nbtConfiguration)
     {
+        int playerCount = 0;
         ListTag playerList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Players");
 
         for (int i = 0 ; i < playerList.getValue().size() ; i++)
@@ -813,7 +815,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             {
                 petPlayer.setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
             }
+
+            playerCount++;
+            DebugLogger.info("   " + petPlayer);
         }
+        return playerCount;
     }
 
     @Override
