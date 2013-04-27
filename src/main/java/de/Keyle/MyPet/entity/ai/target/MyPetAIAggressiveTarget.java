@@ -46,8 +46,8 @@ public class MyPetAIAggressiveTarget extends MyPetAIGoal
     public MyPetAIAggressiveTarget(EntityMyPet petEntity, float range)
     {
         this.petEntity = petEntity;
-        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
+        this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.range = range;
         if (myPet.getSkills().hasSkill("Behavior"))
         {
