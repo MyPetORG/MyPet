@@ -316,7 +316,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         catch (Exception e)
         {
             MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.RED + " NOT ENABLED");
-            e.printStackTrace();
+            DebugLogger.severe(Arrays.toString(e.getStackTrace()));
             DebugLogger.severe("error while registering MyPet entity.");
             DebugLogger.severe(e.getMessage());
             setEnabled(false);
@@ -520,7 +520,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players"))
         {
             DebugLogger.info(loadPlayers(nbtConfiguration) + " PetPlayer(s) loaded");
-            ;
         }
         DebugLogger.info("-----------------------------------------");
 
