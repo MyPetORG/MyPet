@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetArrow;
 import net.minecraft.server.v1_5_R2.EntityArrow;
 import net.minecraft.server.v1_5_R2.EntityLiving;
 import net.minecraft.server.v1_5_R2.World;
@@ -139,7 +140,7 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
     public void shootProjectile(EntityLiving target, float damage)
     {
         World world = target.world;
-        EntityArrow entityArrow = new EntityArrow(world, entityMyPet, target, 1.6F, 14 - world.difficulty * 4);
+        EntityArrow entityArrow = new MyPetArrow(world, entityMyPet, target, 1.6F, 1);
         entityArrow.b(damage);
         entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.aE().nextFloat() * 0.4F + 0.8F));
         world.addEntity(entityArrow);
