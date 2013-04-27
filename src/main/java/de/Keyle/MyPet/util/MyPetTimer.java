@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class MyPetTimer
     {
         if (timerID != -1)
         {
+            DebugLogger.info("Timer stop");
             Bukkit.getScheduler().cancelTask(timerID);
             timerID = -1;
         }
@@ -48,6 +50,7 @@ public class MyPetTimer
     public static void startTimer()
     {
         stopTimer();
+        DebugLogger.info("Timer start");
 
         timerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
         {
