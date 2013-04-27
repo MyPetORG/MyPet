@@ -350,6 +350,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 myPet.createPet();
             }
         }
+        /*
+        else if (option.equalsIgnoreCase("test"))
+        {
+
+        }
+        */
         return true;
     }
 
