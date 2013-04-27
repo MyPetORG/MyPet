@@ -72,7 +72,7 @@ public class EntityMyZombie extends EntityMyPet
 
     public boolean isBaby()
     {
-        return getDataWatcher().getByte(12) == 1;
+        return ((MyZombie) myPet).isBaby;
     }
 
     public void setBaby(boolean flag)
@@ -83,7 +83,7 @@ public class EntityMyZombie extends EntityMyPet
 
     public boolean isVillager()
     {
-        return getDataWatcher().getByte(13) == 1;
+        return ((MyZombie) myPet).isVillager;
     }
 
     public void setVillager(boolean flag)

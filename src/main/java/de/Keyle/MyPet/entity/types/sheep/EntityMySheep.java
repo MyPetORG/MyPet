@@ -59,9 +59,9 @@ public class EntityMySheep extends EntityMyPet
         }
     }
 
-    public int getColor()
+    public DyeColor getColor()
     {
-        return this.datawatcher.getByte(16) & 15;
+        return ((MySheep) myPet).color;
     }
 
     public void setColor(DyeColor color)
@@ -77,7 +77,7 @@ public class EntityMySheep extends EntityMyPet
 
     public boolean isSheared()
     {
-        return (this.datawatcher.getByte(16) & 16) != 0;
+        return ((MySheep) myPet).isSheared;
     }
 
     public void setSheared(boolean flag)

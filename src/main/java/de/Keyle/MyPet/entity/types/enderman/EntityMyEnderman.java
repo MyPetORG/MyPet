@@ -67,7 +67,7 @@ public class EntityMyEnderman extends EntityMyPet
 
     public boolean isScreaming()
     {
-        return this.datawatcher.getByte(18) == 1;
+        return ((MyEnderman) myPet).isScreaming;
     }
 
     public void setScreaming(boolean screaming)

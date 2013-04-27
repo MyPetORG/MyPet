@@ -91,9 +91,9 @@ public class EntityMyOcelot extends EntityMyPet
         ((MyOcelot) myPet).isSitting = flag;
     }
 
-    public int getCatType()
+    public Type getCatType()
     {
-        return this.datawatcher.getByte(18);
+        return ((MyOcelot) myPet).catType;
     }
 
     public void setCatType(int value)
@@ -104,7 +104,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     public boolean isBaby()
     {
-        return this.datawatcher.getInt(12) < 0;
+        return ((MyOcelot) myPet).isBaby;
     }
 
     @SuppressWarnings("boxing")

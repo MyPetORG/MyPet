@@ -82,7 +82,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public boolean isSitting()
     {
-        return this.sitPathfinder.isSitting();
+        return ((MyWolf) myPet).isSitting;
     }
 
     public void applySitting(boolean sitting)
@@ -101,7 +101,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public boolean isTamed()
     {
-        return (this.datawatcher.getByte(16) & 0x4) != 0;
+        return ((MyWolf) myPet).isTamed;
     }
 
     public void setTamed(boolean flag)
@@ -120,7 +120,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public boolean isAngry()
     {
-        return (this.datawatcher.getByte(16) & 0x2) != 0;
+        return ((MyWolf) myPet).isAngry;
     }
 
     public void setAngry(boolean flag)
@@ -139,7 +139,7 @@ public class EntityMyWolf extends EntityMyPet
 
     public boolean isBaby()
     {
-        return this.datawatcher.getInt(12) < 0;
+        return ((MyWolf) myPet).isBaby;
     }
 
     @SuppressWarnings("boxing")

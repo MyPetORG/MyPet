@@ -49,7 +49,7 @@ public class EntityMyPig extends EntityMyPet
 
     public boolean hasSaddle()
     {
-        return (this.datawatcher.getByte(16) & 0x1) != 0;
+        return ((MyPig) myPet).hasSaddle;
     }
 
     public void setSaddle(boolean flag)
@@ -67,7 +67,7 @@ public class EntityMyPig extends EntityMyPet
 
     public boolean isBaby()
     {
-        return this.datawatcher.getInt(12) < 0;
+        return ((MyPig) myPet).isBaby;
     }
 
     @SuppressWarnings("boxing")

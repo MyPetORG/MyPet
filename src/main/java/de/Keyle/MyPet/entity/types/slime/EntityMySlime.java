@@ -51,8 +51,7 @@ public class EntityMySlime extends EntityMyPet
 
     public int getSize()
     {
-        int size = this.datawatcher.getByte(16);
-        return size <= 0 ? 1 : size;
+        return ((MySlime) myPet).size;
     }
 
     public void setSize(int value)

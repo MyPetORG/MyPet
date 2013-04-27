@@ -61,7 +61,7 @@ public class EntityMyBat extends EntityMyPet
 
     public boolean isHanging()
     {
-        return (this.datawatcher.getByte(16) & 0x1) != 0;
+        return ((MyBat) myPet).hanging;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------

@@ -69,7 +69,7 @@ public class EntityMySkeleton extends EntityMyPet
 
     public boolean isWither()
     {
-        return this.datawatcher.getByte(13) == 1;
+        return ((MySkeleton) myPet).isWither;
     }
 
     public void setWither(boolean flag)

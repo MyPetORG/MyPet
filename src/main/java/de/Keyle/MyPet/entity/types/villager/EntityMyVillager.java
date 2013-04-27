@@ -52,7 +52,7 @@ public class EntityMyVillager extends EntityMyPet
 
     public int getProfession()
     {
-        return this.datawatcher.getInt(16);
+        return ((MyVillager) myPet).profession;
     }
 
     public void setProfession(int value)
@@ -63,7 +63,7 @@ public class EntityMyVillager extends EntityMyPet
 
     public boolean isBaby()
     {
-        return this.datawatcher.getInt(12) < 0;
+        return ((MyVillager) myPet).isBaby;
     }
 
     @SuppressWarnings("boxing")

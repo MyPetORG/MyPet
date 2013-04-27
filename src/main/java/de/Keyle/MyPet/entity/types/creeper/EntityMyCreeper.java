@@ -60,7 +60,7 @@ public class EntityMyCreeper extends EntityMyPet
 
     public boolean isPowered()
     {
-        return this.datawatcher.getByte(17) == 1;
+        return ((MyCreeper) myPet).isPowered;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------

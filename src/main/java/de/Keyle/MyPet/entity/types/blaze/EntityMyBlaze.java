@@ -45,7 +45,7 @@ public class EntityMyBlaze extends EntityMyPet
 
     public boolean isOnFire()
     {
-        return this.datawatcher.getByte(16) == 1;
+        return ((MyBlaze) myPet).isOnFire;
     }
 
     public void setOnFire(boolean flag)

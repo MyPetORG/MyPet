@@ -53,7 +53,7 @@ public class EntityMyCow extends EntityMyPet
 
     public boolean isBaby()
     {
-        return this.datawatcher.getInt(12) < 0;
+        return ((MyCow) myPet).isBaby;
     }
 
     @SuppressWarnings("boxing")
