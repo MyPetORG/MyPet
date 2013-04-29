@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.MyPetAISelector;
+import de.Keyle.MyPet.entity.ai.MyPetAIGoalSelector;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIRangedAttack;
 import de.Keyle.MyPet.entity.ai.movement.*;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
-    public MyPetAISelector petPathfinderSelector, petTargetSelector;
+    public MyPetAIGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected float walkSpeed = 0.3F;
     protected boolean isRidden = false;
@@ -61,8 +61,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         setMyPet(myPet);
         myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
 
-        this.petPathfinderSelector = new MyPetAISelector();
-        this.petTargetSelector = new MyPetAISelector();
+        this.petPathfinderSelector = new MyPetAIGoalSelector();
+        this.petTargetSelector = new MyPetAIGoalSelector();
 
         this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
 

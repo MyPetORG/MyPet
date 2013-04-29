@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.ai;
 
 import java.util.*;
 
-public class MyPetAISelector
+public class MyPetAIGoalSelector
 {
     private Map<String, MyPetAIGoal> AIGoalMap = new HashMap<String, MyPetAIGoal>();
     private List<MyPetAIGoal> AIGoalList = new LinkedList<MyPetAIGoal>();
