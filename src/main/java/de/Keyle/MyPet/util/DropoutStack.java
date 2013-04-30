@@ -47,12 +47,13 @@ public class DropoutStack<E> extends Stack<E>
 
     public E push(E element)
     {
+        E returnElement = element;
         if (size() >= dropout)
         {
-            removeEnd();
+            returnElement = removeEnd();
         }
         this.add(0, element);
-        return element;
+        return returnElement;
     }
 
     private E removeEnd()
