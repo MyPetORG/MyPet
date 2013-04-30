@@ -53,6 +53,11 @@ public class MyPetAIGoalSelector
         if (AIGoalMap.containsKey(name))
         {
             MyPetAIGoal oldGoal = AIGoalMap.get(name);
+            if (activeAIGoalList.contains(oldGoal))
+            {
+                activeAIGoalList.remove(oldGoal);
+                oldGoal.finish();
+            }
             int index = AIGoalList.indexOf(oldGoal);
             AIGoalList.add(index, myPetAIgoal);
             AIGoalList.remove(oldGoal);
