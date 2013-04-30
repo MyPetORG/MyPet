@@ -82,7 +82,7 @@ public class LevelCreator
                 {
                     if (MyPetUtil.isInt(response))
                     {
-                        short newLevel = Short.parseShort(response);
+                        int newLevel = Integer.parseInt(response);
                         for (int i = 0 ; i < skillTreeTreeModel.getChildCount(skillTreeTreeModel.getRoot()) ; i++)
                         {
                             if (MyPetUtil.isInt(((DefaultMutableTreeNode) skillTreeTreeModel.getRoot()).getChildAt(i).toString()))
@@ -119,12 +119,12 @@ public class LevelCreator
         {
             public void actionPerformed(ActionEvent e)
             {
-                short level;
+                int level;
                 if (skillTreeTree.getSelectionPath().getPath().length == 2 || skillTreeTree.getSelectionPath().getPath().length == 3)
                 {
                     if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
                     {
-                        level = Short.parseShort(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
+                        level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
                     }
                     else
                     {
@@ -158,7 +158,7 @@ public class LevelCreator
                 {
                     if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
                     {
-                        short level = Short.parseShort(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
+                        int level = Integer.parseInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
                         skillTree.removeLevel(level);
                     }
                     else

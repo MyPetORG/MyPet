@@ -29,15 +29,15 @@ import java.util.List;
 
 public class MyPetSkillTreeLevel
 {
-    short level;
+    int level;
     List<ISkillInfo> skillList = new ArrayList<ISkillInfo>();
 
-    public MyPetSkillTreeLevel(short level)
+    public MyPetSkillTreeLevel(int level)
     {
         this.level = level;
     }
 
-    public short getLevel()
+    public int getLevel()
     {
         return level;
     }

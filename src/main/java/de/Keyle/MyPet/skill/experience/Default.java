@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 
 public class Default extends Experience
 {
-    private short lastLevel = 1;
+    private int lastLevel = 1;
     private double lastExpL = Double.NaN;
     private double lastExpC = Double.NaN;
     private double lastExpR = Double.NaN;
@@ -36,7 +36,7 @@ public class Default extends Experience
         super(myPet);
     }
 
-    public short getLevel(double exp)
+    public int getLevel(double exp)
     {
         if (lastExpL == exp)
         {
@@ -54,12 +54,12 @@ public class Default extends Experience
         double tmpExp = exp;
         int tmpLvl = 0;
 
-        while (tmpExp >= 7 + (int) (tmpLvl * 3.5))
+        while (tmpExp >= 7 + Math.floor(tmpLvl * 3.5))
         {
-            tmpExp -= 7 + (int) (tmpLvl * 3.5);
+            tmpExp -= 7 + Math.floor(tmpLvl * 3.5);
             tmpLvl++;
         }
-        lastLevel = (short) (tmpLvl + 1);
+        lastLevel = tmpLvl + 1;
         return lastLevel;
     }
 
@@ -71,7 +71,7 @@ public class Default extends Experience
         }
         lastExpR = exp;
 
-        lastRequiredExp = 7 + (short) ((getLevel(exp) - 1) * 3.5);
+        lastRequiredExp = 7 + Math.floor((getLevel(exp) - 1) * 3.5);
         return lastRequiredExp;
     }
 
@@ -84,11 +84,11 @@ public class Default extends Experience
         lastExpC = exp;
 
         double tmpExp = exp;
-        short tmplvl = 0;
+        int tmplvl = 0;
 
-        while (tmpExp >= 7 + (short) (tmplvl * 3.5))
+        while (tmpExp >= 7 + Math.floor(tmplvl * 3.5))
         {
-            tmpExp -= 7 + (short) (tmplvl * 3.5);
+            tmpExp -= 7 + Math.floor(tmplvl * 3.5);
             tmplvl++;
         }
         lastCurrentExp = tmpExp;

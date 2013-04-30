@@ -178,7 +178,7 @@ public abstract class MyPet implements IMyPet
             }
         }
         this.skillTree = skillTree;
-        for (short i = 1 ; i <= experience.getLevel() ; i++)
+        for (int i = 1 ; i <= experience.getLevel() ; i++)
         {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
         }

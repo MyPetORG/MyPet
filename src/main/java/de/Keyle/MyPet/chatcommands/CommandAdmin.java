@@ -260,7 +260,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 myPet.getSkills().reset();
 
-                short lvl = myPet.getExperience().getLevel();
+                int lvl = myPet.getExperience().getLevel();
                 MyPetSkillTree skillTree = myPet.getSkillTree();
 
                 if (skillTree != null)

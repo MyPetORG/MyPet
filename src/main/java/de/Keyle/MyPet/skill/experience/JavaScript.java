@@ -43,7 +43,7 @@ public class JavaScript extends Experience
     private double lastExpL = Double.NaN;
     private double lastExpC = Double.NaN;
     private double lastExpR = Double.NaN;
-    private short lastLevel = 1;
+    private int lastLevel = 1;
     private double lastCurrentExp = 0.0;
     private double lastRequiredExp = 0.0;
 
@@ -90,7 +90,7 @@ public class JavaScript extends Experience
         return isUsable;
     }
 
-    public short getLevel(double exp)
+    public int getLevel(double exp)
     {
         if (lastExpL == exp)
         {
@@ -102,7 +102,7 @@ public class JavaScript extends Experience
             try
             {
                 Object result = ((Invocable) scriptEngine).invokeFunction("getLevel", exp);
-                lastLevel = (short) ((Double) result).intValue();
+                lastLevel = ((Double) result).intValue();
             }
             catch (ScriptException e)
             {

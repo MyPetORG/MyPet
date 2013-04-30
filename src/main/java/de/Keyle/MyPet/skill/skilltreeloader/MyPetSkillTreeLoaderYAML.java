@@ -139,13 +139,13 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                     //System.out.println("  " + thisLevel);
                     if (MyPetUtil.isInt(thisLevel))
                     {
-                        short shortLevel = Short.parseShort(thisLevel);
+                        int newLevel = Integer.parseInt(thisLevel);
 
                         Map<String, Object> skillMap = (Map<String, Object>) levelMap.get(thisLevel);
 
                         if (skillMap.size() == 0)
                         {
-                            skillTree.addLevel(shortLevel);
+                            skillTree.addLevel(newLevel);
                             continue;
                         }
                         for (String thisSkill : skillMap.keySet())
@@ -227,7 +227,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                         skill.setProperties(propertiesCompound);
                                         skill.setDefaultProperties();
                                     }
-                                    skillTree.addSkillToLevel(shortLevel, skill);
+                                    skillTree.addSkillToLevel(newLevel, skill);
                                 }
                                 else
                                 {

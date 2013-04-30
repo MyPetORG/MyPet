@@ -34,7 +34,7 @@ public class MyPetSkillTree
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
-    private SortedMap<Short, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Short, MyPetSkillTreeLevel>();
+    private SortedMap<Integer, MyPetSkillTreeLevel> skillsPerLevel = new TreeMap<Integer, MyPetSkillTreeLevel>();
 
     public MyPetSkillTree(String name)
     {
@@ -52,12 +52,12 @@ public class MyPetSkillTree
         return skillTreeName;
     }
 
-    public boolean hasLevel(short level)
+    public boolean hasLevel(int level)
     {
         return skillsPerLevel.containsKey(level);
     }
 
-    public MyPetSkillTreeLevel getLevel(short level)
+    public MyPetSkillTreeLevel getLevel(int level)
     {
         if (!skillsPerLevel.containsKey(level))
         {
@@ -66,7 +66,7 @@ public class MyPetSkillTree
         return skillsPerLevel.get(level);
     }
 
-    public MyPetSkillTreeLevel addLevel(short level)
+    public MyPetSkillTreeLevel addLevel(int level)
     {
         if (!skillsPerLevel.containsKey(level))
         {
@@ -87,7 +87,7 @@ public class MyPetSkillTree
         return skillsPerLevel.get(level.getLevel());
     }
 
-    public void removeLevel(short level)
+    public void removeLevel(int level)
     {
         if (skillsPerLevel.containsKey(level))
         {
@@ -95,7 +95,7 @@ public class MyPetSkillTree
         }
     }
 
-    public void addSkillToLevel(short level, ISkillInfo skill)
+    public void addSkillToLevel(int level, ISkillInfo skill)
     {
         if (skill == null)
         {
@@ -104,7 +104,7 @@ public class MyPetSkillTree
         addLevel(level).addSkill(skill);
     }
 
-    public void addSkillToLevel(short level, List<ISkillInfo> skillList)
+    public void addSkillToLevel(int level, List<ISkillInfo> skillList)
     {
         MyPetSkillTreeLevel myPetSkillTreeLevel = addLevel(level);
         for (ISkillInfo skill : skillList)
@@ -118,7 +118,7 @@ public class MyPetSkillTree
         List<MyPetSkillTreeLevel> levelList = new ArrayList<MyPetSkillTreeLevel>();
         if (skillsPerLevel.size() > 0)
         {
-            for (short level : skillsPerLevel.keySet())
+            for (int level : skillsPerLevel.keySet())
             {
                 levelList.add(skillsPerLevel.get(level));
             }
@@ -191,7 +191,7 @@ public class MyPetSkillTree
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);
 
-        for (short level : skillsPerLevel.keySet())
+        for (int level : skillsPerLevel.keySet())
         {
             newSkillTree.addLevel(skillsPerLevel.get(level).clone());
         }

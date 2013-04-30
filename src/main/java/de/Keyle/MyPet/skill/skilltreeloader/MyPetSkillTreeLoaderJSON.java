@@ -115,7 +115,7 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                 for (Object lvl_object : levelList)
                 {
                     JSONObject levelObject = (JSONObject) lvl_object;
-                    short thisLevel = Short.parseShort(String.valueOf(levelObject.get("Level")));
+                    int thisLevel = Integer.parseInt(String.valueOf(levelObject.get("Level")));
                     skillTree.addLevel(thisLevel);
 
                     JSONArray skillList = (JSONArray) levelObject.get("Skills");

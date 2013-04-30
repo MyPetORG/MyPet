@@ -36,7 +36,7 @@ public abstract class Experience
         return myPet;
     }
 
-    public abstract short getLevel(double exp);
+    public abstract int getLevel(double exp);
 
     public abstract double getRequiredExp(double exp);
 

@@ -115,7 +115,15 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                 for (int i_level = 0 ; i_level < levelList.getValue().size() ; i_level++)
                 {
                     CompoundTag levelCompound = (CompoundTag) levelList.getValue().get(i_level);
-                    short thisLevel = ((ShortTag) levelCompound.getValue().get("Level")).getValue();
+                    int thisLevel;
+                    if (levelCompound.getValue().get("Level").getType() == TagType.TAG_INT)
+                    {
+                        thisLevel = ((IntTag) levelCompound.getValue().get("Level")).getValue();
+                    }
+                    else
+                    {
+                        thisLevel = ((ShortTag) levelCompound.getValue().get("Level")).getValue();
+                    }
                     skillTree.addLevel(thisLevel);
 
                     ListTag skillList = (ListTag) levelCompound.getValue().get("Skills");
@@ -199,7 +207,7 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                 for (MyPetSkillTreeLevel level : skillTree.getLevelList())
                 {
                     CompoundTag levelCompound = new CompoundTag("" + level.getLevel(), new CompoundMap());
-                    levelCompound.getValue().put("Level", new ShortTag("Level", level.getLevel()));
+                    levelCompound.getValue().put("Level", new IntTag("Level", level.getLevel()));
 
                     List<CompoundTag> skillList = new ArrayList<CompoundTag>();
                     for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills())
