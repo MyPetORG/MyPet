@@ -109,6 +109,7 @@ public class MyPetConfiguration
 
         config.addDefault("MyPet.LevelSystem.Active", true);
         config.addDefault("MyPet.LevelSystem.CalculationMode", "Default");
+        config.addDefault("MyPet.LevelSystem.Firework", true);
 
         config.addDefault("MyPet.HungerSystem.Active", true);
         config.addDefault("MyPet.HungerSystem.Time", 60);
@@ -278,6 +279,7 @@ public class MyPetConfiguration
         MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
         MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", false);
+        MyPetExperience.FIREWORK_ON_LEVELUP = config.getBoolean("MyPet.LevelSystem.Firework", true);
 
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
         EntityMyCow.CAN_GIVE_MILK = config.getBoolean("MyPet.Pets.Cow.CanGiveMilk", true);

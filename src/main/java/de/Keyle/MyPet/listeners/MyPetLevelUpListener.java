@@ -23,12 +23,20 @@ package de.Keyle.MyPet.listeners;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
+import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.List;
 
@@ -41,6 +49,21 @@ public class MyPetLevelUpListener implements Listener
         if (!event.isQuiet())
         {
             myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
+
+            if (MyPetExperience.FIREWORK_ON_LEVELUP)
+            {
+                Location location = myPet.getLocation();
+                location.setY(location.getY() - 1.5);
+                location.setPitch(-90);
+                Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.GREEN).withTrail().withFlicker().build();
+                FireworkMeta fwm = fw.getFireworkMeta();
+                fwm.addEffect(fwe);
+                fwm.addEffect(fwe);
+                fwm.addEffect(fwe);
+                fwm.setPower(0);
+                fw.setFireworkMeta(fwm);
+            }
         }
         int lvl = event.getLevel();
         MyPetSkillTree skillTree = myPet.getSkillTree();

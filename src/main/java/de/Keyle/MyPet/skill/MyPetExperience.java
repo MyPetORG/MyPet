@@ -41,6 +41,7 @@ public class MyPetExperience
     public static boolean GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = true;
     public static String CALCULATION_MODE = "Default";
     public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
+    public static boolean FIREWORK_ON_LEVELUP = true;
 
     private final MyPet myPet;
 
