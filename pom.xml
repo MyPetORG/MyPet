@@ -48,6 +48,7 @@
         <regiosapi.version>5.9.6</regiosapi.version>
         <residence.version>2.6.6.4</residence.version>
         <towny.version>0.82.1.0</towny.version>
+        <griefprevention.version>7.7</griefprevention.version>
         <heroes.version>1.5.2</heroes.version>
         <heroes.build>b1713</heroes.build>
 
@@ -191,6 +192,12 @@
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>Towny</artifactId>
             <version>${towny.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.ryanhamshire</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>${griefprevention.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

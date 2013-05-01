@@ -133,6 +133,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Support.MobArena", true);
         config.addDefault("MyPet.Support.Residence", true);
         config.addDefault("MyPet.Support.AncientRPG", true);
+        config.addDefault("MyPet.Support.GriefPrevention", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", false);
@@ -272,6 +273,7 @@ public class MyPetConfiguration
         MyPetPvP.USE_Regios = config.getBoolean("MyPet.Support.Regios", true);
         MyPetPvP.USE_Residence = config.getBoolean("MyPet.Support.Residence", true);
         MyPetPvP.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
+        MyPetPvP.USE_GriefPrevention = config.getBoolean("MyPet.Support.GriefPrevention", true);
 
         MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent", 0);
         MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed", 0.0);

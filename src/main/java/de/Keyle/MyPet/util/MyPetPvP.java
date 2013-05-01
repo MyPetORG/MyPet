@@ -37,6 +37,9 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.PlayerData;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.jzx7.regiosapi.RegiosAPI;
@@ -60,7 +63,7 @@ public class MyPetPvP
     public static boolean USE_McMMO = true;
     public static boolean USE_Residence = true;
     public static boolean USE_AncientRPG = true;
-
+    public static boolean USE_GriefPrevention = true;
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
     private static boolean searchedFactions = false;
@@ -71,7 +74,7 @@ public class MyPetPvP
     private static boolean searchedMobArena = false;
     private static boolean searchedMcMMO = false;
     private static boolean searchedAncientRPG = false;
-
+    private static boolean searchedGriefPrevention = false;
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
     private static boolean pluginTowny = false;
@@ -82,12 +85,13 @@ public class MyPetPvP
     private static RegiosAPI pluginRegios = null;
     private static MobArenaHandler pluginMobArena = null;
     private static ApiManager pluginAncientRPG = null;
+    private static GriefPrevention pluginGriefPrevention = null;
 
     public static boolean canHurt(Player attacker, Player defender)
     {
         if (attacker != null && defender != null)
         {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -312,6 +316,66 @@ public class MyPetPvP
         return true;
     }
 
+    public static boolean canHurtGriefPrevention(Player attacker, Player defender)
+    {
+        if (!searchedGriefPrevention)
+        {
+            searchedGriefPrevention = true;
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("GriefPrevention"))
+            {
+                pluginGriefPrevention = GriefPrevention.instance;
+            }
+        }
+        if (USE_GriefPrevention && pluginGriefPrevention != null)
+        {
+            if (pluginGriefPrevention.config_pvp_enabledWorlds.contains(attacker.getWorld()))
+            {
+                PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
+                PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
+
+                if (defenderData.pvpImmune || attackerData.pvpImmune)
+                {
+                    return false;
+                }
+
+                if (pluginGriefPrevention.config_pvp_noCombatInPlayerLandClaims || pluginGriefPrevention.config_pvp_noCombatInAdminLandClaims)
+                {
+                    Claim attackerClaim = pluginGriefPrevention.dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
+                    if (attackerClaim != null)
+                    {
+                        if (attackerClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims)
+                        {
+                            return false;
+                        }
+                        if (!attackerClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims)
+                        {
+                            return false;
+                        }
+                    }
+
+                    Claim defenderClaim = pluginGriefPrevention.dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
+                    if (defenderClaim != null)
+                    {
+                        if (defenderClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims)
+                        {
+                            return false;
+                        }
+                        if (!defenderClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims)
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void reset()
     {
         searchedCitizens = false;
@@ -324,6 +388,7 @@ public class MyPetPvP
         searchedMobArena = false;
         searchedMcMMO = false;
         searchedAncientRPG = false;
+        searchedGriefPrevention = false;
 
         pluginFactions = false;
         pluginCitizens = false;
@@ -335,5 +400,6 @@ public class MyPetPvP
         pluginRegios = null;
         pluginMobArena = null;
         pluginAncientRPG = null;
+        pluginGriefPrevention = null;
     }
 }
