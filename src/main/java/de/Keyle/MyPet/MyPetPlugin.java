@@ -353,13 +353,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         MyPetTimer.startTimer();
 
-        DebugLogger.info("MyPetPlayer: ---------------");
-        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
-        {
-            DebugLogger.info("   " + myPetPlayer.toString());
-        }
-        DebugLogger.info("----------------------------");
-
         try
         {
             Metrics metrics = new Metrics(this);
