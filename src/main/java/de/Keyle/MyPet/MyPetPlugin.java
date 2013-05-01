@@ -335,12 +335,12 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         MyPetLanguage.load(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
 
-        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
-        if (NBTPetFile.exists())
+        File NBTWolfFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
+        if (NBTWolfFile.exists())
         {
-            NBTPetFile.renameTo(new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old"));
-            NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old");
-            loadMyWolfWolves(NBTPetFile);
+            NBTWolfFile.renameTo(new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old"));
+            NBTWolfFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old");
+            loadMyWolfWolves(NBTWolfFile);
         }
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
