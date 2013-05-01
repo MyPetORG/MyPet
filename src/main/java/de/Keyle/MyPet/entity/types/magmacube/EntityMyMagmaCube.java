@@ -54,6 +54,7 @@ public class EntityMyMagmaCube extends EntityMyPet
         return ((MyMagmaCube) myPet).size;
     }
 
+    @SuppressWarnings("boxing")
     public void setSize(int value)
     {
         this.datawatcher.watch(16, new Byte((byte) value));
