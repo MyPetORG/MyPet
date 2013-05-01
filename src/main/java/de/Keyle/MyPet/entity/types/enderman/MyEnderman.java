@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import org.bukkit.ChatColor;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.ShortTag;
@@ -130,7 +131,7 @@ public class MyEnderman extends MyPet
     @Override
     public String toString()
     {
-        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
+        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
     }
 
 }

@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_5_R2.ItemStack;
+import org.bukkit.ChatColor;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
@@ -139,6 +140,6 @@ public class MySkeleton extends MyPet
     @Override
     public String toString()
     {
-        return "MySkeleton{owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + "}";
+        return "MySkeleton{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + "}";
     }
 }
