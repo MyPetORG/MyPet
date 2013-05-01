@@ -75,11 +75,6 @@ public class EntityMyMagmaCube extends EntityMyPet
         petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 
-    public boolean isBurning()
-    {
-        return false;
-    }
-
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     protected void a()
