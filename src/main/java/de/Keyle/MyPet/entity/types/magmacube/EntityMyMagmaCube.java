@@ -62,7 +62,7 @@ public class EntityMyMagmaCube extends EntityMyPet
         {
             this.a(es.height() * value, es.width() * value);
         }
-        if (petPathfinderSelector.hasGoal("MeleeAttack"))
+        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack"))
         {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
         }
