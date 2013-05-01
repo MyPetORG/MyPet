@@ -341,13 +341,22 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
                     return true;
                 }
-                InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(sender.getName()));
-                inactiveMyPet.setPetType(myPetType);
-                inactiveMyPet.setPetName(myPetType.getTypeName());
-                inactiveMyPet.setLocation(owner.getLocation());
 
-                MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
-                myPet.createPet();
+                MyPetPlayer newOwner = MyPetPlayer.getMyPetPlayer(sender.getName());
+                if (!newOwner.hasMyPet())
+                {
+                    InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
+                    inactiveMyPet.setPetType(myPetType);
+                    inactiveMyPet.setPetName(myPetType.getTypeName());
+                    inactiveMyPet.setLocation(owner.getLocation());
+
+                    MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                    myPet.createPet();
+                }
+                else
+                {
+                    sender.sendMessage(newOwner.getName() + " has an active MyPet already!");
+                }
             }
         }
         /*
