@@ -46,6 +46,8 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandAdmin implements CommandExecutor, TabCompleter
 {
@@ -111,11 +113,23 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(petOwner);
 
             String name = "";
-            for (int i = 2 ; i < args.length ; i++)
+            for (String arg : args)
             {
-                name += args[i] + " ";
+                if (!name.equals(""))
+                {
+                    name += " ";
+                }
+                name += arg;
             }
-            name = name.substring(0, name.length() - 1);
+            name = MyPetBukkitUtil.setColors(name);
+
+            Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
+            Matcher regexMatcher = regex.matcher(name);
+            if (regexMatcher.find())
+            {
+                name += MyPetBukkitUtil.setColors("%reset%");
+            }
+
             myPet.setPetName(name);
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
         }
