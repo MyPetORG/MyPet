@@ -58,7 +58,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
         }
         if (behaviorSkill != null && behaviorSkill.isActive())
         {
-            if (behaviorSkill.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
+            if (behaviorSkill.getBehavior() == BehaviorState.Duel && myPet.getCraftPet().canMove())
             {
                 if (petEntity.getGoalTarget() == null || !petEntity.getGoalTarget().isAlive())
                 {

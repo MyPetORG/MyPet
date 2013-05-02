@@ -102,10 +102,10 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
         {
             if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
             {
-                myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventoryCreative"));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_InventoryCreative")));
                 return false;
             }
-            if (myPet.getLocation().getBlock().isLiquid())
+            if (!myPet.getLocation().getBlock().isLiquid())
             {
                 inv.setName(myPet.petName);
                 openInventory(myPet.getOwner().getPlayer());
@@ -113,7 +113,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetLanguage.getString("Msg_InventorySwimming"));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_InventorySwimming").replace("%petname%", myPet.petName)));
                 return false;
             }
         }
