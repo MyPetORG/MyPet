@@ -37,7 +37,7 @@ import de.Keyle.MyPet.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.spout.nbt.CompoundMap;
@@ -237,7 +237,7 @@ public abstract class MyPet implements IMyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_5_R2.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_5_R3.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 petEntity.setLocation(petLocation);

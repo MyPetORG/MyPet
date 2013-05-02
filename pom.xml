@@ -34,8 +34,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <mypet.version>1.0.8</mypet.version>
-        <minecraft.version>1.5.1</minecraft.version>
-        <bukkit.version>R0.2</bukkit.version>
+        <minecraft.version>1.5.2</minecraft.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.4.03</mcmmo.version>

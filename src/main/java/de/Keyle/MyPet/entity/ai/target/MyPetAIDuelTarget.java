@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import net.minecraft.server.v1_5_R2.EntityPlayer;
+import net.minecraft.server.v1_5_R3.EntityPlayer;
 
 public class MyPetAIDuelTarget extends MyPetAIGoal
 {
@@ -74,7 +74,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
                             EntityMyPet entityMyPet = ((EntityMyPet) entityObj);
                             MyPet targetMyPet = entityMyPet.getMyPet();
 
-                            if (petEntity.aD().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
+                            if (petEntity.getEntitySenses().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
                             {
                                 if (!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
                                 {

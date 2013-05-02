@@ -22,11 +22,11 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
-import net.minecraft.server.v1_5_R2.Block;
-import net.minecraft.server.v1_5_R2.MathHelper;
-import net.minecraft.server.v1_5_R2.World;
+import net.minecraft.server.v1_5_R3.Block;
+import net.minecraft.server.v1_5_R3.MathHelper;
+import net.minecraft.server.v1_5_R3.World;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
 
 public class MyPetAIEatGrass extends MyPetAIGoal
 {

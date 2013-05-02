@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.ai.attack;
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyPetAIMeleeAttack extends MyPetAIGoal
@@ -68,7 +68,7 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
             return false;
         }
         this.targetEntity = targetEntity;
-        return this.petEntity.aD().canSee(targetEntity);
+        return this.petEntity.getEntitySenses().canSee(targetEntity);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
     public void tick()
     {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
-        if (((this.petEntity.aD().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
+        if (((this.petEntity.getEntitySenses().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
         {
             this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aE().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);

@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R2.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityLiving;
 
 public class MyPetAISprint extends MyPetAIGoal
 {
@@ -73,7 +73,7 @@ public class MyPetAISprint extends MyPetAIGoal
             return false;
         }
         this.lastTarget = targetEntity;
-        return this.petEntity.aD().canSee(targetEntity);
+        return this.petEntity.getEntitySenses().canSee(targetEntity);
     }
 
     @Override

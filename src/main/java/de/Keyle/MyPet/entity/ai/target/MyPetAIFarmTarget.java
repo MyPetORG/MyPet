@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import net.minecraft.server.v1_5_R2.Entity;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.EntityMonster;
-import net.minecraft.server.v1_5_R2.EntityPlayer;
+import net.minecraft.server.v1_5_R3.Entity;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.EntityMonster;
+import net.minecraft.server.v1_5_R3.EntityPlayer;
 
 public class MyPetAIFarmTarget extends MyPetAIGoal
 {
@@ -71,7 +71,7 @@ public class MyPetAIFarmTarget extends MyPetAIGoal
                             Entity entity = (Entity) entityObj;
                             EntityMonster entityLiving = (EntityMonster) entity;
 
-                            if (petEntity.aD().canSee(entityLiving))
+                            if (petEntity.getEntitySenses().canSee(entityLiving))
                             {
                                 this.target = entityLiving;
                                 return true;

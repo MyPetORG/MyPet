@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetArrow;
-import net.minecraft.server.v1_5_R2.EntityArrow;
-import net.minecraft.server.v1_5_R2.EntityLiving;
-import net.minecraft.server.v1_5_R2.World;
-import org.bukkit.craftbukkit.v1_5_R2.event.CraftEventFactory;
+import net.minecraft.server.v1_5_R3.EntityArrow;
+import net.minecraft.server.v1_5_R3.EntityLiving;
+import net.minecraft.server.v1_5_R3.World;
+import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyPetAIRangedAttack extends MyPetAIGoal
@@ -103,7 +103,7 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
     public void tick()
     {
         double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.boundingBox.b, this.target.locZ);
-        boolean canSee = this.entityMyPet.aD().canSee(this.target);
+        boolean canSee = this.entityMyPet.getEntitySenses().canSee(this.target);
 
         if (canSee)
         {

@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.spider;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R2.EnumMonsterType;
-import net.minecraft.server.v1_5_R2.World;
+import net.minecraft.server.v1_5_R3.EnumMonsterType;
+import net.minecraft.server.v1_5_R3.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
 public class EntityMySpider extends EntityMyPet

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
-import org.bukkit.craftbukkit.v1_5_R2.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftInventory;
 import org.bukkit.inventory.BeaconInventory;
 import org.bukkit.inventory.ItemStack;
 

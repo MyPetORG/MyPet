@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_5_R2.EntityHuman;
+import net.minecraft.server.v1_5_R3.EntityHuman;
 
-public class TileEntityBeacon extends net.minecraft.server.v1_5_R2.TileEntityBeacon
+public class TileEntityBeacon extends net.minecraft.server.v1_5_R3.TileEntityBeacon
 {
     private Beacon beaconSkill;
     private boolean primaryBuffCheck = false;

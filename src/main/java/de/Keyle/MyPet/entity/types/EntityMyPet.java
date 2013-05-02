@@ -31,10 +31,10 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
-import net.minecraft.server.v1_5_R2.*;
+import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -407,7 +407,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         bC += 1; // N/A
 
-        aD().a(); // sensing
+        getEntitySenses().a(); // sensing
         petTargetSelector.tick(); // target selector
         petPathfinderSelector.tick(); // pathfinder selector
         petNavigation.tick(); // navigation

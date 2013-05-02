@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R2.World;
+import net.minecraft.server.v1_5_R3.World;
 
 @EntitySize(width = 0.4F, height = 1.8F)
 public class EntityMySnowman extends EntityMyPet
