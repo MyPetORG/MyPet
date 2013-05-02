@@ -76,7 +76,7 @@ public class MyPetEntityListener implements Listener
         {
             event.setCancelled(false);
         }
-        if (MyPetConfiguration.USE_LEVEL_SYSTEM && event.getSpawnReason() == SpawnReason.SPAWNER)
+        if (MyPetConfiguration.USE_LEVEL_SYSTEM && !MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER)
         {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
