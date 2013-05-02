@@ -81,6 +81,9 @@ public class MyPetConfiguration
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean PET_INFO_OVERHEAD_NAME = true;
+    public static boolean STORE_PETS_ON_PLAYER_QUIT = true;
+    public static boolean STORE_PETS_ON_PET_LEASH = true;
+    public static boolean STORE_PETS_ON_PET_RELEASE = true;
 
     public static void setDefault()
     {
@@ -88,7 +91,6 @@ public class MyPetConfiguration
         config.addDefault("MyPet.OwnerCanAttackPet", false);
         config.addDefault("MyPet.CheckForUpdates", false);
         config.addDefault("MyPet.DebugLogger", true);
-        config.addDefault("MyPet.AutoSaveTime", 60);
         config.addDefault("MyPet.EnableEvents", false);
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
         config.addDefault("MyPet.FollowStartDistance", 7.0D);
@@ -96,6 +98,11 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Backup.Active", MyPetBackup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", MyPetBackup.SAVE_INTERVAL);
         config.addDefault("MyPet.Backup.DateFormat", MyPetBackup.DATE_FORMAT);
+
+        config.addDefault("MyPet.PetStorage.AutoSaveTime", 60);
+        config.addDefault("MyPet.PetStorage.OnPlayerQuit", true);
+        config.addDefault("MyPet.PetStorage.OnPetLeash", true);
+        config.addDefault("MyPet.PetStorage.OnPetRelease", true);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", 5);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", 5);
@@ -245,6 +252,11 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         MYPET_FOLLOW_START_DISTANCE = (float) config.getDouble("MyPet.FollowStartDistance", 7.0D);
+
+        AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
+        STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);
+        STORE_PETS_ON_PET_LEASH = config.getBoolean("MyPet.PetStorage.OnPetLeash", true);
+        STORE_PETS_ON_PET_RELEASE = config.getBoolean("MyPet.PetStorage.OnPetRelease", true);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);

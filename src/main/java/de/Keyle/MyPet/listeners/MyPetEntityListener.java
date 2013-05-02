@@ -593,7 +593,10 @@ public class MyPetEntityListener implements Listener
                         }
                         DebugLogger.info("New Pet leashed:");
                         DebugLogger.info("   " + myPet.toString());
-                        DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
+                        if (MyPetConfiguration.STORE_PETS_ON_PET_LEASH)
+                        {
+                            DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
+                        }
                         damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
                     }
                 }
