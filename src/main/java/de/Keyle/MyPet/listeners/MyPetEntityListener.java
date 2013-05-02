@@ -284,13 +284,21 @@ public class MyPetEntityListener implements Listener
                 if (!MyPetList.hasMyPet(damager))
                 {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
+
+                    Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
+
+                    if(MyPet.hasLeashFlag(myPetClass,LeashFlag.LowHp) && MyPetPermissions.has(damager,"MyPet.capturehelper"))
+                    {
+                        MyPetCaptureHelper.checkTamable(leashTarget,event.getDamage(),damager);
+                    }
+
                     if (damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
                     {
                         return;
                     }
 
                     boolean willBeLeashed = true;
-                    List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
+                    List<LeashFlag> leashFlags = MyPet.getLeashFlags(myPetClass);
 
                     for (LeashFlag flag : leashFlags)
                     {

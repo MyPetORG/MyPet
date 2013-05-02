@@ -548,6 +548,15 @@ public abstract class MyPet implements IMyPet
         return leashFlagList;
     }
 
+    public static boolean hasLeashFlag(Class<? extends MyPet> myPetClass, LeashFlag flag)
+    {
+        if(leashFlags.containsKey(myPetClass))
+        {
+            return leashFlags.get(myPetClass).contains(flag);
+        }
+        return false;
+    }
+
     public static void setLeashFlags(Class<? extends MyPet> myPetClass, LeashFlag leashFlagToAdd)
     {
         if (leashFlags.containsKey(myPetClass))

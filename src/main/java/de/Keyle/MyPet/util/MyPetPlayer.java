@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import static de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
 import net.minecraft.server.v1_5_R3.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -43,6 +44,7 @@ public class MyPetPlayer implements IScheduler
     private String playerName;
     private boolean customData = false;
 
+    private CaptureHelperMode captureHelperMode = CaptureHelperMode.Normal;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
     private UUID lastActiveMyPetUUID = null;
@@ -176,6 +178,16 @@ public class MyPetPlayer implements IScheduler
     public Player getPlayer()
     {
         return Bukkit.getServer().getPlayer(playerName);
+    }
+
+    public CaptureHelperMode getCaptureHelperMode()
+    {
+        return captureHelperMode;
+    }
+
+    public void setCaptureHelperMode(CaptureHelperMode captureHelperMode)
+    {
+        this.captureHelperMode = captureHelperMode;
     }
 
     public static MyPetPlayer getMyPetPlayer(String name)

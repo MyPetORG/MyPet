@@ -65,6 +65,10 @@ commands:
   pettype:
     description: Infos for Pettype
     usage: '/<command> <Pettype>'
+  petcapturehelper:
+    aliases: [pch]
+    description: Sets the mode for the capturehelper
+    usage: '/<command> [normal|half|tameableonly|deactivate]'
 
 permissions:
   MyPet.user.leash.*:
@@ -110,3 +114,5 @@ permissions:
   MyPet.admin:
     description: Gives access to admin MyPet features.
     default: op
+  MyPet.capturehelper:
+    description: Gives access to the Capturehelper
