@@ -117,6 +117,10 @@ public class MyPetPvP
             if (defender.hasMetadata("NPC"))
             {
                 NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
+                if (npc == null || npc.data() == null)
+                {
+                    return true;
+                }
                 return !npc.data().get("protected", true);
             }
         }
