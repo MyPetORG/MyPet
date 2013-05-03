@@ -55,6 +55,7 @@ public class MyPetArrow extends EntityArrow
             try
             {
                 inGround = EntityArrow.class.getDeclaredField("inGround");
+                inGround.setAccessible(true);
             }
             catch (NoSuchFieldException e)
             {
