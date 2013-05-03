@@ -137,9 +137,7 @@ public class MyPetEntityListener implements Listener
                 }
                 if (event.getEntity() instanceof LivingEntity && !event.isCancelled() && MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION)
                 {
-                    LivingEntity entity = (LivingEntity) event.getEntity();
-                    event.setCancelled(true);
-                    entity.damage(event.getDamage(), boltMyPet.getCraftPet());
+                    MyPetExperience.addDamageToEntity(boltMyPet.getCraftPet(), (LivingEntity) event.getEntity(), event.getDamage());
                 }
             }
         }
