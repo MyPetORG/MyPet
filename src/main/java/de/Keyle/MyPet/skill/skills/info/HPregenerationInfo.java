@@ -34,7 +34,7 @@ import java.io.InputStream;
 @SkillProperties(
         parameterNames = {"hp", "time", "addset_hp", "addset_time"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
-        parameterDefaultValues = {"1", "1", "add", "add"})
+        parameterDefaultValues = {"1", "60", "add", "add"})
 public class HPregenerationInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
