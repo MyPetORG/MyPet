@@ -43,7 +43,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
         this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
-        this.range = range;
+        this.range = range * range;
         if (myPet.getSkills().hasSkill("Behavior"))
         {
             behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
@@ -53,49 +53,50 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
+        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Duel)
+        {
+            return false;
+        }
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
         {
             return false;
         }
-        if (behaviorSkill != null && behaviorSkill.isActive())
+        if (!myPet.getCraftPet().canMove())
         {
-            if (behaviorSkill.getBehavior() == BehaviorState.Duel && myPet.getCraftPet().canMove())
-            {
-                if (petEntity.getGoalTarget() == null || !petEntity.getGoalTarget().isAlive())
-                {
-                    if (duelOpponent != null)
-                    {
-                        this.target = duelOpponent;
-                        return true;
-                    }
-                    for (float range = 1.F ; range <= this.range ; range++)
-                    {
-                        for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
-                        {
-                            EntityMyPet entityMyPet = ((EntityMyPet) entityObj);
-                            MyPet targetMyPet = entityMyPet.getMyPet();
+            return false;
+        }
+        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive())
+        {
+            return false;
+        }
+        if (duelOpponent != null)
+        {
+            this.target = duelOpponent;
+            return true;
+        }
 
-                            if (petEntity.getEntitySenses().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
-                            {
-                                if (!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
-                                {
-                                    continue;
-                                }
-                                Behavior targetbehavior = (Behavior) targetMyPet.getSkills().getSkill("Behavior");
-                                if (targetbehavior.getBehavior() != BehaviorState.Duel)
-                                {
-                                    continue;
-                                }
-                                if (targetMyPet.getDamage() == 0)
-                                {
-                                    continue;
-                                }
-                                this.target = entityMyPet;
-                                return true;
-                            }
-                        }
-                    }
+        for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range)))
+        {
+            EntityMyPet entityMyPet = (EntityMyPet) entityObj;
+            MyPet targetMyPet = entityMyPet.getMyPet();
+
+            if (petEntity.getEntitySenses().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
+            {
+                if (!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
+                {
+                    continue;
                 }
+                Behavior targetbehavior = (Behavior) targetMyPet.getSkills().getSkill("Behavior");
+                if (targetbehavior.getBehavior() != BehaviorState.Duel)
+                {
+                    continue;
+                }
+                if (targetMyPet.getDamage() == 0)
+                {
+                    continue;
+                }
+                this.target = entityMyPet;
+                return true;
             }
         }
         return false;
@@ -113,6 +114,14 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
             return true;
         }
         else if (!petEntity.getGoalTarget().isAlive())
+        {
+            return true;
+        }
+        else if (behaviorSkill.getBehavior() != BehaviorState.Duel)
+        {
+            return true;
+        }
+        else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
         {
             return true;
         }
@@ -136,6 +145,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
     {
         petEntity.setGoalTarget(null);
         duelOpponent = null;
+        target = null;
     }
 
     public EntityMyPet getDuelOpponent()

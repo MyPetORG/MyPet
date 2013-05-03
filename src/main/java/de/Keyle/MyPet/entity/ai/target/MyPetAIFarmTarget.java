@@ -25,7 +25,6 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import net.minecraft.server.v1_5_R3.Entity;
 import net.minecraft.server.v1_5_R3.EntityLiving;
 import net.minecraft.server.v1_5_R3.EntityMonster;
 import net.minecraft.server.v1_5_R3.EntityPlayer;
@@ -55,34 +54,32 @@ public class MyPetAIFarmTarget extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
+        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Farm)
+        {
+            return false;
+        }
         if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
         {
             return false;
         }
-        if (behaviorSkill != null && behaviorSkill.isActive())
+        if (!myPet.getCraftPet().canMove())
         {
-            if (behaviorSkill.getBehavior() == BehaviorState.Farm && myPet.getCraftPet().canMove())
-            {
-                if (target == null || !target.isAlive())
-                {
-                    for (float range = 1.F ; range <= this.range ; range++)
-                    {
-                        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, 4.0D, (double) range)))
-                        {
-                            Entity entity = (Entity) entityObj;
-                            EntityMonster entityLiving = (EntityMonster) entity;
+            return false;
+        }
+        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive())
+        {
+            return false;
+        }
 
-                            if (petEntity.getEntitySenses().canSee(entityLiving))
-                            {
-                                this.target = entityLiving;
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-                return true;
+        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range)))
+        {
+            EntityMonster entityMonster = (EntityMonster) entityObj;
+            if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91 || !petEntity.getEntitySenses().canSee(entityMonster))
+            {
+                continue;
             }
+            this.target = entityMonster;
+            return true;
         }
         return false;
     }
@@ -104,6 +101,14 @@ public class MyPetAIFarmTarget extends MyPetAIGoal
         {
             return true;
         }
+        else if (behaviorSkill.getBehavior() != BehaviorState.Farm)
+        {
+            return true;
+        }
+        else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
+        {
+            return true;
+        }
         return false;
     }
 
@@ -117,5 +122,6 @@ public class MyPetAIFarmTarget extends MyPetAIGoal
     public void finish()
     {
         petEntity.setGoalTarget(null);
+        target = null;
     }
 }
