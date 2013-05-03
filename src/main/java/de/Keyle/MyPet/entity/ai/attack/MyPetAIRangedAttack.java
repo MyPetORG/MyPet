@@ -59,14 +59,14 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
         {
             return false;
         }
-        EntityLiving goalTarget = this.entityMyPet.goalTarget;
+        EntityLiving goalTarget = this.entityMyPet.getGoalTarget();
 
-        if (goalTarget == null || !goalTarget.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
+        if (goalTarget == null || !goalTarget.isAlive() || !entityMyPet.canMove())
         {
             return false;
         }
-        double e = this.entityMyPet.e(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ);
-        if (myPet.getDamage() > 0 && e < 16)
+        double space = this.entityMyPet.e(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ);
+        if (myPet.getDamage() > 0 && space < 16)
         {
             return false;
         }

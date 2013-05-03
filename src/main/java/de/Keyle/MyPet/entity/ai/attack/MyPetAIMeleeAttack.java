@@ -74,15 +74,11 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
     @Override
     public boolean shouldFinish()
     {
-        if (this.petEntity.getGoalTarget() == null)
+        if (this.petEntity.getGoalTarget() == null || !this.targetEntity.isAlive())
         {
             return true;
         }
         else if (this.targetEntity != this.petEntity.getGoalTarget())
-        {
-            return true;
-        }
-        else if (!this.targetEntity.isAlive())
         {
             return true;
         }
