@@ -95,6 +95,7 @@ public class MyPetLanguage
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%reset% first.");
         addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %gold%%name%%reset%.");
         addString("Msg_CantUse", "MyPet.Message.cantuse", "%red%You can not use this now.");
+        addString("Msg_CaptureHelperMode", "MyPet.Message.capturehelpermode", "Set Capturehelper to %gold%%mode%%reset%.");
         addString("Msg_Cmd_moreinfo", "MyPet.Message.moreinfo", "For more info read the command page on: ");
         addString("Msg_Cmd_petadmin", "MyPet.Message.petadmin", " [PlayerName] name/exp/respawn [Value]");
         addString("Msg_Cmd_petbehavior", "MyPet.Message.petbehavior", " | Toggles the behaivior  (alias: /pb or /petb)");

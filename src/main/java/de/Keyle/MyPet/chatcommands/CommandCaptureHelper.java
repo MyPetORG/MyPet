@@ -65,7 +65,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
                 {
                     return false;
                 }
-                player.sendMessage("Set Capturehelper to " + mode);
+                player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CaptureHelperMode")).replace("%mode%", mode));
             }
             player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
         }
