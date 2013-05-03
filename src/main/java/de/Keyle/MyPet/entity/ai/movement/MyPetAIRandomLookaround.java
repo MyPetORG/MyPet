@@ -38,6 +38,10 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
+        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
+        {
+            return false;
+        }
         return this.petEntity.aE().nextFloat() < 0.02F;
     }
 
