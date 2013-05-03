@@ -59,7 +59,7 @@ public class EntityMyMooshroom extends EntityMyPet
     {
         if (flag)
         {
-            this.datawatcher.watch(12, new Integer(-24000));
+            this.datawatcher.watch(12, new Integer(Integer.MIN_VALUE));
         }
         else
         {
