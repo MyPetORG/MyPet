@@ -33,7 +33,6 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
     {
         if (commandSender instanceof Player)
         {
-
             String mode = args[0];
             Player player = (Player) commandSender;
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);

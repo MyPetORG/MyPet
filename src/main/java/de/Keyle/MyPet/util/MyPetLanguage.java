@@ -165,6 +165,7 @@ public class MyPetLanguage
         addString("Msg_SpawnPrevent", "MyPet.Message.spawnprevent", "Something prevents %aqua%%petname%%reset% from coming to you.");
         addString("Msg_StopAttack", "MyPet.Message.stopattack", "Your pet should now %green%stop%reset% attacking!");
         // --  T  --
+        addString("Msg_TameNow", "MyPet.Message.tamenow", "%green% Tame now!");
         addString("Msg_ThornsChance", "MyPet.Message.thornschance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to reflect damage.");
         // --  U  --
         addString("Msg_UserDontHavePet", "MyPet.Message.userdonthavepet", "%gold%%playername%%reset% doesn't have a MyPet!");
