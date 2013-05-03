@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.event.MyPetExpEvent;
 import de.Keyle.MyPet.event.MyPetLevelUpEvent;
@@ -29,7 +30,14 @@ import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.Experience;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.util.MyPetConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.bukkit.Bukkit.getServer;
 
@@ -287,5 +295,116 @@ public class MyPetExperience
             return expMode.getRequiredExp(this.exp);
         }
         return requiredExp;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, int damage)
+    {
+        Map<Entity, Integer> damageMap;
+        if (victim.hasMetadata("DamageCount"))
+        {
+            for (MetadataValue value : victim.getMetadata("DamageCount"))
+            {
+                if (value.getOwningPlugin().getName().equals("MyPet"))
+                {
+                    damageMap = (Map<Entity, Integer>) value.value();
+                    if (damageMap.containsKey(damager))
+                    {
+                        int oldDamage = damageMap.get(damager);
+                        damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() + oldDamage : damage + oldDamage);
+                    }
+                    else
+                    {
+                        damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
+                    }
+                    break;
+                }
+            }
+        }
+        else
+        {
+            damageMap = new HashMap<Entity, Integer>();
+            damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
+            victim.setMetadata("DamageCount", new FixedMetadataValue(MyPetPlugin.getPlugin(), damageMap));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static int getDamageToEntity(LivingEntity damager, LivingEntity victim)
+    {
+        for (MetadataValue value : victim.getMetadata("DamageCount"))
+        {
+            if (value.getOwningPlugin().getName().equals("MyPet"))
+            {
+                Map<Entity, Integer> damageMap = (Map<Entity, Integer>) value.value();
+                if (damageMap.containsKey(damager))
+                {
+                    return damageMap.get(damager);
+                }
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static double getDamageToEntityPercent(LivingEntity damager, LivingEntity victim)
+    {
+        if (victim.hasMetadata("DamageCount"))
+        {
+            for (MetadataValue value : victim.getMetadata("DamageCount"))
+            {
+                if (value.getOwningPlugin().getName().equals("MyPet"))
+                {
+                    Map<Entity, Integer> damageMap = (Map<Entity, Integer>) value.value();
+                    double allDamage = 0;
+                    double damagerDamage = 0;
+                    for (Entity entity : damageMap.keySet())
+                    {
+                        if (entity == damager)
+                        {
+                            damagerDamage = damageMap.get(damager);
+                        }
+                        allDamage += damageMap.get(entity);
+                    }
+                    return damagerDamage / allDamage;
+                }
+            }
+        }
+        return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<Entity, Double> getDamageToEntityPercent(LivingEntity victim)
+    {
+        Map<Entity, Double> damagePercentMap = new HashMap<Entity, Double>();
+        if (victim.hasMetadata("DamageCount"))
+        {
+            for (MetadataValue value : victim.getMetadata("DamageCount"))
+            {
+                if (value.getOwningPlugin().getName().equals("MyPet"))
+                {
+                    Map<Entity, Integer> damageMap = (Map<Entity, Integer>) value.value();
+                    double allDamage = 0;
+                    for (Integer damage : damageMap.values())
+                    {
+                        allDamage += damage;
+                    }
+
+                    if (allDamage <= 0)
+                    {
+                        return damagePercentMap;
+                    }
+
+                    for (Entity entity : damageMap.keySet())
+                    {
+                        damagePercentMap.put(entity, damageMap.get(entity) / allDamage);
+                    }
+
+                    return damagePercentMap;
+                }
+            }
+        }
+        return damagePercentMap;
     }
 }
