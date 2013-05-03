@@ -165,7 +165,7 @@ public class EntityMyZombie extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner() && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
         {
             if (itemStack.id == Item.SHEARS.id)
             {
@@ -187,7 +187,7 @@ public class EntityMyZombie extends EntityMyPet
                 }
                 return true;
             }
-            else if (checkForEquipment(itemStack) && getOwner().isSneaking())
+            else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip"))
                 {

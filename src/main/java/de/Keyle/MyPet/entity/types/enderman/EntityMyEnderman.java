@@ -101,7 +101,7 @@ public class EntityMyEnderman extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner() && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
         {
             if (itemStack.id == Item.SHEARS.id)
             {

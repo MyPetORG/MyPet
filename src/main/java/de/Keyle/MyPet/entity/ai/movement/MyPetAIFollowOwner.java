@@ -24,8 +24,9 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import net.minecraft.server.v1_5_R3.EntityPlayer;
 import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
 
 public class MyPetAIFollowOwner extends MyPetAIGoal
 {
@@ -37,6 +38,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
     private float startDistance;
     private float teleportDistance;
     private MyPetAIControl controlPathfinderGoal;
+    private EntityPlayer owner;
 
     public MyPetAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, float startDistance, float stopDistance, float teleportDistance)
     {
@@ -46,6 +48,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
         this.startDistance = startDistance * startDistance;
         this.stopDistance = stopDistance * stopDistance;
         this.teleportDistance = teleportDistance * teleportDistance;
+        this.owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
     }
 
     @Override
@@ -74,11 +77,11 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
         {
             return false;
         }
-        else if (this.petEntity.e(this.petEntity.getOwner()) < this.startDistance)
+        else if (this.petEntity.e(owner) < this.startDistance)
         {
             return false;
         }
-        else if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null)
+        else if (controlPathfinderGoal.moveTo != null)
         {
             return false;
         }
@@ -96,7 +99,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
         {
             return true;
         }
-        else if (this.petEntity.e(this.petEntity.getOwner()) < this.stopDistance)
+        else if (this.petEntity.e(owner) < this.stopDistance)
         {
             return true;
         }
@@ -135,7 +138,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
             return;
         }
 
-        this.petEntity.getControllerLook().a(this.petEntity.getOwner(), 10.0F, (float) this.petEntity.bs());
+        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bs());
 
         if (this.petEntity.canMove())
         {
@@ -143,12 +146,12 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
             {
                 this.setPathTimer = 10;
 
-                if (!this.nav.navigateTo((LivingEntity) this.petEntity.getOwner().getBukkitEntity()))
+                if (!this.nav.navigateTo(owner))
                 {
-                    if (this.petEntity.getOwner().onGround && this.petEntity.e(this.petEntity.getOwner()) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetBukkitUtil.canSpawn(ownerLocation, this.petEntity))
+                    if (owner.onGround && this.petEntity.e(owner) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && MyPetBukkitUtil.canSpawn(ownerLocation, this.petEntity))
                     {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
-                        this.nav.navigateTo((LivingEntity) this.petEntity.getOwner().getBukkitEntity());
+                        this.nav.navigateTo(owner);
                     }
                 }
             }

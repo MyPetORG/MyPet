@@ -108,7 +108,7 @@ public class EntityMyPig extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner() && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
         {
             if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle())
             {

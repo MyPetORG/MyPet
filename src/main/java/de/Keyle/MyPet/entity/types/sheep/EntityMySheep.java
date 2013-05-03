@@ -138,7 +138,7 @@ public class EntityMySheep extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner() && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
         {
             if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData())
             {
@@ -175,7 +175,7 @@ public class EntityMySheep extends EntityMyPet
                 itemStack.damage(1, entityhuman);
                 return true;
             }
-            else if (entityhuman == getOwner())
+            else if (getOwner().equals(entityhuman))
             {
                 if (itemStack.id == GROW_UP_ITEM.getId())
                 {

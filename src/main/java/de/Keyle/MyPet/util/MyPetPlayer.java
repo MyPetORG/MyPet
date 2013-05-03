@@ -23,8 +23,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import static de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
-import net.minecraft.server.v1_5_R3.EntityPlayer;
+import net.minecraft.server.v1_5_R3.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
@@ -36,6 +35,8 @@ import org.spout.nbt.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
 
 public class MyPetPlayer implements IScheduler
 {
@@ -283,10 +284,10 @@ public class MyPetPlayer implements IScheduler
         {
             return ((OfflinePlayer) obj).getName().equals(playerName);
         }
-        else if (obj instanceof EntityPlayer)
+        else if (obj instanceof EntityHuman)
         {
-            EntityPlayer entityPlayer = (EntityPlayer) obj;
-            return playerName.equals(entityPlayer.getName());
+            EntityHuman entityHuman = (EntityHuman) obj;
+            return playerName.equals(entityHuman.getName());
         }
         else if (obj instanceof AnimalTamer)
         {

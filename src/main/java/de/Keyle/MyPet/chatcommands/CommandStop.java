@@ -55,10 +55,6 @@ public class CommandStop implements CommandExecutor
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
-                if (myPet.getCraftPet().getHandle().canMove())
-                {
-                    myPet.getCraftPet().getHandle().getNavigation().a(myPet.getCraftPet().getHandle().getOwner(), myPet.getCraftPet().getHandle().getWalkSpeed());
-                }
             }
             else
             {

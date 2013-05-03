@@ -147,7 +147,7 @@ public class EntityMyOcelot extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner())
+        if (getOwner().equals(entityhuman))
         {
             if (itemStack != null)
             {

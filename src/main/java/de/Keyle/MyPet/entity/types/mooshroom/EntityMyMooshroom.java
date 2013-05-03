@@ -85,7 +85,7 @@ public class EntityMyMooshroom extends EntityMyPet
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (entityhuman == getOwner() && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
         {
             if (itemStack.id == GROW_UP_ITEM.getId())
             {

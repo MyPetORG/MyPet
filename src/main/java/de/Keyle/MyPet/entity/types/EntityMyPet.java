@@ -35,6 +35,7 @@ import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -202,9 +203,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return false;
     }
 
-    public EntityLiving getOwner()
+    public MyPetPlayer getOwner()
     {
-        return this.world.a(myPet.getOwner().getName());
+        return myPet.getOwner();
     }
 
     public boolean damageEntity(DamageSource damagesource, int i)
@@ -289,13 +290,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             return false;
         }
 
-        Player owner = (Player) this.getOwner().getBukkitEntity();
+        Player owner = this.getOwner().getPlayer();
 
         if (isMyPet() && entityhuman.getBukkitEntity() == owner)
         {
             if (this.hasRider())
             {
-                this.getOwner().mount(null);
+                ((CraftPlayer) owner).getHandle().mount(null);
                 return true;
             }
             if (myPet.getSkills().isSkillActive("Ride"))
@@ -304,7 +305,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
-                        this.getOwner().mount(this);
+                        ((CraftPlayer) owner).getHandle().mount(this);
                         return true;
                     }
                     else
