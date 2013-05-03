@@ -287,9 +287,9 @@ public class MyPetEntityListener implements Listener
 
                     Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
 
-                    if(MyPet.hasLeashFlag(myPetClass,LeashFlag.LowHp) && MyPetPermissions.has(damager,"MyPet.capturehelper"))
+                    if (MyPet.hasLeashFlag(myPetClass, LeashFlag.LowHp) && MyPetPermissions.has(damager, "MyPet.user.capturehelper"))
                     {
-                        MyPetCaptureHelper.checkTamable(leashTarget,event.getDamage(),damager);
+                        MyPetCaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
 
                     if (damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))

@@ -37,7 +37,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
             Player player = (Player) commandSender;
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
 
-            if (MyPetPermissions.has(player, "MyPet.capturehelper"))
+            if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
             {
                 if (args.length < 1)
                 {
@@ -74,7 +74,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings)
     {
-        if (strings.length == 1 && MyPetPermissions.has((Player) sender, "MyPet.capturehelper"))
+        if (strings.length == 1 && MyPetPermissions.has((Player) sender, "MyPet.user.capturehelper"))
         {
             return captureModeList;
         }

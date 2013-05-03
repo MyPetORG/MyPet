@@ -69,6 +69,7 @@ commands:
     aliases: [pch]
     description: Sets the mode for the capturehelper
     usage: '/<command> [normal|half|tameableonly|deactivate]'
+    permission: MyPet.user.capturehelper
 
 permissions:
   MyPet.user.leash.*:
@@ -109,10 +110,11 @@ permissions:
       MyPet.user.leash.*: true
       MyPet.user.release: true
       MyPet.user.respawn: true
+      MyPet.user.capturehelper: true
   MyPet.user.release:
     description: Allows usage of /petrelease
   MyPet.admin:
     description: Gives access to admin MyPet features.
     default: op
-  MyPet.capturehelper:
-    description: Gives access to the Capturehelper
+  MyPet.user.capturehelper:
+    description: Gives access to the CaptureHelper
