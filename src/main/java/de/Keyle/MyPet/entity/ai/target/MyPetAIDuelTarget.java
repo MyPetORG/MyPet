@@ -43,7 +43,7 @@ public class MyPetAIDuelTarget extends MyPetAIGoal
         this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
-        this.range = range * range;
+        this.range = range;
         if (myPet.getSkills().hasSkill("Behavior"))
         {
             behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
