@@ -663,7 +663,17 @@ public class MyPetEntityListener implements Listener
     {
         if (MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player))
         {
-            MyPetExperience.addDamageToEntity((LivingEntity) event.getDamager(), (LivingEntity) event.getEntity(), event.getDamage());
+            LivingEntity damager;
+            if (event.getDamager() instanceof Projectile)
+            {
+                Projectile projectile = (Projectile) event.getDamager();
+                damager = projectile.getShooter();
+            }
+            else
+            {
+                damager = (LivingEntity) event.getDamager();
+            }
+            MyPetExperience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
         }
     }
 
