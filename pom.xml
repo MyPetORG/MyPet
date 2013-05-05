@@ -24,7 +24,7 @@
 
     <groupId>de.Keyle</groupId>
     <artifactId>MyPet</artifactId>
-    <version>${mypet.version}-SNAPSHOT</version>
+    <version>${mypet.version}</version>
     <packaging>jar</packaging>
 
     <name>MyPet</name>
