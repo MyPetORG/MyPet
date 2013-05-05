@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.configuration;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class YAML_Configuration
     public YAML_Configuration(File file)
     {
         yamlFile = file;
-        config = new org.bukkit.configuration.file.YamlConfiguration();
+        config = new YamlConfiguration();
         try
         {
             config.load(yamlFile);
@@ -71,6 +72,6 @@ public class YAML_Configuration
 
     public void clearConfig()
     {
-        config = new org.bukkit.configuration.file.YamlConfiguration();
+        config = new YamlConfiguration();
     }
 }
