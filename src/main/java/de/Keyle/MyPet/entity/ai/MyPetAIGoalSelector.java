@@ -76,6 +76,11 @@ public class MyPetAIGoalSelector
             MyPetAIGoal goal = AIGoalMap.get(name);
             AIGoalList.remove(goal);
             AIGoalMap.remove(name);
+            if (activeAIGoalList.contains(goal))
+            {
+                goal.finish();
+            }
+            activeAIGoalList.remove(goal);
         }
     }
 
@@ -93,6 +98,11 @@ public class MyPetAIGoalSelector
     {
         AIGoalList.clear();
         AIGoalMap.clear();
+        for (MyPetAIGoal goal : activeAIGoalList)
+        {
+            goal.finish();
+        }
+        activeAIGoalList.clear();
     }
 
     public void tick()
