@@ -56,9 +56,10 @@ public class JSON_Configuration
     public boolean load()
     {
         config = new JSONObject();
+        BufferedReader reader = null;
         try
         {
-            BufferedReader reader = new BufferedReader(new FileReader(jsonFile));
+            reader = new BufferedReader(new FileReader(jsonFile));
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(reader);
             config = (JSONObject) obj;
@@ -74,8 +75,19 @@ public class JSON_Configuration
             e.printStackTrace();
             return false;
         }
-        jsonFile.setWritable(true);
-        jsonFile.setReadable(true);
+        finally
+        {
+            if (reader != null)
+            {
+                try
+                {
+                    reader.close();
+                }
+                catch (IOException ignored)
+                {
+                }
+            }
+        }
         return true;
     }
 
