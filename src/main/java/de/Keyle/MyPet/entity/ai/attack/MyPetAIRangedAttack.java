@@ -27,8 +27,6 @@ import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetArrow;
 import net.minecraft.server.v1_5_R3.EntityArrow;
 import net.minecraft.server.v1_5_R3.EntityLiving;
 import net.minecraft.server.v1_5_R3.World;
-import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyPetAIRangedAttack extends MyPetAIGoal
 {
@@ -91,9 +89,6 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
     @Override
     public void finish()
     {
-        EntityTargetEvent.TargetReason reason = this.target.isAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
-        CraftEventFactory.callEntityTargetEvent(this.entityMyPet, null, reason);
-
         this.target = null;
         this.lastSeenTimer = 0;
         this.shootTimer = -1;

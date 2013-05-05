@@ -24,8 +24,6 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_5_R3.EntityLiving;
-import org.bukkit.craftbukkit.v1_5_R3.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MyPetAIMeleeAttack extends MyPetAIGoal
 {
@@ -100,9 +98,6 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
     @Override
     public void finish()
     {
-        EntityTargetEvent.TargetReason reason = targetEntity.isAlive() ? EntityTargetEvent.TargetReason.FORGOT_TARGET : EntityTargetEvent.TargetReason.TARGET_DIED;
-        CraftEventFactory.callEntityTargetEvent(this.petEntity, null, reason);
-
         this.petEntity.petNavigation.getParameters().removeSpeedModifier("MeleeAttack");
         this.targetEntity = null;
         this.petEntity.petNavigation.stop();
