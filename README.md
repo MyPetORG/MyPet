@@ -22,7 +22,7 @@ All Icons in [Ressources/Images] are owned by the Oxygen Team (http://www.oxygen
 These Icons are under the terms of the [GNU Lesser General Public License Version][License].
 
 ## Builds
-Download the latest builds from the [build server][Builds]. [![Build Status](http://build.keyle.de/job/MyPet/badge/icon)][Builds]
+Download the latest builds from our [Jenkins-Server][Builds].
 
 
 [Logo]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/logo.png
