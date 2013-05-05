@@ -25,16 +25,16 @@ These Icons are under the terms of the [GNU Lesser General Public License Versio
 Download the latest builds from our [Jenkins-Server][Builds].
 
 
-[Logo]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/logo.png
-[Banner]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/banner.png
+[Logo]: http://dl.keyle.de/images/logo.png
+[Banner]: http://dl.keyle.de/images/banner.png
 [License]: http://www.gnu.org/licenses/lgpl.html
 [Ressources/Images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
-[Donate]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
+[Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet
-[MCStatsImage]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/metrics.png
+[MCStatsImage]: http://dl.keyle.de/images/metrics.png
 [Builds]: http://build.keyle.de/job/MyPet/
-[BuildsImage]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/devbuilds.png
+[BuildsImage]: http://dl.keyle.de/images/devbuilds.png
 [Wiki]: http://mypet.keyle.de/
-[WikiImage]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/wiki.png
+[WikiImage]: http://dl.keyle.de/images/wiki.png
 [BukkitDev]: http://dev.bukkit.org/server-mods/mywolf/
-[BukkitDevImage]: https://dl.dropbox.com/u/23957620/MinecraftPlugins/MyPet/images/bukkitdev.png
+[BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png
