@@ -72,6 +72,7 @@ public class EntityMySlime extends EntityMyPet
 
     public void setPathfinder()
     {
+        super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 
