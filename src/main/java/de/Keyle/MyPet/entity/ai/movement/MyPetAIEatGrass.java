@@ -65,7 +65,7 @@ public class MyPetAIEatGrass extends MyPetAIGoal
         int blockLocY = MathHelper.floor(this.entityMySheep.locY);
         int blockLocZ = MathHelper.floor(this.entityMySheep.locZ);
 
-        return this.world.getTypeId(blockLocX, blockLocY, blockLocZ) == Block.LONG_GRASS.id && this.world.getData(blockLocX, blockLocY, blockLocZ) == 1;
+        return this.world.getTypeId(blockLocX, blockLocY, blockLocZ) == Block.LONG_GRASS.id || this.world.getTypeId(blockLocX, blockLocY - 1, blockLocZ) == Block.GRASS.id;
     }
 
     @Override

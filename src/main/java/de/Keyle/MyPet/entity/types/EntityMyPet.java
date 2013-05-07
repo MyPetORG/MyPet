@@ -275,6 +275,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
+     * -> interact()
      */
     public boolean a_(EntityHuman entityhuman)
     {
@@ -378,16 +379,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     /**
      * Returns the default sound of the MyPet
+     * -> getLivingSound()
      */
     protected abstract String bb();
 
     /**
      * Returns the sound that is played when the MyPet get hurt
+     * -> getHurtSound()
      */
     protected abstract String bc();
 
     /**
      * Returns the sound that is played when the MyPet dies
+     * -> getDeathSound()
      */
     protected abstract String bd();
 
@@ -402,11 +406,12 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     /**
      * Entity AI tick method
+     * -> updateAITasks()
      */
     @Override
     protected void bo()
     {
-        bC += 1; // N/A
+        bC += 1; // entityAge
 
         getEntitySenses().a(); // sensing
         petTargetSelector.tick(); // target selector

@@ -68,7 +68,7 @@ public class MyPetAISprint extends MyPetAIGoal
         {
             return false;
         }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity) >= 16)
         {
             return false;
         }

@@ -42,7 +42,7 @@ public class MyPetAISit extends MyPetAIGoal
         {
             return false;
         }
-        else if (this.entityMyPet.H())
+        else if (this.entityMyPet.H()) // -> isInWater()
         {
             return false;
         }

@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types.spider;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.EnumMonsterType;
 import net.minecraft.server.v1_5_R3.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
@@ -33,11 +32,6 @@ public class EntityMySpider extends EntityMyPet
     {
         super(world, myPet);
         this.texture = "/mob/spider.png";
-    }
-
-    public EnumMonsterType getMonsterType()
-    {
-        return EnumMonsterType.ARTHROPOD;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -93,14 +87,5 @@ public class EntityMySpider extends EntityMyPet
             b0 = (byte) (b0 & 0xFFFFFFFE);
         }
         this.datawatcher.watch(16, b0);
-    }
-
-    public void l_()
-    {
-        super.l_();
-        if (!this.world.isStatic)
-        {
-            f(this.positionChanged);
-        }
     }
 }

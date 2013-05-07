@@ -232,7 +232,7 @@ public class EntityMyWolf extends EntityMyPet
                 }
             }
         }
-        if (entityhuman.name.equalsIgnoreCase(this.myPet.getOwner().getName()) && !this.world.isStatic)
+        if (this.myPet.getOwner().equals(entityhuman) && !this.world.isStatic)
         {
             this.sitPathfinder.toogleSitting();
             return true;
