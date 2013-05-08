@@ -104,6 +104,10 @@ public class MyPetBackup
 
     public static void copyFile(File source, File dest) throws IOException
     {
+        if (source == null || !source.exists() || dest == null)
+        {
+            return;
+        }
         if (!dest.exists())
         {
             dest.createNewFile();
