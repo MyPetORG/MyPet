@@ -72,6 +72,7 @@ public class MyPetExperience
         if (!expMode.isUsable())
         {
             expMode = new Default(myPet);
+            CALCULATION_MODE = "Default";
         }
 
         for (int i = 1 ; i <= getLevel() ; i++)
