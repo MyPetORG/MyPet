@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
-
 public class CommandCaptureHelper implements CommandExecutor, TabCompleter
 {
     private static List<String> captureModeList = new ArrayList<String>();
@@ -33,38 +31,15 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
     {
         if (commandSender instanceof Player)
         {
-            String mode = args[0];
             Player player = (Player) commandSender;
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
 
             if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
             {
-                if (args.length < 1)
-                {
-                    return false;
-                }
-
-                if (mode.equalsIgnoreCase("normal"))
-                {
-                    myPetPlayer.setCaptureHelperMode(CaptureHelperMode.Normal);
-                }
-                else if (mode.equalsIgnoreCase("half"))
-                {
-                    myPetPlayer.setCaptureHelperMode(CaptureHelperMode.Half);
-                }
-                else if (mode.equalsIgnoreCase("tameableonly"))
-                {
-                    myPetPlayer.setCaptureHelperMode(CaptureHelperMode.TameableOnly);
-                }
-                else if (mode.equalsIgnoreCase("deactivate"))
-                {
-                    myPetPlayer.setCaptureHelperMode(CaptureHelperMode.Deactivated);
-                }
-                else
-                {
-                    return false;
-                }
-                player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CaptureHelperMode")).replace("%mode%", mode));
+                myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
+                String mode = myPetPlayer.isCaptureHelperActive() ? MyPetLanguage.getString("Name_Enabled") : MyPetLanguage.getString("Name_Disabled");
+                player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CaptureHelperMode")).replace("%mode%", "" + mode));
+                return true;
             }
             player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
         }

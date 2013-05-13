@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
-
 public class MyPetPlayer implements IScheduler
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
@@ -45,7 +43,7 @@ public class MyPetPlayer implements IScheduler
     private String playerName;
     private boolean customData = false;
 
-    private CaptureHelperMode captureHelperMode = CaptureHelperMode.Normal;
+    private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
     private UUID lastActiveMyPetUUID = null;
@@ -181,12 +179,12 @@ public class MyPetPlayer implements IScheduler
         return Bukkit.getServer().getPlayer(playerName);
     }
 
-    public CaptureHelperMode getCaptureHelperMode()
+    public boolean isCaptureHelperActive()
     {
         return captureHelperMode;
     }
 
-    public void setCaptureHelperMode(CaptureHelperMode captureHelperMode)
+    public void setCaptureHelperActive(boolean captureHelperMode)
     {
         this.captureHelperMode = captureHelperMode;
     }

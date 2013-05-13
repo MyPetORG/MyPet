@@ -63,7 +63,6 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.MyPetCaptureHelper.CaptureHelperMode;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -760,7 +759,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", myPetPlayer.hasAutoRespawnEnabled()));
                 playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", myPetPlayer.getAutoRespawnMin()));
                 playerNBT.getValue().put("ExtendedInfo", myPetPlayer.getExtendedInfo());
-                playerNBT.getValue().put("CaptureMode", new StringTag("CaptureMode", myPetPlayer.getCaptureHelperMode().name()));
+                playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", myPetPlayer.isCaptureHelperActive()));
                 if (myPetPlayer.getLastActiveMyPetUUID() != null)
                 {
                     playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString()));
@@ -796,8 +795,17 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
             if (myplayerNBT.getValue().containsKey("CaptureMode"))
             {
-                String mode = ((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue();
-                petPlayer.setCaptureHelperMode(CaptureHelperMode.valueOf(mode));
+                if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING)
+                {
+                    if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated"))
+                    {
+                        petPlayer.setCaptureHelperActive(true);
+                    }
+                }
+                else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE)
+                {
+                    petPlayer.setCaptureHelperActive(((ByteTag) myplayerNBT.getValue().get("CaptureMode")).getBooleanValue());
+                }
             }
             if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
             {

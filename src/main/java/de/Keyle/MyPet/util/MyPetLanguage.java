@@ -93,9 +93,10 @@ public class MyPetLanguage
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%reset% comes to you.");
         addString("Msg_CallDead", "MyPet.Message.callwhendead", "%aqua%%petname%%reset% is %red%dead%reset% and will respawn in %gold%%time%%reset% sec.");
         addString("Msg_CallFirst", "MyPet.Message.callfirst", "You must call %aqua%%petname%%reset% first.");
+        addString("Msg_CanNotBreed", "MyPet.Message.cannotbreed", "This monstertype has to be ready to breed to be captured.");
         addString("Msg_CantFindSkilltree", "MyPet.Message.cantfindskilltree", "There is not skilltree available that is labeled %gold%%name%%reset%.");
         addString("Msg_CantUse", "MyPet.Message.cantuse", "%red%You can not use this now.");
-        addString("Msg_CaptureHelperMode", "MyPet.Message.capturehelpermode", "Set Capturehelper to %gold%%mode%%reset%.");
+        addString("Msg_CaptureHelperMode", "MyPet.Message.capturehelpermode", "Capture-Helper: %gold%%mode%%reset%");
         addString("Msg_Cmd_moreinfo", "MyPet.Message.moreinfo", "For more info read the command page on: ");
         addString("Msg_Cmd_petadmin", "MyPet.Message.petadmin", " [PlayerName] name/exp/respawn [Value]");
         addString("Msg_Cmd_petbehavior", "MyPet.Message.petbehavior", " | Toggles the behaivior  (alias: /pb or /petb)");
@@ -135,8 +136,15 @@ public class MyPetLanguage
         addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
         addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%petname%%reset% doesn't have an inventory.");
         addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%reset% doesn't know the skill %gold%%skill%%reset%.");
+        addString("Msg_NotAdult", "MyPet.Message.notadult", "This monstertype has to be adult to be captured!");
+        addString("Msg_NotAngry", "MyPet.Message.notangry", "This monstertype has to be angry to be captured!");
         addString("Msg_NotAllowed", "MyPet.Message.notallowed", "%red%You are %red%not%reset% allowed to use this!%reset%");
+        addString("Msg_NotBaby", "MyPet.Message.notbaby", "This monstertype has to be a baby to be captured!");
+        addString("Msg_NotLeashable", "MyPet.Message.notleashable", "This monstertype can %red%not%reset% be captured!");
         addString("Msg_NothingToSeeHere", "MyPet.Message.nothingtoseehere", "%red%Nothing to see here, move along!");
+        addString("Msg_NotTamed", "MyPet.Message.nottamed", "This monstertype has to be tamed to be captured!");
+        addString("Msg_NotUserCreated", "MyPet.Message.notusercreated", "This monstertype has to be created by a player to be captured!");
+        addString("Msg_NotWild", "MyPet.Message.notwild", "This monstertype has to be wild to be captured!");
         // --  O  --
         addString("Msg_OnlyChooseSkilltreeOnce", "MyPet.Message.onlychooseskilltreeonce", "You can change the skilltree of %aqua%%petname%%reset% only %red%once%reset%!");
         addString("Msg_OnRespawn", "MyPet.Message.onrespawn", "%aqua%%petname%%reset% respawned!");
