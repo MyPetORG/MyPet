@@ -550,7 +550,7 @@ public abstract class MyPet implements IMyPet
 
     public static boolean hasLeashFlag(Class<? extends MyPet> myPetClass, LeashFlag flag)
     {
-        if(leashFlags.containsKey(myPetClass))
+        if (leashFlags.containsKey(myPetClass))
         {
             return leashFlags.get(myPetClass).contains(flag);
         }
@@ -633,6 +633,19 @@ public abstract class MyPet implements IMyPet
     public static void setCustomRespawnTimeFixed(Class<? extends MyPet> myPetClass, int factor)
     {
         customRespawnTimeFixed.put(myPetClass, factor);
+    }
+
+    public static void resetOptions()
+    {
+        customRespawnTimeFactor.clear();
+        customRespawnTimeFixed.clear();
+        leashFlags.clear();
+        food.clear();
+        startSpeed.clear();
+        for (MyPetType petType : MyPetType.values())
+        {
+            startHP.put(petType.getMyPetClass(), 20);
+        }
     }
 
     @Override

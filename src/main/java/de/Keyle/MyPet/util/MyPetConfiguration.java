@@ -309,6 +309,7 @@ public class MyPetConfiguration
         EntityMyWolf.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyZombie.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId()), Material.POTION);
 
+        MyPet.resetOptions();
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
