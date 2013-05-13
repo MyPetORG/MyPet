@@ -131,7 +131,7 @@ public class MyPetLanguage
         addString("Msg_LightningChance", "MyPet.Message.lightningchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to shoot a lightning at his enemies.");
         addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%reset% is now Lv%gold%%lvl%%reset%");
         // --  N  --
-        addString("Msg_Name", "MyPet.Message.name", "The name of your pet is: %aqua%%petname%");
+        addString("Msg_Name", "MyPet.Message.name", "Your pet is now called %aqua%%petname%");
         addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
         addString("Msg_NoInventory", "MyPet.Message.noinventory", "%aqua%%petname%%reset% doesn't have an inventory.");
         addString("Msg_NoSkill", "MyPet.Message.noskill", "%aqua%%petname%%reset% doesn't know the skill %gold%%skill%%reset%.");
