@@ -6,6 +6,7 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetLanguage;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -51,7 +52,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
             String foodString = "";
             for (Material material : MyPet.getFood(myPetType.getMyPetClass()))
             {
-                foodString += material.name() + ", ";
+                foodString += WordUtils.capitalizeFully(material.name().replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
             commandSender.sendMessage("Food: " + foodString);
