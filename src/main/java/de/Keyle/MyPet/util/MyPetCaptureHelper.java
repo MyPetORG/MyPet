@@ -16,6 +16,8 @@ public class MyPetCaptureHelper
 
         boolean tameNow = true;
         List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
+
+        flagloop:
         for (LeashFlag flag : leashFlags)
         {
             switch (flag)
@@ -23,7 +25,7 @@ public class MyPetCaptureHelper
                 case Impossible:
                     tameNow = false;
                     attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotLeashable")));
-                    break;
+                    break flagloop;
                 case Adult:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).isAdult())
                     {
@@ -62,7 +64,7 @@ public class MyPetCaptureHelper
                     break;
                 case None:
                     tameNow = false;
-                    break;
+                    break flagloop;
                 case Tamed:
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed())
                     {
