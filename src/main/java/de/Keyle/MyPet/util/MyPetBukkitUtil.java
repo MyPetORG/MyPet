@@ -21,18 +21,17 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.entity.types.CraftMyPet;
-import net.minecraft.server.v1_5_R3.AxisAlignedBB;
-import net.minecraft.server.v1_5_R3.Block;
-import net.minecraft.server.v1_5_R3.Entity;
-import net.minecraft.server.v1_5_R3.MathHelper;
+import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_5_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,5 +144,21 @@ public class MyPetBukkitUtil
             }
         }
         return entityList;
+    }
+
+    public static String getPlayerLanguage(Player player)
+    {
+        EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+        try
+        {
+            Field field = entityPlayer.getLocale().getClass().getDeclaredField("e");
+            field.setAccessible(true);
+
+            return (String) field.get(entityPlayer.getLocale());
+        }
+        catch (Exception e)
+        {
+            return "en_US";
+        }
     }
 }

@@ -49,6 +49,7 @@ public class MyPetPlayer implements IScheduler
     private UUID lastActiveMyPetUUID = null;
     private boolean lastActiveMyPet = false;
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
+    private String lastLanguage = "en_US";
 
     private MyPetPlayer(String playerName)
     {
@@ -147,6 +148,15 @@ public class MyPetPlayer implements IScheduler
     public boolean isOnline()
     {
         return getPlayer() != null && getPlayer().isOnline();
+    }
+
+    public String getLanguage()
+    {
+        if (isOnline())
+        {
+            lastLanguage = MyPetBukkitUtil.getPlayerLanguage(getPlayer());
+        }
+        return lastLanguage;
     }
 
     public boolean isMyPetAdmin()
