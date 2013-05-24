@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
@@ -114,6 +115,21 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     if (!MyPetConfiguration.REMOVE_PETS_AFTER_RELEASE)
                     {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
+
+                        if (myPet instanceof IMyPetEquipment)
+                        {
+                            World world = myPet.getCraftPet().getHandle().world;
+                            Location petLocation = myPet.getLocation();
+                            for (ItemStack is : ((IMyPetEquipment) myPet).getEquipment())
+                            {
+                                if (is != null)
+                                {
+                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                                    itemEntity.pickupDelay = 10;
+                                    world.addEntity(itemEntity);
+                                }
+                            }
+                        }
 
                         if (myPet instanceof MyChicken)
                         {
@@ -234,17 +250,6 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                         else if (myPet instanceof MyZombie)
                         {
                             ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-                            World world = myPet.getCraftPet().getHandle().world;
-                            Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((MyZombie) myPet).getEquipment())
-                            {
-                                if (is != null)
-                                {
-                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                    itemEntity.pickupDelay = 10;
-                                    world.addEntity(itemEntity);
-                                }
-                            }
                         }
                         else if (myPet instanceof MySkeleton)
                         {
@@ -257,32 +262,10 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                             {
                                 ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
                             }
-                            World world = myPet.getCraftPet().getHandle().world;
-                            Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((MySkeleton) myPet).getEquipment())
-                            {
-                                if (is != null)
-                                {
-                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                    itemEntity.pickupDelay = 10;
-                                    world.addEntity(itemEntity);
-                                }
-                            }
                         }
                         else if (myPet instanceof MyPigZombie)
                         {
                             ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
-                            World world = myPet.getCraftPet().getHandle().world;
-                            Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((MyPigZombie) myPet).getEquipment())
-                            {
-                                if (is != null)
-                                {
-                                    EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
-                                    itemEntity.pickupDelay = 10;
-                                    world.addEntity(itemEntity);
-                                }
-                            }
                         }
                     }
                     myPet.removePet();
