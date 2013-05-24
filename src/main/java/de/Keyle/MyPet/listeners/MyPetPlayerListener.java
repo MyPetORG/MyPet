@@ -25,6 +25,8 @@ import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.event.MyPetSpoutEvent;
+import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
@@ -39,6 +41,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+
+import static org.bukkit.Bukkit.getPluginManager;
 
 public class MyPetPlayerListener implements Listener
 {
@@ -127,7 +131,25 @@ public class MyPetPlayerListener implements Listener
                 }
                 else if (myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
                 {
-                    myPet.createPet();
+                    switch (myPet.createPet())
+                    {
+                        case Success:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                            if (MyPetConfiguration.ENABLE_EVENTS)
+                            {
+                                getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                            }
+                            break;
+                        case Canceled:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                            break;
+                        case NoSpace:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                            break;
+                        case NotAllowed:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowedToSpawn")).replace("%petname%", myPet.petName));
+                            break;
+                    }
                 }
                 else
                 {
@@ -188,6 +210,9 @@ public class MyPetPlayerListener implements Listener
                                     case NoSpace:
                                         runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", runMyPet.petName));
                                         break;
+                                    case NotAllowed:
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowedToSpawn")).replace("%petname%", myPet.petName));
+                                        break;
                                     case Dead:
                                         if (runMyPet != myPet)
                                         {
@@ -214,28 +239,32 @@ public class MyPetPlayerListener implements Listener
     {
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
-            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (myPetPlayer.hasMyPet())
             {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here && event.getTo().getWorld() == myPet.getLocation().getWorld() && (event.getPlayer().getLocation().distance(event.getTo()) > 30))
+                if (myPet.getStatus() == PetState.Here)
                 {
                     myPet.removePet();
-                    myPet.setLocation(event.getTo());
+                    myPet.setLocation(event.getPlayer().getLocation());
 
                     MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
                         public void run()
                         {
-                            if (myPet.status == PetState.Despawned)
+                            if (myPetPlayer.hasMyPet())
                             {
-                                switch (myPet.createPet())
+                                MyPet runMyPet = myPetPlayer.getMyPet();
+                                switch (runMyPet.createPet())
                                 {
                                     case Canceled:
-                                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", runMyPet.petName));
                                         break;
                                     case NoSpace:
-                                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", runMyPet.petName));
+                                        break;
+                                    case NotAllowed:
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowedToSpawn")).replace("%petname%", myPet.petName));
                                         break;
                                 }
                             }

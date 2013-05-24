@@ -34,6 +34,7 @@ import de.Keyle.MyPet.skill.skills.implementation.HP;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.support.Minigames;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -84,7 +85,7 @@ public abstract class MyPet implements IMyPet
 
     public static enum SpawnFlags
     {
-        Success, NoSpace, AlreadyHere, Dead, Canceled
+        Success, NoSpace, AlreadyHere, Dead, Canceled, NotAllowed
     }
 
     public static enum PetState
@@ -245,6 +246,11 @@ public abstract class MyPet implements IMyPet
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
+                }
+                if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
                 }
                 if (!petLocation.getChunk().isLoaded())
                 {

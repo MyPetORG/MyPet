@@ -131,6 +131,8 @@ public class MyPetLanguage
         addString("Msg_LearnedSkill", "MyPet.Message.learnskill", "%aqua%%petname%%reset% learned the skill %gold%%skill%%reset%.");
         addString("Msg_LightningChance", "MyPet.Message.lightningchance", "%aqua%%petname%%reset% has now a chance of %gold%%chance%%%reset% to shoot a lightning at his enemies.");
         addString("Msg_LvlUp", "MyPet.Message.lvlup", "%aqua%%petname%%reset% is now Lv%gold%%lvl%%reset%");
+        // --  M  --
+        addString("Msg_Minigames", "MyPet.Message.minigames", "MyPets are disabled in Minigames.");
         // --  N  --
         addString("Msg_Name", "MyPet.Message.name", "Your pet is now called %aqua%%petname%");
         addString("Msg_NewName", "MyPet.Message.newname", "The name of your pet is now: %aqua%%petname%");
@@ -139,6 +141,7 @@ public class MyPetLanguage
         addString("Msg_NotAdult", "MyPet.Message.notadult", "This monstertype has to be adult to be captured!");
         addString("Msg_NotAngry", "MyPet.Message.notangry", "This monstertype has to be angry to be captured!");
         addString("Msg_NotAllowed", "MyPet.Message.notallowed", "%red%You are %red%not%reset% allowed to use this!%reset%");
+        addString("Msg_NotAllowedToSpawn", "MyPet.Message.notallowedtospawn", "%red%You are %red%not%reset% allowed to spawn %petname% right now!%reset%");
         addString("Msg_NotBaby", "MyPet.Message.notbaby", "This monstertype has to be a baby to be captured!");
         addString("Msg_NotLeashable", "MyPet.Message.notleashable", "This monstertype can %red%not%reset% be captured!");
         addString("Msg_NothingToSeeHere", "MyPet.Message.nothingtoseehere", "%red%Nothing to see here, move along!");
