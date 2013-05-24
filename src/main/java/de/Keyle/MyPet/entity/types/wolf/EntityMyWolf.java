@@ -58,6 +58,7 @@ public class EntityMyWolf extends EntityMyPet
 
             super.setMyPet(myPet);
 
+            this.setBaby(((MyWolf) myPet).isBaby());
             this.setSitting(((MyWolf) myPet).isSitting());
             this.setTamed(((MyWolf) myPet).isTamed());
             this.setCollarColor(((MyWolf) myPet).getCollarColor());
@@ -178,7 +179,7 @@ public class EntityMyWolf extends EntityMyPet
     {
         super.a();
         this.datawatcher.a(16, new Byte((byte) 0));               // tamed/angry/sitting
-        this.datawatcher.a(17, "");                   // wolf owner name
+        this.datawatcher.a(17, "");                               // wolf owner name
         this.datawatcher.a(18, new Integer(this.getHealth()));    // tail height
         this.datawatcher.a(12, new Integer(0));                   // age
         this.datawatcher.a(19, new Byte((byte) 0));
