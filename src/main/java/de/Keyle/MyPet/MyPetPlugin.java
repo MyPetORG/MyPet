@@ -67,6 +67,7 @@ import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.support.MobArena;
 import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -353,6 +354,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         loadPets(NBTPetFile);
 
         MyPetTimer.startTimer();
+
+        MobArena.findPlugin();
 
         try
         {
