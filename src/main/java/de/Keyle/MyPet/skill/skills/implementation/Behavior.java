@@ -68,6 +68,11 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         return active;
     }
 
+    public boolean isModeUsable(BehaviorState mode)
+    {
+        return mode.isActive() && behaviorActive.get(mode);
+    }
+
     public void upgrade(ISkillInfo upgrade, boolean quiet)
     {
         if (upgrade instanceof BehaviorInfo)
@@ -239,11 +244,14 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     {
         if (active)
         {
-            behavior = behaviorState;
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", MyPetLanguage.getString("Name_" + behavior.name())));
-            if (behavior == BehaviorState.Friendly)
+            if (behaviorActive.get(behaviorState))
             {
-                myPet.getCraftPet().getHandle().setGoalTarget(null);
+                behavior = behaviorState;
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BehaviorState")).replace("%petname%", myPet.petName).replace("%mode%", MyPetLanguage.getString("Name_" + behavior.name())));
+                if (behavior == BehaviorState.Friendly)
+                {
+                    myPet.getCraftPet().getHandle().setGoalTarget(null);
+                }
             }
         }
         else
