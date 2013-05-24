@@ -35,6 +35,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -42,10 +43,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +62,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
     private static List<String> addSetRemoveList = new ArrayList<String>();
     private static List<String> showList = new ArrayList<String>();
     private static List<String> petTypeList = new ArrayList<String>();
+    private static Map<String, List<String>> petTypeOptionMap = new HashMap<String, List<String>>();
 
     static
     {
@@ -74,6 +81,66 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
         showList.add("show");
         showList.add("<number>");
+
+        List<String> petTypeOptionList = new ArrayList<String>();
+
+        petTypeOptionList.add("fire");
+        petTypeOptionMap.put("blaze", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("chicken", petTypeOptionList);
+        petTypeOptionMap.put("cow", petTypeOptionList);
+        petTypeOptionMap.put("mooshroom", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("powered");
+        petTypeOptionMap.put("creeper", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("block:");
+        petTypeOptionMap.put("enderman", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("size:");
+        petTypeOptionMap.put("magmacube", petTypeOptionList);
+        petTypeOptionMap.put("slime", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("cat:");
+        petTypeOptionMap.put("ocelot", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("saddle");
+        petTypeOptionMap.put("pig", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("color:");
+        petTypeOptionMap.put("sheep", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("wither");
+        petTypeOptionMap.put("skeleton", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("profession:");
+        petTypeOptionMap.put("villager", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("angry");
+        petTypeOptionList.add("tamed");
+        petTypeOptionList.add("collar:");
+        petTypeOptionMap.put("wolf", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("villager");
+        petTypeOptionMap.put("zombie", petTypeOptionList);
 
         for (MyPetType petType : MyPetType.values())
         {
@@ -346,10 +413,10 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 return false;
             }
-            MyPetType myPetType = MyPetType.getMyPetTypeByName(args[1]);
+            MyPetType myPetType = MyPetType.getMyPetTypeByName(args[2]);
             if (myPetType != null)
             {
-                Player owner = Bukkit.getPlayer(args[2]);
+                Player owner = Bukkit.getPlayer(args[1]);
                 if (owner == null || !owner.isOnline())
                 {
                     sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
@@ -363,6 +430,114 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     inactiveMyPet.setPetType(myPetType);
                     inactiveMyPet.setPetName(myPetType.getTypeName());
                     inactiveMyPet.setLocation(owner.getLocation());
+
+                    CompoundTag compoundTag = inactiveMyPet.getInfo();
+                    if (args.length > 3)
+                    {
+                        for (int i = 3 ; i < args.length ; i++)
+                        {
+                            if (args[i].equalsIgnoreCase("baby"))
+                            {
+                                compoundTag.getValue().put("Baby", new ByteTag("Baby", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("fire"))
+                            {
+                                compoundTag.getValue().put("Fire", new ByteTag("Fire", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("powered"))
+                            {
+                                compoundTag.getValue().put("Powered", new ByteTag("Powered", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("saddle"))
+                            {
+                                compoundTag.getValue().put("Saddle", new ByteTag("Saddle", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("sheared"))
+                            {
+                                compoundTag.getValue().put("Sheared", new ByteTag("Sheared", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("wither"))
+                            {
+                                compoundTag.getValue().put("Wither", new ByteTag("Wither", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("tamed"))
+                            {
+                                compoundTag.getValue().put("Tamed", new ByteTag("Tamed", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("angry"))
+                            {
+                                compoundTag.getValue().put("Angry", new ByteTag("Angry", true));
+                            }
+                            else if (args[i].equalsIgnoreCase("villager"))
+                            {
+                                compoundTag.getValue().put("Villager", new ByteTag("Villager", true));
+                            }
+                            else if (args[i].startsWith("size:"))
+                            {
+                                String size = args[i].replace("size:", "");
+                                if (MyPetUtil.isInt(size))
+                                {
+                                    compoundTag.getValue().put("Size", new IntTag("Size", Integer.parseInt(size)));
+                                }
+                            }
+                            else if (args[i].startsWith("cat:"))
+                            {
+                                String catTypeString = args[i].replace("cat:", "");
+                                if (MyPetUtil.isInt(catTypeString))
+                                {
+                                    int catType = Integer.parseInt(catTypeString);
+                                    catType = Math.min(Math.max(0, catType), 3);
+                                    compoundTag.getValue().put("CatType", new IntTag("CatType", catType));
+                                }
+                            }
+                            else if (args[i].startsWith("profession:"))
+                            {
+                                String professionString = args[i].replace("profession:", "");
+                                if (MyPetUtil.isInt(professionString))
+                                {
+                                    int profession = Integer.parseInt(professionString);
+                                    profession = Math.min(Math.max(0, profession), 5);
+                                    compoundTag.getValue().put("Profession", new IntTag("Profession", profession));
+                                }
+                            }
+                            else if (args[i].startsWith("color:"))
+                            {
+                                String colorString = args[i].replace("color:", "");
+                                if (MyPetUtil.isByte(colorString))
+                                {
+                                    byte color = Byte.parseByte(colorString);
+                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                                    compoundTag.getValue().put("Color", new ByteTag("Color", color));
+                                }
+                            }
+                            else if (args[i].startsWith("collar:"))
+                            {
+                                String colorString = args[i].replace("collar:", "");
+                                if (MyPetUtil.isByte(colorString))
+                                {
+                                    byte color = Byte.parseByte(colorString);
+                                    color = color > 15 ? 15 : color < 0 ? 0 : color;
+                                    compoundTag.getValue().put("CollarColor", new ByteTag("CollarColor", color));
+                                }
+                            }
+                            else if (args[i].startsWith("block:"))
+                            {
+                                String blocks = args[i].replace("block:", "");
+                                String[] blockInfo = blocks.split(":");
+                                if (blockInfo.length >= 1 && MyPetUtil.isInt(blockInfo[0]) && MyPetBukkitUtil.isValidMaterial(Integer.parseInt(blockInfo[0])))
+                                {
+                                    compoundTag.getValue().put("BlockID", new IntTag("BlockID", Integer.parseInt(blockInfo[0])));
+                                }
+                                if (blockInfo.length >= 2 && MyPetUtil.isInt(blockInfo[1]))
+                                {
+                                    int blockData = Integer.parseInt(blockInfo[1]);
+                                    blockData = Math.min(Math.max(0, blockData), 15);
+                                    MyPetLogger.write("bd:" + blockData);
+                                    compoundTag.getValue().put("BlockData", new IntTag("BlockData", blockData));
+                                }
+                            }
+                        }
+                    }
 
                     MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                     myPet.createPet();
@@ -464,11 +639,19 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 if (strings.length == 2)
                 {
-                    return petTypeList;
+                    return null;
                 }
                 if (strings.length == 3)
                 {
-                    return null;
+                    return petTypeList;
+                }
+                if (strings.length >= 4)
+                {
+                    if (petTypeOptionMap.containsKey(strings[2].toLowerCase()))
+                    {
+                        return petTypeOptionMap.get(strings[2].toLowerCase());
+                    }
+                    return emptyList;
                 }
             }
         }

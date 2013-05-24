@@ -39,7 +39,7 @@ public class MyWolf extends MyPet implements IMyPetBaby
 {
     protected boolean isSitting = false;
     protected boolean isBaby = false;
-    protected boolean isTamed = true;
+    protected boolean isTamed = false;
     protected boolean isAngry = false;
     protected DyeColor collarColor = DyeColor.RED;
 
