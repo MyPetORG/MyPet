@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types.skeleton;
 
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
@@ -41,7 +42,7 @@ import java.util.Map;
 import static org.bukkit.Material.BONE;
 
 @MyPetInfo(food = {BONE})
-public class MySkeleton extends MyPet
+public class MySkeleton extends MyPet implements IMyPetEquipment
 {
     protected boolean isWither = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types.pigzombie;
 
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
@@ -40,7 +41,7 @@ import java.util.Map;
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
-public class MyPigZombie extends MyPet
+public class MyPigZombie extends MyPet implements IMyPetEquipment
 {
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
 

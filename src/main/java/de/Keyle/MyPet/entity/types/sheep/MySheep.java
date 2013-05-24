@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.sheep;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -34,7 +35,7 @@ import org.spout.nbt.TagType;
 import static org.bukkit.Material.WHEAT;
 
 @MyPetInfo(food = {WHEAT})
-public class MySheep extends MyPet
+public class MySheep extends MyPet implements IMyPetBaby
 {
     protected DyeColor color = DyeColor.WHITE;
     protected boolean isSheared = false;

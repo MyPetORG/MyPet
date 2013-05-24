@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.cow;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -31,7 +32,7 @@ import org.spout.nbt.CompoundTag;
 import static org.bukkit.Material.WHEAT;
 
 @MyPetInfo(food = {WHEAT})
-public class MyCow extends MyPet
+public class MyCow extends MyPet implements IMyPetBaby
 {
     protected boolean isBaby = false;
 

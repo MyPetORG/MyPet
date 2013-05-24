@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -34,7 +35,7 @@ import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_FISH;
 
 @MyPetInfo(food = {RAW_FISH}, leashFlags = {Tamed})
-public class MyOcelot extends MyPet
+public class MyOcelot extends MyPet implements IMyPetBaby
 {
     protected boolean isSitting = false;
     protected boolean isBaby = false;

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.slime;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetSlimeSize;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -31,7 +32,7 @@ import org.spout.nbt.IntTag;
 import static org.bukkit.Material.SUGAR;
 
 @MyPetInfo(food = {SUGAR})
-public class MySlime extends MyPet
+public class MySlime extends MyPet implements IMyPetSlimeSize
 {
     protected int size = 1;
 

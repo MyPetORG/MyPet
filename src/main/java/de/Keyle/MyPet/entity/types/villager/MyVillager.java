@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.villager;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -32,7 +33,7 @@ import org.spout.nbt.IntTag;
 import static org.bukkit.Material.APPLE;
 
 @MyPetInfo(food = {APPLE})
-public class MyVillager extends MyPet
+public class MyVillager extends MyPet implements IMyPetBaby
 {
     protected int profession = 0;
     protected boolean isBaby = false;

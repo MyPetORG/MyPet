@@ -22,6 +22,8 @@ package de.Keyle.MyPet.entity.types.zombie;
 
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
+import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
@@ -41,7 +43,7 @@ import java.util.Map;
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
-public class MyZombie extends MyPet
+public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
 {
     protected boolean isBaby = false;
     protected boolean isVillager = false;
