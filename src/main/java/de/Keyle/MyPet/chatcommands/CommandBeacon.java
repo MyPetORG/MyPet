@@ -48,7 +48,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
+            if (args.length == 1 && !args[0].equalsIgnoreCase("stop") && MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
@@ -68,11 +68,12 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).activate(player);
                 }
+                return true;
             }
-            else if (MyPetList.hasMyPet(player))
+            if (MyPetList.hasMyPet(player))
             {
                 MyPet myPet = MyPetList.getMyPet(player);
-                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon"))
+                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon", true))
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
                     return true;
