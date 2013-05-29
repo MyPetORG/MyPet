@@ -42,6 +42,10 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
         {
             return false;
         }
+        if (this.petEntity.hasRider())
+        {
+            return false;
+        }
         return this.petEntity.aE().nextFloat() < 0.02F;
     }
 

@@ -57,6 +57,10 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
         {
             return false;
         }
+        if (this.petEntity.hasRider())
+        {
+            return false;
+        }
         this.targetPlayer = this.petEntity.world.findNearbyPlayer(this.petEntity, this.range);
         return this.targetPlayer != null;
     }
