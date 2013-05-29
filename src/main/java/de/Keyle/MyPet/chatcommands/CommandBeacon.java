@@ -91,6 +91,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconStop")).replace("%petname%", myPet.petName));
                     return true;
                 }
                 if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))

@@ -88,6 +88,7 @@ public class MyPetLanguage
         addString("Msg_BeaconCreative", "MyPet.Message.beaconwhileincreative", "You can't open the beacon window while you are in creative mode.");
         addString("Msg_BeaconBuffNotActive", "MyPet.Message.beaconbuffnotactive", "You %red%can't%reset% use the %gold%%buff%%reset% buff.");
         addString("Msg_BeaconImprovedBuffNotActive", "MyPet.Message.beaconimprovedbuffnotactive", "You %red%can't%reset% use the improved %gold%%buff%%reset% buff.");
+        addString("Msg_BeaconStop", "MyPet.Message.beaconstop", "%aqua%%petname%%reset% stopped acting like a beacon.");
         addString("Msg_BehaviorState", "MyPet.Message.behaviorstate", "%aqua%%petname%%reset% is now in %gold%%mode%%reset% mode.");
         // --  C  --
         addString("Msg_Call", "MyPet.Message.call", "%aqua%%petname%%reset% comes to you.");
