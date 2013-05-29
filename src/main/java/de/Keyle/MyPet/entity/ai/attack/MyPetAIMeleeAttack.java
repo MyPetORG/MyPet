@@ -20,12 +20,11 @@
 
 package de.Keyle.MyPet.entity.ai.attack;
 
+import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
-import de.Keyle.MyPet.entity.types.skeleton.EntityMySkeleton;
-import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import net.minecraft.server.v1_5_R3.EntityLiving;
 
 public class MyPetAIMeleeAttack extends MyPetAIGoal
@@ -118,23 +117,9 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
         if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0))
         {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
-            if (this.petEntity instanceof EntityMySkeleton)
+            if (this.petEntity instanceof IMyPetEquipment)
             {
-                if (((EntityMySkeleton) this.petEntity).getPetEquipment(0) != null)
-                {
-                    this.petEntity.bK(); // -> swingItem()
-                }
-            }
-            else if (this.petEntity instanceof EntityMyPigZombie)
-            {
-                if (((EntityMyPigZombie) this.petEntity).getPetEquipment(0) != null)
-                {
-                    this.petEntity.bK(); // -> swingItem()
-                }
-            }
-            else if (this.petEntity instanceof EntityMyZombie)
-            {
-                if (((EntityMyZombie) this.petEntity).getPetEquipment(0) != null)
+                if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null)
                 {
                     this.petEntity.bK(); // -> swingItem()
                 }
