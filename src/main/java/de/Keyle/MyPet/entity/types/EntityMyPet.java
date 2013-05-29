@@ -297,7 +297,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             if (this.hasRider())
             {
-                ((CraftPlayer) owner).getHandle().mount(null);
+                ((CraftPlayer) owner).getHandle().setPassengerOf(null);
                 return true;
             }
             if (myPet.getSkills().isSkillActive("Ride"))
@@ -306,7 +306,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
-                        ((CraftPlayer) owner).getHandle().mount(this);
+                        ((CraftPlayer) owner).getHandle().setPassengerOf(this);
                         return true;
                     }
                     else

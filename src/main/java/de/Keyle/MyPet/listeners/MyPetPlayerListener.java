@@ -245,8 +245,12 @@ public class MyPetPlayerListener implements Listener
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Here)
                 {
-                    myPet.removePet();
-                    myPet.setLocation(event.getPlayer().getLocation());
+
+                    if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10)
+                    {
+                        myPet.removePet();
+                    }
+                    myPet.setLocation(event.getTo());
 
                     MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
