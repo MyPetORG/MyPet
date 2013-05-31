@@ -5,8 +5,8 @@ import com.pauldavdesign.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.locale.MyPetTranslation;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Minigames")));
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetTranslation.getString("Msg_Minigames", player.getPlayer())));
             }
         }
     }
@@ -64,7 +64,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Minigames")));
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetTranslation.getString("Msg_Minigames", player.getPlayer())));
             }
         }
     }
