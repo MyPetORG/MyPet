@@ -44,6 +44,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.jzx7.regiosapi.RegiosAPI;
 import net.jzx7.regiosapi.regions.Region;
+import net.slipcor.pvparena.api.PVPArenaAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -64,6 +65,7 @@ public class MyPetPvP
     public static boolean USE_Residence = true;
     public static boolean USE_AncientRPG = true;
     public static boolean USE_GriefPrevention = true;
+    public static boolean USE_PvPArena = true;
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
     private static boolean searchedFactions = false;
@@ -75,11 +77,13 @@ public class MyPetPvP
     private static boolean searchedMcMMO = false;
     private static boolean searchedAncientRPG = false;
     private static boolean searchedGriefPrevention = false;
+    private static boolean searchedPvPArena = false;
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
     private static boolean pluginTowny = false;
     private static boolean pluginMcMMO = false;
     private static boolean pluginResidence = false;
+    private static boolean pluginPvPArena = false;
     private static WorldGuardPlugin pluginWorldGuard = null;
     private static Heroes pluginHeroes = null;
     private static RegiosAPI pluginRegios = null;
@@ -91,7 +95,7 @@ public class MyPetPvP
     {
         if (attacker != null && defender != null)
         {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -268,6 +272,29 @@ public class MyPetPvP
             if (pluginMobArena.isPlayerInArena(defender))
             {
                 return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
+            }
+        }
+        return true;
+    }
+
+    public static boolean canHurtPvPArena(Player attacker, Player defender)
+    {
+        if (!searchedPvPArena)
+        {
+            searchedPvPArena = true;
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena"))
+            {
+                pluginPvPArena = true;
+            }
+        }
+        if (USE_PvPArena && pluginPvPArena)
+        {
+            if (!PVPArenaAPI.getArenaName(defender).equals(""))
+            {
+                if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender)))
+                {
+                    return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
+                }
             }
         }
         return true;

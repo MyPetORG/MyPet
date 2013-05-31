@@ -35,6 +35,7 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.support.Minigames;
+import de.Keyle.MyPet.util.support.PvPArena;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -248,6 +249,11 @@ public abstract class MyPet implements IMyPet
                     return SpawnFlags.NoSpace;
                 }
                 if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (PvPArena.DISABLE_PETS_IN_ARENA && PvPArena.isInPvPArena(getOwner()))
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;

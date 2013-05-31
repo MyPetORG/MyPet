@@ -40,6 +40,8 @@ import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.support.Minigames;
+import de.Keyle.MyPet.util.support.PvPArena;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -140,6 +142,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Support.Residence", true);
         config.addDefault("MyPet.Support.AncientRPG", true);
         config.addDefault("MyPet.Support.GriefPrevention", true);
+        config.addDefault("MyPet.Support.Minigames.DisableInGames", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", false);
@@ -274,6 +277,9 @@ public class MyPetConfiguration
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
 
         MyPetEconomy.USE_ECONOMY = config.getBoolean("MyPet.Support.Vault.Economy", true);
+        Minigames.DISABLE_PETS_IN_MINIGAMES = config.getBoolean("MyPet.Support.Minigames.DisableInGames", true);
+        PvPArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Support.PvPArena.DisablePetsInArena", true);
+        MyPetPvP.USE_PvPArena = config.getBoolean("MyPet.Support.PvPArena.PvP", true);
         MyPetPvP.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
         MyPetPvP.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);
         MyPetPvP.USE_WorldGuard = config.getBoolean("MyPet.Support.WorldGuard", true);
