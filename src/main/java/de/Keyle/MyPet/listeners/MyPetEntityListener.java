@@ -38,6 +38,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_5_R3.MathHelper;
 import org.bukkit.ChatColor;
@@ -184,7 +185,7 @@ public class MyPetEntityListener implements Listener
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet) && myPet.getOwner() != myPetPlayer)
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", myPet.getOwner().getName()).replace("%N_Owner%", MyPetLocales.getString("Name.Owner", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
@@ -202,29 +203,29 @@ public class MyPetEntityListener implements Listener
                         {
                             msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                     {
                         int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                     {
                         int damage = myPet.getDamage();
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLanguage.getString("Name_RangedDamage")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (MyPetConfiguration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLocales.getString("Name.Hunger", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getDisplayName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getDisplayName()).replace("%N_Skilltree%", MyPetLocales.getString("Name.Skilltree", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (MyPetConfiguration.USE_LEVEL_SYSTEM)
@@ -232,20 +233,20 @@ public class MyPetEntityListener implements Listener
                         if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, myPetPlayer, myPet))
                         {
                             int lvl = myPet.getExperience().getLevel();
-                            damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                            damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLocales.getString("Name.Level", myPet.getOwner().getPlayer())));
                             infoShown = true;
                         }
                         if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
                         {
                             double exp = myPet.getExperience().getCurrentExp();
                             double reqEXP = myPet.getExperience().getRequiredExp();
-                            damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                            damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLocales.getString("Name.Exp", myPet.getOwner().getLanguage())));
                             infoShown = true;
                         }
                     }
                     if (!infoShown)
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NothingToSeeHere")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NothingToSeeHere", myPet.getOwner().getLanguage())));
                     }
 
                     event.setCancelled(true);
@@ -605,7 +606,7 @@ public class MyPetEntityListener implements Listener
                         {
                             DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                         }
-                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddLeash")));
+                        damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddLeash", myPet.getOwner().getLanguage())));
                     }
                 }
             }
@@ -643,13 +644,13 @@ public class MyPetEntityListener implements Listener
                 switch (myPet.createPet())
                 {
                     case Success:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Call")).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Call", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                         break;
                     case Canceled:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                         break;
                     case NoSpace:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                         break;
                 }
             }
@@ -846,8 +847,8 @@ public class MyPetEntityListener implements Listener
                     inventorySkill.inv.dropContentAt(myPet.getLocation());
                 }
             }
-            SendDeathMessage(event);
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+            sendDeathMessage(event);
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
 
             if (MyPetEconomy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.respawnTime >= myPet.getOwner().getAutoRespawnMin() && MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
             {
@@ -855,12 +856,12 @@ public class MyPetEntityListener implements Listener
                 if (MyPetEconomy.canPay(myPet.getOwner(), costs))
                 {
                     MyPetEconomy.pay(myPet.getOwner(), costs);
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
                     myPet.respawnTime = 1;
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnNoMoney").replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
                 }
             }
         }
@@ -1016,7 +1017,7 @@ public class MyPetEntityListener implements Listener
         }
     }
 
-    private void SendDeathMessage(final EntityDeathEvent event)
+    private void sendDeathMessage(final EntityDeathEvent event)
     {
 
         if (event.getEntity() instanceof CraftMyPet)
@@ -1031,7 +1032,7 @@ public class MyPetEntityListener implements Listener
                 {
                     if (e.getDamager() == myPet.getOwner().getPlayer())
                     {
-                        killer = MyPetLanguage.getString("Name_You");
+                        killer = MyPetLocales.getString("Name.You", myPet.getOwner().getLanguage());
                     }
                     else
                     {
@@ -1041,7 +1042,7 @@ public class MyPetEntityListener implements Listener
                 else if (e.getDamager().getType() == EntityType.WOLF)
                 {
                     Wolf w = (Wolf) e.getDamager();
-                    killer = MyPetLanguage.getString("Name_Wolf");
+                    killer = MyPetLocales.getString("Name.Wolf", myPet.getOwner().getLanguage());
                     if (w.isTamed())
                     {
                         killer += " (" + w.getOwner().getName() + ')';
@@ -1055,12 +1056,12 @@ public class MyPetEntityListener implements Listener
                 else if (e.getDamager() instanceof Projectile)
                 {
                     Projectile projectile = (Projectile) e.getDamager();
-                    killer = MyPetLanguage.getString("Name_" + projectile.getType().name()) + " (";
+                    killer = MyPetLocales.getString("Name." + projectile.getType().name(), myPet.getOwner().getLanguage()) + " (";
                     if (projectile.getShooter() instanceof Player)
                     {
                         if (projectile.getShooter() == myPet.getOwner().getPlayer())
                         {
-                            killer += MyPetLanguage.getString("Name_You");
+                            killer += MyPetLocales.getString("Name.You", myPet.getOwner().getLanguage());
                         }
                         else
                         {
@@ -1069,27 +1070,27 @@ public class MyPetEntityListener implements Listener
                     }
                     else
                     {
-                        killer += MyPetLanguage.getString("Name_" + e.getDamager().getType().name());
+                        killer += MyPetLocales.getString("Name." + e.getDamager().getType().name(), myPet.getOwner().getLanguage());
                     }
                     killer += ")";
                 }
                 else
                 {
-                    killer = MyPetLanguage.getString("Name_" + e.getDamager().getType().getName());
+                    killer = MyPetLocales.getString("Name." + e.getDamager().getType().getName(), myPet.getOwner().getLanguage());
                 }
             }
             else
             {
                 if (event.getEntity().getLastDamageCause() != null)
                 {
-                    killer = MyPetLanguage.getString("Name_" + event.getEntity().getLastDamageCause().getCause().name());
+                    killer = MyPetLocales.getString("Name." + event.getEntity().getLastDamageCause().getCause().name(), myPet.getOwner().getLanguage());
                 }
                 else
                 {
-                    killer = MyPetLanguage.getString("Name_Unknow");
+                    killer = MyPetLocales.getString("Name.Unknow", myPet.getOwner().getLanguage());
                 }
             }
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DeathMessage")).replace("%petname%", myPet.petName) + killer);
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DeathMessage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName) + killer);
         }
     }
 }

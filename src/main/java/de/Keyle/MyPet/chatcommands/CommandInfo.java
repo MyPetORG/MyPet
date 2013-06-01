@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -66,7 +67,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player)));
             }
             else if (MyPetList.hasMyPet(playerName))
             {
@@ -81,7 +82,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 }
                 if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet))
                 {
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLanguage.getString("Name_Owner")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLocales.getString("Name.Owner", player)));
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
@@ -89,7 +90,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                     String msg;
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        msg = ChatColor.RED + MyPetLanguage.getString("Name_Dead");
+                        msg = ChatColor.RED + MyPetLocales.getString("Name.Dead", player);
                     }
                     else if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
                     {
@@ -103,29 +104,29 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                     {
                         msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                     }
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLanguage.getString("Name_HP")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", player)));
                     infoShown = true;
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                 {
                     int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamageIncrease() : 0);
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLanguage.getString("Name_Damage")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", player)));
                     infoShown = true;
                 }
                 if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                 {
                     int damage = myPet.getDamage();
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLanguage.getString("Name_RangedDamage")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", player)));
                     infoShown = true;
                 }
                 if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                 {
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLanguage.getString("Name_Hunger")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLocales.getString("Name.Hunger", player)));
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
                 {
-                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getName()).replace("%N_Skilltree%", MyPetLanguage.getString("Name_Skilltree")));
+                    player.sendMessage(MyPetBukkitUtil.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getName()).replace("%N_Skilltree%", MyPetLocales.getString("Name.Skilltree", player)));
                     infoShown = true;
                 }
                 if (MyPetConfiguration.USE_LEVEL_SYSTEM)
@@ -133,20 +134,20 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                     if (canSee(PetInfoDisplay.Level.adminOnly, myPetPlayer, myPet))
                     {
                         int lvl = myPet.getExperience().getLevel();
-                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLanguage.getString("Name_Level")));
+                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLocales.getString("Name.Level", player)));
                         infoShown = true;
                     }
                     if (canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
                     {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
-                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLanguage.getString("Name_Exp")));
+                        player.sendMessage(MyPetBukkitUtil.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLocales.getString("Name.Exp", player)));
                         infoShown = true;
                     }
                 }
                 if (!infoShown)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantViewPetInfo")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantViewPetInfo", player)));
                 }
                 return true;
             }
@@ -154,11 +155,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", playerName)));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", playerName)));
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
                 }
             }
             return true;

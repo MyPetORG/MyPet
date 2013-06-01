@@ -34,6 +34,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
@@ -150,12 +151,14 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
+        String lang = "en";
         if (sender instanceof Player)
         {
             if (!MyPetPermissions.has((Player) sender, "MyPet.admin", false))
             {
                 return true;
             }
+            lang = MyPetBukkitUtil.getPlayerLanguage((Player) sender);
         }
         if (args.length < 1)
         {
@@ -169,12 +172,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -206,12 +209,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -276,12 +279,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -379,12 +382,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -395,16 +398,16 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(args[2]);
                 if (myPet.setSkilltree(skillTree))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeSwitchedTo").replace("%name%", skillTree.getName())));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedToFor", lang).replace("%petowner%", petOwner.getName()).replace("%skilltree%", skillTree.getName())));
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeNotSwitched")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeNotSwitched", lang).replace("%playername%", petOwner.getName())));
                 }
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", args[2])));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", lang).replace("%name%", args[2])));
             }
         }
         else if (option.equalsIgnoreCase("create"))
@@ -419,7 +422,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 Player owner = Bukkit.getPlayer(args[1]);
                 if (owner == null || !owner.isOnline())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang).replace("%playername%", owner.getName())));
                     return true;
                 }
 

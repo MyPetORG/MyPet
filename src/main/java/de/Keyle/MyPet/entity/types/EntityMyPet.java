@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -311,7 +312,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                     else
                     {
-                        getMyPet().sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                        getMyPet().sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage())));
                     }
                 }
             }

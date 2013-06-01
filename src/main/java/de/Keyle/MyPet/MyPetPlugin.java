@@ -64,6 +64,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Minigames;
@@ -121,6 +122,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         this.isReady = false;
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
+        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
@@ -336,7 +338,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
-        MyPetLanguage.load(new YAML_Configuration(getPlugin().getDataFolder().getPath() + File.separator + "lang.yml"));
+        new MyPetLocales();
 
         File NBTWolfFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
         if (NBTWolfFile.exists())
@@ -433,7 +435,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnIn").replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                        player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
                     }
                     else if (myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {
@@ -844,5 +846,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetPlugin.getPlugin().savePets(false);
             autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
         }
+    }
+
+    public File getFile()
+    {
+        return super.getFile();
     }
 }

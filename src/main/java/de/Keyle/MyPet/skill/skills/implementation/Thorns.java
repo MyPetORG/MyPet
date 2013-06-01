@@ -25,7 +25,7 @@ import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.ThornsInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -72,7 +72,7 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_ThornsChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.ThornsChance", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%chance%", "" + chance));
                 }
             }
         }

@@ -23,9 +23,9 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -51,12 +51,12 @@ public class CommandSkill implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", petOwner)));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", petOwner).replace("%playername%", petOwner.getName())));
                     return true;
                 }
             }
@@ -64,7 +64,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_Skills")).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skills", petOwner)).replace("%petname%", myPet.petName).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills())
                 {
@@ -77,7 +77,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

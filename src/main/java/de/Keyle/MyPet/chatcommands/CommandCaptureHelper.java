@@ -1,9 +1,9 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,11 +37,11 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
             if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
             {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
-                String mode = myPetPlayer.isCaptureHelperActive() ? MyPetLanguage.getString("Name_Enabled") : MyPetLanguage.getString("Name_Disabled");
-                player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CaptureHelperMode")).replace("%mode%", "" + mode));
+                String mode = myPetPlayer.isCaptureHelperActive() ? MyPetLocales.getString("Name.Enabled", player) : MyPetLocales.getString("Name.Disabled", player);
+                player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CaptureHelperMode", player)).replace("%mode%", "" + mode));
                 return true;
             }
-            player.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+            player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", player)));
         }
         return true;
     }

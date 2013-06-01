@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Material;
 import org.spout.nbt.FloatTag;
 import org.spout.nbt.StringTag;
@@ -72,7 +72,7 @@ public class Ride extends RideInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddRide")).replace("%petname%", myPet.petName)/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddRide", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName)/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class Ride extends RideInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return MyPetLanguage.getString("Name_Speed") + " +" + String.format("%1.3f", speed);
+        return MyPetLocales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
     }
 
     public void reset()

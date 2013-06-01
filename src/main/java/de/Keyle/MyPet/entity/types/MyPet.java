@@ -34,6 +34,7 @@ import de.Keyle.MyPet.skill.skills.implementation.HP;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.support.Minigames;
 import de.Keyle.MyPet.util.support.PvPArena;
 import org.bukkit.ChatColor;
@@ -213,13 +214,13 @@ public abstract class MyPet implements IMyPet
             switch (createPet())
             {
                 case Success:
-                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_OnRespawn")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.OnRespawn", petOwner.getLanguage())).replace("%petname%", petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnPrevent")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", petOwner.getLanguage())).replace("%petname%", petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SpawnNoSpace")).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", petOwner.getLanguage())).replace("%petname%", petName));
                     break;
             }
             if (MyPetConfiguration.USE_HUNGER_SYSTEM)
@@ -458,7 +459,7 @@ public abstract class MyPet implements IMyPet
                     if (MyPetEconomy.canPay(getOwner(), cost))
                     {
                         MyPetEconomy.pay(getOwner(), cost);
-                        sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_RespawnPaid").replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
+                        sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnPaid", petOwner.getLanguage()).replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
                         respawnTime = 1;
                     }
                 }

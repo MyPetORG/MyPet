@@ -64,7 +64,7 @@ public class PvPArena implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                //player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetTranslation.getString("Msg_PvPArena",player.getPlayer())));
+                //player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PvPArena",player.getPlayer())));
             }
         }
     }

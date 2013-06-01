@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -63,7 +63,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", petOwner)).replace("%petname%", myPet.petName));
                     return true;
                 }
                 else if (myPet.getSkills().hasSkill("Behavior"))
@@ -75,7 +75,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Friendly") || !behaviorSkill.isModeUsable(BehaviorState.Friendly))
                             {
-                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", petOwner)));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Friendly);
@@ -84,7 +84,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.aggressive") || !behaviorSkill.isModeUsable(BehaviorState.Aggressive))
                             {
-                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", petOwner)));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Aggressive);
@@ -93,7 +93,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Farm") || !behaviorSkill.isModeUsable(BehaviorState.Farm))
                             {
-                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", petOwner)));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(BehaviorState.Farm);
@@ -102,7 +102,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Raid") || !behaviorSkill.isModeUsable(BehaviorState.Raid))
                             {
-                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", petOwner)));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Raid);
@@ -111,7 +111,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                         {
                             if (!MyPetPermissions.hasExtended(petOwner, "MyPet.user.extended.Behavior.Duel") || !behaviorSkill.isModeUsable(BehaviorState.Duel))
                             {
-                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAllowed")));
+                                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", petOwner)));
                                 return true;
                             }
                             behaviorSkill.activateBehavior(Behavior.BehaviorState.Duel);
@@ -135,7 +135,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
@@ -48,7 +48,7 @@ public class MyPetLevelUpListener implements Listener
         MyPet myPet = event.getPet();
         if (!event.isQuiet())
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_LvlUp")).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.LvlUp", event.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
 
             if (MyPetExperience.FIREWORK_ON_LEVELUP)
             {

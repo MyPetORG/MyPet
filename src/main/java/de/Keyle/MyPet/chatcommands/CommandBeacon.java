@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -54,12 +54,12 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PlayerNotOnline")));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player).replace("%playername%", petOwner.getName())));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UserDontHavePet").replace("%playername%", petOwner.getName())));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", petOwner.getName())));
                     return true;
                 }
 
@@ -75,28 +75,28 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 MyPet myPet = MyPetList.getMyPet(player);
                 if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon", true))
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantUse")));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", player)));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", player)).replace("%petname%", myPet.petName));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", player)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconStop")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconStop", player)).replace("%petname%", myPet.petName));
                     return true;
                 }
                 if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_BeaconCreative")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconWhileInCreative", player)).replace("%petname%", myPet.petName));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Beacon"))
@@ -106,7 +106,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
             }
             return true;
         }

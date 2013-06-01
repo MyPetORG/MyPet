@@ -25,7 +25,7 @@ import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.FireInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -87,7 +87,7 @@ public class Fire extends FireInfo implements ISkillInstance, ISkillActive
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_FireChance")).replace("%petname%", myPet.petName).replace("%chance%", "" + chance).replace("%duration%", "" + duration));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.FireChance", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%chance%", "" + chance).replace("%duration%", "" + duration));
             }
         }
     }

@@ -5,13 +5,14 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,12 @@ public class CommandPetType implements CommandExecutor, TabCompleter
 
         MyPetType myPetType = MyPetType.getMyPetTypeByName(args[0]);
 
+        String lang = "en";
+        if (commandSender instanceof Player)
+        {
+            lang = MyPetBukkitUtil.getPlayerLanguage((Player) commandSender);
+        }
+
         if (myPetType != null)
         {
             String leashFlagString = "";
@@ -46,8 +53,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
                 leashFlagString += leashFlag.name() + ", ";
             }
             leashFlagString = leashFlagString.substring(0, leashFlagString.lastIndexOf(","));
-            commandSender.sendMessage("Leash Flags: " + leashFlagString);
-
+            commandSender.sendMessage(MyPetLocales.getString("Name.LeashFlag", lang) + ": " + leashFlagString);
 
             String foodString = "";
             for (Material material : MyPet.getFood(myPetType.getMyPetClass()))
@@ -55,12 +61,12 @@ public class CommandPetType implements CommandExecutor, TabCompleter
                 foodString += WordUtils.capitalizeFully(material.name().replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
-            commandSender.sendMessage("Food: " + foodString);
+            commandSender.sendMessage(MyPetLocales.getString("Name.Food", lang) + ": " + foodString);
 
-            commandSender.sendMessage("Start HP: " + MyPet.getStartHP(myPetType.getMyPetClass()));
+            commandSender.sendMessage(MyPetLocales.getString("Name.HP", lang) + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
             return true;
         }
-        commandSender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_UnknownPetType")));
+        commandSender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UnknownPetType", lang)));
 
         return true;
     }

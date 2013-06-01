@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.SprintInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 
 public class Sprint extends SprintInfo implements ISkillInstance
 {
@@ -58,7 +58,7 @@ public class Sprint extends SprintInfo implements ISkillInstance
             active = true;
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddSprint")).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddSprint", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
 
             }
         }

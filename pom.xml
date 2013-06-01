@@ -100,6 +100,16 @@
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.com</url>
         </repository>
+        <repository>
+            <id>zml-repo</id>
+            <url>http://files.zachsthings.com/repo</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <distributionManagement>
@@ -290,6 +300,23 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
+                            <checkoutDirectory>target/classes/locale</checkoutDirectory>
+                            <excludes>exclude,.git</excludes>
+                        </configuration>
+                        <goals>
+                            <goal>checkout</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

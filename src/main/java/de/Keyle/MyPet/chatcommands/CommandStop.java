@@ -23,8 +23,8 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetList;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,22 +43,22 @@ public class CommandStop implements CommandExecutor
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallFirst")).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", petOwner)).replace("%petname%", myPet.petName));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CallDead")).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", petOwner)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
                     return true;
                 }
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_StopAttack")).replace("%petname%", myPet.petName));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.StopAttack", petOwner)).replace("%petname%", myPet.petName));
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

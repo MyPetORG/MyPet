@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -70,7 +70,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddDamage")).replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddDamage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%dmg%", "" + damage));
                 }
             }
             if (isPassive != (damage <= 0))

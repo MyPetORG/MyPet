@@ -29,8 +29,8 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PickupInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetLanguage;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_5_R3.Packet22Collect;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
@@ -81,7 +81,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AddPickup")).replace("%petname%", myPet.petName).replace("%range%", "" + String.format("%1.2f", range)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddPickup", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%range%", "" + String.format("%1.2f", range)));
                 }
             }
         }
@@ -89,7 +89,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
 
     public String getFormattedValue()
     {
-        return MyPetLanguage.getString("Name_Range") + ": " + String.format("%1.2f", range) + " " + MyPetLanguage.getString("Name_Blocks");
+        return MyPetLocales.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + String.format("%1.2f", range) + " " + MyPetLocales.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
     public void reset()
@@ -105,18 +105,18 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
             if (myPet.getSkills().isSkillActive("Inventory"))
             {
                 pickup = !pickup;
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString((pickup ? "Msg_PickUpStart" : "Msg_PickUpStop"))).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString((pickup ? "Message.PickUpStart" : "Message.PickUpStop"), myPet.getOwner().getPlayer())).replace("%petname%", myPet.petName));
                 return true;
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PickButNoInventory")).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpButNoInventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NoSkill")).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
             return false;
         }
     }
@@ -126,7 +126,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         if (pickup && !MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
         {
             pickup = false;
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_PickUpStop")).replace("%petname%", myPet.petName));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpStop", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
             return;
         }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))

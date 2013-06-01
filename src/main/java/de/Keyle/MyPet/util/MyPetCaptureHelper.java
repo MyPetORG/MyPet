@@ -4,6 +4,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.entity.*;
 
 import java.util.List;
@@ -24,20 +25,20 @@ public class MyPetCaptureHelper
             {
                 case Impossible:
                     tameNow = false;
-                    attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotLeashable")));
+                    attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotLeashable", attacker)));
                     break flagloop;
                 case Adult:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).isAdult())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAdult")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAdult", attacker)));
                     }
                     break;
                 case Baby:
                     if (leashTarget instanceof Ageable && ((Ageable) leashTarget).isAdult())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotBaby")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotBaby", attacker)));
                     }
                     break;
                 case LowHp:
@@ -47,19 +48,19 @@ public class MyPetCaptureHelper
                     }
                     if (newHealth <= leashTarget.getMaxHealth() && newHealth > 2)
                     {
-                        attacker.sendMessage(newHealth + "/" + leashTarget.getMaxHealth() + " " + MyPetLanguage.getString("Name_HP"));
+                        attacker.sendMessage(newHealth + "/" + leashTarget.getMaxHealth() + " " + MyPetLocales.getString("Name.HP", attacker));
                     }
                     break;
                 case Angry:
                     if (leashTarget instanceof Wolf && !((Wolf) leashTarget).isAngry())
                     {
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotAngry")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAngry", attacker)));
                     }
                     break;
                 case CanBreed:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).canBreed())
                     {
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CanNotBreed")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CanNotBreed", attacker)));
                     }
                     break;
                 case None:
@@ -69,32 +70,32 @@ public class MyPetCaptureHelper
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotTamed")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotTamed", attacker)));
                     }
                     break;
                 case UserCreated:
                     if (leashTarget instanceof IronGolem && !((IronGolem) leashTarget).isPlayerCreated())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotUserCreated")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotUserCreated", attacker)));
                     }
                     break;
                 case Wild:
                     if (leashTarget instanceof IronGolem && ((IronGolem) leashTarget).isPlayerCreated())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotWild")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotWild", attacker)));
                     }
                     else if (leashTarget instanceof Tameable && ((Tameable) leashTarget).isTamed())
                     {
                         tameNow = false;
-                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_NotWild")));
+                        attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotWild", attacker)));
                     }
             }
         }
         if (tameNow)
         {
-            attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_TameNow")));
+            attacker.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.TameNow", attacker)));
         }
         return tameNow;
     }

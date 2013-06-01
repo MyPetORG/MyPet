@@ -23,7 +23,11 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.MyPetConfiguration;
+import de.Keyle.MyPet.util.MyPetList;
+import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,11 +54,11 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(player);
             if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AutomaticSkilltreeAssignment")));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage())));
             }
             else if (myPet.getSkillTree() != null && MyPetConfiguration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_OnlyChooseSkilltreeOnce").replace("%petname%", myPet.petName)));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()).replace("%petname%", myPet.petName)));
             }
             else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
@@ -70,30 +74,30 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                     if (skillTreeMobType.hasSkillTree(skilltreeName))
                     {
                         MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(skilltreeName);
-                        if (MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
+                        if (MyPetPermissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
                         {
                             if (myPet.setSkilltree(skillTree))
                             {
-                                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeSwitchedTo").replace("%name%", skillTree.getName())));
+                                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedTo", player).replace("%name%", skillTree.getName())));
                             }
                             else
                             {
-                                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_SkilltreeNotSwitched")));
+                                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeNotSwitched", player)));
                             }
                         }
                         else
                         {
-                            sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", skilltreeName)));
+                            sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName)));
                         }
                     }
                     else
                     {
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_CantFindSkilltree").replace("%name%", skilltreeName)));
+                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName)));
                     }
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_AvailableSkilltrees").replace("%petname%", myPet.petName)));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AvailableSkilltrees", player).replace("%petname%", myPet.petName)));
                     for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
                     {
                         if (MyPetPermissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
@@ -106,7 +110,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
         }
         else
         {
-            sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLanguage.getString("Msg_DontHavePet")));
+            sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
         }
         return true;
     }
