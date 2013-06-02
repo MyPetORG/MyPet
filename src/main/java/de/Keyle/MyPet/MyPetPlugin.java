@@ -395,6 +395,15 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 }
             };
             graphTotalCount.addPlotter(plotter);
+            plotter = new Metrics.Plotter("Active MyPets")
+            {
+                @Override
+                public int getValue()
+                {
+                    return MyPetList.countActiveMyPets();
+                }
+            };
+            graphTotalCount.addPlotter(plotter);
 
             boolean metricsActive = metrics.start();
             DebugLogger.info("Metrics " + (metricsActive ? "" : "not ") + "activated");
