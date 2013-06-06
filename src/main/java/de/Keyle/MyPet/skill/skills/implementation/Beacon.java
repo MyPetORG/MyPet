@@ -51,9 +51,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
     private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
     private Map<Integer, Boolean> primaryActive = new HashMap<Integer, Boolean>();
-    private int[] primaryBuffs = {1, 3, 11, 8, 5};
+    private int[] primaryBuffs = {0, 1, 3, 11, 8, 5};
     private Map<Integer, Boolean> secundaryActive = new HashMap<Integer, Boolean>();
-    private int[] secundaryBuffs = {1, 3, 11, 8, 5, 10};
+    private int[] secundaryBuffs = {0, 1, 3, 11, 8, 5, 10};
     private int primaryEffectId = 0;
     private int secondaryEffectId = 0;
     private int hungerDecreaseTimer;
@@ -192,7 +192,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         String availableBuffs = "";
         for (int primaryBuffId : primaryBuffs)
         {
-            if (primaryActive.get(primaryBuffId))
+            if (primaryBuffId != 0 && primaryActive.get(primaryBuffId))
             {
                 if (!availableBuffs.equalsIgnoreCase(""))
                 {
@@ -254,7 +254,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         {
             if (primary)
             {
-                if (primaryActive.get(effectId))
+                if (!primaryActive.containsKey(effectId))
+                {
+                    return false;
+                }
+                else if (primaryActive.get(effectId))
                 {
                     setPrimaryEffectId(effectId);
                     return true;
@@ -267,7 +271,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             }
             else
             {
-                if (secundaryActive.get(effectId))
+                if (!secundaryActive.containsKey(effectId))
+                {
+                    return false;
+                }
+                else if (secundaryActive.get(effectId))
                 {
                     setSecondaryEffectId(effectId);
                     return true;
