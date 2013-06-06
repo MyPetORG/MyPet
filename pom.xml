@@ -410,6 +410,7 @@
                                     <excludes>
                                         <exclude>org/spout/nbt/gui/*.class</exclude>
                                         <exclude>org/spout/nbt/util/*.class</exclude>
+                                        <exclude>LICENSE.txt</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
