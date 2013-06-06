@@ -32,7 +32,12 @@ public class ItemStackNBTConverter
 {
     public static CompoundTag ItemStackToCompund(ItemStack itemStack)
     {
-        CompoundTag compound = new CompoundTag(null, new CompoundMap());
+        return ItemStackToCompund(itemStack, "Item");
+    }
+
+    public static CompoundTag ItemStackToCompund(ItemStack itemStack, String tagName)
+    {
+        CompoundTag compound = new CompoundTag(tagName, new CompoundMap());
 
         compound.getValue().put("id", new ShortTag("id", (short) itemStack.id));
         compound.getValue().put("Count", new ByteTag("Count", (byte) itemStack.count));
