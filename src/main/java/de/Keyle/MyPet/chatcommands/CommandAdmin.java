@@ -183,13 +183,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(petOwner);
 
             String name = "";
-            for (String arg : args)
+            for (int i = 2 ; i < args.length ; i++)
             {
                 if (!name.equals(""))
                 {
                     name += " ";
                 }
-                name += arg;
+                name += args[i];
             }
             name = MyPetBukkitUtil.setColors(name);
 
