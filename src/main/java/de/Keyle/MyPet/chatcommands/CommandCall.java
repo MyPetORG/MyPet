@@ -64,7 +64,7 @@ public class CommandCall implements CommandExecutor
                         sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", petOwner)).replace("%petname%", myPet.petName));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedToSpawn", petOwner)).replace("%petname%", myPet.petName));
+                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", petOwner)).replace("%petname%", myPet.petName));
                         break;
                     case Dead:
                         sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", petOwner)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));

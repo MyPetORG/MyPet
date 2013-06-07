@@ -148,7 +148,7 @@ public class MyPetPlayerListener implements Listener
                             myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                             break;
                         case NotAllowed:
-                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedToSpawn", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                             break;
                     }
                 }
@@ -212,7 +212,7 @@ public class MyPetPlayerListener implements Listener
                                         runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", runMyPet.petName));
                                         break;
                                     case NotAllowed:
-                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedToSpawn", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                                         break;
                                     case Dead:
                                         if (runMyPet != myPet)
@@ -269,7 +269,7 @@ public class MyPetPlayerListener implements Listener
                                         runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", runMyPet.petName));
                                         break;
                                     case NotAllowed:
-                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedToSpawn", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                                        runMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
                                         break;
                                 }
                             }

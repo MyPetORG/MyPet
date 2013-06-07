@@ -21,7 +21,9 @@
 package de.Keyle.MyPet.util.support;
 
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
@@ -64,7 +66,7 @@ public class PvPArena implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                //player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PvPArena",player.getPlayer())));
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
             }
         }
     }

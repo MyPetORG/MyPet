@@ -50,7 +50,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Minigames", player.getPlayer())));
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
             }
         }
     }
@@ -64,7 +64,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();
-                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Minigames", player.getPlayer())));
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
             }
         }
     }
