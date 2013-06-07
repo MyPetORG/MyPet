@@ -21,12 +21,18 @@
 package de.Keyle.MyPet.util.support;
 
 import com.garbagemule.MobArena.MobArenaHandler;
+import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 
 public class MobArena
 {
+    public static boolean DISABLE_PETS_IN_ARENA = true;
     private static MobArenaHandler arenaHandler;
     private static boolean active = false;
 
@@ -47,5 +53,19 @@ public class MobArena
             return arenaHandler.isPlayerInArena(owner.getPlayer());
         }
         return false;
+    }
+
+    @EventHandler
+    public void onJoinPvPArenaEvent(ArenaPlayerJoinEvent event)
+    {
+        if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        {
+            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
+            {
+                player.getMyPet().removePet();
+                player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
+            }
+        }
     }
 }
