@@ -33,6 +33,8 @@
                 <item value="Cow"/>
                 <item value="Creeper"/>
                 <item value="Enderman"/>
+                <item value="Ghast"/>
+                <item value="Giant"/>
                 <item value="IronGolem"/>
                 <item value="MagmaCube"/>
                 <item value="Mooshroom"/>
@@ -45,9 +47,10 @@
                 <item value="Slime"/>
                 <item value="Snowman"/>
                 <item value="Spider"/>
-                <item value="Villager"/>
                 <item value="Witch"/>
+                <item value="Wither"/>
                 <item value="Wolf"/>
+                <item value="Villager"/>
                 <item value="Zombie"/>
               </model>
             </properties>
