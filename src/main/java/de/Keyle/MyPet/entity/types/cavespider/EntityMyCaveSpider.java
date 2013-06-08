@@ -72,19 +72,4 @@ public class EntityMyCaveSpider extends EntityMyPet
     {
         return "mob.spider.death";
     }
-
-    public void a(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        if (flag)
-        {
-            b0 = (byte) (b0 | 0x1);
-        }
-        else
-        {
-            b0 = (byte) (b0 & 0xFFFFFFFE);
-        }
-        this.datawatcher.watch(16, b0);
-    }
 }
