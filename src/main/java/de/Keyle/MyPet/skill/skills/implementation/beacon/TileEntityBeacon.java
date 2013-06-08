@@ -48,32 +48,46 @@ public class TileEntityBeacon extends net.minecraft.server.v1_5_R3.TileEntityBea
     @Override
     public void d(int effectId)
     {
-        if (!beaconSkill.activate(true, effectId))
+        try
         {
-            beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+            if (!beaconSkill.activate(true, effectId))
+            {
+                beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+            }
+            else
+            {
+                beaconSkill.setTributeItem(null);
+                primaryBuffCheck = true;
+            }
         }
-        else
+        catch (Exception e)
         {
-            beaconSkill.setTributeItem(null);
-            primaryBuffCheck = true;
+            e.printStackTrace();
         }
     }
 
     @Override
     public void e(int effectId)
     {
-        if (!beaconSkill.activate(false, effectId))
+        try
         {
-            beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+            if (!beaconSkill.activate(false, effectId))
+            {
+                beaconSkill.setTributeItem(beaconSkill.getTributeItem());
+            }
+            else
+            {
+                beaconSkill.setTributeItem(null);
+            }
+            if (primaryBuffCheck)
+            {
+                beaconSkill.setTributeItem(null);
+                primaryBuffCheck = false;
+            }
         }
-        else
+        catch (Exception e)
         {
-            beaconSkill.setTributeItem(null);
-        }
-        if (primaryBuffCheck)
-        {
-            beaconSkill.setTributeItem(null);
-            primaryBuffCheck = false;
+            e.printStackTrace();
         }
     }
 }

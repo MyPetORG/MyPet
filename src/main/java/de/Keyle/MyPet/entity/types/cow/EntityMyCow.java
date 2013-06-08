@@ -86,43 +86,50 @@ public class EntityMyCow extends EntityMyPet
      */
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman) && itemStack != null)
-        {
-            if (itemStack.id == Item.BUCKET.id)
+            if (super.a_(entityhuman))
             {
-                if (CAN_GIVE_MILK && !this.world.isStatic)
-                {
-                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
-
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
-                    return true;
-                }
+                return true;
             }
-        }
-        else if (getOwner().equals(entityhuman) && itemStack != null)
-        {
-            if (itemStack.id == GROW_UP_ITEM.getId())
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (isBaby())
+                if (itemStack.id == Item.BUCKET.id)
                 {
-                    if (!entityhuman.abilities.canInstantlyBuild)
+                    if (CAN_GIVE_MILK && !this.world.isStatic)
                     {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+                        ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
+
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                        return true;
                     }
-                    this.setBaby(false);
-                    return true;
                 }
             }
+            else if (getOwner().equals(entityhuman) && itemStack != null)
+            {
+                if (itemStack.id == GROW_UP_ITEM.getId())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }

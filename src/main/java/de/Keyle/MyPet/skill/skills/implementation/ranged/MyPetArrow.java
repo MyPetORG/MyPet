@@ -49,30 +49,37 @@ public class MyPetArrow extends EntityArrow
 
     public void l_()
     {
-        super.l_();
-        if (inGround == null)
+        try
         {
+            super.l_();
+            if (inGround == null)
+            {
+                try
+                {
+                    inGround = EntityArrow.class.getDeclaredField("inGround");
+                    inGround.setAccessible(true);
+                }
+                catch (NoSuchFieldException e)
+                {
+                    e.printStackTrace();
+                }
+            }
             try
             {
-                inGround = EntityArrow.class.getDeclaredField("inGround");
-                inGround.setAccessible(true);
+                if (inGround != null)
+                {
+                    if (inGround.getBoolean(this))
+                    {
+                        die();
+                    }
+                }
             }
-            catch (NoSuchFieldException e)
+            catch (IllegalAccessException e)
             {
                 e.printStackTrace();
             }
         }
-        try
-        {
-            if (inGround != null)
-            {
-                if (inGround.getBoolean(this))
-                {
-                    die();
-                }
-            }
-        }
-        catch (IllegalAccessException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

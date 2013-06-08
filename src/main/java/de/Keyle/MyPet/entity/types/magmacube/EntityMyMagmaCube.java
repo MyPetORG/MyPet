@@ -116,14 +116,21 @@ public class EntityMyMagmaCube extends EntityMyPet
      */
     public void l_()
     {
-        super.l_();
-
-        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
+        try
         {
-            getControllerJump().a();
-            jumpDelay = (this.random.nextInt(20) + 10);
-            lastPathEntity = getNavigation().d();
-            makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), ba(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            super.l_();
+
+            if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
+            {
+                getControllerJump().a();
+                jumpDelay = (this.random.nextInt(20) + 10);
+                lastPathEntity = getNavigation().d();
+                makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), ba(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

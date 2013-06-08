@@ -94,41 +94,48 @@ public class EntityMyEnderman extends EntityMyPet
      */
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
+            if (super.a_(entityhuman))
+            {
+                return true;
+            }
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman) && itemStack != null)
+            {
+                if (itemStack.id == Item.SHEARS.id)
+                {
+                    if (getBlockID() != 0)
+                    {
+                        EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+
+                        setBlock(0, 0);
+
+                        return true;
+                    }
+                }
+                else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256)
+                {
+                    setBlock(itemStack.id, itemStack.getData());
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        --itemStack.count;
+                    }
+                    if (itemStack.count <= 0)
+                    {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
+            }
         }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman) && itemStack != null)
+        catch (Exception e)
         {
-            if (itemStack.id == Item.SHEARS.id)
-            {
-                if (getBlockID() != 0)
-                {
-                    EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-
-                    setBlock(0, 0);
-
-                    return true;
-                }
-            }
-            else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256)
-            {
-                setBlock(itemStack.id, itemStack.getData());
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-            }
+            e.printStackTrace();
         }
         return false;
     }

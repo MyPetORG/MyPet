@@ -194,49 +194,56 @@ public class EntityMyWolf extends EntityMyPet
      */
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+            if (super.a_(entityhuman))
+            {
+                return true;
+            }
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemStack != null)
-        {
-            if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
+            if (itemStack != null)
             {
-                if (itemStack.getData() <= 15)
+                if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
                 {
-                    setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                    if (!entityhuman.abilities.canInstantlyBuild)
+                    if (itemStack.getData() <= 15)
                     {
-                        if (--itemStack.count <= 0)
+                        setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
                         }
+                        return true;
                     }
-                    return true;
+                }
+                else if (itemStack.id == GROW_UP_ITEM.getId())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
+                        return true;
+                    }
                 }
             }
-            else if (itemStack.id == GROW_UP_ITEM.getId())
+            if (this.myPet.getOwner().equals(entityhuman) && !this.world.isStatic)
             {
-                if (isBaby())
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                    }
-                    this.setBaby(false);
-                    return true;
-                }
+                this.sitPathfinder.toogleSitting();
+                return true;
             }
         }
-        if (this.myPet.getOwner().equals(entityhuman) && !this.world.isStatic)
+        catch (Exception e)
         {
-            this.sitPathfinder.toogleSitting();
-            return true;
+            e.printStackTrace();
         }
         return false;
     }
@@ -276,60 +283,81 @@ public class EntityMyWolf extends EntityMyPet
     @Override
     protected void bp()
     {
-        this.datawatcher.watch(18, (int) (25. * getHealth() / getMaxHealth())); // update tail height
+        try
+        {
+            this.datawatcher.watch(18, (int) (25. * getHealth() / getMaxHealth())); // update tail height
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void c()
     {
-        super.c();
-        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround)) // k -> has pathentity
+        try
         {
-            this.shaking = true;
-            this.shakeCounter = 0.0F;
-            this.world.broadcastEntityEffect(this, (byte) 8);
+            super.c();
+            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround)) // k -> has pathentity
+            {
+                this.shaking = true;
+                this.shakeCounter = 0.0F;
+                this.world.broadcastEntityEffect(this, (byte) 8);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void l_()
     {
-        super.l_();
-
-        if (G()) // G() -> is in water
+        try
         {
-            this.isWet = true;
-            this.shaking = false;
-            this.shakeCounter = 0.0F;
-        }
-        else if ((this.isWet || this.shaking) && this.shaking)
-        {
-            if (this.shakeCounter == 0.0F)
-            {
-                makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            }
+            super.l_();
 
-            this.shakeCounter += 0.05F;
-            if (this.shakeCounter - 0.05F >= 2.0F)
+            if (G()) // G() -> is in water
             {
-                this.isWet = false;
+                this.isWet = true;
                 this.shaking = false;
                 this.shakeCounter = 0.0F;
             }
-
-            if (this.shakeCounter > 0.4F)
+            else if ((this.isWet || this.shaking) && this.shaking)
             {
-                float locY = (float) this.boundingBox.b;
-                int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
-
-                for (int j = 0 ; j < i ; j++)
+                if (this.shakeCounter == 0.0F)
                 {
-                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                }
 
-                    this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
+                this.shakeCounter += 0.05F;
+                if (this.shakeCounter - 0.05F >= 2.0F)
+                {
+                    this.isWet = false;
+                    this.shaking = false;
+                    this.shakeCounter = 0.0F;
+                }
+
+                if (this.shakeCounter > 0.4F)
+                {
+                    float locY = (float) this.boundingBox.b;
+                    int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
+
+                    for (int j = 0 ; j < i ; j++)
+                    {
+                        float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                        float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+
+                        this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
+                    }
                 }
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

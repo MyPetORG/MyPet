@@ -131,56 +131,22 @@ public class EntityMySheep extends EntityMyPet
      */
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman) && itemStack != null)
-        {
-            if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData())
+            if (super.a_(entityhuman))
             {
-                if (itemStack.getData() <= 15)
-                {
-                    setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                    }
-                    return true;
-                }
-            }
-            else if (CAN_BE_SHEARED && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
-            {
-                if (!this.world.isStatic)
-                {
-                    ((MySheep) myPet).setSheared(true);
-                    int i = 1 + this.random.nextInt(3);
-
-                    for (int j = 0 ; j < i ; ++j)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(Block.WOOL.id, 1, ((MySheep) myPet).getColor().getDyeData()), 1.0F);
-
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    makeSound("mob.sheep.shear", 1.0F, 1.0F);
-                }
-                itemStack.damage(1, entityhuman);
                 return true;
             }
-            else if (getOwner().equals(entityhuman))
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (itemStack.id == GROW_UP_ITEM.getId())
+                if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData())
                 {
-                    if (isBaby())
+                    if (itemStack.getData() <= 15)
                     {
+                        setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                         if (!entityhuman.abilities.canInstantlyBuild)
                         {
                             if (--itemStack.count <= 0)
@@ -188,11 +154,52 @@ public class EntityMySheep extends EntityMyPet
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
-                        this.setBaby(false);
                         return true;
                     }
                 }
+                else if (CAN_BE_SHEARED && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
+                {
+                    if (!this.world.isStatic)
+                    {
+                        ((MySheep) myPet).setSheared(true);
+                        int i = 1 + this.random.nextInt(3);
+
+                        for (int j = 0 ; j < i ; ++j)
+                        {
+                            EntityItem entityitem = this.a(new ItemStack(Block.WOOL.id, 1, ((MySheep) myPet).getColor().getDyeData()), 1.0F);
+
+                            entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                            entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                            entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        }
+                        makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                    }
+                    itemStack.damage(1, entityhuman);
+                    return true;
+                }
+                else if (getOwner().equals(entityhuman))
+                {
+                    if (itemStack.id == GROW_UP_ITEM.getId())
+                    {
+                        if (isBaby())
+                        {
+                            if (!entityhuman.abilities.canInstantlyBuild)
+                            {
+                                if (--itemStack.count <= 0)
+                                {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
+                            }
+                            this.setBaby(false);
+                            return true;
+                        }
+                    }
+                }
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }

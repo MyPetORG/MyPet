@@ -116,10 +116,17 @@ public class EntityMyBat extends EntityMyPet
 
     public void l_()
     {
-        super.l_();
-        if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY + 1.), (int) locZ).isSolid())
+        try
         {
-            this.locY += 0.65;
+            super.l_();
+            if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY + 1.), (int) locZ).isSolid())
+            {
+                this.locY += 0.65;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

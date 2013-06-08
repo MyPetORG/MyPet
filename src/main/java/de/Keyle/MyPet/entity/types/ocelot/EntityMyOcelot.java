@@ -140,58 +140,65 @@ public class EntityMyOcelot extends EntityMyPet
      */
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman))
-        {
-            if (itemStack != null)
+            if (super.a_(entityhuman))
             {
-                if (itemStack.id == 351)
-                {
-                    if (itemStack.getData() == 11)
-                    {
-                        ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
-                        return true;
-                    }
-                    else if (itemStack.getData() == 0)
-                    {
-                        ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
-                        return true;
-                    }
-                    else if (itemStack.getData() == 14)
-                    {
-                        ((MyOcelot) myPet).setCatType(Type.RED_CAT);
-                        return true;
-                    }
-                    else if (itemStack.getData() == 7)
-                    {
-                        ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
-                        return true;
-                    }
-                }
-                else if (itemStack.id == GROW_UP_ITEM.getId())
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
-                        }
-                        this.setBaby(false);
-                        return true;
-                    }
-                }
+                return true;
             }
-            this.sitPathfinder.toogleSitting();
-            return true;
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman))
+            {
+                if (itemStack != null)
+                {
+                    if (itemStack.id == 351)
+                    {
+                        if (itemStack.getData() == 11)
+                        {
+                            ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
+                            return true;
+                        }
+                        else if (itemStack.getData() == 0)
+                        {
+                            ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
+                            return true;
+                        }
+                        else if (itemStack.getData() == 14)
+                        {
+                            ((MyOcelot) myPet).setCatType(Type.RED_CAT);
+                            return true;
+                        }
+                        else if (itemStack.getData() == 7)
+                        {
+                            ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
+                            return true;
+                        }
+                    }
+                    else if (itemStack.id == GROW_UP_ITEM.getId())
+                    {
+                        if (isBaby())
+                        {
+                            if (!entityhuman.abilities.canInstantlyBuild)
+                            {
+                                if (--itemStack.count <= 0)
+                                {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
+                            }
+                            this.setBaby(false);
+                            return true;
+                        }
+                    }
+                }
+                this.sitPathfinder.toogleSitting();
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }

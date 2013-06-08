@@ -91,30 +91,37 @@ public class EntityMyVillager extends EntityMyPet
 
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman) && itemStack != null)
-        {
-            if (itemStack.id == GROW_UP_ITEM.getId())
+            if (super.a_(entityhuman))
             {
-                if (isBaby())
+                return true;
+            }
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman) && itemStack != null)
+            {
+                if (itemStack.id == GROW_UP_ITEM.getId())
                 {
-                    if (!entityhuman.abilities.canInstantlyBuild)
+                    if (isBaby())
                     {
-                        if (--itemStack.count <= 0)
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
                         }
+                        this.setBaby(false);
+                        return true;
                     }
-                    this.setBaby(false);
-                    return true;
                 }
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }

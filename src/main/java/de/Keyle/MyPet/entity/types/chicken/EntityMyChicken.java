@@ -83,30 +83,37 @@ public class EntityMyChicken extends EntityMyPet
 
     public boolean a_(EntityHuman entityhuman)
     {
-        if (super.a_(entityhuman))
+        try
         {
-            return true;
-        }
-
-        ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-        if (getOwner().equals(entityhuman) && itemStack != null)
-        {
-            if (itemStack.id == GROW_UP_ITEM.getId())
+            if (super.a_(entityhuman))
             {
-                if (isBaby())
+                return true;
+            }
+
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (getOwner().equals(entityhuman) && itemStack != null)
+            {
+                if (itemStack.id == GROW_UP_ITEM.getId())
                 {
-                    if (!entityhuman.abilities.canInstantlyBuild)
+                    if (isBaby())
                     {
-                        if (--itemStack.count <= 0)
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
                         }
+                        this.setBaby(false);
+                        return true;
                     }
-                    this.setBaby(false);
-                    return true;
                 }
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
         return false;
     }
@@ -144,18 +151,25 @@ public class EntityMyChicken extends EntityMyPet
 
     public void c()
     {
-        super.c();
-
-        if (!this.onGround && this.motY < 0.0D)
+        try
         {
-            this.motY *= 0.6D;
+            super.c();
+
+            if (!this.onGround && this.motY < 0.0D)
+            {
+                this.motY *= 0.6D;
+            }
+
+            if (CAN_LAY_EGGS && !world.isStatic && --nextEggTimer <= 0)
+            {
+                world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+                b(Item.EGG.id, 1);
+                nextEggTimer = (random.nextInt(6000) + 6000);
+            }
         }
-
-        if (CAN_LAY_EGGS && !world.isStatic && --nextEggTimer <= 0)
+        catch (Exception e)
         {
-            world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
-            b(Item.EGG.id, 1);
-            nextEggTimer = (random.nextInt(6000) + 6000);
+            e.printStackTrace();
         }
     }
 }
