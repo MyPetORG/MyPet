@@ -661,19 +661,31 @@ public class MyPetEntityListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageByEntityDamageMonitor(final EntityDamageByEntityEvent event)
     {
-        if (MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player))
+        if (!event.isCancelled() && MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player))
         {
-            LivingEntity damager;
+            LivingEntity damager = null;
             if (event.getDamager() instanceof Projectile)
             {
                 Projectile projectile = (Projectile) event.getDamager();
                 damager = projectile.getShooter();
             }
-            else
+            else if (event.getDamager() instanceof LivingEntity)
             {
                 damager = (LivingEntity) event.getDamager();
             }
-            MyPetExperience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
+            else if (event.getDamager() instanceof LightningStrike)
+            {
+                LightningStrike lightning = (LightningStrike) event.getDamager();
+                if (Lightning.isSkillLightning(lightning))
+                {
+                    MyPet lightningMyPet = Lightning.lightningList.get(lightning);
+                    damager = lightningMyPet.getCraftPet();
+                }
+            }
+            if (damager != null)
+            {
+                MyPetExperience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
+            }
         }
     }
 
