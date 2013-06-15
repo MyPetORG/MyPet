@@ -35,7 +35,7 @@
 
         <mypet.version>1.1.0</mypet.version>
         <minecraft.version>1.5.2</minecraft.version>
-        <bukkit.version>R0.1</bukkit.version>
+        <bukkit.version>R1.0</bukkit.version>
 
         <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.4.03</mcmmo.version>
@@ -48,7 +48,7 @@
         <mobarena.version>0.94.4.96</mobarena.version>
         <pvparena.version>1.0.2.146</pvparena.version>
         <regiosapi.version>5.9.8</regiosapi.version>
-        <residence.version>2.6.6.4</residence.version>
+        <residence.version>2.6.6.5</residence.version>
         <towny.version>0.82.1.0</towny.version>
         <griefprevention.version>7.7</griefprevention.version>
         <heroes.version>1.5.2</heroes.version>
