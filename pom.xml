@@ -55,10 +55,7 @@
         <heroes.build>b1713</heroes.build>
 
         <metrics.version>R6</metrics.version>
-        <snakeyaml.version>1.12</snakeyaml.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
-        <json-simple.version>1.1.1</json-simple.version>
-        <forms_rt.version>7.0.3</forms_rt.version>
 
         <junit.version>4.8.2</junit.version>
     </properties>
@@ -87,10 +84,6 @@
         <repository>
             <id>spout-repo</id>
             <url>http://nexus.spout.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>snakeyaml-repo</id>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
             <id>metrics-repo</id>
@@ -233,27 +226,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>forms_rt</artifactId>
-            <version>${forms_rt.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.spout</groupId>
             <artifactId>simplenbt</artifactId>
             <version>${simplenbt.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${snakeyaml.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>${json-simple.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -345,23 +320,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>ideauidesigner-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>javac2</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <fork>true</fork>
-                    <debug>true</debug>
-                    <failOnError>true</failOnError>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.0</version>
@@ -391,18 +349,6 @@
                                     <pattern>org.spout.nbt</pattern>
                                     <shadedPattern>de.Keyle.MyPet.util.configuration.nbt</shadedPattern>
                                 </relocation>
-                                <relocation>
-                                    <pattern>org.json.simple</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.configuration.jsonsimple</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.yaml.snakeyaml</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.configuration.snakeyaml</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.intellij.uiDesigner.core</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.gui.uiDesigner</shadedPattern>
-                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
@@ -412,12 +358,6 @@
                                         <exclude>org/spout/nbt/util/*.class</exclude>
                                         <exclude>LICENSE.txt</exclude>
                                     </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>com.intellij:forms_rt</artifact>
-                                    <includes>
-                                        <include>com/intellij/uiDesigner/core/**</include>
-                                    </includes>
                                 </filter>
                             </filters>
                         </configuration>
