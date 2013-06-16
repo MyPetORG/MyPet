@@ -48,6 +48,10 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
+        if (!MyPetEconomy.canUseEconomy())
+        {
+            return true;
+        }
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
@@ -57,10 +61,6 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
 
                 double costs = myPet.respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
 
-                if (!MyPetEconomy.canUseEconomy())
-                {
-                    return true;
-                }
                 if (!MyPetPermissions.has(petOwner, "MyPet.user.respawn"))
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", petOwner)));
