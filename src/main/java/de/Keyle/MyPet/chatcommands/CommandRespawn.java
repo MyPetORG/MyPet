@@ -58,15 +58,13 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-
-                double costs = myPet.respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
-
                 if (!MyPetPermissions.has(petOwner, "MyPet.user.respawn"))
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", petOwner)));
                     return true;
                 }
 
+                double costs = myPet.respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
                 if (args.length == 0)
                 {
                     if (myPet.getStatus() != PetState.Dead)
