@@ -25,10 +25,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import de.Keyle.MyPet.util.MyPetUtil;
-import org.spout.nbt.ByteTag;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,43 +36,11 @@ import java.util.Map;
         parameterDefaultValues = {"true", "true", "true", "true", "true"})
 public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    private static String defaultHTML = null;
-
     protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
 
     public BehaviorInfo(boolean addedByInheritance)
     {
         super(addedByInheritance);
-    }
-
-    public String getHtml()
-    {
-        if (defaultHTML == null)
-        {
-            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-            if (htmlStream == null)
-            {
-                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
-                if (htmlStream == null)
-                {
-                    return "NoSkillPropertieViewNotFoundError";
-                }
-            }
-            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
-        }
-
-        String html = defaultHTML;
-        for (String name : getClass().getAnnotation(SkillProperties.class).parameterNames())
-        {
-            if (getProperties().getValue().containsKey(name))
-            {
-                if (!((ByteTag) getProperties().getValue().get(name)).getBooleanValue())
-                {
-                    html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
-                }
-            }
-        }
-        return html;
     }
 
     public ISkillInfo cloneSkill()

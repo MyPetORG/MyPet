@@ -387,7 +387,7 @@ public abstract class MyPet implements IMyPet
 
     public int getDamage()
     {
-        return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamageIncrease() : 0);
+        return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamage() : 0);
     }
 
     public int getRangedDamage()

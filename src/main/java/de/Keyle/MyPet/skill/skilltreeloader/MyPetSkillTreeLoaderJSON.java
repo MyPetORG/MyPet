@@ -125,9 +125,9 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                         String skillName = (String) skillObject.get("Name");
                         JSONObject skillPropertyObject = (JSONObject) skillObject.get("Properties");
 
-                        if (MyPetSkillsInfo.isValidSkill(skillName))
+                        if (MyPetSkills.isValidSkill(skillName))
                         {
-                            ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
+                            ISkillInfo skill = MyPetSkills.getNewSkillInstance(skillName);
 
                             if (skill != null)
                             {

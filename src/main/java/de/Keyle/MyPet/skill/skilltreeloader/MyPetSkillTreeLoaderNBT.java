@@ -24,7 +24,7 @@ package de.Keyle.MyPet.skill.skilltreeloader;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillsInfo;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -131,10 +131,10 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
                     {
                         CompoundTag skillCompound = (CompoundTag) skillList.getValue().get(i_skill);
                         String skillName = ((StringTag) skillCompound.getValue().get("Name")).getValue();
-                        if (MyPetSkillsInfo.isValidSkill(skillName))
+                        if (MyPetSkills.isValidSkill(skillName))
                         {
                             CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
-                            ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
+                            ISkillInfo skill = MyPetSkills.getNewSkillInstance(skillName);
                             if (skill != null)
                             {
                                 skill.setProperties(skillPropertyCompound);

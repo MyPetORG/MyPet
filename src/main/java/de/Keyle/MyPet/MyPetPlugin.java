@@ -55,9 +55,11 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.ISkillStorage;
+import de.Keyle.MyPet.skill.MyPetMonsterExperience;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.skills.implementation.*;
-import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoader;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
@@ -207,7 +209,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         getCommand("pettype").setExecutor(new CommandPetType());
         getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
 
-        registerSkillsInfo();
         registerSkills();
 
         File defaultSkillConfigNBT = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.st");
@@ -485,28 +486,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetSkills.registerSkill(Sprint.class);
     }
 
-    public static void registerSkillsInfo()
-    {
-        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
-        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
-        MyPetSkillsInfo.registerSkill(PickupInfo.class);
-        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
-        MyPetSkillsInfo.registerSkill(DamageInfo.class);
-        MyPetSkillsInfo.registerSkill(ControlInfo.class);
-        MyPetSkillsInfo.registerSkill(HPInfo.class);
-        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
-        MyPetSkillsInfo.registerSkill(RideInfo.class);
-        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
-        MyPetSkillsInfo.registerSkill(FireInfo.class);
-        MyPetSkillsInfo.registerSkill(BeaconInfo.class);
-        MyPetSkillsInfo.registerSkill(WitherInfo.class);
-        MyPetSkillsInfo.registerSkill(LightningInfo.class);
-        MyPetSkillsInfo.registerSkill(SlowInfo.class);
-        MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
-        MyPetSkillsInfo.registerSkill(RangedInfo.class);
-        MyPetSkillsInfo.registerSkill(SprintInfo.class);
-    }
-
     int loadPets(File f)
     {
         if (!f.exists())
@@ -662,13 +641,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
     public int savePets(boolean shutdown)
     {
-        /*
-        if (!isReady)
-        {
-            MyPetLogger.write(ChatColor.RED + "Plugin tried to save MyPets but it isn't ready! new pet will not be saved to protect the database.");
-            return 0;
-        }
-        */
         autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
         int petCount = 0;
         NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);

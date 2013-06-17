@@ -151,10 +151,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                         for (String thisSkill : skillMap.keySet())
                         {
                             //System.out.println("    " + thisSkill);
-                            if (MyPetSkillsInfo.isValidSkill(thisSkill))
+                            if (MyPetSkills.isValidSkill(thisSkill))
                             {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
-                                ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(thisSkill);
+                                ISkillInfo skill = MyPetSkills.getNewSkillInstance(thisSkill);
 
                                 if (skill != null)
                                 {

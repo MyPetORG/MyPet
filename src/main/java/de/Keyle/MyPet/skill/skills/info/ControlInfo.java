@@ -31,11 +31,6 @@ public class ControlInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
-    {
-        return "";
-    }
-
     public ISkillInfo cloneSkill()
     {
         ControlInfo newSkill = new ControlInfo(this.isAddedByInheritance());

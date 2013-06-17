@@ -39,8 +39,6 @@ import org.spout.nbt.StringTag;
 public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler
 {
     private int timeCounter = 0;
-    private int regenTime = 0;
-    private int increaseHpBy = 0;
     private MyPet myPet;
 
     public HPregeneration(boolean addedByInheritance)

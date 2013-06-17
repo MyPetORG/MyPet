@@ -106,7 +106,7 @@ public class Damage extends DamageInfo implements ISkillInstance
         }
     }
 
-    public int getDamageIncrease()
+    public int getDamage()
     {
         return damageIncrease;
     }
