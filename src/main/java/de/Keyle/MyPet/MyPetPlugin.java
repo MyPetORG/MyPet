@@ -341,13 +341,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         new MyPetLocales();
 
-        File NBTWolfFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf");
-        if (NBTWolfFile.exists())
-        {
-            NBTWolfFile.renameTo(new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old"));
-            NBTWolfFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "Wolves.MyWolf.old");
-            loadMyWolfWolves(NBTWolfFile);
-        }
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         if (MyPetBackup.MAKE_BACKUPS)
@@ -592,51 +585,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         }
         MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
         return petCount;
-    }
-
-    int loadMyWolfWolves(File f)
-    {
-        int wolfCount = 0;
-
-        NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
-        if (!nbtConfiguration.load())
-        {
-            return 0;
-        }
-        ListTag wolfList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Wolves");
-
-        DebugLogger.info("loading Wolves: -----------------------------");
-        for (int i = 0 ; i < wolfList.getValue().size() ; i++)
-        {
-            CompoundTag myMolfNBT = (CompoundTag) wolfList.getValue().get(i);
-
-            CompoundTag locationNBT = (CompoundTag) myMolfNBT.getValue().get("Location");
-            double wolfX = ((DoubleTag) locationNBT.getValue().get("X")).getValue();
-            double wolfY = ((DoubleTag) locationNBT.getValue().get("Y")).getValue();
-            double wolfZ = ((DoubleTag) locationNBT.getValue().get("Z")).getValue();
-            String wolfWorld = ((StringTag) locationNBT.getValue().get("World")).getValue();
-
-            double wolfExp = ((DoubleTag) myMolfNBT.getValue().get("Exp")).getValue();
-            int wolfHealthNow = ((IntTag) myMolfNBT.getValue().get("Health")).getValue();
-            String wolfName = ((StringTag) myMolfNBT.getValue().get("Name")).getValue();
-            String wolfOwner = ((StringTag) myMolfNBT.getValue().get("Owner")).getValue();
-
-            InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(wolfOwner));
-
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(wolfWorld) != null ? Bukkit.getServer().getWorld(wolfWorld) : Bukkit.getServer().getWorlds().get(0), wolfX, wolfY, wolfZ));
-            inactiveMyPet.setHealth(wolfHealthNow);
-            inactiveMyPet.setPetName(wolfName);
-            inactiveMyPet.setExp(wolfExp);
-            inactiveMyPet.setPetType(MyPetType.Wolf);
-
-            MyPetList.addInactiveMyPet(inactiveMyPet);
-
-            DebugLogger.info("   " + inactiveMyPet.toString());
-
-            wolfCount++;
-        }
-        MyPetLogger.write("" + ChatColor.YELLOW + wolfCount + ChatColor.RESET + " wolf/wolves converted");
-        return wolfCount;
     }
 
     public int savePets(boolean shutdown)
