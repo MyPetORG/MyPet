@@ -46,6 +46,7 @@
         <ancientrpg.version>1.0</ancientrpg.version>
         <factions.version>1.8.2</factions.version>
         <mobarena.version>0.94.4.96</mobarena.version>
+        <battlearena.version>3.8.8.3.3</battlearena.version>
         <pvparena.version>1.0.2.146</pvparena.version>
         <regiosapi.version>5.9.8</regiosapi.version>
         <residence.version>2.6.6.5</residence.version>
@@ -92,6 +93,10 @@
         <repository>
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.com</url>
+        </repository>
+        <repository>
+            <id>battlearena-repo</id>
+            <url>http://battleplugins.com/maven</url>
         </repository>
         <repository>
             <id>zml-repo</id>
@@ -186,6 +191,12 @@
             <groupId>com.garbagemule</groupId>
             <artifactId>MobArena</artifactId>
             <version>${mobarena.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mc.alk</groupId>
+            <artifactId>BattleArena</artifactId>
+            <version>${battlearena.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

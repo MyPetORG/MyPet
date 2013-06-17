@@ -27,8 +27,10 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.support.BattleArena;
 import de.Keyle.MyPet.util.support.Minigames;
 import de.Keyle.MyPet.util.support.MobArena;
+import de.Keyle.MyPet.util.support.PvPArena;
 import net.minecraft.server.v1_5_R3.*;
 
 @EntitySize(width = 0.6F, height = 0.9F)
@@ -139,7 +141,7 @@ public class EntityMyPigZombie extends EntityMyPet
             {
                 if (itemStack.id == Item.SHEARS.id)
                 {
-                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") || MobArena.isInMobArena(myPet.getOwner()) || Minigames.isInMinigame(myPet.getOwner()))
+                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") || MobArena.isInMobArena(myPet.getOwner()) || Minigames.isInMinigame(myPet.getOwner()) || BattleArena.isInBattleArena(myPet.getOwner()) || PvPArena.isInPvPArena(myPet.getOwner()))
                     {
                         return false;
                     }
@@ -159,7 +161,7 @@ public class EntityMyPigZombie extends EntityMyPet
                 }
                 else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
                 {
-                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") || MobArena.isInMobArena(myPet.getOwner()) || Minigames.isInMinigame(myPet.getOwner()))
+                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") || MobArena.isInMobArena(myPet.getOwner()) || Minigames.isInMinigame(myPet.getOwner()) || BattleArena.isInBattleArena(myPet.getOwner()) || PvPArena.isInPvPArena(myPet.getOwner()))
                     {
                         return false;
                     }

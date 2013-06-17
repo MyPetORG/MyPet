@@ -69,6 +69,7 @@ import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.support.BattleArena;
 import de.Keyle.MyPet.util.support.Minigames;
 import de.Keyle.MyPet.util.support.MobArena;
 import de.Keyle.MyPet.util.support.PvPArena;
@@ -355,6 +356,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MobArena.findPlugin();
         Minigames.findPlugin();
         PvPArena.findPlugin();
+        BattleArena.findPlugin();
 
         try
         {
