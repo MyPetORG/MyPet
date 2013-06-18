@@ -23,7 +23,6 @@ package de.Keyle.MyPet;
 import de.Keyle.MyPet.chatcommands.*;
 import de.Keyle.MyPet.chatcommands.CommandHelp;
 import de.Keyle.MyPet.chatcommands.CommandStop;
-import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -66,6 +65,7 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
+import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
@@ -77,6 +77,7 @@ import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -190,6 +191,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         MyPetBlockListener blockListener = new MyPetBlockListener();
         getServer().getPluginManager().registerEvents(blockListener, this);
+
+        MyPetWorldListener worldListener = new MyPetWorldListener();
+        getServer().getPluginManager().registerEvents(worldListener, this);
 
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());
@@ -342,13 +346,14 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         new MyPetLocales();
 
+        File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
         NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         if (MyPetBackup.MAKE_BACKUPS)
         {
             new MyPetBackup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
-
+        loadGroups(groupsFile);
         loadPets(NBTPetFile);
 
         MyPetTimer.startTimer();
@@ -416,23 +421,22 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             if (MyPetPlayer.isMyPetPlayer(player))
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
-
-                if (!myPetPlayer.hasMyPet() && myPetPlayer.hasInactiveMyPets())
+                MyPetWorldGroup joinGroup = MyPetWorldGroup.getGroup(player.getWorld().getName());
+                if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
                 {
-                    IMyPet myPet = MyPetList.getLastActiveMyPet(myPetPlayer);
-                    if (!(myPetPlayer.hasLastActiveMyPet() && myPetPlayer.getLastActiveMyPetUUID() == null))
+                    UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
+                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets())
                     {
-                        if (myPetPlayer.getLastActiveMyPetUUID() == null)
+                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
                         {
-                            if (myPetPlayer.hasInactiveMyPets())
-                            {
-                                MyPetList.setMyPetActive(myPetPlayer.getInactiveMyPets()[0]);
-                            }
+                            inactiveMyPet.setLocation(player.getLocation());
+                            MyPetList.setMyPetActive(inactiveMyPet);
+                            break;
                         }
-                        else if (myPet != null && myPet instanceof InactiveMyPet)
-                        {
-                            MyPetList.setMyPetActive((InactiveMyPet) myPet);
-                        }
+                    }
+                    if (!myPetPlayer.hasMyPet())
+                    {
+                        myPetPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                     }
                 }
                 if (myPetPlayer.hasMyPet())
@@ -713,6 +717,98 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             DebugLogger.info("   " + petPlayer);
         }
         return playerCount;
+    }
+
+    private int loadGroups(File f)
+    {
+        YAML_Configuration yamlConfiguration = new YAML_Configuration(f);
+        FileConfiguration config = yamlConfiguration.getConfig();
+
+        if (config == null)
+        {
+            return 0;
+        }
+
+        MyPetWorldGroup.clearGroups();
+
+        Set<String> nodes;
+        try
+        {
+            nodes = config.getConfigurationSection("Groups").getKeys(false);
+        }
+        catch (NullPointerException e)
+        {
+            nodes = new HashSet<String>();
+            MyPetLogger.write("No groups found. Everything will be in 'default' group.");
+        }
+        if (nodes.size() == 0)
+        {
+            List<String> worldNames = new ArrayList<String>();
+            MyPetWorldGroup defaultGroup = new MyPetWorldGroup("default");
+            defaultGroup.registerGroup();
+            for (org.bukkit.World world : this.getServer().getWorlds())
+            {
+                MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
+                worldNames.add(world.getName());
+                defaultGroup.addWorld(world.getName());
+            }
+            config.set("Groups.default", worldNames);
+            yamlConfiguration.saveConfig();
+        }
+        else
+        {
+            for (String node : nodes)
+            {
+                List<String> worlds = config.getStringList("Groups." + node);
+                if (worlds.size() > 0)
+                {
+                    MyPetWorldGroup newGroup = new MyPetWorldGroup(node);
+                    for (String world : worlds)
+                    {
+                        if (getServer().getWorld(world) != null)
+                        {
+                            newGroup.addWorld(world);
+                        }
+                    }
+                    if (newGroup.getWorlds().size() > 0)
+                    {
+                        newGroup.registerGroup();
+                    }
+                }
+            }
+
+            MyPetWorldGroup defaultGroup = null;
+            for (MyPetWorldGroup group : MyPetWorldGroup.getGroups())
+            {
+                if (group.getName().equalsIgnoreCase("default"))
+                {
+                    defaultGroup = group;
+                    break;
+                }
+            }
+            if (defaultGroup == null)
+            {
+                defaultGroup = new MyPetWorldGroup("default");
+                defaultGroup.registerGroup();
+            }
+
+            boolean saveConfig = false;
+            for (org.bukkit.World world : getServer().getWorlds())
+            {
+                if (MyPetWorldGroup.getGroup(world.getName()) == null)
+                {
+                    MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
+                    defaultGroup.addWorld(world.getName());
+                    saveConfig = true;
+                }
+            }
+            if (saveConfig)
+            {
+                config.set("Groups.default", defaultGroup.getWorlds());
+                yamlConfiguration.saveConfig();
+            }
+        }
+        return 0;
     }
 
     @Override

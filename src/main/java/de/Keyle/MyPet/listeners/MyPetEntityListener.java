@@ -596,6 +596,9 @@ public class MyPetEntityListener implements Listener
                         MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                         myPet.createPet();
 
+                        MyPetWorldGroup worldGroup = MyPetWorldGroup.getGroup(damager.getWorld().getName());
+                        myPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), myPet.getUUID());
+
                         if (MyPetConfiguration.ENABLE_EVENTS)
                         {
                             getPluginManager().callEvent(new MyPetLeashEvent(myPet));

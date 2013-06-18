@@ -276,8 +276,6 @@ public class MyPetList
             addMyPet(activeMyPet);
             removeInactiveMyPet(inactiveMyPet);
 
-            inactiveMyPet.getOwner().setLastActiveMyPetUUID(activeMyPet.getUUID());
-
             DebugLogger.info("   A: " + activeMyPet);
             DebugLogger.info("   I: " + inactiveMyPet);
 
@@ -305,7 +303,6 @@ public class MyPetList
                 return null;
             }
             activeMyPet.removePet();
-            activeMyPet.getOwner().setLastActiveMyPetUUID(null);
             InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
@@ -314,25 +311,6 @@ public class MyPetList
             DebugLogger.info("   A: " + activeMyPet);
 
             return inactiveMyPet;
-        }
-        return null;
-    }
-
-    public static IMyPet getLastActiveMyPet(MyPetPlayer petPlayer)
-    {
-        if (petPlayer.hasCustomData())
-        {
-            UUID lastActiveMyPetUUID = petPlayer.getLastActiveMyPetUUID();
-            if (lastActiveMyPetUUID != null)
-            {
-                for (IMyPet myPet : getAllMyPets())
-                {
-                    if (myPet.getUUID().equals(lastActiveMyPetUUID))
-                    {
-                        return myPet;
-                    }
-                }
-            }
         }
         return null;
     }

@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.entity.types.IMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -42,6 +41,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+
+import java.util.UUID;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
@@ -104,23 +105,25 @@ public class MyPetPlayerListener implements Listener
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-
-            if (!joinedPlayer.hasMyPet() && joinedPlayer.hasInactiveMyPets())
+            MyPetWorldGroup joinGroup = MyPetWorldGroup.getGroup(event.getPlayer().getWorld().getName());
+            if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
             {
-                IMyPet myPet = MyPetList.getLastActiveMyPet(joinedPlayer);
-                if (!(joinedPlayer.hasLastActiveMyPet() && joinedPlayer.getLastActiveMyPetUUID() == null))
+                UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
+                for (InactiveMyPet inactiveMyPet : joinedPlayer.getInactiveMyPets())
                 {
-                    if (joinedPlayer.getLastActiveMyPetUUID() == null)
+                    if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
                     {
-                        if (joinedPlayer.hasInactiveMyPets())
-                        {
-                            MyPetList.setMyPetActive(joinedPlayer.getInactiveMyPets()[0]);
-                        }
+                        inactiveMyPet.setLocation(event.getPlayer().getLocation());
+                        MyPetList.setMyPetActive(inactiveMyPet);
+                        MyPet activeMyPet = joinedPlayer.getMyPet();
+                        activeMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NowActivePet", joinedPlayer).replace("%petname%", activeMyPet.getPetName())));
+                        break;
                     }
-                    else if (myPet != null && myPet instanceof InactiveMyPet)
-                    {
-                        MyPetList.setMyPetActive((InactiveMyPet) myPet);
-                    }
+                }
+                if (!joinedPlayer.hasMyPet())
+                {
+                    joinedPlayer.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoActivePetInThisWorld", joinedPlayer)));
+                    joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                 }
             }
             if (joinedPlayer.hasMyPet())
@@ -174,11 +177,11 @@ public class MyPetPlayerListener implements Listener
                     behavior.setBehavior(BehaviorState.Normal);
                 }
             }
-            myPet.removePet();
             if (MyPetConfiguration.STORE_PETS_ON_PLAYER_QUIT)
             {
                 MyPetPlugin.getPlugin().savePets(false);
             }
+            myPet.removePet();
         }
     }
 
@@ -188,12 +191,48 @@ public class MyPetPlayerListener implements Listener
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
             final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (myPetPlayer.hasMyPet())
+
+            MyPetWorldGroup fromGroup = MyPetWorldGroup.getGroup(event.getFrom().getName());
+            MyPetWorldGroup toGroup = MyPetWorldGroup.getGroup(event.getPlayer().getWorld().getName());
+
+            boolean callAfterSwap = myPetPlayer.hasMyPet() && myPetPlayer.getMyPet().getStatus() == PetState.Here;
+
+            if (fromGroup != toGroup)
+            {
+                if (myPetPlayer.hasMyPet())
+                {
+                    MyPetList.setMyPetInactive(myPetPlayer);
+                }
+                if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName()))
+                {
+                    UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
+                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets())
+                    {
+                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
+                        {
+                            inactiveMyPet.setLocation(event.getPlayer().getLocation());
+                            MyPetList.setMyPetActive(inactiveMyPet);
+                            MyPet activeMyPet = myPetPlayer.getMyPet();
+                            activeMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NowActivePet", myPetPlayer).replace("%petname%", activeMyPet.getPetName())));
+                            break;
+                        }
+                    }
+                    if (!myPetPlayer.hasMyPet())
+                    {
+                        myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
+                    }
+                }
+
+            }
+            if (!myPetPlayer.hasMyPet())
+            {
+                myPetPlayer.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoActivePetInThisWorld", myPetPlayer)));
+            }
+            else
             {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here)
+                if (callAfterSwap)
                 {
-                    myPet.removePet();
                     myPet.setLocation(event.getPlayer().getLocation());
 
                     MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()

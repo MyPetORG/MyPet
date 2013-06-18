@@ -544,6 +544,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
                     MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                     myPet.createPet();
+                    myPet.getOwner().setMyPetForWorldGroup(MyPetWorldGroup.getGroup(owner.getWorld().getName()).getName(), myPet.getUUID());
                 }
                 else
                 {

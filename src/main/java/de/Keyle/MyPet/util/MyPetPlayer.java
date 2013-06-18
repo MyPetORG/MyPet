@@ -27,13 +27,12 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_5_R3.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MyPetPlayer implements IScheduler, NBTStorage
 {
@@ -46,8 +45,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
-    private UUID lastActiveMyPetUUID = null;
-    private boolean lastActiveMyPet = false;
+    private Map<String, UUID> petWorlds = new HashMap<String, UUID>();
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
 
     private MyPetPlayer(String playerName)
@@ -66,11 +64,15 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         {
             return true;
         }
-        else if (extendedInfo.getValue().size() != 0)
+        else if (captureHelperMode)
         {
             return true;
         }
-        else if (captureHelperMode)
+        else if (extendedInfo.getValue().size() > 0)
+        {
+            return true;
+        }
+        else if (petWorlds.size() > 0)
         {
             return true;
         }
@@ -109,20 +111,26 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         this.captureHelperMode = captureHelperMode;
     }
 
-    public void setLastActiveMyPetUUID(UUID myPetUUID)
+    public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID)
     {
-        lastActiveMyPetUUID = myPetUUID;
-        lastActiveMyPet = true;
+        if (myPetUUID == null)
+        {
+            petWorlds.remove(worldGroup);
+        }
+        else
+        {
+            petWorlds.put(worldGroup, myPetUUID);
+        }
     }
 
-    public UUID getLastActiveMyPetUUID()
+    public UUID getMyPetForWorldGroup(String worldGroup)
     {
-        return lastActiveMyPetUUID;
+        return petWorlds.get(worldGroup);
     }
 
-    public boolean hasLastActiveMyPet()
+    public boolean hasMyPetInWorldGroup(String worldGroup)
     {
-        return lastActiveMyPet;
+        return petWorlds.containsKey(worldGroup);
     }
 
     public void setExtendedInfo(CompoundTag compound)
@@ -261,16 +269,17 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         playerNBT.getValue().put("Name", new StringTag("Name", getName()));
         playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", hasAutoRespawnEnabled()));
         playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", getAutoRespawnMin()));
+        playerNBT.getValue().put("AutoRespawnMin2", new IntTag("AutoRespawnMin2", getAutoRespawnMin()));
         playerNBT.getValue().put("ExtendedInfo", getExtendedInfo());
         playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", isCaptureHelperActive()));
-        if (getLastActiveMyPetUUID() != null)
+
+        CompoundTag multiWorldCompound = new CompoundTag("MultiWorld", new CompoundMap());
+        for (String worldGroupName : petWorlds.keySet())
         {
-            playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", getLastActiveMyPetUUID().toString()));
+            multiWorldCompound.getValue().put(worldGroupName, new StringTag(worldGroupName, petWorlds.get(worldGroupName).toString()));
         }
-        else
-        {
-            playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", ""));
-        }
+        playerNBT.getValue().put("MultiWorld", multiWorldCompound);
+
         return playerNBT;
     }
 
@@ -302,18 +311,26 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
         {
             String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
+            UUID lastActiveUUID = UUID.fromString(lastActive);
             if (!lastActive.equalsIgnoreCase(""))
             {
-                setLastActiveMyPetUUID(UUID.fromString(lastActive));
-            }
-            else
-            {
-                setLastActiveMyPetUUID(null);
+                World newWorld = Bukkit.getServer().getWorlds().get(0);
+                MyPetWorldGroup lastActiveGroup = MyPetWorldGroup.getGroup(newWorld.getName());
+                this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
             }
         }
         if (myplayerNBT.getValue().containsKey("ExtendedInfo"))
         {
             setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
+        }
+        if (myplayerNBT.getValue().containsKey("MultiWorld"))
+        {
+            CompoundMap map = ((CompoundTag) myplayerNBT.getValue().get("MultiWorld")).getValue();
+            for (String worldGroupName : map.keySet())
+            {
+                String petUUID = ((StringTag) map.get(worldGroupName)).getValue();
+                setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
+            }
         }
     }
 
