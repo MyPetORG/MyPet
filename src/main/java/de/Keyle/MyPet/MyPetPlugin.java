@@ -692,23 +692,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         {
             if (myPetPlayer.hasCustomData())
             {
-                CompoundTag playerNBT = new CompoundTag(myPetPlayer.getName(), new CompoundMap());
-
-                playerNBT.getValue().put("Name", new StringTag("Name", myPetPlayer.getName()));
-                playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", myPetPlayer.hasAutoRespawnEnabled()));
-                playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", myPetPlayer.getAutoRespawnMin()));
-                playerNBT.getValue().put("ExtendedInfo", myPetPlayer.getExtendedInfo());
-                playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", myPetPlayer.isCaptureHelperActive()));
-                if (myPetPlayer.getLastActiveMyPetUUID() != null)
-                {
-                    playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", myPetPlayer.getLastActiveMyPetUUID().toString()));
-                }
-                else
-                {
-                    playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", ""));
-                }
-
-                playerList.add(playerNBT);
+                playerList.add(myPetPlayer.save());
             }
         }
         return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
@@ -723,45 +707,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         {
             CompoundTag myplayerNBT = (CompoundTag) playerList.getValue().get(i);
             MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(((StringTag) myplayerNBT.getValue().get("Name")).getValue());
-
-            if (myplayerNBT.getValue().containsKey("AutoRespawn"))
-            {
-                petPlayer.setAutoRespawnEnabled(((ByteTag) myplayerNBT.getValue().get("AutoRespawn")).getBooleanValue());
-            }
-            if (myplayerNBT.getValue().containsKey("AutoRespawnMin"))
-            {
-                petPlayer.setAutoRespawnMin(((IntTag) myplayerNBT.getValue().get("AutoRespawnMin")).getValue());
-            }
-            if (myplayerNBT.getValue().containsKey("CaptureMode"))
-            {
-                if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING)
-                {
-                    if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated"))
-                    {
-                        petPlayer.setCaptureHelperActive(true);
-                    }
-                }
-                else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE)
-                {
-                    petPlayer.setCaptureHelperActive(((ByteTag) myplayerNBT.getValue().get("CaptureMode")).getBooleanValue());
-                }
-            }
-            if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
-            {
-                String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
-                if (!lastActive.equalsIgnoreCase(""))
-                {
-                    petPlayer.setLastActiveMyPetUUID(UUID.fromString(lastActive));
-                }
-                else
-                {
-                    petPlayer.setLastActiveMyPetUUID(null);
-                }
-            }
-            if (myplayerNBT.getValue().containsKey("ExtendedInfo"))
-            {
-                petPlayer.setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
-            }
+            petPlayer.load(myplayerNBT);
 
             playerCount++;
             DebugLogger.info("   " + petPlayer);

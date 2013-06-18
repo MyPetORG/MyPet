@@ -18,10 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.util;
 
-import de.Keyle.MyPet.util.NBTStorage;
+import org.spout.nbt.CompoundTag;
 
-public interface ISkillStorage extends NBTStorage
+public interface NBTStorage
 {
+    public CompoundTag save();
+
+    public void load(CompoundTag compound);
 }

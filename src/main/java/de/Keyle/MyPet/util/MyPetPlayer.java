@@ -29,19 +29,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.Tag;
+import org.spout.nbt.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MyPetPlayer implements IScheduler
+public class MyPetPlayer implements IScheduler, NBTStorage
 {
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
     private String playerName;
+    private String lastLanguage = "en_US";
     private boolean customData = false;
 
     private boolean captureHelperMode = false;
@@ -50,7 +49,6 @@ public class MyPetPlayer implements IScheduler
     private UUID lastActiveMyPetUUID = null;
     private boolean lastActiveMyPet = false;
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
-    private String lastLanguage = "en_US";
 
     private MyPetPlayer(String playerName)
     {
@@ -64,7 +62,19 @@ public class MyPetPlayer implements IScheduler
 
     public boolean hasCustomData()
     {
-        return customData;
+        if (autoRespawn || autoRespawnMin != 1)
+        {
+            return true;
+        }
+        else if (extendedInfo.getValue().size() != 0)
+        {
+            return true;
+        }
+        else if (captureHelperMode)
+        {
+            return true;
+        }
+        return false;
     }
 
     // Custom Data -----------------------------------------------------------------
@@ -72,7 +82,6 @@ public class MyPetPlayer implements IScheduler
     public void setAutoRespawnEnabled(boolean flag)
     {
         autoRespawn = flag;
-        customData = true;
     }
 
     public boolean hasAutoRespawnEnabled()
@@ -83,7 +92,6 @@ public class MyPetPlayer implements IScheduler
     public void setAutoRespawnMin(int value)
     {
         autoRespawnMin = value;
-        customData = true;
     }
 
     public int getAutoRespawnMin()
@@ -91,10 +99,19 @@ public class MyPetPlayer implements IScheduler
         return autoRespawnMin;
     }
 
+    public boolean isCaptureHelperActive()
+    {
+        return captureHelperMode;
+    }
+
+    public void setCaptureHelperActive(boolean captureHelperMode)
+    {
+        this.captureHelperMode = captureHelperMode;
+    }
+
     public void setLastActiveMyPetUUID(UUID myPetUUID)
     {
         lastActiveMyPetUUID = myPetUUID;
-        customData = true;
         lastActiveMyPet = true;
     }
 
@@ -114,10 +131,6 @@ public class MyPetPlayer implements IScheduler
         {
             extendedInfo = compound;
         }
-        if (extendedInfo.getValue().size() != 0)
-        {
-            customData = true;
-        }
     }
 
     public void addExtendedInfo(String key, Tag<?> tag)
@@ -128,10 +141,6 @@ public class MyPetPlayer implements IScheduler
 
     public Tag<?> getExtendedInfo(String key)
     {
-        if (extendedInfo.getValue().size() != 0)
-        {
-            customData = true;
-        }
         if (extendedInfo.getValue().containsKey(key))
         {
             return extendedInfo.getValue().get(key);
@@ -190,16 +199,6 @@ public class MyPetPlayer implements IScheduler
         return Bukkit.getServer().getPlayer(playerName);
     }
 
-    public boolean isCaptureHelperActive()
-    {
-        return captureHelperMode;
-    }
-
-    public void setCaptureHelperActive(boolean captureHelperMode)
-    {
-        this.captureHelperMode = captureHelperMode;
-    }
-
     public static MyPetPlayer getMyPetPlayer(String name)
     {
         for (MyPetPlayer myPetPlayer : playerList)
@@ -252,6 +251,70 @@ public class MyPetPlayer implements IScheduler
             playerArray[playerCounter++] = player;
         }
         return playerArray;
+    }
+
+    @Override
+    public CompoundTag save()
+    {
+        CompoundTag playerNBT = new CompoundTag(getName(), new CompoundMap());
+
+        playerNBT.getValue().put("Name", new StringTag("Name", getName()));
+        playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", hasAutoRespawnEnabled()));
+        playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", getAutoRespawnMin()));
+        playerNBT.getValue().put("ExtendedInfo", getExtendedInfo());
+        playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", isCaptureHelperActive()));
+        if (getLastActiveMyPetUUID() != null)
+        {
+            playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", getLastActiveMyPetUUID().toString()));
+        }
+        else
+        {
+            playerNBT.getValue().put("LastActiveMyPetUUID", new StringTag("LastActiveMyPetUUID", ""));
+        }
+        return playerNBT;
+    }
+
+    @Override
+    public void load(CompoundTag myplayerNBT)
+    {
+        if (myplayerNBT.getValue().containsKey("AutoRespawn"))
+        {
+            setAutoRespawnEnabled(((ByteTag) myplayerNBT.getValue().get("AutoRespawn")).getBooleanValue());
+        }
+        if (myplayerNBT.getValue().containsKey("AutoRespawnMin"))
+        {
+            setAutoRespawnMin(((IntTag) myplayerNBT.getValue().get("AutoRespawnMin")).getValue());
+        }
+        if (myplayerNBT.getValue().containsKey("CaptureMode"))
+        {
+            if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING)
+            {
+                if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated"))
+                {
+                    setCaptureHelperActive(true);
+                }
+            }
+            else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE)
+            {
+                setCaptureHelperActive(((ByteTag) myplayerNBT.getValue().get("CaptureMode")).getBooleanValue());
+            }
+        }
+        if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
+        {
+            String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
+            if (!lastActive.equalsIgnoreCase(""))
+            {
+                setLastActiveMyPetUUID(UUID.fromString(lastActive));
+            }
+            else
+            {
+                setLastActiveMyPetUUID(null);
+            }
+        }
+        if (myplayerNBT.getValue().containsKey("ExtendedInfo"))
+        {
+            setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
+        }
     }
 
     public void schedule()
