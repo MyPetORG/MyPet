@@ -127,6 +127,18 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return petWorlds.get(worldGroup);
     }
 
+    public String getWorldGroupForMyPet(UUID petUUID)
+    {
+        for (String worldGroup : petWorlds.keySet())
+        {
+            if (petWorlds.get(worldGroup).equals(petUUID))
+            {
+                return worldGroup;
+            }
+        }
+        return null;
+    }
+
     public boolean hasMyPetInWorldGroup(String worldGroup)
     {
         return petWorlds.containsKey(worldGroup);
