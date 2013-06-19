@@ -38,8 +38,8 @@
         <bukkit.version>R1.0</bukkit.version>
 
         <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
-        <mcmmo.version>1.4.03</mcmmo.version>
-        <vault.version>1.2.25-SNAPSHOT</vault.version>
+        <mcmmo.version>1.4.05</mcmmo.version>
+        <vault.version>1.2.26-SNAPSHOT</vault.version>
         <minigames.version>1.5.1</minigames.version>
         <worldguard.version>5.7.3</worldguard.version>
         <worldedit.version>5.5.6</worldedit.version>
