@@ -40,7 +40,6 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     private String playerName;
     private String lastLanguage = "en_US";
-    private boolean customData = false;
 
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
@@ -144,7 +143,6 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     public void addExtendedInfo(String key, Tag<?> tag)
     {
         extendedInfo.getValue().put(key, tag);
-        customData = true;
     }
 
     public Tag<?> getExtendedInfo(String key)
