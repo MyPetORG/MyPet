@@ -311,9 +311,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
         {
             String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
-            UUID lastActiveUUID = UUID.fromString(lastActive);
             if (!lastActive.equalsIgnoreCase(""))
             {
+                UUID lastActiveUUID = UUID.fromString(lastActive);
                 World newWorld = Bukkit.getServer().getWorlds().get(0);
                 MyPetWorldGroup lastActiveGroup = MyPetWorldGroup.getGroup(newWorld.getName());
                 this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
