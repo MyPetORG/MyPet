@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIRangedAttack;
 import de.Keyle.MyPet.entity.ai.movement.*;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
-import de.Keyle.MyPet.entity.ai.navigation.MCNavigation;
+import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
@@ -70,7 +70,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
             this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
 
-            petNavigation = new MCNavigation(this);
+            petNavigation = new VanillaNavigation(this);
 
             this.setPathfinder();
         }
@@ -442,7 +442,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         return true;
     }
-
 
     /**
      * Entity AI tick method

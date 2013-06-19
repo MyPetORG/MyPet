@@ -15,16 +15,7 @@ import java.util.List;
 
 public class CommandCaptureHelper implements CommandExecutor, TabCompleter
 {
-    private static List<String> captureModeList = new ArrayList<String>();
     private static List<String> emptyList = new ArrayList<String>();
-
-    static
-    {
-        captureModeList.add("normal");
-        captureModeList.add("half");
-        captureModeList.add("tameableonly");
-        captureModeList.add("deactivate");
-    }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args)
@@ -49,10 +40,6 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings)
     {
-        if (strings.length == 1 && MyPetPermissions.has((Player) sender, "MyPet.user.capturehelper"))
-        {
-            return captureModeList;
-        }
         return emptyList;
     }
 }

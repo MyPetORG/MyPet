@@ -33,6 +33,7 @@ import org.bukkit.event.EventHandler;
 public class MobArena
 {
     public static boolean DISABLE_PETS_IN_ARENA = true;
+
     private static MobArenaHandler arenaHandler;
     private static boolean active = false;
 
@@ -43,7 +44,7 @@ public class MobArena
             arenaHandler = new MobArenaHandler();
             active = true;
         }
-        DebugLogger.info("MobArena Support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("MobArena support " + (active ? "" : "not ") + "activated.");
     }
 
     public static boolean isInMobArena(MyPetPlayer owner)

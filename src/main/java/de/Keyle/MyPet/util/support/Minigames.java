@@ -28,7 +28,7 @@ public class Minigames implements Listener
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetPlugin.getPlugin());
             active = true;
         }
-        DebugLogger.info("Minigames Support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("Minigames support " + (active ? "" : "not ") + "activated.");
     }
 
     public static boolean isInMinigame(MyPetPlayer owner)

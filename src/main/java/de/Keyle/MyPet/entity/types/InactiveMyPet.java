@@ -221,5 +221,4 @@ public class InactiveMyPet implements IMyPet
 
         return this.uuid;
     }
-
 }

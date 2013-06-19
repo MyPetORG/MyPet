@@ -66,6 +66,7 @@ public class MyPetPvP
     public static boolean USE_AncientRPG = true;
     public static boolean USE_GriefPrevention = true;
     public static boolean USE_PvPArena = true;
+
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
     private static boolean searchedFactions = false;
@@ -78,6 +79,7 @@ public class MyPetPvP
     private static boolean searchedAncientRPG = false;
     private static boolean searchedGriefPrevention = false;
     private static boolean searchedPvPArena = false;
+
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
     private static boolean pluginTowny = false;

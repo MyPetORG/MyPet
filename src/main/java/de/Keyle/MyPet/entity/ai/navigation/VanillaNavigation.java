@@ -26,17 +26,17 @@ import net.minecraft.server.v1_5_R3.Navigation;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
-public class MCNavigation extends AbstractNavigation
+public class VanillaNavigation extends AbstractNavigation
 {
     Navigation nav;
 
-    public MCNavigation(EntityMyPet entityMyPet)
+    public VanillaNavigation(EntityMyPet entityMyPet)
     {
         super(entityMyPet);
         nav = entityMyPet.getNavigation();
     }
 
-    public MCNavigation(EntityMyPet entityMyPet, NavigationParameters parameters)
+    public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters)
     {
         super(entityMyPet, parameters);
         nav = entityMyPet.getNavigation();

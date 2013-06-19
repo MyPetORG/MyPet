@@ -65,7 +65,7 @@ public class MyPetVersion
         }
     }
 
-    public static Manifest getClassLoaderForExtraModule(String filepath) throws IOException
+    private static Manifest getClassLoaderForExtraModule(String filepath) throws IOException
     {
         File jar = new File(filepath);
         JarFile jf = new JarFile(jar);

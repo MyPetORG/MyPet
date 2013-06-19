@@ -44,7 +44,7 @@ public class PvPArena implements Listener
         {
             active = true;
         }
-        DebugLogger.info("PvPArena Support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("PvPArena support " + (active ? "" : "not ") + "activated.");
     }
 
     public static boolean isInPvPArena(MyPetPlayer owner)

@@ -29,4 +29,3 @@ public @interface SkillName
 {
     String value();
 }
-
