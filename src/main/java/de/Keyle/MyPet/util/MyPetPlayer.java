@@ -195,6 +195,18 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return MyPetList.hasInactiveMyPets(playerName);
     }
 
+    public InactiveMyPet getInactiveMyPet(UUID petUUID)
+    {
+        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(playerName))
+        {
+            if (inactiveMyPet.getUUID().equals(petUUID))
+            {
+                return inactiveMyPet;
+            }
+        }
+        return null;
+    }
+
     public InactiveMyPet[] getInactiveMyPets()
     {
         return MyPetList.getInactiveMyPets(playerName);
