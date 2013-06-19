@@ -303,6 +303,11 @@ public class MyPetList
                 return null;
             }
             activeMyPet.removePet();
+
+            // remove pet from world groups
+            String wg = owner.getWorldGroupForMyPet(activeMyPet.getUUID());
+            activeMyPet.getOwner().setMyPetForWorldGroup(wg, null);
+
             InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
