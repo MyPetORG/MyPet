@@ -31,7 +31,7 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
         parameterDefaultValues = {"1", "add"})
 public class DamageInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    protected int damageIncrease = 0;
+    protected int damage = 0;
 
     public DamageInfo(boolean addedByInheritance)
     {

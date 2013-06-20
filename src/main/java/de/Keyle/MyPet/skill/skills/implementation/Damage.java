@@ -50,37 +50,37 @@ public class Damage extends DamageInfo implements ISkillInstance
 
     public boolean isActive()
     {
-        return damageIncrease > 0;
+        return damage > 0;
     }
 
     public void upgrade(ISkillInfo upgrade, boolean quiet)
     {
         if (upgrade instanceof DamageInfo)
         {
-            boolean isPassive = damageIncrease <= 0;
+            boolean isPassive = damage <= 0;
             if (upgrade.getProperties().getValue().containsKey("damage"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
                 {
-                    damageIncrease += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 }
                 else
                 {
-                    damageIncrease = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddDamage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damageIncrease));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddDamage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage));
                 }
             }
-            if (isPassive != (damageIncrease <= 0))
+            if (isPassive != (damage <= 0))
             {
                 if (myPet.getStatus() == PetState.Here)
                 {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().setPathfinder();
-                    if (damageIncrease == 0)
+                    if (damage == 0)
                     {
                         getMyPet().getCraftPet().getHandle().setGoalTarget(null);
                     }
@@ -91,12 +91,12 @@ public class Damage extends DamageInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return "+" + damageIncrease;
+        return " -> " + damage;
     }
 
     public void reset()
     {
-        damageIncrease = 0;
+        damage = 0;
         if (myPet.getStatus() == PetState.Here)
         {
             getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
@@ -108,7 +108,7 @@ public class Damage extends DamageInfo implements ISkillInstance
 
     public int getDamage()
     {
-        return damageIncrease;
+        return damage;
     }
 
     public ISkillInstance cloneSkill()
