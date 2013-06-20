@@ -427,7 +427,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     return true;
                 }
 
-                MyPetPlayer newOwner = MyPetPlayer.getMyPetPlayer(sender.getName());
+                MyPetPlayer newOwner = MyPetPlayer.getMyPetPlayer(owner.getName());
                 if (!newOwner.hasMyPet())
                 {
                     InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
