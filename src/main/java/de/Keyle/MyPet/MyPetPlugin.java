@@ -750,6 +750,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             nodes = new HashSet<String>();
             MyPetLogger.write("No groups found. Everything will be in 'default' group.");
         }
+
+        DebugLogger.info("--- Load WorldGroups ---------------------------");
         if (nodes.size() == 0)
         {
             List<String> worldNames = new ArrayList<String>();
@@ -759,6 +761,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             {
                 MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
+                DebugLogger.info("   added " + world.getName() + " to " + defaultGroup.getName());
                 defaultGroup.addWorld(world.getName());
             }
             config.set("Groups.default", worldNames);
@@ -776,11 +779,13 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     {
                         if (getServer().getWorld(world) != null)
                         {
+                            DebugLogger.info("   added '" + world + "' to '" + newGroup.getName() + "'");
                             newGroup.addWorld(world);
                         }
                     }
                     if (newGroup.getWorlds().size() > 0)
                     {
+                        DebugLogger.info("   registered '" + newGroup.getName() + "' group");
                         newGroup.registerGroup();
                     }
                 }
@@ -799,6 +804,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             {
                 defaultGroup = new MyPetWorldGroup("default");
                 defaultGroup.registerGroup();
+                DebugLogger.info("   registered 'default' group");
             }
 
             boolean saveConfig = false;
@@ -817,6 +823,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 yamlConfiguration.saveConfig();
             }
         }
+        DebugLogger.info("-------------------------------------------------");
         return 0;
     }
 
