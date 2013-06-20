@@ -41,6 +41,7 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_5_R3.MathHelper;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEnderman;
@@ -1066,12 +1067,12 @@ public class MyPetEntityListener implements Listener
                 else if (e.getDamager() instanceof CraftMyPet)
                 {
                     CraftMyPet craftMyPet = (CraftMyPet) e.getDamager();
-                    killer = craftMyPet.getMyPet().petName + " (" + craftMyPet.getOwner().getName() + ')';
+                    killer = craftMyPet.getMyPet().getPetName() + " (" + craftMyPet.getOwner().getName() + ')';
                 }
                 else if (e.getDamager() instanceof Projectile)
                 {
                     Projectile projectile = (Projectile) e.getDamager();
-                    killer = MyPetLocales.getString("Name." + projectile.getType().name(), myPet.getOwner().getLanguage()) + " (";
+                    killer = MyPetLocales.getString("Name." + capitalizeName(projectile.getType().name()), myPet.getOwner().getLanguage()) + " (";
                     if (projectile.getShooter() instanceof Player)
                     {
                         if (projectile.getShooter() == myPet.getOwner().getPlayer())
@@ -1085,27 +1086,35 @@ public class MyPetEntityListener implements Listener
                     }
                     else
                     {
-                        killer += MyPetLocales.getString("Name." + e.getDamager().getType().name(), myPet.getOwner().getLanguage());
+                        killer += MyPetLocales.getString("Name." + capitalizeName(e.getDamager().getType().name()), myPet.getOwner().getLanguage());
                     }
                     killer += ")";
                 }
                 else
                 {
-                    killer = MyPetLocales.getString("Name." + e.getDamager().getType().getName(), myPet.getOwner().getLanguage());
+                    killer = MyPetLocales.getString("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                 }
             }
             else
             {
                 if (event.getEntity().getLastDamageCause() != null)
                 {
-                    killer = MyPetLocales.getString("Name." + event.getEntity().getLastDamageCause().getCause().name(), myPet.getOwner().getLanguage());
+                    killer = MyPetLocales.getString("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner().getLanguage());
                 }
                 else
                 {
                     killer = MyPetLocales.getString("Name.Unknow", myPet.getOwner().getLanguage());
                 }
             }
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DeathMessage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName) + killer);
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DeathMessage", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()) + " " + killer);
         }
+    }
+
+    private static String capitalizeName(String name)
+    {
+        name = name.replace("_", " ");
+        name = WordUtils.capitalizeFully(name);
+        name = name.replace(" ", "");
+        return name;
     }
 }
