@@ -598,6 +598,7 @@ public class MyPetEntityListener implements Listener
                         myPet.createPet();
 
                         MyPetWorldGroup worldGroup = MyPetWorldGroup.getGroup(damager.getWorld().getName());
+                        myPet.setWorldGroup(worldGroup.getName());
                         myPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), myPet.getUUID());
 
                         if (MyPetConfiguration.ENABLE_EVENTS)

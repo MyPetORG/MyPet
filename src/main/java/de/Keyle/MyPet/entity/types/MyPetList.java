@@ -53,8 +53,9 @@ public class MyPetList
             activeMyPet.setUUID(inactiveMyPet.getUUID());
             activeMyPet.setLocation(inactiveMyPet.getLocation() == null ? inactiveMyPet.getOwner().getPlayer().getLocation() : inactiveMyPet.getLocation());
             activeMyPet.petName = inactiveMyPet.getPetName();
-            activeMyPet.respawnTime = inactiveMyPet.getRespawnTime();
+            activeMyPet.setRespawnTime(inactiveMyPet.getRespawnTime());
             activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
+            activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
 
             if (activeMyPet.respawnTime > 0)
@@ -183,6 +184,7 @@ public class MyPetList
         inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
         inactiveMyPet.setPetType(activeMyPet.getPetType());
         inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());
+        inactiveMyPet.setWorldGroup(activeMyPet.getWorldGroup());
 
         return inactiveMyPet;
     }

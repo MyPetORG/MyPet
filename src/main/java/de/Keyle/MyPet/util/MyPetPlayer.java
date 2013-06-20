@@ -113,6 +113,10 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID)
     {
+        if (worldGroup == null || worldGroup.equals(""))
+        {
+            return;
+        }
         if (myPetUUID == null)
         {
             petWorlds.remove(worldGroup);

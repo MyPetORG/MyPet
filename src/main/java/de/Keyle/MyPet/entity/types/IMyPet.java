@@ -47,4 +47,6 @@ public interface IMyPet
     public int getHungerValue();
 
     public MyPetType getPetType();
+
+    public String getWorldGroup();
 }

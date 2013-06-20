@@ -104,6 +104,7 @@ public abstract class MyPet implements IMyPet
     protected int hungerTime = 0;
     protected int hunger = 100;
     protected UUID uuid = null;
+    protected String worldGroup = "";
 
     protected PetState status = PetState.Despawned;
 
@@ -277,6 +278,12 @@ public abstract class MyPet implements IMyPet
                 }
                 craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
                 status = PetState.Here;
+
+                if (worldGroup == null || worldGroup.equals(""))
+                {
+                    setWorldGroup(MyPetWorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
+                }
+
                 return SpawnFlags.Success;
             }
         }
@@ -459,6 +466,20 @@ public abstract class MyPet implements IMyPet
         if (status == PetState.Here && MyPetBukkitUtil.canSpawn(loc, this.craftMyPet.getHandle()))
         {
             craftMyPet.teleport(loc);
+        }
+    }
+
+    @Override
+    public String getWorldGroup()
+    {
+        return this.worldGroup;
+    }
+
+    public void setWorldGroup(String worldGroup)
+    {
+        if (worldGroup != null)
+        {
+            this.worldGroup = worldGroup;
         }
     }
 

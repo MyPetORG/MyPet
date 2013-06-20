@@ -35,6 +35,7 @@ public class InactiveMyPet implements IMyPet
 {
     private UUID uuid = null;
     private String petName = "";
+    private String worldGroup = "";
     private final MyPetPlayer petOwner;
     private int health = -1;
     private int hunger = 100;
@@ -113,6 +114,20 @@ public class InactiveMyPet implements IMyPet
     public MyPetType getPetType()
     {
         return petType;
+    }
+
+    @Override
+    public String getWorldGroup()
+    {
+        return worldGroup;
+    }
+
+    public void setWorldGroup(String worldGroup)
+    {
+        if (worldGroup != null)
+        {
+            this.worldGroup = worldGroup;
+        }
     }
 
     public int getHungerValue()

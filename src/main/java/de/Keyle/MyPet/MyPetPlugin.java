@@ -558,6 +558,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             {
                 petType = ((StringTag) myPetNBT.getValue().get("Type")).getValue();
             }
+            String worldGroup = "";
+            if (myPetNBT.getValue().containsKey("WorldGroup"))
+            {
+                worldGroup = ((StringTag) myPetNBT.getValue().get("WorldGroup")).getValue();
+            }
 
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
 
@@ -568,6 +573,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             inactiveMyPet.setRespawnTime(petRespawnTime);
             inactiveMyPet.setPetName(petName);
             inactiveMyPet.setExp(petExp);
+            inactiveMyPet.setWorldGroup(worldGroup);
             inactiveMyPet.setSkills((CompoundTag) myPetNBT.getValue().get("Skills"));
             inactiveMyPet.setPetType(MyPetType.valueOf(petType));
             inactiveMyPet.setInfo((CompoundTag) myPetNBT.getValue().get("Info"));
@@ -621,6 +627,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             petNBT.getValue().put("Respawntime", new IntTag("Respawntime", myPet.getRespawnTime()));
             petNBT.getValue().put("Hunger", new IntTag("Hunger", myPet.getHungerValue()));
             petNBT.getValue().put("Name", new StringTag("Name", myPet.getPetName()));
+            petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", myPet.getWorldGroup()));
             petNBT.getValue().put("Exp", new DoubleTag("Exp", myPet.getExp()));
             petNBT.getValue().put("Info", myPet.getExtendedInfo());
             if (myPet.getSkillTree() != null)
@@ -669,6 +676,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             petNBT.getValue().put("Respawntime", new IntTag("Respawntime", inactiveMyPet.getRespawnTime()));
             petNBT.getValue().put("Hunger", new IntTag("Hunger", inactiveMyPet.getHungerValue()));
             petNBT.getValue().put("Name", new StringTag("Name", inactiveMyPet.getPetName()));
+            petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", inactiveMyPet.getWorldGroup()));
             petNBT.getValue().put("Exp", new DoubleTag("Exp", inactiveMyPet.getExp()));
             petNBT.getValue().put("Info", inactiveMyPet.getInfo());
             if (inactiveMyPet.getSkillTree() != null)
