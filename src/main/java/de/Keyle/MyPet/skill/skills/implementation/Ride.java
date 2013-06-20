@@ -72,7 +72,7 @@ public class Ride extends RideInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddRide", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName)/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddRide", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName())/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
                 }
             }
         }

@@ -75,7 +75,7 @@ public class HP extends HPInfo implements ISkillInstance
 
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddHp", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + hpIncrease)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddHp", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%maxhealth%", "" + (MyPet.getStartHP(myPet.getClass()) + hpIncrease)));
                 }
             }
         }

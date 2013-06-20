@@ -22,10 +22,10 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
@@ -80,23 +80,23 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", player)).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", player)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", player)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconStop", player)).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconStop", player)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconWhileInCreative", player)).replace("%petname%", myPet.petName));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BeaconWhileInCreative", player)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Beacon"))

@@ -48,7 +48,7 @@ public class MyPetLevelUpListener implements Listener
         MyPet myPet = event.getPet();
         if (!event.isQuiet())
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.LvlUp", event.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%lvl%", "" + event.getLevel()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.LvlUp", event.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%lvl%", "" + event.getLevel()));
 
             if (MyPetExperience.FIREWORK_ON_LEVELUP)
             {

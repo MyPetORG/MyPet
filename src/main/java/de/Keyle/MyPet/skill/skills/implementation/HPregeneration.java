@@ -97,7 +97,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddHpRegeneration", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%sec%", "" + regenTime).replace("%hp%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddHpRegeneration", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%sec%", "" + regenTime).replace("%hp%", "" + increaseHpBy));
             }
         }
     }

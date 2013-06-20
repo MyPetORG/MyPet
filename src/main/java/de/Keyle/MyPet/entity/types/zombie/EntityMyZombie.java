@@ -59,7 +59,7 @@ public class EntityMyZombie extends EntityMyPet
             {
                 public void run()
                 {
-                    if (myZombie.status == PetState.Here)
+                    if (myZombie.getStatus() == PetState.Here)
                     {
                         for (EquipmentSlot slot : EquipmentSlot.values())
                         {

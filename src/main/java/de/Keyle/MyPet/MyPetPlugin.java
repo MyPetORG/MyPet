@@ -26,6 +26,7 @@ import de.Keyle.MyPet.chatcommands.CommandStop;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.blaze.EntityMyBlaze;
@@ -444,7 +445,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+                        player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
                     }
                     else if (myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {
@@ -452,7 +453,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     }
                     else
                     {
-                        myPet.status = PetState.Despawned;
+                        myPet.setStatus(PetState.Despawned);
                     }
                 }
             }

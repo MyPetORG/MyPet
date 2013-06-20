@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;

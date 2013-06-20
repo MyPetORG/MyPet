@@ -85,7 +85,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddPickup", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%range%", "" + String.format("%1.2f", range)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddPickup", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%range%", "" + String.format("%1.2f", range)));
                 }
             }
         }
@@ -109,18 +109,18 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
             if (myPet.getSkills().isSkillActive("Inventory"))
             {
                 pickup = !pickup;
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString((pickup ? "Message.PickUpStart" : "Message.PickUpStop"), myPet.getOwner().getPlayer())).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString((pickup ? "Message.PickUpStart" : "Message.PickUpStop"), myPet.getOwner().getPlayer())).replace("%petname%", myPet.getPetName()));
                 return true;
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpButNoInventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpButNoInventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
             return false;
         }
     }
@@ -130,7 +130,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         if (pickup && (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || MobArena.isInMobArena(myPet.getOwner()) || Minigames.isInMinigame(myPet.getOwner()) || BattleArena.isInBattleArena(myPet.getOwner()) || PvPArena.isInPvPArena(myPet.getOwner())))
         {
             pickup = false;
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpStop", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PickUpStop", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
             return;
         }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))

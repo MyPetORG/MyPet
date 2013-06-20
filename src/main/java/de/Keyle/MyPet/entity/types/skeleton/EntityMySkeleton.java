@@ -56,7 +56,7 @@ public class EntityMySkeleton extends EntityMyPet
             {
                 public void run()
                 {
-                    if (mySkeleton.status == PetState.Here)
+                    if (mySkeleton.getStatus() == PetState.Here)
                     {
                         for (EquipmentSlot slot : EquipmentSlot.values())
                         {

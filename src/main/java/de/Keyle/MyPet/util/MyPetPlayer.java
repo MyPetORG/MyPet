@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_5_R3.EntityHuman;
 import org.bukkit.Bukkit;
@@ -372,7 +373,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                     if (!myPet.getCraftPet().canMove())
                     {
                         myPet.removePet();
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Despawn", getLanguage())).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Despawn", getLanguage())).replace("%petname%", myPet.getPetName()));
                     }
                 }
             }

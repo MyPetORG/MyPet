@@ -97,15 +97,15 @@ public abstract class MyPet implements IMyPet
     }
 
     protected CraftMyPet craftMyPet;
-    public String petName = "Pet";
+    protected String petName = "Pet";
     protected final MyPetPlayer petOwner;
     protected int health;
-    public int respawnTime = 0;
-    public int hungerTime = 0;
+    protected int respawnTime = 0;
+    protected int hungerTime = 0;
     protected int hunger = 100;
-    public UUID uuid = null;
+    protected UUID uuid = null;
 
-    public PetState status = PetState.Despawned;
+    protected PetState status = PetState.Despawned;
 
     protected Location petLocation;
 
@@ -312,6 +312,32 @@ public abstract class MyPet implements IMyPet
         return status;
     }
 
+    public void setStatus(PetState status)
+    {
+        if (status == PetState.Here)
+        {
+            if (this.status == PetState.Dead)
+            {
+                respawnPet();
+            }
+            else if (this.status == PetState.Despawned)
+            {
+                createPet();
+            }
+        }
+        else if (status == PetState.Dead)
+        {
+            this.status = PetState.Dead;
+        }
+        else
+        {
+            if (this.status == PetState.Here)
+            {
+                removePet();
+            }
+        }
+    }
+
     public void setHealth(int d)
     {
         if (d > getMaxHealth())
@@ -348,6 +374,11 @@ public abstract class MyPet implements IMyPet
     public int getRespawnTime()
     {
         return respawnTime;
+    }
+
+    public void setRespawnTime(int time)
+    {
+        respawnTime = time > 0 ? time : 0;
     }
 
     public int getHungerValue()

@@ -58,7 +58,7 @@ public class Sprint extends SprintInfo implements ISkillInstance
             active = true;
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddSprint", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddSprint", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
 
             }
         }

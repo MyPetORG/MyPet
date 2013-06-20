@@ -53,7 +53,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
     public void setMyPet(MyPet myPet)
     {
         this.myPet = myPet;
-        inv.setName(myPet.petName);
+        inv.setName(myPet.getPetName());
     }
 
     public MyPet getMyPet()
@@ -75,7 +75,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Inventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName).replace("%size%", "" + inv.getSize()));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Inventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -107,19 +107,19 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             if (!myPet.getLocation().getBlock().isLiquid())
             {
-                inv.setName(myPet.petName);
+                inv.setName(myPet.getPetName());
                 openInventory(myPet.getOwner().getPlayer());
                 return true;
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.InventoryWhileSwimming", myPet.getOwner().getLanguage()).replace("%petname%", myPet.petName)));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.InventoryWhileSwimming", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName())));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoInventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoInventory", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
             return false;
         }
     }

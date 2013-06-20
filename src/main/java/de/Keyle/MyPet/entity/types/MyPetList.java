@@ -18,17 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.entity.types.IMyPet;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
-import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.event.MyPetSelectEvent;
 import de.Keyle.MyPet.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
+import de.Keyle.MyPet.util.MyPetConfiguration;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundTag;

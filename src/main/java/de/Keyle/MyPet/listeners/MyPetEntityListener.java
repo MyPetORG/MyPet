@@ -181,7 +181,7 @@ public class MyPetEntityListener implements Listener
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
                     {
-                        damager.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.petName));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.getPetName()));
                         infoShown = true;
                     }
                     if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet) && myPet.getOwner() != myPetPlayer)
@@ -204,19 +204,19 @@ public class MyPetEntityListener implements Listener
                         {
                             msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
                         }
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.petName).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", myPet.getOwner().getLanguage())));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.getPetName()).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                     {
                         int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamage() : 0);
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage())));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                     {
                         int damage = myPet.getDamage();
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.petName).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (MyPetConfiguration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
@@ -648,13 +648,13 @@ public class MyPetEntityListener implements Listener
                 switch (myPet.createPet())
                 {
                     case Success:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Call", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Call", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
                         break;
                     case Canceled:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
                         break;
                     case NoSpace:
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", myPet.petName));
+                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
                         break;
                 }
             }
@@ -803,9 +803,9 @@ public class MyPetEntityListener implements Listener
             {
                 return;
             }
-            myPet.status = PetState.Dead;
 
-            myPet.respawnTime = (MyPetConfiguration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass())));
+            myPet.setRespawnTime((MyPetConfiguration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
+            myPet.setStatus(PetState.Dead);
 
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
@@ -813,7 +813,7 @@ public class MyPetEntityListener implements Listener
 
                 if (e.getDamager() instanceof Player)
                 {
-                    myPet.respawnTime = (MyPetConfiguration.RESPAWN_TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass())));
+                    myPet.setRespawnTime((MyPetConfiguration.RESPAWN_TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (MyPetConfiguration.RESPAWN_TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
                 }
                 else if (e.getDamager() instanceof CraftMyPet)
                 {
@@ -831,7 +831,7 @@ public class MyPetEntityListener implements Listener
                                 MyPetAIDuelTarget duelTarget = (MyPetAIDuelTarget) myPetEntity.petTargetSelector.getGoal("DuelTarget");
                                 if (duelTarget.getDuelOpponent() == duelKiller)
                                 {
-                                    myPet.respawnTime = 10;
+                                    myPet.setRespawnTime(10);
                                 }
                             }
                         }
@@ -864,20 +864,20 @@ public class MyPetEntityListener implements Listener
                 }
             }
             sendDeathMessage(event);
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()).replace("%petname%", myPet.petName).replace("%time%", "" + myPet.respawnTime)));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
 
-            if (MyPetEconomy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.respawnTime >= myPet.getOwner().getAutoRespawnMin() && MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
+            if (MyPetEconomy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.getRespawnTime() >= myPet.getOwner().getAutoRespawnMin() && MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
             {
-                double costs = myPet.respawnTime * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
+                double costs = myPet.getRespawnTime() * MyPetConfiguration.RESPAWN_COSTS_FACTOR + MyPetConfiguration.RESPAWN_COSTS_FIXED;
                 if (MyPetEconomy.canPay(myPet.getOwner(), costs))
                 {
                     MyPetEconomy.pay(myPet.getOwner(), costs);
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
-                    myPet.respawnTime = 1;
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.getPetName())));
+                    myPet.setRespawnTime(1);
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.petName)));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.getPetName())));
                 }
             }
         }

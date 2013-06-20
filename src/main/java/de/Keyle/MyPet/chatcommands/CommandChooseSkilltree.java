@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetConfiguration;
-import de.Keyle.MyPet.util.MyPetList;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
@@ -58,7 +58,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
             }
             else if (myPet.getSkillTree() != null && MyPetConfiguration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()).replace("%petname%", myPet.petName)));
+                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName())));
             }
             else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
@@ -97,7 +97,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AvailableSkilltrees", player).replace("%petname%", myPet.petName)));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AvailableSkilltrees", player).replace("%petname%", myPet.getPetName())));
                     for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
                     {
                         if (MyPetPermissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))

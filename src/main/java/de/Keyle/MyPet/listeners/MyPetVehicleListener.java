@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
-import de.Keyle.MyPet.util.MyPetList;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

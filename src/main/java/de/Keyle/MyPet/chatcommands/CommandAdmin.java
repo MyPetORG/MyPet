@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
@@ -290,7 +291,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(petOwner);
             if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.respawnTime + "sec.");
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.getRespawnTime() + "sec.");
             }
             else if (myPet.getStatus() == PetState.Dead)
             {
@@ -299,14 +300,14 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     int respawnTime = Integer.parseInt(args[2]);
                     if (respawnTime >= 0)
                     {
-                        myPet.respawnTime = respawnTime;
+                        myPet.setRespawnTime(respawnTime);
                     }
                 }
                 else
                 {
-                    myPet.respawnTime = 0;
+                    myPet.setRespawnTime(0);
                 }
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.respawnTime + "sec.");
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.getRespawnTime() + "sec.");
             }
             else
             {
