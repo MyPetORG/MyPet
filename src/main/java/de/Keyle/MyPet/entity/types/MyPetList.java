@@ -222,6 +222,10 @@ public class MyPetList
         lInactivePets.remove(inactiveMyPet);
         if (mInctivePets.containsKey(inactiveMyPet.getOwner()))
         {
+            // remove pet from world groups
+            String wg = inactiveMyPet.getOwner().getWorldGroupForMyPet(inactiveMyPet.getUUID());
+            inactiveMyPet.getOwner().setMyPetForWorldGroup(wg, null);
+
             List<InactiveMyPet> myPetList = mInctivePets.get(inactiveMyPet.getOwner());
             if (myPetList.contains(inactiveMyPet))
             {
@@ -303,10 +307,6 @@ public class MyPetList
                 return null;
             }
             activeMyPet.removePet();
-
-            // remove pet from world groups
-            String wg = owner.getWorldGroupForMyPet(activeMyPet.getUUID());
-            activeMyPet.getOwner().setMyPetForWorldGroup(wg, null);
 
             InactiveMyPet inactiveMyPet = getInactiveMyPetFromMyPet(activeMyPet);
             removeMyPet(activeMyPet);
