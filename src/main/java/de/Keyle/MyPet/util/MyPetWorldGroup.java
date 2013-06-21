@@ -28,11 +28,11 @@ import java.util.Map;
 public class MyPetWorldGroup
 {
     private static List<MyPetWorldGroup> allGroups = new ArrayList<MyPetWorldGroup>();
+    private static Map<String, MyPetWorldGroup> groupWorlds = new HashMap<String, MyPetWorldGroup>();
 
     private String name;
     private List<String> worlds = new ArrayList<String>();
 
-    private static Map<String, MyPetWorldGroup> groupWorlds = new HashMap<String, MyPetWorldGroup>();
 
     public MyPetWorldGroup(String groupName)
     {
