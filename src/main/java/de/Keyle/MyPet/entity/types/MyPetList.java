@@ -195,7 +195,7 @@ public class MyPetList
         {
             return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
         }
-        return null;
+        return new ArrayList<InactiveMyPet>();
     }
 
     public static InactiveMyPet[] getInactiveMyPets(String owner)
@@ -210,7 +210,7 @@ public class MyPetList
             }
             return allInactiveMyPets;
         }
-        return null;
+        return new InactiveMyPet[0];
     }
 
     public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet)
