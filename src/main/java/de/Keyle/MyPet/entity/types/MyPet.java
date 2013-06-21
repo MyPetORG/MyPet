@@ -170,19 +170,6 @@ public abstract class MyPet implements IMyPet
             return false;
         }
         skills.reset();
-        if (this.skillTree != null)
-        {
-            if (this.getOwner().isMyPetAdmin() && MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_ADMIN)
-            {
-                experience.removeExp(MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                experience.removeExp(experience.getExp() * MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
-            }
-            else
-            {
-                experience.removeExp(MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                experience.removeExp(experience.getExp() * MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
-            }
-        }
         this.skillTree = skillTree;
         for (int i = 1 ; i <= experience.getLevel() ; i++)
         {

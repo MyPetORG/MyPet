@@ -27,10 +27,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
-import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoader;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
@@ -335,40 +334,87 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 petTypes[i] = MyPetType.values()[i].getTypeName();
             }
+            for (MyPet myPet : MyPetList.getAllActiveMyPets())
+            {
+                myPet.getSkills().reset();
+            }
 
             MyPetSkillTreeMobType.clearMobTypes();
             MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
             MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
             MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
+            for (MyPetType mobType : MyPetType.values())
+            {
+                MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+                MyPetSkillTreeLoader.addDefault(skillTreeMobType);
+                MyPetSkillTreeLoader.manageInheritance(skillTreeMobType);
+            }
+
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
                 myPet.getSkills().reset();
 
-                int lvl = myPet.getExperience().getLevel();
                 MyPetSkillTree skillTree = myPet.getSkillTree();
-
                 if (skillTree != null)
                 {
-                    for (MyPetSkillTreeLevel level : skillTree.getLevelList())
+                    String skilltreeName = skillTree.getName();
+                    if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
                     {
-                        if (level.getLevel() > lvl)
+                        MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByPetType(myPet.getPetType());
+
+                        if (mobType.hasSkillTree(skilltreeName))
                         {
-                            continue;
+                            skillTree = mobType.getSkillTree(skilltreeName);
                         }
-                        for (ISkillInfo skill : level.getSkills())
+                        else
                         {
-                            myPet.getSkills().getSkill(skill.getName()).upgrade(skill, true);
+                            skillTree = null;
                         }
                     }
+                    else
+                    {
+                        skillTree = null;
+                    }
+                }
+                myPet.setSkilltree(skillTree);
+                if (skillTree != null)
+                {
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skills", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
                     for (ISkillInstance skill : myPet.getSkills().getSkills())
                     {
                         if (skill.isActive())
                         {
-                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors("  %green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                         }
                     }
                 }
+            }
+            for (InactiveMyPet myPet : MyPetList.getAllInactiveMyPets())
+            {
+                MyPetSkillTree skillTree = myPet.getSkillTree();
+                if (skillTree != null)
+                {
+                    String skilltreeName = skillTree.getName();
+                    if (MyPetSkillTreeMobType.getMobTypeByPetType(myPet.getPetType()) != null)
+                    {
+                        MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByPetType(myPet.getPetType());
+
+                        if (mobType.hasSkillTree(skilltreeName))
+                        {
+                            skillTree = mobType.getSkillTree(skilltreeName);
+                        }
+                        else
+                        {
+                            skillTree = null;
+                        }
+                    }
+                    else
+                    {
+                        skillTree = null;
+                    }
+                }
+                myPet.setSkillTree(skillTree);
             }
             sender.sendMessage(MyPetBukkitUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!"));
             DebugLogger.info("Skilltrees reloaded.");

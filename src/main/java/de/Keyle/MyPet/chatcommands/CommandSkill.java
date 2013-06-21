@@ -70,7 +70,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
                 {
                     if (skill.isActive())
                     {
-                        sender.sendMessage(MyPetBukkitUtil.setColors("%green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                        sender.sendMessage(MyPetBukkitUtil.setColors("  %green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                     }
                 }
                 return true;
