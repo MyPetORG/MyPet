@@ -95,6 +95,10 @@ public class MyPetPvP
 
     public static boolean canHurt(Player attacker, Player defender)
     {
+        if (MyPetConfiguration.DISABLE_PET_VS_PLAYER)
+        {
+            return true;
+        }
         if (attacker != null && defender != null)
         {
             return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurt(defender);
@@ -104,6 +108,10 @@ public class MyPetPvP
 
     public static boolean canHurt(Player defender)
     {
+        if (MyPetConfiguration.DISABLE_PET_VS_PLAYER)
+        {
+            return true;
+        }
         if (defender != null)
         {
             return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();

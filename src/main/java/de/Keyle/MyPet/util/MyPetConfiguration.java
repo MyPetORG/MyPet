@@ -76,6 +76,7 @@ public class MyPetConfiguration
     public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
     public static boolean PREVENT_LEVELLING_WITHOUT_SKILLTREE = true;
     public static boolean OWNER_CAN_ATTACK_PET = false;
+    public static boolean DISABLE_PET_VS_PLAYER = false;
     public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
     public static boolean USE_DEBUG_LOGGER = true;
@@ -91,6 +92,7 @@ public class MyPetConfiguration
     {
         config.addDefault("MyPet.Leash.Item", LEASH_ITEM.getId());
         config.addDefault("MyPet.OwnerCanAttackPet", false);
+        config.addDefault("MyPet.DisablePetVersusPlayer", false);
         config.addDefault("MyPet.CheckForUpdates", false);
         config.addDefault("MyPet.DebugLogger", true);
         config.addDefault("MyPet.EnableEvents", false);
@@ -251,6 +253,7 @@ public class MyPetConfiguration
         PREVENT_LEVELLING_WITHOUT_SKILLTREE = config.getBoolean("MyPet.Skilltree.PreventLevellingWithout", true);
         USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem.Active", true);
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
+        DISABLE_PET_VS_PLAYER = config.getBoolean("MyPet.DisablePetVersusPlayer", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
