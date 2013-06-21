@@ -20,7 +20,10 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkillsInfo;
+import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -33,9 +36,7 @@ import org.json.simple.JSONObject;
 import org.spout.nbt.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
 {
@@ -125,9 +126,9 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                         String skillName = (String) skillObject.get("Name");
                         JSONObject skillPropertyObject = (JSONObject) skillObject.get("Properties");
 
-                        if (MyPetSkills.isValidSkill(skillName))
+                        if (MyPetSkillsInfo.isValidSkill(skillName))
                         {
-                            ISkillInfo skill = MyPetSkills.getNewSkillInstance(skillName);
+                            ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(skillName);
 
                             if (skill != null)
                             {
@@ -215,140 +216,5 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                 MyPetLogger.write(ChatColor.RED + "Error in " + skillTreeMobType.getMobTypeName().toLowerCase() + ".json -> Skilltree not loaded.");
             }
         }
-    }
-
-    @Override
-    public List<String> saveSkillTrees(String configPath, String[] mobtypes)
-    {
-        JSON_Configuration jsonConfig;
-        File skillFile;
-        List<String> savedPetTypes = new ArrayList<String>();
-
-        for (String petType : mobtypes)
-        {
-            skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".json");
-            jsonConfig = new JSON_Configuration(skillFile);
-            if (saveSkillTree(jsonConfig, petType))
-            {
-                savedPetTypes.add(petType);
-            }
-        }
-
-        skillFile = new File(configPath + File.separator + "default.json");
-        jsonConfig = new JSON_Configuration(skillFile);
-        if (saveSkillTree(jsonConfig, "default"))
-        {
-            savedPetTypes.add("default");
-        }
-
-        return savedPetTypes;
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean saveSkillTree(JSON_Configuration jsonConfiguration, String petTypeName)
-    {
-        boolean saveMobType = false;
-
-        if (MyPetSkillTreeMobType.getMobTypeByName(petTypeName).getSkillTreeNames().size() != 0)
-        {
-            MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByName(petTypeName);
-            mobType.cleanupPlaces();
-
-            JSONArray skilltreeList = new JSONArray();
-            for (MyPetSkillTree skillTree : mobType.getSkillTrees())
-            {
-                JSONObject skilltreeObject = new JSONObject();
-                skilltreeObject.put("Name", skillTree.getName());
-                skilltreeObject.put("Place", mobType.getSkillTreePlace(skillTree));
-                if (skillTree.hasInheritance())
-                {
-                    skilltreeObject.put("Inherits", skillTree.getInheritance());
-                }
-                if (skillTree.hasCustomPermissions())
-                {
-                    skilltreeObject.put("Permission", skillTree.getPermission());
-                }
-                if (skillTree.hasDisplayName())
-                {
-                    skilltreeObject.put("Display", skillTree.getDisplayName());
-                }
-
-                JSONArray levelList = new JSONArray();
-                for (MyPetSkillTreeLevel level : skillTree.getLevelList())
-                {
-                    JSONObject levelObject = new JSONObject();
-                    levelObject.put("Level", level.getLevel());
-
-                    JSONArray skillList = new JSONArray();
-                    for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills())
-                    {
-                        if (!skill.isAddedByInheritance())
-                        {
-                            JSONObject skillObject = new JSONObject();
-                            skillObject.put("Name", skill.getName());
-                            JSONObject skillProperties = new JSONObject();
-                            SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
-                            if (sp != null)
-                            {
-                                for (int i = 0 ; i < sp.parameterNames().length ; i++)
-                                {
-                                    String propertyName = sp.parameterNames()[i];
-                                    NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                    CompoundTag propertiesCompound = skill.getProperties();
-                                    if (propertiesCompound.getValue().containsKey(propertyName))
-                                    {
-                                        switch (propertyType)
-                                        {
-                                            case Short:
-                                                skillProperties.put(propertyName, ((ShortTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Int:
-                                                skillProperties.put(propertyName, ((IntTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Long:
-                                                skillProperties.put(propertyName, ((LongTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Float:
-                                                skillProperties.put(propertyName, ((FloatTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Double:
-                                                skillProperties.put(propertyName, ((DoubleTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Byte:
-                                                skillProperties.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                            case Boolean:
-                                                skillProperties.put(propertyName, ((ByteTag) propertiesCompound.getValue().get(propertyName)).getBooleanValue());
-                                                break;
-                                            case String:
-                                                skillProperties.put(propertyName, ((StringTag) propertiesCompound.getValue().get(propertyName)).getValue());
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        skillProperties.put(propertyName, sp.parameterDefaultValues()[i]);
-                                    }
-                                }
-                            }
-                            skillObject.put("Properties", skillProperties);
-
-                            skillList.add(skillObject);
-                        }
-                    }
-                    levelObject.put("Skills", skillList);
-                    levelList.add(levelObject);
-                }
-                skilltreeObject.put("Level", levelList);
-                skilltreeList.add(skilltreeObject);
-            }
-            jsonConfiguration.getJSONObject().put("Skilltrees", skilltreeList);
-            if (mobType.getSkillTreeNames().size() > 0)
-            {
-                jsonConfiguration.save();
-                saveMobType = true;
-            }
-        }
-        return saveMobType;
     }
 }

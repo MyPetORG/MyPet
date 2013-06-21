@@ -31,6 +31,11 @@ public class SprintInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
+    public String getHtml()
+    {
+        return "";
+    }
+
     public ISkillInfo cloneSkill()
     {
         SprintInfo newSkill = new SprintInfo(this.isAddedByInheritance());

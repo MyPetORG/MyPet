@@ -24,6 +24,12 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.DoubleTag;
+import org.spout.nbt.StringTag;
+
+import java.io.InputStream;
+import java.util.Locale;
 
 @SkillName("Pickup")
 @SkillProperties(
@@ -32,11 +38,46 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
         parameterDefaultValues = {"1.0", "add"})
 public class PickupInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
+    private static String defaultHTML = null;
+
     protected double range = 0;
 
     public PickupInfo(boolean addedByInheritance)
     {
         super(addedByInheritance);
+    }
+
+    public String getHtml()
+    {
+        if (defaultHTML == null)
+        {
+            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
+            if (htmlStream == null)
+            {
+                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
+                if (htmlStream == null)
+                {
+                    return "NoSkillPropertieViewNotFoundError";
+                }
+            }
+            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
+        }
+
+        String html = defaultHTML;
+        if (getProperties().getValue().containsKey("range"))
+        {
+            double range = ((DoubleTag) getProperties().getValue().get("range")).getValue();
+            html = html.replace("value=\"0.00\"", "value=\"" + String.format(Locale.ENGLISH, "%1.2f", range) + "\"");
+            if (getProperties().getValue().containsKey("addset_range"))
+            {
+                if (((StringTag) getProperties().getValue().get("addset_range")).getValue().equals("set"))
+                {
+                    html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
+                    html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
+                }
+            }
+        }
+        return html;
     }
 
     public ISkillInfo cloneSkill()

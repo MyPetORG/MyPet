@@ -24,6 +24,8 @@ import org.spout.nbt.CompoundTag;
 
 public interface ISkillInfo
 {
+    public String getHtml();
+
     public void setProperties(CompoundTag propertiesCompound);
 
     public CompoundTag getProperties();
