@@ -61,8 +61,7 @@ public class CommandShowSkillTree implements CommandExecutor
                     if (MyPetSkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1]))
                     {
                         MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
-                        MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : "none") + " -----");
-                        DebugLogger.info("----- Console: MyPet Skilltree: " + skillTree.getName() + " - Inherits: " + skillTree.getInheritance() + " -----");
+                        MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : ChatColor.DARK_GRAY + "none" + ChatColor.RESET) + " -----");
                         for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
                         {
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ":");
@@ -71,17 +70,14 @@ public class CommandShowSkillTree implements CommandExecutor
                                 if (skill.isAddedByInheritance())
                                 {
                                     MyPetLogger.write("   " + ChatColor.DARK_GRAY + skill.getName());
-                                    DebugLogger.info("   (i) " + skill.getName());
                                 }
                                 else
                                 {
                                     MyPetLogger.write("   " + skill.getName());
-                                    DebugLogger.info("   " + skill.getName());
                                 }
                             }
                         }
                         MyPetLogger.write("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");
-                        DebugLogger.info("----- MyPet Skilltree end -----");
                     }
                     else
                     {
