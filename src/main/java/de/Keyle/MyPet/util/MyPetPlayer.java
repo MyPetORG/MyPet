@@ -149,6 +149,18 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return petWorlds.containsKey(worldGroup);
     }
 
+    public boolean hasInactiveMyPetInWorldGroup(String worldGroup)
+    {
+        for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
+        {
+            if (inactiveMyPet.getWorldGroup().equals(worldGroup))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setExtendedInfo(CompoundTag compound)
     {
         if (extendedInfo.getValue().size() == 0)
