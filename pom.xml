@@ -45,6 +45,7 @@
         <worldedit.version>5.5.6</worldedit.version>
         <ancientrpg.version>1.0</ancientrpg.version>
         <factions.version>1.8.2</factions.version>
+        <factions2.version>2.0.0</factions2.version>
         <mobarena.version>0.94.4.96</mobarena.version>
         <battlearena.version>3.8.8.3.3</battlearena.version>
         <pvparena.version>1.0.2.146</pvparena.version>
@@ -187,6 +188,11 @@
             <artifactId>factions</artifactId>
             <version>${factions.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft.factions</groupId>
+            <artifactId>Factions</artifactId>
+            <version>${factions2.version}</version>
         </dependency>
         <dependency>
             <groupId>com.garbagemule</groupId>

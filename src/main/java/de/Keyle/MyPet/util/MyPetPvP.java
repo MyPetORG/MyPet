@@ -31,6 +31,7 @@ import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.P;
+import com.massivecraft.factions.listeners.FactionsListenerMain;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -51,6 +52,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.Plugin;
 
 public class MyPetPvP
 {
@@ -70,6 +72,7 @@ public class MyPetPvP
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
     private static boolean searchedFactions = false;
+    private static boolean searchedFactions2 = false;
     private static boolean searchedTowny = false;
     private static boolean searchedHeroes = false;
     private static boolean searchedRegios = false;
@@ -82,6 +85,7 @@ public class MyPetPvP
 
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
+    private static boolean pluginFactions2 = false;
     private static boolean pluginTowny = false;
     private static boolean pluginMcMMO = false;
     private static boolean pluginResidence = false;
@@ -101,7 +105,7 @@ public class MyPetPvP
         }
         if (attacker != null && defender != null)
         {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtFactions2(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -167,12 +171,35 @@ public class MyPetPvP
         if (!searchedFactions)
         {
             searchedFactions = true;
-            pluginFactions = Bukkit.getServer().getPluginManager().isPluginEnabled("Factions");
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions"))
+            {
+                Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
+                pluginFactions = plugin.getDescription().getVersion().startsWith("1.");
+            }
         }
         if (USE_Factions && pluginFactions)
         {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
             return P.p.entityListener.canDamagerHurtDamagee(sub, false);
+        }
+        return true;
+    }
+
+    public static boolean canHurtFactions2(Player attacker, Player defender)
+    {
+        if (!searchedFactions2)
+        {
+            searchedFactions2 = true;
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions"))
+            {
+                Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
+                pluginFactions2 = plugin.getDescription().getVersion().startsWith("2.");
+            }
+        }
+        if (USE_Factions && pluginFactions2)
+        {
+            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
+            return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
         }
         return true;
     }
@@ -423,6 +450,7 @@ public class MyPetPvP
         searchedHeroes = false;
         searchedTowny = false;
         searchedFactions = false;
+        searchedFactions2 = false;
         searchedWorldGuard = false;
         searchedRegios = false;
         searchedResidence = false;
@@ -432,6 +460,7 @@ public class MyPetPvP
         searchedGriefPrevention = false;
 
         pluginFactions = false;
+        pluginFactions2 = false;
         pluginCitizens = false;
         pluginTowny = false;
         pluginMcMMO = false;
