@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -56,7 +57,7 @@ public class MyPetLevelUpListener implements Listener
                 location.setY(location.getY() - 1.5);
                 location.setPitch(-90);
                 Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-                FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.GREEN).withTrail().withFlicker().build();
+                FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(MyPetConfiguration.LEVELUP_FIREWORK_COLOR)).withTrail().withFlicker().build();
                 FireworkMeta fwm = fw.getFireworkMeta();
                 fwm.addEffect(fwe);
                 fwm.addEffect(fwe);

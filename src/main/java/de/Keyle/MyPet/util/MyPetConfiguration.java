@@ -67,6 +67,7 @@ public class MyPetConfiguration
     public static int HUNGER_SYSTEM_TIME = 60;
     public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
     public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
+    public static int LEVELUP_FIREWORK_COLOR = 0x00FF00;
     public static float MYPET_FOLLOW_START_DISTANCE = 7.0F;
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
@@ -120,7 +121,8 @@ public class MyPetConfiguration
 
         config.addDefault("MyPet.LevelSystem.Active", true);
         config.addDefault("MyPet.LevelSystem.CalculationMode", "Default");
-        config.addDefault("MyPet.LevelSystem.Firework", true);
+        config.addDefault("MyPet.LevelSystem.Firework.Enabled", true);
+        config.addDefault("MyPet.LevelSystem.Firework.Color", "#00FF00");
 
         config.addDefault("MyPet.HungerSystem.Active", true);
         config.addDefault("MyPet.HungerSystem.Time", 60);
@@ -261,6 +263,7 @@ public class MyPetConfiguration
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         MYPET_FOLLOW_START_DISTANCE = (float) config.getDouble("MyPet.FollowStartDistance", 7.0D);
+        LEVELUP_FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
 
         AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
         STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);
