@@ -127,6 +127,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
+        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
@@ -348,7 +349,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         new MyPetLocales();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
-        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         if (MyPetBackup.MAKE_BACKUPS)
         {
