@@ -54,6 +54,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(player);
             if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
+                myPet.autoAssignSkilltree();
                 sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage())));
             }
             else if (myPet.getSkillTree() != null && MyPetConfiguration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())

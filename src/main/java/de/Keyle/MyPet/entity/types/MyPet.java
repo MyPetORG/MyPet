@@ -117,23 +117,10 @@ public abstract class MyPet implements IMyPet
     public MyPet(MyPetPlayer Owner)
     {
         this.petOwner = Owner;
-        if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT)
-        {
-            if (MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
-            {
-                for (MyPetSkillTree skillTree : MyPetSkillTreeMobType.getSkillTrees(this.getPetType()))
-                {
-                    if (MyPetPermissions.has(Owner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
-                    {
-                        this.skillTree = skillTree;
-                        break;
-                    }
-                }
-            }
-        }
         skills = new MyPetSkills(this);
         experience = new MyPetExperience(this);
         hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
+        autoAssignSkilltree();
     }
 
     public void setPetName(String newName)
@@ -176,6 +163,24 @@ public abstract class MyPet implements IMyPet
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
         }
         return true;
+    }
+
+    public boolean autoAssignSkilltree()
+    {
+        if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && skillTree == null && this.petOwner.isOnline())
+        {
+            if (MyPetSkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
+            {
+                for (MyPetSkillTree skillTree : MyPetSkillTreeMobType.getSkillTrees(this.getPetType()))
+                {
+                    if (MyPetPermissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
+                    {
+                        return setSkilltree(skillTree);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void removePet()
@@ -266,6 +271,8 @@ public abstract class MyPet implements IMyPet
                 {
                     setWorldGroup(MyPetWorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
                 }
+
+                autoAssignSkilltree();
 
                 return SpawnFlags.Success;
             }

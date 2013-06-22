@@ -64,6 +64,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
+                myPet.autoAssignSkilltree();
                 sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skills", petOwner)).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills())
