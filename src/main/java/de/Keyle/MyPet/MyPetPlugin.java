@@ -126,6 +126,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
+        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());

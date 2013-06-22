@@ -44,7 +44,7 @@ public class DebugLogger
                 path = path.replace("/", File.separator);
                 path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
                 File pluginDirFile = new File(path);
-                Handler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "MyPet.log");
+                Handler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log");
                 debugLogger.setUseParentHandlers(false);
                 fileHandler.setFormatter(new LogFormat());
                 debugLogger.addHandler(fileHandler);
