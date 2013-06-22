@@ -115,7 +115,7 @@ public class MyPetLocales
 
     public void loadLocale(String localeString)
     {
-        MyPetResourceBundle newLocale;
+        MyPetResourceBundle newLocale = null;
         if (jarFile != null)
         {
             try
@@ -131,12 +131,15 @@ public class MyPetLocales
                     throw new IOException();
                 }
             }
-            catch (IOException e)
+            catch (UnsupportedEncodingException e)
             {
-                newLocale = new MyPetResourceBundle();
+                e.printStackTrace();
+            }
+            catch (IOException ignored)
+            {
             }
         }
-        else
+        if (newLocale == null)
         {
             newLocale = new MyPetResourceBundle();
         }
@@ -149,11 +152,13 @@ public class MyPetLocales
                 ResourceBundle optionalBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(localeFile), "UTF-8"));
                 newLocale.addExtensionBundle(optionalBundle);
             }
-            catch (UnsupportedEncodingException ignored)
+            catch (UnsupportedEncodingException e)
             {
+                e.printStackTrace();
             }
-            catch (IOException ignored)
+            catch (IOException e)
             {
+                e.printStackTrace();
             }
         }
         locales.put(localeString, newLocale);
