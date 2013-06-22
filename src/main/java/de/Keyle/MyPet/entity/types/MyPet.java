@@ -254,10 +254,6 @@ public abstract class MyPet implements IMyPet
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-                if (!petLocation.getChunk().isLoaded())
-                {
-                    petLocation.getChunk().load();
-                }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     status = PetState.Despawned;
