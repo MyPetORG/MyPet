@@ -193,6 +193,7 @@
             <groupId>com.massivecraft.factions</groupId>
             <artifactId>Factions</artifactId>
             <version>${factions2.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.garbagemule</groupId>
