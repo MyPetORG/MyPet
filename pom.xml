@@ -73,10 +73,6 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
-        </repository>
-        <repository>
             <id>mcmmo-repo</id>
             <url>http://repo.mcmmo.info/</url>
         </repository>
@@ -101,14 +97,8 @@
             <url>http://battleplugins.com/maven</url>
         </repository>
         <repository>
-            <id>zml-repo</id>
-            <url>http://files.zachsthings.com/repo</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>vault-repo</id>
+            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
     </repositories>
 
