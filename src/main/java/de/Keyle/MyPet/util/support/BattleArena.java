@@ -51,7 +51,7 @@ public class BattleArena implements Listener
         if (active)
         {
             Player p = owner.getPlayer();
-            return !mc.alk.arena.BattleArena.inArena(p) && !mc.alk.arena.BattleArena.inCompetition(p);
+            return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
         }
         return false;
     }
