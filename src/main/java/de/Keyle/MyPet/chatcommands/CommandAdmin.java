@@ -730,6 +730,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     return emptyList;
                 }
             }
+            else if (strings[0].equalsIgnoreCase("remove"))
+            {
+                if (strings.length == 2)
+                {
+                    return null;
+                }
+            }
         }
         return emptyList;
     }
