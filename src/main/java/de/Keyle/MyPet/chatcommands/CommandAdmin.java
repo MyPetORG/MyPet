@@ -165,9 +165,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         String option = args[0];
         String[] parameter = Arrays.copyOfRange(args, 1, args.length);
 
-        if (option.equalsIgnoreCase("name") && args.length >= 3)
+        if (option.equalsIgnoreCase("name") && parameter.length >= 2)
         {
-            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(parameter[0]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -182,13 +182,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(petOwner);
 
             String name = "";
-            for (int i = 2 ; i < args.length ; i++)
+            for (int i = 1 ; i < parameter.length ; i++)
             {
                 if (!name.equals(""))
                 {
                     name += " ";
                 }
-                name += args[i];
+                name += parameter[i];
             }
             name = MyPetBukkitUtil.setColors(name);
 
@@ -202,9 +202,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             myPet.setPetName(name);
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
         }
-        else if (option.equalsIgnoreCase("exp") && args.length >= 3)
+        else if (option.equalsIgnoreCase("exp") && parameter.length >= 2)
         {
-            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(parameter[0]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -217,9 +217,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
-            String value = args[2];
+            String value = parameter[1];
 
-            if (args.length == 3 || (args.length >= 4 && args[3].equalsIgnoreCase("set")))
+            if (parameter.length == 2 || (parameter.length >= 3 && parameter[2].equalsIgnoreCase("set")))
             {
                 if (MyPetUtil.isDouble(value))
                 {
@@ -239,7 +239,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     }
                 }
             }
-            else if (args.length >= 4 && args[3].equalsIgnoreCase("add"))
+            else if (parameter.length >= 3 && parameter[2].equalsIgnoreCase("add"))
             {
                 if (MyPetUtil.isDouble(value))
                 {
@@ -249,7 +249,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
                 }
             }
-            else if (args.length >= 4 && args[3].equalsIgnoreCase("remove"))
+            else if (parameter.length >= 3 && parameter[2].equalsIgnoreCase("remove"))
             {
                 if (MyPetUtil.isDouble(value))
                 {
@@ -272,9 +272,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 }
             }
         }
-        else if (option.equalsIgnoreCase("respawn") && args.length >= 2)
+        else if (option.equalsIgnoreCase("respawn") && parameter.length >= 1)
         {
-            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(parameter[0]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -287,15 +287,15 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
-            if (args.length >= 3 && args[2].equalsIgnoreCase("show"))
+            if (parameter.length >= 2 && parameter[1].equalsIgnoreCase("show"))
             {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.getRespawnTime() + "sec.");
             }
             else if (myPet.getStatus() == PetState.Dead)
             {
-                if (args.length >= 3 && MyPetUtil.isInt(args[2]))
+                if (parameter.length >= 2 && MyPetUtil.isInt(parameter[1]))
                 {
-                    int respawnTime = Integer.parseInt(args[2]);
+                    int respawnTime = Integer.parseInt(parameter[1]);
                     if (respawnTime >= 0)
                     {
                         myPet.setRespawnTime(respawnTime);
@@ -420,11 +420,11 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("skilltree"))
         {
-            if (args.length < 3)
+            if (parameter.length < 2)
             {
                 return false;
             }
-            Player petOwner = Bukkit.getServer().getPlayer(args[1]);
+            Player petOwner = Bukkit.getServer().getPlayer(parameter[0]);
 
             if (petOwner == null || !petOwner.isOnline())
             {
@@ -439,9 +439,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPet myPet = MyPetList.getMyPet(petOwner);
 
             MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
-            if (skillTreeMobType.hasSkillTree(args[2]))
+            if (skillTreeMobType.hasSkillTree(parameter[1]))
             {
-                MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(args[2]);
+                MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(parameter[1]);
                 if (myPet.setSkilltree(skillTree))
                 {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedToFor", lang).replace("%petowner%", petOwner.getName()).replace("%skilltree%", skillTree.getName())));
@@ -453,19 +453,19 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", lang).replace("%name%", args[2])));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", lang).replace("%name%", parameter[2])));
             }
         }
         else if (option.equalsIgnoreCase("create"))
         {
-            if (args.length < 3)
+            if (parameter.length < 2)
             {
                 return false;
             }
-            MyPetType myPetType = MyPetType.getMyPetTypeByName(args[2]);
+            MyPetType myPetType = MyPetType.getMyPetTypeByName(parameter[1]);
             if (myPetType != null)
             {
-                Player owner = Bukkit.getPlayer(args[1]);
+                Player owner = Bukkit.getPlayer(parameter[0]);
                 if (owner == null || !owner.isOnline())
                 {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
@@ -481,57 +481,57 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     inactiveMyPet.setLocation(owner.getLocation());
 
                     CompoundTag compoundTag = inactiveMyPet.getInfo();
-                    if (args.length > 3)
+                    if (parameter.length > 2)
                     {
-                        for (int i = 3 ; i < args.length ; i++)
+                        for (int i = 2 ; i < parameter.length ; i++)
                         {
-                            if (args[i].equalsIgnoreCase("baby"))
+                            if (parameter[i].equalsIgnoreCase("baby"))
                             {
                                 compoundTag.getValue().put("Baby", new ByteTag("Baby", true));
                             }
-                            else if (args[i].equalsIgnoreCase("fire"))
+                            else if (parameter[i].equalsIgnoreCase("fire"))
                             {
                                 compoundTag.getValue().put("Fire", new ByteTag("Fire", true));
                             }
-                            else if (args[i].equalsIgnoreCase("powered"))
+                            else if (parameter[i].equalsIgnoreCase("powered"))
                             {
                                 compoundTag.getValue().put("Powered", new ByteTag("Powered", true));
                             }
-                            else if (args[i].equalsIgnoreCase("saddle"))
+                            else if (parameter[i].equalsIgnoreCase("saddle"))
                             {
                                 compoundTag.getValue().put("Saddle", new ByteTag("Saddle", true));
                             }
-                            else if (args[i].equalsIgnoreCase("sheared"))
+                            else if (parameter[i].equalsIgnoreCase("sheared"))
                             {
                                 compoundTag.getValue().put("Sheared", new ByteTag("Sheared", true));
                             }
-                            else if (args[i].equalsIgnoreCase("wither"))
+                            else if (parameter[i].equalsIgnoreCase("wither"))
                             {
                                 compoundTag.getValue().put("Wither", new ByteTag("Wither", true));
                             }
-                            else if (args[i].equalsIgnoreCase("tamed"))
+                            else if (parameter[i].equalsIgnoreCase("tamed"))
                             {
                                 compoundTag.getValue().put("Tamed", new ByteTag("Tamed", true));
                             }
-                            else if (args[i].equalsIgnoreCase("angry"))
+                            else if (parameter[i].equalsIgnoreCase("angry"))
                             {
                                 compoundTag.getValue().put("Angry", new ByteTag("Angry", true));
                             }
-                            else if (args[i].equalsIgnoreCase("villager"))
+                            else if (parameter[i].equalsIgnoreCase("villager"))
                             {
                                 compoundTag.getValue().put("Villager", new ByteTag("Villager", true));
                             }
-                            else if (args[i].startsWith("size:"))
+                            else if (parameter[i].startsWith("size:"))
                             {
-                                String size = args[i].replace("size:", "");
+                                String size = parameter[i].replace("size:", "");
                                 if (MyPetUtil.isInt(size))
                                 {
                                     compoundTag.getValue().put("Size", new IntTag("Size", Integer.parseInt(size)));
                                 }
                             }
-                            else if (args[i].startsWith("cat:"))
+                            else if (parameter[i].startsWith("cat:"))
                             {
-                                String catTypeString = args[i].replace("cat:", "");
+                                String catTypeString = parameter[i].replace("cat:", "");
                                 if (MyPetUtil.isInt(catTypeString))
                                 {
                                     int catType = Integer.parseInt(catTypeString);
@@ -539,9 +539,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                                     compoundTag.getValue().put("CatType", new IntTag("CatType", catType));
                                 }
                             }
-                            else if (args[i].startsWith("profession:"))
+                            else if (parameter[i].startsWith("profession:"))
                             {
-                                String professionString = args[i].replace("profession:", "");
+                                String professionString = parameter[i].replace("profession:", "");
                                 if (MyPetUtil.isInt(professionString))
                                 {
                                     int profession = Integer.parseInt(professionString);
@@ -549,9 +549,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                                     compoundTag.getValue().put("Profession", new IntTag("Profession", profession));
                                 }
                             }
-                            else if (args[i].startsWith("color:"))
+                            else if (parameter[i].startsWith("color:"))
                             {
-                                String colorString = args[i].replace("color:", "");
+                                String colorString = parameter[i].replace("color:", "");
                                 if (MyPetUtil.isByte(colorString))
                                 {
                                     byte color = Byte.parseByte(colorString);
@@ -559,9 +559,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                                     compoundTag.getValue().put("Color", new ByteTag("Color", color));
                                 }
                             }
-                            else if (args[i].startsWith("collar:"))
+                            else if (parameter[i].startsWith("collar:"))
                             {
-                                String colorString = args[i].replace("collar:", "");
+                                String colorString = parameter[i].replace("collar:", "");
                                 if (MyPetUtil.isByte(colorString))
                                 {
                                     byte color = Byte.parseByte(colorString);
@@ -569,9 +569,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                                     compoundTag.getValue().put("CollarColor", new ByteTag("CollarColor", color));
                                 }
                             }
-                            else if (args[i].startsWith("block:"))
+                            else if (parameter[i].startsWith("block:"))
                             {
-                                String blocks = args[i].replace("block:", "");
+                                String blocks = parameter[i].replace("block:", "");
                                 String[] blockInfo = blocks.split(":");
                                 if (blockInfo.length >= 1 && MyPetUtil.isInt(blockInfo[0]) && MyPetBukkitUtil.isValidMaterial(Integer.parseInt(blockInfo[0])))
                                 {
@@ -603,9 +603,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         else if (option.equalsIgnoreCase("remove"))
         {
-            if (args.length >= 2)
+            if (parameter.length >= 1)
             {
-                Player player = Bukkit.getPlayer(args[1]);
+                Player player = Bukkit.getPlayer(parameter[0]);
                 if (player == null || !player.isOnline())
                 {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
