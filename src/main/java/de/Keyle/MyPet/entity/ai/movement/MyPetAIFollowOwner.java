@@ -61,10 +61,6 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
                 controlPathfinderGoal = (MyPetAIControl) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
-        if (controlPathfinderGoal == null)
-        {
-            return false;
-        }
         if (!this.petEntity.canMove())
         {
             return false;
@@ -81,7 +77,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
         {
             return false;
         }
-        else if (controlPathfinderGoal.moveTo != null)
+        else if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null)
         {
             return false;
         }
