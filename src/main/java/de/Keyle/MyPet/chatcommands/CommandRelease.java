@@ -106,7 +106,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     }
                     name += arg;
                 }
-                if (myPet.getPetName().replaceAll("§[abcdefklmnor0-9]", "").equalsIgnoreCase(name))
+                if (MyPetBukkitUtil.stripColors(myPet.getPetName()).equalsIgnoreCase(name))
                 {
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {
