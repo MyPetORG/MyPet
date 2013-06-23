@@ -150,6 +150,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Support.GriefPrevention", true);
         config.addDefault("MyPet.Support.Minigames.DisablePetsInGames", true);
         config.addDefault("MyPet.Support.PvPArena.DisablePetsInArena", true);
+        config.addDefault("MyPet.Support.PvPArena.PvP", true);
         config.addDefault("MyPet.Support.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
