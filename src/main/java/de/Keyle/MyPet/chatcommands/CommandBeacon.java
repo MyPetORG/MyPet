@@ -54,7 +54,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player).replace("%playername%", petOwner.getName())));
+                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player)));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
