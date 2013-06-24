@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util.support;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -29,8 +30,9 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class MobArena
+public class MobArena implements Listener
 {
     public static boolean DISABLE_PETS_IN_ARENA = true;
 
@@ -41,6 +43,7 @@ public class MobArena
     {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena"))
         {
+            Bukkit.getPluginManager().registerEvents(new MobArena(), MyPetPlugin.getPlugin());
             arenaHandler = new MobArenaHandler();
             active = true;
         }

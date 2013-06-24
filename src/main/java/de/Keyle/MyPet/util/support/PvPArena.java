@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.support;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -42,6 +43,7 @@ public class PvPArena implements Listener
     {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena"))
         {
+            Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
             active = true;
         }
         DebugLogger.info("PvPArena support " + (active ? "" : "not ") + "activated.");

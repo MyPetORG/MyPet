@@ -53,6 +53,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
+import org.mcsg.survivalgames.Game;
+import org.mcsg.survivalgames.GameManager;
 
 public class MyPetPvP
 {
@@ -68,6 +70,7 @@ public class MyPetPvP
     public static boolean USE_AncientRPG = true;
     public static boolean USE_GriefPrevention = true;
     public static boolean USE_PvPArena = true;
+    public static boolean USE_SurvivalGame = true;
 
     private static boolean searchedCitizens = false;
     private static boolean searchedWorldGuard = false;
@@ -82,6 +85,7 @@ public class MyPetPvP
     private static boolean searchedAncientRPG = false;
     private static boolean searchedGriefPrevention = false;
     private static boolean searchedPvPArena = false;
+    private static boolean searchedSurvivalGame = false;
 
     private static boolean pluginCitizens = false;
     private static boolean pluginFactions = false;
@@ -90,6 +94,7 @@ public class MyPetPvP
     private static boolean pluginMcMMO = false;
     private static boolean pluginResidence = false;
     private static boolean pluginPvPArena = false;
+    private static boolean pluginSurvivalGame = false;
     private static WorldGuardPlugin pluginWorldGuard = null;
     private static Heroes pluginHeroes = null;
     private static RegiosAPI pluginRegios = null;
@@ -118,7 +123,7 @@ public class MyPetPvP
         }
         if (defender != null)
         {
-            return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
+            return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && canHurtSurvivalGame(defender) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
         }
         return false;
     }
@@ -314,6 +319,40 @@ public class MyPetPvP
         return true;
     }
 
+    public static boolean canHurtSurvivalGame(Player defender)
+    {
+        if (!searchedSurvivalGame)
+        {
+            searchedSurvivalGame = true;
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames"))
+            {
+                pluginSurvivalGame = true;
+            }
+        }
+        if (USE_SurvivalGame && pluginSurvivalGame)
+        {
+            int gameid = GameManager.getInstance().getPlayerGameId(defender);
+            if (gameid == -1)
+            {
+                return true;
+            }
+            if (!GameManager.getInstance().isPlayerActive(defender))
+            {
+                return true;
+            }
+            Game game = GameManager.getInstance().getGame(gameid);
+            if (game.getMode() != Game.GameMode.INGAME)
+            {
+                return false;
+            }
+            if (game.isProtectionOn())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean canHurtPvPArena(Player attacker, Player defender)
     {
         if (!searchedPvPArena)
@@ -458,6 +497,7 @@ public class MyPetPvP
         searchedMcMMO = false;
         searchedAncientRPG = false;
         searchedGriefPrevention = false;
+        searchedSurvivalGame = false;
 
         pluginFactions = false;
         pluginFactions2 = false;
@@ -465,6 +505,7 @@ public class MyPetPvP
         pluginTowny = false;
         pluginMcMMO = false;
         pluginResidence = false;
+        pluginSurvivalGame = false;
         pluginWorldGuard = null;
         pluginHeroes = null;
         pluginRegios = null;

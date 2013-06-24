@@ -26,44 +26,43 @@ import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.mcsg.survivalgames.GameManager;
+import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
-public class BattleArena implements Listener
+public class SurvivalGames implements Listener
 {
-    public static boolean DISABLE_PETS_IN_ARENA = true;
+    public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
 
     private static boolean active = false;
 
     public static void findPlugin()
     {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("BattleArena"))
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames"))
         {
-            Bukkit.getPluginManager().registerEvents(new BattleArena(), MyPetPlugin.getPlugin());
+            Bukkit.getPluginManager().registerEvents(new SurvivalGames(), MyPetPlugin.getPlugin());
             active = true;
         }
-        DebugLogger.info("BattleArena support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("SurvivalGames support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInBattleArena(MyPetPlayer owner)
+    public static boolean isInSurvivalGames(MyPetPlayer owner)
     {
         if (active)
         {
-            Player p = owner.getPlayer();
-            return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
+            return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
         }
         return false;
     }
 
     @EventHandler
-    public void onJoinBattleArenaEvent(ArenaPlayerEnterEvent event)
+    public void onJoinPvPArenaEvent(PlayerJoinArenaEvent event)
     {
-        if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        if (DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer().getName());
+            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet();

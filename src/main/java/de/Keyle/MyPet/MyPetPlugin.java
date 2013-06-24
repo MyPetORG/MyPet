@@ -68,10 +68,7 @@ import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.support.BattleArena;
-import de.Keyle.MyPet.util.support.Minigames;
-import de.Keyle.MyPet.util.support.MobArena;
-import de.Keyle.MyPet.util.support.PvPArena;
+import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -363,6 +360,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         Minigames.findPlugin();
         PvPArena.findPlugin();
         BattleArena.findPlugin();
+        SurvivalGames.findPlugin();
 
         try
         {

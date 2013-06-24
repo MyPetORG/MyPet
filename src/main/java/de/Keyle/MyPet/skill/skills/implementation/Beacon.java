@@ -33,6 +33,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
@@ -226,6 +227,15 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     {
         if (level > 0)
         {
+            if (MobArena.isInMobArena(myPet.getOwner()) ||
+                    Minigames.isInMinigame(myPet.getOwner()) ||
+                    BattleArena.isInBattleArena(myPet.getOwner()) ||
+                    PvPArena.isInPvPArena(myPet.getOwner()) ||
+                    SurvivalGames.isInSurvivalGames(myPet.getOwner()))
+            {
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
+                return false;
+            }
             openBeacon(myPet.getOwner().getPlayer());
             return true;
         }

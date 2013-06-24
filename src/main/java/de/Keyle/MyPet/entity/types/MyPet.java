@@ -35,9 +35,7 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import de.Keyle.MyPet.util.support.Minigames;
-import de.Keyle.MyPet.util.support.MobArena;
-import de.Keyle.MyPet.util.support.PvPArena;
+import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -243,6 +241,7 @@ public abstract class MyPet implements IMyPet
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
                 }
+
                 if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner()))
                 {
                     status = PetState.Despawned;
@@ -253,12 +252,22 @@ public abstract class MyPet implements IMyPet
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
-
                 if (MobArena.DISABLE_PETS_IN_ARENA && MobArena.isInMobArena(getOwner()))
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
+                if (BattleArena.DISABLE_PETS_IN_ARENA && BattleArena.isInBattleArena(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES && SurvivalGames.isInSurvivalGames(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     status = PetState.Despawned;

@@ -49,6 +49,7 @@
         <mobarena.version>0.94.4.96</mobarena.version>
         <battlearena.version>3.8.8.3.3</battlearena.version>
         <pvparena.version>1.0.2.146</pvparena.version>
+        <survivalgames.version>0.5.8.42</survivalgames.version>
         <regiosapi.version>5.9.8</regiosapi.version>
         <residence.version>2.6.6.5</residence.version>
         <towny.version>0.82.1.0</towny.version>
@@ -202,6 +203,11 @@
             <artifactId>pvparena</artifactId>
             <version>${pvparena.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mcsg</groupId>
+            <artifactId>survivalgames</artifactId>
+            <version>${survivalgames.version}</version>
         </dependency>
         <dependency>
             <groupId>net.jzx7</groupId>

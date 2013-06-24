@@ -43,6 +43,7 @@ import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Minigames;
 import de.Keyle.MyPet.util.support.MobArena;
 import de.Keyle.MyPet.util.support.PvPArena;
+import de.Keyle.MyPet.util.support.SurvivalGames;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -151,6 +152,8 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Support.Minigames.DisablePetsInGames", true);
         config.addDefault("MyPet.Support.PvPArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.PvPArena.PvP", true);
+        config.addDefault("MyPet.Support.SurvivalGames.PvP", true);
+        config.addDefault("MyPet.Support.SurvivalGames.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
@@ -290,6 +293,8 @@ public class MyPetConfiguration
         MyPetEconomy.USE_ECONOMY = config.getBoolean("MyPet.Support.Vault.Economy", true);
         Minigames.DISABLE_PETS_IN_MINIGAMES = config.getBoolean("MyPet.Support.Minigames.DisablePetsInGames", true);
         PvPArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Support.PvPArena.DisablePetsInArena", true);
+        SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Support.SurvivalGames.DisablePetsInArena", true);
+        MobArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Support.MobArena.DisablePetsInArena", false);
         MyPetPvP.USE_PvPArena = config.getBoolean("MyPet.Support.PvPArena.PvP", true);
         MyPetPvP.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
         MyPetPvP.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);
@@ -298,7 +303,7 @@ public class MyPetConfiguration
         MyPetPvP.USE_Heroes = config.getBoolean("MyPet.Support.Heroes", true);
         MyPetPvP.USE_McMMO = config.getBoolean("MyPet.Support.mcMMO", true);
         MyPetPvP.USE_MobArena = config.getBoolean("MyPet.Support.MobArena.PvP", true);
-        MobArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Support.MobArena.DisablePetsInArena", false);
+        MyPetPvP.USE_SurvivalGame = config.getBoolean("MyPet.Support.SurvivalGames.PvP", true);
         MyPetPvP.USE_Regios = config.getBoolean("MyPet.Support.Regios", true);
         MyPetPvP.USE_Residence = config.getBoolean("MyPet.Support.Residence", true);
         MyPetPvP.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
