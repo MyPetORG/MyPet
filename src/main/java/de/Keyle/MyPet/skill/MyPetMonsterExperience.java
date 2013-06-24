@@ -28,6 +28,7 @@ import java.util.Map;
 public class MyPetMonsterExperience
 {
     public static final Map<EntityType, MyPetMonsterExperience> mobExp = new HashMap<EntityType, MyPetMonsterExperience>();
+    private static MyPetMonsterExperience unknown = new MyPetMonsterExperience(0., EntityType.UNKNOWN);
 
     static
     {
@@ -149,6 +150,10 @@ public class MyPetMonsterExperience
 
     public static MyPetMonsterExperience getMonsterExperience(EntityType type)
     {
-        return mobExp.get(type);
+        if (mobExp.containsKey(type))
+        {
+            return mobExp.get(type);
+        }
+        return unknown;
     }
 }
