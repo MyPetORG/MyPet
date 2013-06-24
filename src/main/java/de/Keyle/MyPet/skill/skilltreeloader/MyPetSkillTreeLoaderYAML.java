@@ -97,6 +97,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             //System.out.println(skillTreeName);
             MyPetSkillTree skillTree;
             Map<String, Object> skilltreeMap = (Map<String, Object>) skilltrees.get(skillTreeName);
+            if (skilltreeMap == null)
+            {
+                continue;
+            }
             if (skilltreeMap.containsKey("Inherit"))
             {
                 String inherit = (String) skilltreeMap.get("Inherit");
@@ -134,6 +138,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             if (skilltreeMap.containsKey("Level"))
             {
                 Map<String, Object> levelMap = (Map<String, Object>) skilltreeMap.get("Level");
+                if (levelMap == null)
+                {
+                    continue;
+                }
                 for (String thisLevel : levelMap.keySet())
                 {
                     //System.out.println("  " + thisLevel);
@@ -143,6 +151,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
 
                         Map<String, Object> skillMap = (Map<String, Object>) levelMap.get(thisLevel);
 
+                        if (skillMap == null)
+                        {
+                            continue;
+                        }
                         if (skillMap.size() == 0)
                         {
                             skillTree.addLevel(newLevel);
@@ -154,6 +166,10 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                             if (MyPetSkillsInfo.isValidSkill(thisSkill))
                             {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
+                                if (propertyMap == null)
+                                {
+                                    continue;
+                                }
                                 ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(thisSkill);
 
                                 if (skill != null)
