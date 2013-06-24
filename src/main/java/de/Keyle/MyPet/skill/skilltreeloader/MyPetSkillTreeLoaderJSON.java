@@ -62,8 +62,17 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
             skilltreeConfig = new JSON_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  default.json");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  default.json");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.json");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.json");
+                }
             }
         }
 
@@ -80,8 +89,17 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
             skilltreeConfig = new JSON_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  " + mobType.toLowerCase() + ".json");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  " + mobType.toLowerCase() + ".json");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".json");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".json");
+                }
             }
             skillTreeMobType.cleanupPlaces();
         }

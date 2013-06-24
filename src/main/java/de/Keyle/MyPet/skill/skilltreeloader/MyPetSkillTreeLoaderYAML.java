@@ -29,6 +29,8 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.configuration.SnakeYAML_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.spout.nbt.*;
 
 import java.io.File;
@@ -57,8 +59,17 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  default.yml");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  default.yml");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.yml");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.yml");
+                }
             }
         }
 
@@ -76,8 +87,17 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
             skilltreeConfig = new SnakeYAML_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".yml");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".yml");
+                }
             }
         }
     }

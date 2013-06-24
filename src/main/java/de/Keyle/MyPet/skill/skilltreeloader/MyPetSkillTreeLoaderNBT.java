@@ -28,6 +28,8 @@ import de.Keyle.MyPet.skill.MyPetSkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.configuration.NBT_Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.bukkit.ChatColor;
 import org.spout.nbt.*;
 
 import java.io.File;
@@ -58,8 +60,17 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
             skilltreeConfig = new NBT_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  default.st");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  default.st");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.st");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.st");
+                }
             }
         }
 
@@ -77,8 +88,17 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
             skilltreeConfig = new NBT_Configuration(skillFile);
             if (skilltreeConfig.load())
             {
-                loadSkillTree(skilltreeConfig, skillTreeMobType);
-                DebugLogger.info("  " + mobType.toLowerCase() + ".st");
+                try
+                {
+                    loadSkillTree(skilltreeConfig, skillTreeMobType);
+                    DebugLogger.info("  " + mobType.toLowerCase() + ".st");
+                }
+                catch (Exception e)
+                {
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".st");
+                    e.printStackTrace();
+                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".st");
+                }
             }
             skillTreeMobType.cleanupPlaces();
         }
