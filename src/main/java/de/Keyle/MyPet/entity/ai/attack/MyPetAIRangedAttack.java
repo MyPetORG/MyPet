@@ -75,7 +75,7 @@ public class MyPetAIRangedAttack extends MyPetAIGoal
     @Override
     public boolean shouldFinish()
     {
-        if (target == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
+        if (entityMyPet.getGoalTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove())
         {
             return true;
         }
