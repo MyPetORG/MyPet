@@ -24,7 +24,7 @@
 
     <groupId>de.Keyle</groupId>
     <artifactId>MyPet</artifactId>
-    <version>${mypet.version}</version>
+    <version>${mypet.version}-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MyPet</name>
@@ -33,7 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <mypet.version>1.1.0</mypet.version>
+        <mypet.version>1.1.1</mypet.version>
         <minecraft.version>1.5.2</minecraft.version>
         <bukkit.version>R1.0</bukkit.version>
 
