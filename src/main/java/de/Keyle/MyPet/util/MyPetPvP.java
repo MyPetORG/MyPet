@@ -137,7 +137,7 @@ public class MyPetPvP
         }
         if (USE_Citizens && pluginCitizens)
         {
-            if (defender.hasMetadata("NPC"))
+            if (CitizensAPI.getNPCRegistry().isNPC(defender))
             {
                 NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
                 if (npc == null || npc.data() == null)
