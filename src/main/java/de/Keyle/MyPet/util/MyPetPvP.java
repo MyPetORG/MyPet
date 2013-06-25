@@ -106,7 +106,7 @@ public class MyPetPvP
     {
         if (MyPetConfiguration.DISABLE_PET_VS_PLAYER)
         {
-            return true;
+            return false;
         }
         if (attacker != null && defender != null)
         {
@@ -119,7 +119,7 @@ public class MyPetPvP
     {
         if (MyPetConfiguration.DISABLE_PET_VS_PLAYER)
         {
-            return true;
+            return false;
         }
         if (defender != null)
         {
