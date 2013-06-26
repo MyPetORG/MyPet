@@ -99,7 +99,7 @@ public class MyPetEntityListener implements Listener
     @EventHandler
     public void onEntityDamageByLightning(final EntityDamageByEntityEvent event)
     {
-        if (event.getCause() == DamageCause.LIGHTNING)
+        if (event.getCause() == DamageCause.LIGHTNING && event.getDamager() instanceof LightningStrike)
         {
             LightningStrike bolt = (LightningStrike) event.getDamager();
             if (Lightning.isSkillLightning(bolt))
