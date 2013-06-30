@@ -209,11 +209,13 @@
             <groupId>org.mcsg</groupId>
             <artifactId>survivalgames</artifactId>
             <version>${survivalgames.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.randude14.hungergames</groupId>
             <artifactId>MyHungerGames</artifactId>
             <version>${myhungergames.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.jzx7</groupId>
