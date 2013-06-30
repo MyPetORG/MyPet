@@ -32,7 +32,7 @@ import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-public class CraftMyPet extends CraftCreature
+public class CraftMyPet extends CraftCreature implements MyPetEntity
 {
     protected MyPetPlayer petOwner;
     protected EntityMyPet petEntity;
