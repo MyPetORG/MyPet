@@ -231,6 +231,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                     Minigames.isInMinigame(myPet.getOwner()) ||
                     BattleArena.isInBattleArena(myPet.getOwner()) ||
                     PvPArena.isInPvPArena(myPet.getOwner()) ||
+                    MyHungerGames.isInHungerGames(myPet.getOwner()) ||
                     SurvivalGames.isInSurvivalGames(myPet.getOwner()))
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner())).replace("%petname%", myPet.getPetName()));

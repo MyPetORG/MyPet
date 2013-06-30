@@ -355,6 +355,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         PvPArena.findPlugin();
         BattleArena.findPlugin();
         SurvivalGames.findPlugin();
+        MyHungerGames.findPlugin();
 
         try
         {

@@ -129,6 +129,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                 Minigames.isInMinigame(myPet.getOwner()) ||
                 BattleArena.isInBattleArena(myPet.getOwner()) ||
                 PvPArena.isInPvPArena(myPet.getOwner())) ||
+                MyHungerGames.isInHungerGames(myPet.getOwner()) ||
                 SurvivalGames.isInSurvivalGames(myPet.getOwner()))
         {
             pickup = false;

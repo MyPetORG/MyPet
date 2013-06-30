@@ -162,6 +162,7 @@ public class EntityMySkeleton extends EntityMyPet
                             Minigames.isInMinigame(myPet.getOwner()) ||
                             BattleArena.isInBattleArena(myPet.getOwner()) ||
                             PvPArena.isInPvPArena(myPet.getOwner()) ||
+                            MyHungerGames.isInHungerGames(myPet.getOwner()) ||
                             SurvivalGames.isInSurvivalGames(myPet.getOwner()))
                     {
                         return false;
@@ -187,6 +188,7 @@ public class EntityMySkeleton extends EntityMyPet
                             Minigames.isInMinigame(myPet.getOwner()) ||
                             BattleArena.isInBattleArena(myPet.getOwner()) ||
                             PvPArena.isInPvPArena(myPet.getOwner()) ||
+                            MyHungerGames.isInHungerGames(myPet.getOwner()) ||
                             SurvivalGames.isInSurvivalGames(myPet.getOwner()))
                     {
                         return false;
