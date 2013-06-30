@@ -32,14 +32,15 @@ import java.io.InputStream;
 
 @SkillName("Lightning")
 @SkillProperties(
-        parameterNames = {"chance", "addset_chance"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
-        parameterDefaultValues = {"5", "add"})
+        parameterNames = {"chance", "addset_chance", "damage", "addset_damage"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add", "3", "add"})
 public class LightningInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
     protected int chance = 0;
+    protected int damage = 0;
 
     public LightningInfo(boolean addedByInheritance)
     {
@@ -73,6 +74,19 @@ public class LightningInfo extends MyPetSkillTreeSkill implements ISkillInfo
                 {
                     html = html.replace("name=\"addset_chance\" value=\"add\" checked", "name=\"addset_chance\" value=\"add\"");
                     html = html.replace("name=\"addset_chance\" value=\"set\"", "name=\"addset_chance\" value=\"set\" checked");
+                }
+            }
+        }
+        if (getProperties().getValue().containsKey("damage"))
+        {
+            int chance = ((IntTag) getProperties().getValue().get("damage")).getValue();
+            html = html.replace("damage\" value=\"0\"", "damage\" value=\"" + chance + "\"");
+            if (getProperties().getValue().containsKey("addset_damage"))
+            {
+                if (((StringTag) getProperties().getValue().get("addset_damage")).getValue().equals("set"))
+                {
+                    html = html.replace("name=\"addset_damage\" value=\"add\" checked", "name=\"addset_damage\" value=\"add\"");
+                    html = html.replace("name=\"addset_damage\" value=\"set\"", "name=\"addset_damage\" value=\"set\" checked");
                 }
             }
         }

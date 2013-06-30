@@ -26,18 +26,19 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.LightningInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import org.bukkit.entity.LightningStrike;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
-import java.util.*;
+import java.util.Random;
 
 public class Lightning extends LightningInfo implements ISkillInstance, ISkillActive
 {
     private static Random random = new Random();
-    public static Map<LightningStrike, MyPet> lightningList = new HashMap<LightningStrike, MyPet>();
-    public static boolean isStriking = false;
     private MyPet myPet;
+    private boolean isStriking = false;
 
     public Lightning(boolean addedByInheritance)
     {
@@ -56,7 +57,7 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
 
     public boolean isActive()
     {
-        return chance > 0;
+        return chance > 0 && damage > 0;
     }
 
     public void upgrade(ISkillInfo upgrade, boolean quiet)
@@ -76,55 +77,53 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
                 }
                 valuesEdit = true;
             }
+            if (upgrade.getProperties().getValue().containsKey("damage"))
+            {
+                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
+                {
+                    damage += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                }
+                else
+                {
+                    damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                }
+                valuesEdit = true;
+            }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.LightningChance", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.LightningChance", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance).replace("%damage%", "" + damage));
             }
         }
     }
 
     public String getFormattedValue()
     {
-        return chance + "%";
+        return "" + ChatColor.GOLD + chance + ChatColor.RESET + "% -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + MyPetLocales.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset()
     {
         chance = 0;
+        damage = 0;
     }
 
     public boolean activate()
     {
-        return random.nextDouble() <= chance / 100.;
+        return !isStriking && random.nextDouble() <= chance / 100.;
     }
 
-
-    public static int countLightnings()
+    public void strikeLightning(Location loc)
     {
-        removeDeadLightnings();
-        return lightningList.size();
-    }
-
-    public static boolean isSkillLightning(LightningStrike lightningStrike)
-    {
-        removeDeadLightnings();
-        return lightningList.containsKey(lightningStrike);
-    }
-
-    private static void removeDeadLightnings()
-    {
-        List<LightningStrike> deadLightningStrikes = new ArrayList<LightningStrike>();
-        for (LightningStrike bolt : lightningList.keySet())
+        isStriking = true;
+        loc.getWorld().strikeLightningEffect(loc);
+        for (LivingEntity entity : loc.getWorld().getLivingEntities())
         {
-            if (bolt.isDead())
+            if (loc.distance(entity.getLocation()) <= 1.2)
             {
-                deadLightningStrikes.add(bolt);
+                entity.damage(damage, myPet.getCraftPet());
             }
         }
-        for (LightningStrike bolt : deadLightningStrikes)
-        {
-            lightningList.remove(bolt);
-        }
+        isStriking = false;
     }
 
     @Override

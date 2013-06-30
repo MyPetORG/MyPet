@@ -97,55 +97,6 @@ public class MyPetEntityListener implements Listener
     }
 
     @EventHandler
-    public void onEntityDamageByLightning(final EntityDamageByEntityEvent event)
-    {
-        if (event.getCause() == DamageCause.LIGHTNING && event.getDamager() instanceof LightningStrike)
-        {
-            LightningStrike bolt = (LightningStrike) event.getDamager();
-            if (Lightning.isSkillLightning(bolt))
-            {
-                MyPet boltMyPet = Lightning.lightningList.get(bolt);
-                if (event.getEntity() instanceof CraftMyPet)
-                {
-                    MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-                    if (boltMyPet == myPet)
-                    {
-                        event.setCancelled(true);
-                    }
-                    else if (!MyPetPvP.canHurt(boltMyPet.getOwner().getPlayer(), myPet.getOwner().getPlayer()))
-                    {
-                        event.setCancelled(true);
-                    }
-                }
-                else if (event.getEntity() instanceof Player)
-                {
-                    Player victim = (Player) event.getEntity();
-                    if (boltMyPet.getOwner().getPlayer() == victim)
-                    {
-                        event.setCancelled(true);
-                    }
-                    else if (!MyPetPvP.canHurt(boltMyPet.getOwner().getPlayer(), victim))
-                    {
-                        event.setCancelled(true);
-                    }
-                }
-                else if (event.getEntity() instanceof Tameable)
-                {
-                    Tameable tameable = (Tameable) event.getEntity();
-                    if (boltMyPet.getOwner().equals(tameable.getOwner()))
-                    {
-                        event.setCancelled(true);
-                    }
-                }
-                if (event.getEntity() instanceof LivingEntity && !event.isCancelled() && MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION)
-                {
-                    MyPetExperience.addDamageToEntity(boltMyPet.getCraftPet(), (LivingEntity) event.getEntity(), event.getDamage());
-                }
-            }
-        }
-    }
-
-    @EventHandler
     public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event)
     {
         if (event.getEntity() instanceof CraftMyPet)
@@ -678,21 +629,14 @@ public class MyPetEntityListener implements Listener
             {
                 damager = (LivingEntity) event.getDamager();
             }
-            else if (event.getDamager() instanceof LightningStrike)
-            {
-                LightningStrike lightning = (LightningStrike) event.getDamager();
-                if (Lightning.isSkillLightning(lightning))
-                {
-                    MyPet lightningMyPet = Lightning.lightningList.get(lightning);
-                    damager = lightningMyPet.getCraftPet();
-                }
-            }
             if (damager != null)
             {
                 MyPetExperience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
             }
         }
     }
+
+    boolean isSkillActive = false;
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event)
@@ -723,7 +667,7 @@ public class MyPetEntityListener implements Listener
                     }
                 }
             }
-            else if (event.getDamager() instanceof CraftMyPet)
+            else if (event.getDamager() instanceof CraftMyPet && !isSkillActive)
             {
                 MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
 
@@ -785,10 +729,9 @@ public class MyPetEntityListener implements Listener
                     Lightning lightningSkill = (Lightning) myPet.getSkills().getSkill("Lightning");
                     if (lightningSkill.activate())
                     {
-                        Lightning.isStriking = true;
-                        LightningStrike bolt = damagedEntity.getLocation().getWorld().strikeLightning(damagedEntity.getLocation());
-                        Lightning.lightningList.put(bolt, myPet);
-                        Lightning.isStriking = false;
+                        isSkillActive = true;
+                        lightningSkill.strikeLightning(damagedEntity.getLocation());
+                        isSkillActive = false;
                     }
                 }
             }

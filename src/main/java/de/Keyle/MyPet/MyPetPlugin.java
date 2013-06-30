@@ -184,12 +184,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetLevelUpListener levelupListener = new MyPetLevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
 
-        MyPetWeatherListener weatherListener = new MyPetWeatherListener();
-        getServer().getPluginManager().registerEvents(weatherListener, this);
-
-        MyPetBlockListener blockListener = new MyPetBlockListener();
-        getServer().getPluginManager().registerEvents(blockListener, this);
-
         MyPetWorldListener worldListener = new MyPetWorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
 
