@@ -174,6 +174,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     }
 
     @Override
+    public String getCustomName()
+    {
+        try
+        {
+            return myPet.getPetName();
+        }
+        catch (Exception e)
+        {
+            return super.getCustomName();
+        }
+    }
+
+    @Override
     public boolean getCustomNameVisible()
     {
         return MyPetConfiguration.PET_INFO_OVERHEAD_NAME;
