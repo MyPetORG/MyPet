@@ -786,7 +786,7 @@ public class MyPetEntityListener implements Listener
             }
             event.setDroppedExp(0);
 
-            if (MyPetConfiguration.USE_LEVEL_SYSTEM && MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0)
+            if (MyPetConfiguration.USE_LEVEL_SYSTEM && (MyPetExperience.LOSS_FIXED > 0 || MyPetExperience.LOSS_PERCENT > 0))
             {
                 double lostExpirience = MyPetExperience.LOSS_FIXED;
                 lostExpirience += myPet.getExperience().getRequiredExp() * MyPetExperience.LOSS_PERCENT / 100;

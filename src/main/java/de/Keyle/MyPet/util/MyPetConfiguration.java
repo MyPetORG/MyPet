@@ -308,8 +308,8 @@ public class MyPetConfiguration
         MyPetPvP.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
         MyPetPvP.USE_GriefPrevention = config.getBoolean("MyPet.Support.GriefPrevention", true);
 
-        MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.loss.Percent", 0);
-        MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.loss.Fixed", 0.0);
+        MyPetExperience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
+        MyPetExperience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         MyPetExperience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
         MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
         MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
