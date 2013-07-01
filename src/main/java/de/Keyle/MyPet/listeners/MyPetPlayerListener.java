@@ -134,7 +134,7 @@ public class MyPetPlayerListener implements Listener
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
                 }
-                else if (myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
+                else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
                 {
                     switch (myPet.createPet())
                     {
@@ -182,7 +182,7 @@ public class MyPetPlayerListener implements Listener
             {
                 MyPetPlugin.getPlugin().savePets(false);
             }
-            myPet.removePet();
+            myPet.removePet(true);
         }
     }
 
@@ -289,7 +289,7 @@ public class MyPetPlayerListener implements Listener
 
                     if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10)
                     {
-                        myPet.removePet();
+                        myPet.removePet(true);
                     }
                     myPet.setLocation(event.getTo());
 

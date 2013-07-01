@@ -594,7 +594,7 @@ public class MyPetEntityListener implements Listener
             {
                 MyPet myPet = craftMyPet.getMyPet();
 
-                myPet.removePet();
+                myPet.removePet(true);
                 myPet.setLocation(myPet.getOwner().getPlayer().getLocation());
 
                 switch (myPet.createPet())

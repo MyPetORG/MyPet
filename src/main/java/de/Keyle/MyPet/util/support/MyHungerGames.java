@@ -68,7 +68,7 @@ public class MyHungerGames implements Listener
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
-                player.getMyPet().removePet();
+                player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
             }
         }

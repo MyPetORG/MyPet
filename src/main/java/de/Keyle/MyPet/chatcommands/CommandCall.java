@@ -45,7 +45,7 @@ public class CommandCall implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                myPet.removePet();
+                myPet.removePet(true);
                 myPet.setLocation(petOwner.getLocation());
 
                 switch (myPet.createPet())

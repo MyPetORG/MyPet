@@ -36,7 +36,7 @@ public class MyPetVehicleListener implements Listener
             Player player = (Player) event.getEntered();
             if (MyPetList.hasMyPet(player))
             {
-                MyPetList.getMyPet(player).removePet();
+                MyPetList.getMyPet(player).removePet(true);
             }
         }
     }

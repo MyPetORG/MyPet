@@ -103,11 +103,9 @@ public abstract class MyPet implements IMyPet
     protected int hunger = 100;
     protected UUID uuid = null;
     protected String worldGroup = "";
-
     protected PetState status = PetState.Despawned;
-
+    protected boolean wantToRespawn = false;
     protected Location petLocation;
-
     protected MyPetSkillTree skillTree = null;
     protected MyPetSkills skills;
     protected MyPetExperience experience;
@@ -183,6 +181,11 @@ public abstract class MyPet implements IMyPet
 
     public void removePet()
     {
+        removePet(false);
+    }
+
+    public void removePet(boolean wantToRespawn)
+    {
         if (status == PetState.Here)
         {
             health = craftMyPet.getHealth();
@@ -192,6 +195,7 @@ public abstract class MyPet implements IMyPet
                 petLocation = getOwner().getPlayer().getLocation();
             }
             status = PetState.Despawned;
+            this.wantToRespawn = wantToRespawn;
             craftMyPet.remove();
             craftMyPet = null;
         }
@@ -316,6 +320,11 @@ public abstract class MyPet implements IMyPet
             }
         }
         return status;
+    }
+
+    public boolean wantToRespawn()
+    {
+        return wantToRespawn;
     }
 
     public void setStatus(PetState status)

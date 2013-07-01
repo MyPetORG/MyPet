@@ -106,7 +106,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) saved");
             for (MyPet myPet : MyPetList.getAllActiveMyPets())
             {
-                myPet.removePet();
+                myPet.removePet(myPet.wantToRespawn());
             }
             MyPetList.clearList();
         }
@@ -440,7 +440,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     {
                         player.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
                     }
-                    else if (myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
+                    else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {
                         myPet.createPet();
                     }
