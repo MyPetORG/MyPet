@@ -23,14 +23,19 @@ package de.Keyle.MyPet.util.support;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.MyPetEntity;
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class MobArena implements Listener
 {
@@ -60,7 +65,7 @@ public class MobArena implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArenaEvent(ArenaPlayerJoinEvent event)
+    public void onJoinPvPArena(ArenaPlayerJoinEvent event)
     {
         if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
@@ -70,6 +75,29 @@ public class MobArena implements Listener
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onMyPetDamageInArena(EntityDamageByEntityEvent event)
+    {
+        MyPetEntity damager;
+
+        if (event.getDamager() instanceof MyPetEntity)
+        {
+            damager = (CraftMyPet) event.getDamager();
+        }
+        else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof MyPetEntity)
+        {
+            damager = (CraftMyPet) ((Projectile) event.getDamager()).getShooter();
+        }
+        else
+        {
+            return;
+        }
+        if (isInMobArena(damager.getOwner()))
+        {
+            event.setCancelled(false);
         }
     }
 }
