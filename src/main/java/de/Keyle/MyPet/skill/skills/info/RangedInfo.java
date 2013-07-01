@@ -32,13 +32,21 @@ import java.io.InputStream;
 
 @SkillName("Ranged")
 @SkillProperties(
-        parameterNames = {"damage", "addset_damage"}, parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
-        parameterDefaultValues = {"1", "add"})
+        parameterNames = {"damage", "addset_damage", "projectile"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"1", "add", "Arrow"})
 public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
     protected int damage = 0;
+
+    public enum Projectiles
+    {
+        Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull
+    }
+
+    protected Projectiles selectedProjectile = Projectiles.Arrow;
 
     public RangedInfo(boolean addedByInheritance)
     {
@@ -73,6 +81,30 @@ public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
                     html = html.replace("name=\"addset_damage\" value=\"add\" checked", "name=\"addset_damage\" value=\"add\"");
                     html = html.replace("name=\"addset_damage\" value=\"set\"", "name=\"addset_damage\" value=\"set\" checked");
                 }
+            }
+        }
+        if (getProperties().getValue().containsKey("projectile"))
+        {
+            String projectile = ((StringTag) getProperties().getValue().get("projectile")).getValue();
+            if (projectile.equalsIgnoreCase("Arrow"))
+            {
+                html = html.replace("<option value=\"Arrow\">Arrow</option>", "<option value=\"Arrow\" selected>Arrow</option>");
+            }
+            else if (projectile.equalsIgnoreCase("Snowball"))
+            {
+                html = html.replace("<option value=\"Snowball\">Snowball</option>", "<option value=\"Snowball\" selected>Snowball</option>");
+            }
+            else if (projectile.equalsIgnoreCase("LargeFireball"))
+            {
+                html = html.replace("<option value=\"LargeFireball\">Large Fireball</option>", "<option value=\"LargeFireball\" selected>Large Fireball</option>");
+            }
+            else if (projectile.equalsIgnoreCase("Snowball"))
+            {
+                html = html.replace("<option value=\"SmallFireball\">Small Fireball</option>", "<option value=\"SmallFireball\" selected>Small Fireball</option>");
+            }
+            else if (projectile.equalsIgnoreCase("Snowball"))
+            {
+                html = html.replace("<option value=\"WitherSkull\">Wither Skull</option>", "<option value=\"WitherSkull\" selected>Wither Skull</option>");
             }
         }
         return html;

@@ -48,6 +48,11 @@ public class Ranged extends RangedInfo implements ISkillInstance
         return myPet;
     }
 
+    public Projectiles getProjectile()
+    {
+        return selectedProjectile;
+    }
+
     public boolean isActive()
     {
         return damage > 0;
@@ -71,6 +76,17 @@ public class Ranged extends RangedInfo implements ISkillInstance
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage));
+                }
+            }
+            if (upgrade.getProperties().getValue().containsKey("projectile"))
+            {
+                String projectileName = ((StringTag) upgrade.getProperties().getValue().get("projectile")).getValue();
+                for (Projectiles projectile : Projectiles.values())
+                {
+                    if (projectile.name().equalsIgnoreCase(projectileName))
+                    {
+                        selectedProjectile = projectile;
+                    }
                 }
             }
             if (isPassive != (damage <= 0))
