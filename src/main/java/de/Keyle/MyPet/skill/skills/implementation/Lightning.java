@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation;
 
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
@@ -29,6 +30,7 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -114,11 +116,13 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
 
     public void strikeLightning(Location loc)
     {
+        Player owner = myPet.getOwner().getPlayer();
+        CraftMyPet craftMyPet = myPet.getCraftPet();
         isStriking = true;
         loc.getWorld().strikeLightningEffect(loc);
         for (LivingEntity entity : loc.getWorld().getLivingEntities())
         {
-            if (loc.distance(entity.getLocation()) <= 1.2)
+            if (craftMyPet != entity && owner != entity & loc.distance(entity.getLocation()) <= 1.2)
             {
                 entity.damage(damage, myPet.getCraftPet());
             }
