@@ -70,6 +70,7 @@ public class MyPetConfiguration
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
     public static double RESPAWN_COSTS_FIXED = 0.0;
+    public static boolean CONSUME_LEASH_ITEM = false;
     public static boolean SKILLTREE_SWITCH_PENALTY_ADMIN = false;
     public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = true;
     public static boolean CHOOSE_SKILLTREE_ONLY_ONCE = true;
@@ -90,6 +91,7 @@ public class MyPetConfiguration
     public static void setDefault()
     {
         config.addDefault("MyPet.Leash.Item", LEASH_ITEM.getId());
+        config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.OwnerCanAttackPet", false);
         config.addDefault("MyPet.DisablePetVersusPlayer", false);
         config.addDefault("MyPet.CheckForUpdates", false);
@@ -226,6 +228,7 @@ public class MyPetConfiguration
     public static void loadConfiguration()
     {
         LEASH_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
+        CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         Control.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
         Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);

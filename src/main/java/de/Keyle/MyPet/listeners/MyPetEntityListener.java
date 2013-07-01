@@ -43,6 +43,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_5_R3.MathHelper;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEnderman;
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
@@ -547,6 +548,18 @@ public class MyPetEntityListener implements Listener
 
                         MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                         myPet.createPet();
+
+                        if (MyPetConfiguration.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null)
+                        {
+                            if (damager.getItemInHand().getAmount() > 1)
+                            {
+                                damager.getItemInHand().setAmount(damager.getItemInHand().getAmount() - 1);
+                            }
+                            else
+                            {
+                                damager.setItemInHand(null);
+                            }
+                        }
 
                         MyPetWorldGroup worldGroup = MyPetWorldGroup.getGroup(damager.getWorld().getName());
                         myPet.setWorldGroup(worldGroup.getName());
