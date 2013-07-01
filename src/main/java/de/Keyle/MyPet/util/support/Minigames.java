@@ -42,7 +42,7 @@ public class Minigames implements Listener
     }
 
     @EventHandler
-    public void onJoinMinigameEvent(JoinMinigameEvent event)
+    public void onJoinMinigame(JoinMinigameEvent event)
     {
         if (DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
@@ -56,7 +56,7 @@ public class Minigames implements Listener
     }
 
     @EventHandler
-    public void onSpectateMinigameEvent(SpectateMinigameEvent event)
+    public void onSpectateMinigame(SpectateMinigameEvent event)
     {
         if (DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {

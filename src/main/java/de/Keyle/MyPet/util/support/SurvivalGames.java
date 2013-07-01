@@ -58,7 +58,7 @@ public class SurvivalGames implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArenaEvent(PlayerJoinArenaEvent event)
+    public void onJoinPvPArena(PlayerJoinArenaEvent event)
     {
         if (DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {

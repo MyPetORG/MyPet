@@ -60,7 +60,7 @@ public class PvPArena implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArenaEvent(PAJoinEvent event)
+    public void onJoinPvPArena(PAJoinEvent event)
     {
         if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {

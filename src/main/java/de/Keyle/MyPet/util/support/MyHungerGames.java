@@ -61,7 +61,7 @@ public class MyHungerGames implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArenaEvent(PlayerJoinGameEvent event)
+    public void onJoinPvPArena(PlayerJoinGameEvent event)
     {
         if (DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
