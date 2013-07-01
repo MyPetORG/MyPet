@@ -76,7 +76,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Inventory", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -103,7 +103,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
         {
             if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.InventoryWhileInCreative", myPet.getOwner())));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Creative", myPet.getOwner())));
                 return false;
             }
             if (MobArena.isInMobArena(myPet.getOwner()) ||
@@ -124,13 +124,13 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.InventoryWhileSwimming", myPet.getOwner()).replace("%petname%", myPet.getPetName())));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()).replace("%petname%", myPet.getPetName())));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NoInventory", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
             return false;
         }
     }

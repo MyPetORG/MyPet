@@ -66,7 +66,7 @@ public class MyPetPlayerListener implements Listener
                         Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
                         if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                         {
-                            event.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.ControlAggroFarm", event.getPlayer()).replace("%petname%", myPet.getPetName()).replace("%mode%", "" + behavior.getBehavior().name())));
+                            event.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Control.AggroFarm", event.getPlayer()).replace("%petname%", myPet.getPetName()).replace("%mode%", "" + behavior.getBehavior().name())));
                             return;
                         }
                     }

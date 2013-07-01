@@ -143,7 +143,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.AddBehavior", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName())));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName())));
                 myPet.sendMessageToOwner("  " + activeModes);
             }
         }
@@ -233,7 +233,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     public void setBehavior(BehaviorState behaviorState)
     {
         behavior = behaviorState;
-        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BehaviorState", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
+        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
         if (behavior == BehaviorState.Friendly)
         {
             myPet.getCraftPet().setTarget(null);
@@ -247,7 +247,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             if (behaviorActive.get(behaviorState))
             {
                 behavior = behaviorState;
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BehaviorState", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
                 if (behavior == BehaviorState.Friendly)
                 {
                     myPet.getCraftPet().getHandle().setGoalTarget(null);
@@ -296,7 +296,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 behavior = BehaviorState.Normal;
             }
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.BehaviorState", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
             return true;
         }
         else
