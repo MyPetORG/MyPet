@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 import de.Keyle.MyPet.skill.skills.implementation.Control;

@@ -18,28 +18,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.event;
+package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetExpEvent extends Event implements Cancellable
+public class MyPetSpoutEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
-    private boolean isCancelled = false;
-    private double oldExp;
-    private double newExp;
+    private MyPetSpoutEventReason eventReason = MyPetSpoutEventReason.Nothing;
 
-    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp)
+    public enum MyPetSpoutEventReason
+    {
+        Nothing, Name, Call, SendAway, ExpChange, HungerChange
+    }
+
+    public MyPetSpoutEvent(MyPet myPet, MyPetSpoutEventReason eventReason)
     {
         this.myPet = myPet;
-        this.oldExp = oldExp;
-        this.newExp = newExp;
+        this.eventReason = eventReason;
     }
 
     public MyPetPlayer getOwner()
@@ -52,41 +53,9 @@ public class MyPetExpEvent extends Event implements Cancellable
         return myPet;
     }
 
-    public double getOldExp()
+    public MyPetSpoutEventReason getEventReason()
     {
-        return oldExp;
-    }
-
-    public double getNewExp()
-    {
-        return newExp;
-    }
-
-    public void setNewEXP(double newExp)
-    {
-        this.newExp = newExp;
-    }
-
-    public double getExp()
-    {
-        if (isCancelled)
-        {
-            return oldExp;
-        }
-        else
-        {
-            return newExp;
-        }
-    }
-
-    public boolean isCancelled()
-    {
-        return isCancelled;
-    }
-
-    public void setCancelled(boolean flag)
-    {
-        isCancelled = flag;
+        return eventReason;
     }
 
     public HandlerList getHandlers()

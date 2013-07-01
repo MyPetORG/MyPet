@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;

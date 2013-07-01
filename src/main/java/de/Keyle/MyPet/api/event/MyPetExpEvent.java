@@ -18,33 +18,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.event;
+package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLevelUpEvent extends Event
+public class MyPetExpEvent extends Event implements Cancellable
 {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
-    private final int level;
-    private final boolean beQuiet;
+    private boolean isCancelled = false;
+    private double oldExp;
+    private double newExp;
 
-    public MyPetLevelUpEvent(MyPet myPet, int Level)
+    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp)
     {
         this.myPet = myPet;
-        this.level = Level;
-        this.beQuiet = false;
-    }
-
-    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet)
-    {
-        this.myPet = myPet;
-        this.level = level;
-        this.beQuiet = beQuiet;
+        this.oldExp = oldExp;
+        this.newExp = newExp;
     }
 
     public MyPetPlayer getOwner()
@@ -52,19 +47,46 @@ public class MyPetLevelUpEvent extends Event
         return myPet.getOwner();
     }
 
-    public boolean isQuiet()
-    {
-        return beQuiet;
-    }
-
     public MyPet getPet()
     {
         return myPet;
     }
 
-    public int getLevel()
+    public double getOldExp()
     {
-        return level;
+        return oldExp;
+    }
+
+    public double getNewExp()
+    {
+        return newExp;
+    }
+
+    public void setNewEXP(double newExp)
+    {
+        this.newExp = newExp;
+    }
+
+    public double getExp()
+    {
+        if (isCancelled)
+        {
+            return oldExp;
+        }
+        else
+        {
+            return newExp;
+        }
+    }
+
+    public boolean isCancelled()
+    {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean flag)
+    {
+        isCancelled = flag;
     }
 
     public HandlerList getHandlers()

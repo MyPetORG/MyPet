@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.chatcommands.CommandInfo;
 import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.EquipmentSlot;
@@ -30,7 +31,6 @@ import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
-import de.Keyle.MyPet.event.MyPetLeashEvent;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;

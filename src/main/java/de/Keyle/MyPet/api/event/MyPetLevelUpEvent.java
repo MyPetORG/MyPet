@@ -18,29 +18,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.event;
+package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetSpoutEvent extends Event
+public class MyPetLevelUpEvent extends Event
 {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
-    private MyPetSpoutEventReason eventReason = MyPetSpoutEventReason.Nothing;
+    private final int level;
+    private final boolean beQuiet;
 
-    public enum MyPetSpoutEventReason
-    {
-        Nothing, Name, Call, SendAway, ExpChange, HungerChange
-    }
-
-    public MyPetSpoutEvent(MyPet myPet, MyPetSpoutEventReason eventReason)
+    public MyPetLevelUpEvent(MyPet myPet, int Level)
     {
         this.myPet = myPet;
-        this.eventReason = eventReason;
+        this.level = Level;
+        this.beQuiet = false;
+    }
+
+    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet)
+    {
+        this.myPet = myPet;
+        this.level = level;
+        this.beQuiet = beQuiet;
     }
 
     public MyPetPlayer getOwner()
@@ -48,14 +52,19 @@ public class MyPetSpoutEvent extends Event
         return myPet.getOwner();
     }
 
+    public boolean isQuiet()
+    {
+        return beQuiet;
+    }
+
     public MyPet getPet()
     {
         return myPet;
     }
 
-    public MyPetSpoutEventReason getEventReason()
+    public int getLevel()
     {
-        return eventReason;
+        return level;
     }
 
     public HandlerList getHandlers()

@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetExpEvent;
+import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.event.MyPetExpEvent;
-import de.Keyle.MyPet.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.Experience;
 import de.Keyle.MyPet.skill.experience.JavaScript;

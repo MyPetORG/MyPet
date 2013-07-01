@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.chatcommands;
 
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
+import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
