@@ -119,7 +119,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                 {
-                    int damage = myPet.getDamage();
+                    int damage = myPet.getRangedDamage();
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", player)));
                     infoShown = true;
                 }

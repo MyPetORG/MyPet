@@ -167,7 +167,7 @@ public class MyPetEntityListener implements Listener
                     }
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                     {
-                        int damage = myPet.getDamage();
+                        int damage = myPet.getRangedDamage();
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
