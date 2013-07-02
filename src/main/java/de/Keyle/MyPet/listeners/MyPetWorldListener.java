@@ -22,11 +22,15 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.MyPetWorldGroup;
+import de.Keyle.MyPet.util.configuration.YAML_Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
+
+import java.io.File;
 
 public class MyPetWorldListener implements Listener
 {
@@ -34,14 +38,18 @@ public class MyPetWorldListener implements Listener
     public void onWorldInit(final WorldInitEvent event)
     {
         MyPetWorldGroup defaultGroup = MyPetWorldGroup.getGroup("default");
-        if (defaultGroup != null)
+        if (defaultGroup == null)
         {
-            if (defaultGroup.addWorld(event.getWorld().getName()))
-            {
-                MyPetPlugin.getPlugin().getConfig().set("Groups.default", defaultGroup.getWorlds());
-                MyPetPlugin.getPlugin().saveConfig();
-                MyPetLogger.write("added " + ChatColor.GOLD + event.getWorld().getName() + ChatColor.RESET + " to 'default' group.");
-            }
+            defaultGroup = new MyPetWorldGroup("default");
+        }
+        if (defaultGroup.addWorld(event.getWorld().getName()))
+        {
+            File groupsFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
+            YAML_Configuration yamlConfiguration = new YAML_Configuration(groupsFile);
+            FileConfiguration config = yamlConfiguration.getConfig();
+            config.set("Groups.default", defaultGroup.getWorlds());
+            yamlConfiguration.saveConfig();
+            MyPetLogger.write("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
         }
     }
 }
