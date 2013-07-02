@@ -216,12 +216,6 @@ public class InactiveMyPet implements IMyPet
         return petOwner;
     }
 
-    @Override
-    public String toString()
-    {
-        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
-    }
-
     public void setUUID(UUID uuid)
     {
         this.uuid = uuid;
@@ -235,5 +229,11 @@ public class InactiveMyPet implements IMyPet
         }
 
         return this.uuid;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + "}";
     }
 }
