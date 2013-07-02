@@ -58,7 +58,7 @@
         <heroes.version>1.5.2</heroes.version>
         <heroes.build>b1713</heroes.build>
 
-        <metrics.version>R6</metrics.version>
+        <metrics.version>R7</metrics.version>
         <simplenbt.version>1.0.5-SNAPSHOT</simplenbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
 
