@@ -55,7 +55,10 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.MyPetMonsterExperience;
+import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.MyPetSkills;
+import de.Keyle.MyPet.skill.MyPetSkillsInfo;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoader;
@@ -72,7 +75,6 @@ import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
 import org.bukkit.entity.Player;
@@ -80,7 +82,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
-import org.spout.nbt.*;
+import org.spout.nbt.ByteTag;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.ListTag;
+import org.spout.nbt.StringTag;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -532,78 +537,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         for (int i = 0 ; i < petList.getValue().size() ; i++)
         {
             CompoundTag myPetNBT = (CompoundTag) petList.getValue().get(i);
-            CompoundTag locationNBT = (CompoundTag) myPetNBT.getValue().get("Location");
-
-            double petX = ((DoubleTag) locationNBT.getValue().get("X")).getValue();
-            double petY = ((DoubleTag) locationNBT.getValue().get("Y")).getValue();
-            double petZ = ((DoubleTag) locationNBT.getValue().get("Z")).getValue();
-            float petYaw = 1F;
-            if (locationNBT.getValue().containsKey("Yaw"))
-            {
-                petYaw = ((FloatTag) locationNBT.getValue().get("Yaw")).getValue();
-            }
-            float petPitch = 1F;
-            if (locationNBT.getValue().containsKey("Pitch"))
-            {
-                petPitch = ((FloatTag) locationNBT.getValue().get("Pitch")).getValue();
-            }
-            UUID petUuid = null;
-            if (myPetNBT.getValue().containsKey("UUID"))
-            {
-                petUuid = UUID.fromString(((StringTag) myPetNBT.getValue().get("UUID")).getValue());
-            }
-            String petWorld = ((StringTag) locationNBT.getValue().get("World")).getValue();
-            double petExp = ((DoubleTag) myPetNBT.getValue().get("Exp")).getValue();
-            int petHealthNow = ((IntTag) myPetNBT.getValue().get("Health")).getValue();
-            int petRespawnTime = ((IntTag) myPetNBT.getValue().get("Respawntime")).getValue();
-            String petName = ((StringTag) myPetNBT.getValue().get("Name")).getValue();
             String petOwner = ((StringTag) myPetNBT.getValue().get("Owner")).getValue();
-            String skillTree = null;
-            if (myPetNBT.getValue().containsKey("Skilltree"))
-            {
-                skillTree = ((StringTag) myPetNBT.getValue().get("Skilltree")).getValue();
-            }
-            int petHunger = 100;
-            if (myPetNBT.getValue().containsKey("Hunger"))
-            {
-                petHunger = ((IntTag) myPetNBT.getValue().get("Hunger")).getValue();
-            }
-            String petType = "Wolf";
-            if (myPetNBT.getValue().containsKey("Type"))
-            {
-                petType = ((StringTag) myPetNBT.getValue().get("Type")).getValue();
-            }
-            String worldGroup = "";
-            if (myPetNBT.getValue().containsKey("WorldGroup"))
-            {
-                worldGroup = ((StringTag) myPetNBT.getValue().get("WorldGroup")).getValue();
-            }
-
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
-
-            inactiveMyPet.setUUID(petUuid);
-            inactiveMyPet.setLocation(new Location(Bukkit.getServer().getWorld(petWorld) != null ? Bukkit.getServer().getWorld(petWorld) : Bukkit.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch));
-            inactiveMyPet.setHealth(petHealthNow);
-            inactiveMyPet.setHungerValue(petHunger);
-            inactiveMyPet.setRespawnTime(petRespawnTime);
-            inactiveMyPet.setPetName(petName);
-            inactiveMyPet.setExp(petExp);
-            inactiveMyPet.setWorldGroup(worldGroup);
-            inactiveMyPet.setSkills((CompoundTag) myPetNBT.getValue().get("Skills"));
-            inactiveMyPet.setPetType(MyPetType.valueOf(petType));
-            inactiveMyPet.setInfo((CompoundTag) myPetNBT.getValue().get("Info"));
-            if (skillTree != null)
-            {
-                if (MyPetSkillTreeMobType.getMobTypeByPetType(inactiveMyPet.getPetType()) != null)
-                {
-                    MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByPetType(inactiveMyPet.getPetType());
-
-                    if (mobType.hasSkillTree(skillTree))
-                    {
-                        inactiveMyPet.setSkillTree(mobType.getSkillTree(skillTree));
-                    }
-                }
-            }
+            inactiveMyPet.load(myPetNBT);
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
 
@@ -624,83 +560,13 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets())
         {
-            CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
-            CompoundTag locationNBT = new CompoundTag("Location", new CompoundMap());
-
-            locationNBT.getValue().put("X", new DoubleTag("X", myPet.getLocation().getX()));
-            locationNBT.getValue().put("Y", new DoubleTag("Y", myPet.getLocation().getY()));
-            locationNBT.getValue().put("Z", new DoubleTag("Z", myPet.getLocation().getY()));
-            locationNBT.getValue().put("Yaw", new FloatTag("Yaw", myPet.getLocation().getYaw()));
-            locationNBT.getValue().put("Pitch", new FloatTag("Pitch", myPet.getLocation().getPitch()));
-            locationNBT.getValue().put("World", new StringTag("World", myPet.getLocation().getWorld().getName()));
-
-            petNBT.getValue().put("UUID", new StringTag("UUID", myPet.getUUID().toString()));
-            petNBT.getValue().put("Type", new StringTag("Type", myPet.getPetType().getTypeName()));
-            petNBT.getValue().put("Owner", new StringTag("Owner", myPet.getOwner().getName()));
-            petNBT.getValue().put("Location", locationNBT);
-            petNBT.getValue().put("Health", new IntTag("Health", myPet.getHealth()));
-            petNBT.getValue().put("Respawntime", new IntTag("Respawntime", myPet.getRespawnTime()));
-            petNBT.getValue().put("Hunger", new IntTag("Hunger", myPet.getHungerValue()));
-            petNBT.getValue().put("Name", new StringTag("Name", myPet.getPetName()));
-            petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", myPet.getWorldGroup()));
-            petNBT.getValue().put("Exp", new DoubleTag("Exp", myPet.getExp()));
-            petNBT.getValue().put("Info", myPet.getExtendedInfo());
-            if (myPet.getSkillTree() != null)
-            {
-                petNBT.getValue().put("Skilltree", new StringTag("Skilltree", myPet.getSkillTree().getName()));
-            }
-
-            CompoundTag skillsNBT = new CompoundTag("Skills", new CompoundMap());
-            Collection<ISkillInstance> skillList = myPet.getSkills().getSkills();
-            if (skillList.size() > 0)
-            {
-                for (ISkillInstance skill : skillList)
-                {
-                    if (skill instanceof ISkillStorage)
-                    {
-                        ISkillStorage storageSkill = (ISkillStorage) skill;
-                        CompoundTag s = storageSkill.save();
-                        if (s != null)
-                        {
-                            skillsNBT.getValue().put(skill.getName(), s);
-                        }
-                    }
-                }
-            }
-            petNBT.getValue().put("Skills", skillsNBT);
+            CompoundTag petNBT = myPet.save();
             petList.add(petNBT);
             petCount++;
         }
         for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets())
         {
-            CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
-            CompoundTag locationNBT = new CompoundTag("Location", new CompoundMap());
-
-            locationNBT.getValue().put("X", new DoubleTag("X", inactiveMyPet.getLocation().getX()));
-            locationNBT.getValue().put("Y", new DoubleTag("Y", inactiveMyPet.getLocation().getY()));
-            locationNBT.getValue().put("Z", new DoubleTag("Z", inactiveMyPet.getLocation().getY()));
-            locationNBT.getValue().put("Yaw", new FloatTag("Yaw", inactiveMyPet.getLocation().getYaw()));
-            locationNBT.getValue().put("Pitch", new FloatTag("Pitch", inactiveMyPet.getLocation().getPitch()));
-            locationNBT.getValue().put("World", new StringTag("World", inactiveMyPet.getLocation().getWorld().getName()));
-
-            petNBT.getValue().put("UUID", new StringTag("UUID", inactiveMyPet.getUUID().toString()));
-            petNBT.getValue().put("Type", new StringTag("Type", inactiveMyPet.getPetType().getTypeName()));
-            petNBT.getValue().put("Owner", new StringTag("Owner", inactiveMyPet.getOwner().getName()));
-            petNBT.getValue().put("Location", locationNBT);
-            petNBT.getValue().put("Health", new IntTag("Health", inactiveMyPet.getHealth()));
-            petNBT.getValue().put("Respawntime", new IntTag("Respawntime", inactiveMyPet.getRespawnTime()));
-            petNBT.getValue().put("Hunger", new IntTag("Hunger", inactiveMyPet.getHungerValue()));
-            petNBT.getValue().put("Name", new StringTag("Name", inactiveMyPet.getPetName()));
-            petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", inactiveMyPet.getWorldGroup()));
-            petNBT.getValue().put("Exp", new DoubleTag("Exp", inactiveMyPet.getExp()));
-            petNBT.getValue().put("Info", inactiveMyPet.getInfo());
-            if (inactiveMyPet.getSkillTree() != null)
-            {
-                petNBT.getValue().put("Skilltree", new StringTag("Skilltree", inactiveMyPet.getSkillTree().getName()));
-            }
-
-            petNBT.getValue().put("Skills", inactiveMyPet.getSkills());
-
+            CompoundTag petNBT = inactiveMyPet.save();
             petList.add(petNBT);
             petCount++;
         }

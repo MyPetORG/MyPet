@@ -25,10 +25,7 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.skill.MyPetExperience;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkills;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.skill.skills.implementation.HP;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
@@ -42,15 +39,14 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
+import org.spout.nbt.*;
 
 import java.util.*;
 
 import static org.bukkit.Bukkit.getPluginManager;
 import static org.bukkit.Bukkit.getServer;
 
-public abstract class MyPet implements IMyPet
+public abstract class MyPet implements IMyPet, NBTStorage
 {
     private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
@@ -683,6 +679,61 @@ public abstract class MyPet implements IMyPet
     }
 
     public void setExtendedInfo(CompoundTag info)
+    {
+    }
+
+    @Override
+    public CompoundTag save()
+    {
+        CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
+
+        CompoundTag locationNBT = new CompoundTag("Location", new CompoundMap());
+        locationNBT.getValue().put("X", new DoubleTag("X", this.getLocation().getX()));
+        locationNBT.getValue().put("Y", new DoubleTag("Y", this.getLocation().getY()));
+        locationNBT.getValue().put("Z", new DoubleTag("Z", this.getLocation().getY()));
+        locationNBT.getValue().put("Yaw", new FloatTag("Yaw", this.getLocation().getYaw()));
+        locationNBT.getValue().put("Pitch", new FloatTag("Pitch", this.getLocation().getPitch()));
+        locationNBT.getValue().put("World", new StringTag("World", this.getLocation().getWorld().getName()));
+
+        petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
+        petNBT.getValue().put("Type", new StringTag("Type", this.getPetType().getTypeName()));
+        petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
+        petNBT.getValue().put("Location", locationNBT);
+        petNBT.getValue().put("Health", new IntTag("Health", this.health));
+        petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
+        petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
+        petNBT.getValue().put("Name", new StringTag("Name", this.petName));
+        petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
+        petNBT.getValue().put("Exp", new DoubleTag("Exp", this.getExp()));
+        petNBT.getValue().put("Info", getExtendedInfo());
+        if (this.skillTree != null)
+        {
+            petNBT.getValue().put("Skilltree", new StringTag("Skilltree", skillTree.getName()));
+        }
+        CompoundTag skillsNBT = new CompoundTag("Skills", new CompoundMap());
+        Collection<ISkillInstance> skillList = this.getSkills().getSkills();
+        if (skillList.size() > 0)
+        {
+            for (ISkillInstance skill : skillList)
+            {
+                if (skill instanceof ISkillStorage)
+                {
+                    ISkillStorage storageSkill = (ISkillStorage) skill;
+                    CompoundTag s = storageSkill.save();
+                    if (s != null)
+                    {
+                        skillsNBT.getValue().put(skill.getName(), s);
+                    }
+                }
+            }
+        }
+        petNBT.getValue().put("Skills", skillsNBT);
+
+        return petNBT;
+    }
+
+    @Override
+    public void load(CompoundTag myPetNBT)
     {
     }
 
