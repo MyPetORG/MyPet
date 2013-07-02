@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.bukkit.ChatColor;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -107,7 +108,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return "+" + damage;
+        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + MyPetLocales.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset()
