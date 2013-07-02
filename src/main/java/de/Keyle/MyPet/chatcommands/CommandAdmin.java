@@ -36,7 +36,6 @@ import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -581,7 +580,6 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                                 {
                                     int blockData = Integer.parseInt(blockInfo[1]);
                                     blockData = Math.min(Math.max(0, blockData), 15);
-                                    MyPetLogger.write("bd:" + blockData);
                                     compoundTag.getValue().put("BlockData", new IntTag("BlockData", blockData));
                                 }
                             }
