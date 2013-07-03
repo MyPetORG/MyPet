@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.skills.info.RangedInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -64,15 +65,22 @@ public class Ranged extends RangedInfo implements ISkillInstance
         if (upgrade instanceof RangedInfo)
         {
             boolean isPassive = damage <= 0;
-            if (upgrade.getProperties().getValue().containsKey("damage"))
+            if (getProperties().getValue().containsKey("damage"))
+            {
+                int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
+                getProperties().getValue().remove("damage");
+                DoubleTag doubleTag = new DoubleTag("damage_double", damage);
+                getProperties().getValue().put("damage_double", doubleTag);
+            }
+            if (upgrade.getProperties().getValue().containsKey("damage_double"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
                 {
-                    damage += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage += ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
                 else
                 {
-                    damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
                 if (!quiet)
                 {
@@ -123,7 +131,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
         }
     }
 
-    public int getDamage()
+    public double getDamage()
     {
         return damage;
     }

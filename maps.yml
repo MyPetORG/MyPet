@@ -1,0 +1,9 @@
+members:
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_damage (I)V": damage
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_damage (ILorg/bukkit/entity/Entity;)V": damage
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_getHealth ()I": getHealth
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_setHealth (I)V": setHealth
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_getMaxHealth ()I": getMaxHealth
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_setMaxHealth (I)V": setMaxHealth
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_getLastDamage ()I": getLastDamage
+  "de/Keyle/MyPet/entity/types/CraftMyPet _INVALID_setLastDamage (I)V": setLastDamage

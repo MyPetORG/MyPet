@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_5_R3.*;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftInventoryView;
+import net.minecraft.server.v1_6_R1.*;
+import org.bukkit.craftbukkit.v1_6_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 
-public class ContainerBeacon extends net.minecraft.server.v1_5_R3.ContainerBeacon
+public class ContainerBeacon extends net.minecraft.server.v1_6_R1.ContainerBeacon
 {
     private final SlotBeacon slotBeacon;
     private CraftInventoryView bukkitEntity = null;
@@ -93,7 +93,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_5_R3.ContainerBeaco
         ItemStack slotItemClone = null;
         Slot slot = (Slot) this.c.get(slotNumber); // c -> List<Slot>
 
-        if ((slot != null) && (slot.d())) // slot.d() -> Item in Slot != null
+        if ((slot != null) && (slot.e())) // slot.e() -> Item in Slot != null
         {
             ItemStack slotItem = slot.getItem();
 
@@ -107,7 +107,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_5_R3.ContainerBeaco
 
                 slot.a(slotItem, slotItemClone);
             }
-            else if ((!this.slotBeacon.d()) && (this.slotBeacon.isAllowed(slotItem)) && (slotItem.count == 1))
+            else if ((!this.slotBeacon.e()) && (this.slotBeacon.isAllowed(slotItem)) && (slotItem.count == 1))
             {
                 if (!a(slotItem, 0, 1, false))
                 {

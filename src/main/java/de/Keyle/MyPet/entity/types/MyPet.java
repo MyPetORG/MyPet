@@ -36,7 +36,7 @@ import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.spout.nbt.*;
@@ -48,8 +48,8 @@ import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPet implements IMyPet, NBTStorage
 {
-    private static Map<Class<? extends MyPet>, Integer> startHP = new HashMap<Class<? extends MyPet>, Integer>();
-    private static Map<Class<? extends MyPet>, Float> startSpeed = new HashMap<Class<? extends MyPet>, Float>();
+    private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<Class<? extends MyPet>, Double>();
+    private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<Class<? extends MyPet>, Double>();
     private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
@@ -59,7 +59,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
     {
         for (MyPetType petType : MyPetType.values())
         {
-            startHP.put(petType.getMyPetClass(), 20);
+            startHP.put(petType.getMyPetClass(), 20D);
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
     protected CraftMyPet craftMyPet;
     protected String petName = "Pet";
     protected final MyPetPlayer petOwner;
-    protected int health;
+    protected double health;
     protected int respawnTime = 0;
     protected int hungerTime = 0;
     protected int hunger = 100;
@@ -232,7 +232,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_5_R3.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 petEntity.setLocation(petLocation);
@@ -349,7 +349,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
     }
 
-    public void setHealth(int d)
+    public void setHealth(double d)
     {
         if (d > getMaxHealth())
         {
@@ -365,7 +365,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
     }
 
-    public int getHealth()
+    public double getHealth()
     {
         if (status == PetState.Here)
         {
@@ -377,7 +377,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
     }
 
-    public int getMaxHealth()
+    public double getMaxHealth()
     {
         return getStartHP(this.getClass()) + (skills.isSkillActive("HP") ? ((HP) skills.getSkill("HP")).getHpIncrease() : 0);
     }
@@ -427,12 +427,12 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
     }
 
-    public int getDamage()
+    public double getDamage()
     {
         return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamage() : 0);
     }
 
-    public int getRangedDamage()
+    public double getRangedDamage()
     {
         return (getSkills().hasSkill("Ranged") ? ((Ranged) getSkills().getSkill("Ranged")).getDamage() : 0);
     }
@@ -558,7 +558,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
     }
 
-    public static int getStartHP(Class<? extends MyPet> myPetClass)
+    public static double getStartHP(Class<? extends MyPet> myPetClass)
     {
         if (startHP.containsKey(myPetClass))
         {
@@ -567,12 +567,12 @@ public abstract class MyPet implements IMyPet, NBTStorage
         return 1;
     }
 
-    public static void setStartHP(Class<? extends MyPet> myPetClass, int hp)
+    public static void setStartHP(Class<? extends MyPet> myPetClass, double hp)
     {
         startHP.put(myPetClass, hp);
     }
 
-    public static float getStartSpeed(Class<? extends MyPet> myPetClass)
+    public static double getStartSpeed(Class<? extends MyPet> myPetClass)
     {
         if (startSpeed.containsKey(myPetClass))
         {
@@ -581,7 +581,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         return 0.3F;
     }
 
-    public static void setStartSpeed(Class<? extends MyPet> myPetClass, float speed)
+    public static void setStartSpeed(Class<? extends MyPet> myPetClass, double speed)
     {
         startSpeed.put(myPetClass, speed);
     }
@@ -699,7 +699,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         petNBT.getValue().put("Type", new StringTag("Type", this.getPetType().getTypeName()));
         petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
         petNBT.getValue().put("Location", locationNBT);
-        petNBT.getValue().put("Health", new IntTag("Health", this.health));
+        petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
         petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
         petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
         petNBT.getValue().put("Name", new StringTag("Name", this.petName));
@@ -775,7 +775,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         startSpeed.clear();
         for (MyPetType petType : MyPetType.values())
         {
-            startHP.put(petType.getMyPetClass(), 20);
+            startHP.put(petType.getMyPetClass(), 20D);
         }
     }
 

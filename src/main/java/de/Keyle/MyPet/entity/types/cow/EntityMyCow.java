@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.cow;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.Item;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.Item;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
@@ -38,7 +38,6 @@ public class EntityMyCow extends EntityMyPet
     public EntityMyCow(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/cow.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -84,11 +83,11 @@ public class EntityMyCow extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -142,7 +141,7 @@ public class EntityMyCow extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.cow.say";
     }
@@ -151,7 +150,7 @@ public class EntityMyCow extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.cow.hurt";
     }
@@ -160,7 +159,7 @@ public class EntityMyCow extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.cow.hurt";
     }

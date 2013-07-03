@@ -113,13 +113,13 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                 {
-                    int damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamage() : 0);
+                    double damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamage() : 0);
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", player)));
                     infoShown = true;
                 }
                 if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                 {
-                    int damage = myPet.getRangedDamage();
+                    double damage = myPet.getRangedDamage();
                     player.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", player)));
                     infoShown = true;
                 }

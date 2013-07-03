@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.bat;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.World;
 
 
 @EntitySize(width = 0.5F, height = 0.9F)
@@ -32,7 +32,6 @@ public class EntityMyBat extends EntityMyPet
     public EntityMyBat(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/bat.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -75,13 +74,13 @@ public class EntityMyBat extends EntityMyPet
     /**
      * Returns the speed of played sounds
      */
-    protected float aY()
+    protected float aX()
     {
-        return super.aY() * 0.95F;
+        return super.aX() * 0.95F;
     }
 
     @Override
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.bat.idle";
     }
@@ -90,7 +89,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.bat.hurt";
     }
@@ -99,7 +98,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.bat.death";
     }

@@ -42,7 +42,7 @@ public class MyPetAIFloat extends MyPetAIGoal
     @Override
     public void tick()
     {
-        if (entityMyPet.aE().nextFloat() < 0.9D)
+        if (entityMyPet.aB().nextFloat() < 0.9D)
         {
             entityMyPet.motY += 0.05D;
         }

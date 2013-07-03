@@ -21,9 +21,10 @@
 package de.Keyle.MyPet.entity.ai.navigation;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.Navigation;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import net.minecraft.server.v1_6_R1.EntityLiving;
+import net.minecraft.server.v1_6_R1.GenericAttributes;
+import net.minecraft.server.v1_6_R1.Navigation;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class VanillaNavigation extends AbstractNavigation
@@ -45,14 +46,14 @@ public class VanillaNavigation extends AbstractNavigation
     @Override
     public void stop()
     {
-        nav.g();
+        nav.h();
     }
 
     @Override
     public boolean navigateTo(double x, double y, double z)
     {
         applyNavigationParameters();
-        if (this.nav.a(x, y, z, parameters.speed() + parameters.speedModifier()))
+        if (this.nav.a(x, y, z, 1.D))
         {
             applyNavigationParameters();
             return true;
@@ -63,18 +64,13 @@ public class VanillaNavigation extends AbstractNavigation
     @Override
     public boolean navigateTo(LivingEntity entity)
     {
-        if (this.nav.a(((CraftLivingEntity) entity).getHandle(), parameters.speed() + parameters.speedModifier()))
-        {
-            applyNavigationParameters();
-            return true;
-        }
-        return false;
+        return navigateTo(((CraftLivingEntity) entity).getHandle());
     }
 
     @Override
     public boolean navigateTo(EntityLiving entity)
     {
-        if (this.nav.a(entity, parameters.speed() + parameters.speedModifier()))
+        if (this.nav.a(entity, 1.D))
         {
             applyNavigationParameters();
             return true;
@@ -85,12 +81,12 @@ public class VanillaNavigation extends AbstractNavigation
     @Override
     public void tick()
     {
-        nav.e();
+        nav.f();
     }
 
     public void applyNavigationParameters()
     {
         this.nav.a(parameters.avoidWater());
-        this.nav.a(parameters.speed() + parameters.speedModifier());
+        this.entityMyPet.a(GenericAttributes.d).a(parameters.speed() + parameters.speedModifier());
     }
 }

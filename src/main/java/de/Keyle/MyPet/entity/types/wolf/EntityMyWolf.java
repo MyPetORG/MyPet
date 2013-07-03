@@ -24,7 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R1.MathHelper;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -41,7 +44,6 @@ public class EntityMyWolf extends EntityMyPet
     public EntityMyWolf(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/wolf.png";
     }
 
     public void setPathfinder()
@@ -68,7 +70,7 @@ public class EntityMyWolf extends EntityMyPet
     public void setHealth(int i)
     {
         super.setHealth(i);
-        this.bp();
+        this.bg();
     }
 
     public boolean canMove()
@@ -175,15 +177,16 @@ public class EntityMyWolf extends EntityMyPet
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
+    @SuppressWarnings("boxing")
     protected void a()
     {
         super.a();
         this.datawatcher.a(16, new Byte((byte) 0));               // tamed/angry/sitting
         this.datawatcher.a(17, "");                               // wolf owner name
-        this.datawatcher.a(18, new Integer(this.getHealth()));    // tail height
+        this.datawatcher.a(18, new Float(getHealth()));           // tail height
         this.datawatcher.a(12, new Integer(0));                   // age
         this.datawatcher.a(19, new Byte((byte) 0));
-        this.datawatcher.a(20, new Byte((byte) BlockCloth.g_(1))); // collar color
+        this.datawatcher.a(20, new Byte((byte) 14)); // collar color
     }
 
     /**
@@ -192,11 +195,11 @@ public class EntityMyWolf extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -257,7 +260,7 @@ public class EntityMyWolf extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
@@ -266,7 +269,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.wolf.hurt";
     }
@@ -275,17 +278,17 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bp()
+    protected void bg()
     {
         try
         {
-            this.datawatcher.watch(18, (int) (25. * getHealth() / getMaxHealth())); // update tail height
+            this.datawatcher.watch(18, (25.F * getHealth() / getMaxHealth())); // update tail height
         }
         catch (Exception e)
         {
@@ -299,7 +302,7 @@ public class EntityMyWolf extends EntityMyPet
         try
         {
             super.c();
-            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!k()) && (this.onGround)) // k -> has pathentity
+            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bI()) && (this.onGround)) // k -> has pathentity
             {
                 this.shaking = true;
                 this.shakeCounter = 0.0F;
@@ -319,7 +322,7 @@ public class EntityMyWolf extends EntityMyPet
         {
             super.l_();
 
-            if (G()) // G() -> is in water
+            if (F()) // F() -> is in water
             {
                 this.isWet = true;
                 this.shaking = false;
@@ -329,7 +332,7 @@ public class EntityMyWolf extends EntityMyPet
             {
                 if (this.shakeCounter == 0.0F)
                 {
-                    makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                    makeSound("mob.wolf.shake", aW(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 }
 
                 this.shakeCounter += 0.05F;

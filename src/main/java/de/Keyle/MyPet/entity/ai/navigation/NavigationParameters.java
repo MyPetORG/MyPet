@@ -26,10 +26,10 @@ import java.util.Map;
 public class NavigationParameters
 {
     private boolean avoidWater = false;
-    private float speed;
-    private Map<String, Float> speedModifier = new HashMap<String, Float>();
+    private double speed;
+    private Map<String, Double> speedModifier = new HashMap<String, Double>();
 
-    public NavigationParameters(float baseSpeed)
+    public NavigationParameters(double baseSpeed)
     {
         speed = baseSpeed;
     }
@@ -44,17 +44,17 @@ public class NavigationParameters
         return avoidWater;
     }
 
-    public void speed(float speed)
+    public void speed(double speed)
     {
         this.speed = speed;
     }
 
-    public float speed()
+    public double speed()
     {
         return speed;
     }
 
-    public void addSpeedModifier(String id, float speedModifier)
+    public void addSpeedModifier(String id, double speedModifier)
     {
         this.speedModifier.put(id, speedModifier);
     }
@@ -64,10 +64,10 @@ public class NavigationParameters
         this.speedModifier.remove(id);
     }
 
-    public float speedModifier()
+    public double speedModifier()
     {
-        float speedModifier = 0F;
-        for (Float sm : this.speedModifier.values())
+        double speedModifier = 0D;
+        for (Double sm : this.speedModifier.values())
         {
             speedModifier += sm;
         }

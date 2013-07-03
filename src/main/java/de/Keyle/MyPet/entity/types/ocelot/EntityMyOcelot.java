@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -39,7 +39,6 @@ public class EntityMyOcelot extends EntityMyPet
     public EntityMyOcelot(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/ozelot.png";
     }
 
     public void setPathfinder()
@@ -128,6 +127,7 @@ public class EntityMyOcelot extends EntityMyPet
         super.a();
         this.datawatcher.a(12, new Integer(0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
+        this.datawatcher.a(17, "");                 // ownername
         this.datawatcher.a(18, new Byte((byte) 0)); // cat type
 
     }
@@ -138,11 +138,11 @@ public class EntityMyOcelot extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -206,7 +206,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
@@ -214,7 +214,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String bc()
+    protected String aK()
     {
         return "mob.cat.hitt";
     }
@@ -222,7 +222,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String bd()
+    protected String aL()
     {
         return "mob.cat.hitt";
     }

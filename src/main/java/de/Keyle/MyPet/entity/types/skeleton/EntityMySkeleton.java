@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.support.*;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySkeleton extends EntityMyPet
@@ -36,7 +36,6 @@ public class EntityMySkeleton extends EntityMyPet
     public EntityMySkeleton(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/skeleton.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -133,7 +132,7 @@ public class EntityMySkeleton extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(13, new Byte((byte) 0)); // age
+        this.datawatcher.a(13, new Byte((byte) 0)); // skeleton type
     }
 
     /**
@@ -142,11 +141,11 @@ public class EntityMySkeleton extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -232,7 +231,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.skeleton.say";
     }
@@ -240,7 +239,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String bc()
+    protected String aK()
     {
         return "mob.skeleton.hurt";
     }
@@ -248,7 +247,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String bd()
+    protected String aL()
     {
         return "mob.skeleton.death";
     }

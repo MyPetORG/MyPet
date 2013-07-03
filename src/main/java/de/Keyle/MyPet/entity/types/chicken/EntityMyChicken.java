@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.Item;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.Item;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.3F, height = 0.7F)
@@ -40,7 +40,6 @@ public class EntityMyChicken extends EntityMyPet
     public EntityMyChicken(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/chicken.png";
         nextEggTimer = (random.nextInt(6000) + 6000);
     }
 
@@ -81,11 +80,11 @@ public class EntityMyChicken extends EntityMyPet
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -126,7 +125,7 @@ public class EntityMyChicken extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.chicken.say";
     }
@@ -135,7 +134,7 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.chicken.hurt";
     }
@@ -144,7 +143,7 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.chicken.hurt";
     }

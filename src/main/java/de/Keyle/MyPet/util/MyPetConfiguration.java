@@ -53,7 +53,7 @@ public class MyPetConfiguration
 {
     public static FileConfiguration config;
 
-    public static Material LEASH_ITEM = Material.STRING;
+    public static Material LEASH_ITEM = Material.LEASH;
     public static String PET_INFO_OVERHEAD_PREFIX = "" + ChatColor.AQUA;
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
@@ -206,6 +206,10 @@ public class MyPetConfiguration
         for (MyPetType petType : MyPetType.values())
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
+            if (pi == null)
+            {
+                continue;
+            }
 
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp());
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed());
@@ -227,10 +231,10 @@ public class MyPetConfiguration
 
     public static void loadConfiguration()
     {
-        LEASH_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 287), Material.STRING);
+        LEASH_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Leash.Item", 420), Material.LEASH);
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
-        Control.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.STRING);
-        Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.STRING);
+        Control.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Control.Item", 287), Material.LEASH);
+        Ride.ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Skill.Ride.Item", 287), Material.LEASH);
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
@@ -339,8 +343,8 @@ public class MyPetConfiguration
         {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
-            MyPet.setStartHP(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
-            MyPet.setStartSpeed(petType.getMyPetClass(), (float) config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
+            MyPet.setStartHP(petType.getMyPetClass(), config.getDouble("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
+            MyPet.setStartSpeed(petType.getMyPetClass(), config.getDouble("MyPet.Pets." + petType.getTypeName() + ".Speed", pi.walkSpeed()));
             seperateFood(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".Food", linkFood(pi.food())));
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
             MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0));

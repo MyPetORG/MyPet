@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.wither;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.World;
 
 @EntitySize(width = 0.9F, height = 4.0F)
 public class EntityMyWither extends EntityMyPet
@@ -31,7 +31,6 @@ public class EntityMyWither extends EntityMyPet
     public EntityMyWither(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/wither.png";
     }
 
 
@@ -40,17 +39,17 @@ public class EntityMyWither extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, new Integer(300));   // Healthbar
-        this.datawatcher.a(17, new Integer(0));     // target EntityID
-        this.datawatcher.a(18, new Integer(0));     // N/A
-        this.datawatcher.a(19, new Integer(0));     // N/A
-        this.datawatcher.a(20, new Integer(0));     // blue (1/0)
+        //this.datawatcher.a(16, new Float(300.)); // Healthbar
+        this.datawatcher.a(17, new Integer(0));  // target EntityID
+        this.datawatcher.a(18, new Integer(0));  // N/A
+        this.datawatcher.a(19, new Integer(0));  // N/A
+        this.datawatcher.a(20, new Integer(0));  // blue (1/0)
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.wither.idle";
     }
@@ -59,7 +58,7 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.wither.hurt";
     }
@@ -68,14 +67,14 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.wither.death";
     }
 
     @Override
-    protected void bp()
+    protected void bg()
     {
-        this.datawatcher.watch(16, (int) (300. * getHealth() / getMaxHealth())); // update healthbar
+        //this.datawatcher.watch(16, (int) (300. * getHealth() / getMaxHealth())); // update healthbar
     }
 }

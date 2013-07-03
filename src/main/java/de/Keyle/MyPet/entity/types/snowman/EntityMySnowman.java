@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.World;
 
 @EntitySize(width = 0.4F, height = 1.8F)
 public class EntityMySnowman extends EntityMyPet
@@ -31,7 +31,6 @@ public class EntityMySnowman extends EntityMyPet
     public EntityMySnowman(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/snowman.png";
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -45,7 +44,7 @@ public class EntityMySnowman extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "step.snow";
     }
@@ -54,7 +53,7 @@ public class EntityMySnowman extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "step.snow";
     }
@@ -63,7 +62,7 @@ public class EntityMySnowman extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "step.snow";
     }

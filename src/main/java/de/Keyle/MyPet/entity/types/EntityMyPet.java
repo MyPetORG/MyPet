@@ -32,11 +32,11 @@ import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -47,7 +47,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
     public MyPetAIGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
-    protected float walkSpeed = 0.3F;
+    protected double walkSpeed = 0.3F;
     protected boolean isRidden = false;
     protected boolean isMyPet = false;
     protected MyPet myPet;
@@ -69,6 +69,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             this.petTargetSelector = new MyPetAIGoalSelector();
 
             this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+            a(GenericAttributes.d).a(walkSpeed);
 
             petNavigation = new VanillaNavigation(this);
 
@@ -93,7 +94,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             isMyPet = true;
 
             ((LivingEntity) this.getBukkitEntity()).setMaxHealth(myPet.getMaxHealth());
-            this.setHealth(myPet.getHealth());
+            this.setHealth((float) myPet.getHealth());
             this.setCustomName("");
         }
     }
@@ -101,7 +102,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new MyPetAIFloat(this));
-        petPathfinderSelector.addGoal("Ride", new MyPetAIRide(this, this.walkSpeed));
+        petPathfinderSelector.addGoal("Ride", new MyPetAIRide(this, (float) this.walkSpeed));
         petPathfinderSelector.addGoal("Sprint", new MyPetAISprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new MyPetAIRangedAttack(this, -0.1F, 35, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 3, 20));
@@ -195,7 +196,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     @Override
     public void setCustomNameVisible(boolean ignored)
     {
-        this.datawatcher.watch(6, Byte.valueOf((byte) (MyPetConfiguration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
+        this.datawatcher.watch(11, Byte.valueOf((byte) (MyPetConfiguration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
     }
 
     public boolean canMove()
@@ -203,7 +204,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return true;
     }
 
-    public float getWalkSpeed()
+    public double getWalkSpeed()
     {
         return walkSpeed;
     }
@@ -264,7 +265,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         boolean damageEntity = false;
         try
         {
-            int damage = isMyPet() ? myPet.getDamage() : 0;
+            double damage = isMyPet() ? myPet.getDamage() : 0;
             if (entity instanceof EntityPlayer)
             {
                 Player victim = (Player) entity.getBukkitEntity();
@@ -277,19 +278,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     return false;
                 }
             }
-            damageEntity = entity.damageEntity(DamageSource.mobAttack(this), damage);
+            damageEntity = entity.damageEntity(DamageSource.mobAttack(this), (float) damage);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
         return damageEntity;
-    }
-
-    @Override
-    public int getMaxHealth()
-    {
-        return this.maxHealth;
     }
 
     protected void tamedEffect(boolean tamed)
@@ -323,11 +318,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * false: no reaction on rightclick
      * -> interact()
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -434,24 +429,24 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * Returns the default sound of the MyPet
      * -> getLivingSound()
      */
-    protected abstract String bb();
+    protected abstract String r();
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected abstract String bc();
+    protected abstract String aK();
 
     /**
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected abstract String bd();
+    protected abstract String aL();
 
     /**
      * Set weather the "new" AI is used
      */
-    public boolean bh()
+    public boolean bb()
     {
         return true;
     }
@@ -461,17 +456,17 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * -> updateAITasks()
      */
     @Override
-    protected void bo()
+    protected void be()
     {
         try
         {
-            bC += 1; // entityAge
+            aV += 1; // entityAge
 
             getEntitySenses().a(); // sensing
             petTargetSelector.tick(); // target selector
             petPathfinderSelector.tick(); // pathfinder selector
             petNavigation.tick(); // navigation
-            bp(); // "mob tick"
+            bg(); // "mob tick"
 
             // controls
             getControllerMove().c(); // move

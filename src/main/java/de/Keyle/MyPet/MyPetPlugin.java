@@ -72,11 +72,11 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.*;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -317,6 +317,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             a.invoke(a, EntityOcelot.class, "Ozelot", 98);
             a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
+            //a.invoke(a, EntityMyHorse.class, "EntityHorse", 100); //TODO
+            //a.invoke(a, EntityHorse.class, "EntityHorse", 100);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
 

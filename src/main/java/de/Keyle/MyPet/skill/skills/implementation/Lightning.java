@@ -31,6 +31,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -79,15 +80,22 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("damage"))
+            if (getProperties().getValue().containsKey("damage"))
+            {
+                int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
+                getProperties().getValue().remove("damage");
+                DoubleTag doubleTag = new DoubleTag("damage_double", damage);
+                getProperties().getValue().put("damage_double", doubleTag);
+            }
+            if (upgrade.getProperties().getValue().containsKey("damage_double"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
                 {
-                    damage += ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage += ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
                 else
                 {
-                    damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                    damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
                 valuesEdit = true;
             }

@@ -39,7 +39,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage
     private String petName = "";
     private String worldGroup = "";
     private final MyPetPlayer petOwner;
-    private int health = -1;
+    private double health = -1;
     private int hunger = 100;
     private int respawnTime = 0;
     private Location location;
@@ -153,12 +153,12 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         }
     }
 
-    public void setHealth(int health)
+    public void setHealth(double health)
     {
         this.health = health;
     }
 
-    public int getHealth()
+    public double getHealth()
     {
         return health;
     }
@@ -250,7 +250,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         petNBT.getValue().put("Type", new StringTag("Type", this.petType.getTypeName()));
         petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
         petNBT.getValue().put("Location", locationNBT);
-        petNBT.getValue().put("Health", new IntTag("Health", this.health));
+        petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
         petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
         petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
         petNBT.getValue().put("Name", new StringTag("Name", this.petName));
@@ -299,7 +299,15 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         }
 
         exp = ((DoubleTag) myPetNBT.getValue().get("Exp")).getValue();
-        health = ((IntTag) myPetNBT.getValue().get("Health")).getValue();
+        if (myPetNBT.getValue().get("Health").getType() == TagType.TAG_INT)
+        {
+            health = ((IntTag) myPetNBT.getValue().get("Health")).getValue();
+        }
+        else
+        {
+            health = ((DoubleTag) myPetNBT.getValue().get("Health")).getValue();
+        }
+
         respawnTime = ((IntTag) myPetNBT.getValue().get("Respawntime")).getValue();
         petName = ((StringTag) myPetNBT.getValue().get("Name")).getValue();
 

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAIEatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
@@ -38,7 +38,6 @@ public class EntityMySheep extends EntityMyPet
     public EntityMySheep(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/sheep.png";
     }
 
     public void setPathfinder()
@@ -119,8 +118,8 @@ public class EntityMySheep extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
         this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
     }
 
     /**
@@ -129,11 +128,11 @@ public class EntityMySheep extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -212,7 +211,7 @@ public class EntityMySheep extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.sheep.say";
     }
@@ -221,7 +220,7 @@ public class EntityMySheep extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.sheep.say";
     }
@@ -230,7 +229,7 @@ public class EntityMySheep extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.sheep.say";
     }

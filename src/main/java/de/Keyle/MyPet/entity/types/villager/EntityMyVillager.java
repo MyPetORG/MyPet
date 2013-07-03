@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -36,7 +36,6 @@ public class EntityMyVillager extends EntityMyPet
     public EntityMyVillager(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/villager/villager.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -85,15 +84,15 @@ public class EntityMyVillager extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, new Integer(0)); // profession
         this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(16, new Integer(0)); // profession
     }
 
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -129,7 +128,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.villager.default";
     }
@@ -137,7 +136,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String bc()
+    protected String aK()
     {
         return "mob.villager.defaulthurt";
     }
@@ -145,7 +144,7 @@ public class EntityMyVillager extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String bd()
+    protected String aL()
     {
         return "mob.villager.defaultdeath";
     }

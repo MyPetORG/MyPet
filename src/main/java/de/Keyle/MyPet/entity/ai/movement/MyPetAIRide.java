@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 
 public class MyPetAIRide extends MyPetAIGoal
 {
@@ -32,7 +32,7 @@ public class MyPetAIRide extends MyPetAIGoal
     private final float startSpeed;
     private MyPet myPet;
     private float currentSpeed = 0.0F;
-    private boolean stopRiding = true;
+    private boolean stopRiding = false;
 
     public MyPetAIRide(EntityMyPet entityMyPet, float startSpeed)
     {
@@ -137,7 +137,7 @@ public class MyPetAIRide extends MyPetAIGoal
         float f4 = 0.1627714F / (f3 * f3 * f3);
         float f5 = MathHelper.sin(this.petEntity.yaw * 3.141593F / 180.0F);
         float f6 = MathHelper.cos(this.petEntity.yaw * 3.141593F / 180.0F);
-        float f7 = this.petEntity.aI() * f4;
+        float f7 = this.petEntity.bc() * f4;
         float f8 = Math.max(this.currentSpeed, 1.0F);
         f8 = f7 / f8;
         float f9 = this.currentSpeed * f8;

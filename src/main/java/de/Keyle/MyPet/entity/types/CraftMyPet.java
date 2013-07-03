@@ -26,10 +26,11 @@ import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_5_R3.EntityCreature;
-import org.bukkit.craftbukkit.v1_5_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftLivingEntity;
+import net.minecraft.server.v1_6_R1.EntityCreature;
+import org.bukkit.craftbukkit.v1_6_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
@@ -84,7 +85,7 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
     }
 
     @Override
-    public void setHealth(int health)
+    public void setHealth(double health)
     {
         if (health < 0)
         {
@@ -94,7 +95,7 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
         {
             health = getMaxHealth();
         }
-        petEntity.setHealth(health);
+        super.setHealth(health);
     }
 
     public MyPetPlayer getOwner()
@@ -137,5 +138,52 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
     public String toString()
     {
         return "CraftMyPet{MyPet=" + getHandle().isMyPet() + ",owner=" + getOwner() + ",type=" + getPetType() + "}";
+    }
+
+    @Override
+    public void _INVALID_damage(int amount)
+    {
+        damage((double) amount);
+    }
+
+    @Override
+    public void _INVALID_damage(int amount, Entity source)
+    {
+        damage((double) amount, source);
+    }
+
+    @Override
+    public int _INVALID_getHealth()
+    {
+        return (int) getHealth();
+    }
+
+    @Override
+    public void _INVALID_setHealth(int health)
+    {
+        setHealth((double) health);
+    }
+
+    @Override
+    public int _INVALID_getMaxHealth()
+    {
+        return (int) getMaxHealth();
+    }
+
+    @Override
+    public void _INVALID_setMaxHealth(int health)
+    {
+    }
+
+    @Override
+    public int _INVALID_getLastDamage()
+    {
+        return (int) getLastDamage();
+    }
+
+    @Override
+    public void _INVALID_setLastDamage(int damage)
+    {
+        setLastDamage((double) damage);
     }
 }

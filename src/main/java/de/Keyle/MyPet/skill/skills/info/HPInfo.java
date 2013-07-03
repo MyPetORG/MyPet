@@ -25,6 +25,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -32,14 +33,14 @@ import java.io.InputStream;
 
 @SkillName("HP")
 @SkillProperties(
-        parameterNames = {"hp", "addset_hp"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
-        parameterDefaultValues = {"1", "add"})
+        parameterNames = {"hp_double", "addset_hp"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "add"})
 public class HPInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
-    protected int hpIncrease = 0;
+    protected double hpIncrease = 0;
 
     public HPInfo(boolean addedByInheritance)
     {
@@ -66,7 +67,14 @@ public class HPInfo extends MyPetSkillTreeSkill implements ISkillInfo
         if (getProperties().getValue().containsKey("hp"))
         {
             int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
-            html = html.replace("value=\"0\"", "value=\"" + hp + "\"");
+            getProperties().getValue().remove("hp");
+            DoubleTag doubleTag = new DoubleTag("hp_double", hp);
+            getProperties().getValue().put("hp_double", doubleTag);
+        }
+        if (getProperties().getValue().containsKey("hp_double"))
+        {
+            double hp = ((DoubleTag) getProperties().getValue().get("hp_double")).getValue();
+            html = html.replace("\"hp_double\" value=\"0.0\"", "\"hp_double\" value=\"" + hp + "\"");
             if (getProperties().getValue().containsKey("addset_hp"))
             {
                 if (((StringTag) getProperties().getValue().get("addset_hp")).getValue().equals("set"))

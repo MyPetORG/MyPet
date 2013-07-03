@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.MyPetPvP;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.EntityPlayer;
-import net.minecraft.server.v1_5_R3.EntityTameableAnimal;
+import net.minecraft.server.v1_6_R1.EntityLiving;
+import net.minecraft.server.v1_6_R1.EntityPlayer;
+import net.minecraft.server.v1_6_R1.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
 public class MyPetAIHurtByTarget extends MyPetAIGoal
@@ -49,13 +49,13 @@ public class MyPetAIHurtByTarget extends MyPetAIGoal
         {
             return false;
         }
-        if (petEntity.aF() == null)
+        if (petEntity.getLastDamager() == null)
         {
             return false;
         }
-        if (target != petEntity.aF())
+        if (target != petEntity.getLastDamager())
         {
-            target = petEntity.aF();
+            target = petEntity.getLastDamager();
         }
         if (target == petEntity)
         {

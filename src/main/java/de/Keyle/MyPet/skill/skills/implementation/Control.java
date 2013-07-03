@@ -30,7 +30,7 @@ import org.bukkit.Material;
 
 public class Control extends ControlInfo implements ISkillInstance
 {
-    public static Material ITEM = Material.STRING;
+    public static Material ITEM = Material.LEASH;
     private Location moveTo;
     private Location prevMoveTo;
     private boolean active = false;

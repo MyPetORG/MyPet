@@ -75,8 +75,8 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_5_R3.EntityCreature;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.EntityCreature;
+import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
@@ -93,6 +93,7 @@ public enum MyPetType
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     Ghast(EntityType.GHAST, "Ghast", EntityMyGhast.class, MyGhast.class),
     Giant(EntityType.GIANT, "Giant", EntityMyGiant.class, MyGiant.class),
+    //Horse(EntityType.HORSE, "Horse", EntityMyHorse.class, MyHorse.class), //TODO
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube", EntityMyMagmaCube.class, MyMagmaCube.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),

@@ -56,13 +56,13 @@ public class SkillPropertyEditor
             {
                 if (e instanceof FormSubmitEvent)
                 {
+                    if (skill == null)
+                    {
+                        return;
+                    }
                     SkillProperties ph = skill.getClass().getAnnotation(SkillProperties.class);
                     if (ph != null)
                     {
-                        if (skill == null)
-                        {
-                            return;
-                        }
                         CompoundTag tagCompound = skill.getProperties();
                         System.out.println(((FormSubmitEvent) e).getData());
                         Map<String, String> parameterMap = seperateParameter(((FormSubmitEvent) e).getData());

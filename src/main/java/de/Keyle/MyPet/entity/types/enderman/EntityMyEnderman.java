@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.enderman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
@@ -32,7 +32,6 @@ public class EntityMyEnderman extends EntityMyPet
     public EntityMyEnderman(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/enderman.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -92,11 +91,11 @@ public class EntityMyEnderman extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -141,7 +140,7 @@ public class EntityMyEnderman extends EntityMyPet
     }
 
     @Override
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
@@ -150,7 +149,7 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.endermen.hit";
     }
@@ -159,7 +158,7 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.endermen.death";
     }

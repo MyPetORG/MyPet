@@ -30,7 +30,7 @@ public interface IMyPet
 {
     public UUID getUUID();
 
-    public int getHealth();
+    public double getHealth();
 
     public String getPetName();
 

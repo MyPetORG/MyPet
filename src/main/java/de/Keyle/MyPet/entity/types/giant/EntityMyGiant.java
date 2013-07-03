@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.World;
 
 @EntitySize(width = 5.5f, height = 5.5F)
 public class EntityMyGiant extends EntityMyPet
@@ -32,7 +32,6 @@ public class EntityMyGiant extends EntityMyPet
     public EntityMyGiant(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/zombie.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -65,7 +64,7 @@ public class EntityMyGiant extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.zombie.say";
     }
@@ -74,7 +73,7 @@ public class EntityMyGiant extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.zombie.hurt";
     }
@@ -83,7 +82,7 @@ public class EntityMyGiant extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.zombie.death";
     }

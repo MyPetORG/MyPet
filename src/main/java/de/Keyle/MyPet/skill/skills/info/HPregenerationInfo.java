@@ -25,6 +25,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -32,14 +33,14 @@ import java.io.InputStream;
 
 @SkillName("HPregeneration")
 @SkillProperties(
-        parameterNames = {"hp", "time", "addset_hp", "addset_time"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
-        parameterDefaultValues = {"1", "60", "add", "add"})
+        parameterNames = {"hp_double", "time", "addset_hp", "addset_time"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "60", "add", "add"})
 public class HPregenerationInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
-    protected int increaseHpBy = 0;
+    protected double increaseHpBy = 0;
     protected int regenTime = 0;
 
     public HPregenerationInfo(boolean addedByInheritance)
@@ -67,7 +68,14 @@ public class HPregenerationInfo extends MyPetSkillTreeSkill implements ISkillInf
         if (getProperties().getValue().containsKey("hp"))
         {
             int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
-            html = html.replace("hp\" value=\"0\"", "hp\" value=\"" + hp + "\"");
+            getProperties().getValue().remove("hp");
+            DoubleTag doubleTag = new DoubleTag("hp_double", hp);
+            getProperties().getValue().put("hp_double", doubleTag);
+        }
+        if (getProperties().getValue().containsKey("hp_double"))
+        {
+            double hp = ((DoubleTag) getProperties().getValue().get("hp_double")).getValue();
+            html = html.replace("hp_double\" value=\"0.0\"", "hp_double\" value=\"" + hp + "\"");
             if (getProperties().getValue().containsKey("addset_hp"))
             {
                 if (((StringTag) getProperties().getValue().get("addset_hp")).getValue().equals("set"))

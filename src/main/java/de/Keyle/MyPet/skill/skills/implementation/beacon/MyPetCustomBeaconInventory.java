@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import net.minecraft.server.v1_5_R3.EntityHuman;
-import net.minecraft.server.v1_5_R3.IInventory;
-import net.minecraft.server.v1_5_R3.ItemStack;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftHumanEntity;
+import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R1.IInventory;
+import net.minecraft.server.v1_6_R1.ItemStack;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 

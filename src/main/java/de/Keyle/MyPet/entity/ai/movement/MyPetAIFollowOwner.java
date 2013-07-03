@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import net.minecraft.server.v1_5_R3.EntityPlayer;
+import net.minecraft.server.v1_6_R1.EntityPlayer;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 
 public class MyPetAIFollowOwner extends MyPetAIGoal
 {
@@ -134,7 +134,7 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
             return;
         }
 
-        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bs());
+        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bl());
 
         if (this.petEntity.canMove())
         {

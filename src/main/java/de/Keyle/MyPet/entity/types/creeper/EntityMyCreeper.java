@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.creeper;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.World;
 
 
 @EntitySize(width = 0.6F, height = 0.9F)
@@ -32,7 +32,6 @@ public class EntityMyCreeper extends EntityMyPet
     public EntityMyCreeper(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/creeper.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -68,12 +67,12 @@ public class EntityMyCreeper extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(16, new Byte((byte) -1)); // N/A
+        this.datawatcher.a(16, new Byte((byte) -1)); // fuse
         this.datawatcher.a(17, new Byte((byte) 0));  // powered
     }
 
     @Override
-    protected String bb()
+    protected String r()
     {
         return "";
     }
@@ -82,7 +81,7 @@ public class EntityMyCreeper extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.creeper.say";
     }
@@ -91,7 +90,7 @@ public class EntityMyCreeper extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.creeper.death";
     }

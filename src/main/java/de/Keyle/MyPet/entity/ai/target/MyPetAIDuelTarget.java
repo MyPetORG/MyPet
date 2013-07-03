@@ -25,8 +25,8 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import net.minecraft.server.v1_5_R3.EntityPlayer;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
+import net.minecraft.server.v1_6_R1.EntityPlayer;
+import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 
 public class MyPetAIDuelTarget extends MyPetAIGoal
 {

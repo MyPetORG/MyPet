@@ -25,6 +25,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -32,14 +33,14 @@ import java.io.InputStream;
 
 @SkillName("Ranged")
 @SkillProperties(
-        parameterNames = {"damage", "addset_damage", "projectile"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
-        parameterDefaultValues = {"1", "add", "Arrow"})
+        parameterNames = {"damage_double", "addset_damage", "projectile"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "add", "Arrow"})
 public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
-    protected int damage = 0;
+    protected double damage = 0;
 
     public enum Projectiles
     {
@@ -73,7 +74,14 @@ public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
         if (getProperties().getValue().containsKey("damage"))
         {
             int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
-            html = html.replace("value=\"0\"", "value=\"" + damage + "\"");
+            getProperties().getValue().remove("damage");
+            DoubleTag doubleTag = new DoubleTag("damage_double", damage);
+            getProperties().getValue().put("damage_double", doubleTag);
+        }
+        if (getProperties().getValue().containsKey("damage_double"))
+        {
+            int damage = ((IntTag) getProperties().getValue().get("damage_double")).getValue();
+            html = html.replace("value=\"0.0\"", "value=\"" + damage + "\"");
             if (getProperties().getValue().containsKey("addset_damage"))
             {
                 if (((StringTag) getProperties().getValue().get("addset_damage")).getValue().equals("set"))

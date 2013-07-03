@@ -31,7 +31,7 @@ import org.spout.nbt.StringTag;
 
 public class Ride extends RideInfo implements ISkillInstance
 {
-    public static Material ITEM = Material.STRING;
+    public static Material ITEM = Material.LEASH;
     private boolean active = false;
     private MyPet myPet;
 

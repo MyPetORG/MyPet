@@ -25,6 +25,7 @@ import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.util.MyPetUtil;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -32,15 +33,15 @@ import java.io.InputStream;
 
 @SkillName("Lightning")
 @SkillProperties(
-        parameterNames = {"chance", "addset_chance", "damage", "addset_damage"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
-        parameterDefaultValues = {"5", "add", "3", "add"})
+        parameterNames = {"chance", "addset_chance", "damage_double", "addset_damage"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Double, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add", "3.0", "add"})
 public class LightningInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private static String defaultHTML = null;
 
     protected int chance = 0;
-    protected int damage = 0;
+    protected double damage = 0;
 
     public LightningInfo(boolean addedByInheritance)
     {
@@ -79,8 +80,15 @@ public class LightningInfo extends MyPetSkillTreeSkill implements ISkillInfo
         }
         if (getProperties().getValue().containsKey("damage"))
         {
-            int chance = ((IntTag) getProperties().getValue().get("damage")).getValue();
-            html = html.replace("damage\" value=\"0\"", "damage\" value=\"" + chance + "\"");
+            int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
+            getProperties().getValue().remove("damage");
+            DoubleTag doubleTag = new DoubleTag("damage_double", damage);
+            getProperties().getValue().put("damage_double", doubleTag);
+        }
+        if (getProperties().getValue().containsKey("damage_double"))
+        {
+            double damage = ((DoubleTag) getProperties().getValue().get("damage_double")).getValue();
+            html = html.replace("damage_double\" value=\"0.0\"", "damage_double\" value=\"" + damage + "\"");
             if (getProperties().getValue().containsKey("addset_damage"))
             {
                 if (((StringTag) getProperties().getValue().get("addset_damage")).getValue().equals("set"))

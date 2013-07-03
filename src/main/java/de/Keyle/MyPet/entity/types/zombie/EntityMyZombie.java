@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.support.*;
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.9F)
 public class EntityMyZombie extends EntityMyPet
@@ -38,7 +38,6 @@ public class EntityMyZombie extends EntityMyPet
     public EntityMyZombie(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/zombie.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -147,8 +146,9 @@ public class EntityMyZombie extends EntityMyPet
     protected void a()
     {
         super.a();
-        getDataWatcher().a(12, new Byte((byte) 0)); // is baby
-        getDataWatcher().a(13, new Byte((byte) 0)); // is villager
+        getDataWatcher().a(12, new Byte((byte) 0));    // is baby
+        getDataWatcher().a(13, new Byte((byte) 0));    // is villager
+        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
     }
 
     /**
@@ -157,11 +157,11 @@ public class EntityMyZombie extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a_(EntityHuman entityhuman)
+    public boolean a(EntityHuman entityhuman)
     {
         try
         {
-            if (super.a_(entityhuman))
+            if (super.a(entityhuman))
             {
                 return true;
             }
@@ -262,7 +262,7 @@ public class EntityMyZombie extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return !playIdleSound() ? "" : "mob.zombie.say";
     }
@@ -271,7 +271,7 @@ public class EntityMyZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
         return "mob.zombie.hurt";
     }
@@ -280,7 +280,7 @@ public class EntityMyZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.zombie.death";
     }

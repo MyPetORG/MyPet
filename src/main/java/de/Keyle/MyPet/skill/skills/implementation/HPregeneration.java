@@ -29,10 +29,11 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.PotionBrewer;
+import net.minecraft.server.v1_6_R1.EntityLiving;
+import net.minecraft.server.v1_6_R1.PotionBrewer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -66,15 +67,22 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
         if (upgrade instanceof HPregenerationInfo)
         {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().getValue().containsKey("hp"))
+            if (getProperties().getValue().containsKey("hp"))
+            {
+                int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
+                getProperties().getValue().remove("hp");
+                DoubleTag doubleTag = new DoubleTag("hp_double", hp);
+                getProperties().getValue().put("hp_double", doubleTag);
+            }
+            if (upgrade.getProperties().getValue().containsKey("hp_double"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
                 {
-                    increaseHpBy += ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
+                    increaseHpBy += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
                 else
                 {
-                    increaseHpBy = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
+                    increaseHpBy = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
                 valuesEdit = true;
             }
@@ -123,7 +131,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
                 if (myPet.getHealth() < myPet.getMaxHealth())
                 {
                     addPotionGraphicalEffect(myPet.getCraftPet(), 0x00FF00, 40); //Green Potion Effect
-                    myPet.getCraftPet().getHandle().heal(increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
+                    myPet.getCraftPet().getHandle().heal((float) increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
                 }
                 timeCounter = regenTime;
             }

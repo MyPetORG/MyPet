@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_5_R3.EntityHuman;
+import net.minecraft.server.v1_6_R1.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;

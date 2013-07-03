@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_5_R3.PathEntity;
-import net.minecraft.server.v1_5_R3.World;
+import net.minecraft.server.v1_6_R1.PathEntity;
+import net.minecraft.server.v1_6_R1.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMyMagmaCube extends EntityMyPet
@@ -36,7 +36,6 @@ public class EntityMyMagmaCube extends EntityMyPet
     public EntityMyMagmaCube(World world, MyPet myPet)
     {
         super(world, myPet);
-        this.texture = "/mob/lava.png";
     }
 
     public void setMyPet(MyPet myPet)
@@ -87,7 +86,7 @@ public class EntityMyMagmaCube extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String bb()
+    protected String r()
     {
         return "";
     }
@@ -96,16 +95,16 @@ public class EntityMyMagmaCube extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String bc()
+    protected String aK()
     {
-        return bd();
+        return aL();
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String bd()
+    protected String aL()
     {
         return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
     }
@@ -120,12 +119,12 @@ public class EntityMyMagmaCube extends EntityMyPet
         {
             super.l_();
 
-            if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().d())
+            if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e())
             {
                 getControllerJump().a();
                 jumpDelay = (this.random.nextInt(20) + 10);
-                lastPathEntity = getNavigation().d();
-                makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), ba(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                lastPathEntity = getNavigation().e();
+                makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), aW(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
             }
         }
         catch (Exception e)

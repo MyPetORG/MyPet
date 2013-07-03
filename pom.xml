@@ -34,8 +34,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <mypet.version>1.1.2</mypet.version>
-        <minecraft.version>1.5.2</minecraft.version>
-        <bukkit.version>R1.0</bukkit.version>
+        <minecraft.version>1.6.1</minecraft.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.8-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.4.05</mcmmo.version>
@@ -120,14 +120,12 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>${minecraft.version}-${bukkit.version}</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>${minecraft.version}-${bukkit.version}</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -140,7 +138,6 @@
             <groupId>com.pauldavdesign.mineauz</groupId>
             <artifactId>Minigames</artifactId>
             <version>${minigames.version}</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -154,7 +151,6 @@
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
             <version>${mcmmo.version}</version>
-            <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -318,6 +314,25 @@
                         <goals>
                             <goal>checkout</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.wolvereness</groupId>
+                <artifactId>overmapped</artifactId>
+                <version>0.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>map</goal>
+                        </goals>
+                        <configuration>
+                            <maps>${basedir}/maps.yml</maps>
+                            <input>${basedir}/target/${project.artifactId}-${project.version}.jar</input>
+                            <original>${basedir}/target/unmapped-${project.artifactId}-${project.version}.jar</original>
+                            <missing>FAIL</missing>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

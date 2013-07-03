@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.HPInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -57,15 +58,22 @@ public class HP extends HPInfo implements ISkillInstance
     {
         if (upgrade instanceof HPInfo)
         {
-            if (upgrade.getProperties().getValue().containsKey("hp"))
+            if (getProperties().getValue().containsKey("hp"))
+            {
+                int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
+                getProperties().getValue().remove("hp");
+                DoubleTag doubleTag = new DoubleTag("hp_double", hp);
+                getProperties().getValue().put("hp_double", doubleTag);
+            }
+            if (upgrade.getProperties().getValue().containsKey("hp_double"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
                 {
-                    hpIncrease += ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
+                    hpIncrease += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
                 else
                 {
-                    hpIncrease = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
+                    hpIncrease = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
 
                 if (getMyPet().getStatus() == PetState.Here)
@@ -91,7 +99,7 @@ public class HP extends HPInfo implements ISkillInstance
         hpIncrease = 0;
     }
 
-    public int getHpIncrease()
+    public double getHpIncrease()
     {
         return hpIncrease;
     }

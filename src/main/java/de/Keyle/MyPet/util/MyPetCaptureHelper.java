@@ -11,9 +11,9 @@ import java.util.List;
 
 public class MyPetCaptureHelper
 {
-    public static boolean checkTamable(LivingEntity leashTarget, int damage, Player attacker)
+    public static boolean checkTamable(LivingEntity leashTarget, double damage, Player attacker)
     {
-        int newHealth = leashTarget.getHealth() - damage;
+        double newHealth = leashTarget.getHealth() - damage;
 
         boolean tameNow = true;
         List<LeashFlag> leashFlags = MyPet.getLeashFlags(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass());
