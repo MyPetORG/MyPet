@@ -484,6 +484,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     @Override
     public void c()
     {
+        super.c();
         if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
         {
             Location l1 = getBukkitEntity().getLocation();
