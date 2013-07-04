@@ -38,6 +38,8 @@ import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
 import de.Keyle.MyPet.entity.types.ghast.MyGhast;
 import de.Keyle.MyPet.entity.types.giant.EntityMyGiant;
 import de.Keyle.MyPet.entity.types.giant.MyGiant;
+import de.Keyle.MyPet.entity.types.horse.EntityMyHorse;
+import de.Keyle.MyPet.entity.types.horse.MyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.EntityMyMagmaCube;
@@ -93,7 +95,7 @@ public enum MyPetType
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
     Ghast(EntityType.GHAST, "Ghast", EntityMyGhast.class, MyGhast.class),
     Giant(EntityType.GIANT, "Giant", EntityMyGiant.class, MyGiant.class),
-    //Horse(EntityType.HORSE, "Horse", EntityMyHorse.class, MyHorse.class), //TODO
+    Horse(EntityType.HORSE, "Horse", EntityMyHorse.class, MyHorse.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube", EntityMyMagmaCube.class, MyMagmaCube.class),
     Mooshroom(EntityType.MUSHROOM_COW, "Mooshroom", EntityMyMooshroom.class, MyMooshroom.class),

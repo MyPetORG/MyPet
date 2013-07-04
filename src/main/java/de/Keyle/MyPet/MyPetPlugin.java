@@ -37,6 +37,7 @@ import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
 import de.Keyle.MyPet.entity.types.giant.EntityMyGiant;
+import de.Keyle.MyPet.entity.types.horse.EntityMyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.EntityMyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
@@ -317,8 +318,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             a.invoke(a, EntityOcelot.class, "Ozelot", 98);
             a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
             a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
-            //a.invoke(a, EntityMyHorse.class, "EntityHorse", 100); //TODO
-            //a.invoke(a, EntityHorse.class, "EntityHorse", 100);
+            a.invoke(a, EntityMyHorse.class, "EntityHorse", 100);
+            a.invoke(a, EntityHorse.class, "EntityHorse", 100);
             a.invoke(a, EntityMyVillager.class, "Villager", 120);
             a.invoke(a, EntityVillager.class, "Villager", 120);
 

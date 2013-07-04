@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
+import de.Keyle.MyPet.entity.types.horse.EntityMyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
@@ -182,6 +183,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
@@ -330,6 +332,7 @@ public class MyPetConfiguration
         EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
         EntityMyChicken.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyCow.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId()), Material.POTION);
+        EntityMyHorse.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Horse.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyMooshroom.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyOcelot.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId()), Material.POTION);
         EntityMyPig.GROW_UP_ITEM = MyPetBukkitUtil.checkMaterial(config.getInt("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId()), Material.POTION);

@@ -40,15 +40,13 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import net.minecraft.server.v1_6_R1.EntityHorse;
 import net.minecraft.server.v1_6_R1.MathHelper;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEnderman;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_6_R1.entity.*;
 import org.bukkit.craftbukkit.v1_6_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -377,6 +375,11 @@ public class MyPetEntityListener implements Listener
                         else if (leashTarget instanceof Creeper)
                         {
                             extendedInfo.getValue().put("Powered", new ByteTag("Powered", ((Creeper) leashTarget).isPowered()));
+                        }
+                        else if (leashTarget instanceof Horse)
+                        {
+                            extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).bP()));
+                            extendedInfo.getValue().put("Variant", new IntTag("Variant", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).bQ()));
                         }
                         else if (leashTarget instanceof Zombie)
                         {

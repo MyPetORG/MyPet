@@ -60,7 +60,7 @@ public class SkilltreeCreator
 
     DefaultTreeModel skilltreeTreeModel;
 
-    String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Ghast", "Giant", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
+    String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Ghast", "Giant", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
 
     private MyPetSkillTree skilltreeCopyPaste;
     MyPetSkillTreeMobType selectedMobtype;
