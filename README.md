@@ -41,5 +41,5 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [BuildsImage]: http://dl.keyle.de/images/devbuilds.png
 [Wiki]: http://mypet.keyle.de/
 [WikiImage]: http://dl.keyle.de/images/wiki.png
-[BukkitDev]: http://dev.bukkit.org/server-mods/mywolf/
+[BukkitDev]: http://dev.bukkit.org/server-mods/mypet/
 [BukkitDevImage]: http://dl.keyle.de/images/bukkitdev.png
