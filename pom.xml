@@ -104,6 +104,13 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>bukkit-plugins</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <distributionManagement>
         <repository>
             <id>MyPet</id>
