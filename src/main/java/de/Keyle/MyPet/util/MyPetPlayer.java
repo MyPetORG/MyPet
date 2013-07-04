@@ -20,11 +20,13 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R1.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -33,6 +35,7 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class MyPetPlayer implements IScheduler, NBTStorage
@@ -42,6 +45,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private String playerName;
     private String lastLanguage = "en_US";
 
+    private boolean donator = false;
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
@@ -51,6 +55,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private MyPetPlayer(String playerName)
     {
         this.playerName = playerName;
+        checkForDonation();
     }
 
     public String getName()
@@ -193,6 +198,41 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     public boolean isOnline()
     {
         return getPlayer() != null && getPlayer().isOnline();
+    }
+
+    public boolean isDonator()
+    {
+        return donator;
+    }
+
+    public void checkForDonation()
+    {
+        if (donator || !MyPetConfiguration.DONATOR_EFFECT)
+        {
+            return;
+        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetPlugin.getPlugin(), new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    // Check whether this player has donated for the MyPet project
+                    // returns 1 for yes and 0 for no
+                    // no data will be saved
+                    String donation = MyPetUtil.readUrlContent("http://donation.keyle.de/donated.php?userid=" + playerName);
+                    if (donation.equals("1"))
+                    {
+                        donator = true;
+                        DebugLogger.info(playerName + " is a donator! Thanks " + playerName + " =)");
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }, 60L);
     }
 
     public String getLanguage()

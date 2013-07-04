@@ -54,6 +54,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     protected int idleSoundTimer = 0;
     public AbstractNavigation petNavigation;
 
+    int donatorParticleCounter = 0;
+
     public EntityMyPet(World world, MyPet myPet)
     {
         super(world);
@@ -476,6 +478,22 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void c()
+    {
+        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        {
+            Location l1 = getBukkitEntity().getLocation();
+            org.bukkit.block.Block block1 = l1.getBlock();
+            getOwner().getPlayer().sendBlockChange(l1, 60, (byte) 0);
+            Packet61WorldEvent particle = new Packet61WorldEvent(2005, (int) locX, (int) locY, (int) locZ, 0, false);
+            ((CraftPlayer) getOwner().getPlayer()).getHandle().playerConnection.sendPacket(particle);
+            getOwner().getPlayer().sendBlockChange(l1, block1.getType(), block1.getData());
+
+            donatorParticleCounter = 90 + aB().nextInt(60);
         }
     }
 }

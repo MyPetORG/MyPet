@@ -22,6 +22,9 @@ package de.Keyle.MyPet.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class MyPetUtil
 {
@@ -132,5 +135,38 @@ public class MyPetUtil
     {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    public static String readUrlContent(String address) throws IOException
+    {
+        StringBuilder contents = new StringBuilder(2048);
+        BufferedReader br = null;
+
+        try
+        {
+            URL url = new URL(address);
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                contents.append(line);
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (br != null)
+                {
+                    br.close();
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return contents.toString();
     }
 }
