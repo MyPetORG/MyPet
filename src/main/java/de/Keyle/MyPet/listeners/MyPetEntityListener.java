@@ -341,7 +341,7 @@ public class MyPetEntityListener implements Listener
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                         inactiveMyPet.setLocation(leashTarget.getLocation());
-
+                        inactiveMyPet.setPetName(MyPetLocales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
                         /*
                         if(leashTarget.getCustomName() != null)
                         {
