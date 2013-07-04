@@ -204,14 +204,6 @@ public class EntityMyOcelot extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     protected String aK()
@@ -225,5 +217,13 @@ public class EntityMyOcelot extends EntityMyPet
     protected String aL()
     {
         return "mob.cat.hitt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 }

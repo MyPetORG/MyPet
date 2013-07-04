@@ -71,12 +71,6 @@ public class EntityMyCreeper extends EntityMyPet
         this.datawatcher.a(17, new Byte((byte) 0));  // powered
     }
 
-    @Override
-    protected String r()
-    {
-        return "";
-    }
-
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
@@ -93,5 +87,11 @@ public class EntityMyCreeper extends EntityMyPet
     protected String aL()
     {
         return "mob.creeper.death";
+    }
+
+    @Override
+    protected String r()
+    {
+        return "";
     }
 }

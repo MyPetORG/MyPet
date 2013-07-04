@@ -119,31 +119,6 @@ public class EntityMyHorse extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        if (playIdleSound())
-        {
-            int horseType = ((MyHorse) myPet).horseType;
-            if (horseType == 3)
-            {
-                return "mob.horse.zombie.idle";
-            }
-            if (horseType == 4)
-            {
-                return "mob.horse.skeleton.idle";
-            }
-            if ((horseType == 1) || (horseType == 2))
-            {
-                return "mob.horse.donkey.idle";
-            }
-            return "mob.horse.idle";
-        }
-        return "";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -185,5 +160,30 @@ public class EntityMyHorse extends EntityMyPet
             return "mob.horse.donkey.death";
         }
         return "mob.horse.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        if (playIdleSound())
+        {
+            int horseType = ((MyHorse) myPet).horseType;
+            if (horseType == 3)
+            {
+                return "mob.horse.zombie.idle";
+            }
+            if (horseType == 4)
+            {
+                return "mob.horse.skeleton.idle";
+            }
+            if ((horseType == 1) || (horseType == 2))
+            {
+                return "mob.horse.donkey.idle";
+            }
+            return "mob.horse.idle";
+        }
+        return "";
     }
 }

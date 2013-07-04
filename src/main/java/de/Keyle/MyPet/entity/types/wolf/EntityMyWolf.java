@@ -258,14 +258,6 @@ public class EntityMyWolf extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -362,5 +354,13 @@ public class EntityMyWolf extends EntityMyPet
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 }

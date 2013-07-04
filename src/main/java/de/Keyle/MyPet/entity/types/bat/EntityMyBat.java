@@ -72,20 +72,6 @@ public class EntityMyBat extends EntityMyPet
     }
 
     /**
-     * Returns the speed of played sounds
-     */
-    protected float aX()
-    {
-        return super.aX() * 0.95F;
-    }
-
-    @Override
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.bat.idle";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -101,6 +87,14 @@ public class EntityMyBat extends EntityMyPet
     protected String aL()
     {
         return "mob.bat.death";
+    }
+
+    /**
+     * Returns the speed of played sounds
+     */
+    protected float aX()
+    {
+        return super.aX() * 0.95F;
     }
 
     public void c()
@@ -127,5 +121,11 @@ public class EntityMyBat extends EntityMyPet
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.bat.idle";
     }
 }

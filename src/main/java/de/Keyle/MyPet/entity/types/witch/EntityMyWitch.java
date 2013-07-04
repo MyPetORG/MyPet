@@ -50,14 +50,6 @@ public class EntityMyWitch extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.witch.idle";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -73,5 +65,13 @@ public class EntityMyWitch extends EntityMyPet
     protected String aL()
     {
         return "mob.witch.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.witch.idle";
     }
 }

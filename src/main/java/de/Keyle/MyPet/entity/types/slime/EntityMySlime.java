@@ -84,14 +84,6 @@ public class EntityMySlime extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return "";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -132,5 +124,13 @@ public class EntityMySlime extends EntityMyPet
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return "";
     }
 }

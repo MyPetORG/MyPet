@@ -44,14 +44,6 @@ public class EntityMyGhast extends EntityMyPet
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.ghast.moan";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -67,5 +59,13 @@ public class EntityMyGhast extends EntityMyPet
     protected String aL()
     {
         return "mob.ghast.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.ghast.moan";
     }
 }

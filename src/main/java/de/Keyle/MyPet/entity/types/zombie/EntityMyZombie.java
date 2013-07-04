@@ -260,14 +260,6 @@ public class EntityMyZombie extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.zombie.say";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -283,5 +275,13 @@ public class EntityMyZombie extends EntityMyPet
     protected String aL()
     {
         return "mob.zombie.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.zombie.say";
     }
 }

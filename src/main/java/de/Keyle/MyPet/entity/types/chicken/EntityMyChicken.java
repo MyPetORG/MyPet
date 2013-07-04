@@ -123,14 +123,6 @@ public class EntityMyChicken extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.chicken.say";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -170,5 +162,13 @@ public class EntityMyChicken extends EntityMyPet
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.chicken.say";
     }
 }

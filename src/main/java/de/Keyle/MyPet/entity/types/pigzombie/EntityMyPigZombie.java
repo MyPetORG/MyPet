@@ -205,14 +205,6 @@ public class EntityMyPigZombie extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.zombiepig.zpig";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -228,5 +220,13 @@ public class EntityMyPigZombie extends EntityMyPet
     protected String aL()
     {
         return "mob.zombiepig.zpigdeath";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.zombiepig.zpig";
     }
 }

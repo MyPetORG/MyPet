@@ -126,14 +126,6 @@ public class EntityMyVillager extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.villager.default";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     protected String aK()
@@ -147,5 +139,13 @@ public class EntityMyVillager extends EntityMyPet
     protected String aL()
     {
         return "mob.villager.defaultdeath";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.villager.default";
     }
 }

@@ -139,12 +139,6 @@ public class EntityMyEnderman extends EntityMyPet
         return false;
     }
 
-    @Override
-    protected String r()
-    {
-        return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
-    }
-
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
@@ -161,5 +155,11 @@ public class EntityMyEnderman extends EntityMyPet
     protected String aL()
     {
         return "mob.endermen.death";
+    }
+
+    @Override
+    protected String r()
+    {
+        return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 }

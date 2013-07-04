@@ -42,14 +42,6 @@ public class EntityMySilverfish extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.silverfish.say";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -65,5 +57,13 @@ public class EntityMySilverfish extends EntityMyPet
     protected String aL()
     {
         return "mob.silverfish.kill";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.silverfish.say";
     }
 }

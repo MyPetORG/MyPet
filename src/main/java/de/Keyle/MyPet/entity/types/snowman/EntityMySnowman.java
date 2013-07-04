@@ -42,14 +42,6 @@ public class EntityMySnowman extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "step.snow";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -65,5 +57,13 @@ public class EntityMySnowman extends EntityMyPet
     protected String aL()
     {
         return "step.snow";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "step.snow";
     }
 }

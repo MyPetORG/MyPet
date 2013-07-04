@@ -48,14 +48,6 @@ public class EntityMySpider extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.spider.say";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -71,5 +63,13 @@ public class EntityMySpider extends EntityMyPet
     protected String aL()
     {
         return "mob.spider.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.spider.say";
     }
 }

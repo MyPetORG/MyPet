@@ -47,14 +47,6 @@ public class EntityMyWither extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.wither.idle";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -76,5 +68,13 @@ public class EntityMyWither extends EntityMyPet
     protected void bg()
     {
         //this.datawatcher.watch(16, (int) (300. * getHealth() / getMaxHealth())); // update healthbar
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.wither.idle";
     }
 }

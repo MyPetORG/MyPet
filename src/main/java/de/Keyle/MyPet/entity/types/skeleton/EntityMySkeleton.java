@@ -229,14 +229,6 @@ public class EntityMySkeleton extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return !playIdleSound() ? "" : "mob.skeleton.say";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     protected String aK()
@@ -250,5 +242,13 @@ public class EntityMySkeleton extends EntityMyPet
     protected String aL()
     {
         return "mob.skeleton.death";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
+    {
+        return !playIdleSound() ? "" : "mob.skeleton.say";
     }
 }

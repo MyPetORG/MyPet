@@ -36,6 +36,26 @@ public class EntityMyIronGolem extends EntityMyPet
         super(world, myPet);
     }
 
+    public boolean attack(Entity entity)
+    {
+        boolean flag = false;
+        try
+        {
+            this.world.broadcastEntityEffect(this, (byte) 4);
+            flag = super.attack(entity);
+            if (CAN_THROW_UP && flag)
+            {
+                entity.motY += 0.4000000059604645D;
+                this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
     public void setPathfinder()
     {
         super.setPathfinder();
@@ -71,14 +91,6 @@ public class EntityMyIronGolem extends EntityMyPet
     }
 
     /**
-     * Returns the default sound of the MyPet
-     */
-    protected String r()
-    {
-        return "";
-    }
-
-    /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
@@ -96,23 +108,11 @@ public class EntityMyIronGolem extends EntityMyPet
         return "mob.irongolem.death";
     }
 
-    public boolean attack(Entity entity)
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String r()
     {
-        boolean flag = false;
-        try
-        {
-            this.world.broadcastEntityEffect(this, (byte) 4);
-            flag = super.attack(entity);
-            if (CAN_THROW_UP && flag)
-            {
-                entity.motY += 0.4000000059604645D;
-                this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return flag;
+        return "";
     }
 }
