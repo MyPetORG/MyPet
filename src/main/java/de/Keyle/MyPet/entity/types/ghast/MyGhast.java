@@ -52,23 +52,20 @@ public class MyGhast extends MyPet
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                Location loc = petOwner.getPlayer().getLocation();
+                net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
-                petEntity.setLocation(petLocation);
-                if (!MyPetBukkitUtil.canSpawn(petLocation, petEntity))
+                petEntity.setLocation(loc);
+                if (!MyPetBukkitUtil.canSpawn(loc, petEntity))
                 {
-                    Location l = petLocation.add(0, 4, 0);
+                    Location l = loc.add(0, 4, 0);
                     if (!MyPetBukkitUtil.canSpawn(l, petEntity))
                     {
                         status = PetState.Despawned;
                         return SpawnFlags.NoSpace;
                     }
                     petEntity.setLocation(l);
-                }
-                if (!petLocation.getChunk().isLoaded())
-                {
-                    petLocation.getChunk().load();
                 }
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {

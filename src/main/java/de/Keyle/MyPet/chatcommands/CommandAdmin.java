@@ -477,7 +477,6 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
                     inactiveMyPet.setPetType(myPetType);
                     inactiveMyPet.setPetName(MyPetLocales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
-                    inactiveMyPet.setLocation(owner.getLocation());
 
                     CompoundTag compoundTag = inactiveMyPet.getInfo();
                     if (parameter.length > 2)

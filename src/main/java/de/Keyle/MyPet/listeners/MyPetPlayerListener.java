@@ -114,7 +114,6 @@ public class MyPetPlayerListener implements Listener
                 {
                     if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
                     {
-                        inactiveMyPet.setLocation(event.getPlayer().getLocation());
                         MyPetList.setMyPetActive(inactiveMyPet);
                         MyPet activeMyPet = joinedPlayer.getMyPet();
                         activeMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NowActivePet", joinedPlayer).replace("%petname%", activeMyPet.getPetName())));
@@ -211,7 +210,6 @@ public class MyPetPlayerListener implements Listener
                     {
                         if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
                         {
-                            inactiveMyPet.setLocation(event.getPlayer().getLocation());
                             MyPetList.setMyPetActive(inactiveMyPet);
                             MyPet activeMyPet = myPetPlayer.getMyPet();
                             activeMyPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NowActivePet", myPetPlayer).replace("%petname%", activeMyPet.getPetName())));
@@ -234,8 +232,6 @@ public class MyPetPlayerListener implements Listener
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (callAfterSwap)
                 {
-                    myPet.setLocation(event.getPlayer().getLocation());
-
                     MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
                         public void run()
@@ -291,7 +287,6 @@ public class MyPetPlayerListener implements Listener
                     {
                         myPet.removePet(true);
                     }
-                    myPet.setLocation(event.getTo());
 
                     MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {

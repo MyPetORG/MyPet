@@ -22,7 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import org.bukkit.Location;
 
 import java.util.UUID;
 
@@ -37,8 +36,6 @@ public interface IMyPet
     public MyPetPlayer getOwner();
 
     public MyPetSkillTree getSkillTree();
-
-    public Location getLocation();
 
     public int getRespawnTime();
 

@@ -101,7 +101,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
     protected String worldGroup = "";
     protected PetState status = PetState.Despawned;
     protected boolean wantToRespawn = false;
-    protected Location petLocation;
     protected MyPetSkillTree skillTree = null;
     protected MyPetSkills skills;
     protected MyPetExperience experience;
@@ -186,11 +185,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
         if (status == PetState.Here)
         {
             health = craftMyPet.getHealth();
-            petLocation = craftMyPet.getLocation();
-            if (petLocation == null && getOwner().isOnline())
-            {
-                petLocation = getOwner().getPlayer().getLocation();
-            }
             status = PetState.Despawned;
             this.wantToRespawn = wantToRespawn;
             craftMyPet.remove();
@@ -202,7 +196,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
     {
         if (status != PetState.Here && getOwner().isOnline())
         {
-            petLocation = getOwner().getPlayer().getLocation();
             respawnTime = 0;
             switch (createPet())
             {
@@ -233,11 +226,12 @@ public abstract class MyPet implements IMyPet, NBTStorage
         {
             if (respawnTime <= 0)
             {
-                net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) petLocation.getWorld()).getHandle();
+                Location loc = petOwner.getPlayer().getLocation();
+                net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
-                petEntity.setLocation(petLocation);
-                if (!MyPetBukkitUtil.canSpawn(petLocation, petEntity))
+                petEntity.setLocation(loc);
+                if (!MyPetBukkitUtil.canSpawn(loc, petEntity))
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
@@ -459,15 +453,18 @@ public abstract class MyPet implements IMyPet, NBTStorage
         {
             return craftMyPet.getLocation();
         }
+        else if (petOwner.isOnline())
+        {
+            return petOwner.getPlayer().getLocation();
+        }
         else
         {
-            return petLocation;
+            return null;
         }
     }
 
     public void setLocation(Location loc)
     {
-        this.petLocation = loc;
         if (status == PetState.Here && MyPetBukkitUtil.canSpawn(loc, this.craftMyPet.getHandle()))
         {
             craftMyPet.teleport(loc);
@@ -688,18 +685,9 @@ public abstract class MyPet implements IMyPet, NBTStorage
     {
         CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
 
-        CompoundTag locationNBT = new CompoundTag("Location", new CompoundMap());
-        locationNBT.getValue().put("X", new DoubleTag("X", this.getLocation().getX()));
-        locationNBT.getValue().put("Y", new DoubleTag("Y", this.getLocation().getY()));
-        locationNBT.getValue().put("Z", new DoubleTag("Z", this.getLocation().getY()));
-        locationNBT.getValue().put("Yaw", new FloatTag("Yaw", this.getLocation().getYaw()));
-        locationNBT.getValue().put("Pitch", new FloatTag("Pitch", this.getLocation().getPitch()));
-        locationNBT.getValue().put("World", new StringTag("World", this.getLocation().getWorld().getName()));
-
         petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
         petNBT.getValue().put("Type", new StringTag("Type", this.getPetType().getTypeName()));
         petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
-        petNBT.getValue().put("Location", locationNBT);
         petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
         petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
         petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));

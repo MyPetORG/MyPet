@@ -340,7 +340,6 @@ public class MyPetEntityListener implements Listener
                         event.setCancelled(true);
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
-                        inactiveMyPet.setLocation(leashTarget.getLocation());
                         inactiveMyPet.setPetName(MyPetLocales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
                         /*
                         if(leashTarget.getCustomName() != null)
@@ -617,7 +616,6 @@ public class MyPetEntityListener implements Listener
                 MyPet myPet = craftMyPet.getMyPet();
 
                 myPet.removePet(true);
-                myPet.setLocation(myPet.getOwner().getPlayer().getLocation());
 
                 switch (myPet.createPet())
                 {

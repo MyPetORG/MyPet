@@ -431,7 +431,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     {
                         if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
                         {
-                            inactiveMyPet.setLocation(player.getLocation());
                             MyPetList.setMyPetActive(inactiveMyPet);
                             break;
                         }

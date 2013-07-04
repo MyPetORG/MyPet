@@ -26,8 +26,6 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.NBTStorage;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.spout.nbt.*;
 
 import java.util.Collection;
@@ -42,7 +40,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage
     private double health = -1;
     private int hunger = 100;
     private int respawnTime = 0;
-    private Location location;
     private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
     private MyPetSkillTree skillTree = null;
@@ -193,16 +190,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         return respawnTime;
     }
 
-    public Location getLocation()
-    {
-        return location;
-    }
-
-    public void setLocation(Location Location)
-    {
-        this.location = Location;
-    }
-
     public MyPetSkillTree getSkillTree()
     {
         return skillTree;
@@ -238,18 +225,9 @@ public class InactiveMyPet implements IMyPet, NBTStorage
     {
         CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
 
-        CompoundTag locationNBT = new CompoundTag("Location", new CompoundMap());
-        locationNBT.getValue().put("X", new DoubleTag("X", this.location.getX()));
-        locationNBT.getValue().put("Y", new DoubleTag("Y", this.location.getY()));
-        locationNBT.getValue().put("Z", new DoubleTag("Z", this.location.getY()));
-        locationNBT.getValue().put("Yaw", new FloatTag("Yaw", this.location.getYaw()));
-        locationNBT.getValue().put("Pitch", new FloatTag("Pitch", this.location.getPitch()));
-        locationNBT.getValue().put("World", new StringTag("World", this.location.getWorld().getName()));
-
         petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
         petNBT.getValue().put("Type", new StringTag("Type", this.petType.getTypeName()));
         petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
-        petNBT.getValue().put("Location", locationNBT);
         petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
         petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
         petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
@@ -272,30 +250,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         if (myPetNBT.getValue().containsKey("UUID"))
         {
             uuid = UUID.fromString(((StringTag) myPetNBT.getValue().get("UUID")).getValue());
-        }
-
-        CompoundTag locationNBT = (CompoundTag) myPetNBT.getValue().get("Location");
-        double petX = ((DoubleTag) locationNBT.getValue().get("X")).getValue();
-        double petY = ((DoubleTag) locationNBT.getValue().get("Y")).getValue();
-        double petZ = ((DoubleTag) locationNBT.getValue().get("Z")).getValue();
-        float petYaw = 1F;
-        if (locationNBT.getValue().containsKey("Yaw"))
-        {
-            petYaw = ((FloatTag) locationNBT.getValue().get("Yaw")).getValue();
-        }
-        float petPitch = 1F;
-        if (locationNBT.getValue().containsKey("Pitch"))
-        {
-            petPitch = ((FloatTag) locationNBT.getValue().get("Pitch")).getValue();
-        }
-        String petWorld = ((StringTag) locationNBT.getValue().get("World")).getValue();
-        if (Bukkit.getServer().getWorld(petWorld) != null)
-        {
-            this.location = new Location(Bukkit.getServer().getWorld(petWorld), petX, petY, petZ, petYaw, petPitch);
-        }
-        else
-        {
-            this.location = new Location(Bukkit.getServer().getWorlds().get(0), petX, petY, petZ, petYaw, petPitch);
         }
 
         exp = ((DoubleTag) myPetNBT.getValue().get("Exp")).getValue();
