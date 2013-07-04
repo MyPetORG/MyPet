@@ -38,7 +38,6 @@ public class MyBlaze extends MyPet
     public MyBlaze(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Blaze";
     }
 
     public boolean isOnFire()

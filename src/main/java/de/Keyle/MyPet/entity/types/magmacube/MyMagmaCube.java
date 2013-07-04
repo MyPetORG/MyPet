@@ -39,7 +39,6 @@ public class MyMagmaCube extends MyPet implements IMyPetSlimeSize
     public MyMagmaCube(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "LavaSlime";
     }
 
     public int getSize()

@@ -44,7 +44,6 @@ public class MySheep extends MyPet implements IMyPetBaby
     public MySheep(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Sheep";
     }
 
     public void setColor(DyeColor color)

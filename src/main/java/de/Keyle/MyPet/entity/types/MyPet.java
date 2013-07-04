@@ -113,6 +113,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         experience = new MyPetExperience(this);
         hungerTime = MyPetConfiguration.HUNGER_SYSTEM_TIME;
         autoAssignSkilltree();
+        petName = MyPetLocales.getString("Name." + getPetType().getTypeName(), petOwner.getLanguage());
     }
 
     public void setPetName(String newName)

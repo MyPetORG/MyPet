@@ -50,7 +50,6 @@ public class MySkeleton extends MyPet implements IMyPetEquipment
     public MySkeleton(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Skeleton";
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item)

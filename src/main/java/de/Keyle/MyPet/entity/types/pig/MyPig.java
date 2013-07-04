@@ -40,7 +40,6 @@ public class MyPig extends MyPet implements IMyPetBaby
     public MyPig(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Pig";
     }
 
     public boolean hasSaddle()

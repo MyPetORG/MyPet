@@ -48,7 +48,6 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment
     public MyPigZombie(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "PigZombie";
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item)

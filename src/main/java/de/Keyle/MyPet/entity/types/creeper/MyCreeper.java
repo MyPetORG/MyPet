@@ -38,7 +38,6 @@ public class MyCreeper extends MyPet
     public MyCreeper(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Creeper";
     }
 
     public void setPowered(boolean flag)

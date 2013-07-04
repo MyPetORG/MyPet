@@ -35,7 +35,6 @@ public class MyIronGolem extends MyPet
     public MyIronGolem(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Iron Golem";
     }
 
     @Override

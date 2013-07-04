@@ -39,7 +39,6 @@ public class MyMooshroom extends MyPet implements IMyPetBaby
     public MyMooshroom(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Mooshroom";
     }
 
     public boolean isBaby()

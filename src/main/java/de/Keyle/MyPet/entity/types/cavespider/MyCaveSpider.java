@@ -34,7 +34,6 @@ public class MyCaveSpider extends MyPet
     public MyCaveSpider(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Cave Spider";
     }
 
     @Override

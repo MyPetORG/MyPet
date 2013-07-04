@@ -34,7 +34,6 @@ public class MyGiant extends MyPet
     public MyGiant(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Giant";
     }
 
     @Override

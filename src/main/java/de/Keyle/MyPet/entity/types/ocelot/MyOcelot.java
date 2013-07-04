@@ -44,7 +44,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby
     public MyOcelot(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Ocelot";
     }
 
     public boolean isSitting()

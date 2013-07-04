@@ -38,7 +38,6 @@ public class MyBat extends MyPet
     public MyBat(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Bat";
     }
 
     public void setHanging(boolean flag)

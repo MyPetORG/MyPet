@@ -41,7 +41,6 @@ public class MyHorse extends MyPet
     public MyHorse(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Horse";
     }
 
     public byte getHorseType()

@@ -44,7 +44,6 @@ public class MyEnderman extends MyPet
     public MyEnderman(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Enderman";
     }
 
     public int getBlockID()

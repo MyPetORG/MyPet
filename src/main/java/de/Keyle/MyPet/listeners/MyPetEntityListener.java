@@ -340,8 +340,14 @@ public class MyPetEntityListener implements Listener
                         event.setCancelled(true);
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
-                        inactiveMyPet.setPetName(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName());
                         inactiveMyPet.setLocation(leashTarget.getLocation());
+
+                        /*
+                        if(leashTarget.getCustomName() != null)
+                        {
+                            inactiveMyPet.setPetName(leashTarget.getCustomName());
+                        }
+                        */
 
                         CompoundTag extendedInfo = new CompoundTag("Info", new CompoundMap());
                         if (leashTarget instanceof Ocelot)

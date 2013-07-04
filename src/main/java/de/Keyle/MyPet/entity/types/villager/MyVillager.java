@@ -41,7 +41,6 @@ public class MyVillager extends MyPet implements IMyPetBaby
     public MyVillager(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Villager";
     }
 
     public void setProfession(int value)

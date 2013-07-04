@@ -39,7 +39,6 @@ public class MySlime extends MyPet implements IMyPetSlimeSize
     public MySlime(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Slime";
     }
 
     public int getSize()

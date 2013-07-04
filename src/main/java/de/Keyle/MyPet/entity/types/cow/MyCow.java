@@ -39,7 +39,6 @@ public class MyCow extends MyPet implements IMyPetBaby
     public MyCow(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Cow";
     }
 
     public boolean isBaby()

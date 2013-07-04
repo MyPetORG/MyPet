@@ -43,7 +43,6 @@ public class MyGhast extends MyPet
     public MyGhast(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Ghast";
     }
 
     @Override

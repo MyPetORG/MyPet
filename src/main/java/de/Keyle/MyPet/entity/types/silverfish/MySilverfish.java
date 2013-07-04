@@ -34,7 +34,6 @@ public class MySilverfish extends MyPet
     public MySilverfish(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Silverfish";
     }
 
     @Override

@@ -52,7 +52,6 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     public MyZombie(MyPetPlayer petOwner)
     {
         super(petOwner);
-        this.petName = "Zombie";
     }
 
     public boolean isBaby()
