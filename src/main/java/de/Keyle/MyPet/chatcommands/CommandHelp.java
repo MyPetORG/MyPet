@@ -39,6 +39,10 @@ public class CommandHelp implements CommandExecutor
             player.sendMessage("--------------- MyPet - " + MyPetLocales.getString("Name.Help", player) + " -------------------------");
             player.sendMessage(MyPetBukkitUtil.setColors("/petinfo" + MyPetLocales.getString("Message.Help.PetInfo", player)));
             player.sendMessage(MyPetBukkitUtil.setColors("/pettype" + MyPetLocales.getString("Message.Help.PetType", player)));
+            if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
+            {
+                player.sendMessage(MyPetBukkitUtil.setColors("/petcapturehelper" + MyPetLocales.getString("Message.Help.PetCaptureHelper", player)));
+            }
             if (MyPetPermissions.has(player, "MyPet.admin", false))
             {
                 player.sendMessage(MyPetBukkitUtil.setColors("/petadmin" + MyPetLocales.getString("Message.Help.PetAdmin", player)));
@@ -56,6 +60,10 @@ public class CommandHelp implements CommandExecutor
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
                 {
                     player.sendMessage(MyPetBukkitUtil.setColors("/petinventory" + MyPetLocales.getString("Message.Help.PetInventory", player)));
+                }
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Beacon"))
+                {
+                    player.sendMessage(MyPetBukkitUtil.setColors("/petbeacon" + MyPetLocales.getString("Message.Help.PetBeacon", player)));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
                 {
