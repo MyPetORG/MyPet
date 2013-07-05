@@ -149,7 +149,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
     public void addPotionGraphicalEffect(CraftMyPet entity, int color, int duration)
     {
         final EntityLiving entityLiving = entity.getHandle();
-        entityLiving.getDataWatcher().watch(8, new Integer(color));
+        entityLiving.getDataWatcher().watch(7, new Integer(color));
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable()
         {
@@ -160,7 +160,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
                 {
                     potionEffects = PotionBrewer.a(entityLiving.effects.values());
                 }
-                entityLiving.getDataWatcher().watch(8, new Integer(potionEffects));
+                entityLiving.getDataWatcher().watch(7, new Integer(potionEffects));
             }
         }, duration);
     }
