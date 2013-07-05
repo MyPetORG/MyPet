@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import net.minecraft.server.v1_6_R1.*;
 
 public class MyPetAIRide extends MyPetAIGoal
@@ -32,7 +31,6 @@ public class MyPetAIRide extends MyPetAIGoal
     private final float startSpeed;
     private MyPet myPet;
     private float currentSpeed = 0.0F;
-    private boolean stopRiding = false;
 
     public MyPetAIRide(EntityMyPet entityMyPet, float startSpeed)
     {
@@ -88,16 +86,7 @@ public class MyPetAIRide extends MyPetAIGoal
     {
         EntityHuman petRider = (EntityHuman) this.petEntity.passenger;
 
-        if (petRider.isSneaking() && this.petEntity.onGround)
-        {
-            this.petEntity.motY += 0.5;
-        }
-        if (stopRiding)
-        {
-            return;
-        }
-
-        float totalSpeed = this.startSpeed + (((Ride) myPet.getSkills().getSkill("Ride")).getSpeed());
+        float totalSpeed = this.startSpeed;// + (((Ride) myPet.getSkills().getSkill("Ride")).getSpeed());
 
         float rotationDiff = MathHelper.g(petRider.yaw - this.petEntity.yaw) * 0.5F;
         if (rotationDiff > 5.0F)
@@ -194,23 +183,8 @@ public class MyPetAIRide extends MyPetAIGoal
         return Block.byId[blockId] != null && (Block.byId[blockId].d() == 10 || Block.byId[blockId] instanceof BlockStepAbstract);
     }
 
-    public void stopRiding(boolean flag)
+    public void stopRiding()
     {
         this.currentSpeed = 0.0F;
-        this.stopRiding = flag;
-    }
-
-    public void toggleRiding()
-    {
-        if (this.petEntity.passenger != null)
-        {
-            this.currentSpeed = 0.0F;
-            this.stopRiding = !this.stopRiding;
-        }
-    }
-
-    public boolean canRide()
-    {
-        return !this.stopRiding;
     }
 }

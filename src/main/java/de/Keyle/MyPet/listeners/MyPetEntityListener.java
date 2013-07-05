@@ -25,7 +25,6 @@ import de.Keyle.MyPet.api.event.MyPetLeashEvent;
 import de.Keyle.MyPet.chatcommands.CommandInfo;
 import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.EquipmentSlot;
-import de.Keyle.MyPet.entity.ai.movement.MyPetAIRide;
 import de.Keyle.MyPet.entity.ai.target.MyPetAIDuelTarget;
 import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
@@ -113,18 +112,7 @@ public class MyPetEntityListener implements Listener
                 {
                     damager = (Player) event.getDamager();
                 }
-                if (craftMyPet.getHandle().hasRider() && myPet.getOwner().equals(damager))
-                {
-                    event.setCancelled(true);
-                    if (myPet.getSkills().hasSkill("Ride"))
-                    {
-                        if (craftMyPet.getHandle().petPathfinderSelector.hasGoal("Ride"))
-                        {
-                            ((MyPetAIRide) craftMyPet.getHandle().petPathfinderSelector.getGoal("Ride")).toggleRiding();
-                        }
-                    }
-                }
-                else if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM)
+                if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM)
                 {
                     MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(damager);
 

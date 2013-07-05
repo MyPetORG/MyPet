@@ -338,13 +338,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
             Player owner = this.getOwner().getPlayer();
 
-            if (isMyPet() && entityhuman.getBukkitEntity() == owner)
+            if (isMyPet() && myPet.getOwner().equals(entityhuman))
             {
-                if (this.hasRider())
-                {
-                    ((CraftPlayer) owner).getHandle().setPassengerOf(null);
-                    return true;
-                }
                 if (myPet.getSkills().isSkillActive("Ride"))
                 {
                     if (itemStack.id == Ride.ITEM.getId() && canMove())
