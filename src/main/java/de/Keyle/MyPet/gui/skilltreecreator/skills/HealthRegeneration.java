@@ -124,7 +124,7 @@ public class HealthRegeneration implements SkillPropertiesPanel
             healthInput.setText("" + ((DoubleTag) compoundTag.getValue().get("hp_double")).getValue());
         }
 
-        if (!compoundTag.getValue().containsKey("addset_duration") || ((StringTag) compoundTag.getValue().get("addset_duration")).getValue().equals("add"))
+        if (!compoundTag.getValue().containsKey("addset_time") || ((StringTag) compoundTag.getValue().get("addset_time")).getValue().equals("add"))
         {
             decreaseTimeRadioButton.setSelected(true);
         }
@@ -132,9 +132,9 @@ public class HealthRegeneration implements SkillPropertiesPanel
         {
             setTimeRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("duration"))
+        if (compoundTag.getValue().containsKey("time"))
         {
-            timeInput.setText("" + ((IntTag) compoundTag.getValue().get("duration")).getValue());
+            timeInput.setText("" + ((IntTag) compoundTag.getValue().get("time")).getValue());
         }
     }
 }

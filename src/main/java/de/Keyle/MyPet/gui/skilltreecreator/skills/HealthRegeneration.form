@@ -95,7 +95,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="0.0"/>
+              <text value="0"/>
             </properties>
           </component>
           <component id="c33fc" class="javax.swing.JRadioButton" binding="decreaseTimeRadioButton">
