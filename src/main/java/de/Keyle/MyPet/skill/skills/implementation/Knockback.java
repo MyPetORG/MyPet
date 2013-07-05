@@ -70,6 +70,7 @@ public class Knockback extends KnockbackInfo implements ISkillInstance, ISkillAc
                 {
                     chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
+                chance = Math.min(chance, 100);
                 if (!quiet)
                 {
                     myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance));

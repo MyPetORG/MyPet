@@ -85,6 +85,7 @@ public class Slow extends SlowInfo implements ISkillInstance, ISkillActive
                 }
                 valuesEdit = true;
             }
+            chance = Math.min(chance, 100);
             if (!quiet && valuesEdit)
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Slow.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance).replace("%duration%", "" + duration));

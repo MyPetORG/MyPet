@@ -20,20 +20,13 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator;
 
+import com.intellij.uiDesigner.core.GridConstraints;
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.skill.SkillProperties;
-import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
-import org.spout.nbt.*;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.Document;
-import javax.swing.text.html.FormSubmitEvent;
-import javax.swing.text.html.HTMLEditorKit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -41,117 +34,47 @@ import java.util.Map;
 
 public class SkillPropertyEditor
 {
-    protected JTextPane propertyTextPane;
+    protected JPanel propertyPanel;
     protected JPanel skillPropertyEditorPanel;
     protected JButton cancelButton;
+    private JButton saveButton;
     protected JFrame skillPropertyEditorFrame;
 
     private ISkillInfo skill;
+    private SkillPropertiesPanel skillPropertiesPanel;
+
+    private GridConstraints constraints = new GridConstraints();
 
     public SkillPropertyEditor()
     {
-        propertyTextPane.addHyperlinkListener(new HyperlinkListener()
+        saveButton.addActionListener(new ActionListener()
         {
-            public void hyperlinkUpdate(HyperlinkEvent e)
+            public void actionPerformed(ActionEvent e)
             {
-                if (e instanceof FormSubmitEvent)
-                {
-                    if (skill == null)
-                    {
-                        return;
-                    }
-                    SkillProperties ph = skill.getClass().getAnnotation(SkillProperties.class);
-                    if (ph != null)
-                    {
-                        CompoundTag tagCompound = skill.getProperties();
-                        System.out.println(((FormSubmitEvent) e).getData());
-                        Map<String, String> parameterMap = seperateParameter(((FormSubmitEvent) e).getData());
-                        for (int i = 0 ; i < ph.parameterNames().length ; i++)
-                        {
-                            if (i >= ph.parameterTypes().length)
-                            {
-                                break;
-                            }
-                            NBTdatatypes type = ph.parameterTypes()[i];
-                            String name = ph.parameterNames()[i];
-                            String value = parameterMap.get(name);
-                            switch (type)
-                            {
-                                case Short:
-                                    if (MyPetUtil.isShort(value))
-                                    {
-                                        tagCompound.getValue().put(name, new ShortTag(name, Short.parseShort(value)));
-                                    }
-                                    break;
-                                case Int:
-                                    if (MyPetUtil.isInt(value))
-                                    {
-                                        tagCompound.getValue().put(name, new IntTag(name, Integer.parseInt(value)));
-                                    }
-                                    break;
-                                case Long:
-                                    if (MyPetUtil.isLong(value))
-                                    {
-                                        tagCompound.getValue().put(name, new LongTag(name, Long.parseLong(value)));
-                                    }
-                                    break;
-                                case Float:
-                                    if (MyPetUtil.isFloat(value))
-                                    {
-                                        tagCompound.getValue().put(name, new FloatTag(name, Float.parseFloat(value)));
-                                    }
-                                    break;
-                                case Double:
-                                    if (MyPetUtil.isDouble(value))
-                                    {
-                                        tagCompound.getValue().put(name, new DoubleTag(name, Double.parseDouble(value)));
-                                    }
-                                    break;
-                                case Byte:
-                                    if (MyPetUtil.isByte(value))
-                                    {
-                                        tagCompound.getValue().put(name, new ByteTag(name, Byte.parseByte(value)));
-                                    }
-                                    break;
-                                case Boolean:
-                                    if (value == null || value.equalsIgnoreCase("") || value.equalsIgnoreCase("off"))
-                                    {
-                                        tagCompound.getValue().put(name, new ByteTag(name, false));
-                                    }
-                                    else if (value.equalsIgnoreCase("on"))
-                                    {
-                                        tagCompound.getValue().put(name, new ByteTag(name, true));
-                                    }
-                                    break;
-                                case String:
-                                    tagCompound.getValue().put(name, new StringTag(name, value));
-                                    break;
-                            }
-                        }
-                    }
-                }
-                propertyTextPane.setText("");
+                skillPropertiesPanel.verifyInput();
+                skillPropertiesPanel.save();
                 GuiMain.levelCreator.getFrame().setEnabled(true);
                 skillPropertyEditorFrame.setVisible(false);
             }
         });
+
         cancelButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                propertyTextPane.setText("");
+                skillPropertiesPanel.load(skill.getProperties());
                 GuiMain.levelCreator.getFrame().setEnabled(true);
                 skillPropertyEditorFrame.setVisible(false);
             }
         });
-        HTMLEditorKit kit = (HTMLEditorKit) propertyTextPane.getEditorKit();
-        kit.setAutoFormSubmission(false);
-        Document doc = kit.createDefaultDocument();
-        propertyTextPane.setDocument(doc);
     }
 
-    private void createUIComponents()
+    public void setSkill(ISkillInfo skill)
     {
+        this.skill = skill;
+        propertyPanel.removeAll();
+        skillPropertiesPanel = skill.getGuiPanel();
+        propertyPanel.add(skillPropertiesPanel.getMainPanel(), constraints);
     }
 
     public JPanel getMainPanel()
@@ -166,17 +89,6 @@ public class SkillPropertyEditor
             skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return skillPropertyEditorFrame;
-    }
-
-    public boolean setHTML(ISkillInfo skill)
-    {
-        SkillProperties ph = skill.getClass().getAnnotation(SkillProperties.class);
-        if (ph != null)
-        {
-            propertyTextPane.setText(skill.getHtml());
-        }
-        this.skill = skill;
-        return false;
     }
 
     public Map<String, String> seperateParameter(String parameterString)

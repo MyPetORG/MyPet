@@ -20,16 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.Health;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.util.MyPetUtil;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
-
-import java.io.InputStream;
 
 @SkillName("HP")
 @SkillProperties(
@@ -38,7 +34,7 @@ import java.io.InputStream;
         parameterDefaultValues = {"1.0", "add"})
 public class HPInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    private static String defaultHTML = null;
+    private SkillPropertiesPanel panel = null;
 
     protected double hpIncrease = 0;
 
@@ -47,44 +43,13 @@ public class HPInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
+    public SkillPropertiesPanel getGuiPanel()
     {
-        if (defaultHTML == null)
+        if (panel == null)
         {
-            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-            if (htmlStream == null)
-            {
-                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
-                if (htmlStream == null)
-                {
-                    return "NoSkillPropertieViewNotFoundError";
-                }
-            }
-            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
+            panel = new Health(this.getProperties());
         }
-
-        String html = defaultHTML;
-        if (getProperties().getValue().containsKey("hp"))
-        {
-            int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
-            getProperties().getValue().remove("hp");
-            DoubleTag doubleTag = new DoubleTag("hp_double", hp);
-            getProperties().getValue().put("hp_double", doubleTag);
-        }
-        if (getProperties().getValue().containsKey("hp_double"))
-        {
-            double hp = ((DoubleTag) getProperties().getValue().get("hp_double")).getValue();
-            html = html.replace("\"hp_double\" value=\"0.0\"", "\"hp_double\" value=\"" + hp + "\"");
-            if (getProperties().getValue().containsKey("addset_hp"))
-            {
-                if (((StringTag) getProperties().getValue().get("addset_hp")).getValue().equals("set"))
-                {
-                    html = html.replace("name=\"addset_hp\" value=\"add\" checked", "name=\"addset_hp\" value=\"add\"");
-                    html = html.replace("name=\"addset_hp\" value=\"set\"", "name=\"addset_hp\" value=\"set\" checked");
-                }
-            }
-        }
-        return html;
+        return panel;
     }
 
     public ISkillInfo cloneSkill()

@@ -20,15 +20,14 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.Behavior;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
-import de.Keyle.MyPet.util.MyPetUtil;
-import org.spout.nbt.ByteTag;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ import java.util.Map;
         parameterDefaultValues = {"true", "true", "true", "true", "true"})
 public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    private static String defaultHTML = null;
+    private SkillPropertiesPanel panel = null;
 
     protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
 
@@ -48,34 +47,13 @@ public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
+    public SkillPropertiesPanel getGuiPanel()
     {
-        if (defaultHTML == null)
+        if (panel == null)
         {
-            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-            if (htmlStream == null)
-            {
-                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
-                if (htmlStream == null)
-                {
-                    return "NoSkillPropertieViewNotFoundError";
-                }
-            }
-            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
+            panel = new Behavior(this.getProperties());
         }
-
-        String html = defaultHTML;
-        for (String name : getClass().getAnnotation(SkillProperties.class).parameterNames())
-        {
-            if (getProperties().getValue().containsKey(name))
-            {
-                if (!((ByteTag) getProperties().getValue().get(name)).getBooleanValue())
-                {
-                    html = html.replace("name=\"" + name + "\" checked", "name=\"" + name + "\"");
-                }
-            }
-        }
-        return html;
+        return panel;
     }
 
     public ISkillInfo cloneSkill()

@@ -20,16 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.Ranged;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.util.MyPetUtil;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
-
-import java.io.InputStream;
 
 @SkillName("Ranged")
 @SkillProperties(
@@ -38,7 +34,7 @@ import java.io.InputStream;
         parameterDefaultValues = {"1.0", "add", "Arrow"})
 public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    private static String defaultHTML = null;
+    private SkillPropertiesPanel panel = null;
 
     protected double damage = 0;
 
@@ -54,68 +50,13 @@ public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
+    public SkillPropertiesPanel getGuiPanel()
     {
-        if (defaultHTML == null)
+        if (panel == null)
         {
-            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-            if (htmlStream == null)
-            {
-                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
-                if (htmlStream == null)
-                {
-                    return "NoSkillPropertieViewNotFoundError";
-                }
-            }
-            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
+            panel = new Ranged(this.getProperties());
         }
-
-        String html = defaultHTML;
-        if (getProperties().getValue().containsKey("damage"))
-        {
-            int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
-            getProperties().getValue().remove("damage");
-            DoubleTag doubleTag = new DoubleTag("damage_double", damage);
-            getProperties().getValue().put("damage_double", doubleTag);
-        }
-        if (getProperties().getValue().containsKey("damage_double"))
-        {
-            int damage = ((IntTag) getProperties().getValue().get("damage_double")).getValue();
-            html = html.replace("value=\"0.0\"", "value=\"" + damage + "\"");
-            if (getProperties().getValue().containsKey("addset_damage"))
-            {
-                if (((StringTag) getProperties().getValue().get("addset_damage")).getValue().equals("set"))
-                {
-                    html = html.replace("name=\"addset_damage\" value=\"add\" checked", "name=\"addset_damage\" value=\"add\"");
-                    html = html.replace("name=\"addset_damage\" value=\"set\"", "name=\"addset_damage\" value=\"set\" checked");
-                }
-            }
-        }
-        if (getProperties().getValue().containsKey("projectile"))
-        {
-            String projectile = ((StringTag) getProperties().getValue().get("projectile")).getValue();
-            if (projectile.equalsIgnoreCase("Arrow"))
-            {
-                html = html.replace("<option value=\"Arrow\">Arrow</option>", "<option value=\"Arrow\" selected>Arrow</option>");
-            }
-            else if (projectile.equalsIgnoreCase("Snowball"))
-            {
-                html = html.replace("<option value=\"Snowball\">Snowball</option>", "<option value=\"Snowball\" selected>Snowball</option>");
-            }
-            else if (projectile.equalsIgnoreCase("LargeFireball"))
-            {
-                html = html.replace("<option value=\"LargeFireball\">Large Fireball</option>", "<option value=\"LargeFireball\" selected>Large Fireball</option>");
-            }
-            else if (projectile.equalsIgnoreCase("Snowball"))
-            {
-                html = html.replace("<option value=\"SmallFireball\">Small Fireball</option>", "<option value=\"SmallFireball\" selected>Small Fireball</option>");
-            }
-            else if (projectile.equalsIgnoreCase("Snowball"))
-            {
-                html = html.replace("<option value=\"WitherSkull\">Wither Skull</option>", "<option value=\"WitherSkull\" selected>Wither Skull</option>");
-            }
-        }
-        return html;
+        return panel;
     }
 
     public ISkillInfo cloneSkill()

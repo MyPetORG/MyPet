@@ -23,11 +23,7 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Material;
-import org.spout.nbt.FloatTag;
-import org.spout.nbt.StringTag;
 
 public class Ride extends RideInfo implements ISkillInstance
 {
@@ -60,6 +56,7 @@ public class Ride extends RideInfo implements ISkillInstance
         if (upgrade instanceof RideInfo)
         {
             active = true;
+            /*
             if (upgrade.getProperties().getValue().containsKey("speed"))
             {
                 if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add"))
@@ -72,26 +69,29 @@ public class Ride extends RideInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName())/*.replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add")))*/);
+                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add"))));
                 }
             }
+            */
         }
     }
 
     public String getFormattedValue()
     {
-        return MyPetLocales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
+        //return MyPetLocales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
+        return "";
     }
 
     public void reset()
     {
-        speed = 0F;
+        //speed = 0F;
         active = false;
     }
 
     public float getSpeed()
     {
-        return speed;
+        //return speed;
+        return 0F;
     }
 
     @Override

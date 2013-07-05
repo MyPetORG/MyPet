@@ -69,7 +69,7 @@ public class LevelCreator
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
-    String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ranged", "Ride", "Slow", "Sprint", "Thorns", "Wither"};
+    private static String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ranged", "Ride", "Slow", "Sprint", "Thorns", "Wither"};
 
     public LevelCreator()
     {
@@ -326,7 +326,15 @@ public class LevelCreator
                             }
                             if (MyPetSkillsInfo.isValidSkill(skill.getName()))
                             {
-                                GuiMain.skillPropertyEditor.setHTML(skill);
+                                if (skill.getGuiPanel() != null)
+                                {
+                                    GuiMain.skillPropertyEditor.setSkill(skill);
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
+                                    return;
+                                }
                             }
                             GuiMain.skillPropertyEditor.getFrame().setVisible(true);
                             getFrame().setEnabled(false);

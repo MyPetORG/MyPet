@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 
@@ -31,9 +32,9 @@ public class ControlInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
+    public SkillPropertiesPanel getGuiPanel()
     {
-        return "";
+        return null;
     }
 
     public ISkillInfo cloneSkill()

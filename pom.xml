@@ -402,8 +402,6 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.spout:simplenbt:jar:*</include>
-                                    <include>org.yaml:snakeyaml:*</include>
-                                    <include>com.googlecode.json-simple:json-simple:*</include>
                                     <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                 </includes>

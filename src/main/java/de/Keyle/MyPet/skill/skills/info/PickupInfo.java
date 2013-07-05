@@ -20,16 +20,12 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.Pickup;
+import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.util.MyPetUtil;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.StringTag;
-
-import java.io.InputStream;
-import java.util.Locale;
 
 @SkillName("Pickup")
 @SkillProperties(
@@ -38,7 +34,7 @@ import java.util.Locale;
         parameterDefaultValues = {"1.0", "add"})
 public class PickupInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
-    private static String defaultHTML = null;
+    private SkillPropertiesPanel panel = null;
 
     protected double range = 0;
 
@@ -47,37 +43,13 @@ public class PickupInfo extends MyPetSkillTreeSkill implements ISkillInfo
         super(addedByInheritance);
     }
 
-    public String getHtml()
+    public SkillPropertiesPanel getGuiPanel()
     {
-        if (defaultHTML == null)
+        if (panel == null)
         {
-            InputStream htmlStream = getClass().getClassLoader().getResourceAsStream("html/skills/" + getName() + ".html");
-            if (htmlStream == null)
-            {
-                htmlStream = this.getClass().getClassLoader().getResourceAsStream("html/skills/_default.html");
-                if (htmlStream == null)
-                {
-                    return "NoSkillPropertieViewNotFoundError";
-                }
-            }
-            defaultHTML = MyPetUtil.convertStreamToString(htmlStream).replace("#Skillname#", getName());
+            panel = new Pickup(this.getProperties());
         }
-
-        String html = defaultHTML;
-        if (getProperties().getValue().containsKey("range"))
-        {
-            double range = ((DoubleTag) getProperties().getValue().get("range")).getValue();
-            html = html.replace("value=\"0.00\"", "value=\"" + String.format(Locale.ENGLISH, "%1.2f", range) + "\"");
-            if (getProperties().getValue().containsKey("addset_range"))
-            {
-                if (((StringTag) getProperties().getValue().get("addset_range")).getValue().equals("set"))
-                {
-                    html = html.replace("name=\"addset_range\" value=\"add\" checked", "name=\"addset_range\" value=\"add\"");
-                    html = html.replace("name=\"addset_range\" value=\"set\"", "name=\"addset_range\" value=\"set\" checked");
-                }
-            }
-        }
-        return html;
+        return panel;
     }
 
     public ISkillInfo cloneSkill()
