@@ -32,6 +32,9 @@ public class Thorns implements SkillPropertiesPanel
     private JTextField chanceInput;
     private JRadioButton addChanceRadioButton;
     private JRadioButton setChanceRadioButton;
+    private JTextField reflectionInput;
+    private JRadioButton addReflectionRadioButton;
+    private JRadioButton setReflectionRadioButton;
 
     private CompoundTag compoundTag;
 
@@ -50,10 +53,16 @@ public class Thorns implements SkillPropertiesPanel
     @Override
     public void verifyInput()
     {
-        chanceInput.setText(chanceInput.getText().replaceAll("[^0-6]*", ""));
+        chanceInput.setText(chanceInput.getText().replaceAll("[^0-9]*", ""));
         if (chanceInput.getText().length() == 0)
         {
             chanceInput.setText("0");
+        }
+
+        reflectionInput.setText(reflectionInput.getText().replaceAll("[^0-9]*", ""));
+        if (reflectionInput.getText().length() == 0)
+        {
+            reflectionInput.setText("0");
         }
     }
 
@@ -62,6 +71,9 @@ public class Thorns implements SkillPropertiesPanel
     {
         compoundTag.getValue().put("addset_chance", new StringTag("addset_chance", addChanceRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("chance", new IntTag("chance", Integer.parseInt(chanceInput.getText())));
+
+        compoundTag.getValue().put("addset_reflection", new StringTag("addset_reflection", addReflectionRadioButton.isSelected() ? "add" : "set"));
+        compoundTag.getValue().put("reflection", new IntTag("reflection", Integer.parseInt(reflectionInput.getText())));
 
         return compoundTag;
     }
@@ -80,6 +92,19 @@ public class Thorns implements SkillPropertiesPanel
         if (compoundTag.getValue().containsKey("chance"))
         {
             chanceInput.setText("" + ((IntTag) compoundTag.getValue().get("chance")).getValue());
+        }
+
+        if (!compoundTag.getValue().containsKey("addset_reflection") || ((StringTag) compoundTag.getValue().get("addset_reflection")).getValue().equals("add"))
+        {
+            addReflectionRadioButton.setSelected(true);
+        }
+        else
+        {
+            setReflectionRadioButton.setSelected(true);
+        }
+        if (compoundTag.getValue().containsKey("reflection"))
+        {
+            reflectionInput.setText("" + ((IntTag) compoundTag.getValue().get("reflection")).getValue());
         }
     }
 }

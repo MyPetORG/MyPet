@@ -211,14 +211,22 @@ public class MyPetEntityListener implements Listener
                     event.setCancelled(true);
                 }
             }
-            if (event.getDamager() instanceof LivingEntity)
+            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity)
             {
-                if (!event.isCancelled() && myPet.getSkills().isSkillActive("Thorns"))
+                LivingEntity damager = (LivingEntity) event.getDamager();
+                if (damager instanceof Player)
+                {
+                    if (!MyPetPvP.canHurtAncientRPG(myPet.getOwner().getPlayer(), (Player) damager))
+                    {
+                        return;
+                    }
+                }
+                if (myPet.getSkills().isSkillActive("Thorns"))
                 {
                     Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
                     if (thornsSkill.activate())
                     {
-                        ((LivingEntity) event.getDamager()).damage((int) (event.getDamage() / 2 + 0.5), event.getEntity());
+                        damager.damage(thornsSkill.getReflectedDamage(event.getDamage()), craftMyPet);
                     }
                 }
             }

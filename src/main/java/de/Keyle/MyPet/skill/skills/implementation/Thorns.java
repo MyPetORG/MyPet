@@ -70,6 +70,15 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
                 {
                     chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
+                if (!upgrade.getProperties().getValue().containsKey("addset_reflection") || ((StringTag) upgrade.getProperties().getValue().get("addset_reflection")).getValue().equals("add"))
+                {
+                    reflectedDamagePercent += ((IntTag) upgrade.getProperties().getValue().get("reflection")).getValue();
+                }
+                else
+                {
+                    reflectedDamagePercent = ((IntTag) upgrade.getProperties().getValue().get("reflection")).getValue();
+                }
+                reflectedDamagePercent = Math.min(reflectedDamagePercent, 100);
                 chance = Math.min(chance, 100);
                 if (!quiet)
                 {
@@ -81,7 +90,7 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
 
     public String getFormattedValue()
     {
-        return chance + "%";
+        return chance + "% -> " + reflectedDamagePercent + "% " + MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage());
     }
 
     public void reset()
@@ -92,6 +101,11 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
     public boolean activate()
     {
         return random.nextDouble() < chance / 100.;
+    }
+
+    public double getReflectedDamage(double damage)
+    {
+        return damage * reflectedDamagePercent / 100.;
     }
 
     @Override

@@ -29,14 +29,15 @@ import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 
 @SkillName("Thorns")
 @SkillProperties(
-        parameterNames = {"chance", "addset_chance"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
-        parameterDefaultValues = {"5", "add"})
+        parameterNames = {"chance", "addset_chance", "reflection", "addset_reflection"},
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add", "15", "add"})
 public class ThornsInfo extends MyPetSkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 
     protected int chance = 0;
+    protected int reflectedDamagePercent = 0;
 
     public ThornsInfo(boolean addedByInheritance)
     {
