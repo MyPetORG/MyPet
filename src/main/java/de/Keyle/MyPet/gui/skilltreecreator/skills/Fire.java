@@ -53,7 +53,7 @@ public class Fire implements SkillPropertiesPanel
     @Override
     public void verifyInput()
     {
-        chanceInput.setText(chanceInput.getText().replaceAll("[^0-6]*", ""));
+        chanceInput.setText(chanceInput.getText().replaceAll("[^0-9]*", ""));
         if (chanceInput.getText().length() == 0)
         {
             chanceInput.setText("0");

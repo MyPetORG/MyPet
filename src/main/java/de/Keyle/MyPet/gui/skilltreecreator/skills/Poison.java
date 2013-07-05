@@ -53,13 +53,13 @@ public class Poison implements SkillPropertiesPanel
     @Override
     public void verifyInput()
     {
-        chanceInput.setText(chanceInput.getText().replaceAll("[^0-6]*", ""));
+        chanceInput.setText(chanceInput.getText().replaceAll("[^0-9]*", ""));
         if (chanceInput.getText().length() == 0)
         {
             chanceInput.setText("0");
         }
 
-        timeInput.setText(timeInput.getText().replaceAll("[^0-6]*", ""));
+        timeInput.setText(timeInput.getText().replaceAll("[^0-9]*", ""));
         if (timeInput.getText().length() == 0)
         {
             timeInput.setText("0");
