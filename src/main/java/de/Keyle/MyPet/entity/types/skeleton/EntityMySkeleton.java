@@ -119,6 +119,10 @@ public class EntityMySkeleton extends EntityMyPet
             {
                 return true;
             }
+            else if (itemstack.getItem() instanceof ItemBow)
+            {
+                return true;
+            }
             return false;
         }
         else
