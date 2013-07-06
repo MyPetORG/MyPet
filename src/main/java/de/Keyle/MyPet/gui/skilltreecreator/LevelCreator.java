@@ -338,6 +338,7 @@ public class LevelCreator
                             }
                             GuiMain.skillPropertyEditor.getFrame().setVisible(true);
                             getFrame().setEnabled(false);
+                            GuiMain.skillPropertyEditor.getFrame().setSize(GuiMain.skillPropertyEditor.getFrame().getWidth(), skill.getGuiPanel().getMainPanel().getHeight() + 90);
                         }
                     }
                 }
