@@ -71,13 +71,15 @@ public class LevelCreator
 
     private static String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ranged", "Ride", "Slow", "Sprint", "Thorns", "Wither"};
 
+    int highestLevel = 0;
+
     public LevelCreator()
     {
         addLevelButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                String response = JOptionPane.showInputDialog(null, "Enter the number for the new level.", "Create new Level", JOptionPane.QUESTION_MESSAGE);
+                String response = (String) JOptionPane.showInputDialog(null, "Enter the number for the new level.", "Create new Level", JOptionPane.QUESTION_MESSAGE, null, null, "" + (highestLevel + 1));
                 if (response != null)
                 {
                     if (MyPetUtil.isInt(response))
@@ -100,6 +102,7 @@ public class LevelCreator
                                 }
                             }
                         }
+                        highestLevel = Math.max(highestLevel, newLevel);
                         DefaultMutableTreeNode levelNode = new DefaultMutableTreeNode(newLevel);
                         skillTree.addLevel(newLevel);
 
@@ -541,6 +544,7 @@ public class LevelCreator
         int skillcount = 0;
         for (MyPetSkillTreeLevel level : skillTree.getLevelList())
         {
+            highestLevel = Math.max(highestLevel, level.getLevel());
             DefaultMutableTreeNode levelNode = new DefaultMutableTreeNode(level.getLevel());
             rootNode.add(levelNode);
             for (ISkillInfo skill : level.getSkills())
