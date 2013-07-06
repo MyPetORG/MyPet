@@ -35,7 +35,6 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
-import java.io.IOException;
 import java.util.*;
 
 public class MyPetPlayer implements IScheduler, NBTStorage
@@ -227,9 +226,10 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                         DebugLogger.info(playerName + " is a donator! Thanks " + playerName + " =)");
                     }
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
-                    e.printStackTrace();
+                    DebugLogger.info("Can not connect to donation server.");
+                    MyPetConfiguration.DONATOR_EFFECT = false;
                 }
             }
         }, 60L);
