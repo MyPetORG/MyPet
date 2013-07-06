@@ -204,32 +204,6 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         active = false;
     }
 
-    public static enum BehaviorState
-    {
-        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
-
-        boolean active;
-
-        BehaviorState(boolean active)
-        {
-            this.active = active;
-        }
-
-        public void setActive(boolean active)
-        {
-            if (this != Normal)
-            {
-                this.active = active;
-            }
-        }
-
-        public boolean isActive()
-        {
-            return this.active;
-        }
-    }
-
-
     public void setBehavior(BehaviorState behaviorState)
     {
         behavior = behaviorState;

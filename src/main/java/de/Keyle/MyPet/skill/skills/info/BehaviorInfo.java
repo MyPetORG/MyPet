@@ -26,7 +26,6 @@ import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +40,31 @@ public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
     private SkillPropertiesPanel panel = null;
 
     protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
+
+    public static enum BehaviorState
+    {
+        Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
+
+        boolean active;
+
+        BehaviorState(boolean active)
+        {
+            this.active = active;
+        }
+
+        public void setActive(boolean active)
+        {
+            if (this != Normal)
+            {
+                this.active = active;
+            }
+        }
+
+        public boolean isActive()
+        {
+            return this.active;
+        }
+    }
 
     public BehaviorInfo(boolean addedByInheritance)
     {

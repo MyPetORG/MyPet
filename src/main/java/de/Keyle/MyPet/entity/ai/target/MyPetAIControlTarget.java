@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.movement.MyPetAIControl;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import de.Keyle.MyPet.skill.skills.implementation.Behavior.BehaviorState;
+import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPvP;
 import net.minecraft.server.v1_6_R1.EntityLiving;
 import net.minecraft.server.v1_6_R1.EntityPlayer;
