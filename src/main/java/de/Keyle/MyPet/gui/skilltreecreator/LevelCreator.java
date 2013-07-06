@@ -502,12 +502,8 @@ public class LevelCreator
         this.inheritanceComboBoxModel.removeAllElements();
 
         inheritanceCheckBox.setSelected(false);
-        if (skillTreeMobType.getSkillTreeNames().size() == 1 && MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() == 0)
-        {
-            inheritanceCheckBox.setEnabled(false);
-            inheritanceComboBox.setEnabled(false);
-        }
-        else
+        inheritanceCheckBox.setEnabled(false);
+        if (skillTreeMobType.getSkillTreeNames().size() > 1 || (!skillTreeMobType.getMobTypeName().equals("default") && MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() > 0))
         {
             inheritanceCheckBox.setEnabled(true);
             ArrayList<String> skilltreeNames = new ArrayList<String>();
