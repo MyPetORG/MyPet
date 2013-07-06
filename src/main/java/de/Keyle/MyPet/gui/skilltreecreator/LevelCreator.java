@@ -476,7 +476,7 @@ public class LevelCreator
     {
         this.skillTree = skillTree;
         this.skillTreeMobType = skillTreeMobType;
-
+        highestLevel = 0;
 
         if (skillTree.hasDisplayName())
         {
