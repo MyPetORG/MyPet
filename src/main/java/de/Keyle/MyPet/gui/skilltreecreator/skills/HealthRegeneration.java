@@ -58,7 +58,7 @@ public class HealthRegeneration implements SkillPropertiesPanel
     public void verifyInput()
     {
         timeInput.setText(timeInput.getText().replaceAll("[^0-9]*", ""));
-        if (timeInput.getText().length() > 0)
+        if (timeInput.getText().length() == 0)
         {
             timeInput.setText("0");
         }
