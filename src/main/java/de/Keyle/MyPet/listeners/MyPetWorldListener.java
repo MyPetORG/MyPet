@@ -41,6 +41,7 @@ public class MyPetWorldListener implements Listener
         if (defaultGroup == null)
         {
             defaultGroup = new MyPetWorldGroup("default");
+            defaultGroup.registerGroup();
         }
         if (defaultGroup.addWorld(event.getWorld().getName()))
         {
@@ -50,6 +51,10 @@ public class MyPetWorldListener implements Listener
             config.set("Groups.default", defaultGroup.getWorlds());
             yamlConfiguration.saveConfig();
             MyPetLogger.write("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
+        }
+        else
+        {
+            MyPetLogger.write("An error occured while adding " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group. Please restart the server.");
         }
     }
 }
