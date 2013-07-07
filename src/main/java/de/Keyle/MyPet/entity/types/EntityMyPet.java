@@ -34,7 +34,6 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -213,10 +212,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public boolean canEat(ItemStack itemstack)
     {
-        List<Material> foodList = MyPet.getFood(myPet.getClass());
-        for (Material foodItem : foodList)
+        List<Integer> foodList = MyPet.getFood(myPet.getClass());
+        for (int foodItem : foodList)
         {
-            if (itemstack.id == foodItem.getId())
+            if (itemstack.id == foodItem)
             {
                 return true;
             }
@@ -342,7 +341,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (myPet.getSkills().isSkillActive("Ride"))
                 {
-                    if (itemStack.id == Ride.ITEM.getId() && canMove())
+                    if (itemStack.id == Ride.RIDE_ITEM && canMove())
                     {
                         if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                         {
@@ -357,7 +356,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 }
                 if (myPet.getSkills().isSkillActive("Control"))
                 {
-                    if (itemStack.id == Control.ITEM.getId())
+                    if (itemStack.id == Control.CONTROL_ITEM)
                     {
                         return true;
                     }

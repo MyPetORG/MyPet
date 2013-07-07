@@ -29,11 +29,12 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R1.*;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 0.9F)
 public class EntityMyZombie extends EntityMyPet
 {
-    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     public EntityMyZombie(World world, MyPet myPet)
     {
@@ -234,7 +235,7 @@ public class EntityMyZombie extends EntityMyPet
                     }
                     return true;
                 }
-                else if (itemStack.id == GROW_UP_ITEM.getId())
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

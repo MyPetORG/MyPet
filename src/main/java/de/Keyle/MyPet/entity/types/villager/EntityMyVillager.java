@@ -31,7 +31,7 @@ import org.bukkit.Material;
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyVillager extends EntityMyPet
 {
-    public static Material GROW_UP_ITEM = Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     public EntityMyVillager(World world, MyPet myPet)
     {
@@ -101,7 +101,7 @@ public class EntityMyVillager extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (itemStack.id == GROW_UP_ITEM.getId())
+                if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

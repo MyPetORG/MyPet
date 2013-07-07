@@ -29,11 +29,12 @@ import net.minecraft.server.v1_6_R1.ItemStack;
 import net.minecraft.server.v1_6_R1.MathHelper;
 import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyWolf extends EntityMyPet
 {
-    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     protected boolean shaking;
     protected boolean isWet;
@@ -222,7 +223,7 @@ public class EntityMyWolf extends EntityMyPet
                         return true;
                     }
                 }
-                else if (itemStack.id == GROW_UP_ITEM.getId())
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

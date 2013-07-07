@@ -33,7 +33,7 @@ import org.bukkit.Material;
 public class EntityMyCow extends EntityMyPet
 {
     public static boolean CAN_GIVE_MILK = true;
-    public static Material GROW_UP_ITEM = Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     public EntityMyCow(World world, MyPet myPet)
     {
@@ -109,7 +109,7 @@ public class EntityMyCow extends EntityMyPet
             }
             else if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (itemStack.id == GROW_UP_ITEM.getId())
+                if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

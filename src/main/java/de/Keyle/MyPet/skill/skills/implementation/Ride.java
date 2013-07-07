@@ -29,7 +29,7 @@ import org.bukkit.Material;
 
 public class Ride extends RideInfo implements ISkillInstance
 {
-    public static Material ITEM = Material.LEASH;
+    public static int RIDE_ITEM = Material.LEASH.getId();
     private boolean active = false;
     private MyPet myPet;
 

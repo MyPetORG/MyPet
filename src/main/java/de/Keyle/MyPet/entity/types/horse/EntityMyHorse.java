@@ -26,11 +26,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R1.Block;
 import net.minecraft.server.v1_6_R1.StepSound;
 import net.minecraft.server.v1_6_R1.World;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyHorse extends EntityMyPet
 {
-    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     int bP = 0;
 

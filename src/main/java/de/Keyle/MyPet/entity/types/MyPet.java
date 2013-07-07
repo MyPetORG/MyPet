@@ -35,7 +35,6 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -50,7 +49,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 {
     private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<Class<? extends MyPet>, Double>();
     private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<Class<? extends MyPet>, Double>();
-    private static Map<Class<? extends MyPet>, List<Material>> food = new HashMap<Class<? extends MyPet>, List<Material>>();
+    private static Map<Class<? extends MyPet>, List<Integer>> food = new HashMap<Class<? extends MyPet>, List<Integer>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
@@ -584,9 +583,9 @@ public abstract class MyPet implements IMyPet, NBTStorage
         startSpeed.put(myPetClass, speed);
     }
 
-    public static List<Material> getFood(Class<? extends MyPet> myPetClass)
+    public static List<Integer> getFood(Class<? extends MyPet> myPetClass)
     {
-        List<Material> foodList = new ArrayList<Material>();
+        List<Integer> foodList = new ArrayList<Integer>();
         if (food.containsKey(myPetClass))
         {
             foodList.addAll(food.get(myPetClass));
@@ -594,11 +593,11 @@ public abstract class MyPet implements IMyPet, NBTStorage
         return foodList;
     }
 
-    public static void setFood(Class<? extends MyPet> myPetClass, Material foodToAdd)
+    public static void setFood(Class<? extends MyPet> myPetClass, int foodToAdd)
     {
         if (food.containsKey(myPetClass))
         {
-            List<Material> foodList = food.get(myPetClass);
+            List<Integer> foodList = food.get(myPetClass);
             if (!foodList.contains(foodToAdd))
             {
                 foodList.add(foodToAdd);
@@ -606,7 +605,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         }
         else
         {
-            List<Material> foodList = new ArrayList<Material>();
+            List<Integer> foodList = new ArrayList<Integer>();
             foodList.add(foodToAdd);
             food.put(myPetClass, foodList);
         }

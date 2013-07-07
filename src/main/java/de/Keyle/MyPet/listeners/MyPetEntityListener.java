@@ -112,7 +112,7 @@ public class MyPetEntityListener implements Listener
                 {
                     damager = (Player) event.getDamager();
                 }
-                if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM)
+                if (damager.getItemInHand().getTypeId() == MyPetConfiguration.LEASH_ITEM)
                 {
                     MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(damager);
 
@@ -236,7 +236,7 @@ public class MyPetEntityListener implements Listener
 
                     Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
 
-                    if (damager.getItemInHand().getType() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
+                    if (damager.getItemInHand().getTypeId() != MyPetConfiguration.LEASH_ITEM || !MyPetPermissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
                     {
                         return;
                     }
@@ -670,7 +670,7 @@ public class MyPetEntityListener implements Listener
             if (event.getDamager() instanceof Player)
             {
                 Player damager = (Player) event.getDamager();
-                if (damager.getItemInHand().getType() == MyPetConfiguration.LEASH_ITEM && damagedEntity instanceof CraftMyPet)
+                if (damager.getItemInHand().getTypeId() == MyPetConfiguration.LEASH_ITEM && damagedEntity instanceof CraftMyPet)
                 {
                     return;
                 }

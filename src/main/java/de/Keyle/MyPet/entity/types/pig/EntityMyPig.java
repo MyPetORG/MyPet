@@ -24,11 +24,12 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R1.*;
+import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet
 {
-    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     public EntityMyPig(World world, MyPet myPet)
     {
@@ -140,7 +141,7 @@ public class EntityMyPig extends EntityMyPet
                     }
                     itemStack.damage(1, entityhuman);
                 }
-                else if (itemStack.id == GROW_UP_ITEM.getId())
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

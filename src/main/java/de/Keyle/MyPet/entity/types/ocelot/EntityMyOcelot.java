@@ -27,12 +27,13 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R1.EntityHuman;
 import net.minecraft.server.v1_6_R1.ItemStack;
 import net.minecraft.server.v1_6_R1.World;
+import org.bukkit.Material;
 import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet
 {
-    public static org.bukkit.Material GROW_UP_ITEM = org.bukkit.Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     private MyPetAISit sitPathfinder;
 
@@ -176,7 +177,7 @@ public class EntityMyOcelot extends EntityMyPet
                             return true;
                         }
                     }
-                    else if (itemStack.id == GROW_UP_ITEM.getId())
+                    else if (itemStack.id == GROW_UP_ITEM)
                     {
                         if (isBaby())
                         {

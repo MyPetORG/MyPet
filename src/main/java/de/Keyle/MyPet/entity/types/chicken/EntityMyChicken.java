@@ -33,7 +33,7 @@ import org.bukkit.Material;
 public class EntityMyChicken extends EntityMyPet
 {
     public static boolean CAN_LAY_EGGS = true;
-    public static Material GROW_UP_ITEM = Material.POTION;
+    public static int GROW_UP_ITEM = Material.POTION.getId();
 
     private int nextEggTimer;
 
@@ -93,7 +93,7 @@ public class EntityMyChicken extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (itemStack.id == GROW_UP_ITEM.getId())
+                if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

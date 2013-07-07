@@ -66,6 +66,15 @@ public class MyPetBukkitUtil
         return Material.getMaterial(itemid) != null;
     }
 
+    public static String getMaterialName(int itemId)
+    {
+        if (isValidMaterial(itemId))
+        {
+            return Material.getMaterial(itemId).name();
+        }
+        return String.valueOf(itemId);
+    }
+
     public static void sendMessage(Player player, String Message)
     {
         if (player != null && player.isOnline())
