@@ -149,6 +149,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                         infoShown = true;
                     }
                 }
+                if (myPet.getOwner().isDonator())
+                {
+                    infoShown = true;
+                    player.sendMessage(ChatColor.GOLD + "   ❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤");
+                }
                 if (!infoShown)
                 {
                     sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantViewPetInfo", player)));

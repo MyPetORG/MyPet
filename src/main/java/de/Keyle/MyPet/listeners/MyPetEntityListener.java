@@ -183,6 +183,12 @@ public class MyPetEntityListener implements Listener
                             infoShown = true;
                         }
                     }
+
+                    if (myPet.getOwner().isDonator())
+                    {
+                        infoShown = true;
+                        damager.sendMessage(ChatColor.GOLD + "   ❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤");
+                    }
                     if (!infoShown)
                     {
                         damager.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NothingToSeeHere", myPet.getOwner().getLanguage())));
