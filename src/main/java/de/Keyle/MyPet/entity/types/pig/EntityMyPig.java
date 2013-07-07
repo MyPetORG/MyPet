@@ -70,7 +70,6 @@ public class EntityMyPig extends EntityMyPet
         return ((MyPig) myPet).isBaby;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)

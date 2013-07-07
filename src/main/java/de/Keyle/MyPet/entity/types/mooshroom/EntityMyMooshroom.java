@@ -53,7 +53,6 @@ public class EntityMyMooshroom extends EntityMyPet
         return ((MyMooshroom) myPet).isBaby;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)

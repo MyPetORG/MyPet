@@ -40,21 +40,18 @@ public class EntityMyHorse extends EntityMyPet
         super(world, myPet);
     }
 
-    @SuppressWarnings("boxing")
     public void setHorseType(byte horseType)
     {
         this.datawatcher.watch(19, Byte.valueOf(horseType));
         ((MyHorse) myPet).horseType = horseType;
     }
 
-    @SuppressWarnings("boxing")
     public void setVariant(int variant)
     {
         this.datawatcher.watch(20, Integer.valueOf(variant));
         ((MyHorse) myPet).variant = variant;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)

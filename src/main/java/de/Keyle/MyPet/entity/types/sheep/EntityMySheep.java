@@ -99,7 +99,6 @@ public class EntityMySheep extends EntityMyPet
         return this.datawatcher.getInt(12) < 0;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)

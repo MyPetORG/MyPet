@@ -107,7 +107,6 @@ public class EntityMyOcelot extends EntityMyPet
         return ((MyOcelot) myPet).isBaby;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)

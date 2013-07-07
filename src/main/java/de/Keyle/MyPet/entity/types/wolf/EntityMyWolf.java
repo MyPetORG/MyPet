@@ -146,7 +146,6 @@ public class EntityMyWolf extends EntityMyPet
         return ((MyWolf) myPet).isBaby;
     }
 
-    @SuppressWarnings("boxing")
     public void setBaby(boolean flag)
     {
         if (flag)
@@ -178,7 +177,6 @@ public class EntityMyWolf extends EntityMyPet
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    @SuppressWarnings("boxing")
     protected void a()
     {
         super.a();
