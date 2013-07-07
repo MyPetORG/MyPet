@@ -39,6 +39,8 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.Configuration.WorldConfig;
+import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import net.citizensnpcs.api.CitizensAPI;
@@ -435,49 +437,41 @@ public class MyPetPvP
         }
         if (USE_GriefPrevention && pluginGriefPrevention != null)
         {
-            if (pluginGriefPrevention.config_pvp_enabledWorlds.contains(attacker.getWorld()))
-            {
-                PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
-                PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
+            PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
+            PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
 
-                if (defenderData.pvpImmune || attackerData.pvpImmune)
-                {
-                    return false;
-                }
-
-                if (pluginGriefPrevention.config_pvp_noCombatInPlayerLandClaims || pluginGriefPrevention.config_pvp_noCombatInAdminLandClaims)
-                {
-                    Claim attackerClaim = pluginGriefPrevention.dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
-                    if (attackerClaim != null)
-                    {
-                        if (attackerClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims)
-                        {
-                            return false;
-                        }
-                        if (!attackerClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims)
-                        {
-                            return false;
-                        }
-                    }
-
-                    Claim defenderClaim = pluginGriefPrevention.dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
-                    if (defenderClaim != null)
-                    {
-                        if (defenderClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims)
-                        {
-                            return false;
-                        }
-                        if (!defenderClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims)
-                        {
-                            return false;
-                        }
-                    }
-
-                }
-            }
-            else
+            if (defenderData.pvpImmune || attackerData.pvpImmune)
             {
                 return false;
+            }
+
+            if (pluginGriefPrevention.getDescription().getVersion().equals("7.8"))
+            {
+                WorldConfig worldConfig = pluginGriefPrevention.getWorldCfg(defender.getWorld());
+                DataStore dataStore = pluginGriefPrevention.dataStore;
+
+                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims())
+                {
+                    Claim localClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
+                    if (localClaim != null)
+                    {
+                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims()))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims())
+                {
+                    Claim localClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
+                    if (localClaim != null)
+                    {
+                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims()))
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
         }
         return true;
