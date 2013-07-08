@@ -56,7 +56,6 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.MyPetMonsterExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.MyPetSkills;
 import de.Keyle.MyPet.skill.MyPetSkillsInfo;
@@ -139,11 +138,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetConfiguration.config = this.getConfig();
         MyPetConfiguration.setDefault();
         MyPetConfiguration.loadConfiguration();
-
-        DebugLogger.setup(MyPetConfiguration.USE_DEBUG_LOGGER);
+        DebugLogger.setup();
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
-
         if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion))
         {
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
@@ -160,23 +157,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.info("Bukkit " + getServer().getVersion());
 
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
-
-        List<String> nodeList = new ArrayList<String>();
-        String allNodes = "";
-        MyPetConfiguration.getConfigOptionList(nodeList, "MyPet");
-        for (String node : nodeList)
-        {
-            allNodes += "\n   " + node;
-        }
-        DebugLogger.info("Config: -------------------------------" + allNodes);
-        DebugLogger.info("---------------------------------------");
-
-        DebugLogger.info("MobEXP table: -------------------------");
-        for (MyPetMonsterExperience monsterExperience : MyPetMonsterExperience.mobExp.values())
-        {
-            DebugLogger.info("   " + monsterExperience.toString());
-        }
-        DebugLogger.info("MobEXP table end ----------------------");
 
         MyPetPlayerListener playerListener = new MyPetPlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);

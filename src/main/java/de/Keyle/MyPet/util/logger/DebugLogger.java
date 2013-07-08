@@ -34,39 +34,49 @@ public class DebugLogger
     private static final Logger debugLogger = Logger.getLogger("MyPet");
     private static boolean isEnabled = false;
 
-    public static boolean setup(boolean enabled)
+    public static boolean setup()
     {
-        if (enabled)
+        if (debugLogger.getHandlers().length > 0)
         {
-            try
+            for (Handler h : debugLogger.getHandlers())
             {
-                String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                path = path.replace("/", File.separator);
-                path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
-                File pluginDirFile = new File(path);
-                Handler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log");
-                debugLogger.setUseParentHandlers(false);
-                fileHandler.setFormatter(new LogFormat());
-                debugLogger.addHandler(fileHandler);
-                isEnabled = true;
-                return true;
-            }
-            catch (IOException e)
-            {
-                isEnabled = false;
-                e.printStackTrace();
-                return false;
-            }
-            catch (URISyntaxException e)
-            {
-                isEnabled = false;
-                e.printStackTrace();
-                return false;
+                if (h.toString().equals("MyPet-Debug-Logger-FileHandler"))
+                {
+                    isEnabled = true;
+                    return true;
+                }
             }
         }
-        else
+        try
+        {
+            String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            path = path.replace("/", File.separator);
+            path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
+            File pluginDirFile = new File(path);
+            FileHandler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log", true)
+            {
+                @Override
+                public String toString()
+                {
+                    return "MyPet-Debug-Logger-FileHandler";
+                }
+            };
+            debugLogger.setUseParentHandlers(false);
+            fileHandler.setFormatter(new LogFormat());
+            debugLogger.addHandler(fileHandler);
+            isEnabled = true;
+            return true;
+        }
+        catch (IOException e)
         {
             isEnabled = false;
+            e.printStackTrace();
+            return false;
+        }
+        catch (URISyntaxException e)
+        {
+            isEnabled = false;
+            e.printStackTrace();
             return false;
         }
     }

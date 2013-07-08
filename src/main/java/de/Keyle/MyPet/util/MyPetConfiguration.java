@@ -80,7 +80,6 @@ public class MyPetConfiguration
     public static boolean DISABLE_PET_VS_PLAYER = false;
     public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
-    public static boolean USE_DEBUG_LOGGER = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
@@ -97,7 +96,6 @@ public class MyPetConfiguration
         config.addDefault("MyPet.OwnerCanAttackPet", false);
         config.addDefault("MyPet.DisablePetVersusPlayer", false);
         config.addDefault("MyPet.CheckForUpdates", false);
-        config.addDefault("MyPet.DebugLogger", true);
         config.addDefault("MyPet.DonatorEffect", true);
         config.addDefault("MyPet.EnableEvents", false);
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
@@ -272,7 +270,6 @@ public class MyPetConfiguration
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
-        USE_DEBUG_LOGGER = config.getBoolean("MyPet.DebugLogger", true);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         DONATOR_EFFECT = config.getBoolean("MyPet.DonatorEffect", true);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
