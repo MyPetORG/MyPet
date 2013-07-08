@@ -30,6 +30,7 @@ import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R1.EntityPlayer;
+import net.minecraft.server.v1_6_R1.Packet62NamedSoundEffect;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -132,6 +133,8 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
     public void openInventory(Player p)
     {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
+        Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect("mob.horse.leather", p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 1.0F, 1.0F);
+        eh.playerConnection.sendPacket(packet);
         eh.openContainer(inv);
     }
 
