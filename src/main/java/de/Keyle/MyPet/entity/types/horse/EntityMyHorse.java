@@ -28,7 +28,7 @@ import net.minecraft.server.v1_6_R1.StepSound;
 import net.minecraft.server.v1_6_R1.World;
 import org.bukkit.Material;
 
-@EntitySize(width = 0.3F, height = 0.7F)
+@EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();
