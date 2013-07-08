@@ -312,7 +312,7 @@
                 <version>1.8.1</version>
                 <executions>
                     <execution>
-                        <phase>generate-resources</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <connectionUrl>scm:git:https://github.com/xXKeyleXx/MyPet-Translations.git</connectionUrl>
                             <checkoutDirectory>target/classes/locale</checkoutDirectory>
