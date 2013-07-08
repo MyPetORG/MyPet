@@ -31,7 +31,8 @@ public class EntityMyHorse extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.BREAD.getId();
 
-    int bP = 0;
+    int soundCounter = 0;
+    int rearCounter = -1;
 
     public EntityMyHorse(World world, MyPet myPet)
     {
@@ -54,7 +55,7 @@ public class EntityMyHorse extends EntityMyPet
 
     public void setChest(boolean flag)
     {
-        applySaddleChest();
+        applyVisual(8, flag);
         ((MyHorse) myPet).chest = flag;
     }
 
@@ -65,7 +66,7 @@ public class EntityMyHorse extends EntityMyPet
 
     public void setSaddle(boolean flag)
     {
-        applySaddleChest();
+        applyVisual(4, flag);
         ((MyHorse) myPet).saddle = flag;
     }
 
@@ -74,24 +75,15 @@ public class EntityMyHorse extends EntityMyPet
         return ((MyHorse) myPet).saddle;
     }
 
-    private void applySaddleChest()
-    {
-        int saddleChest = 0;
-        if (hasChest())
-        {
-            saddleChest += 8;
-        }
-        if (hasSaddle())
-        {
-            saddleChest += 4;
-        }
-        this.datawatcher.watch(16, Integer.valueOf(saddleChest));
-    }
-
     public void setHorseType(byte horseType)
     {
         this.datawatcher.watch(19, Byte.valueOf(horseType));
         ((MyHorse) myPet).horseType = horseType;
+    }
+
+    public byte getHorseType()
+    {
+        return ((MyHorse) myPet).horseType;
     }
 
     public void setArmor(int value)
@@ -135,7 +127,6 @@ public class EntityMyHorse extends EntityMyPet
         return ((MyHorse) myPet).age < 0;
     }
 
-
     public void setAge(int value)
     {
         value = Math.min(0, (Math.max(-24000, value)));
@@ -147,6 +138,55 @@ public class EntityMyHorse extends EntityMyPet
     public int getAge()
     {
         return ((MyHorse) myPet).age;
+    }
+
+    public boolean attack(Entity entity)
+    {
+        boolean flag = false;
+        try
+        {
+            flag = super.attack(entity);
+            if (flag)
+            {
+                applyVisual(64, true);
+                rearCounter = 10;
+                if (getHorseType() == 0)
+                {
+                    this.world.makeSound(this, "mob.horse.angry", 1.0F, 1.0F);
+                }
+                else if (getHorseType() == 2 || getHorseType() == 1)
+                {
+                    this.world.makeSound(this, "mob.horse.donkey.angry", 1.0F, 1.0F);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /*
+     * Possible visual horse effects:
+     *   4 saddle
+     *   8 chest
+     *   32 head down
+     *   64 rear
+     *   128 mouth open
+     *
+     */
+    private void applyVisual(int value, boolean flag)
+    {
+        int i = this.datawatcher.getInt(16);
+        if (flag)
+        {
+            this.datawatcher.watch(16, Integer.valueOf(i | value));
+        }
+        else
+        {
+            this.datawatcher.watch(16, Integer.valueOf(i & (~value)));
+        }
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -288,8 +328,8 @@ public class EntityMyHorse extends EntityMyPet
             int horseType = ((MyHorse) myPet).horseType;
             if ((this.passenger != null) && (horseType != 1) && (horseType != 2))
             {
-                this.bP += 1;
-                if ((this.bP > 5) && (this.bP % 3 == 0))
+                this.soundCounter += 1;
+                if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0))
                 {
                     makeSound("mob.horse.gallop", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
                     if ((horseType == 0) && (this.random.nextInt(10) == 0))
@@ -297,7 +337,7 @@ public class EntityMyHorse extends EntityMyPet
                         makeSound("mob.horse.breathe", localStepSound.getVolume1() * 0.6F, localStepSound.getVolume2());
                     }
                 }
-                else if (this.bP <= 5)
+                else if (this.soundCounter <= 5)
                 {
                     makeSound("mob.horse.wood", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
                 }
@@ -355,6 +395,15 @@ public class EntityMyHorse extends EntityMyPet
             return "mob.horse.donkey.death";
         }
         return "mob.horse.death";
+    }
+
+    public void c()
+    {
+        super.c();
+        if (rearCounter > -1 && rearCounter-- == 0)
+        {
+            applyVisual(64, false);
+        }
     }
 
     /**
