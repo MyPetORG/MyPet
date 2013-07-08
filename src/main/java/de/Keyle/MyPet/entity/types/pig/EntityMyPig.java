@@ -111,7 +111,7 @@ public class EntityMyPig extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
-                if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle())
+                if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
                 {
                     if (!entityhuman.abilities.canInstantlyBuild)
                     {
@@ -124,7 +124,7 @@ public class EntityMyPig extends EntityMyPet
                     ((MyPig) myPet).setSaddle(true);
                     return true;
                 }
-                else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle())
+                else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
                 {
                     ((MyPig) myPet).setSaddle(false);
                     if (!entityhuman.abilities.canInstantlyBuild)
@@ -137,7 +137,7 @@ public class EntityMyPig extends EntityMyPet
                     makeSound("mob.sheep.shear", 1.0F, 1.0F);
                     itemStack.damage(1, entityhuman);
                 }
-                else if (itemStack.id == GROW_UP_ITEM)
+                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
                 {
                     if (isBaby())
                     {

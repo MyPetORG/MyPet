@@ -173,7 +173,7 @@ public class EntityMyZombie extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null)
             {
-                if (itemStack.id == Item.SHEARS.id)
+                if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
                 {
                     if (!canEquip())
                     {
@@ -221,7 +221,7 @@ public class EntityMyZombie extends EntityMyPet
                     }
                     return true;
                 }
-                else if (itemStack.id == GROW_UP_ITEM)
+                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
                 {
                     if (isBaby())
                     {

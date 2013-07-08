@@ -100,7 +100,7 @@ public class EntityMyVillager extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
-                if (itemStack.id == GROW_UP_ITEM)
+                if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
                 {
                     if (isBaby())
                     {

@@ -104,7 +104,7 @@ public class EntityMyEnderman extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
-                if (itemStack.id == Item.SHEARS.id)
+                if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
                 {
                     if (getBlockID() != 0)
                     {
@@ -118,7 +118,7 @@ public class EntityMyEnderman extends EntityMyPet
                         return true;
                     }
                 }
-                else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256)
+                else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking())
                 {
                     setBlock(itemStack.id, itemStack.getData());
                     if (!entityhuman.abilities.canInstantlyBuild)

@@ -156,7 +156,7 @@ public class EntityMySkeleton extends EntityMyPet
 
             if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
-                if (itemStack.id == Item.SHEARS.id)
+                if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
                 {
                     if (!canEquip())
                     {

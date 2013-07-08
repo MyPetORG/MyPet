@@ -151,7 +151,7 @@ public class EntityMyOcelot extends EntityMyPet
 
             if (getOwner().equals(entityhuman))
             {
-                if (itemStack != null && canUseItem())
+                if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking())
                 {
                     if (itemStack.id == 351)
                     {
@@ -176,7 +176,7 @@ public class EntityMyOcelot extends EntityMyPet
                             return true;
                         }
                     }
-                    else if (itemStack.id == GROW_UP_ITEM)
+                    else if (itemStack.id == GROW_UP_ITEM && canUseItem() && getOwner().getPlayer().isSneaking())
                     {
                         if (isBaby())
                         {

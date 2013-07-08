@@ -208,7 +208,7 @@ public class EntityMyWolf extends EntityMyPet
             {
                 if (itemStack != null && canUseItem())
                 {
-                    if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
+                    if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking())
                     {
                         if (itemStack.getData() <= 15)
                         {
@@ -223,7 +223,7 @@ public class EntityMyWolf extends EntityMyPet
                             return true;
                         }
                     }
-                    else if (itemStack.id == GROW_UP_ITEM)
+                    else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
                     {
                         if (isBaby())
                         {

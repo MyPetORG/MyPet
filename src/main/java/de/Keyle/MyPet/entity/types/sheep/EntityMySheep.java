@@ -175,7 +175,7 @@ public class EntityMySheep extends EntityMyPet
                     itemStack.damage(1, entityhuman);
                     return true;
                 }
-                else if (itemStack.id == GROW_UP_ITEM)
+                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
                 {
                     if (isBaby())
                     {
