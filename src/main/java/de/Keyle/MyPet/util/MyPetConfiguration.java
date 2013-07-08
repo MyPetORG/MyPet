@@ -183,7 +183,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
-        config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
@@ -332,7 +332,7 @@ public class MyPetConfiguration
         EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
         EntityMyChicken.GROW_UP_ITEM = config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         EntityMyCow.GROW_UP_ITEM = config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
-        EntityMyHorse.GROW_UP_ITEM = config.getInt("MyPet.Pets.Horse.GrowUpItem", Material.POTION.getId());
+        EntityMyHorse.GROW_UP_ITEM = config.getInt("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
         EntityMyMooshroom.GROW_UP_ITEM = config.getInt("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
         EntityMyOcelot.GROW_UP_ITEM = config.getInt("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
         EntityMyPig.GROW_UP_ITEM = config.getInt("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
