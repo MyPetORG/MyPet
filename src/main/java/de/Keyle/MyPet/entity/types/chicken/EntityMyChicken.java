@@ -150,7 +150,7 @@ public class EntityMyChicken extends EntityMyPet
                 this.motY *= 0.6D;
             }
 
-            if (CAN_LAY_EGGS && !world.isStatic && --nextEggTimer <= 0)
+            if (CAN_LAY_EGGS && !world.isStatic && canUseItem() && --nextEggTimer <= 0)
             {
                 world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
                 b(Item.EGG.id, 1);

@@ -93,7 +93,7 @@ public class EntityMyCow extends EntityMyPet
 
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
                 if (itemStack.id == Item.BUCKET.id)
                 {
@@ -105,10 +105,7 @@ public class EntityMyCow extends EntityMyPet
                         return true;
                     }
                 }
-            }
-            else if (getOwner().equals(entityhuman) && itemStack != null)
-            {
-                if (itemStack.id == GROW_UP_ITEM)
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {

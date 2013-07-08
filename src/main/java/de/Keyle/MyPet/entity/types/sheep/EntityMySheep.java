@@ -138,7 +138,7 @@ public class EntityMySheep extends EntityMyPet
 
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
                 if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData())
                 {
@@ -155,7 +155,7 @@ public class EntityMySheep extends EntityMyPet
                         return true;
                     }
                 }
-                else if (CAN_BE_SHEARED && itemStack.id == Item.SHEARS.id && !((MySheep) myPet).isSheared())
+                else if (itemStack.id == Item.SHEARS.id && CAN_BE_SHEARED && !((MySheep) myPet).isSheared())
                 {
                     if (!this.world.isStatic)
                     {
@@ -175,22 +175,19 @@ public class EntityMySheep extends EntityMyPet
                     itemStack.damage(1, entityhuman);
                     return true;
                 }
-                else if (getOwner().equals(entityhuman))
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
-                    if (itemStack.id == GROW_UP_ITEM)
+                    if (isBaby())
                     {
-                        if (isBaby())
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            if (!entityhuman.abilities.canInstantlyBuild)
+                            if (--itemStack.count <= 0)
                             {
-                                if (--itemStack.count <= 0)
-                                {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                                }
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
-                            this.setBaby(false);
-                            return true;
                         }
+                        this.setBaby(false);
+                        return true;
                     }
                 }
             }

@@ -26,8 +26,6 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R1.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
@@ -156,17 +154,11 @@ public class EntityMySkeleton extends EntityMyPet
 
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
                 if (itemStack.id == Item.SHEARS.id)
                 {
-                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") ||
-                            MobArena.isInMobArena(myPet.getOwner()) ||
-                            Minigames.isInMinigame(myPet.getOwner()) ||
-                            BattleArena.isInBattleArena(myPet.getOwner()) ||
-                            PvPArena.isInPvPArena(myPet.getOwner()) ||
-                            MyHungerGames.isInHungerGames(myPet.getOwner()) ||
-                            SurvivalGames.isInSurvivalGames(myPet.getOwner()))
+                    if (!canEquip())
                     {
                         return false;
                     }
@@ -186,13 +178,7 @@ public class EntityMySkeleton extends EntityMyPet
                 }
                 else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
                 {
-                    if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Equip") ||
-                            MobArena.isInMobArena(myPet.getOwner()) ||
-                            Minigames.isInMinigame(myPet.getOwner()) ||
-                            BattleArena.isInBattleArena(myPet.getOwner()) ||
-                            PvPArena.isInPvPArena(myPet.getOwner()) ||
-                            MyHungerGames.isInHungerGames(myPet.getOwner()) ||
-                            SurvivalGames.isInSurvivalGames(myPet.getOwner()))
+                    if (!canEquip())
                     {
                         return false;
                     }

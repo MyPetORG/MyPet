@@ -31,7 +31,6 @@ import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R1.Packet22Collect;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
@@ -124,13 +123,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
 
     public void schedule()
     {
-        if (pickup && (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") ||
-                MobArena.isInMobArena(myPet.getOwner()) ||
-                Minigames.isInMinigame(myPet.getOwner()) ||
-                BattleArena.isInBattleArena(myPet.getOwner()) ||
-                PvPArena.isInPvPArena(myPet.getOwner())) ||
-                MyHungerGames.isInHungerGames(myPet.getOwner()) ||
-                SurvivalGames.isInSurvivalGames(myPet.getOwner()))
+        if (pickup && (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || myPet.getOwner().isInExternalGames()))
         {
             pickup = false;
             myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Pickup.Stop", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));

@@ -29,7 +29,6 @@ import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R1.EntityPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
@@ -106,12 +105,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Creative", myPet.getOwner())));
                 return false;
             }
-            if (MobArena.isInMobArena(myPet.getOwner()) ||
-                    Minigames.isInMinigame(myPet.getOwner()) ||
-                    BattleArena.isInBattleArena(myPet.getOwner()) ||
-                    PvPArena.isInPvPArena(myPet.getOwner()) ||
-                    MyHungerGames.isInHungerGames(myPet.getOwner()) ||
-                    SurvivalGames.isInSurvivalGames(myPet.getOwner()))
+            if (myPet.getOwner().isInExternalGames())
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
                 return false;

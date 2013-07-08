@@ -109,7 +109,7 @@ public class EntityMyPig extends EntityMyPet
 
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
             {
                 if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle())
                 {
@@ -126,18 +126,15 @@ public class EntityMyPig extends EntityMyPet
                 }
                 else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle())
                 {
-                    if (!this.world.isStatic)
+                    ((MyPig) myPet).setSaddle(false);
+                    if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        ((MyPig) myPet).setSaddle(false);
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
-                            entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                            entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                            entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        }
-                        makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                        EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     }
+                    makeSound("mob.sheep.shear", 1.0F, 1.0F);
                     itemStack.damage(1, entityhuman);
                 }
                 else if (itemStack.id == GROW_UP_ITEM)

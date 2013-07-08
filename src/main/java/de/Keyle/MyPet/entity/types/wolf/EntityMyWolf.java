@@ -204,41 +204,41 @@ public class EntityMyWolf extends EntityMyPet
             }
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (itemStack != null)
+            if (getOwner().equals(entityhuman))
             {
-                if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
+                if (itemStack != null && canUseItem())
                 {
-                    if (itemStack.getData() <= 15)
+                    if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData())
                     {
-                        setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                        if (!entityhuman.abilities.canInstantlyBuild)
+                        if (itemStack.getData() <= 15)
                         {
-                            if (--itemStack.count <= 0)
+                            setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                            if (!entityhuman.abilities.canInstantlyBuild)
                             {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                if (--itemStack.count <= 0)
+                                {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
                             }
+                            return true;
                         }
-                        return true;
+                    }
+                    else if (itemStack.id == GROW_UP_ITEM)
+                    {
+                        if (isBaby())
+                        {
+                            if (!entityhuman.abilities.canInstantlyBuild)
+                            {
+                                if (--itemStack.count <= 0)
+                                {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
+                            }
+                            this.setBaby(false);
+                            return true;
+                        }
                     }
                 }
-                else if (itemStack.id == GROW_UP_ITEM)
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
-                        }
-                        this.setBaby(false);
-                        return true;
-                    }
-                }
-            }
-            if (this.myPet.getOwner().equals(entityhuman) && !this.world.isStatic)
-            {
                 this.sitPathfinder.toogleSitting();
                 return true;
             }

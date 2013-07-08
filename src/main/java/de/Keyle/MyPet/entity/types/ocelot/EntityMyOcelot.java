@@ -151,7 +151,7 @@ public class EntityMyOcelot extends EntityMyPet
 
             if (getOwner().equals(entityhuman))
             {
-                if (itemStack != null)
+                if (itemStack != null && canUseItem())
                 {
                     if (itemStack.id == 351)
                     {
