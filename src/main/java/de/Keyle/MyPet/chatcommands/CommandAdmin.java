@@ -140,6 +140,14 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         petTypeOptionList.add("villager");
         petTypeOptionMap.put("zombie", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("chest");
+        petTypeOptionList.add("saddle");
+        petTypeOptionList.add("horse:");
+        petTypeOptionList.add("variant:");
+        petTypeOptionMap.put("horse", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values())
         {
             petTypeList.add(petType.getTypeName());
@@ -519,12 +527,36 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                             {
                                 compoundTag.getValue().put("Villager", new ByteTag("Villager", true));
                             }
+                            else if (parameter[i].equalsIgnoreCase("chest"))
+                            {
+                                compoundTag.getValue().put("Chest", new ByteTag("Chest", true));
+                            }
                             else if (parameter[i].startsWith("size:"))
                             {
                                 String size = parameter[i].replace("size:", "");
                                 if (MyPetUtil.isInt(size))
                                 {
                                     compoundTag.getValue().put("Size", new IntTag("Size", Integer.parseInt(size)));
+                                }
+                            }
+                            else if (parameter[i].startsWith("horse:"))
+                            {
+                                String horseTypeString = parameter[i].replace("horse:", "");
+                                if (MyPetUtil.isByte(horseTypeString))
+                                {
+                                    int horseType = Integer.parseInt(horseTypeString);
+                                    horseType = Math.min(Math.max(0, horseType), 4);
+                                    compoundTag.getValue().put("Type", new ByteTag("Type", (byte) horseType));
+                                }
+                            }
+                            else if (parameter[i].startsWith("variant:"))
+                            {
+                                String variantString = parameter[i].replace("variant:", "");
+                                if (MyPetUtil.isInt(variantString))
+                                {
+                                    int variant = Integer.parseInt(variantString);
+                                    variant = Math.min(Math.max(0, variant), 1030);
+                                    compoundTag.getValue().put("Variant", new IntTag("Variant", variant));
                                 }
                             }
                             else if (parameter[i].startsWith("cat:"))
