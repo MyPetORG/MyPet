@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R1.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -222,6 +223,20 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     public boolean isOnline()
     {
         return getPlayer() != null && getPlayer().isOnline();
+    }
+
+    public boolean isInExternalGames()
+    {
+        if (MobArena.isInMobArena(this) ||
+                Minigames.isInMinigame(this) ||
+                BattleArena.isInBattleArena(this) ||
+                PvPArena.isInPvPArena(this) ||
+                MyHungerGames.isInHungerGames(this) ||
+                SurvivalGames.isInSurvivalGames(this))
+        {
+            return true;
+        }
+        return false;
     }
 
     public boolean isDonator()

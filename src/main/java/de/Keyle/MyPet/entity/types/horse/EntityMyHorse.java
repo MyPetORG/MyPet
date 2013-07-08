@@ -23,15 +23,13 @@ package de.Keyle.MyPet.entity.types.horse;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.Block;
-import net.minecraft.server.v1_6_R1.StepSound;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.Material;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static int GROW_UP_ITEM = Material.BREAD.getId();
 
     int bP = 0;
 
@@ -40,10 +38,71 @@ public class EntityMyHorse extends EntityMyPet
         super(world, myPet);
     }
 
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setAge(((MyHorse) myPet).getAge());
+            this.setHorseType(((MyHorse) myPet).getHorseType());
+            this.setVariant(((MyHorse) myPet).getVariant());
+            this.setSaddle(((MyHorse) myPet).hasSaddle());
+            this.setChest(((MyHorse) myPet).hasChest());
+        }
+    }
+
+    public void setChest(boolean flag)
+    {
+        applySaddleChest();
+        ((MyHorse) myPet).chest = flag;
+    }
+
+    public boolean hasChest()
+    {
+        return ((MyHorse) myPet).chest;
+    }
+
+    public void setSaddle(boolean flag)
+    {
+        applySaddleChest();
+        ((MyHorse) myPet).saddle = flag;
+    }
+
+    public boolean hasSaddle()
+    {
+        return ((MyHorse) myPet).saddle;
+    }
+
+    private void applySaddleChest()
+    {
+        int saddleChest = 0;
+        if (hasChest())
+        {
+            saddleChest += 8;
+        }
+        if (hasSaddle())
+        {
+            saddleChest += 4;
+        }
+        this.datawatcher.watch(16, Integer.valueOf(saddleChest));
+    }
+
     public void setHorseType(byte horseType)
     {
         this.datawatcher.watch(19, Byte.valueOf(horseType));
         ((MyHorse) myPet).horseType = horseType;
+    }
+
+    public void setArmor(int value)
+    {
+        this.datawatcher.watch(22, Integer.valueOf(value));
+        ((MyHorse) myPet).armor = value;
+    }
+
+    public int getArmor()
+    {
+        return ((MyHorse) myPet).armor;
     }
 
     public void setVariant(int variant)
@@ -52,17 +111,42 @@ public class EntityMyHorse extends EntityMyPet
         ((MyHorse) myPet).variant = variant;
     }
 
+    public int getVariant()
+    {
+        return ((MyHorse) myPet).variant;
+    }
+
     public void setBaby(boolean flag)
     {
         if (flag)
         {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Integer.valueOf(-24000));
+            ((MyHorse) myPet).age = -24000;
         }
         else
         {
             this.datawatcher.watch(12, new Integer(0));
+            ((MyHorse) myPet).age = 0;
         }
-        ((MyHorse) myPet).isBaby = flag;
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyHorse) myPet).age < 0;
+    }
+
+
+    public void setAge(int value)
+    {
+        value = Math.min(0, (Math.max(-24000, value)));
+        value = value - (value % 1000);
+        ((MyHorse) myPet).age = value;
+        this.datawatcher.watch(12, new Integer(value));
+    }
+
+    public int getAge()
+    {
+        return ((MyHorse) myPet).age;
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -70,12 +154,125 @@ public class EntityMyHorse extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(12, Integer.valueOf(0));    // Age
-        this.datawatcher.a(16, Integer.valueOf(0));    //
+        this.datawatcher.a(12, Integer.valueOf(0));     // Age
+        this.datawatcher.a(16, Integer.valueOf(0));     // Saddle & Chest
         this.datawatcher.a(19, Byte.valueOf((byte) 0)); // Horse type
-        this.datawatcher.a(20, Integer.valueOf(0));    // variant
-        this.datawatcher.a(21, String.valueOf(""));    //
-        this.datawatcher.a(22, Integer.valueOf(0));    //
+        this.datawatcher.a(20, Integer.valueOf(0));     // Variant
+        this.datawatcher.a(21, String.valueOf(""));     // N/A
+        this.datawatcher.a(22, Integer.valueOf(0));     // Armor
+    }
+
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
+    public boolean a(EntityHuman entityhuman)
+    {
+        try
+        {
+            if (super.a(entityhuman))
+            {
+                return true;
+            }
+            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+            if (itemStack != null)
+            {
+                if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip())
+                {
+                    setSaddle(true);
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    return true;
+                }
+                else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip())
+                {
+                    setChest(true);
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    return true;
+                }
+                else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip())
+                {
+                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
+                    {
+                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    }
+                    setArmor(itemStack.id - 416);
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    return true;
+                }
+                else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip())
+                {
+                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
+                    {
+                        setArmor(0);
+                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    }
+                    if (hasChest() && !entityhuman.abilities.canInstantlyBuild)
+                    {
+                        setChest(false);
+                        EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    }
+                    if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild)
+                    {
+                        setSaddle(false);
+                        EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    }
+                    return true;
+                }
+                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking() && canUseItem())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setAge(getAge() + 1000);
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

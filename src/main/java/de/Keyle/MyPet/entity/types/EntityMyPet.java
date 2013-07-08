@@ -223,6 +223,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return false;
     }
 
+    public boolean canEquip()
+    {
+        return MyPetPermissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
+    }
+
+    public boolean canUseItem()
+    {
+        return !getOwner().isInExternalGames();
+    }
+
     public boolean playIdleSound()
     {
         if (idleSoundTimer-- <= 0)

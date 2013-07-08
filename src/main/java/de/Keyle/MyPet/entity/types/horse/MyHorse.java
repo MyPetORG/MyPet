@@ -36,7 +36,10 @@ public class MyHorse extends MyPet
 {
     protected byte horseType = 0;
     protected int variant = 0;
-    public boolean isBaby = false;
+    protected int armor = 0;
+    public int age = 0;
+    protected boolean chest = false;
+    protected boolean saddle = false;
 
     public MyHorse(MyPetPlayer petOwner)
     {
@@ -50,6 +53,7 @@ public class MyHorse extends MyPet
 
     public void setHorseType(byte horseType)
     {
+        horseType = (byte) Math.min(Math.max(0, horseType), 4);
         this.horseType = horseType;
         if (status == PetState.Here)
         {
@@ -103,18 +107,79 @@ public class MyHorse extends MyPet
         }
     }
 
-    public boolean isBaby()
+    public int getArmor()
     {
-        return isBaby;
+        return armor;
+    }
+
+    public void setArmor(int value)
+    {
+        value = Math.min(Math.max(0, value), 3);
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setArmor(value);
+        }
+        this.armor = value;
+    }
+
+    public void setSaddle(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setSaddle(flag);
+        }
+        this.saddle = flag;
+    }
+
+    public boolean hasSaddle()
+    {
+        return saddle;
+    }
+
+    public void setChest(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setChest(flag);
+        }
+        this.chest = flag;
+    }
+
+    public boolean hasChest()
+    {
+        return chest;
+    }
+
+    public int getAge()
+    {
+        return age;
     }
 
     public void setBaby(boolean flag)
     {
-        this.isBaby = flag;
         if (status == PetState.Here)
         {
             ((EntityMyHorse) getCraftPet().getHandle()).setBaby(flag);
         }
+        if (flag)
+        {
+            this.age = -24000;
+        }
+        else
+        {
+            this.age = 0;
+        }
+    }
+
+    public void setAge(int value)
+    {
+        value = Math.min(0, (Math.max(-24000, value)));
+        value = value - (value % 1000);
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setAge(value);
+        }
+        this.age = value;
     }
 
     @Override
@@ -123,7 +188,10 @@ public class MyHorse extends MyPet
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Type", new ByteTag("Type", getHorseType()));
         info.getValue().put("Variant", new IntTag("Variant", getVariant()));
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+        info.getValue().put("Armor", new IntTag("Armor", getArmor()));
+        info.getValue().put("Age", new IntTag("Age", getAge()));
+        info.getValue().put("Chest", new ByteTag("Chest", hasChest()));
+        info.getValue().put("Saddle", new ByteTag("Saddle", hasSaddle()));
         return info;
     }
 
@@ -138,9 +206,21 @@ public class MyHorse extends MyPet
         {
             setVariant(((IntTag) info.getValue().get("Variant")).getValue());
         }
-        if (info.getValue().containsKey("Baby"))
+        if (info.getValue().containsKey("Armor"))
         {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+            setArmor(((IntTag) info.getValue().get("Armor")).getValue());
+        }
+        if (info.getValue().containsKey("Age"))
+        {
+            setAge(((IntTag) info.getValue().get("Age")).getValue());
+        }
+        if (info.getValue().containsKey("Chest"))
+        {
+            setChest(((ByteTag) info.getValue().get("Chest")).getBooleanValue());
+        }
+        if (info.getValue().containsKey("Saddle"))
+        {
+            setSaddle(((ByteTag) info.getValue().get("Saddle")).getBooleanValue());
         }
     }
 
