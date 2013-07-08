@@ -372,7 +372,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                 }
             }
-            if (canEat(itemStack))
+            if (canEat(itemStack) && canUseItem())
             {
                 if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
                 {
