@@ -55,6 +55,7 @@ public class EntityMyMagmaCube extends EntityMyPet
 
     public void setSize(int value)
     {
+        value = Math.max(1, value);
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMyMagmaCube.class.getAnnotation(EntitySize.class);
         if (es != null)

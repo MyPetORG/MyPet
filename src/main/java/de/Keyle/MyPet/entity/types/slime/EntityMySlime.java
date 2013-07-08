@@ -56,6 +56,7 @@ public class EntityMySlime extends EntityMyPet
 
     public void setSize(int value)
     {
+        value = Math.max(1, value);
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
         if (es != null)

@@ -48,6 +48,7 @@ public class MySlime extends MyPet implements IMyPetSlimeSize
 
     public void setSize(int value)
     {
+        value = Math.max(1, value);
         if (status == PetState.Here)
         {
             ((EntityMySlime) getCraftPet().getHandle()).setSize(value);

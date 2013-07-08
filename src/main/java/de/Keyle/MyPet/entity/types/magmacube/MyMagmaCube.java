@@ -48,6 +48,7 @@ public class MyMagmaCube extends MyPet implements IMyPetSlimeSize
 
     public void setSize(int value)
     {
+        value = Math.max(1, value);
         if (status == PetState.Here)
         {
             ((EntityMyMagmaCube) getCraftPet().getHandle()).setSize(value);
