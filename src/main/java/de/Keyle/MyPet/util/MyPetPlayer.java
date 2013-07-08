@@ -29,6 +29,7 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R1.EntityHuman;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.AnimalTamer;
@@ -45,11 +46,35 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private String lastLanguage = "en_US";
 
     private boolean donator = false;
+    private DonationRank rank = DonationRank.None;
+
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
     private Map<String, UUID> petWorlds = new HashMap<String, UUID>();
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
+
+    public enum DonationRank
+    {
+        None(""),
+        Creator(ChatColor.GOLD + "☣ " + ChatColor.UNDERLINE + "Creator of MyPet" + ChatColor.RESET + ChatColor.GOLD + " ☣" + ChatColor.RESET),
+        Donator(ChatColor.GOLD + "❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤" + ChatColor.RESET),
+        Translator(ChatColor.GOLD + "✈ " + ChatColor.UNDERLINE + "Translator" + ChatColor.RESET + ChatColor.GOLD + " ✈" + ChatColor.RESET),
+        Developer(ChatColor.GOLD + "✪ " + ChatColor.UNDERLINE + "Developer" + ChatColor.RESET + ChatColor.GOLD + " ✪" + ChatColor.RESET),
+        Helper(ChatColor.GOLD + "☘ " + ChatColor.UNDERLINE + "Helper" + ChatColor.RESET + ChatColor.GOLD + " ☘" + ChatColor.RESET);
+
+        String displayText;
+
+        DonationRank(String displayText)
+        {
+            this.displayText = displayText;
+        }
+
+        public String getDisplayText()
+        {
+            return displayText;
+        }
+    }
 
     private MyPetPlayer(String playerName)
     {
@@ -204,6 +229,11 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return donator;
     }
 
+    public DonationRank getDonationRank()
+    {
+        return rank;
+    }
+
     public void checkForDonation()
     {
         if (donator || !MyPetConfiguration.DONATOR_EFFECT)
@@ -216,14 +246,41 @@ public class MyPetPlayer implements IScheduler, NBTStorage
             {
                 try
                 {
-                    // Check whether this player has donated for the MyPet project
-                    // returns 1 for yes and 0 for no
-                    // no data will be saved
+                    // Check whether this player has donated or is a helper for the MyPet project
+                    // returns
+                    //   0 for nothing
+                    //   1 for donator
+                    //   2 for developer
+                    //   3 for translator
+                    //   4 for helper
+                    //   5 for creator
+                    // no data will be saved on the server
                     String donation = MyPetUtil.readUrlContent("http://donation.keyle.de/donated.php?userid=" + playerName);
                     if (donation.equals("1"))
                     {
                         donator = true;
+                        rank = DonationRank.Donator;
                         DebugLogger.info(playerName + " is a donator! Thanks " + playerName + " =)");
+                    }
+                    else if (donation.equals("2"))
+                    {
+                        donator = true;
+                        rank = DonationRank.Developer;
+                    }
+                    else if (donation.equals("3"))
+                    {
+                        donator = true;
+                        rank = DonationRank.Translator;
+                    }
+                    else if (donation.equals("4"))
+                    {
+                        donator = true;
+                        rank = DonationRank.Helper;
+                    }
+                    else if (donation.equals("5"))
+                    {
+                        donator = true;
+                        rank = DonationRank.Creator;
                     }
                 }
                 catch (Exception e)

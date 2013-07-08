@@ -187,7 +187,7 @@ public class MyPetEntityListener implements Listener
                     if (myPet.getOwner().isDonator())
                     {
                         infoShown = true;
-                        damager.sendMessage(ChatColor.GOLD + "   ❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤");
+                        damager.sendMessage("   " + myPetPlayer.getDonationRank().getDisplayText());
                     }
                     if (!infoShown)
                     {

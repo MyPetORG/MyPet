@@ -152,7 +152,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 if (myPet.getOwner().isDonator())
                 {
                     infoShown = true;
-                    player.sendMessage(ChatColor.GOLD + "   ❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤");
+                    player.sendMessage("   " + myPetPlayer.getDonationRank().getDisplayText());
                 }
                 if (!infoShown)
                 {
