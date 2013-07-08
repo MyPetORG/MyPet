@@ -57,7 +57,7 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
         {
             return false;
         }
-        if (this.petEntity.hasRider())
+        if (this.petEntity.passenger != null)
         {
             return false;
         }
@@ -73,6 +73,10 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
             return true;
         }
         if (this.petEntity.e(this.targetPlayer) > this.range * this.range)
+        {
+            return true;
+        }
+        if (this.petEntity.passenger != null)
         {
             return true;
         }

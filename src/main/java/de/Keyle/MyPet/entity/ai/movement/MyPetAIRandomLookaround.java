@@ -42,7 +42,7 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
         {
             return false;
         }
-        if (this.petEntity.hasRider())
+        if (this.petEntity.passenger != null)
         {
             return false;
         }
@@ -52,7 +52,7 @@ public class MyPetAIRandomLookaround extends MyPetAIGoal
     @Override
     public boolean shouldFinish()
     {
-        return this.ticksUntilStopLookingAround <= 0;
+        return this.ticksUntilStopLookingAround <= 0 || this.petEntity.passenger != null;
     }
 
     @Override

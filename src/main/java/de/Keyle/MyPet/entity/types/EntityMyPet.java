@@ -40,6 +40,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
@@ -54,6 +55,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public AbstractNavigation petNavigation;
 
     int donatorParticleCounter = 0;
+
+    private Field jump = null;
 
     public EntityMyPet(World world, MyPet myPet)
     {
@@ -75,6 +78,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             petNavigation = new VanillaNavigation(this);
 
             this.setPathfinder();
+
+            try
+            {
+                jump = EntityLiving.class.getDeclaredField("bd");
+                jump.setAccessible(true);
+            }
+            catch (NoSuchFieldException e)
+            {
+                e.printStackTrace();
+            }
         }
         catch (Exception e)
         {
@@ -103,7 +116,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void setPathfinder()
     {
         petPathfinderSelector.addGoal("Float", new MyPetAIFloat(this));
-        petPathfinderSelector.addGoal("Ride", new MyPetAIRide(this, (float) this.walkSpeed));
         petPathfinderSelector.addGoal("Sprint", new MyPetAISprint(this, 0.25F));
         petPathfinderSelector.addGoal("RangedTarget", new MyPetAIRangedAttack(this, -0.1F, 35, 12.0F));
         petPathfinderSelector.addGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 3, 20));
@@ -499,6 +511,61 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             getOwner().getPlayer().sendBlockChange(l1, block1.getType(), block1.getData());
 
             donatorParticleCounter = 90 + aB().nextInt(60);
+        }
+    }
+
+    public void e(float motionSideways, float motionForward)
+    {
+        if (this.passenger == null || !(this.passenger instanceof EntityPlayer))
+        {
+            super.e(motionSideways, motionForward);
+            return;
+        }
+        else
+        {
+            // just the owner can ride the pet
+            EntityPlayer passenger = (EntityPlayer) this.passenger;
+            if (!getOwner().equals(passenger))
+            {
+                super.e(motionSideways, motionForward);
+                return;
+            }
+        }
+
+        //apply pitch & yaw
+        this.lastYaw = (this.yaw = this.passenger.yaw);
+        this.pitch = this.passenger.pitch * 0.5F;
+        b(this.yaw, this.pitch);
+        this.aP = (this.aN = this.yaw);
+
+        // get motion from passenger (player)
+        motionSideways = ((EntityLiving) this.passenger).be * 0.5F;
+        motionForward = ((EntityLiving) this.passenger).bf;
+
+        // backwards is slower
+        if (motionForward <= 0.0F)
+        {
+            motionForward *= 0.25F;
+        }
+        // sideways is slower too
+        motionSideways *= 0.5F;
+
+        i(0.22222F); // set ride speed
+        super.e(motionSideways, motionForward); // apply motion
+
+        // jump when the player jumps
+        if (jump != null && onGround)
+        {
+            try
+            {
+                if (jump.getBoolean(this.passenger))
+                {
+                    this.motY = 0.525D;
+                }
+            }
+            catch (IllegalAccessException ignored)
+            {
+            }
         }
     }
 }
