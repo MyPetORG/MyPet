@@ -33,6 +33,8 @@ public class EntityMyHorse extends EntityMyPet
 
     int soundCounter = 0;
     int rearCounter = -1;
+    int ageCounter = -1;
+    int ageFailCounter = 1;
 
     public EntityMyHorse(World world, MyPet myPet)
     {
@@ -130,7 +132,7 @@ public class EntityMyHorse extends EntityMyPet
     public void setAge(int value)
     {
         value = Math.min(0, (Math.max(-24000, value)));
-        value = value - (value % 1000);
+        value -= value % 1000;
         ((MyHorse) myPet).age = value;
         this.datawatcher.watch(12, new Integer(value));
     }
@@ -218,7 +220,7 @@ public class EntityMyHorse extends EntityMyPet
             }
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (itemStack != null)
+            if (itemStack != null && canUseItem())
             {
                 if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip())
                 {
@@ -291,20 +293,33 @@ public class EntityMyHorse extends EntityMyPet
                     }
                     return true;
                 }
-                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking() && canUseItem())
+                else if (itemStack.id == GROW_UP_ITEM)
                 {
                     if (isBaby())
                     {
-                        if (!entityhuman.abilities.canInstantlyBuild)
+                        if (getOwner().getPlayer().isSneaking())
                         {
-                            if (--itemStack.count <= 0)
+                            if (!entityhuman.abilities.canInstantlyBuild)
                             {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                if (--itemStack.count <= 0)
+                                {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
                             }
+                            this.setAge(getAge() + 3000);
+                            return true;
                         }
-                        this.setAge(getAge() + 1000);
-                        return true;
                     }
+                }
+                if (itemStack.id == Material.BREAD.getId() ||
+                        itemStack.id == Material.WHEAT.getId() ||
+                        itemStack.id == Material.GOLDEN_APPLE.getId() ||
+                        itemStack.id == Material.HAY_BLOCK.getId() ||
+                        itemStack.id == Material.GOLDEN_CARROT.getId() ||
+                        itemStack.id == Material.APPLE.getId() ||
+                        itemStack.id == Material.SUGAR.getId())
+                {
+                    ageCounter = 5;
                 }
             }
         }
@@ -403,6 +418,13 @@ public class EntityMyHorse extends EntityMyPet
         if (rearCounter > -1 && rearCounter-- == 0)
         {
             applyVisual(64, false);
+            rearCounter = -1;
+        }
+        if (ageCounter > -1 && ageCounter-- == 0)
+        {
+            this.datawatcher.watch(12, new Integer(getAge() + ageFailCounter++));
+            ageCounter = -1;
+            ageFailCounter %= 1000;
         }
     }
 
