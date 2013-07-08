@@ -71,7 +71,7 @@ public class EntityMyMooshroom extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(12, new Integer(0));
+        this.datawatcher.a(12, new Integer(0)); // age
     }
 
     public boolean a(EntityHuman entityhuman)

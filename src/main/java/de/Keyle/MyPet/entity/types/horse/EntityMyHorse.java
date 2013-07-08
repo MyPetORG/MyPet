@@ -154,12 +154,12 @@ public class EntityMyHorse extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(12, Integer.valueOf(0));     // Age
-        this.datawatcher.a(16, Integer.valueOf(0));     // Saddle & Chest
-        this.datawatcher.a(19, Byte.valueOf((byte) 0)); // Horse type
-        this.datawatcher.a(20, Integer.valueOf(0));     // Variant
+        this.datawatcher.a(12, Integer.valueOf(0));     // age
+        this.datawatcher.a(16, Integer.valueOf(0));     // saddle & chest
+        this.datawatcher.a(19, Byte.valueOf((byte) 0)); // horse type
+        this.datawatcher.a(20, Integer.valueOf(0));     // variant
         this.datawatcher.a(21, String.valueOf(""));     // N/A
-        this.datawatcher.a(22, Integer.valueOf(0));     // Armor
+        this.datawatcher.a(22, Integer.valueOf(0));     // armor
     }
 
     /**

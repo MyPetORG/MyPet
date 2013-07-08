@@ -39,8 +39,7 @@ public class EntityMyWither extends EntityMyPet
     protected void a()
     {
         super.a();
-        //this.datawatcher.a(16, new Float(300.)); // Healthbar
-        this.datawatcher.a(17, new Integer(0));  // target EntityID
+        this.datawatcher.a(17, new Integer(0));  // target entityID
         this.datawatcher.a(18, new Integer(0));  // N/A
         this.datawatcher.a(19, new Integer(0));  // N/A
         this.datawatcher.a(20, new Integer(0));  // blue (1/0)
@@ -62,12 +61,6 @@ public class EntityMyWither extends EntityMyPet
     protected String aL()
     {
         return "mob.wither.death";
-    }
-
-    @Override
-    protected void bg()
-    {
-        //this.datawatcher.watch(16, (int) (300. * getHealth() / getMaxHealth())); // update healthbar
     }
 
     /**

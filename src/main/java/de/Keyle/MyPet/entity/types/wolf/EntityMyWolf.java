@@ -180,12 +180,12 @@ public class EntityMyWolf extends EntityMyPet
     protected void a()
     {
         super.a();
-        this.datawatcher.a(12, new Integer(0));                   // age
-        this.datawatcher.a(16, new Byte((byte) 0));               // tamed/angry/sitting
-        this.datawatcher.a(17, "");                               // wolf owner name
-        this.datawatcher.a(18, new Float(getHealth()));           // tail height
-        this.datawatcher.a(19, new Byte((byte) 0));
-        this.datawatcher.a(20, new Byte((byte) 14)); // collar color
+        this.datawatcher.a(12, new Integer(0));         // age
+        this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
+        this.datawatcher.a(17, "");                     // wolf owner name
+        this.datawatcher.a(18, new Float(getHealth())); // tail height
+        this.datawatcher.a(19, new Byte((byte) 0));     // N/A
+        this.datawatcher.a(20, new Byte((byte) 14));    // collar color
     }
 
     /**
