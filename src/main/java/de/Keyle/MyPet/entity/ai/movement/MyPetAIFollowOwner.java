@@ -35,12 +35,12 @@ public class MyPetAIFollowOwner extends MyPetAIGoal
     private AbstractNavigation nav;
     private int setPathTimer = 0;
     private float stopDistance;
-    private float startDistance;
+    private double startDistance;
     private float teleportDistance;
     private MyPetAIControl controlPathfinderGoal;
     private EntityPlayer owner;
 
-    public MyPetAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, float startDistance, float stopDistance, float teleportDistance)
+    public MyPetAIFollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, double startDistance, float stopDistance, float teleportDistance)
     {
         this.petEntity = entityMyPet;
         this.walkSpeedModifier = walkSpeedModifier;
