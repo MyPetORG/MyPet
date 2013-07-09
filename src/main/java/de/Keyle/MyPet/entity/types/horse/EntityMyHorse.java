@@ -52,6 +52,7 @@ public class EntityMyHorse extends EntityMyPet
             this.setVariant(((MyHorse) myPet).getVariant());
             this.setSaddle(((MyHorse) myPet).hasSaddle());
             this.setChest(((MyHorse) myPet).hasChest());
+            this.setArmor(((MyHorse) myPet).getArmor());
         }
     }
 
