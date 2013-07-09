@@ -48,7 +48,7 @@ public class MyPetCaptureHelper
                     }
                     if (newHealth <= leashTarget.getMaxHealth() && newHealth > 2)
                     {
-                        attacker.sendMessage(newHealth + "/" + leashTarget.getMaxHealth() + " " + MyPetLocales.getString("Name.HP", attacker));
+                        attacker.sendMessage(String.format("%1.2f", newHealth) + "/" + String.format("%1.2f", leashTarget.getMaxHealth()) + " " + MyPetLocales.getString("Name.HP", attacker));
                     }
                     break;
                 case Angry:

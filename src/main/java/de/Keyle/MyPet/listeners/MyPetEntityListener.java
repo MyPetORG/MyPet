@@ -132,29 +132,30 @@ public class MyPetEntityListener implements Listener
                         String msg;
                         if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
                         {
-                            msg = "" + ChatColor.GREEN + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            msg = "" + ChatColor.GREEN;
                         }
                         else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
                         {
-                            msg = "" + ChatColor.YELLOW + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            msg = "" + ChatColor.YELLOW;
                         }
                         else
                         {
-                            msg = "" + ChatColor.RED + myPet.getHealth() + ChatColor.WHITE + "/" + myPet.getMaxHealth();
+                            msg = "" + ChatColor.RED;
                         }
+                        msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                         damager.sendMessage(MyPetBukkitUtil.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.getPetName()).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                     {
                         double damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamage() : 0);
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage())));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + String.format("%1.2f", damage)).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                     {
                         double damage = myPet.getRangedDamage();
-                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + damage).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
+                        damager.sendMessage(MyPetBukkitUtil.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + String.format("%1.2f", damage)).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", myPet.getOwner().getLanguage())));
                         infoShown = true;
                     }
                     if (MyPetConfiguration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
