@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
@@ -71,6 +72,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         optionsList.add("skilltree");
         optionsList.add("build");
         optionsList.add("create");
+        optionsList.add("clone");
         optionsList.add("remove");
 
         addSetRemoveList.add("add");
@@ -617,6 +619,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                         }
                     }
 
+                    MyPetList.addInactiveMyPet(inactiveMyPet);
                     MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                     myPet.createPet();
 
@@ -626,9 +629,73 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has an active MyPet already!");
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
                 }
             }
+        }
+        else if (option.equalsIgnoreCase("clone"))
+        {
+            if (parameter.length < 2)
+            {
+                return false;
+            }
+
+            Player oldOwner = Bukkit.getPlayer(parameter[0]);
+            if (oldOwner == null || !oldOwner.isOnline())
+            {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                return true;
+            }
+            Player newOwner = Bukkit.getPlayer(parameter[1]);
+            if (newOwner == null || !newOwner.isOnline())
+            {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                return true;
+            }
+
+            MyPetPlayer oldPetOwner = MyPetPlayer.getMyPetPlayer(oldOwner);
+            MyPetPlayer newPetOwner = MyPetPlayer.getMyPetPlayer(newOwner);
+
+            if (!oldPetOwner.hasMyPet())
+            {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang)).replace("%playername%", oldOwner.getName()));
+                return true;
+            }
+            if (newPetOwner.hasMyPet())
+            {
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
+                return true;
+            }
+
+            MyPet oldPet = oldPetOwner.getMyPet();
+            InactiveMyPet newPet = new InactiveMyPet(newPetOwner);
+            newPet.setPetName(oldPet.getPetName());
+            newPet.setExp(oldPet.getExperience().getExp());
+            newPet.setHealth(oldPet.getHealth());
+            newPet.setHungerValue(oldPet.getHungerValue());
+            newPet.setRespawnTime(oldPet.getRespawnTime());
+            newPet.setInfo(oldPet.getExtendedInfo());
+            newPet.setPetType(oldPet.getPetType());
+            newPet.setSkillTree(oldPet.getSkillTree());
+            newPet.setWorldGroup(oldPet.getWorldGroup());
+            CompoundTag skillCompund = newPet.getSkills();
+            for (ISkillInstance skill : oldPet.getSkills().getSkills())
+            {
+                if (skill instanceof ISkillStorage)
+                {
+                    ISkillStorage storageSkill = (ISkillStorage) skill;
+                    CompoundTag s = storageSkill.save();
+                    if (s != null)
+                    {
+                        skillCompund.getValue().put(skill.getName(), s);
+                    }
+                }
+            }
+
+            MyPetList.addInactiveMyPet(newPet);
+            MyPetList.setMyPetActive(newPet);
+
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newOwner.getName() + " successfully cloned!");
         }
         else if (option.equalsIgnoreCase("remove"))
         {
@@ -757,6 +824,17 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                         return petTypeOptionMap.get(strings[2].toLowerCase());
                     }
                     return emptyList;
+                }
+            }
+            else if (strings[0].equalsIgnoreCase("clone"))
+            {
+                if (strings.length == 2)
+                {
+                    return null;
+                }
+                if (strings.length == 3)
+                {
+                    return null;
                 }
             }
             else if (strings[0].equalsIgnoreCase("remove"))
