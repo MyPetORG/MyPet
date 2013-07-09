@@ -34,6 +34,7 @@ import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
+import de.Keyle.MyPet.entity.types.snowman.EntityMySnowman;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
@@ -181,6 +182,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Pets.Sheep.CanBeSheared", true);
         config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", true);
         config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
+        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", true);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
@@ -330,6 +332,7 @@ public class MyPetConfiguration
         EntityMySheep.CAN_BE_SHEARED = config.getBoolean("MyPet.Pets.Sheep.CanBeSheared", true);
         EntityMySheep.CAN_REGROW_WOOL = config.getBoolean("MyPet.Pets.Sheep.CanRegrowWool", true);
         EntityMyIronGolem.CAN_THROW_UP = config.getBoolean("MyPet.Pets.IronGolem.CanThrowUp", true);
+        EntityMySnowman.FIX_SNOW_TRACK = config.getBoolean("MyPet.Pets.Snowman.FixSnowTrack", true);
         EntityMyChicken.GROW_UP_ITEM = config.getInt("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         EntityMyCow.GROW_UP_ITEM = config.getInt("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         EntityMyHorse.GROW_UP_ITEM = config.getInt("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());

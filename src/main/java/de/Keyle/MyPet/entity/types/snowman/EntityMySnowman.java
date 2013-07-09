@@ -23,14 +23,55 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_6_R2.AxisAlignedBB;
+import net.minecraft.server.v1_6_R2.Block;
+import net.minecraft.server.v1_6_R2.MathHelper;
 import net.minecraft.server.v1_6_R2.World;
+import org.bukkit.Location;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @EntitySize(width = 0.4F, height = 1.8F)
 public class EntityMySnowman extends EntityMyPet
 {
+    public static boolean FIX_SNOW_TRACK = true;
+
     public EntityMySnowman(World world, MyPet myPet)
     {
         super(world, myPet);
+    }
+
+    Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
+
+    private void addAirBlocksInBB(org.bukkit.World world, AxisAlignedBB axisalignedbb)
+    {
+        int minX = MathHelper.floor(axisalignedbb.a - 0.1);
+        int maxX = MathHelper.floor(axisalignedbb.d + 1.1D);
+        int minY = MathHelper.floor(axisalignedbb.b - 0.1);
+        int maxY = MathHelper.floor(axisalignedbb.e + 1.1D);
+        int minZ = MathHelper.floor(axisalignedbb.c - 0.1);
+        int maxZ = MathHelper.floor(axisalignedbb.f + 1.1D);
+
+        for (int x = minX ; x < maxX ; x++)
+        {
+            for (int z = minZ ; z < maxZ ; z++)
+            {
+                if (world.getChunkAt(x, z).isLoaded())
+                {
+                    for (int y = minY - 1 ; y < maxY ; y++)
+                    {
+                        Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
+
+                        if (block == null)
+                        {
+                            snowMap.put(new Location(world, x, y, z), 10);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -57,6 +98,52 @@ public class EntityMySnowman extends EntityMyPet
     protected String aO()
     {
         return "step.snow";
+    }
+
+    public void c()
+    {
+        try
+        {
+            super.c();
+
+            if (FIX_SNOW_TRACK)
+            {
+                if (this.motX != 0D || this.motZ != 0D)
+                {
+                    addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
+                }
+                if (snowMap.size() > 0)
+                {
+                    Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();
+                    while (iter.hasNext())
+                    {
+                        Map.Entry<Location, Integer> entry = iter.next();
+
+                        int oldCounter = entry.getValue();
+                        Location loc = entry.getKey();
+
+                        if (oldCounter - 1 == 0)
+                        {
+                            iter.remove();
+                            if (loc.getBlock().getTypeId() == 0)
+                            {
+                                byte data = loc.getBlock().getData();
+                                loc.getBlock().setData((byte) 1);
+                                loc.getBlock().setData(data);
+                            }
+                        }
+                        else
+                        {
+                            snowMap.put(loc, oldCounter - 1);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
