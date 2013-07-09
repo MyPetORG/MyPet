@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.listeners;
 
+import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +39,10 @@ public class MyPetVehicleListener implements Listener
             {
                 MyPetList.getMyPet(player).removePet(true);
             }
+        }
+        if (event.getEntered() instanceof MyPetEntity)
+        {
+            event.setCancelled(true);
         }
     }
 }
