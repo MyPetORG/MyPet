@@ -44,6 +44,8 @@ public class EntityMyPigZombie extends EntityMyPet
             final MyPigZombie myPigZombie = (MyPigZombie) myPet;
             final EntityMyPigZombie entityMyPigZombie = this;
 
+            this.setBaby(myPigZombie.isBaby());
+
             MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
             {
                 public void run()
@@ -61,6 +63,17 @@ public class EntityMyPigZombie extends EntityMyPet
                 }
             }, 5L);
         }
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyPigZombie) myPet).isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
+        ((MyPigZombie) myPet).isBaby = flag;
     }
 
     public void setPetEquipment(int slot, ItemStack itemStack)
@@ -117,6 +130,12 @@ public class EntityMyPigZombie extends EntityMyPet
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    protected void a()
+    {
+        super.a();
+        getDataWatcher().a(12, new Byte((byte) 0)); // is baby
+    }
 
     /**
      * Is called when player rightclicks this MyPet

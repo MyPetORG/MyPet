@@ -144,6 +144,10 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
         petTypeOptionList = new ArrayList<String>();
         petTypeOptionList.add("baby");
+        petTypeOptionMap.put("pigzombie", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
         petTypeOptionList.add("chest");
         petTypeOptionList.add("saddle");
         petTypeOptionList.add("horse:");

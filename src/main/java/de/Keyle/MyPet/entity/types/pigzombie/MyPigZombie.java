@@ -29,6 +29,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.util.MyPetPlayer;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import org.bukkit.ChatColor;
+import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.ListTag;
@@ -43,11 +44,26 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 @MyPetInfo(food = {ROTTEN_FLESH})
 public class MyPigZombie extends MyPet implements IMyPetEquipment
 {
+    protected boolean isBaby = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
 
     public MyPigZombie(MyPetPlayer petOwner)
     {
         super(petOwner);
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyPigZombie) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item)
@@ -79,6 +95,7 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment
     public CompoundTag getExtendedInfo()
     {
         CompoundTag info = super.getExtendedInfo();
+        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
 
         List<CompoundTag> itemList = new ArrayList<CompoundTag>();
         for (EquipmentSlot slot : EquipmentSlot.values())
@@ -97,6 +114,10 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment
     @Override
     public void setExtendedInfo(CompoundTag info)
     {
+        if (info.getValue().containsKey("Baby"))
+        {
+            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        }
         if (info.getValue().containsKey("Equipment"))
         {
             ListTag equipment = (ListTag) info.getValue().get("Equipment");

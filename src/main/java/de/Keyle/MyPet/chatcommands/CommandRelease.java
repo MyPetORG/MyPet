@@ -269,6 +269,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                         else if (myPet instanceof MyPigZombie)
                         {
                             ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+                            ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
                         }
                     }
                     myPet.removePet();
