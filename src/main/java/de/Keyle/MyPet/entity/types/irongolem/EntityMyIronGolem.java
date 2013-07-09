@@ -56,12 +56,6 @@ public class EntityMyIronGolem extends EntityMyPet
         return flag;
     }
 
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.removeGoal("Float");
-    }
-
     protected void setPlayerCreated(boolean flag)
     {
         byte b0 = this.datawatcher.getByte(16);
