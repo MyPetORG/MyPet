@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.horse.MyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
 import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
@@ -46,16 +47,15 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_6_R2.EntityItem;
+import net.minecraft.server.v1_6_R2.*;
 import net.minecraft.server.v1_6_R2.Item;
-import net.minecraft.server.v1_6_R2.ItemStack;
-import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPigZombie;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftSkeleton;
 import org.bukkit.entity.*;
@@ -270,6 +270,15 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                         {
                             ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
                             ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
+                        }
+                        else if (myPet instanceof MyHorse)
+                        {
+                            ((CraftHorse) normalEntity).getHandle().setAge(((MyHorse) myPet).getAge());
+                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setVariant(((MyHorse) myPet).getVariant());
+                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setType(((MyHorse) myPet).getHorseType());
+                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setHasChest(((MyHorse) myPet).hasChest());
+                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).n(((MyHorse) myPet).hasSaddle());
+                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).r(((MyHorse) myPet).getArmor());
                         }
                     }
                     myPet.removePet();
