@@ -36,7 +36,7 @@ public class MyPetAIFloat extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
-        return entityMyPet.world.getMaterial((int) entityMyPet.locX, (int) entityMyPet.locY, (int) entityMyPet.locZ).isLiquid();
+        return entityMyPet.world.containsLiquid(entityMyPet.boundingBox);
     }
 
     @Override
