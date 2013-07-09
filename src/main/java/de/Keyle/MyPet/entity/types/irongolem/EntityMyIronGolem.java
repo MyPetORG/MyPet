@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.irongolem;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.Entity;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R2.Entity;
+import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet
@@ -94,7 +94,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aK()
+    protected String aN()
     {
         return "mob.irongolem.hit";
     }
@@ -103,7 +103,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aL()
+    protected String aO()
     {
         return "mob.irongolem.death";
     }

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_6_R1.Entity;
+import net.minecraft.server.v1_6_R2.Entity;
 
 public class MyPetAILookAtPlayer extends MyPetAIGoal
 {
@@ -49,7 +49,7 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
     @Override
     public boolean shouldStart()
     {
-        if (this.petEntity.aB().nextFloat() >= this.lookAtPlayerChance)
+        if (this.petEntity.aC().nextFloat() >= this.lookAtPlayerChance)
         {
             return false;
         }
@@ -86,7 +86,7 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
     @Override
     public void start()
     {
-        this.ticksUntilStopLooking = (40 + this.petEntity.aB().nextInt(40));
+        this.ticksUntilStopLooking = (40 + this.petEntity.aC().nextInt(40));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MyPetAILookAtPlayer extends MyPetAIGoal
     @Override
     public void tick()
     {
-        this.petEntity.getControllerLook().a(this.targetPlayer.locX, this.targetPlayer.locY + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ, 10.0F, this.petEntity.bl());
+        this.petEntity.getControllerLook().a(this.targetPlayer.locX, this.targetPlayer.locY + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ, 10.0F, this.petEntity.bp());
         this.ticksUntilStopLooking -= 1;
     }
 }

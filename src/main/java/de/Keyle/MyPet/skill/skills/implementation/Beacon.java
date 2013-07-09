@@ -33,10 +33,10 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 

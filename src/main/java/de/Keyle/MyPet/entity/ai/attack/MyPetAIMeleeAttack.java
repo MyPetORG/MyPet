@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.EntityLiving;
+import net.minecraft.server.v1_6_R2.EntityLiving;
 
 public class MyPetAIMeleeAttack extends MyPetAIGoal
 {
@@ -111,7 +111,7 @@ public class MyPetAIMeleeAttack extends MyPetAIGoal
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
         if (((this.petEntity.getEntitySenses().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
         {
-            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aB().nextInt(7));
+            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aC().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);
         }
         if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0))

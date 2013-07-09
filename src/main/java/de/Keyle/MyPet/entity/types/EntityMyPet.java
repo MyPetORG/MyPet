@@ -32,11 +32,10 @@ import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -73,7 +72,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             this.petTargetSelector = new MyPetAIGoalSelector();
 
             this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
-            a(GenericAttributes.d).a(walkSpeed);
+            getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
 
             petNavigation = new VanillaNavigation(this);
 
@@ -107,7 +106,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             this.myPet = myPet;
             isMyPet = true;
 
-            ((LivingEntity) this.getBukkitEntity()).setMaxHealth(myPet.getMaxHealth());
+            this.getAttributeInstance(GenericAttributes.a).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.setCustomName("");
         }
@@ -453,18 +452,18 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected abstract String aK();
+    protected abstract String aN();
 
     /**
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected abstract String aL();
+    protected abstract String aO();
 
     /**
      * Set weather the "new" AI is used
      */
-    public boolean bb()
+    public boolean be()
     {
         return true;
     }
@@ -474,7 +473,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      * -> updateAITasks()
      */
     @Override
-    protected void be()
+    protected void bh()
     {
         try
         {
@@ -484,7 +483,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             petTargetSelector.tick(); // target selector
             petPathfinderSelector.tick(); // pathfinder selector
             petNavigation.tick(); // navigation
-            bg(); // "mob tick"
+            bj(); // "mob tick"
 
             // controls
             getControllerMove().c(); // move
@@ -510,7 +509,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             ((CraftPlayer) getOwner().getPlayer()).getHandle().playerConnection.sendPacket(particle);
             getOwner().getPlayer().sendBlockChange(l1, block1.getType(), block1.getData());
 
-            donatorParticleCounter = 90 + aB().nextInt(60);
+            donatorParticleCounter = 90 + aC().nextInt(60);
         }
     }
 

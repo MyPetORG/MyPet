@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.PathEntity;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R2.PathEntity;
+import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySlime extends EntityMyPet
@@ -88,16 +88,16 @@ public class EntityMySlime extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aK()
+    protected String aN()
     {
-        return aL();
+        return aO();
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aL()
+    protected String aO()
     {
         return "mob.slime." + (getSize() > 1 ? "big" : "small");
 
@@ -118,7 +118,7 @@ public class EntityMySlime extends EntityMyPet
                 getControllerJump().a();
                 jumpDelay = (this.random.nextInt(20) + 10);
                 lastPathEntity = getNavigation().e();
-                makeSound("mob.slime." + (getSize() > 1 ? "big" : "small"), aW(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                makeSound("mob.slime." + (getSize() > 1 ? "big" : "small"), aZ(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
             }
         }
         catch (Exception e)

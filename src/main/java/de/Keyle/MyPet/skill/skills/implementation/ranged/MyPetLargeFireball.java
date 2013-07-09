@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 
 public class MyPetLargeFireball extends EntityLargeFireball
 {

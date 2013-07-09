@@ -20,14 +20,14 @@
 
 package de.Keyle.MyPet.util;
 
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.util.UnsafeList;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -90,7 +90,7 @@ public class MyPetBukkitUtil
 
     public static Boolean canSpawn(Location loc, float width, float height, float length)
     {
-        net.minecraft.server.v1_6_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_6_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 

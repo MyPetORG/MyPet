@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.EntityHuman;
-import net.minecraft.server.v1_6_R1.ItemStack;
-import net.minecraft.server.v1_6_R1.MathHelper;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.ItemStack;
+import net.minecraft.server.v1_6_R2.MathHelper;
+import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
@@ -71,7 +71,7 @@ public class EntityMyWolf extends EntityMyPet
     public void setHealth(int i)
     {
         super.setHealth(i);
-        this.bg();
+        this.bj();
     }
 
     public boolean canMove()
@@ -260,7 +260,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aK()
+    protected String aN()
     {
         return "mob.wolf.hurt";
     }
@@ -269,13 +269,13 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aL()
+    protected String aO()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bg()
+    protected void bj()
     {
         try
         {
@@ -293,7 +293,7 @@ public class EntityMyWolf extends EntityMyPet
         try
         {
             super.c();
-            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bI()) && (this.onGround)) // k -> has pathentity
+            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bM()) && (this.onGround)) // bM -> has pathentity
             {
                 this.shaking = true;
                 this.shakeCounter = 0.0F;
@@ -323,7 +323,7 @@ public class EntityMyWolf extends EntityMyPet
             {
                 if (this.shakeCounter == 0.0F)
                 {
-                    makeSound("mob.wolf.shake", aW(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                    makeSound("mob.wolf.shake", aZ(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 }
 
                 this.shakeCounter += 0.05F;

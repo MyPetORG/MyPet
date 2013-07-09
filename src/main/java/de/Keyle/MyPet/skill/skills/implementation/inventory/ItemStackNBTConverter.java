@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 import org.spout.nbt.*;
 
 import java.lang.reflect.Field;

@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.*;
-import net.minecraft.server.v1_6_R1.EntityHuman;
+import net.minecraft.server.v1_6_R2.EntityHuman;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;

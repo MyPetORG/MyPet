@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMySkeleton extends EntityMyPet
@@ -221,7 +221,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aK()
+    protected String aN()
     {
         return "mob.skeleton.hurt";
     }
@@ -229,7 +229,7 @@ public class EntityMySkeleton extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aL()
+    protected String aO()
     {
         return "mob.skeleton.death";
     }

@@ -27,7 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import net.minecraft.server.v1_6_R1.ItemStack;
+import net.minecraft.server.v1_6_R2.ItemStack;
 import org.bukkit.ChatColor;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;

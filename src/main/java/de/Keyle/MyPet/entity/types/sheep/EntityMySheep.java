@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAIEatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.*;
+import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
@@ -208,7 +208,7 @@ public class EntityMySheep extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aK()
+    protected String aN()
     {
         return "mob.sheep.say";
     }
@@ -217,7 +217,7 @@ public class EntityMySheep extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aL()
+    protected String aO()
     {
         return "mob.sheep.say";
     }

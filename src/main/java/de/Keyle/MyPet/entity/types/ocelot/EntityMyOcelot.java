@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R1.EntityHuman;
-import net.minecraft.server.v1_6_R1.ItemStack;
-import net.minecraft.server.v1_6_R1.World;
+import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.ItemStack;
+import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.Material;
 import org.bukkit.entity.Ocelot.Type;
 
@@ -206,7 +206,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aK()
+    protected String aN()
     {
         return "mob.cat.hitt";
     }
@@ -214,7 +214,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aL()
+    protected String aO()
     {
         return "mob.cat.hitt";
     }
