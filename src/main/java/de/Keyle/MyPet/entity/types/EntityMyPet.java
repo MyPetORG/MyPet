@@ -547,7 +547,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             motionForward *= 0.25F;
         }
         // sideways is slower too
-        motionSideways *= 0.5F;
+        motionSideways *= 0.85F;
 
         i(0.22222F); // set ride speed
         super.e(motionSideways, motionForward); // apply motion
