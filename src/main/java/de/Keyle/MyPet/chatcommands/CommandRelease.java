@@ -50,6 +50,7 @@ import net.minecraft.server.v1_6_R2.EntityItem;
 import net.minecraft.server.v1_6_R2.Item;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -106,7 +107,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     }
                     name += arg;
                 }
-                if (MyPetBukkitUtil.stripColors(myPet.getPetName()).equalsIgnoreCase(name))
+                if (ChatColor.stripColor(myPet.getPetName()).equalsIgnoreCase(name))
                 {
                     if (myPet.getSkills().isSkillActive("Inventory"))
                     {

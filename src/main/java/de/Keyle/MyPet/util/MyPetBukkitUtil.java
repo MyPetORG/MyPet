@@ -44,11 +44,6 @@ public class MyPetBukkitUtil
         return text;
     }
 
-    public static String stripColors(String text)
-    {
-        return text.replaceAll("§[abcdefklmnor0-9]", "");
-    }
-
     public static Material checkMaterial(int itemid, Material defaultMaterial)
     {
         if (Material.getMaterial(itemid) == null)
