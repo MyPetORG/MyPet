@@ -29,9 +29,10 @@ import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 
+import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.*;
 
-@MyPetInfo(food = {SUGAR, WHEAT, APPLE})
+@MyPetInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
 public class MyHorse extends MyPet
 {
     protected byte horseType = 0;

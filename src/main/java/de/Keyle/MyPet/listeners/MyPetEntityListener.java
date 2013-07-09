@@ -299,12 +299,20 @@ public class MyPetEntityListener implements Listener
                             {
                                 willBeLeashed = !((Tameable) leashTarget).isTamed();
                             }
+                            else if (leashTarget instanceof Horse)
+                            {
+                                willBeLeashed = !((EntityHorse) ((CraftHorse) leashTarget).getHandle()).isTame();
+                            }
                         }
                         else if (flag == LeashFlag.Tamed)
                         {
                             if (leashTarget instanceof Tameable)
                             {
                                 willBeLeashed = ((Tameable) leashTarget).isTamed();
+                            }
+                            if (leashTarget instanceof Horse)
+                            {
+                                willBeLeashed = ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).isTame();
                             }
                         }
                         else if (flag == LeashFlag.CanBreed)
