@@ -169,14 +169,13 @@ public class EntityMyHorse extends EntityMyPet
         return flag;
     }
 
-    /*
+    /**
      * Possible visual horse effects:
-     *   4 saddle
-     *   8 chest
-     *   32 head down
-     *   64 rear
-     *   128 mouth open
-     *
+     * 4 saddle
+     * 8 chest
+     * 32 head down
+     * 64 rear
+     * 128 mouth open
      */
     private void applyVisual(int value, boolean flag)
     {

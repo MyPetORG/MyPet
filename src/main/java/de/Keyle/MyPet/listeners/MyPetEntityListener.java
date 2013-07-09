@@ -387,6 +387,10 @@ public class MyPetEntityListener implements Listener
                         {
                             extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).getType()));
                             extendedInfo.getValue().put("Variant", new IntTag("Variant", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).getVariant()));
+                            extendedInfo.getValue().put("Armor", new IntTag("Armor", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).cf()));
+                            extendedInfo.getValue().put("Chest", new ByteTag("Chest", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).hasChest()));
+                            extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).co()));
+                            extendedInfo.getValue().put("Age", new IntTag("Age", ((CraftHorse) leashTarget).getHandle().getAge()));
                         }
                         else if (leashTarget instanceof Zombie)
                         {
