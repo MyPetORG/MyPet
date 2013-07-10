@@ -60,12 +60,12 @@ public class Control extends ControlInfo implements ISkillInstance
     {
         if (upgrade instanceof ControlInfo)
         {
-            active = true;
-            if (!quiet)
+            if (!quiet && !active)
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%item%", MyPetBukkitUtil.getMaterialName(CONTROL_ITEM)));
 
             }
+            active = true;
         }
     }
 
