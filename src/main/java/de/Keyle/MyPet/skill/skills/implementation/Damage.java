@@ -60,12 +60,12 @@ public class Damage extends DamageInfo implements ISkillInstance
         if (upgrade instanceof DamageInfo)
         {
             boolean isPassive = damage <= 0;
-            if (getProperties().getValue().containsKey("damage"))
+            if (upgrade.getProperties().getValue().containsKey("damage"))
             {
-                int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
-                getProperties().getValue().remove("damage");
+                int damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                upgrade.getProperties().getValue().remove("damage");
                 DoubleTag doubleTag = new DoubleTag("damage_double", damage);
-                getProperties().getValue().put("damage_double", doubleTag);
+                upgrade.getProperties().getValue().put("damage_double", doubleTag);
             }
             if (upgrade.getProperties().getValue().containsKey("damage_double"))
             {

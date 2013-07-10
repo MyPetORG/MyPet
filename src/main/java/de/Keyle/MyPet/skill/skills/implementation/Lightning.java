@@ -80,12 +80,12 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
                 }
                 valuesEdit = true;
             }
-            if (getProperties().getValue().containsKey("damage"))
+            if (upgrade.getProperties().getValue().containsKey("damage"))
             {
-                int damage = ((IntTag) getProperties().getValue().get("damage")).getValue();
-                getProperties().getValue().remove("damage");
+                int damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
+                upgrade.getProperties().getValue().remove("damage");
                 DoubleTag doubleTag = new DoubleTag("damage_double", damage);
-                getProperties().getValue().put("damage_double", doubleTag);
+                upgrade.getProperties().getValue().put("damage_double", doubleTag);
             }
             if (upgrade.getProperties().getValue().containsKey("damage_double"))
             {

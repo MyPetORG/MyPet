@@ -67,12 +67,12 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
         if (upgrade instanceof HPregenerationInfo)
         {
             boolean valuesEdit = false;
-            if (getProperties().getValue().containsKey("hp"))
+            if (upgrade.getProperties().getValue().containsKey("hp"))
             {
-                int hp = ((IntTag) getProperties().getValue().get("hp")).getValue();
-                getProperties().getValue().remove("hp");
+                int hp = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
+                upgrade.getProperties().getValue().remove("hp");
                 DoubleTag doubleTag = new DoubleTag("hp_double", hp);
-                getProperties().getValue().put("hp_double", doubleTag);
+                upgrade.getProperties().getValue().put("hp_double", doubleTag);
             }
             if (upgrade.getProperties().getValue().containsKey("hp_double"))
             {
