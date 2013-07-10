@@ -55,12 +55,12 @@ public class Sprint extends SprintInfo implements ISkillInstance
     {
         if (upgrade instanceof SprintInfo)
         {
-            active = true;
-            if (!quiet)
+            if (!quiet && !active)
             {
                 myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
 
             }
+            active = true;
         }
     }
 
