@@ -22,15 +22,22 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.MyPetAIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import net.minecraft.server.v1_6_R2.EntityPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 
 public class MyPetAIFloat extends MyPetAIGoal
 {
     private EntityMyPet entityMyPet;
+    private EntityPlayer owner;
+
+    private int lavaCounter = 10;
+    private boolean inLava = false;
 
     public MyPetAIFloat(EntityMyPet entityMyPet)
     {
         this.entityMyPet = entityMyPet;
         entityMyPet.getNavigation().e(true);
+        this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
     }
 
     @Override
@@ -40,11 +47,26 @@ public class MyPetAIFloat extends MyPetAIGoal
     }
 
     @Override
+    public void finish()
+    {
+        inLava = false;
+    }
+
+    @Override
     public void tick()
     {
-        if (entityMyPet.aC().nextFloat() < 0.9D)
+        entityMyPet.motY += 0.05D;
+
+        if (inLava && lavaCounter-- <= 0)
         {
-            entityMyPet.motY += 0.05D;
+            if (entityMyPet.petNavigation.navigateTo(owner))
+            {
+                lavaCounter = 10;
+            }
+        }
+        if (!inLava && entityMyPet.world.e(entityMyPet.boundingBox)) // e -> is in Fire/Lava
+        {
+            inLava = true;
         }
     }
 }
