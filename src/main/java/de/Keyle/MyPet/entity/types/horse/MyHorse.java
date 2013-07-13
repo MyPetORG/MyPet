@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.entity.types.horse;
 
 import de.Keyle.MyPet.entity.MyPetInfo;
+import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -33,7 +34,7 @@ import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.*;
 
 @MyPetInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
-public class MyHorse extends MyPet
+public class MyHorse extends MyPet implements IMyPetBaby
 {
     protected byte horseType = 0;
     protected int variant = 0;
@@ -170,6 +171,12 @@ public class MyHorse extends MyPet
         {
             this.age = 0;
         }
+    }
+
+    @Override
+    public boolean isBaby()
+    {
+        return age < 0;
     }
 
     public void setAge(int value)
