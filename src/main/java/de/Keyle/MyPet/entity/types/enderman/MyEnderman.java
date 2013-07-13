@@ -130,7 +130,7 @@ public class MyEnderman extends MyPet
     @Override
     public String toString()
     {
-        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
+        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
     }
 
 }

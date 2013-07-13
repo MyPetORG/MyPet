@@ -161,6 +161,6 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     @Override
     public String toString()
     {
-        return "MyZombie{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
+        return "MyZombie{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", villager=" + isVillager() + ", baby=" + isBaby() + "}";
     }
 }

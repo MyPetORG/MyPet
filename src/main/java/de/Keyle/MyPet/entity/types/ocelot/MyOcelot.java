@@ -124,6 +124,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby
     @Override
     public String toString()
     {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }
