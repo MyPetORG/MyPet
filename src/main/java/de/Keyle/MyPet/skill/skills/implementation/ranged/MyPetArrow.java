@@ -26,12 +26,8 @@ import net.minecraft.server.v1_6_R2.EntityLiving;
 import net.minecraft.server.v1_6_R2.NBTTagCompound;
 import net.minecraft.server.v1_6_R2.World;
 
-import java.lang.reflect.Field;
-
 public class MyPetArrow extends EntityArrow
 {
-    private Field inGround = null;
-
     public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i)
     {
         super(world, entityMyPet, target, v, i);
@@ -52,31 +48,9 @@ public class MyPetArrow extends EntityArrow
         try
         {
             super.l_();
-            if (inGround == null)
+            if (this.isInGround())
             {
-                try
-                {
-                    inGround = EntityArrow.class.getDeclaredField("inGround");
-                    inGround.setAccessible(true);
-                }
-                catch (NoSuchFieldException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            try
-            {
-                if (inGround != null)
-                {
-                    if (inGround.getBoolean(this))
-                    {
-                        die();
-                    }
-                }
-            }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
+                die();
             }
         }
         catch (Exception e)
