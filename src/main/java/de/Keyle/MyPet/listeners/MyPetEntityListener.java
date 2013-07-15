@@ -302,7 +302,7 @@ public class MyPetEntityListener implements Listener
                             }
                             else if (leashTarget instanceof Horse)
                             {
-                                willBeLeashed = !((EntityHorse) ((CraftHorse) leashTarget).getHandle()).isTame();
+                                willBeLeashed = !((CraftHorse) leashTarget).getHandle().isTame();
                             }
                         }
                         else if (flag == LeashFlag.Tamed)
@@ -313,7 +313,7 @@ public class MyPetEntityListener implements Listener
                             }
                             if (leashTarget instanceof Horse)
                             {
-                                willBeLeashed = ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).isTame();
+                                willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame();
                             }
                         }
                         else if (flag == LeashFlag.CanBreed)
