@@ -40,7 +40,6 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R2.EntityHorse;
-import net.minecraft.server.v1_6_R2.MathHelper;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -59,8 +58,6 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.spout.nbt.*;
 
 import java.util.ArrayList;
@@ -221,7 +218,9 @@ public class MyPetEntityListener implements Listener
                     Thorns thornsSkill = ((Thorns) myPet.getSkills().getSkill("Thorns"));
                     if (thornsSkill.activate())
                     {
-                        damager.damage(thornsSkill.getReflectedDamage(event.getDamage()), craftMyPet);
+                        isSkillActive = true;
+                        thornsSkill.reflectDamage(damager, event.getDamage());
+                        isSkillActive = false;
                     }
                 }
             }
@@ -722,8 +721,7 @@ public class MyPetEntityListener implements Listener
                     Poison poisonSkill = (Poison) myPet.getSkills().getSkill("Poison");
                     if (poisonSkill.activate())
                     {
-                        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, poisonSkill.getDuration() * 20, 1);
-                        ((LivingEntity) damagedEntity).addPotionEffect(effect);
+                        poisonSkill.poisonTarget((LivingEntity) damagedEntity);
                         skillUsed = true;
                     }
                 }
@@ -732,8 +730,7 @@ public class MyPetEntityListener implements Listener
                     Wither witherSkill = (Wither) myPet.getSkills().getSkill("Wither");
                     if (witherSkill.activate())
                     {
-                        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, witherSkill.getDuration() * 20, 1);
-                        ((LivingEntity) damagedEntity).addPotionEffect(effect);
+                        witherSkill.witherTarget((LivingEntity) damagedEntity);
                         skillUsed = true;
                     }
                 }
@@ -742,7 +739,7 @@ public class MyPetEntityListener implements Listener
                     Fire fireSkill = (Fire) myPet.getSkills().getSkill("Fire");
                     if (fireSkill.activate())
                     {
-                        damagedEntity.setFireTicks(fireSkill.getDuration() * 20);
+                        fireSkill.igniteTarget((LivingEntity) damagedEntity);
                         skillUsed = true;
                     }
                 }
@@ -751,8 +748,7 @@ public class MyPetEntityListener implements Listener
                     Slow slowSkill = (Slow) myPet.getSkills().getSkill("Slow");
                     if (slowSkill.activate())
                     {
-                        PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, slowSkill.getDuration() * 20, 1);
-                        ((LivingEntity) damagedEntity).addPotionEffect(effect);
+                        slowSkill.slowTarget((LivingEntity) damagedEntity);
                         skillUsed = true;
                     }
                 }
@@ -761,7 +757,7 @@ public class MyPetEntityListener implements Listener
                     Knockback knockbackSkill = (Knockback) myPet.getSkills().getSkill("Knockback");
                     if (knockbackSkill.activate())
                     {
-                        ((CraftEntity) damagedEntity).getHandle().g(-MathHelper.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F, 0.1D, MathHelper.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F);
+                        knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
                         skillUsed = true;
                     }
                 }

@@ -26,6 +26,8 @@ import de.Keyle.MyPet.skill.skills.info.FireInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.bukkit.Effect;
+import org.bukkit.entity.LivingEntity;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -112,6 +114,12 @@ public class Fire extends FireInfo implements ISkillInstance, ISkillActive
     public int getDuration()
     {
         return duration;
+    }
+
+    public void igniteTarget(LivingEntity target)
+    {
+        target.setFireTicks(getDuration() * 20);
+        target.getWorld().playEffect(target.getLocation(), Effect.POTION_BREAK, 0xD60000);
     }
 
     @Override

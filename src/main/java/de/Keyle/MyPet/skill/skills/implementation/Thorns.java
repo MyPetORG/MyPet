@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.ThornsInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.bukkit.entity.LivingEntity;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -106,6 +107,12 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
     public double getReflectedDamage(double damage)
     {
         return damage * reflectedDamagePercent / 100.;
+    }
+
+    public void reflectDamage(LivingEntity damager, double damage)
+    {
+        damager.damage(getReflectedDamage(damage), myPet.getCraftPet());
+        myPet.getCraftPet().getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
     }
 
     @Override

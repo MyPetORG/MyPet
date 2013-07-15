@@ -26,6 +26,9 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.KnockbackInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import net.minecraft.server.v1_6_R2.MathHelper;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.entity.LivingEntity;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -92,6 +95,11 @@ public class Knockback extends KnockbackInfo implements ISkillInstance, ISkillAc
     public boolean activate()
     {
         return random.nextDouble() < chance / 100.;
+    }
+
+    public void knockbackTarget(LivingEntity target)
+    {
+        ((CraftEntity) target).getHandle().g(-MathHelper.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F, 0.1D, MathHelper.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F);
     }
 
     @Override
