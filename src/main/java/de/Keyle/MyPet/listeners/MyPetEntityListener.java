@@ -287,14 +287,20 @@ public class MyPetEntityListener implements Listener
                         {
                             if (leashTarget instanceof IronGolem)
                             {
-                                willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
+                                //willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
+
+                                //temporary fix
+                                willBeLeashed = ((CraftIronGolem) leashTarget).getHandle().bW();
                             }
                         }
                         else if (flag == LeashFlag.Wild)
                         {
                             if (leashTarget instanceof IronGolem)
                             {
-                                willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
+                                //willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
+
+                                //temporary fix
+                                willBeLeashed = !((CraftIronGolem) leashTarget).getHandle().bW();
                             }
                             else if (leashTarget instanceof Tameable)
                             {
