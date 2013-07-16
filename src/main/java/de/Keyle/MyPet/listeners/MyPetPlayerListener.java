@@ -333,6 +333,41 @@ public class MyPetPlayerListener implements Listener
                         inv.dropContentAt(myPet.getLocation());
                     }
                 }
+                myPet.removePet(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(final PlayerRespawnEvent event)
+    {
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        {
+            MyPetPlayer respawnedMyPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            if (respawnedMyPetPlayer.hasMyPet())
+            {
+                MyPet myPet = respawnedMyPetPlayer.getMyPet();
+                if (myPet.wantToRespawn())
+                {
+                    switch (myPet.createPet())
+                    {
+                        case Success:
+                            if (MyPetConfiguration.ENABLE_EVENTS)
+                            {
+                                getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
+                            }
+                            break;
+                        case Canceled:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
+                            break;
+                        case NoSpace:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
+                            break;
+                        case NotAllowed:
+                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
+                            break;
+                    }
+                }
             }
         }
     }
