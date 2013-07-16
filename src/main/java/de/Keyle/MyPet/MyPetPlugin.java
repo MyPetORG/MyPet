@@ -50,6 +50,7 @@ import de.Keyle.MyPet.entity.types.skeleton.EntityMySkeleton;
 import de.Keyle.MyPet.entity.types.slime.EntityMySlime;
 import de.Keyle.MyPet.entity.types.snowman.EntityMySnowman;
 import de.Keyle.MyPet.entity.types.spider.EntityMySpider;
+import de.Keyle.MyPet.entity.types.squid.EntityMySquid;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
 import de.Keyle.MyPet.entity.types.witch.EntityMyWitch;
 import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
@@ -288,6 +289,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             a.invoke(a, EntityCow.class, "Cow", 92);
             a.invoke(a, EntityMyChicken.class, "Chicken", 93);
             a.invoke(a, EntityChicken.class, "Chicken", 93);
+            a.invoke(a, EntityMySquid.class, "Squid", 94);
+            a.invoke(a, EntitySquid.class, "Squid", 94);
             a.invoke(a, EntityMyWolf.class, "Wolf", 95);
             a.invoke(a, EntityWolf.class, "Wolf", 95);
             a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
