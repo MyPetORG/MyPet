@@ -518,6 +518,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         if (this.passenger == null || !(this.passenger instanceof EntityPlayer))
         {
             super.e(motionSideways, motionForward);
+            this.Y = 0.5F; // climb height -> halfslab
             return;
         }
         else
@@ -527,9 +528,12 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             if (!getOwner().equals(passenger))
             {
                 super.e(motionSideways, motionForward);
+                this.Y = 0.5F; // climb height -> halfslab
                 return;
             }
         }
+
+        this.Y = 1.0F; // climb height -> 1 block
 
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
