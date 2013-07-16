@@ -74,6 +74,7 @@ public class MyPetPlayerListener implements Listener
                     {
                         if (myPet.getCraftPet().getHandle().hasRider())
                         {
+                            event.getPlayer().sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Control.Ride", event.getPlayer()).replace("%petname%", myPet.getPetName())));
                             return;
                         }
                     }

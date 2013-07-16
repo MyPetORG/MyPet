@@ -156,12 +156,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public boolean hasRider()
     {
-        return isRidden;
-    }
-
-    public void setRidden(boolean flag)
-    {
-        isRidden = flag;
+        return passenger != null && getOwner().equals(passenger);
     }
 
     public void setLocation(Location loc)
