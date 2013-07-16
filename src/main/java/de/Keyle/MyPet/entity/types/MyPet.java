@@ -478,10 +478,15 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public void setWorldGroup(String worldGroup)
     {
-        if (worldGroup != null)
+        if (worldGroup == null)
         {
-            this.worldGroup = worldGroup;
+            return;
         }
+        if (MyPetWorldGroup.getGroup(worldGroup) == null)
+        {
+            worldGroup = "default";
+        }
+        this.worldGroup = worldGroup;
     }
 
     public void setUUID(UUID uuid)
