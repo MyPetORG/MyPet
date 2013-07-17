@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
 import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
@@ -55,11 +54,11 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
             if (MyPetConfiguration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage())));
+                sender.sendMessage(MyPetLocales.getString("Message.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage()));
             }
             else if (myPet.getSkillTree() != null && MyPetConfiguration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
             {
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName())));
+                sender.sendMessage(MyPetLocales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
             }
             else if (MyPetSkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
@@ -79,7 +78,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                         {
                             if (myPet.setSkilltree(skillTree))
                             {
-                                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedTo", player).replace("%name%", skillTree.getName())));
+                                sender.sendMessage(MyPetLocales.getString("Message.SkilltreeSwitchedTo", player).replace("%name%", skillTree.getName()));
                                 if (myPet.getOwner().isMyPetAdmin() && MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_ADMIN)
                                 {
                                     myPet.getExperience().removeExp(MyPetConfiguration.SKILLTREE_SWITCH_PENALTY_FIXED);
@@ -93,22 +92,22 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                             }
                             else
                             {
-                                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.SkilltreeNotSwitched", player)));
+                                sender.sendMessage(MyPetLocales.getString("Message.SkilltreeNotSwitched", player));
                             }
                         }
                         else
                         {
-                            sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName)));
+                            sender.sendMessage(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName));
                         }
                     }
                     else
                     {
-                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName)));
+                        sender.sendMessage(MyPetLocales.getString("Message.CantFindSkilltree", player).replace("%name%", skilltreeName));
                     }
                 }
                 else
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.AvailableSkilltrees", player).replace("%petname%", myPet.getPetName())));
+                    sender.sendMessage(MyPetLocales.getString("Message.AvailableSkilltrees", player).replace("%petname%", myPet.getPetName()));
                     for (MyPetSkillTree skillTree : skillTreeMobType.getSkillTrees())
                     {
                         if (MyPetPermissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
@@ -121,7 +120,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
         }
         else
         {
-            sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
+            sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", player));
         }
         return true;
     }

@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPlayer;
@@ -71,7 +70,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player)));
+                sender.sendMessage(MyPetLocales.getString("Message.PlayerNotOnline", player));
             }
             else if (MyPetList.hasMyPet(playerName))
             {
@@ -81,12 +80,12 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
                 if (canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
                 {
-                    player.sendMessage(Colorizer.setColors("%aqua%%petname%%white%:").replace("%petname%", myPet.getPetName()));
+                    player.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
                     infoShown = true;
                 }
                 if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet))
                 {
-                    player.sendMessage(Colorizer.setColors("   %N_Owner%: %owner%").replace("%owner%", playerName).replace("%N_Owner%", MyPetLocales.getString("Name.Owner", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.Owner", player) + ": " + playerName);
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
@@ -109,29 +108,29 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                         msg = "" + ChatColor.RED;
                     }
                     msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
-                    player.sendMessage(Colorizer.setColors("   %N_HP%: %hp%").replace("%petname%", myPet.getPetName()).replace("%hp%", msg).replace("%N_HP%", MyPetLocales.getString("Name.HP", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.HP", player) + ": " + msg);
                     infoShown = true;
                 }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
                 {
                     double damage = (myPet.getSkills().isSkillActive("Damage") ? ((Damage) myPet.getSkills().getSkill("Damage")).getDamage() : 0);
-                    player.sendMessage(Colorizer.setColors("   %N_Damage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + String.format("%1.2f", damage)).replace("%N_Damage%", MyPetLocales.getString("Name.Damage", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
                 if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
                 {
                     double damage = myPet.getRangedDamage();
-                    player.sendMessage(Colorizer.setColors("   %N_RangedDamage%: %dmg%").replace("%petname%", myPet.getPetName()).replace("%dmg%", "" + String.format("%1.2f", damage)).replace("%N_RangedDamage%", MyPetLocales.getString("Name.RangedDamage", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.RangedDamage", player) + ": " + String.format("%1.2f", damage));
                     infoShown = true;
                 }
                 if (MyPetConfiguration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
                 {
-                    player.sendMessage(Colorizer.setColors("   %N_Hunger%: %hunger%").replace("%hunger%", "" + myPet.getHungerValue()).replace("%N_Hunger%", MyPetLocales.getString("Name.Hunger", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
                     infoShown = true;
                 }
                 if (canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
                 {
-                    player.sendMessage(Colorizer.setColors("   %N_Skilltree%: %name%").replace("%name%", "" + myPet.getSkillTree().getName()).replace("%N_Skilltree%", MyPetLocales.getString("Name.Skilltree", player)));
+                    player.sendMessage("   " + MyPetLocales.getString("Name.Skilltree", player) + ": " + myPet.getSkillTree().getName());
                     infoShown = true;
                 }
                 if (MyPetConfiguration.USE_LEVEL_SYSTEM)
@@ -139,14 +138,14 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                     if (canSee(PetInfoDisplay.Level.adminOnly, myPetPlayer, myPet))
                     {
                         int lvl = myPet.getExperience().getLevel();
-                        player.sendMessage(Colorizer.setColors("   %N_Level%: %lvl%").replace("%lvl%", "" + lvl).replace("%N_Level%", MyPetLocales.getString("Name.Level", player)));
+                        player.sendMessage("   " + MyPetLocales.getString("Name.Level", player) + ": " + lvl);
                         infoShown = true;
                     }
                     if (canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
                     {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
-                        player.sendMessage(Colorizer.setColors("   %N_Exp%: %exp%/%reqexp%").replace("%exp%", String.format("%1.2f", exp)).replace("%reqexp%", String.format("%1.2f", reqEXP)).replace("%N_Exp%", MyPetLocales.getString("Name.Exp", player)));
+                        player.sendMessage("   " + MyPetLocales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                         infoShown = true;
                     }
                 }
@@ -157,7 +156,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
                 }
                 if (!infoShown)
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CantViewPetInfo", player)));
+                    sender.sendMessage(MyPetLocales.getString("Message.CantViewPetInfo", player));
                 }
                 return true;
             }
@@ -165,11 +164,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", playerName)));
+                    sender.sendMessage(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", playerName));
                 }
                 else
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
+                    sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", player));
                 }
             }
             return true;

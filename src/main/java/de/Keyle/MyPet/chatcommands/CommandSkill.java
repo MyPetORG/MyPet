@@ -23,10 +23,10 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,12 +51,12 @@ public class CommandSkill implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", petOwner)));
+                    sender.sendMessage(MyPetLocales.getString("Message.PlayerNotOnline", petOwner));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", petOwner).replace("%playername%", petOwner.getName())));
+                    sender.sendMessage(MyPetLocales.getString("Message.UserDontHavePet", petOwner).replace("%playername%", petOwner.getName()));
                     return true;
                 }
             }
@@ -65,20 +65,20 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.Skills", petOwner)).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(MyPetLocales.getString("Message.Skills", petOwner).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills())
                 {
                     if (skill.isActive())
                     {
-                        sender.sendMessage(Colorizer.setColors("  %green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName() + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
                 return true;
             }
             else
             {
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
+                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }

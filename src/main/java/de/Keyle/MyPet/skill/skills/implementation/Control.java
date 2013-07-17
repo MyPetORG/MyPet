@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ControlInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Location;
@@ -63,7 +62,7 @@ public class Control extends ControlInfo implements ISkillInstance
         {
             if (!quiet && !active)
             {
-                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%item%", MyPetBukkitUtil.getMaterialName(CONTROL_ITEM)));
+                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%item%", MyPetBukkitUtil.getMaterialName(CONTROL_ITEM)));
 
             }
             active = true;

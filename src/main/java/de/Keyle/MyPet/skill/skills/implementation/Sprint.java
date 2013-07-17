@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.SprintInfo;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 
 public class Sprint extends SprintInfo implements ISkillInstance
@@ -57,7 +56,7 @@ public class Sprint extends SprintInfo implements ISkillInstance
         {
             if (!quiet && !active)
             {
-                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
 
             }
             active = true;

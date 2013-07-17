@@ -4,7 +4,6 @@ import com.pauldavdesign.mineauz.minigames.events.JoinMinigameEvent;
 import com.pauldavdesign.mineauz.minigames.events.SpectateMinigameEvent;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -50,7 +49,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet(true);
-                player.getPlayer().sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
+                player.getPlayer().sendMessage(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer()));
             }
         }
     }
@@ -64,7 +63,7 @@ public class Minigames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet(true);
-                player.getPlayer().sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer())));
+                player.getPlayer().sendMessage(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer()));
             }
         }
     }

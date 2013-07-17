@@ -25,20 +25,20 @@ public class MyPetCaptureHelper
             {
                 case Impossible:
                     tameNow = false;
-                    attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotLeashable", attacker)));
+                    attacker.sendMessage(MyPetLocales.getString("Message.NotLeashable", attacker));
                     break flagloop;
                 case Adult:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).isAdult())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAdult", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotAdult", attacker));
                     }
                     break;
                 case Baby:
                     if (leashTarget instanceof Ageable && ((Ageable) leashTarget).isAdult())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotBaby", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotBaby", attacker));
                     }
                     break;
                 case LowHp:
@@ -54,13 +54,13 @@ public class MyPetCaptureHelper
                 case Angry:
                     if (leashTarget instanceof Wolf && !((Wolf) leashTarget).isAngry())
                     {
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAngry", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotAngry", attacker));
                     }
                     break;
                 case CanBreed:
                     if (leashTarget instanceof Ageable && !((Ageable) leashTarget).canBreed())
                     {
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CanNotBreed", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.CanNotBreed", attacker));
                     }
                     break;
                 case None:
@@ -70,32 +70,32 @@ public class MyPetCaptureHelper
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotTamed", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotTamed", attacker));
                     }
                     break;
                 case UserCreated:
                     if (leashTarget instanceof IronGolem && !((IronGolem) leashTarget).isPlayerCreated())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotUserCreated", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotUserCreated", attacker));
                     }
                     break;
                 case Wild:
                     if (leashTarget instanceof IronGolem && ((IronGolem) leashTarget).isPlayerCreated())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotWild", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotWild", attacker));
                     }
                     else if (leashTarget instanceof Tameable && ((Tameable) leashTarget).isTamed())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotWild", attacker)));
+                        attacker.sendMessage(MyPetLocales.getString("Message.NotWild", attacker));
                     }
             }
         }
         if (tameNow)
         {
-            attacker.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.TameNow", attacker)));
+            attacker.sendMessage(MyPetLocales.getString("Message.TameNow", attacker));
         }
         return tameNow;
     }

@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.locale;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -101,13 +102,13 @@ public class MyPetLocales
         ResourceBundle locale = locales.get(localeString);
         if (locale.containsKey(key))
         {
-            return locale.getString(key);
+            return Colorizer.setColors(locale.getString(key));
         }
 
         locale = locales.get("en");
         if (locale.containsKey(key))
         {
-            return locale.getString(key);
+            return Colorizer.setColors(locale.getString(key));
         }
 
         return key;

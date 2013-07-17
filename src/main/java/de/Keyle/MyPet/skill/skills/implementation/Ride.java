@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Material;
 
@@ -59,7 +58,7 @@ public class Ride extends RideInfo implements ISkillInstance
         {
             if (!active && !quiet)
             {
-                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
             }
             active = true;
             /*

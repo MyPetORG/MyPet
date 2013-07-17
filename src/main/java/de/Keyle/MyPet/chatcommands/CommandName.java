@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,16 +61,16 @@ public class CommandName implements CommandExecutor
                 Matcher regexMatcher = regex.matcher(name);
                 if (regexMatcher.find())
                 {
-                    name += Colorizer.setColors("%reset%");
+                    name += ChatColor.RESET;
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NewName", petOwner)).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(MyPetLocales.getString("Message.NewName", petOwner).replace("%petname%", name));
             }
             else
             {
-                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
+                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }

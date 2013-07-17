@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
@@ -37,45 +36,45 @@ public class CommandHelp implements CommandExecutor
         {
             Player player = (Player) sender;
             player.sendMessage("--------------- MyPet - " + MyPetLocales.getString("Name.Help", player) + " -------------------------");
-            player.sendMessage(Colorizer.setColors("/petinfo" + MyPetLocales.getString("Message.Help.PetInfo", player)));
-            player.sendMessage(Colorizer.setColors("/pettype" + MyPetLocales.getString("Message.Help.PetType", player)));
+            player.sendMessage("/petinfo" + MyPetLocales.getString("Message.Help.PetInfo", player));
+            player.sendMessage("/pettype" + MyPetLocales.getString("Message.Help.PetType", player));
             if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
             {
-                player.sendMessage(Colorizer.setColors("/petcapturehelper" + MyPetLocales.getString("Message.Help.PetCaptureHelper", player)));
+                player.sendMessage("/petcapturehelper" + MyPetLocales.getString("Message.Help.PetCaptureHelper", player));
             }
             if (MyPetPermissions.has(player, "MyPet.admin", false))
             {
-                player.sendMessage(Colorizer.setColors("/petadmin" + MyPetLocales.getString("Message.Help.PetAdmin", player)));
+                player.sendMessage("/petadmin" + MyPetLocales.getString("Message.Help.PetAdmin", player));
             }
             if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage(Colorizer.setColors("/petname" + MyPetLocales.getString("Message.Help.PetName", player)));
-                player.sendMessage(Colorizer.setColors("/petrelease" + MyPetLocales.getString("Message.Help.PetRelease", player)));
-                player.sendMessage(Colorizer.setColors("/petstop" + MyPetLocales.getString("Message.Help.PetStop", player)));
-                player.sendMessage(Colorizer.setColors("/petcall" + MyPetLocales.getString("Message.Help.PetCall", player)));
-                player.sendMessage(Colorizer.setColors("/petsendaway" + MyPetLocales.getString("Message.Help.PetSendAway", player)));
-                player.sendMessage(Colorizer.setColors("/petskill" + MyPetLocales.getString("Message.Help.PetSkill", player)));
-                player.sendMessage(Colorizer.setColors("/petchooseskilltree" + MyPetLocales.getString("Message.Help.PetChooseSkilltree", player)));
+                player.sendMessage("/petname" + MyPetLocales.getString("Message.Help.PetName", player));
+                player.sendMessage("/petrelease" + MyPetLocales.getString("Message.Help.PetRelease", player));
+                player.sendMessage("/petstop" + MyPetLocales.getString("Message.Help.PetStop", player));
+                player.sendMessage("/petcall" + MyPetLocales.getString("Message.Help.PetCall", player));
+                player.sendMessage("/petsendaway" + MyPetLocales.getString("Message.Help.PetSendAway", player));
+                player.sendMessage("/petskill" + MyPetLocales.getString("Message.Help.PetSkill", player));
+                player.sendMessage("/petchooseskilltree" + MyPetLocales.getString("Message.Help.PetChooseSkilltree", player));
 
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
                 {
-                    player.sendMessage(Colorizer.setColors("/petinventory" + MyPetLocales.getString("Message.Help.PetInventory", player)));
+                    player.sendMessage("/petinventory" + MyPetLocales.getString("Message.Help.PetInventory", player));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Beacon"))
                 {
-                    player.sendMessage(Colorizer.setColors("/petbeacon" + MyPetLocales.getString("Message.Help.PetBeacon", player)));
+                    player.sendMessage("/petbeacon" + MyPetLocales.getString("Message.Help.PetBeacon", player));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
                 {
-                    player.sendMessage(Colorizer.setColors("/petpickup" + MyPetLocales.getString("Message.Help.PetPickup", player)));
+                    player.sendMessage("/petpickup" + MyPetLocales.getString("Message.Help.PetPickup", player));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive("Behavior"))
                 {
-                    player.sendMessage(Colorizer.setColors("/petbehavior" + MyPetLocales.getString("Message.Help.PetBehavior", player)));
+                    player.sendMessage("/petbehavior" + MyPetLocales.getString("Message.Help.PetBehavior", player));
                 }
             }
             player.sendMessage("");
-            player.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.Help.MoreInfo", player) + " http://mypet.keyle.de"));
+            player.sendMessage(MyPetLocales.getString("Message.Help.MoreInfo", player) + " http://mypet.keyle.de");
             player.sendMessage("-----------------------------------------------------");
             return true;
         }

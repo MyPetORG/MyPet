@@ -199,13 +199,13 @@ public abstract class MyPet implements IMyPet, NBTStorage
             switch (createPet())
             {
                 case Success:
-                    sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.OnRespawn", petOwner.getLanguage())).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetLocales.getString("Message.OnRespawn", petOwner.getLanguage()).replace("%petname%", petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.SpawnPrevent", petOwner.getLanguage())).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetLocales.getString("Message.SpawnPrevent", petOwner.getLanguage()).replace("%petname%", petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.SpawnNoSpace", petOwner.getLanguage())).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetLocales.getString("Message.SpawnNoSpace", petOwner.getLanguage()).replace("%petname%", petName));
                     break;
             }
             if (MyPetConfiguration.USE_HUNGER_SYSTEM)
@@ -524,7 +524,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
                     if (MyPetEconomy.canPay(getOwner(), cost))
                     {
                         MyPetEconomy.pay(getOwner(), cost);
-                        sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.RespawnPaid", petOwner.getLanguage()).replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
+                        sendMessageToOwner(MyPetLocales.getString("Message.RespawnPaid", petOwner.getLanguage().replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
                         respawnTime = 1;
                     }
                 }
