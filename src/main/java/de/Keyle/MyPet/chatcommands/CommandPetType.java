@@ -4,6 +4,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.apache.commons.lang.WordUtils;
@@ -65,7 +66,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
             commandSender.sendMessage(MyPetLocales.getString("Name.HP", lang) + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
             return true;
         }
-        commandSender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UnknownPetType", lang)));
+        commandSender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.UnknownPetType", lang)));
 
         return true;
     }

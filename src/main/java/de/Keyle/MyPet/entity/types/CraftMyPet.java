@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.EntityCreature;
@@ -76,7 +76,7 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
         if (getMyPet().getStatus() != PetState.Despawned)
         {
             getMyPet().removePet();
-            getMyPet().sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Despawn", getOwner().getLanguage()).replace("%petname%", getMyPet().petName)));
+            getMyPet().sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Despawn", getOwner().getLanguage()).replace("%petname%", getMyPet().petName)));
         }
         else
         {

@@ -293,8 +293,8 @@ public class MyPetConfiguration
         PetInfoDisplay.Skilltree.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetOwner", true);
 
         PET_INFO_OVERHEAD_NAME = config.getBoolean("MyPet.Info.OverHead.Name", true);
-        PET_INFO_OVERHEAD_PREFIX = MyPetBukkitUtil.setColors(config.getString("MyPet.Info.OverHead.Prefix", "%aqua%"));
-        PET_INFO_OVERHEAD_SUFFIX = MyPetBukkitUtil.setColors(config.getString("MyPet.Info.OverHead.Suffix", ""));
+        PET_INFO_OVERHEAD_PREFIX = Colorizer.setColors(config.getString("MyPet.Info.OverHead.Prefix", "%aqua%"));
+        PET_INFO_OVERHEAD_SUFFIX = Colorizer.setColors(config.getString("MyPet.Info.OverHead.Suffix", ""));
 
         MyPetPermissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         MyPetPermissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);

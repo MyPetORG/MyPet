@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
@@ -76,7 +76,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
+                    myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -103,12 +103,12 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
         {
             if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Creative", myPet.getOwner())));
+                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Inventory.Creative", myPet.getOwner())));
                 return false;
             }
             if (myPet.getOwner().isInExternalGames())
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
                 return false;
             }
             if (!myPet.getLocation().getBlock().isLiquid())
@@ -119,13 +119,13 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()).replace("%petname%", myPet.getPetName())));
+                myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()).replace("%petname%", myPet.getPetName())));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
+            myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner())).replace("%petname%", myPet.getPetName()));
             return false;
         }
     }

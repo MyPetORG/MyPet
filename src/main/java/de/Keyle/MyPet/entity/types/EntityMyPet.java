@@ -366,7 +366,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                         }
                         else
                         {
-                            getMyPet().sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage())));
+                            getMyPet().sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage())));
                         }
                     }
                 }

@@ -86,12 +86,12 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", petOwner)).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallFirst", petOwner)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.RespawnIn", petOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.RespawnIn", petOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime())));
                     return true;
                 }
                 if (args.length < 1)
@@ -284,7 +284,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(MyPetWorldGroup.getGroup(petOwner.getWorld().getName()).getName(), null);
 
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Release", petOwner)).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.Release", petOwner)).replace("%petname%", myPet.getPetName()));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
                     if (MyPetConfiguration.STORE_PETS_ON_PET_RELEASE)
@@ -295,13 +295,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.ShowPetName", petOwner)).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.ShowPetName", petOwner)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
+                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

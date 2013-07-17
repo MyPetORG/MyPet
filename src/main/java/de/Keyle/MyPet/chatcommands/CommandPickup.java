@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
@@ -45,17 +45,17 @@ public class CommandPickup implements CommandExecutor
 
                 if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowed", owner)));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAllowed", owner)));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", owner)).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallFirst", owner)).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", owner)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallWhenDead", owner)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Pickup"))
@@ -65,7 +65,7 @@ public class CommandPickup implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", owner)));
+                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", owner)));
             }
             return true;
         }

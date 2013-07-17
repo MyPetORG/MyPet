@@ -22,7 +22,7 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,22 +54,22 @@ public class CommandName implements CommandExecutor
                     }
                     name += arg;
                 }
-                name = MyPetBukkitUtil.setColors(name);
+                name = Colorizer.setColors(name);
 
                 Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
                 Matcher regexMatcher = regex.matcher(name);
                 if (regexMatcher.find())
                 {
-                    name += MyPetBukkitUtil.setColors("%reset%");
+                    name += Colorizer.setColors("%reset%");
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NewName", petOwner)).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NewName", petOwner)).replace("%petname%", myPet.getPetName()));
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
+                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

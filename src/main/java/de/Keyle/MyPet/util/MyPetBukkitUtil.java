@@ -21,7 +21,6 @@
 package de.Keyle.MyPet.util;
 
 import net.minecraft.server.v1_6_R2.*;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -35,15 +34,6 @@ import java.util.List;
 
 public class MyPetBukkitUtil
 {
-    public static String setColors(String text)
-    {
-        for (ChatColor color : ChatColor.values())
-        {
-            text = text.replace("%" + color.name().replace("_", "").toLowerCase() + "%", color.toString());
-        }
-        return text;
-    }
-
     public static Material checkMaterial(int itemid, Material defaultMaterial)
     {
         if (Material.getMaterial(itemid) == null)

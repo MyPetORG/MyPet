@@ -184,12 +184,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -203,13 +203,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 }
                 name += parameter[i];
             }
-            name = MyPetBukkitUtil.setColors(name);
+            name = Colorizer.setColors(name);
 
             Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
             Matcher regexMatcher = regex.matcher(name);
             if (regexMatcher.find())
             {
-                name += MyPetBukkitUtil.setColors("%reset%");
+                name += Colorizer.setColors("%reset%");
             }
 
             myPet.setPetName(name);
@@ -221,12 +221,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -291,12 +291,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -331,7 +331,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             MyPetConfiguration.config = MyPetPlugin.getPlugin().getConfig();
             MyPetConfiguration.loadConfiguration();
             DebugLogger.info("Config reloaded.");
-            sender.sendMessage(MyPetBukkitUtil.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
+            sender.sendMessage(Colorizer.setColors("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] config (config.yml) reloaded!"));
         }
         else if (option.equalsIgnoreCase("build"))
         {
@@ -392,12 +392,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 myPet.setSkilltree(skillTree);
                 if (skillTree != null)
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Skills", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.Skills", myPet.getOwner())).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
                     for (ISkillInstance skill : myPet.getSkills().getSkills())
                     {
                         if (skill.isActive())
                         {
-                            myPet.sendMessageToOwner(MyPetBukkitUtil.setColors("  %green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
+                            myPet.sendMessageToOwner(Colorizer.setColors("  %green%%skillname%%white% " + skill.getFormattedValue()).replace("%skillname%", skill.getName()));
                         }
                     }
                 }
@@ -441,12 +441,12 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
             else if (!MyPetList.hasMyPet(petOwner))
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang).replace("%playername%", petOwner.getName())));
                 return true;
             }
             MyPet myPet = MyPetList.getMyPet(petOwner);
@@ -457,16 +457,16 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 MyPetSkillTree skillTree = skillTreeMobType.getSkillTree(parameter[1]);
                 if (myPet.setSkilltree(skillTree))
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedToFor", lang).replace("%petowner%", petOwner.getName()).replace("%skilltree%", skillTree.getName())));
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.SkilltreeSwitchedToFor", lang).replace("%petowner%", petOwner.getName()).replace("%skilltree%", skillTree.getName())));
                 }
                 else
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SkilltreeNotSwitched", lang).replace("%playername%", petOwner.getName())));
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.SkilltreeNotSwitched", lang).replace("%playername%", petOwner.getName())));
                 }
             }
             else
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantFindSkilltree", lang).replace("%name%", parameter[2])));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.CantFindSkilltree", lang).replace("%name%", parameter[2])));
             }
         }
         else if (option.equalsIgnoreCase("create"))
@@ -481,7 +481,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 Player owner = Bukkit.getPlayer(parameter[0]);
                 if (owner == null || !owner.isOnline())
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                     return true;
                 }
 
@@ -647,13 +647,13 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             Player oldOwner = Bukkit.getPlayer(parameter[0]);
             if (oldOwner == null || !oldOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
             Player newOwner = Bukkit.getPlayer(parameter[1]);
             if (newOwner == null || !newOwner.isOnline())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                 return true;
             }
 
@@ -662,7 +662,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
 
             if (!oldPetOwner.hasMyPet())
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang)).replace("%playername%", oldOwner.getName()));
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.UserDontHavePet", lang)).replace("%playername%", oldOwner.getName()));
                 return true;
             }
             if (newPetOwner.hasMyPet())
@@ -708,7 +708,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 Player player = Bukkit.getPlayer(parameter[0]);
                 if (player == null || !player.isOnline())
                 {
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", lang)));
                     return true;
                 }
                 if (MyPetPlayer.isMyPetPlayer(player))

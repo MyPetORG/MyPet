@@ -24,7 +24,7 @@ import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
@@ -50,30 +50,30 @@ public class CommandCall implements CommandExecutor
                 switch (myPet.createPet())
                 {
                     case Success:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.Call", petOwner)).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.Call", petOwner)).replace("%petname%", myPet.getPetName()));
                         if (MyPetConfiguration.ENABLE_EVENTS)
                         {
                             getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         break;
                     case Canceled:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnPrevent", petOwner)).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.SpawnPrevent", petOwner)).replace("%petname%", myPet.getPetName()));
                         break;
                     case NoSpace:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.SpawnNoSpace", petOwner)).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.SpawnNoSpace", petOwner)).replace("%petname%", myPet.getPetName()));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.NotAllowedHere", petOwner)).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.NotAllowedHere", petOwner)).replace("%petname%", myPet.getPetName()));
                         break;
                     case Dead:
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", petOwner)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallWhenDead", petOwner)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                         break;
                 }
                 return true;
             }
             else
             {
-                sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
+                sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", petOwner)));
             }
             return true;
         }

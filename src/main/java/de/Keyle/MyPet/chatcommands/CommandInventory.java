@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
@@ -54,17 +54,17 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned)
                     {
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallFirst", player)).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallFirst", player)).replace("%petname%", myPet.getPetName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CallWhenDead", player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                        sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.CallWhenDead", player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                         return true;
                     }
                     if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Inventory") && !MyPetPermissions.has(player, "MyPet.admin", false))
                     {
-                        myPet.sendMessageToOwner(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.CantUse", player)));
+                        myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.CantUse", player)));
                         return true;
                     }
                     if (myPet.getSkills().hasSkill("Inventory"))
@@ -74,7 +74,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.DontHavePet", player)));
                 }
             }
             else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
@@ -83,7 +83,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetBukkitUtil.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player)));
+                    sender.sendMessage(Colorizer.setColors(MyPetLocales.getString("Message.PlayerNotOnline", player)));
                 }
                 else if (MyPetList.hasMyPet(petOwner))
                 {
