@@ -83,6 +83,7 @@ permissions:
       MyPet.user.leash.Creeper: true
       MyPet.user.leash.Enderman: true
       MyPet.user.leash.Giant: true
+      MyPet.user.leash.Horse: true
       MyPet.user.leash.IronGolem: true
       MyPet.user.leash.MagmaCube: true
       MyPet.user.leash.Mooshroom: true
@@ -95,6 +96,7 @@ permissions:
       MyPet.user.leash.Slime: true
       MyPet.user.leash.Snowman: true
       MyPet.user.leash.Spider: true
+      MyPet.user.leash.Squid: true
       MyPet.user.leash.Villager: true
       MyPet.user.leash.Witch: true
       MyPet.user.leash.Wither: true
