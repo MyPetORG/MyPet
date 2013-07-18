@@ -339,11 +339,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
-
             ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
             if (itemStack == null)
