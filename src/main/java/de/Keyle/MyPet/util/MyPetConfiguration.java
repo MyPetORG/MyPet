@@ -204,7 +204,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", true);
 
         config.addDefault("MyPet.Info.OverHead.Name", true);
-        config.addDefault("MyPet.Info.OverHead.Prefix", "%aqua%");
+        config.addDefault("MyPet.Info.OverHead.Prefix", "<aqua>");
         config.addDefault("MyPet.Info.OverHead.Suffix", "");
 
         for (MyPetType petType : MyPetType.values())
