@@ -23,6 +23,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -66,7 +67,7 @@ public class CommandName implements CommandExecutor
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
-                sender.sendMessage(MyPetLocales.getString("Message.NewName", petOwner).replace("%petname%", name));
+                sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.NewName", petOwner), name));
             }
             else
             {
