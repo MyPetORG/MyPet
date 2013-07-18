@@ -26,6 +26,7 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -63,7 +64,8 @@ public class Control extends ControlInfo implements ISkillInstance
         {
             if (!quiet && !active)
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetBukkitUtil.getMaterialName(CONTROL_ITEM)));
+                String controlItemName = WordUtils.capitalizeFully(MyPetBukkitUtil.getMaterialName(CONTROL_ITEM).replace("_", " "));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), controlItemName));
 
             }
             active = true;
