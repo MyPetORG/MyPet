@@ -21,8 +21,10 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
+import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -42,6 +44,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
@@ -95,6 +99,37 @@ public class MyPetPlayerListener implements Listener
                             }
                         }
                         ((Control) myPet.getSkills().getSkill("Control")).setMoveTo(block.getLocation());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event)
+    {
+        if (event.getRightClicked() instanceof MyPetEntity)
+        {
+            CraftMyPet craftMyPet = (CraftMyPet) event.getRightClicked();
+            MyPet myPet = craftMyPet.getMyPet();
+            ItemStack heldItem = event.getPlayer().getItemInHand();
+
+            if (heldItem != null)
+            {
+                if (heldItem.getType() == Material.NAME_TAG)
+                {
+                    if (craftMyPet.getOwner().equals(event.getPlayer()))
+                    {
+                        ItemMeta meta = heldItem.getItemMeta();
+                        if (meta.hasDisplayName())
+                        {
+                            craftMyPet.getMyPet().setPetName(meta.getDisplayName());
+                            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NewName", myPet.getOwner()), meta.getDisplayName()));
+                        }
+                    }
+                    else
+                    {
+                        event.setCancelled(true);
                     }
                 }
             }
