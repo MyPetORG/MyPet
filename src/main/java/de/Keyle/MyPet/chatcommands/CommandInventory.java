@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -53,12 +54,12 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned)
                     {
-                        sender.sendMessage(MyPetLocales.getString("Message.CallFirst", player).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", player), myPet.getPetName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        sender.sendMessage(MyPetLocales.getString("Message.CallWhenDead", player).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
                         return true;
                     }
                     if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Inventory") && !MyPetPermissions.has(player, "MyPet.admin", false))

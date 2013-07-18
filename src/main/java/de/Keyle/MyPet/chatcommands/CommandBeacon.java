@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -58,7 +59,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", petOwner.getName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.UserDontHavePet", player), petOwner.getName()));
                     return true;
                 }
 
@@ -79,12 +80,12 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallFirst", player).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", player), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallWhenDead", player).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))

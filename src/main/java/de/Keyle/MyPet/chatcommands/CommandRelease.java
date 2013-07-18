@@ -44,10 +44,7 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
-import de.Keyle.MyPet.util.MyPetConfiguration;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.MyPetWorldGroup;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R2.*;
@@ -89,12 +86,12 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallFirst", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.RespawnIn", petOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnIn", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length < 1)
@@ -287,7 +284,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(MyPetWorldGroup.getGroup(petOwner.getWorld().getName()).getName(), null);
 
-                    sender.sendMessage(MyPetLocales.getString("Message.Release", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.Release", petOwner), myPet.getPetName()));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
                     if (MyPetConfiguration.STORE_PETS_ON_PET_RELEASE)
@@ -298,7 +295,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.ShowPetName", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.ShowPetName", petOwner), myPet.getPetName()));
                     return true;
                 }
             }

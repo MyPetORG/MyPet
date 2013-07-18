@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,7 +57,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.UserDontHavePet", petOwner).replace("%playername%", petOwner.getName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.UserDontHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
@@ -65,7 +66,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(MyPetLocales.getString("Message.Skills", petOwner).replace("%petname%", myPet.getPetName()).replace("%skilltree%", (myPet.getSkillTree() == null ? "None" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.Skills", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills())
                 {

@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import net.minecraft.server.v1_6_R2.Packet62NamedSoundEffect;
@@ -75,7 +76,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%size%", "" + inv.getSize()));
+                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -118,13 +119,13 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()), myPet.getPetName()));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner()), myPet.getPetName()));
             return false;
         }
     }

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -49,12 +50,12 @@ public class CommandPickup implements CommandExecutor
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallFirst", owner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", owner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallWhenDead", owner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Pickup"))

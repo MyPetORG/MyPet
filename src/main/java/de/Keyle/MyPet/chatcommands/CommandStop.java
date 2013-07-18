@@ -23,6 +23,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,12 +43,12 @@ public class CommandStop implements CommandExecutor
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallFirst", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallWhenDead", petOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 sender.sendMessage(MyPetLocales.getString("Message.StopAttack", petOwner).replace("%petname%", myPet.getPetName()));

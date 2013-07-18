@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -62,7 +63,7 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallFirst", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getSkills().hasSkill("Behavior"))

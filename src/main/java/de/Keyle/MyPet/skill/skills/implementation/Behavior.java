@@ -28,6 +28,7 @@ import de.Keyle.MyPet.skill.skills.info.BehaviorInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.MyPetPermissions;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
 import org.spout.nbt.ByteTag;
@@ -142,7 +143,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
                 myPet.sendMessageToOwner("  " + activeModes);
             }
         }
@@ -206,7 +207,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     public void setBehavior(BehaviorState behaviorState)
     {
         behavior = behaviorState;
-        myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
+        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
         if (behavior == BehaviorState.Friendly)
         {
             myPet.getCraftPet().setTarget(null);
@@ -220,7 +221,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             if (behaviorActive.get(behaviorState))
             {
                 behavior = behaviorState;
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
                 if (behavior == BehaviorState.Friendly)
                 {
                     myPet.getCraftPet().getHandle().setGoalTarget(null);
@@ -229,7 +230,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
@@ -269,12 +270,12 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 behavior = BehaviorState.Normal;
             }
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%mode%", MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
             return true;
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }

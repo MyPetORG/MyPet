@@ -115,6 +115,15 @@ public class MyPetUtil
         return string;
     }
 
+    public static String formatText(String text, Object... values)
+    {
+        for (int i = 0 ; i < values.length ; i++)
+        {
+            text = text.replaceAll("\\{" + i + "}", values[i].toString());
+        }
+        return text;
+    }
+
     public static String readFileAsString(String filePath) throws java.io.IOException
     {
         StringBuilder fileData = new StringBuilder(1000);

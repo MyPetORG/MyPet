@@ -199,13 +199,13 @@ public abstract class MyPet implements IMyPet, NBTStorage
             switch (createPet())
             {
                 case Success:
-                    sendMessageToOwner(MyPetLocales.getString("Message.OnRespawn", petOwner.getLanguage()).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.OnRespawn", petOwner.getLanguage()), petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(MyPetLocales.getString("Message.SpawnPrevent", petOwner.getLanguage()).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnPrevent", petOwner.getLanguage()), petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(MyPetLocales.getString("Message.SpawnNoSpace", petOwner.getLanguage()).replace("%petname%", petName));
+                    sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnNoSpace", petOwner.getLanguage()), petName));
                     break;
             }
             if (MyPetConfiguration.USE_HUNGER_SYSTEM)
@@ -524,7 +524,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
                     if (MyPetEconomy.canPay(getOwner(), cost))
                     {
                         MyPetEconomy.pay(getOwner(), cost);
-                        sendMessageToOwner(MyPetLocales.getString("Message.RespawnPaid", petOwner.getLanguage().replace("%cost%", cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", petName)));
+                        sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnPaid", petOwner.getLanguage()), petName, cost + " " + MyPetEconomy.getEconomy().currencyNameSingular()));
                         respawnTime = 1;
                     }
                 }

@@ -428,7 +428,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        player.sendMessage(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                        player.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)), myPet.getPetName(), myPet.getRespawnTime()));
                     }
                     else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {

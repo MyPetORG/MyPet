@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.HPregenerationInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.EntityLiving;
 import net.minecraft.server.v1_6_R2.PotionBrewer;
@@ -104,7 +105,7 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%sec%", "" + regenTime).replace("%hp%", "" + increaseHpBy));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
             }
         }
     }

@@ -2,6 +2,7 @@ package de.Keyle.MyPet.chatcommands;
 
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +29,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
             {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 String mode = myPetPlayer.isCaptureHelperActive() ? MyPetLocales.getString("Name.Enabled", player) : MyPetLocales.getString("Name.Disabled", player);
-                player.sendMessage(MyPetLocales.getString("Message.CaptureHelperMode", player).replace("%mode%", "" + mode));
+                player.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CaptureHelperMode", player), mode));
                 return true;
             }
             player.sendMessage(MyPetLocales.getString("Message.NotAllowed", player));

@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.FireInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
@@ -89,7 +90,7 @@ public class Fire extends FireInfo implements ISkillInstance, ISkillActive
             chance = Math.min(chance, 100);
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Fire.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance).replace("%duration%", "" + duration));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Fire.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
             }
         }
     }

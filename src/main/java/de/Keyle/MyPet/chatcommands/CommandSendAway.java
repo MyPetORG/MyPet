@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.MyPetConfiguration;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,7 +48,7 @@ public class CommandSendAway implements CommandExecutor
                 if (myPet.getStatus() == PetState.Here)
                 {
                     myPet.removePet(false);
-                    sender.sendMessage(MyPetLocales.getString("Message.SendAway", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.SendAway", petOwner), myPet.getPetName()));
                     if (MyPetConfiguration.ENABLE_EVENTS)
                     {
                         getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
@@ -55,11 +56,11 @@ public class CommandSendAway implements CommandExecutor
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.AlreadyAway", petOwner).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.AlreadyAway", petOwner), myPet.getPetName()));
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.CallWhenDead", petOwner).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                 }
             }
             else

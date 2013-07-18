@@ -31,6 +31,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.info.BeaconInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.ChatColor;
@@ -180,7 +181,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             }
             if (!quiet)
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()).replace("%range%", String.format("%1.2f", range)).replace("%duration%", "" + duration).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range), duration));
                 myPet.sendMessageToOwner("  " + getFormattedValue());
             }
         }
@@ -235,7 +236,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
@@ -248,7 +249,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            player.sendMessage(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
+            player.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
@@ -269,7 +270,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()).replace("%buff%", MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
+                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()), MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
                     return false;
                 }
             }
@@ -288,11 +289,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 {
                     if (effectId != 10)
                     {
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Beacon.ImprovedBuffNotActive", myPet.getOwner().getLanguage()).replace("%buff%", MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
+                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Beacon.ImprovedBuffNotActive", myPet.getOwner().getLanguage()), MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
                     }
                     else
                     {
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()).replace("%buff%", MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
+                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()), MyPetLocales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
                     }
                     return false;
                 }
@@ -300,7 +301,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%skill%", this.getName()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
         return false;
     }

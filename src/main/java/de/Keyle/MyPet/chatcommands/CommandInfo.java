@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -164,7 +165,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.UserDontHavePet", player).replace("%playername%", playerName));
+                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.UserDontHavePet", player), playerName));
                 }
                 else
                 {

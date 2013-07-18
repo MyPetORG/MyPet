@@ -640,13 +640,13 @@ public class MyPetEntityListener implements Listener
                 switch (myPet.createPet())
                 {
                     case Success:
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.Call", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Call", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                     case Canceled:
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                     case NoSpace:
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                 }
             }
@@ -847,7 +847,7 @@ public class MyPetEntityListener implements Listener
                 }
             }
             sendDeathMessage(event);
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
             if (MyPetEconomy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.getRespawnTime() >= myPet.getOwner().getAutoRespawnMin() && MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
             {
@@ -855,12 +855,12 @@ public class MyPetEntityListener implements Listener
                 if (MyPetEconomy.canPay(myPet.getOwner(), costs))
                 {
                     MyPetEconomy.pay(myPet.getOwner(), costs);
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.getPetName()));
+                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()).replace("%costs%", costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()).replace("%petname%", myPet.getPetName()));
+                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + MyPetEconomy.getEconomy().currencyNameSingular()));
                 }
             }
         }
@@ -1108,7 +1108,7 @@ public class MyPetEntityListener implements Listener
                     killer = MyPetLocales.getString("Name.Unknow", myPet.getOwner().getLanguage());
                 }
             }
-            myPet.sendMessageToOwner(MyPetLocales.getString("Message.DeathMessage", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()) + " " + killer);
+            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.DeathMessage", myPet.getOwner().getLanguage()), myPet.getPetName(), killer));
         }
     }
 

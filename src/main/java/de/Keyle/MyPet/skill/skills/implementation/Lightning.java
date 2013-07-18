@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.LightningInfo;
+import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -101,7 +102,7 @@ public class Lightning extends LightningInfo implements ISkillInstance, ISkillAc
             chance = Math.min(chance, 100);
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Lightning.Upgrade", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%chance%", "" + chance).replace("%damage%", "" + damage));
+                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Lightning.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, damage));
             }
         }
     }
