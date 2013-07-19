@@ -24,10 +24,38 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 
 public class MyPetUtil
 {
+    public static Field getField(Class<?> clazz, String field)
+    {
+        try
+        {
+            Field f = clazz.getDeclaredField(field);
+            f.setAccessible(true);
+            return f;
+        }
+        catch (Exception ignored)
+        {
+            return null;
+        }
+    }
+
+    public static boolean setFieldValue(Field field, Object object, Object value)
+    {
+        try
+        {
+            field.set(object, value);
+            return true;
+        }
+        catch (IllegalAccessException e)
+        {
+            return false;
+        }
+    }
+
     public static boolean isInt(String number)
     {
         try
