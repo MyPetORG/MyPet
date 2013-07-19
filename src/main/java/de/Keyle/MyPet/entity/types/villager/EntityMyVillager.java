@@ -28,7 +28,7 @@ import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.Material;
 
-@EntitySize(width = 0.6F, height = 0.8F)
+@EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();

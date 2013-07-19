@@ -29,7 +29,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Material;
 
-@EntitySize(width = 0.6F, height = 0.9F)
+@EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();

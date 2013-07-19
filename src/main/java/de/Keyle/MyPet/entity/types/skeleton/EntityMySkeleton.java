@@ -28,7 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_6_R2.*;
 
-@EntitySize(width = 0.6F, height = 0.6F)
+@EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet
 {
     public EntityMySkeleton(World world, MyPet myPet)
