@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
@@ -36,11 +37,16 @@ import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.StringTag;
 
+import java.util.Random;
+
 public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive
 {
+    private static Random random = new Random();
+
     private BehaviorState behavior = BehaviorState.Normal;
     private boolean active = false;
     private MyPet myPet;
+    private double height;
 
     public Behavior(boolean addedByInheritance)
     {
@@ -56,6 +62,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     public void setMyPet(MyPet myPet)
     {
         this.myPet = myPet;
+        height = MyPet.getEntitySize(myPet.getPetType().getEntityClass())[0];
     }
 
     public MyPet getMyPet()
@@ -297,6 +304,10 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
 
     public void schedule()
     {
+        if (behavior == BehaviorState.Aggressive && random.nextBoolean())
+        {
+            MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, height, 0), "angryVillager", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+        }
         if (myPet instanceof MyEnderman)
         {
             MyEnderman myEnderman = (MyEnderman) myPet;
