@@ -59,10 +59,6 @@ public class MyPetSkillTree
 
     public MyPetSkillTreeLevel getLevel(int level)
     {
-        if (!skillsPerLevel.containsKey(level))
-        {
-            return null;
-        }
         return skillsPerLevel.get(level);
     }
 
