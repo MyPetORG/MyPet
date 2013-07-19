@@ -47,10 +47,13 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_6_R2.*;
+import net.minecraft.server.v1_6_R2.EntityItem;
 import net.minecraft.server.v1_6_R2.Item;
+import net.minecraft.server.v1_6_R2.ItemStack;
+import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -273,12 +276,24 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                         }
                         else if (myPet instanceof MyHorse)
                         {
-                            ((CraftHorse) normalEntity).getHandle().setAge(((MyHorse) myPet).getAge());
-                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setVariant(((MyHorse) myPet).getVariant());
-                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setType(((MyHorse) myPet).getHorseType());
-                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).setHasChest(((MyHorse) myPet).hasChest());
-                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).n(((MyHorse) myPet).hasSaddle());
-                            ((EntityHorse) ((CraftHorse) normalEntity).getHandle()).r(((MyHorse) myPet).getArmor());
+                            ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
+                            ((CraftHorse) normalEntity).getHandle().setVariant(((MyHorse) myPet).getVariant());
+                            ((CraftHorse) normalEntity).getHandle().setType(((MyHorse) myPet).getHorseType());
+                            ((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
+
+                            if (((MyHorse) myPet).hasSaddle())
+                            {
+                                ((Horse) normalEntity).getInventory().setSaddle(new org.bukkit.inventory.ItemStack(Material.SADDLE));
+                                ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
+                            }
+                            else
+                            {
+                                ((Horse) normalEntity).setTamed(false);
+                            }
+                            if (((MyHorse) myPet).getArmor() > 0)
+                            {
+                                ((Horse) normalEntity).getInventory().setArmor(new org.bukkit.inventory.ItemStack(416 + ((MyHorse) myPet).getArmor()));
+                            }
                         }
                     }
                     myPet.removePet();
