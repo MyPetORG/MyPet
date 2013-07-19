@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types.squid;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.95F, height = 0.95F)
@@ -59,5 +60,15 @@ public class EntityMySquid extends EntityMyPet
     protected String r()
     {
         return null;
+    }
+
+    @Override
+    public void l_()
+    {
+        super.l_();
+        if (this.random.nextBoolean())
+        {
+            MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, 0.7, 0), "splash", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
+        }
     }
 }
