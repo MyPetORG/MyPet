@@ -269,7 +269,6 @@ public class EntityMyHorse extends EntityMyPet
                 {
                     if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
                     {
-                        setArmor(0);
                         EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -277,7 +276,6 @@ public class EntityMyHorse extends EntityMyPet
                     }
                     if (hasChest() && !entityhuman.abilities.canInstantlyBuild)
                     {
-                        setChest(false);
                         EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -285,12 +283,14 @@ public class EntityMyHorse extends EntityMyPet
                     }
                     if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild)
                     {
-                        setSaddle(false);
                         EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     }
+                    setChest(false);
+                    setSaddle(false);
+                    setArmor(0);
                     return true;
                 }
                 else if (itemStack.id == GROW_UP_ITEM)
