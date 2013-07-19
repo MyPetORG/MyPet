@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -31,17 +34,16 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundTag;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
 
 public class MyPetList
 {
-    private static final Map<MyPetPlayer, MyPet> mActivePets = new HashMap<MyPetPlayer, MyPet>();
-    private static final List<MyPet> lActivePets = new ArrayList<MyPet>();
-
-    private static final Map<MyPetPlayer, List<InactiveMyPet>> mInctivePets = new HashMap<MyPetPlayer, List<InactiveMyPet>>();
-    private static final List<InactiveMyPet> lInactivePets = new ArrayList<InactiveMyPet>();
+    private static final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
+    private static final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
+    private static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> mInctivePets = ArrayListMultimap.create();
 
     // Active -------------------------------------------------------------------
 
@@ -91,8 +93,7 @@ public class MyPetList
 
     private static void addMyPet(MyPet myPet)
     {
-        mActivePets.put(myPet.getOwner(), myPet);
-        lActivePets.add(myPet);
+        mActivePetsPlayer.put(myPet, myPet.getOwner());
     }
 
     private static void removeMyPet(MyPet myPet)
@@ -101,36 +102,24 @@ public class MyPetList
         {
             return;
         }
-        lActivePets.remove(myPet);
-        if (mActivePets.containsKey(myPet.getOwner()))
-        {
-            mActivePets.remove(myPet.getOwner());
-        }
+        mActivePetsPlayer.remove(myPet);
     }
 
     public static MyPet getMyPet(Player owner)
     {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
-        {
-            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
-        }
-        return null;
+        return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
     public static MyPet getMyPet(String owner)
     {
-        if (mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
-        {
-            return mActivePets.get(MyPetPlayer.getMyPetPlayer(owner));
-        }
-        return null;
+        return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
     public static MyPet[] getAllActiveMyPets()
     {
-        MyPet[] allActiveMyPets = new MyPet[lActivePets.size()];
+        MyPet[] allActiveMyPets = new MyPet[mActivePetsPlayer.keySet().size()];
         int i = 0;
-        for (MyPet myPet : lActivePets)
+        for (MyPet myPet : mActivePetsPlayer.keySet())
         {
             allActiveMyPets[i++] = myPet;
         }
@@ -139,19 +128,19 @@ public class MyPetList
 
     public static boolean hasMyPet(Player player)
     {
-        return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(player));
+        return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(player));
     }
 
     public static boolean hasMyPet(String name)
     {
-        return mActivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
+        return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
     // Inactive -----------------------------------------------------------------
 
-    public static List<InactiveMyPet> getAllInactiveMyPets()
+    public static Collection<InactiveMyPet> getAllInactiveMyPets()
     {
-        return lInactivePets;
+        return mInctivePets.values();
     }
 
     public static boolean hasInactiveMyPets(Player player)
@@ -162,11 +151,6 @@ public class MyPetList
     public static boolean hasInactiveMyPets(MyPetPlayer myPetPlayer)
     {
         return mInctivePets.containsKey(myPetPlayer);
-    }
-
-    public static boolean hasInactiveMyPets(String name)
-    {
-        return MyPetPlayer.isMyPetPlayer(name) && mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
     private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet)
@@ -187,67 +171,26 @@ public class MyPetList
         return inactiveMyPet;
     }
 
-    public static List<InactiveMyPet> getInactiveMyPets(Player owner)
+    public static List<InactiveMyPet> getInactiveMyPets(MyPetPlayer owner)
     {
-        if (mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
-        {
-            return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
-        }
-        return new ArrayList<InactiveMyPet>();
+        return mInctivePets.get(owner);
     }
 
-    public static InactiveMyPet[] getInactiveMyPets(String owner)
+    public static List<InactiveMyPet> getInactiveMyPets(Player owner)
     {
-        if (mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(owner)))
-        {
-            InactiveMyPet[] allInactiveMyPets = new InactiveMyPet[mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner)).size()];
-            int i = 0;
-            for (InactiveMyPet myPet : mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner)))
-            {
-                allInactiveMyPets[i++] = myPet;
-            }
-            return allInactiveMyPets;
-        }
-        return new InactiveMyPet[0];
+        return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
     public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
-        if (inactiveMyPet == null)
-        {
-            return;
-        }
-        lInactivePets.remove(inactiveMyPet);
-        if (mInctivePets.containsKey(inactiveMyPet.getOwner()))
-        {
-            List<InactiveMyPet> myPetList = mInctivePets.get(inactiveMyPet.getOwner());
-            if (myPetList.contains(inactiveMyPet))
-            {
-                myPetList.remove(inactiveMyPet);
-            }
-            if (myPetList.size() == 0)
-            {
-                mInctivePets.remove(inactiveMyPet.getOwner());
-            }
-        }
+        mInctivePets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
     }
 
     public static void addInactiveMyPet(InactiveMyPet inactiveMyPet)
     {
-        lInactivePets.add(inactiveMyPet);
-        if (mInctivePets.containsKey(inactiveMyPet.getOwner()))
+        if (!mInctivePets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet))
         {
-            List<InactiveMyPet> inactiveMyPetList = mInctivePets.get(inactiveMyPet.getOwner());
-            if (!inactiveMyPetList.contains(inactiveMyPet))
-            {
-                inactiveMyPetList.add(inactiveMyPet);
-            }
-        }
-        else
-        {
-            List<InactiveMyPet> inactiveMyPetList = new ArrayList<InactiveMyPet>();
-            inactiveMyPetList.add(inactiveMyPet);
-            mInctivePets.put(inactiveMyPet.getOwner(), inactiveMyPetList);
+            mInctivePets.put(inactiveMyPet.getOwner(), inactiveMyPet);
         }
     }
 
@@ -284,7 +227,7 @@ public class MyPetList
 
     public static InactiveMyPet setMyPetInactive(MyPetPlayer owner)
     {
-        if (mActivePets.containsKey(owner))
+        if (mActivePlayerPets.containsKey(owner))
         {
             MyPet activeMyPet = owner.getMyPet();
 
@@ -318,11 +261,11 @@ public class MyPetList
     {
         IMyPet[] allMyPets = new IMyPet[countMyPets()];
         int i = 0;
-        for (MyPet myPet : lActivePets)
+        for (MyPet myPet : mActivePetsPlayer.keySet())
         {
             allMyPets[i++] = myPet;
         }
-        for (InactiveMyPet inactiveMyPet : lInactivePets)
+        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets())
         {
             allMyPets[i++] = inactiveMyPet;
         }
@@ -331,33 +274,31 @@ public class MyPetList
 
     public static void clearList()
     {
-        mActivePets.clear();
-        lActivePets.clear();
+        mActivePlayerPets.clear();
         mInctivePets.clear();
-        lInactivePets.clear();
     }
 
     public static int countMyPets()
     {
-        return lActivePets.size() + lInactivePets.size();
+        return countActiveMyPets() + getAllInactiveMyPets().size();
     }
 
     public static int countActiveMyPets()
     {
-        return lActivePets.size();
+        return mActivePetsPlayer.size();
     }
 
     public static int countMyPets(MyPetType myPetType)
     {
         int counter = 0;
-        for (MyPet myPet : lActivePets)
+        for (MyPet myPet : mActivePetsPlayer.keySet())
         {
             if (myPet.getPetType() == myPetType)
             {
                 counter++;
             }
         }
-        for (InactiveMyPet inactiveMyPet : lInactivePets)
+        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets())
         {
             if (inactiveMyPet.getPetType() == myPetType)
             {

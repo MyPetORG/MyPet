@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.util;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -37,7 +39,9 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class MyPetPlayer implements IScheduler, NBTStorage
 {
@@ -52,7 +56,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
-    private Map<String, UUID> petWorlds = new HashMap<String, UUID>();
+
+    private BiMap<String, UUID> petWorldUUID = HashBiMap.create();
+    private BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
 
     public enum DonationRank
@@ -102,7 +108,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         {
             return true;
         }
-        else if (petWorlds.size() > 0)
+        else if (petWorldUUID.size() > 0)
         {
             return true;
         }
@@ -149,34 +155,27 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         }
         if (myPetUUID == null)
         {
-            petWorlds.remove(worldGroup);
+            petUUIDWorld.remove(myPetUUID);
         }
         else
         {
-            petWorlds.put(worldGroup, myPetUUID);
+            petWorldUUID.put(worldGroup, myPetUUID);
         }
     }
 
     public UUID getMyPetForWorldGroup(String worldGroup)
     {
-        return petWorlds.get(worldGroup);
+        return petWorldUUID.get(worldGroup);
     }
 
     public String getWorldGroupForMyPet(UUID petUUID)
     {
-        for (String worldGroup : petWorlds.keySet())
-        {
-            if (petWorlds.get(worldGroup).equals(petUUID))
-            {
-                return worldGroup;
-            }
-        }
-        return null;
+        return petUUIDWorld.get(petUUID);
     }
 
     public boolean hasMyPetInWorldGroup(String worldGroup)
     {
-        return petWorlds.containsKey(worldGroup);
+        return petWorldUUID.containsKey(worldGroup);
     }
 
     public boolean hasInactiveMyPetInWorldGroup(String worldGroup)
@@ -333,12 +332,12 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     public boolean hasInactiveMyPets()
     {
-        return MyPetList.hasInactiveMyPets(playerName);
+        return MyPetList.hasInactiveMyPets(this);
     }
 
     public InactiveMyPet getInactiveMyPet(UUID petUUID)
     {
-        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(playerName))
+        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this))
         {
             if (inactiveMyPet.getUUID().equals(petUUID))
             {
@@ -348,9 +347,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return null;
     }
 
-    public InactiveMyPet[] getInactiveMyPets()
+    public List<InactiveMyPet> getInactiveMyPets()
     {
-        return MyPetList.getInactiveMyPets(playerName);
+        return MyPetList.getInactiveMyPets(this);
     }
 
     public Player getPlayer()
@@ -425,9 +424,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", isCaptureHelperActive()));
 
         CompoundTag multiWorldCompound = new CompoundTag("MultiWorld", new CompoundMap());
-        for (String worldGroupName : petWorlds.keySet())
+        for (String worldGroupName : petWorldUUID.keySet())
         {
-            multiWorldCompound.getValue().put(worldGroupName, new StringTag(worldGroupName, petWorlds.get(worldGroupName).toString()));
+            multiWorldCompound.getValue().put(worldGroupName, new StringTag(worldGroupName, petWorldUUID.get(worldGroupName).toString()));
         }
         playerNBT.getValue().put("MultiWorld", multiWorldCompound);
 
