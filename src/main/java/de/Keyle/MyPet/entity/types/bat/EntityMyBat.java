@@ -32,6 +32,7 @@ public class EntityMyBat extends EntityMyPet
     public EntityMyBat(World world, MyPet myPet)
     {
         super(world, myPet);
+        this.height = 1F;
     }
 
     public void setMyPet(MyPet myPet)
@@ -104,22 +105,6 @@ public class EntityMyBat extends EntityMyPet
         if (!this.onGround && this.motY < 0.0D)
         {
             this.motY *= 0.6D;
-        }
-    }
-
-    public void l_()
-    {
-        try
-        {
-            super.l_();
-            if (!world.getMaterial((int) locX, (int) locY, (int) locZ).isLiquid() && !world.getMaterial((int) locX, (int) (locY + 1.), (int) locZ).isSolid())
-            {
-                this.locY += 0.65;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 

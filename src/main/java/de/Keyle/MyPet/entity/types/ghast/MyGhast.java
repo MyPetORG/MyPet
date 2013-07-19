@@ -28,6 +28,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.MyPetWorldGroup;
+import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
@@ -56,17 +58,40 @@ public class MyGhast extends MyPet
                 net.minecraft.server.v1_6_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                loc = loc.add(0, 4, 0);
                 petEntity.setLocation(loc);
                 if (!MyPetBukkitUtil.canSpawn(loc, petEntity))
                 {
-                    Location l = loc.add(0, 4, 0);
-                    if (!MyPetBukkitUtil.canSpawn(l, petEntity))
-                    {
-                        status = PetState.Despawned;
-                        return SpawnFlags.NoSpace;
-                    }
-                    petEntity.setLocation(l);
+                    status = PetState.Despawned;
+                    return SpawnFlags.NoSpace;
                 }
+
+                if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (PvPArena.DISABLE_PETS_IN_ARENA && PvPArena.isInPvPArena(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (MobArena.DISABLE_PETS_IN_ARENA && MobArena.isInMobArena(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (BattleArena.DISABLE_PETS_IN_ARENA && BattleArena.isInBattleArena(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+                if (SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES && SurvivalGames.isInSurvivalGames(getOwner()))
+                {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
+
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM))
                 {
                     status = PetState.Despawned;
@@ -74,6 +99,14 @@ public class MyGhast extends MyPet
                 }
                 craftMyPet.setMetadata("MyPet", new FixedMetadataValue(MyPetPlugin.getPlugin(), this));
                 status = PetState.Here;
+
+                if (worldGroup == null || worldGroup.equals(""))
+                {
+                    setWorldGroup(MyPetWorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
+                }
+
+                autoAssignSkilltree();
+
                 return SpawnFlags.Success;
             }
         }
