@@ -40,6 +40,7 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R2.EntityHorse;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -1114,6 +1115,8 @@ public class MyPetEntityListener implements Listener
 
     private static String capitalizeName(String name)
     {
+        Validate.notNull(name, "Name can't be null");
+
         name = name.replace("_", " ");
         name = WordUtils.capitalizeFully(name);
         name = name.replace(" ", "");
