@@ -159,7 +159,7 @@ public class MyPetConfiguration
         config.addDefault("MyPet.Support.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
-        config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", false);
+        config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", true);
         config.addDefault("MyPet.Exp.Passive.PercentPerMonster", 25);
         config.addDefault("MyPet.Exp.Loss.Percent", 0);
         config.addDefault("MyPet.Exp.Loss.Fixed", 0.0);
@@ -324,7 +324,7 @@ public class MyPetConfiguration
         MyPetExperience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
         MyPetExperience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
         MyPetExperience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
-        MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", false);
+        MyPetExperience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);
         MyPetExperience.FIREWORK_ON_LEVELUP = config.getBoolean("MyPet.LevelSystem.Firework", true);
 
         EntityMyChicken.CAN_LAY_EGGS = config.getBoolean("MyPet.Pets.Chicken.CanLayEggs", true);
