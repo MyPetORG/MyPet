@@ -29,7 +29,6 @@ import de.Keyle.MyPet.util.MyPetVersion;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -51,9 +50,6 @@ public class LevelCreator
     JCheckBox inheritanceCheckBox;
     JPanel levelCreatorPanel;
     JButton backButton;
-    JLabel mobTypeLabel;
-    JTable skillCounterTabel;
-    JLabel skilllevelLabel;
     JButton copyButton;
     JTextField permissionDisplayTextField;
     JCheckBox displayNameCheckbox;
@@ -62,19 +58,32 @@ public class LevelCreator
     JTextField permissionTextField;
     JFrame levelCreatorFrame;
 
-    DefaultTableModel skillCounterTabelModel;
     DefaultTreeModel skillTreeTreeModel;
     DefaultComboBoxModel inheritanceComboBoxModel;
 
     MyPetSkillTree skillTree;
     MyPetSkillTreeMobType skillTreeMobType;
 
-    private static String[] skillNames = new String[]{"Beacon", "Behavior", "Control", "Damage", "Fire", "HP", "HPregeneration", "Inventory", "Knockback", "Lightning", "Pickup", "Poison", "Ranged", "Ride", "Slow", "Sprint", "Thorns", "Wither"};
+    private static String[] skillNames = null;
 
     int highestLevel = 0;
 
     public LevelCreator()
     {
+        if (skillNames == null)
+        {
+            skillNames = new String[MyPetSkillsInfo.getRegisteredSkillsInfo().size()];
+            int skillCounter = 0;
+            for (Class<? extends MyPetSkillTreeSkill> clazz : MyPetSkillsInfo.getRegisteredSkillsInfo())
+            {
+                SkillName sn = clazz.getAnnotation(SkillName.class);
+                if (sn != null)
+                {
+                    skillNames[skillCounter++] = sn.value();
+                }
+            }
+        }
+
         addLevelButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -198,9 +207,6 @@ public class LevelCreator
                 {
                     addSkillButton.setEnabled(false);
                     deleteLevelSkillButton.setEnabled(false);
-                    skillCounterTabelModel.getDataVector().removeAllElements();
-                    skillCounterTabel.updateUI();
-                    skilllevelLabel.setText("Skilllevels for level: -");
                 }
                 else if (e.getPath().getPath().length == 2)
                 {
@@ -448,14 +454,6 @@ public class LevelCreator
                 }
             }
         }
-        skillCounterTabelModel.getDataVector().removeAllElements();
-        for (String skillName : skillCount.keySet())
-        {
-            String[] row = {skillName, "" + skillCount.get(skillName)};
-            skillCounterTabelModel.addRow(row);
-        }
-        skilllevelLabel.setText("Skilllevels for level: " + level);
-        skillCounterTabel.updateUI();
     }
 
     public JPanel getMainPanel()
@@ -501,7 +499,6 @@ public class LevelCreator
         }
         permissionTextField.setText(skillTree.getPermission());
         permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
-        mobTypeLabel.setText(skillTreeMobType.getMobTypeName());
 
         this.inheritanceComboBoxModel.removeAllElements();
 
@@ -580,19 +577,6 @@ public class LevelCreator
 
         inheritanceComboBoxModel = new DefaultComboBoxModel();
         inheritanceComboBox = new JComboBox(inheritanceComboBoxModel);
-
-        String[] columnNames = {"Skill", "Level"};
-        String[][] data = new String[0][0];
-        skillCounterTabelModel = new DefaultTableModel(data, columnNames);
-        skillCounterTabel = new JTable(skillCounterTabelModel)
-        {
-            public boolean isCellEditable(int rowIndex, int colIndex)
-            {
-                return false;
-            }
-        };
-        skillCounterTabel.getColumnModel().getColumn(0).setPreferredWidth(160);
-        skillCounterTabel.getColumnModel().getColumn(1).setPreferredWidth(50);
     }
 
     private class SkillTreeSkillNode extends DefaultMutableTreeNode

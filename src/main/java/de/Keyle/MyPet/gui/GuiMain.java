@@ -203,23 +203,23 @@ public class GuiMain
 
     public static void registerSkillsInfo()
     {
-        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
-        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
-        MyPetSkillsInfo.registerSkill(PickupInfo.class);
-        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
-        MyPetSkillsInfo.registerSkill(DamageInfo.class);
-        MyPetSkillsInfo.registerSkill(ControlInfo.class);
-        MyPetSkillsInfo.registerSkill(HPInfo.class);
-        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
-        MyPetSkillsInfo.registerSkill(RideInfo.class);
-        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
-        MyPetSkillsInfo.registerSkill(FireInfo.class);
         MyPetSkillsInfo.registerSkill(BeaconInfo.class);
-        MyPetSkillsInfo.registerSkill(WitherInfo.class);
-        MyPetSkillsInfo.registerSkill(LightningInfo.class);
-        MyPetSkillsInfo.registerSkill(SlowInfo.class);
+        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
+        MyPetSkillsInfo.registerSkill(ControlInfo.class);
+        MyPetSkillsInfo.registerSkill(DamageInfo.class);
+        MyPetSkillsInfo.registerSkill(FireInfo.class);
+        MyPetSkillsInfo.registerSkill(HPInfo.class);
+        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
+        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
+        MyPetSkillsInfo.registerSkill(LightningInfo.class);
+        MyPetSkillsInfo.registerSkill(PickupInfo.class);
+        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
         MyPetSkillsInfo.registerSkill(RangedInfo.class);
+        MyPetSkillsInfo.registerSkill(RideInfo.class);
+        MyPetSkillsInfo.registerSkill(SlowInfo.class);
         MyPetSkillsInfo.registerSkill(SprintInfo.class);
+        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
+        MyPetSkillsInfo.registerSkill(WitherInfo.class);
     }
 }
