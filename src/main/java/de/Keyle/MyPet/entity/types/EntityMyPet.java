@@ -474,23 +474,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
-    @Override
-    public void c()
-    {
-        super.c();
-        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
-        {
-            Location l1 = getBukkitEntity().getLocation();
-            org.bukkit.block.Block block1 = l1.getBlock();
-            getOwner().getPlayer().sendBlockChange(l1, 60, (byte) 0);
-            Packet61WorldEvent particle = new Packet61WorldEvent(2005, (int) locX, (int) locY, (int) locZ, 0, false);
-            ((CraftPlayer) getOwner().getPlayer()).getHandle().playerConnection.sendPacket(particle);
-            getOwner().getPlayer().sendBlockChange(l1, block1.getType(), block1.getData());
-
-            donatorParticleCounter = 90 + aC().nextInt(60);
-        }
-    }
-
     public void e(float motionSideways, float motionForward)
     {
         if (this.passenger == null || !(this.passenger instanceof EntityPlayer))
@@ -547,6 +530,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             catch (IllegalAccessException ignored)
             {
             }
+        }
+    }
+
+    public void l_()
+    {
+        super.l_();
+        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        {
+            donatorParticleCounter = 20 + aC().nextInt(10);
+            MyPetBukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
         }
     }
 }
