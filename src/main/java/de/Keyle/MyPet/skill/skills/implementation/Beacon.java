@@ -31,6 +31,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.info.BeaconInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
+import de.Keyle.MyPet.util.MyPetBukkitUtil;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import net.minecraft.server.v1_6_R2.*;
@@ -317,6 +318,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 amplification = 1;
             }
             double range = this.range * myPet.getHungerValue() / 100.;
+
+            MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range)))
             {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
@@ -324,6 +328,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
                 if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
                 {
+                    MyPetBukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                     entityHuman.addEffect(new MobEffect(this.secondaryEffectId, duration * 20, 0, true));
                 }
             }
