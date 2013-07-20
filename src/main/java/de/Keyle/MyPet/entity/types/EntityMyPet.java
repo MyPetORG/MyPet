@@ -304,18 +304,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return damageEntity;
     }
 
-    protected void tamedEffect(boolean tamed)
-    {
-        String str = tamed ? "heart" : "smoke";
-        for (int i = 0 ; i < 7 ; i++)
-        {
-            double d1 = this.random.nextGaussian() * 0.02D;
-            double d2 = this.random.nextGaussian() * 0.02D;
-            double d3 = this.random.nextGaussian() * 0.02D;
-            this.world.addParticle(str, this.locX + this.random.nextFloat() * this.width * 2.0F - this.width, this.locY + 0.5D + this.random.nextFloat() * this.length, this.locZ + this.random.nextFloat() * this.width * 2.0F - this.width, d1, d2, d3);
-        }
-    }
-
     @Override
     public CraftEntity getBukkitEntity()
     {
@@ -400,7 +388,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.tamedEffect(true);
+                    MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                 }
                 else if (myPet.getHungerValue() < 100)
                 {
@@ -412,7 +400,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.tamedEffect(true);
+                    MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
                 }
                 if (addHunger > 0 && myPet.getHungerValue() < 100)
                 {
