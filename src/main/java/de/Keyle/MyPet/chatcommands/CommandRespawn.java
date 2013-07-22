@@ -52,17 +52,13 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        if (!MyPetEconomy.canUseEconomy())
-        {
-            return true;
-        }
         if (sender instanceof Player)
         {
             Player petOwner = (Player) sender;
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (!MyPetPermissions.has(petOwner, "MyPet.user.respawn"))
+                if (!MyPetEconomy.canUseEconomy() || !MyPetPermissions.has(petOwner, "MyPet.user.respawn"))
                 {
                     myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", petOwner));
                     return true;
@@ -129,6 +125,10 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                         myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnShow", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                     }
                 }
+            }
+            else
+            {
+                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }
