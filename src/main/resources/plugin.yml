@@ -10,6 +10,7 @@ commands:
   petname:
     description: Set the name of your MyPet
     usage: '/<command> <PetName>'
+    permission: MyPet.user.command.name
   petcall:
     aliases: [petc, pc]
     description: Call your MyPet.
@@ -19,7 +20,7 @@ commands:
   petrelease:
     description: Release your MyPet.
     usage: '/<command> <PetName>'
-    permission: MyPet.user.release
+    permission: MyPet.user.command.release
   petstop:
     aliases: [pets, ps]
     description: your MyPet stop attacking.
@@ -69,7 +70,7 @@ commands:
     aliases: [pch]
     description: Sets the mode for the capturehelper
     usage: '/<command> [normal|half|tameableonly|deactivate]'
-    permission: MyPet.user.capturehelper
+    permission: MyPet.user.command.capturehelper
 
 permissions:
   MyPet.user.leash.*:
@@ -111,8 +112,9 @@ permissions:
     children:
       MyPet.user.leash.*: true
       MyPet.user.release: true
-      MyPet.user.respawn: true
-      MyPet.user.capturehelper: true
+      MyPet.user.command.respawn: true
+      MyPet.user.command.capturehelper: true
+      MyPet.user.command.name: true
   MyPet.user.release:
     description: Allows usage of /petrelease
   MyPet.admin:

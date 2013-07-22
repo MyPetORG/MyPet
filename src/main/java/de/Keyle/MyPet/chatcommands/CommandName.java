@@ -23,6 +23,7 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
+import de.Keyle.MyPet.util.MyPetPermissions;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
 import org.bukkit.ChatColor;
@@ -47,6 +48,14 @@ public class CommandName implements CommandExecutor
                 {
                     return false;
                 }
+
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                if (!MyPetPermissions.has(petOwner, "MyPet.user.command.name"))
+                {
+                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", petOwner));
+                    return true;
+                }
+
                 String name = "";
                 for (String arg : args)
                 {
@@ -65,7 +74,6 @@ public class CommandName implements CommandExecutor
                     name += ChatColor.RESET;
                 }
 
-                MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.setPetName(name);
                 sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.NewName", petOwner), name));
             }

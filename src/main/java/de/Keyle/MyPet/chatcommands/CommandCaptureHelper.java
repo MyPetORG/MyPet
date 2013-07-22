@@ -25,7 +25,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
             Player player = (Player) commandSender;
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
 
-            if (MyPetPermissions.has(player, "MyPet.user.capturehelper"))
+            if (MyPetPermissions.has(player, "MyPet.user.command.capturehelper"))
             {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 String mode = myPetPlayer.isCaptureHelperActive() ? MyPetLocales.getString("Name.Enabled", player) : MyPetLocales.getString("Name.Disabled", player);

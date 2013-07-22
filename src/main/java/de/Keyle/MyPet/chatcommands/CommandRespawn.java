@@ -58,7 +58,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (!MyPetEconomy.canUseEconomy() || !MyPetPermissions.has(petOwner, "MyPet.user.respawn"))
+                if (!MyPetEconomy.canUseEconomy() || !MyPetPermissions.has(petOwner, "MyPet.command.user.respawn"))
                 {
                     myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", petOwner));
                     return true;
