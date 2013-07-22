@@ -60,7 +60,7 @@ public class SkilltreeCreator
 
     DefaultTreeModel skilltreeTreeModel;
 
-    String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Ghast", "Giant", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
+    private static String[] petTypes = new String[]{"default", "Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Ghast", "Giant", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
 
     private MyPetSkillTree skilltreeCopyPaste;
     MyPetSkillTreeMobType selectedMobtype;
@@ -426,6 +426,7 @@ public class SkilltreeCreator
 
         createRightclickMenus();
 
+        mobTypeComboBox = new JComboBox(petTypes);
         selectedMobtype = MyPetSkillTreeMobType.getMobTypeByName("default");
         skilltreeTreeSetSkilltrees();
     }

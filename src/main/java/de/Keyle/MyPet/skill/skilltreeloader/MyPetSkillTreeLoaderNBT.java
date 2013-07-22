@@ -191,13 +191,6 @@ public class MyPetSkillTreeLoaderNBT extends MyPetSkillTreeLoader
             }
         }
 
-        skillFile = new File(configPath + File.separator + "default.st");
-        nbtConfig = new NBT_Configuration(skillFile);
-        if (saveSkillTree(nbtConfig, "default"))
-        {
-            savedPetTypes.add("default");
-        }
-
         return savedPetTypes;
     }
 
