@@ -267,7 +267,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                         skill.setProperties(propertiesCompound);
                                         skill.setDefaultProperties();
                                     }
-                                    skillTree.addSkillToLevel(lvl, skill);
+                                    newLevel.addSkill(skill);
                                 }
                                 else
                                 {
