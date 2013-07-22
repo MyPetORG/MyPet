@@ -20,10 +20,7 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillsInfo;
-import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -135,7 +132,13 @@ public class MyPetSkillTreeLoaderJSON extends MyPetSkillTreeLoader
                 {
                     JSONObject levelObject = (JSONObject) lvl_object;
                     int thisLevel = Integer.parseInt(String.valueOf(levelObject.get("Level")));
-                    skillTree.addLevel(thisLevel);
+
+                    MyPetSkillTreeLevel newLevel = skillTree.addLevel(thisLevel);
+                    if (levelObject.containsKey("Message"))
+                    {
+                        String message = (String) levelObject.get("Message");
+                        newLevel.setLevelupMessage(message);
+                    }
 
                     JSONArray skillList = (JSONArray) levelObject.get("Skills");
                     for (Object skill_object : skillList)

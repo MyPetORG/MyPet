@@ -30,6 +30,8 @@ import java.util.List;
 public class MyPetSkillTreeLevel
 {
     int level;
+    String levelupMessage;
+
     List<ISkillInfo> skillList = new ArrayList<ISkillInfo>();
 
     public MyPetSkillTreeLevel(int level)
@@ -42,11 +44,26 @@ public class MyPetSkillTreeLevel
         return level;
     }
 
+    public boolean hasLevelupMessage()
+    {
+        return levelupMessage != null && !levelupMessage.equalsIgnoreCase("");
+    }
+
+    public String getLevelupMessage()
+    {
+        return levelupMessage;
+    }
+
+    public void setLevelupMessage(String levelupMessage)
+    {
+        this.levelupMessage = levelupMessage;
+    }
+
     public void addSkill(ISkillInfo skill)
     {
         if (skill == null)
         {
-            MyPetLogger.write("Skills->null: ende");
+            MyPetLogger.write("Skills->null:");
             MyPetLogger.write(Arrays.toString(Thread.currentThread().getStackTrace()));
         }
         skillList.add(skill);
@@ -65,6 +82,7 @@ public class MyPetSkillTreeLevel
     public MyPetSkillTreeLevel clone()
     {
         MyPetSkillTreeLevel newLevel = new MyPetSkillTreeLevel(level);
+        newLevel.setLevelupMessage(getLevelupMessage());
 
         for (ISkillInfo skill : skillList)
         {
@@ -72,5 +90,10 @@ public class MyPetSkillTreeLevel
         }
 
         return newLevel;
+    }
+
+    public String toString()
+    {
+        return "MyPetSkilltreeLevel{lvl:" + level + ", skillCount:" + skillList.size() + ", message:" + (hasLevelupMessage() ? getLevelupMessage() : "-") + "}";
     }
 }

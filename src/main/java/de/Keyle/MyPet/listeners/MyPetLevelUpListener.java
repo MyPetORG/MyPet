@@ -25,7 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.MyPetExperience;
 import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetConfiguration;
 import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.locale.MyPetLocales;
@@ -70,7 +72,16 @@ public class MyPetLevelUpListener implements Listener
         MyPetSkillTree skillTree = myPet.getSkillTree();
         if (skillTree != null && skillTree.hasLevel(lvl))
         {
-            List<ISkillInfo> skillList = skillTree.getLevel(lvl).getSkills();
+            MyPetSkillTreeLevel level = skillTree.getLevel(lvl);
+            if (!event.isQuiet())
+            {
+                if (level.hasLevelupMessage())
+                {
+                    myPet.sendMessageToOwner(Colorizer.setColors(level.getLevelupMessage()));
+                }
+            }
+
+            List<ISkillInfo> skillList = level.getSkills();
             for (ISkillInfo skill : skillList)
             {
                 myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());

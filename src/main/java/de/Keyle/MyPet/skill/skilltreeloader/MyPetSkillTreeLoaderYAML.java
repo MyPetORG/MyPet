@@ -20,10 +20,7 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkillsInfo;
-import de.Keyle.MyPet.skill.SkillProperties;
+import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.MyPetUtil;
@@ -167,7 +164,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                     //System.out.println("  " + thisLevel);
                     if (MyPetUtil.isInt(thisLevel))
                     {
-                        int newLevel = Integer.parseInt(thisLevel);
+                        int lvl = Integer.parseInt(thisLevel);
 
                         Map<String, Object> skillMap = (Map<String, Object>) levelMap.get(thisLevel);
 
@@ -175,9 +172,16 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                         {
                             continue;
                         }
+
+                        MyPetSkillTreeLevel newLevel = skillTree.addLevel(lvl);
+                        if (levelMap.containsKey("Message"))
+                        {
+                            String message = (String) levelMap.get("Message");
+                            newLevel.setLevelupMessage(message);
+                        }
+
                         if (skillMap.size() == 0)
                         {
-                            skillTree.addLevel(newLevel);
                             continue;
                         }
                         for (String thisSkill : skillMap.keySet())
@@ -263,7 +267,7 @@ public class MyPetSkillTreeLoaderYAML extends MyPetSkillTreeLoader
                                         skill.setProperties(propertiesCompound);
                                         skill.setDefaultProperties();
                                     }
-                                    skillTree.addSkillToLevel(newLevel, skill);
+                                    skillTree.addSkillToLevel(lvl, skill);
                                 }
                                 else
                                 {
