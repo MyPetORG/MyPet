@@ -21,13 +21,8 @@
 package de.Keyle.MyPet;
 
 import de.Keyle.MyPet.chatcommands.*;
-import de.Keyle.MyPet.chatcommands.CommandHelp;
-import de.Keyle.MyPet.chatcommands.CommandStop;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
-import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.blaze.EntityMyBlaze;
 import de.Keyle.MyPet.entity.types.cavespider.EntityMyCaveSpider;
@@ -73,7 +68,7 @@ import de.Keyle.MyPet.util.locale.MyPetLocales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.*;
-import net.minecraft.server.v1_6_R2.*;
+import net.minecraft.server.v1_6_R2.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,7 +84,7 @@ import org.spout.nbt.ListTag;
 import org.spout.nbt.StringTag;
 
 import java.io.*;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class MyPetPlugin extends JavaPlugin implements IScheduler
@@ -243,80 +238,34 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetSkillTreeLoader.manageInheritance(skillTreeMobType);
         }
 
-        try
-        {
-            Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, Integer.TYPE);
-            a.setAccessible(true);
-
-            // https://github.com/Bukkit/mc-dev/blob/master/net/minecraft/server/EntityTypes.java
-            a.invoke(a, EntityMyCreeper.class, "Creeper", 50);
-            a.invoke(a, EntityCreeper.class, "Creeper", 50);
-            a.invoke(a, EntityMySkeleton.class, "Skeleton", 51);
-            a.invoke(a, EntitySkeleton.class, "Skeleton", 51);
-            a.invoke(a, EntityMySpider.class, "Spider", 52);
-            a.invoke(a, EntitySpider.class, "Spider", 52);
-            a.invoke(a, EntityMyGiant.class, "Giant", 53);
-            a.invoke(a, EntityGiantZombie.class, "Giant", 53);
-            a.invoke(a, EntityMyZombie.class, "Zombie", 54);
-            a.invoke(a, EntityZombie.class, "Zombie", 54);
-            a.invoke(a, EntityMySlime.class, "Slime", 55);
-            a.invoke(a, EntitySlime.class, "Slime", 55);
-            a.invoke(a, EntityMyGhast.class, "Ghast", 56);
-            a.invoke(a, EntityGhast.class, "Ghast", 56);
-            a.invoke(a, EntityMyPigZombie.class, "PigZombie", 57);
-            a.invoke(a, EntityPigZombie.class, "PigZombie", 57);
-            a.invoke(a, EntityMyEnderman.class, "Enderman", 58);
-            a.invoke(a, EntityEnderman.class, "Enderman", 58);
-            a.invoke(a, EntityMyCaveSpider.class, "CaveSpider", 59);
-            a.invoke(a, EntityCaveSpider.class, "CaveSpider", 59);
-            a.invoke(a, EntityMySilverfish.class, "Silverfish", 60);
-            a.invoke(a, EntitySilverfish.class, "Silverfish", 60);
-            a.invoke(a, EntityMyBlaze.class, "Blaze", 61);
-            a.invoke(a, EntityBlaze.class, "Blaze", 61);
-            a.invoke(a, EntityMyMagmaCube.class, "LavaSlime", 62);
-            a.invoke(a, EntityMagmaCube.class, "LavaSlime", 62);
-            a.invoke(a, EntityMyWither.class, "WitherBoss", 64);
-            a.invoke(a, EntityWither.class, "WitherBoss", 64);
-            a.invoke(a, EntityMyBat.class, "Bat", 65);
-            a.invoke(a, EntityBat.class, "Bat", 65);
-            a.invoke(a, EntityMyWitch.class, "Witch", 66);
-            a.invoke(a, EntityWitch.class, "Witch", 66);
-            a.invoke(a, EntityMyPig.class, "Pig", 90);
-            a.invoke(a, EntityPig.class, "Pig", 90);
-            a.invoke(a, EntityMySheep.class, "Sheep", 91);
-            a.invoke(a, EntitySheep.class, "Sheep", 91);
-            a.invoke(a, EntityMyCow.class, "Cow", 92);
-            a.invoke(a, EntityCow.class, "Cow", 92);
-            a.invoke(a, EntityMyChicken.class, "Chicken", 93);
-            a.invoke(a, EntityChicken.class, "Chicken", 93);
-            a.invoke(a, EntityMySquid.class, "Squid", 94);
-            a.invoke(a, EntitySquid.class, "Squid", 94);
-            a.invoke(a, EntityMyWolf.class, "Wolf", 95);
-            a.invoke(a, EntityWolf.class, "Wolf", 95);
-            a.invoke(a, EntityMyMooshroom.class, "MushroomCow", 96);
-            a.invoke(a, EntityMushroomCow.class, "MushroomCow", 96);
-            a.invoke(a, EntityMySnowman.class, "SnowMan", 97);
-            a.invoke(a, EntitySnowman.class, "SnowMan", 97);
-            a.invoke(a, EntityMyOcelot.class, "Ozelot", 98);
-            a.invoke(a, EntityOcelot.class, "Ozelot", 98);
-            a.invoke(a, EntityMyIronGolem.class, "VillagerGolem", 99);
-            a.invoke(a, EntityIronGolem.class, "VillagerGolem", 99);
-            a.invoke(a, EntityMyHorse.class, "EntityHorse", 100);
-            a.invoke(a, EntityHorse.class, "EntityHorse", 100);
-            a.invoke(a, EntityMyVillager.class, "Villager", 120);
-            a.invoke(a, EntityVillager.class, "Villager", 120);
-
-            DebugLogger.info("registered MyPet entities.");
-        }
-        catch (Exception e)
-        {
-            MyPetLogger.write("version " + MyPetPlugin.plugin.getDescription().getVersion() + ChatColor.RED + " NOT ENABLED");
-            DebugLogger.severe(Arrays.toString(e.getStackTrace()));
-            DebugLogger.severe("error while registering MyPet entity.");
-            DebugLogger.severe(e.getMessage());
-            setEnabled(false);
-            return;
-        }
+        registerMyPetEntity(EntityMyCreeper.class, "Creeper", 50);
+        registerMyPetEntity(EntityMySkeleton.class, "Skeleton", 51);
+        registerMyPetEntity(EntityMySpider.class, "Spider", 52);
+        registerMyPetEntity(EntityMyGiant.class, "Giant", 53);
+        registerMyPetEntity(EntityMyZombie.class, "Zombie", 54);
+        registerMyPetEntity(EntityMySlime.class, "Slime", 55);
+        registerMyPetEntity(EntityMyGhast.class, "Ghast", 56);
+        registerMyPetEntity(EntityMyPigZombie.class, "PigZombie", 57);
+        registerMyPetEntity(EntityMyEnderman.class, "Enderman", 58);
+        registerMyPetEntity(EntityMyCaveSpider.class, "CaveSpider", 59);
+        registerMyPetEntity(EntityMySilverfish.class, "Silverfish", 60);
+        registerMyPetEntity(EntityMyBlaze.class, "Blaze", 61);
+        registerMyPetEntity(EntityMyMagmaCube.class, "LavaSlime", 62);
+        registerMyPetEntity(EntityMyWither.class, "WitherBoss", 64);
+        registerMyPetEntity(EntityMyBat.class, "Bat", 65);
+        registerMyPetEntity(EntityMyWitch.class, "Witch", 66);
+        registerMyPetEntity(EntityMyPig.class, "Pig", 90);
+        registerMyPetEntity(EntityMySheep.class, "Sheep", 91);
+        registerMyPetEntity(EntityMyCow.class, "Cow", 92);
+        registerMyPetEntity(EntityMyChicken.class, "Chicken", 93);
+        registerMyPetEntity(EntityMySquid.class, "Squid", 94);
+        registerMyPetEntity(EntityMyWolf.class, "Wolf", 95);
+        registerMyPetEntity(EntityMyMooshroom.class, "MushroomCow", 96);
+        registerMyPetEntity(EntityMySnowman.class, "SnowMan", 97);
+        registerMyPetEntity(EntityMyOcelot.class, "Ozelot", 98);
+        registerMyPetEntity(EntityMyIronGolem.class, "VillagerGolem", 99);
+        registerMyPetEntity(EntityMyHorse.class, "EntityHorse", 100);
+        registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
         DebugLogger.info("Pet type: ----------");
         for (MyPetType myPetType : MyPetType.values())
@@ -489,6 +438,52 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
         MyPetSkillsInfo.registerSkill(RangedInfo.class);
         MyPetSkillsInfo.registerSkill(SprintInfo.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static boolean registerMyPetEntity(Class<? extends EntityMyPet> myPetEntityClass, String entityTypeName, int entityTypeId)
+    {
+        try
+        {
+            Field EntityTypes_c = EntityTypes.class.getDeclaredField("c");
+            Field EntityTypes_e = EntityTypes.class.getDeclaredField("e");
+            EntityTypes_c.setAccessible(true);
+            EntityTypes_e.setAccessible(true);
+
+            Map<Class, String> c = (Map) EntityTypes_c.get(EntityTypes_c);
+            Map<Class, Integer> e = (Map) EntityTypes_e.get(EntityTypes_e);
+
+            Iterator cIterator = c.keySet().iterator();
+            while (cIterator.hasNext())
+            {
+                Class clazz = (Class) cIterator.next();
+                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName()))
+                {
+                    cIterator.remove();
+                }
+            }
+
+            Iterator eIterator = e.keySet().iterator();
+            while (eIterator.hasNext())
+            {
+                Class clazz = (Class) eIterator.next();
+                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName()))
+                {
+                    eIterator.remove();
+                }
+            }
+
+            c.put(myPetEntityClass, entityTypeName);
+            e.put(myPetEntityClass, entityTypeId);
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            DebugLogger.severe("error while registering " + myPetEntityClass.getCanonicalName());
+            DebugLogger.severe(e.getMessage());
+            return false;
+        }
     }
 
     int loadPets(File f)
