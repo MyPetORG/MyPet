@@ -83,7 +83,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (!MyPetPermissions.has(petOwner, "MyPet.user.release"))
+                if (!MyPetPermissions.has(petOwner, "MyPet.user.command.release"))
                 {
                     return true;
                 }

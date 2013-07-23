@@ -62,7 +62,7 @@ commands:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
     usage: '/<command> [pay/auto] [min respawn time]'
-    permission: MyPet.user.respawn
+    permission: MyPet.user.command.respawn
   pettype:
     description: Infos for Pettype
     usage: '/<command> <Pettype>'
@@ -113,6 +113,7 @@ permissions:
       MyPet.user.leash.*: true
       MyPet.user.release: true
       MyPet.user.command.respawn: true
+      MyPet.user.command.release: true
       MyPet.user.command.capturehelper: true
       MyPet.user.command.name: true
   MyPet.user.release:
