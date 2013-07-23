@@ -75,11 +75,9 @@ public class EntityMyEnderman extends EntityMyPet
         ((MyEnderman) myPet).isScreaming = screaming;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0));  // blockID
         this.datawatcher.a(17, new Byte((byte) 0));  // blockData
         this.datawatcher.a(18, new Byte((byte) 0));  // face(angry)
@@ -91,50 +89,43 @@ public class EntityMyEnderman extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
-
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-            {
-                if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
-                {
-                    if (getBlockID() != 0)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-
-                        setBlock(0, 0);
-
-                        return true;
-                    }
-                }
-                else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking())
-                {
-                    setBlock(itemStack.id, itemStack.getData());
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        --itemStack.count;
-                    }
-                    if (itemStack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
-                }
-            }
+            return true;
         }
-        catch (Exception e)
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
         {
-            e.printStackTrace();
+            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
+            {
+                if (getBlockID() != 0)
+                {
+                    EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+
+                    setBlock(0, 0);
+
+                    return true;
+                }
+            }
+            else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking())
+            {
+                setBlock(itemStack.id, itemStack.getData());
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+            }
         }
         return false;
     }
@@ -143,7 +134,7 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.endermen.hit";
     }
@@ -152,14 +143,14 @@ public class EntityMyEnderman extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.endermen.death";
     }
 
     @Override
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
+        return !playIdleSound() ? null : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 }

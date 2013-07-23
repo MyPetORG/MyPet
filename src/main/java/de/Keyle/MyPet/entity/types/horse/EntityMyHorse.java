@@ -191,11 +191,9 @@ public class EntityMyHorse extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, Integer.valueOf(0));     // age
         this.datawatcher.a(16, Integer.valueOf(0));     // saddle & chest
         this.datawatcher.a(19, Byte.valueOf((byte) 0)); // horse type
@@ -210,128 +208,121 @@ public class EntityMyHorse extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
+            return true;
+        }
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (itemStack != null && canUseItem())
+        {
+            if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip())
             {
+                setSaddle(true);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    if (--itemStack.count <= 0)
+                    {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
                 return true;
             }
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-            if (itemStack != null && canUseItem())
+            else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip())
             {
-                if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip())
+                setChest(true);
+                if (!entityhuman.abilities.canInstantlyBuild)
                 {
-                    setSaddle(true);
-                    if (!entityhuman.abilities.canInstantlyBuild)
+                    if (--itemStack.count <= 0)
                     {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    return true;
                 }
-                else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip())
+                return true;
+            }
+            else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip())
+            {
+                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
                 {
-                    setChest(true);
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                    }
-                    return true;
+                    EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip())
+                setArmor(itemStack.id - 416);
+                if (!entityhuman.abilities.canInstantlyBuild)
                 {
-                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
+                    if (--itemStack.count <= 0)
                     {
-                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    setArmor(itemStack.id - 416);
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                    }
-                    return true;
                 }
-                else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip())
+                return true;
+            }
+            else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip())
+            {
+                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
                 {
-                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    if (hasChest() && !entityhuman.abilities.canInstantlyBuild)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    setChest(false);
-                    setSaddle(false);
-                    setArmor(0);
-                    return true;
+                    EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                else if (itemStack.id == GROW_UP_ITEM)
+                if (hasChest() && !entityhuman.abilities.canInstantlyBuild)
                 {
-                    if (isBaby())
+                    EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild)
+                {
+                    EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                setChest(false);
+                setSaddle(false);
+                setArmor(0);
+                return true;
+            }
+            else if (itemStack.id == GROW_UP_ITEM)
+            {
+                if (isBaby())
+                {
+                    if (getOwner().getPlayer().isSneaking())
                     {
-                        if (getOwner().getPlayer().isSneaking())
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            if (!entityhuman.abilities.canInstantlyBuild)
+                            if (--itemStack.count <= 0)
                             {
-                                if (--itemStack.count <= 0)
-                                {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                                }
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
-                            this.setAge(getAge() + 3000);
-                            return true;
                         }
+                        this.setAge(getAge() + 3000);
+                        return true;
                     }
-                }
-                if (itemStack.id == Material.BREAD.getId() ||
-                        itemStack.id == Material.WHEAT.getId() ||
-                        itemStack.id == Material.GOLDEN_APPLE.getId() ||
-                        itemStack.id == Material.HAY_BLOCK.getId() ||
-                        itemStack.id == Material.GOLDEN_CARROT.getId() ||
-                        itemStack.id == Material.APPLE.getId() ||
-                        itemStack.id == Material.SUGAR.getId())
-                {
-                    ageCounter = 5;
                 }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            if (itemStack.id == Material.BREAD.getId() ||
+                    itemStack.id == Material.WHEAT.getId() ||
+                    itemStack.id == Material.GOLDEN_APPLE.getId() ||
+                    itemStack.id == Material.HAY_BLOCK.getId() ||
+                    itemStack.id == Material.GOLDEN_CARROT.getId() ||
+                    itemStack.id == Material.APPLE.getId() ||
+                    itemStack.id == Material.SUGAR.getId())
+            {
+                ageCounter = 5;
+            }
         }
         return false;
     }
 
     @Override
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound(int i, int j, int k, int l)
     {
         StepSound localStepSound = Block.byId[l].stepSound;
         if (this.world.getTypeId(i, j + 1, k) == Block.SNOW.id)
@@ -372,7 +363,7 @@ public class EntityMyHorse extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         int horseType = ((MyHorse) myPet).horseType;
         if (horseType == 3)
@@ -394,7 +385,7 @@ public class EntityMyHorse extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         int horseType = ((MyHorse) myPet).horseType;
         if (horseType == 3)
@@ -412,9 +403,9 @@ public class EntityMyHorse extends EntityMyPet
         return "mob.horse.death";
     }
 
-    public void c()
+    public void onLivingUpdate()
     {
-        super.c();
+        super.onLivingUpdate();
         if (rearCounter > -1 && rearCounter-- == 0)
         {
             applyVisual(64, false);
@@ -431,7 +422,7 @@ public class EntityMyHorse extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
         if (playIdleSound())
         {
@@ -450,6 +441,6 @@ public class EntityMyHorse extends EntityMyPet
             }
             return "mob.horse.idle";
         }
-        return "";
+        return null;
     }
 }

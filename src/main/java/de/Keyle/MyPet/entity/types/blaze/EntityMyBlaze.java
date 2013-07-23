@@ -53,11 +53,9 @@ public class EntityMyBlaze extends EntityMyPet
         ((MyBlaze) myPet).isOnFire = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         getDataWatcher().a(16, new Byte((byte) 0)); // burning
     }
 
@@ -65,7 +63,7 @@ public class EntityMyBlaze extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.blaze.hit";
     }
@@ -74,7 +72,7 @@ public class EntityMyBlaze extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.blaze.death";
     }
@@ -82,8 +80,8 @@ public class EntityMyBlaze extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.blaze.breathe";
+        return !playIdleSound() ? null : "mob.blaze.breathe";
     }
 }

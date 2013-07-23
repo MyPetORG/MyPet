@@ -74,10 +74,8 @@ public class EntityMySnowman extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
     @Override
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("step.snow", 0.15F, 1.0F);
     }
@@ -86,7 +84,7 @@ public class EntityMySnowman extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "step.snow";
     }
@@ -95,62 +93,55 @@ public class EntityMySnowman extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "step.snow";
     }
 
-    public void c()
+    public void onLivingUpdate()
     {
-        try
+        super.onLivingUpdate();
+
+        if (FIX_SNOW_TRACK)
         {
-            super.c();
-
-            if (FIX_SNOW_TRACK)
+            if (this.motX != 0D || this.motZ != 0D)
             {
-                if (this.motX != 0D || this.motZ != 0D)
+                addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
+            }
+            if (snowMap.size() > 0)
+            {
+                Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();
+                while (iter.hasNext())
                 {
-                    addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
-                }
-                if (snowMap.size() > 0)
-                {
-                    Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();
-                    while (iter.hasNext())
+                    Map.Entry<Location, Integer> entry = iter.next();
+
+                    int oldCounter = entry.getValue();
+                    Location loc = entry.getKey();
+
+                    if (oldCounter - 1 == 0)
                     {
-                        Map.Entry<Location, Integer> entry = iter.next();
-
-                        int oldCounter = entry.getValue();
-                        Location loc = entry.getKey();
-
-                        if (oldCounter - 1 == 0)
+                        iter.remove();
+                        if (loc.getBlock().getTypeId() == 0)
                         {
-                            iter.remove();
-                            if (loc.getBlock().getTypeId() == 0)
-                            {
-                                byte data = loc.getBlock().getData();
-                                loc.getBlock().setData((byte) 1);
-                                loc.getBlock().setData(data);
-                            }
+                            byte data = loc.getBlock().getData();
+                            loc.getBlock().setData((byte) 1);
+                            loc.getBlock().setData(data);
                         }
-                        else
-                        {
-                            snowMap.put(loc, oldCounter - 1);
-                        }
+                    }
+                    else
+                    {
+                        snowMap.put(loc, oldCounter - 1);
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "step.snow";
+        return !playIdleSound() ? null : "step.snow";
     }
 }

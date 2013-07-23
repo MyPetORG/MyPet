@@ -54,9 +54,7 @@ public class EntityMyGiant extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.zombie.step", 0.15F, 1.0F);
     }
@@ -65,7 +63,7 @@ public class EntityMyGiant extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.zombie.hurt";
     }
@@ -74,7 +72,7 @@ public class EntityMyGiant extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.zombie.death";
     }
@@ -82,8 +80,8 @@ public class EntityMyGiant extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.zombie.say";
+        return !playIdleSound() ? null : "mob.zombie.say";
     }
 }

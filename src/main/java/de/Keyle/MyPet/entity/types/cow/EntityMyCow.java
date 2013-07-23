@@ -68,11 +68,10 @@ public class EntityMyCow extends EntityMyPet
         ((MyCow) myPet).isBaby = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
@@ -82,54 +81,47 @@ public class EntityMyCow extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
-
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-            {
-                if (itemStack.id == Item.BUCKET.id)
-                {
-                    if (CAN_GIVE_MILK && !this.world.isStatic)
-                    {
-                        ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
-
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
-                        return true;
-                    }
-                }
-                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
-                        }
-                        this.setBaby(false);
-                        return true;
-                    }
-                }
-            }
+            return true;
         }
-        catch (Exception e)
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
         {
-            e.printStackTrace();
+            if (itemStack.id == Item.BUCKET.id)
+            {
+                if (CAN_GIVE_MILK && !this.world.isStatic)
+                {
+                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
+
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
+                    return true;
+                }
+            }
+            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            {
+                if (isBaby())
+                {
+                    if (!entityhuman.abilities.canInstantlyBuild)
+                    {
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    this.setBaby(false);
+                    return true;
+                }
+            }
         }
         return false;
     }
 
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.cow.step", 0.15F, 1.0F);
     }
@@ -138,7 +130,7 @@ public class EntityMyCow extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.cow.hurt";
     }
@@ -147,7 +139,7 @@ public class EntityMyCow extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.cow.hurt";
     }
@@ -155,8 +147,8 @@ public class EntityMyCow extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.cow.say";
+        return !playIdleSound() ? null : "mob.cow.say";
     }
 }

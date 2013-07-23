@@ -71,52 +71,44 @@ public class EntityMyChicken extends EntityMyPet
         ((MyChicken) myPet).isBaby = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
+            return true;
+        }
 
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
+        {
+            if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
             {
-                if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+                if (isBaby())
                 {
-                    if (isBaby())
+                    if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        if (!entityhuman.abilities.canInstantlyBuild)
+                        if (--itemStack.count <= 0)
                         {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        this.setBaby(false);
-                        return true;
                     }
+                    this.setBaby(false);
+                    return true;
                 }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
         return false;
     }
 
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.chicken.step", 0.15F, 1.0F);
     }
@@ -125,7 +117,7 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.chicken.hurt";
     }
@@ -134,40 +126,33 @@ public class EntityMyChicken extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.chicken.hurt";
     }
 
-    public void c()
+    public void onLivingUpdate()
     {
-        try
+        super.onLivingUpdate();
+
+        if (!this.onGround && this.motY < 0.0D)
         {
-            super.c();
-
-            if (!this.onGround && this.motY < 0.0D)
-            {
-                this.motY *= 0.6D;
-            }
-
-            if (CAN_LAY_EGGS && !world.isStatic && canUseItem() && --nextEggTimer <= 0)
-            {
-                world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
-                b(Item.EGG.id, 1);
-                nextEggTimer = (random.nextInt(6000) + 6000);
-            }
+            this.motY *= 0.6D;
         }
-        catch (Exception e)
+
+        if (CAN_LAY_EGGS && !world.isStatic && canUseItem() && --nextEggTimer <= 0)
         {
-            e.printStackTrace();
+            world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+            b(Item.EGG.id, 1);
+            nextEggTimer = (random.nextInt(6000) + 6000);
         }
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.chicken.say";
+        return !playIdleSound() ? null : "mob.chicken.say";
     }
 }

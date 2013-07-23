@@ -41,13 +41,11 @@ public class EntityMyGhast extends EntityMyPet
         petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 5.5, 20));
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.ghast.scream";
     }
@@ -56,7 +54,7 @@ public class EntityMyGhast extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.ghast.death";
     }
@@ -64,8 +62,8 @@ public class EntityMyGhast extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.ghast.moan";
+        return !playIdleSound() ? null : "mob.ghast.moan";
     }
 }

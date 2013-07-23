@@ -66,52 +66,43 @@ public class EntityMyMooshroom extends EntityMyPet
         ((MyMooshroom) myPet).isBaby = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
+            return true;
+        }
 
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
+        {
+            if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
             {
-                if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+                if (isBaby())
                 {
-                    if (isBaby())
+                    if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        if (!entityhuman.abilities.canInstantlyBuild)
+                        if (--itemStack.count <= 0)
                         {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
-                        this.setBaby(false);
-                        return true;
                     }
+                    this.setBaby(false);
+                    return true;
                 }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
         return false;
     }
 
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.cow.step", 0.15F, 1.0F);
     }
@@ -120,7 +111,7 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.cow.hurt";
     }
@@ -129,7 +120,7 @@ public class EntityMyMooshroom extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.cow.hurt";
     }
@@ -137,8 +128,8 @@ public class EntityMyMooshroom extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.cow.say";
+        return !playIdleSound() ? null : "mob.cow.say";
     }
 }

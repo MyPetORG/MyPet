@@ -144,11 +144,9 @@ public class EntityMyZombie extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         getDataWatcher().a(12, new Byte((byte) 0));     // is baby
         getDataWatcher().a(13, new Byte((byte) 0));     // is villager
         getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
@@ -160,92 +158,85 @@ public class EntityMyZombie extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
+            return true;
+        }
 
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman) && itemStack != null)
+        if (getOwner().equals(entityhuman) && itemStack != null)
+        {
+            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
             {
-                if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
+                if (!canEquip())
                 {
-                    if (!canEquip())
-                    {
-                        return false;
-                    }
-                    for (EquipmentSlot slot : EquipmentSlot.values())
-                    {
-                        ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
-                        if (itemInSlot != null)
-                        {
-                            EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
-                            entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                            entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                            entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                            setPetEquipment(slot.getSlotId(), null);
-                        }
-                    }
-                    return true;
+                    return false;
                 }
-                else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
+                for (EquipmentSlot slot : EquipmentSlot.values())
                 {
-                    if (!canEquip())
-                    {
-                        return false;
-                    }
-                    EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
                     ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
-                    if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
+                    if (itemInSlot != null)
                     {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        setPetEquipment(slot.getSlotId(), null);
                     }
-                    ItemStack itemStackClone = itemStack.cloneItemStack();
-                    itemStackClone.count = 1;
-                    setPetEquipment(b(itemStack), itemStackClone);
+                }
+                return true;
+            }
+            else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
+            {
+                if (!canEquip())
+                {
+                    return false;
+                }
+                EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
+                ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
+                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
+                {
+                    EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                ItemStack itemStackClone = itemStack.cloneItemStack();
+                itemStackClone.count = 1;
+                setPetEquipment(b(itemStack), itemStackClone);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                return true;
+            }
+            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            {
+                if (isBaby())
+                {
                     if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        --itemStack.count;
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
                     }
-                    if (itemStack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
+                    this.setBaby(false);
                     return true;
                 }
-                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
-                        }
-                        this.setBaby(false);
-                        return true;
-                    }
-                }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
         return false;
     }
 
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.zombie.step", 0.15F, 1.0F);
     }
@@ -254,7 +245,7 @@ public class EntityMyZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.zombie.hurt";
     }
@@ -263,7 +254,7 @@ public class EntityMyZombie extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.zombie.death";
     }
@@ -271,8 +262,8 @@ public class EntityMyZombie extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.zombie.say";
+        return !playIdleSound() ? null : "mob.zombie.say";
     }
 }

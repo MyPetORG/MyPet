@@ -120,11 +120,9 @@ public class EntityMyOcelot extends EntityMyPet
         ((MyOcelot) myPet).isBaby = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
         this.datawatcher.a(17, "");                 // ownername
@@ -138,67 +136,60 @@ public class EntityMyOcelot extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
+            return true;
+        }
 
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman))
+        if (getOwner().equals(entityhuman))
+        {
+            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking())
             {
-                if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking())
+                if (itemStack.id == 351)
                 {
-                    if (itemStack.id == 351)
+                    if (itemStack.getData() == 11)
                     {
-                        if (itemStack.getData() == 11)
-                        {
-                            ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
-                            return true;
-                        }
-                        else if (itemStack.getData() == 0)
-                        {
-                            ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
-                            return true;
-                        }
-                        else if (itemStack.getData() == 14)
-                        {
-                            ((MyOcelot) myPet).setCatType(Type.RED_CAT);
-                            return true;
-                        }
-                        else if (itemStack.getData() == 7)
-                        {
-                            ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
-                            return true;
-                        }
+                        ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
+                        return true;
                     }
-                    else if (itemStack.id == GROW_UP_ITEM && canUseItem() && getOwner().getPlayer().isSneaking())
+                    else if (itemStack.getData() == 0)
                     {
-                        if (isBaby())
-                        {
-                            if (!entityhuman.abilities.canInstantlyBuild)
-                            {
-                                if (--itemStack.count <= 0)
-                                {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                                }
-                            }
-                            this.setBaby(false);
-                            return true;
-                        }
+                        ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
+                        return true;
+                    }
+                    else if (itemStack.getData() == 14)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.RED_CAT);
+                        return true;
+                    }
+                    else if (itemStack.getData() == 7)
+                    {
+                        ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
+                        return true;
                     }
                 }
-                this.sitPathfinder.toogleSitting();
-                return true;
+                else if (itemStack.id == GROW_UP_ITEM && canUseItem() && getOwner().getPlayer().isSneaking())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
+                        return true;
+                    }
+                }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            this.sitPathfinder.toogleSitting();
+            return true;
         }
         return false;
     }
@@ -206,7 +197,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.cat.hitt";
     }
@@ -214,7 +205,7 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the sound that is played when the MyPet dies
      */
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.cat.hitt";
     }
@@ -222,8 +213,8 @@ public class EntityMyOcelot extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
+        return !playIdleSound() ? null : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 }

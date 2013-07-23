@@ -83,11 +83,9 @@ public class EntityMyPig extends EntityMyPet
         ((MyPig) myPet).isBaby = flag;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // saddle
     }
@@ -98,70 +96,63 @@ public class EntityMyPig extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
+        {
+            if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
             {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                ((MyPig) myPet).setSaddle(true);
                 return true;
             }
-
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-            if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
+            else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
             {
-                if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
+                ((MyPig) myPet).setSaddle(false);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
+                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                }
+                makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                itemStack.damage(1, entityhuman);
+            }
+            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            {
+                if (isBaby())
                 {
                     if (!entityhuman.abilities.canInstantlyBuild)
                     {
-                        --itemStack.count;
+                        if (--itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
                     }
-                    if (itemStack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
-                    ((MyPig) myPet).setSaddle(true);
+                    this.setBaby(false);
                     return true;
                 }
-                else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
-                {
-                    ((MyPig) myPet).setSaddle(false);
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    makeSound("mob.sheep.shear", 1.0F, 1.0F);
-                    itemStack.damage(1, entityhuman);
-                }
-                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                            }
-                        }
-                        this.setBaby(false);
-                        return true;
-                    }
-                }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
         return false;
     }
 
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.pig.step", 0.15F, 1.0F);
     }
@@ -170,7 +161,7 @@ public class EntityMyPig extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.pig.say";
     }
@@ -179,7 +170,7 @@ public class EntityMyPig extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.pig.death";
     }
@@ -187,8 +178,8 @@ public class EntityMyPig extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.pig.say";
+        return !playIdleSound() ? null : "mob.pig.say";
     }
 }

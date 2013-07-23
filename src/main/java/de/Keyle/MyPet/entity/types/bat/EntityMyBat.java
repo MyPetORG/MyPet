@@ -64,11 +64,9 @@ public class EntityMyBat extends EntityMyPet
         return ((MyBat) myPet).hanging;
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0)); // hanging
     }
 
@@ -76,7 +74,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.bat.hurt";
     }
@@ -85,22 +83,19 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.bat.death";
     }
 
-    /**
-     * Returns the speed of played sounds
-     */
-    protected float ba()
+    public float getSoundSpeed()
     {
-        return super.ba() * 0.95F;
+        return super.getSoundSpeed() * 0.95F;
     }
 
-    public void c()
+    public void onLivingUpdate()
     {
-        super.c();
+        super.onLivingUpdate();
 
         if (!this.onGround && this.motY < 0.0D)
         {
@@ -109,8 +104,8 @@ public class EntityMyBat extends EntityMyPet
     }
 
     @Override
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.bat.idle";
+        return !playIdleSound() ? null : "mob.bat.idle";
     }
 }

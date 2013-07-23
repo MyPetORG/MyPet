@@ -75,11 +75,9 @@ public class EntityMyMagmaCube extends EntityMyPet
         petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 1)); //size
     }
 
@@ -87,16 +85,16 @@ public class EntityMyMagmaCube extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
-        return aO();
+        return getDeathSound();
     }
 
     /**
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
     }
@@ -105,31 +103,24 @@ public class EntityMyMagmaCube extends EntityMyPet
      * Method is called when pet moves
      * Is used to create the hopping motion
      */
-    public void l_()
+    public void onLivingUpdate()
     {
-        try
-        {
-            super.l_();
+        super.onLivingUpdate();
 
-            if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e())
-            {
-                getControllerJump().a();
-                jumpDelay = (this.random.nextInt(20) + 10);
-                lastPathEntity = getNavigation().e();
-                makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), aZ(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
-            }
-        }
-        catch (Exception e)
+        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e())
         {
-            e.printStackTrace();
+            getControllerJump().a();
+            jumpDelay = (this.random.nextInt(20) + 10);
+            lastPathEntity = getNavigation().e();
+            makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), aZ(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return "";
+        return null;
     }
 }

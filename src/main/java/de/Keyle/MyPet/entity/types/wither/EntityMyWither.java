@@ -33,12 +33,9 @@ public class EntityMyWither extends EntityMyPet
         super(world, myPet);
     }
 
-
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(17, new Integer(0));  // target entityID
         this.datawatcher.a(18, new Integer(0));  // N/A
         this.datawatcher.a(19, new Integer(0));  // N/A
@@ -49,7 +46,7 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.wither.hurt";
     }
@@ -58,7 +55,7 @@ public class EntityMyWither extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.wither.death";
     }
@@ -66,8 +63,8 @@ public class EntityMyWither extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.wither.idle";
+        return !playIdleSound() ? null : "mob.wither.idle";
     }
 }

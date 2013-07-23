@@ -314,104 +314,160 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         return this.bukkitEntity;
     }
 
+    // Obfuscated Method handler ------------------------------------------------------------------------------------
+
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
+    {
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (itemStack == null)
+        {
+            return false;
+        }
+
+        Player owner = this.getOwner().getPlayer();
+
+        if (isMyPet() && myPet.getOwner().equals(entityhuman))
+        {
+            if (myPet.getSkills().isSkillActive("Ride"))
+            {
+                if (itemStack.id == Ride.RIDE_ITEM && canMove())
+                {
+                    if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
+                    {
+                        ((CraftPlayer) owner).getHandle().setPassengerOf(this);
+                        return true;
+                    }
+                    else
+                    {
+                        getMyPet().sendMessageToOwner(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                    }
+                }
+            }
+            if (myPet.getSkills().isSkillActive("Control"))
+            {
+                if (itemStack.id == Control.CONTROL_ITEM)
+                {
+                    return true;
+                }
+            }
+        }
+        if (canEat(itemStack) && canUseItem())
+        {
+            if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
+            {
+                return false;
+            }
+            if (this.petTargetSelector.hasGoal("DuelTarget"))
+            {
+                MyPetAIDuelTarget duelTarget = (MyPetAIDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
+                if (duelTarget.getDuelOpponent() != null)
+                {
+                    return true;
+                }
+            }
+            int addHunger = MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED;
+            if (getHealth() < getMaxHealth())
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
+                this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+            }
+            else if (myPet.getHungerValue() < 100)
+            {
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    --itemStack.count;
+                }
+                if (itemStack.count <= 0)
+                {
+                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                }
+                MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+            }
+            if (addHunger > 0 && myPet.getHungerValue() < 100)
+            {
+                myPet.setHungerValue(myPet.getHungerValue() + addHunger);
+                addHunger = 0;
+            }
+            if (addHunger < MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void onLivingUpdate()
+    {
+        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        {
+            donatorParticleCounter = 20 + aC().nextInt(10);
+            MyPetBukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+        }
+    }
+
+    protected void initDatawatcher()
+    {
+    }
+
+    public float getSoundSpeed()
+    {
+        return super.ba();
+    }
+
+    protected abstract String getLivingSound();
+
+    protected abstract String getHurtSound();
+
+    protected abstract String getDeathSound();
+
+    public void playStepSound()
+    {
+    }
+
+    public void playStepSound(int i, int j, int k, int l)
+    {
+    }
+
     // Obfuscated Methods -------------------------------------------------------------------------------------------
+
+    /**
+     * -> initDatawatcher()
+     */
+    protected void a()
+    {
+        super.a();
+        try
+        {
+            initDatawatcher();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Is called when player rightclicks this MyPet
      * return:
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
-     * -> interact()
+     * -> handlePlayerInteraction(EntityHuman)
      */
-    public boolean a(EntityHuman entityhuman)
+    protected boolean a(EntityHuman entityhuman)
     {
         try
         {
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
-
-            if (itemStack == null)
-            {
-                return false;
-            }
-
-            Player owner = this.getOwner().getPlayer();
-
-            if (isMyPet() && myPet.getOwner().equals(entityhuman))
-            {
-                if (myPet.getSkills().isSkillActive("Ride"))
-                {
-                    if (itemStack.id == Ride.RIDE_ITEM && canMove())
-                    {
-                        if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
-                        {
-                            ((CraftPlayer) owner).getHandle().setPassengerOf(this);
-                            return true;
-                        }
-                        else
-                        {
-                            getMyPet().sendMessageToOwner(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
-                        }
-                    }
-                }
-                if (myPet.getSkills().isSkillActive("Control"))
-                {
-                    if (itemStack.id == Control.CONTROL_ITEM)
-                    {
-                        return true;
-                    }
-                }
-            }
-            if (canEat(itemStack) && canUseItem())
-            {
-                if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
-                {
-                    return false;
-                }
-                if (this.petTargetSelector.hasGoal("DuelTarget"))
-                {
-                    MyPetAIDuelTarget duelTarget = (MyPetAIDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
-                    if (duelTarget.getDuelOpponent() != null)
-                    {
-                        return true;
-                    }
-                }
-                int addHunger = MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED;
-                if (getHealth() < getMaxHealth())
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        --itemStack.count;
-                    }
-                    addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
-                    this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
-                    if (itemStack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
-                    MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-                }
-                else if (myPet.getHungerValue() < 100)
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        --itemStack.count;
-                    }
-                    if (itemStack.count <= 0)
-                    {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                    }
-                    MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-                }
-                if (addHunger > 0 && myPet.getHungerValue() < 100)
-                {
-                    myPet.setHungerValue(myPet.getHungerValue() + addHunger);
-                    addHunger = 0;
-                }
-                if (addHunger < MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED)
-                {
-                    return true;
-                }
-            }
+            return handlePlayerInteraction(entityhuman);
         }
         catch (Exception e)
         {
@@ -421,22 +477,70 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     }
 
     /**
-     * Returns the default sound of the MyPet
-     * -> getLivingSound()
+     * -> playStepSound()
      */
-    protected abstract String r();
+    protected void a(int i, int j, int k, int l)
+    {
+        try
+        {
+            playStepSound();
+            playStepSound(i, j, k, l);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected abstract String aN();
+    protected String aN()
+    {
+        try
+        {
+            getHurtSound();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected abstract String aO();
+    protected String aO()
+    {
+        try
+        {
+            getDeathSound();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Returns the speed of played sounds
+     */
+    protected float ba()
+    {
+        try
+        {
+            getSoundSpeed();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return super.ba();
+    }
 
     /**
      * Set weather the "new" AI is used
@@ -536,10 +640,31 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public void l_()
     {
         super.l_();
-        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        try
         {
-            donatorParticleCounter = 20 + aC().nextInt(10);
-            MyPetBukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+            onLivingUpdate();
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Returns the default sound of the MyPet
+     * -> getLivingSound()
+     */
+    protected String r()
+    {
+        try
+        {
+            getLivingSound();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

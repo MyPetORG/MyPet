@@ -175,11 +175,9 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).collarColor = DyeColor.getByWoolData(color);
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0));         // age
         this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
         this.datawatcher.a(17, "");                     // wolf owner name
@@ -194,64 +192,57 @@ public class EntityMyWolf extends EntityMyPet
      * true: there was a reaction on rightclick
      * false: no reaction on rightclick
      */
-    public boolean a(EntityHuman entityhuman)
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
-        try
+        if (super.handlePlayerInteraction(entityhuman))
         {
-            if (super.a(entityhuman))
-            {
-                return true;
-            }
-            ItemStack itemStack = entityhuman.inventory.getItemInHand();
+            return true;
+        }
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-            if (getOwner().equals(entityhuman))
+        if (getOwner().equals(entityhuman))
+        {
+            if (itemStack != null && canUseItem())
             {
-                if (itemStack != null && canUseItem())
+                if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking())
                 {
-                    if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking())
+                    if (itemStack.getData() <= 15)
                     {
-                        if (itemStack.getData() <= 15)
+                        setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                        if (!entityhuman.abilities.canInstantlyBuild)
                         {
-                            setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                            if (!entityhuman.abilities.canInstantlyBuild)
+                            if (--itemStack.count <= 0)
                             {
-                                if (--itemStack.count <= 0)
-                                {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                                }
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
-                            return true;
                         }
-                    }
-                    else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
-                    {
-                        if (isBaby())
-                        {
-                            if (!entityhuman.abilities.canInstantlyBuild)
-                            {
-                                if (--itemStack.count <= 0)
-                                {
-                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                                }
-                            }
-                            this.setBaby(false);
-                            return true;
-                        }
+                        return true;
                     }
                 }
-                this.sitPathfinder.toogleSitting();
-                return true;
+                else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+                {
+                    if (isBaby())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            if (--itemStack.count <= 0)
+                            {
+                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                            }
+                        }
+                        this.setBaby(false);
+                        return true;
+                    }
+                }
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            this.sitPathfinder.toogleSitting();
+            return true;
         }
         return false;
     }
 
     @Override
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.wolf.step", 0.15F, 1.0F);
     }
@@ -260,7 +251,7 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.wolf.hurt";
     }
@@ -269,97 +260,70 @@ public class EntityMyWolf extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.wolf.death";
     }
 
     @Override
-    protected void bj()
+    public void onLivingUpdate()
     {
-        try
+        super.onLivingUpdate();
+        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bM()) && (this.onGround)) // bM -> has pathentity
         {
-            this.datawatcher.watch(18, (25.F * getHealth() / getMaxHealth())); // update tail height
+            this.shaking = true;
+            this.shakeCounter = 0.0F;
+            this.world.broadcastEntityEffect(this, (byte) 8);
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
-    @Override
-    public void c()
-    {
-        try
+        if (F()) // F() -> is in water
         {
-            super.c();
-            if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bM()) && (this.onGround)) // bM -> has pathentity
+            this.isWet = true;
+            this.shaking = false;
+            this.shakeCounter = 0.0F;
+        }
+        else if ((this.isWet || this.shaking) && this.shaking)
+        {
+            if (this.shakeCounter == 0.0F)
             {
-                this.shaking = true;
-                this.shakeCounter = 0.0F;
-                this.world.broadcastEntityEffect(this, (byte) 8);
+                makeSound("mob.wolf.shake", aZ(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
-    @Override
-    public void l_()
-    {
-        try
-        {
-            super.l_();
-
-            if (F()) // F() -> is in water
+            this.shakeCounter += 0.05F;
+            if (this.shakeCounter - 0.05F >= 2.0F)
             {
-                this.isWet = true;
+                this.isWet = false;
                 this.shaking = false;
                 this.shakeCounter = 0.0F;
             }
-            else if ((this.isWet || this.shaking) && this.shaking)
+
+            if (this.shakeCounter > 0.4F)
             {
-                if (this.shakeCounter == 0.0F)
+                float locY = (float) this.boundingBox.b;
+                int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
+
+                for (int j = 0 ; j < i ; j++)
                 {
-                    makeSound("mob.wolf.shake", aZ(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                }
+                    float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
+                    float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
 
-                this.shakeCounter += 0.05F;
-                if (this.shakeCounter - 0.05F >= 2.0F)
-                {
-                    this.isWet = false;
-                    this.shaking = false;
-                    this.shakeCounter = 0.0F;
-                }
-
-                if (this.shakeCounter > 0.4F)
-                {
-                    float locY = (float) this.boundingBox.b;
-                    int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
-
-                    for (int j = 0 ; j < i ; j++)
-                    {
-                        float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-                        float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
-
-                        this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
-                    }
+                    this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
                 }
             }
         }
-        catch (Exception e)
+
+        float tailHeight = 25.F * getHealth() / getMaxHealth();
+        if (this.datawatcher.getFloat(18) != tailHeight)
         {
-            e.printStackTrace();
+            this.datawatcher.watch(18, tailHeight); // update tail height
         }
     }
 
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+        return !playIdleSound() ? null : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 }

@@ -41,11 +41,9 @@ public class EntityMyWitch extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         getDataWatcher().a(21, new Byte((byte) 0)); // N/A
     }
 
@@ -53,7 +51,7 @@ public class EntityMyWitch extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.witch.hurt";
     }
@@ -62,7 +60,7 @@ public class EntityMyWitch extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.witch.death";
     }
@@ -70,8 +68,8 @@ public class EntityMyWitch extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.witch.idle";
+        return !playIdleSound() ? null : "mob.witch.idle";
     }
 }

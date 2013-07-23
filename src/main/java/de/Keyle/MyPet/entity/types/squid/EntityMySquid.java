@@ -34,13 +34,11 @@ public class EntityMySquid extends EntityMyPet
         super(world, myPet);
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
     /**
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return null;
     }
@@ -49,7 +47,7 @@ public class EntityMySquid extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return null;
     }
@@ -57,15 +55,15 @@ public class EntityMySquid extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
         return null;
     }
 
     @Override
-    public void l_()
+    public void onLivingUpdate()
     {
-        super.l_();
+        super.onLivingUpdate();
         if (this.random.nextBoolean())
         {
             MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, 0.7, 0), "splash", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);

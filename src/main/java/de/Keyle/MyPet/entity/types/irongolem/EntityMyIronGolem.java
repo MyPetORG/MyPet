@@ -70,16 +70,14 @@ public class EntityMyIronGolem extends EntityMyPet
         }
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
-    protected void a()
+    protected void initDatawatcher()
     {
-        super.a();
+        super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0)); // flower???
     }
 
     @Override
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
@@ -88,7 +86,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.irongolem.hit";
     }
@@ -97,7 +95,7 @@ public class EntityMyIronGolem extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.irongolem.death";
     }
@@ -105,8 +103,8 @@ public class EntityMyIronGolem extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return "";
+        return null;
     }
 }

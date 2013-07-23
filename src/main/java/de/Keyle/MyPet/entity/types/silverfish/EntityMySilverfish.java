@@ -33,10 +33,8 @@ public class EntityMySilverfish extends EntityMyPet
         super(world, myPet);
     }
 
-    // Obfuscated Methods -------------------------------------------------------------------------------------------
-
     @Override
-    protected void a(int i, int j, int k, int l)
+    public void playStepSound()
     {
         makeSound("mob.silverfish.step", 1.0F, 1.0F);
     }
@@ -45,7 +43,7 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String aN()
+    protected String getHurtSound()
     {
         return "mob.silverfish.hit";
     }
@@ -54,7 +52,7 @@ public class EntityMySilverfish extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String aO()
+    protected String getDeathSound()
     {
         return "mob.silverfish.kill";
     }
@@ -62,8 +60,8 @@ public class EntityMySilverfish extends EntityMyPet
     /**
      * Returns the default sound of the MyPet
      */
-    protected String r()
+    protected String getLivingSound()
     {
-        return !playIdleSound() ? "" : "mob.silverfish.say";
+        return !playIdleSound() ? null : "mob.silverfish.say";
     }
 }
