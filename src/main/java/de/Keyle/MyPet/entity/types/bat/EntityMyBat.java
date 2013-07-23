@@ -70,25 +70,6 @@ public class EntityMyBat extends EntityMyPet
         this.datawatcher.a(16, new Byte((byte) 0)); // hanging
     }
 
-    public boolean isHanging()
-    {
-        return ((MyBat) myPet).hanging;
-    }
-
-    public void setHanging(boolean flags)
-    {
-        int i = this.datawatcher.getByte(16);
-        if (flags)
-        {
-            this.datawatcher.watch(16, (byte) (i | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
-        }
-        ((MyBat) myPet).hanging = flags;
-    }
-
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -96,16 +77,6 @@ public class EntityMyBat extends EntityMyPet
         if (!this.onGround && this.motY < 0.0D)
         {
             this.motY *= 0.6D;
-        }
-    }
-
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-
-            this.setHanging(((MyBat) myPet).ishanging());
         }
     }
 }

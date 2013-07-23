@@ -35,16 +35,12 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
 
 import static org.bukkit.Material.SPIDER_EYE;
 
 @MyPetInfo(food = {SPIDER_EYE})
 public class MyBat extends MyPet
 {
-    boolean hanging = false;
-
     public MyBat(MyPetPlayer petOwner)
     {
         super(petOwner);
@@ -124,45 +120,14 @@ public class MyBat extends MyPet
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Hanging", new ByteTag("Hanging", ishanging()));
-        return info;
-    }
-
-    @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Hanging"))
-        {
-            setHanging(((ByteTag) info.getValue().get("Hanging")).getBooleanValue());
-        }
-    }
-
-    @Override
     public MyPetType getPetType()
     {
         return MyPetType.Bat;
     }
 
-    public boolean ishanging()
-    {
-        return hanging;
-    }
-
-    public void setHanging(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyBat) getCraftPet().getHandle()).setHanging(flag);
-        }
-        this.hanging = flag;
-    }
-
     @Override
     public String toString()
     {
-        return "MyBat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",hanging=" + ishanging() + "}";
+        return "MyBat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }
