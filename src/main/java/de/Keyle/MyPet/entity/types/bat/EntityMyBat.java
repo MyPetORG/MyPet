@@ -35,14 +35,44 @@ public class EntityMyBat extends EntityMyPet
         this.height = 1F;
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
+        return "mob.bat.death";
+    }
 
-            this.setHanging(((MyBat) myPet).ishanging());
-        }
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.bat.hurt";
+    }
+
+    @Override
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.bat.idle";
+    }
+
+    public float getSoundSpeed()
+    {
+        return super.getSoundSpeed() * 0.95F;
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(16, new Byte((byte) 0)); // hanging
+    }
+
+    public boolean isHanging()
+    {
+        return ((MyBat) myPet).hanging;
     }
 
     public void setHanging(boolean flags)
@@ -59,40 +89,6 @@ public class EntityMyBat extends EntityMyPet
         ((MyBat) myPet).hanging = flags;
     }
 
-    public boolean isHanging()
-    {
-        return ((MyBat) myPet).hanging;
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) 0)); // hanging
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return "mob.bat.hurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.bat.death";
-    }
-
-    public float getSoundSpeed()
-    {
-        return super.getSoundSpeed() * 0.95F;
-    }
-
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
@@ -103,9 +99,13 @@ public class EntityMyBat extends EntityMyPet
         }
     }
 
-    @Override
-    protected String getLivingSound()
+    public void setMyPet(MyPet myPet)
     {
-        return !playIdleSound() ? null : "mob.bat.idle";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setHanging(((MyBat) myPet).ishanging());
+        }
     }
 }

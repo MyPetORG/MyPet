@@ -37,13 +37,12 @@ import java.util.Map;
 public class EntityMySnowman extends EntityMyPet
 {
     public static boolean FIX_SNOW_TRACK = true;
+    Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
 
     public EntityMySnowman(World world, MyPet myPet)
     {
         super(world, myPet);
     }
-
-    Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
 
     private void addAirBlocksInBB(org.bukkit.World world, AxisAlignedBB axisalignedbb)
     {
@@ -74,10 +73,13 @@ public class EntityMySnowman extends EntityMyPet
         }
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     @Override
-    public void playStepSound()
+    protected String getDeathSound()
     {
-        makeSound("step.snow", 0.15F, 1.0F);
+        return "step.snow";
     }
 
     /**
@@ -90,12 +92,11 @@ public class EntityMySnowman extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
+     * Returns the default sound of the MyPet
      */
-    @Override
-    protected String getDeathSound()
+    protected String getLivingSound()
     {
-        return "step.snow";
+        return !playIdleSound() ? null : "step.snow";
     }
 
     public void onLivingUpdate()
@@ -137,11 +138,9 @@ public class EntityMySnowman extends EntityMyPet
         }
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    @Override
+    public void playStepSound()
     {
-        return !playIdleSound() ? null : "step.snow";
+        makeSound("step.snow", 0.15F, 1.0F);
     }
 }

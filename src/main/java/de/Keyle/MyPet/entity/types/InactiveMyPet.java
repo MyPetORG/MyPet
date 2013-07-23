@@ -33,17 +33,16 @@ import java.util.UUID;
 
 public class InactiveMyPet implements IMyPet, NBTStorage
 {
+    private final MyPetPlayer petOwner;
     private UUID uuid = null;
     private String petName = "";
     private String worldGroup = "";
-    private final MyPetPlayer petOwner;
     private double health = -1;
     private int hunger = 100;
     private int respawnTime = 0;
     private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
     private MyPetSkillTree skillTree = null;
-
     private CompoundTag NBTSkills;
     private CompoundTag NBTextendetInfo;
 
@@ -52,81 +51,24 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         this.petOwner = petOwner;
     }
 
-    public void setSkills(Collection<ISkillInstance> skills)
+    public double getExp()
     {
-        if (NBTSkills == null)
-        {
-            NBTSkills = new CompoundTag("Skills", new CompoundMap());
-        }
-        for (ISkillInstance skill : skills)
-        {
-            if (skill instanceof ISkillStorage)
-            {
-                ISkillStorage storageSkill = (ISkillStorage) skill;
-                CompoundTag s = storageSkill.save();
-                if (s != null)
-                {
-                    this.NBTSkills.getValue().put(skill.getName(), s);
-                }
-            }
-        }
+        return exp;
     }
 
-    public void setSkills(CompoundTag skills)
+    public void setExp(double Exp)
     {
-        NBTSkills = skills;
+        this.exp = Exp;
     }
 
-    public void setInfo(CompoundTag info)
+    public double getHealth()
     {
-        NBTextendetInfo = info;
+        return health;
     }
 
-    public CompoundTag getInfo()
+    public void setHealth(double health)
     {
-        if (NBTextendetInfo == null)
-        {
-            NBTextendetInfo = new CompoundTag("Info", new CompoundMap());
-        }
-        return NBTextendetInfo;
-    }
-
-    public CompoundTag getSkills()
-    {
-        if (NBTSkills == null)
-        {
-            NBTSkills = new CompoundTag("Skills", new CompoundMap());
-        }
-        return NBTSkills;
-    }
-
-    public void setPetType(MyPetType petType)
-    {
-        this.petType = petType;
-        if (respawnTime <= 0 && health == -1)
-        {
-            this.health = MyPet.getStartHP(petType.getMyPetClass());
-        }
-
-    }
-
-    public MyPetType getPetType()
-    {
-        return petType;
-    }
-
-    @Override
-    public String getWorldGroup()
-    {
-        return worldGroup;
-    }
-
-    public void setWorldGroup(String worldGroup)
-    {
-        if (worldGroup != null)
-        {
-            this.worldGroup = worldGroup;
-        }
+        this.health = health;
     }
 
     public int getHungerValue()
@@ -150,29 +92,23 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         }
     }
 
-    public void setHealth(double health)
+    public CompoundTag getInfo()
     {
-        this.health = health;
+        if (NBTextendetInfo == null)
+        {
+            NBTextendetInfo = new CompoundTag("Info", new CompoundMap());
+        }
+        return NBTextendetInfo;
     }
 
-    public double getHealth()
+    public void setInfo(CompoundTag info)
     {
-        return health;
+        NBTextendetInfo = info;
     }
 
-    public void setExp(double Exp)
+    public MyPetPlayer getOwner()
     {
-        this.exp = Exp;
-    }
-
-    public double getExp()
-    {
-        return exp;
-    }
-
-    public void setPetName(String petName)
-    {
-        this.petName = petName;
+        return petOwner;
     }
 
     public String getPetName()
@@ -180,14 +116,34 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         return petName;
     }
 
-    public void setRespawnTime(int respawnTime)
+    public void setPetName(String petName)
     {
-        this.respawnTime = respawnTime;
+        this.petName = petName;
+    }
+
+    public MyPetType getPetType()
+    {
+        return petType;
+    }
+
+    public void setPetType(MyPetType petType)
+    {
+        this.petType = petType;
+        if (respawnTime <= 0 && health == -1)
+        {
+            this.health = MyPet.getStartHP(petType.getMyPetClass());
+        }
+
     }
 
     public int getRespawnTime()
     {
         return respawnTime;
+    }
+
+    public void setRespawnTime(int respawnTime)
+    {
+        this.respawnTime = respawnTime;
     }
 
     public MyPetSkillTree getSkillTree()
@@ -200,14 +156,18 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         this.skillTree = skillTree;
     }
 
-    public MyPetPlayer getOwner()
+    public CompoundTag getSkills()
     {
-        return petOwner;
+        if (NBTSkills == null)
+        {
+            NBTSkills = new CompoundTag("Skills", new CompoundMap());
+        }
+        return NBTSkills;
     }
 
-    public void setUUID(UUID uuid)
+    public void setSkills(CompoundTag skills)
     {
-        this.uuid = uuid;
+        NBTSkills = skills;
     }
 
     public UUID getUUID()
@@ -220,28 +180,23 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         return this.uuid;
     }
 
-    @Override
-    public CompoundTag save()
+    public void setUUID(UUID uuid)
     {
-        CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
+        this.uuid = uuid;
+    }
 
-        petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
-        petNBT.getValue().put("Type", new StringTag("Type", this.petType.getTypeName()));
-        petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
-        petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
-        petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
-        petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
-        petNBT.getValue().put("Name", new StringTag("Name", this.petName));
-        petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
-        petNBT.getValue().put("Exp", new DoubleTag("Exp", this.exp));
-        petNBT.getValue().put("Info", getInfo());
-        if (this.skillTree != null)
+    @Override
+    public String getWorldGroup()
+    {
+        return worldGroup;
+    }
+
+    public void setWorldGroup(String worldGroup)
+    {
+        if (worldGroup != null)
         {
-            petNBT.getValue().put("Skilltree", new StringTag("Skilltree", skillTree.getName()));
+            this.worldGroup = worldGroup;
         }
-        petNBT.getValue().put("Skills", getSkills());
-
-        return petNBT;
     }
 
     @Override
@@ -300,6 +255,50 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         setSkills((CompoundTag) myPetNBT.getValue().get("Skills"));
         setInfo((CompoundTag) myPetNBT.getValue().get("Info"));
 
+    }
+
+    @Override
+    public CompoundTag save()
+    {
+        CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
+
+        petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
+        petNBT.getValue().put("Type", new StringTag("Type", this.petType.getTypeName()));
+        petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
+        petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
+        petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
+        petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
+        petNBT.getValue().put("Name", new StringTag("Name", this.petName));
+        petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
+        petNBT.getValue().put("Exp", new DoubleTag("Exp", this.exp));
+        petNBT.getValue().put("Info", getInfo());
+        if (this.skillTree != null)
+        {
+            petNBT.getValue().put("Skilltree", new StringTag("Skilltree", skillTree.getName()));
+        }
+        petNBT.getValue().put("Skills", getSkills());
+
+        return petNBT;
+    }
+
+    public void setSkills(Collection<ISkillInstance> skills)
+    {
+        if (NBTSkills == null)
+        {
+            NBTSkills = new CompoundTag("Skills", new CompoundMap());
+        }
+        for (ISkillInstance skill : skills)
+        {
+            if (skill instanceof ISkillStorage)
+            {
+                ISkillStorage storageSkill = (ISkillStorage) skill;
+                CompoundTag s = storageSkill.save();
+                if (s != null)
+                {
+                    this.NBTSkills.getValue().put(skill.getName(), s);
+                }
+            }
+        }
     }
 
     @Override

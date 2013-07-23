@@ -130,16 +130,19 @@ public enum MyPetType
         this.myPetClass = myPetClass;
     }
 
-    public static MyPetType getMyPetTypeByEntityType(EntityType type)
+    public Class<? extends EntityMyPet> getEntityClass()
     {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.bukkitType == type)
-            {
-                return myPetType;
-            }
-        }
-        return null;
+        return entityClass;
+    }
+
+    public EntityType getEntityType()
+    {
+        return bukkitType;
+    }
+
+    public Class<? extends MyPet> getMyPetClass()
+    {
+        return myPetClass;
     }
 
     public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass)
@@ -147,6 +150,18 @@ public enum MyPetType
         for (MyPetType myPetType : MyPetType.values())
         {
             if (myPetType.entityClass == entityClass)
+            {
+                return myPetType;
+            }
+        }
+        return null;
+    }
+
+    public static MyPetType getMyPetTypeByEntityType(EntityType type)
+    {
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            if (myPetType.bukkitType == type)
             {
                 return myPetType;
             }
@@ -164,38 +179,6 @@ public enum MyPetType
             }
         }
         return null;
-    }
-
-    public static boolean isLeashableEntityType(EntityType type)
-    {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.bukkitType == type)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public EntityType getEntityType()
-    {
-        return bukkitType;
-    }
-
-    public Class<? extends EntityMyPet> getEntityClass()
-    {
-        return entityClass;
-    }
-
-    public Class<? extends MyPet> getMyPetClass()
-    {
-        return myPetClass;
-    }
-
-    public String getTypeName()
-    {
-        return name;
     }
 
     public EntityMyPet getNewEntityInstance(World world, MyPet myPet)
@@ -240,5 +223,22 @@ public enum MyPetType
             DebugLogger.warning(myPetClass.getName() + " is no valid MyPet!");
         }
         return pet;
+    }
+
+    public String getTypeName()
+    {
+        return name;
+    }
+
+    public static boolean isLeashableEntityType(EntityType type)
+    {
+        for (MyPetType myPetType : MyPetType.values())
+        {
+            if (myPetType.bukkitType == type)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

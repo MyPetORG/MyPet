@@ -52,16 +52,6 @@ public class MySkeleton extends MyPet implements IMyPetEquipment
         super(petOwner);
     }
 
-    public void setEquipment(EquipmentSlot slot, ItemStack item)
-    {
-        item = item.cloneItemStack();
-        equipment.put(slot, item);
-        if (status == PetState.Here)
-        {
-            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
-        }
-    }
-
     public ItemStack[] getEquipment()
     {
         ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
@@ -75,20 +65,6 @@ public class MySkeleton extends MyPet implements IMyPetEquipment
     public ItemStack getEquipment(EquipmentSlot slot)
     {
         return equipment.get(slot);
-    }
-
-    public void setWither(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMySkeleton) getCraftPet().getHandle()).setWither(flag);
-        }
-        this.isWither = flag;
-    }
-
-    public boolean isWither()
-    {
-        return isWither;
     }
 
     @Override
@@ -135,6 +111,30 @@ public class MySkeleton extends MyPet implements IMyPetEquipment
     public MyPetType getPetType()
     {
         return MyPetType.Skeleton;
+    }
+
+    public boolean isWither()
+    {
+        return isWither;
+    }
+
+    public void setWither(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMySkeleton) getCraftPet().getHandle()).setWither(flag);
+        }
+        this.isWither = flag;
+    }
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item)
+    {
+        item = item.cloneItemStack();
+        equipment.put(slot, item);
+        if (status == PetState.Here)
+        {
+            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
+        }
     }
 
     @Override

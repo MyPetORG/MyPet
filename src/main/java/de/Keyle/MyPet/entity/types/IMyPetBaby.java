@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 public interface IMyPetBaby
 {
-    public void setBaby(boolean flag);
-
     public boolean isBaby();
+
+    public void setBaby(boolean flag);
 }

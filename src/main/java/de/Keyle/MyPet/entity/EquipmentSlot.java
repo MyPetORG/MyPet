@@ -35,11 +35,6 @@ public enum EquipmentSlot
         this.slot = slot;
     }
 
-    public int getSlotId()
-    {
-        return this.slot;
-    }
-
     public static EquipmentSlot getSlotById(int id)
     {
         for (EquipmentSlot slot : EquipmentSlot.values())
@@ -50,5 +45,10 @@ public enum EquipmentSlot
             }
         }
         return EquipmentSlot.Weapon;
+    }
+
+    public int getSlotId()
+    {
+        return this.slot;
     }
 }

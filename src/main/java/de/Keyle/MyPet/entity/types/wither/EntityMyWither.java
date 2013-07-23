@@ -33,13 +33,13 @@ public class EntityMyWither extends EntityMyPet
         super(world, myPet);
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        super.initDatawatcher();
-        this.datawatcher.a(17, new Integer(0));  // target entityID
-        this.datawatcher.a(18, new Integer(0));  // N/A
-        this.datawatcher.a(19, new Integer(0));  // N/A
-        this.datawatcher.a(20, new Integer(0));  // blue (1/0)
+        return "mob.wither.death";
     }
 
     /**
@@ -52,19 +52,19 @@ public class EntityMyWither extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.wither.death";
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.wither.idle";
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(17, new Integer(0));  // target entityID
+        this.datawatcher.a(18, new Integer(0));  // N/A
+        this.datawatcher.a(19, new Integer(0));  // N/A
+        this.datawatcher.a(20, new Integer(0));  // blue (1/0)
     }
 }

@@ -35,58 +35,14 @@ import org.bukkit.Material;
 public class EntityMyWolf extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();
-
     protected boolean shaking;
     protected boolean isWet;
     protected float shakeCounter;
-
     private MyPetAISit sitPathfinder;
 
     public EntityMyWolf(World world, MyPet myPet)
     {
         super(world, myPet);
-    }
-
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
-    }
-
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            this.sitPathfinder = new MyPetAISit(this);
-
-            super.setMyPet(myPet);
-
-            this.setBaby(((MyWolf) myPet).isBaby());
-            this.setSitting(((MyWolf) myPet).isSitting());
-            this.setTamed(((MyWolf) myPet).isTamed());
-            this.setCollarColor(((MyWolf) myPet).getCollarColor());
-        }
-    }
-
-    public void setHealth(int i)
-    {
-        super.setHealth(i);
-        this.bj();
-    }
-
-    public boolean canMove()
-    {
-        return !isSitting();
-    }
-
-    public void setSitting(boolean sitting)
-    {
-        this.sitPathfinder.setSitting(sitting);
-    }
-
-    public boolean isSitting()
-    {
-        return ((MyWolf) myPet).isSitting;
     }
 
     public void applySitting(boolean sitting)
@@ -103,70 +59,14 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).isSitting = sitting;
     }
 
-    public boolean isTamed()
+    public boolean canMove()
     {
-        return ((MyWolf) myPet).isTamed;
-    }
-
-    public void setTamed(boolean flag)
-    {
-        int i = this.datawatcher.getByte(16);
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (i | 0x4));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
-        }
-        ((MyWolf) myPet).isTamed = flag;
-    }
-
-    public boolean isAngry()
-    {
-        return ((MyWolf) myPet).isAngry;
-    }
-
-    public void setAngry(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 0x2));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFD));
-        }
-        ((MyWolf) myPet).isAngry = flag;
-    }
-
-    public boolean isBaby()
-    {
-        return ((MyWolf) myPet).isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MyWolf) myPet).isBaby = flag;
+        return !isSitting();
     }
 
     public DyeColor getCollarColor()
     {
         return ((MyWolf) myPet).collarColor;
-    }
-
-    public void setCollarColor(DyeColor color)
-    {
-        setCollarColor(color.getWoolData());
     }
 
     public void setCollarColor(byte color)
@@ -175,15 +75,30 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).collarColor = DyeColor.getByWoolData(color);
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));         // age
-        this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
-        this.datawatcher.a(17, "");                     // wolf owner name
-        this.datawatcher.a(18, new Float(getHealth())); // tail height
-        this.datawatcher.a(19, new Byte((byte) 0));     // N/A
-        this.datawatcher.a(20, new Byte((byte) 14));    // collar color
+        return "mob.wolf.death";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.wolf.hurt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 
     /**
@@ -241,28 +156,81 @@ public class EntityMyWolf extends EntityMyPet
         return false;
     }
 
-    @Override
-    public void playStepSound()
+    protected void initDatawatcher()
     {
-        makeSound("mob.wolf.step", 0.15F, 1.0F);
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0));         // age
+        this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
+        this.datawatcher.a(17, "");                     // wolf owner name
+        this.datawatcher.a(18, new Float(getHealth())); // tail height
+        this.datawatcher.a(19, new Byte((byte) 0));     // N/A
+        this.datawatcher.a(20, new Byte((byte) 14));    // collar color
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    public boolean isAngry()
     {
-        return "mob.wolf.hurt";
+        return ((MyWolf) myPet).isAngry;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
+    public void setAngry(boolean flag)
     {
-        return "mob.wolf.death";
+        byte b0 = this.datawatcher.getByte(16);
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x2));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFD));
+        }
+        ((MyWolf) myPet).isAngry = flag;
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyWolf) myPet).isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MyWolf) myPet).isBaby = flag;
+    }
+
+    public boolean isSitting()
+    {
+        return ((MyWolf) myPet).isSitting;
+    }
+
+    public void setSitting(boolean sitting)
+    {
+        this.sitPathfinder.setSitting(sitting);
+    }
+
+    public boolean isTamed()
+    {
+        return ((MyWolf) myPet).isTamed;
+    }
+
+    public void setTamed(boolean flag)
+    {
+        int i = this.datawatcher.getByte(16);
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (i | 0x4));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
+        }
+        ((MyWolf) myPet).isTamed = flag;
     }
 
     @Override
@@ -319,11 +287,41 @@ public class EntityMyWolf extends EntityMyPet
         }
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    @Override
+    public void playStepSound()
     {
-        return !playIdleSound() ? null : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
+        makeSound("mob.wolf.step", 0.15F, 1.0F);
+    }
+
+    public void setCollarColor(DyeColor color)
+    {
+        setCollarColor(color.getWoolData());
+    }
+
+    public void setHealth(int i)
+    {
+        super.setHealth(i);
+        this.bj();
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            this.sitPathfinder = new MyPetAISit(this);
+
+            super.setMyPet(myPet);
+
+            this.setBaby(((MyWolf) myPet).isBaby());
+            this.setSitting(((MyWolf) myPet).isSitting());
+            this.setTamed(((MyWolf) myPet).isTamed());
+            this.setCollarColor(((MyWolf) myPet).getCollarColor());
+        }
+    }
+
+    public void setPathfinder()
+    {
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }

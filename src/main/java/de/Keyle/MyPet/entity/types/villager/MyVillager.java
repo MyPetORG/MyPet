@@ -43,34 +43,6 @@ public class MyVillager extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public void setProfession(int value)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyVillager) getCraftPet().getHandle()).setProfession(value);
-        }
-        this.profession = value;
-    }
-
-    public int getProfession()
-    {
-        return profession;
-    }
-
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyVillager) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -97,6 +69,34 @@ public class MyVillager extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Villager;
+    }
+
+    public int getProfession()
+    {
+        return profession;
+    }
+
+    public void setProfession(int value)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyVillager) getCraftPet().getHandle()).setProfession(value);
+        }
+        this.profession = value;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyVillager) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override

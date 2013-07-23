@@ -40,20 +40,6 @@ public class MyBlaze extends MyPet
         super(petOwner);
     }
 
-    public boolean isOnFire()
-    {
-        return isOnFire;
-    }
-
-    public void setOnFire(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyBlaze) getCraftPet().getHandle()).setOnFire(flag);
-        }
-        isOnFire = flag;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -75,6 +61,20 @@ public class MyBlaze extends MyPet
     public MyPetType getPetType()
     {
         return MyPetType.Blaze;
+    }
+
+    public boolean isOnFire()
+    {
+        return isOnFire;
+    }
+
+    public void setOnFire(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyBlaze) getCraftPet().getHandle()).setOnFire(flag);
+        }
+        isOnFire = flag;
     }
 
     @Override

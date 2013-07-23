@@ -41,21 +41,6 @@ public class MySlime extends MyPet implements IMyPetSlimeSize
         super(petOwner);
     }
 
-    public int getSize()
-    {
-        return size;
-    }
-
-    public void setSize(int value)
-    {
-        value = Math.max(1, value);
-        if (status == PetState.Here)
-        {
-            ((EntityMySlime) getCraftPet().getHandle()).setSize(value);
-        }
-        this.size = value;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -77,6 +62,21 @@ public class MySlime extends MyPet implements IMyPetSlimeSize
     public MyPetType getPetType()
     {
         return MyPetType.Slime;
+    }
+
+    public int getSize()
+    {
+        return size;
+    }
+
+    public void setSize(int value)
+    {
+        value = Math.max(1, value);
+        if (status == PetState.Here)
+        {
+            ((EntityMySlime) getCraftPet().getHandle()).setSize(value);
+        }
+        this.size = value;
     }
 
     @Override

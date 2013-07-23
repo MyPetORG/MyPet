@@ -36,62 +36,6 @@ public class EntityMySkeleton extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-            final MySkeleton mySkeleton = (MySkeleton) myPet;
-            final EntityMySkeleton entityMySkeleton = this;
-
-            this.setWither(mySkeleton.isWither());
-
-            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-            {
-                public void run()
-                {
-                    if (mySkeleton.getStatus() == PetState.Here)
-                    {
-                        for (EquipmentSlot slot : EquipmentSlot.values())
-                        {
-                            if (mySkeleton.getEquipment(slot) != null)
-                            {
-                                entityMySkeleton.setPetEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
-                            }
-                        }
-                    }
-                }
-            }, 5L);
-        }
-    }
-
-    public boolean isWither()
-    {
-        return ((MySkeleton) myPet).isWither;
-    }
-
-    public void setWither(boolean flag)
-    {
-        this.datawatcher.watch(13, (byte) (flag ? 1 : 0));
-        ((MySkeleton) myPet).isWither = flag;
-    }
-
-    public void setPetEquipment(int slot, ItemStack itemStack)
-    {
-        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
-        ((MySkeleton) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
-    }
-
-    public ItemStack getPetEquipment(int slot)
-    {
-        return ((MySkeleton) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
-    }
-
-    public ItemStack[] getPetEquipment()
-    {
-        return ((MySkeleton) myPet).getEquipment();
-    }
-
     public boolean checkForEquipment(ItemStack itemstack)
     {
         int slot = b(itemstack);
@@ -129,10 +73,38 @@ public class EntityMySkeleton extends EntityMyPet
         }
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected String getDeathSound()
     {
-        super.initDatawatcher();
-        this.datawatcher.a(13, new Byte((byte) 0)); // skeleton type
+        return "mob.skeleton.death";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected String getHurtSound()
+    {
+        return "mob.skeleton.hurt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.skeleton.say";
+    }
+
+    public ItemStack getPetEquipment(int slot)
+    {
+        return ((MySkeleton) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
+    }
+
+    public ItemStack[] getPetEquipment()
+    {
+        return ((MySkeleton) myPet).getEquipment();
     }
 
     /**
@@ -204,32 +176,60 @@ public class EntityMySkeleton extends EntityMyPet
         return false;
     }
 
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(13, new Byte((byte) 0)); // skeleton type
+    }
+
+    public boolean isWither()
+    {
+        return ((MySkeleton) myPet).isWither;
+    }
+
+    public void setWither(boolean flag)
+    {
+        this.datawatcher.watch(13, (byte) (flag ? 1 : 0));
+        ((MySkeleton) myPet).isWither = flag;
+    }
+
     public void playStepSound()
     {
         makeSound("mob.skeleton.step", 0.15F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected String getHurtSound()
+    public void setMyPet(MyPet myPet)
     {
-        return "mob.skeleton.hurt";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+            final MySkeleton mySkeleton = (MySkeleton) myPet;
+            final EntityMySkeleton entityMySkeleton = this;
+
+            this.setWither(mySkeleton.isWither());
+
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
+            {
+                public void run()
+                {
+                    if (mySkeleton.getStatus() == PetState.Here)
+                    {
+                        for (EquipmentSlot slot : EquipmentSlot.values())
+                        {
+                            if (mySkeleton.getEquipment(slot) != null)
+                            {
+                                entityMySkeleton.setPetEquipment(slot.getSlotId(), mySkeleton.getEquipment(slot));
+                            }
+                        }
+                    }
+                }
+            }, 5L);
+        }
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected String getDeathSound()
+    public void setPetEquipment(int slot, ItemStack itemStack)
     {
-        return "mob.skeleton.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.skeleton.say";
+        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
+        ((MySkeleton) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }
 }

@@ -42,34 +42,6 @@ public class MyPig extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public boolean hasSaddle()
-    {
-        return hasSaddle;
-    }
-
-    public void setSaddle(boolean saddle)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyPig) getCraftPet().getHandle()).setSaddle(saddle);
-        }
-        this.hasSaddle = saddle;
-    }
-
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyPig) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -96,6 +68,34 @@ public class MyPig extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Pig;
+    }
+
+    public boolean hasSaddle()
+    {
+        return hasSaddle;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyPig) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public void setSaddle(boolean saddle)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyPig) getCraftPet().getHandle()).setSaddle(saddle);
+        }
+        this.hasSaddle = saddle;
     }
 
     @Override

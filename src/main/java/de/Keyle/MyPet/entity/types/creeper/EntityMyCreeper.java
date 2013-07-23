@@ -34,14 +34,40 @@ public class EntityMyCreeper extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
+        return "mob.creeper.death";
+    }
 
-            this.setPowered(((MyCreeper) myPet).isPowered());
-        }
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.creeper.say";
+    }
+
+    @Override
+    protected String getLivingSound()
+    {
+        return null;
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(16, new Byte((byte) -1)); // fuse
+        this.datawatcher.a(17, new Byte((byte) 0));  // powered
+    }
+
+    public boolean isPowered()
+    {
+        return ((MyCreeper) myPet).isPowered;
     }
 
     public void setPowered(boolean powered)
@@ -57,39 +83,13 @@ public class EntityMyCreeper extends EntityMyPet
         ((MyCreeper) myPet).isPowered = powered;
     }
 
-    public boolean isPowered()
+    public void setMyPet(MyPet myPet)
     {
-        return ((MyCreeper) myPet).isPowered;
-    }
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
 
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) -1)); // fuse
-        this.datawatcher.a(17, new Byte((byte) 0));  // powered
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return "mob.creeper.say";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.creeper.death";
-    }
-
-    @Override
-    protected String getLivingSound()
-    {
-        return null;
+            this.setPowered(((MyCreeper) myPet).isPowered());
+        }
     }
 }

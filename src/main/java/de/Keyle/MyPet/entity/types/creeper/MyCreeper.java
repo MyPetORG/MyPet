@@ -40,20 +40,6 @@ public class MyCreeper extends MyPet
         super(petOwner);
     }
 
-    public void setPowered(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyCreeper) getCraftPet().getHandle()).setPowered(flag);
-        }
-        this.isPowered = flag;
-    }
-
-    public boolean isPowered()
-    {
-        return isPowered;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -75,6 +61,20 @@ public class MyCreeper extends MyPet
     public MyPetType getPetType()
     {
         return MyPetType.Creeper;
+    }
+
+    public boolean isPowered()
+    {
+        return isPowered;
+    }
+
+    public void setPowered(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyCreeper) getCraftPet().getHandle()).setPowered(flag);
+        }
+        this.isPowered = flag;
     }
 
     @Override

@@ -123,20 +123,6 @@ public class MyBat extends MyPet
         }
     }
 
-    public void setHanging(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyBat) getCraftPet().getHandle()).setHanging(flag);
-        }
-        this.hanging = flag;
-    }
-
-    public boolean ishanging()
-    {
-        return hanging;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -158,6 +144,20 @@ public class MyBat extends MyPet
     public MyPetType getPetType()
     {
         return MyPetType.Bat;
+    }
+
+    public boolean ishanging()
+    {
+        return hanging;
+    }
+
+    public void setHanging(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyBat) getCraftPet().getHandle()).setHanging(flag);
+        }
+        this.hanging = flag;
     }
 
     @Override

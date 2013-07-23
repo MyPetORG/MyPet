@@ -36,58 +36,30 @@ public class EntityMyPig extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-
-            this.setSaddle(((MyPig) myPet).hasSaddle());
-            this.setBaby(((MyPig) myPet).isBaby());
-        }
+        return "mob.pig.death";
     }
 
-    public boolean hasSaddle()
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
     {
-        return ((MyPig) myPet).hasSaddle;
+        return "mob.pig.say";
     }
 
-    public void setSaddle(boolean flag)
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
     {
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) 1);
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) 0);
-        }
-        ((MyPig) myPet).hasSaddle = flag;
-    }
-
-    public boolean isBaby()
-    {
-        return ((MyPig) myPet).isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MyPig) myPet).isBaby = flag;
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));     // age
-        this.datawatcher.a(16, new Byte((byte) 0)); // saddle
+        return !playIdleSound() ? null : "mob.pig.say";
     }
 
     /**
@@ -152,34 +124,62 @@ public class EntityMyPig extends EntityMyPet
         return false;
     }
 
+    public boolean hasSaddle()
+    {
+        return ((MyPig) myPet).hasSaddle;
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(16, new Byte((byte) 0)); // saddle
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyPig) myPet).isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MyPig) myPet).isBaby = flag;
+    }
+
     public void playStepSound()
     {
         makeSound("mob.pig.step", 0.15F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    public void setMyPet(MyPet myPet)
     {
-        return "mob.pig.say";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setSaddle(((MyPig) myPet).hasSaddle());
+            this.setBaby(((MyPig) myPet).isBaby());
+        }
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
+    public void setSaddle(boolean flag)
     {
-        return "mob.pig.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.pig.say";
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) 1);
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) 0);
+        }
+        ((MyPig) myPet).hasSaddle = flag;
     }
 }

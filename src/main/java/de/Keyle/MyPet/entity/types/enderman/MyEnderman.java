@@ -37,18 +37,13 @@ import static org.bukkit.Material.SOUL_SAND;
 public class MyEnderman extends MyPet
 {
 
+    public boolean isScreaming = false;
     int BlockID = 0;
     int BlockData = 0;
-    public boolean isScreaming = false;
 
     public MyEnderman(MyPetPlayer petOwner)
     {
         super(petOwner);
-    }
-
-    public int getBlockID()
-    {
-        return BlockID;
     }
 
     public int getBlockData()
@@ -56,28 +51,9 @@ public class MyEnderman extends MyPet
         return BlockData;
     }
 
-    public void setBlock(int id, int data)
+    public int getBlockID()
     {
-        if (status == PetState.Here)
-        {
-            ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(id, data);
-        }
-        this.BlockID = id;
-        this.BlockData = data;
-    }
-
-    public boolean isScreaming()
-    {
-        return isScreaming;
-    }
-
-    public void setScreaming(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyEnderman) getCraftPet().getHandle()).setScreaming(flag);
-        }
-        this.isScreaming = flag;
+        return BlockID;
     }
 
     @Override
@@ -125,6 +101,30 @@ public class MyEnderman extends MyPet
     public MyPetType getPetType()
     {
         return MyPetType.Enderman;
+    }
+
+    public boolean isScreaming()
+    {
+        return isScreaming;
+    }
+
+    public void setScreaming(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyEnderman) getCraftPet().getHandle()).setScreaming(flag);
+        }
+        this.isScreaming = flag;
+    }
+
+    public void setBlock(int id, int data)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(id, data);
+        }
+        this.BlockID = id;
+        this.BlockData = data;
     }
 
     @Override

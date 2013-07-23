@@ -39,74 +39,6 @@ public class EntityMyZombie extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-            final MyZombie myZombie = (MyZombie) myPet;
-            final EntityMyZombie entityMyZombie = this;
-
-            this.setBaby(myZombie.isBaby());
-            this.setVillager(myZombie.isVillager());
-
-            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-            {
-                public void run()
-                {
-                    if (myZombie.getStatus() == PetState.Here)
-                    {
-                        for (EquipmentSlot slot : EquipmentSlot.values())
-                        {
-                            if (myZombie.getEquipment(slot) != null)
-                            {
-                                entityMyZombie.setPetEquipment(slot.getSlotId(), myZombie.getEquipment(slot));
-                            }
-                        }
-                    }
-                }
-            }, 5L);
-        }
-    }
-
-    public boolean isBaby()
-    {
-        return ((MyZombie) myPet).isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
-        ((MyZombie) myPet).isBaby = flag;
-    }
-
-    public boolean isVillager()
-    {
-        return ((MyZombie) myPet).isVillager;
-    }
-
-    public void setVillager(boolean flag)
-    {
-        getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
-        ((MyZombie) myPet).isVillager = flag;
-    }
-
-    public void setPetEquipment(int slot, ItemStack itemStack)
-    {
-        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
-        ((MyZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
-    }
-
-    public ItemStack getPetEquipment(int slot)
-    {
-        return ((MyZombie) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
-    }
-
-    public ItemStack[] getPetEquipment()
-    {
-        return ((MyZombie) myPet).getEquipment();
-    }
-
     public boolean checkForEquipment(ItemStack itemstack)
     {
         int slot = b(itemstack);
@@ -144,12 +76,40 @@ public class EntityMyZombie extends EntityMyPet
         }
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        super.initDatawatcher();
-        getDataWatcher().a(12, new Byte((byte) 0));     // is baby
-        getDataWatcher().a(13, new Byte((byte) 0));     // is villager
-        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
+        return "mob.zombie.death";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.zombie.hurt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.zombie.say";
+    }
+
+    public ItemStack getPetEquipment(int slot)
+    {
+        return ((MyZombie) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
+    }
+
+    public ItemStack[] getPetEquipment()
+    {
+        return ((MyZombie) myPet).getEquipment();
     }
 
     /**
@@ -236,34 +196,74 @@ public class EntityMyZombie extends EntityMyPet
         return false;
     }
 
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        getDataWatcher().a(12, new Byte((byte) 0));     // is baby
+        getDataWatcher().a(13, new Byte((byte) 0));     // is villager
+        getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyZombie) myPet).isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
+        ((MyZombie) myPet).isBaby = flag;
+    }
+
+    public boolean isVillager()
+    {
+        return ((MyZombie) myPet).isVillager;
+    }
+
+    public void setVillager(boolean flag)
+    {
+        getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
+        ((MyZombie) myPet).isVillager = flag;
+    }
+
     public void playStepSound()
     {
         makeSound("mob.zombie.step", 0.15F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    public void setMyPet(MyPet myPet)
     {
-        return "mob.zombie.hurt";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+            final MyZombie myZombie = (MyZombie) myPet;
+            final EntityMyZombie entityMyZombie = this;
+
+            this.setBaby(myZombie.isBaby());
+            this.setVillager(myZombie.isVillager());
+
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
+            {
+                public void run()
+                {
+                    if (myZombie.getStatus() == PetState.Here)
+                    {
+                        for (EquipmentSlot slot : EquipmentSlot.values())
+                        {
+                            if (myZombie.getEquipment(slot) != null)
+                            {
+                                entityMyZombie.setPetEquipment(slot.getSlotId(), myZombie.getEquipment(slot));
+                            }
+                        }
+                    }
+                }
+            }, 5L);
+        }
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
+    public void setPetEquipment(int slot, ItemStack itemStack)
     {
-        return "mob.zombie.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.zombie.say";
+        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
+        ((MyZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }
 }

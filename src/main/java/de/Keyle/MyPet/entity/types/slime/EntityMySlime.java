@@ -39,14 +39,31 @@ public class EntityMySlime extends EntityMyPet
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
+        return "mob.slime." + (getSize() > 1 ? "big" : "small");
 
-            setSize(((MySlime) myPet).getSize());
-        }
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return getDeathSound();
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return null;
     }
 
     public int getSize()
@@ -70,35 +87,10 @@ public class EntityMySlime extends EntityMyPet
         ((MySlime) myPet).size = value;
     }
 
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
-    }
-
     protected void initDatawatcher()
     {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 1)); //size
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return getDeathSound();
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.slime." + (getSize() > 1 ? "big" : "small");
-
     }
 
     /**
@@ -118,11 +110,19 @@ public class EntityMySlime extends EntityMyPet
         }
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    public void setMyPet(MyPet myPet)
     {
-        return null;
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            setSize(((MySlime) myPet).getSize());
+        }
+    }
+
+    public void setPathfinder()
+    {
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 }

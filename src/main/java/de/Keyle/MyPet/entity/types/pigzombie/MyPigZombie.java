@@ -53,30 +53,6 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyPigZombie) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
-    public void setEquipment(EquipmentSlot slot, ItemStack item)
-    {
-        item = item.cloneItemStack();
-        equipment.put(slot, item);
-        if (status == PetState.Here)
-        {
-            ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
-        }
-    }
-
     public ItemStack[] getEquipment()
     {
         ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
@@ -136,6 +112,30 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.PigZombie;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyPigZombie) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item)
+    {
+        item = item.cloneItemStack();
+        equipment.put(slot, item);
+        if (status == PetState.Here)
+        {
+            ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
+        }
     }
 
     @Override

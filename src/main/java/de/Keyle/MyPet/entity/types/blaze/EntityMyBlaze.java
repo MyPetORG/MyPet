@@ -33,13 +33,36 @@ public class EntityMyBlaze extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-            setOnFire(((MyBlaze) myPet).isOnFire());
-        }
+        return "mob.blaze.death";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.blaze.hit";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.blaze.breathe";
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        getDataWatcher().a(16, new Byte((byte) 0)); // burning
     }
 
     public boolean isOnFire()
@@ -53,35 +76,12 @@ public class EntityMyBlaze extends EntityMyPet
         ((MyBlaze) myPet).isOnFire = flag;
     }
 
-    protected void initDatawatcher()
+    public void setMyPet(MyPet myPet)
     {
-        super.initDatawatcher();
-        getDataWatcher().a(16, new Byte((byte) 0)); // burning
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return "mob.blaze.hit";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.blaze.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.blaze.breathe";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+            setOnFire(((MyBlaze) myPet).isOnFire());
+        }
     }
 }

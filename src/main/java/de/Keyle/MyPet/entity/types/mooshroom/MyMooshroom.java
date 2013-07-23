@@ -41,20 +41,6 @@ public class MyMooshroom extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyMooshroom) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -76,6 +62,20 @@ public class MyMooshroom extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Mooshroom;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyMooshroom) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override

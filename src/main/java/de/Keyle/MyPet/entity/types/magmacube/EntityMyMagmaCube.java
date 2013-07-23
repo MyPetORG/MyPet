@@ -38,14 +38,30 @@ public class EntityMyMagmaCube extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
+        return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
+    }
 
-            setSize(((MyMagmaCube) myPet).getSize());
-        }
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return getDeathSound();
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return null;
     }
 
     public int getSize()
@@ -69,34 +85,10 @@ public class EntityMyMagmaCube extends EntityMyPet
         ((MyMagmaCube) myPet).size = value;
     }
 
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
-    }
-
     protected void initDatawatcher()
     {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 1)); //size
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return getDeathSound();
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
     }
 
     /**
@@ -116,11 +108,19 @@ public class EntityMyMagmaCube extends EntityMyPet
         }
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    public void setMyPet(MyPet myPet)
     {
-        return null;
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            setSize(((MyMagmaCube) myPet).getSize());
+        }
+    }
+
+    public void setPathfinder()
+    {
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 }

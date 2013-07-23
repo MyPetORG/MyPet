@@ -27,23 +27,23 @@ import java.util.UUID;
 
 public interface IMyPet
 {
-    public UUID getUUID();
+    public double getExp();
 
     public double getHealth();
 
-    public String getPetName();
+    public int getHungerValue();
 
     public MyPetPlayer getOwner();
 
-    public MyPetSkillTree getSkillTree();
+    public String getPetName();
+
+    public MyPetType getPetType();
 
     public int getRespawnTime();
 
-    public double getExp();
+    public MyPetSkillTree getSkillTree();
 
-    public int getHungerValue();
-
-    public MyPetType getPetType();
+    public UUID getUUID();
 
     public String getWorldGroup();
 }

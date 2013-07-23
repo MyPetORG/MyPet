@@ -54,44 +54,6 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyZombie) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
-    public boolean isVillager()
-    {
-        return isVillager;
-    }
-
-    public void setVillager(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyZombie) getCraftPet().getHandle()).setVillager(flag);
-        }
-        this.isVillager = flag;
-    }
-
-    public void setEquipment(EquipmentSlot slot, ItemStack item)
-    {
-        item = item.cloneItemStack();
-        equipment.put(slot, item);
-        if (status == PetState.Here)
-        {
-            ((EntityMyZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
-        }
-    }
-
     public ItemStack[] getEquipment()
     {
         ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
@@ -156,6 +118,44 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Zombie;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyZombie) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public boolean isVillager()
+    {
+        return isVillager;
+    }
+
+    public void setVillager(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyZombie) getCraftPet().getHandle()).setVillager(flag);
+        }
+        this.isVillager = flag;
+    }
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item)
+    {
+        item = item.cloneItemStack();
+        equipment.put(slot, item);
+        if (status == PetState.Here)
+        {
+            ((EntityMyZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
+        }
     }
 
     @Override

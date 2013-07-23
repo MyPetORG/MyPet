@@ -46,6 +46,11 @@ public class MySheep extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
+    public DyeColor getColor()
+    {
+        return color;
+    }
+
     public void setColor(DyeColor color)
     {
         if (status == PetState.Here)
@@ -53,39 +58,6 @@ public class MySheep extends MyPet implements IMyPetBaby
             ((EntityMySheep) getCraftPet().getHandle()).setColor(color.getDyeData());
         }
         this.color = color;
-    }
-
-    public DyeColor getColor()
-    {
-        return color;
-    }
-
-    public void setSheared(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMySheep) getCraftPet().getHandle()).setSheared(flag);
-        }
-        this.isSheared = flag;
-    }
-
-    public boolean isSheared()
-    {
-        return isSheared;
-    }
-
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMySheep) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
     }
 
     @Override
@@ -128,6 +100,34 @@ public class MySheep extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Sheep;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMySheep) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public boolean isSheared()
+    {
+        return isSheared;
+    }
+
+    public void setSheared(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMySheep) getCraftPet().getHandle()).setSheared(flag);
+        }
+        this.isSheared = flag;
     }
 
     @Override

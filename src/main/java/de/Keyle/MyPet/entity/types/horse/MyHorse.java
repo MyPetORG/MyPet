@@ -36,10 +36,10 @@ import static org.bukkit.Material.*;
 @MyPetInfo(food = {SUGAR, WHEAT, APPLE}, leashFlags = {Tamed})
 public class MyHorse extends MyPet implements IMyPetBaby
 {
+    public int age = 0;
     protected byte horseType = 0;
     protected int variant = 0;
     protected int armor = 0;
-    public int age = 0;
     protected boolean chest = false;
     protected boolean saddle = false;
 
@@ -48,65 +48,20 @@ public class MyHorse extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public byte getHorseType()
+    public int getAge()
     {
-        return horseType;
+        return age;
     }
 
-    public void setHorseType(byte horseType)
+    public void setAge(int value)
     {
-        horseType = (byte) Math.min(Math.max(0, horseType), 4);
-        this.horseType = horseType;
+        value = Math.min(0, (Math.max(-24000, value)));
+        value = value - (value % 1000);
         if (status == PetState.Here)
         {
-            ((EntityMyHorse) getCraftPet().getHandle()).setHorseType(horseType);
+            ((EntityMyHorse) getCraftPet().getHandle()).setAge(value);
         }
-
-        if (horseType != 0)
-        {
-            setVariant(0);
-        }
-    }
-
-    public int getVariant()
-    {
-        return variant;
-    }
-
-    public void setVariant(int variant)
-    {
-        if (horseType != 0)
-        {
-            this.variant = 0;
-        }
-        else if (variant >= 0 && variant <= 6)
-        {
-            this.variant = variant;
-        }
-        else if (variant >= 256 && variant <= 262)
-        {
-            this.variant = variant;
-        }
-        else if (variant >= 512 && variant <= 518)
-        {
-            this.variant = variant;
-        }
-        else if (variant >= 768 && variant <= 774)
-        {
-            this.variant = variant;
-        }
-        else if (variant >= 1024 && variant <= 1030)
-        {
-            this.variant = variant;
-        }
-        else
-        {
-            this.variant = 0;
-        }
-        if (status == PetState.Here)
-        {
-            ((EntityMyHorse) getCraftPet().getHandle()).setVariant(this.variant);
-        }
+        this.age = value;
     }
 
     public int getArmor()
@@ -122,72 +77,6 @@ public class MyHorse extends MyPet implements IMyPetBaby
             ((EntityMyHorse) getCraftPet().getHandle()).setArmor(value);
         }
         this.armor = value;
-    }
-
-    public void setSaddle(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyHorse) getCraftPet().getHandle()).setSaddle(flag);
-        }
-        this.saddle = flag;
-    }
-
-    public boolean hasSaddle()
-    {
-        return saddle;
-    }
-
-    public void setChest(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyHorse) getCraftPet().getHandle()).setChest(flag);
-        }
-        this.chest = flag;
-    }
-
-    public boolean hasChest()
-    {
-        return chest;
-    }
-
-    public int getAge()
-    {
-        return age;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyHorse) getCraftPet().getHandle()).setBaby(flag);
-        }
-        if (flag)
-        {
-            this.age = -24000;
-        }
-        else
-        {
-            this.age = 0;
-        }
-    }
-
-    @Override
-    public boolean isBaby()
-    {
-        return age < 0;
-    }
-
-    public void setAge(int value)
-    {
-        value = Math.min(0, (Math.max(-24000, value)));
-        value = value - (value % 1000);
-        if (status == PetState.Here)
-        {
-            ((EntityMyHorse) getCraftPet().getHandle()).setAge(value);
-        }
-        this.age = value;
     }
 
     @Override
@@ -232,10 +121,121 @@ public class MyHorse extends MyPet implements IMyPetBaby
         }
     }
 
+    public byte getHorseType()
+    {
+        return horseType;
+    }
+
+    public void setHorseType(byte horseType)
+    {
+        horseType = (byte) Math.min(Math.max(0, horseType), 4);
+        this.horseType = horseType;
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setHorseType(horseType);
+        }
+
+        if (horseType != 0)
+        {
+            setVariant(0);
+        }
+    }
+
     @Override
     public MyPetType getPetType()
     {
         return MyPetType.Horse;
+    }
+
+    public int getVariant()
+    {
+        return variant;
+    }
+
+    public void setVariant(int variant)
+    {
+        if (horseType != 0)
+        {
+            this.variant = 0;
+        }
+        else if (variant >= 0 && variant <= 6)
+        {
+            this.variant = variant;
+        }
+        else if (variant >= 256 && variant <= 262)
+        {
+            this.variant = variant;
+        }
+        else if (variant >= 512 && variant <= 518)
+        {
+            this.variant = variant;
+        }
+        else if (variant >= 768 && variant <= 774)
+        {
+            this.variant = variant;
+        }
+        else if (variant >= 1024 && variant <= 1030)
+        {
+            this.variant = variant;
+        }
+        else
+        {
+            this.variant = 0;
+        }
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setVariant(this.variant);
+        }
+    }
+
+    public boolean hasChest()
+    {
+        return chest;
+    }
+
+    public boolean hasSaddle()
+    {
+        return saddle;
+    }
+
+    @Override
+    public boolean isBaby()
+    {
+        return age < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setBaby(flag);
+        }
+        if (flag)
+        {
+            this.age = -24000;
+        }
+        else
+        {
+            this.age = 0;
+        }
+    }
+
+    public void setChest(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setChest(flag);
+        }
+        this.chest = flag;
+    }
+
+    public void setSaddle(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyHorse) getCraftPet().getHandle()).setSaddle(flag);
+        }
+        this.saddle = flag;
     }
 
     @Override

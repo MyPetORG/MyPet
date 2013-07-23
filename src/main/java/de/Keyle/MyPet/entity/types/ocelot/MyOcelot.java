@@ -46,20 +46,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isSitting()
-    {
-        return isSitting;
-    }
-
-    public void setSitting(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyOcelot) getCraftPet().getHandle()).setSitting(flag);
-        }
-        this.isSitting = flag;
-    }
-
     public Type getCatType()
     {
         return catType;
@@ -72,20 +58,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby
             ((EntityMyOcelot) getCraftPet().getHandle()).setCatType(value.getId());
         }
         this.catType = value;
-    }
-
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyOcelot) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
     }
 
     @Override
@@ -119,6 +91,34 @@ public class MyOcelot extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Ocelot;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyOcelot) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public boolean isSitting()
+    {
+        return isSitting;
+    }
+
+    public void setSitting(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyOcelot) getCraftPet().getHandle()).setSitting(flag);
+        }
+        this.isSitting = flag;
     }
 
     @Override

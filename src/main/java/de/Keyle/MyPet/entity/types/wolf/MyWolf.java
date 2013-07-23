@@ -48,20 +48,6 @@ public class MyWolf extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isSitting()
-    {
-        return isSitting;
-    }
-
-    public void setSitting(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyWolf) getCraftPet().getHandle()).setSitting(flag);
-        }
-        this.isSitting = flag;
-    }
-
     public DyeColor getCollarColor()
     {
         return collarColor;
@@ -74,48 +60,6 @@ public class MyWolf extends MyPet implements IMyPetBaby
             ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getDyeData());
         }
         this.collarColor = value;
-    }
-
-    public boolean isTamed()
-    {
-        return isTamed;
-    }
-
-    public void setTamed(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyWolf) getCraftPet().getHandle()).setTamed(flag);
-        }
-        this.isTamed = flag;
-    }
-
-    public boolean isAngry()
-    {
-        return isAngry;
-    }
-
-    public void setAngry(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyWolf) getCraftPet().getHandle()).setAngry(flag);
-        }
-        this.isAngry = flag;
-    }
-
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyWolf) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
     }
 
     @Override
@@ -159,6 +103,62 @@ public class MyWolf extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Wolf;
+    }
+
+    public boolean isAngry()
+    {
+        return isAngry;
+    }
+
+    public void setAngry(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyWolf) getCraftPet().getHandle()).setAngry(flag);
+        }
+        this.isAngry = flag;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyWolf) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
+    }
+
+    public boolean isSitting()
+    {
+        return isSitting;
+    }
+
+    public void setSitting(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyWolf) getCraftPet().getHandle()).setSitting(flag);
+        }
+        this.isSitting = flag;
+    }
+
+    public boolean isTamed()
+    {
+        return isTamed;
+    }
+
+    public void setTamed(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyWolf) getCraftPet().getHandle()).setTamed(flag);
+        }
+        this.isTamed = flag;
     }
 
     @Override

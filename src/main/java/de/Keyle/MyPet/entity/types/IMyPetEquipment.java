@@ -25,9 +25,9 @@ import net.minecraft.server.v1_6_R2.ItemStack;
 
 public interface IMyPetEquipment
 {
-    public void setEquipment(EquipmentSlot slot, ItemStack item);
-
     public ItemStack[] getEquipment();
 
     public ItemStack getEquipment(EquipmentSlot slot);
+
+    public void setEquipment(EquipmentSlot slot, ItemStack item);
 }

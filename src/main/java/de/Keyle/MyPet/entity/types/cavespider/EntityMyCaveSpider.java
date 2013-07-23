@@ -33,15 +33,13 @@ public class EntityMyCaveSpider extends EntityMyPet
         super(world, myPet);
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) 0)); // N/A
-    }
-
-    public void playStepSound()
-    {
-        makeSound("mob.spider.step", 0.15F, 1.0F);
+        return "mob.spider.death";
     }
 
     /**
@@ -54,19 +52,21 @@ public class EntityMyCaveSpider extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.spider.death";
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.spider.say";
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(16, new Byte((byte) 0)); // N/A
+    }
+
+    public void playStepSound()
+    {
+        makeSound("mob.spider.step", 0.15F, 1.0F);
     }
 }

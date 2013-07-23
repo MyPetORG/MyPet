@@ -40,32 +40,9 @@ public class EntityMySheep extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new MyPetAIEatGrass(this, 0.02));
-    }
-
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-
-            this.setColor(((MySheep) myPet).getColor());
-            this.setSheared(((MySheep) myPet).isSheared());
-            this.setBaby(((MySheep) myPet).isBaby());
-        }
-    }
-
     public DyeColor getColor()
     {
         return ((MySheep) myPet).color;
-    }
-
-    public void setColor(DyeColor color)
-    {
-        setColor(color.getWoolData());
     }
 
     public void setColor(byte color)
@@ -74,49 +51,30 @@ public class EntityMySheep extends EntityMyPet
         ((MySheep) myPet).color = DyeColor.getByWoolData(color);
     }
 
-    public boolean isSheared()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        return ((MySheep) myPet).isSheared;
+        return "mob.sheep.say";
     }
 
-    public void setSheared(boolean flag)
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
     {
-
-        byte b0 = this.datawatcher.getByte(16);
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 16));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & -17));
-        }
-        ((MySheep) myPet).isSheared = flag;
+        return "mob.sheep.say";
     }
 
-    public boolean isBaby()
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
     {
-        return this.datawatcher.getInt(12) < 0;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MySheep) myPet).isBaby = flag;
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));     // age
-        this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
+        return !playIdleSound() ? null : "mob.sheep.say";
     }
 
     /**
@@ -190,34 +148,76 @@ public class EntityMySheep extends EntityMyPet
         return false;
     }
 
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
+    }
+
+    public boolean isBaby()
+    {
+        return this.datawatcher.getInt(12) < 0;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MySheep) myPet).isBaby = flag;
+    }
+
+    public boolean isSheared()
+    {
+        return ((MySheep) myPet).isSheared;
+    }
+
+    public void setSheared(boolean flag)
+    {
+
+        byte b0 = this.datawatcher.getByte(16);
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 16));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & -17));
+        }
+        ((MySheep) myPet).isSheared = flag;
+    }
+
     public void playStepSound()
     {
         makeSound("mob.sheep.step", 0.15F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    public void setColor(DyeColor color)
     {
-        return "mob.sheep.say";
+        setColor(color.getWoolData());
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
+    public void setMyPet(MyPet myPet)
     {
-        return "mob.sheep.say";
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setColor(((MySheep) myPet).getColor());
+            this.setSheared(((MySheep) myPet).isSheared());
+            this.setBaby(((MySheep) myPet).isBaby());
+        }
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    public void setPathfinder()
     {
-        return !playIdleSound() ? null : "mob.sheep.say";
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("EatGrass", new MyPetAIEatGrass(this, 0.02));
     }
 }

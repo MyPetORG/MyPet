@@ -33,18 +33,13 @@ public class EntityMyWitch extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-        }
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        getDataWatcher().a(21, new Byte((byte) 0)); // N/A
+        return "mob.witch.death";
     }
 
     /**
@@ -57,19 +52,24 @@ public class EntityMyWitch extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.witch.death";
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.witch.idle";
+    }
+
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        getDataWatcher().a(21, new Byte((byte) 0)); // N/A
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+        }
     }
 }

@@ -56,18 +56,30 @@ public class EntityMyIronGolem extends EntityMyPet
         return flag;
     }
 
-    protected void setPlayerCreated(boolean flag)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        byte b0 = this.datawatcher.getByte(16);
+        return "mob.irongolem.death";
+    }
 
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
-        }
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.irongolem.hit";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return null;
     }
 
     protected void initDatawatcher()
@@ -82,29 +94,17 @@ public class EntityMyIronGolem extends EntityMyPet
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    protected void setPlayerCreated(boolean flag)
     {
-        return "mob.irongolem.hit";
-    }
+        byte b0 = this.datawatcher.getByte(16);
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.irongolem.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return null;
+        if (flag)
+        {
+            this.datawatcher.watch(16, (byte) (b0 | 0x1));
+        }
+        else
+        {
+            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
+        }
     }
 }

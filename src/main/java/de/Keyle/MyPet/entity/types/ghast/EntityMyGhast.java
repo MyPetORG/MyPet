@@ -35,10 +35,13 @@ public class EntityMyGhast extends EntityMyPet
         this.height = 3.5F;
     }
 
-    public void setPathfinder()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 5.5, 20));
+        return "mob.ghast.death";
     }
 
     /**
@@ -51,19 +54,16 @@ public class EntityMyGhast extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.ghast.death";
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.ghast.moan";
+    }
+
+    public void setPathfinder()
+    {
+        super.setPathfinder();
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 5.5, 20));
     }
 }

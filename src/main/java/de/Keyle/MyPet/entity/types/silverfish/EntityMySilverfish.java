@@ -33,10 +33,13 @@ public class EntityMySilverfish extends EntityMyPet
         super(world, myPet);
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     @Override
-    public void playStepSound()
+    protected String getDeathSound()
     {
-        makeSound("mob.silverfish.step", 1.0F, 1.0F);
+        return "mob.silverfish.kill";
     }
 
     /**
@@ -49,19 +52,16 @@ public class EntityMySilverfish extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.silverfish.kill";
-    }
-
-    /**
      * Returns the default sound of the MyPet
      */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.silverfish.say";
+    }
+
+    @Override
+    public void playStepSound()
+    {
+        makeSound("mob.silverfish.step", 1.0F, 1.0F);
     }
 }

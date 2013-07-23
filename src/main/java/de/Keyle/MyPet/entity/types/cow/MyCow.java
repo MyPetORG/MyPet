@@ -41,20 +41,6 @@ public class MyCow extends MyPet implements IMyPetBaby
         super(petOwner);
     }
 
-    public boolean isBaby()
-    {
-        return isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
-            ((EntityMyCow) getCraftPet().getHandle()).setBaby(flag);
-        }
-        this.isBaby = flag;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -76,6 +62,20 @@ public class MyCow extends MyPet implements IMyPetBaby
     public MyPetType getPetType()
     {
         return MyPetType.Cow;
+    }
+
+    public boolean isBaby()
+    {
+        return isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (status == PetState.Here)
+        {
+            ((EntityMyCow) getCraftPet().getHandle()).setBaby(flag);
+        }
+        this.isBaby = flag;
     }
 
     @Override

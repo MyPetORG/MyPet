@@ -34,6 +34,37 @@ public class EntityMyGiant extends EntityMyPet
         super(world, myPet);
     }
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
+    {
+        return "mob.zombie.death";
+    }
+
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.zombie.hurt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.zombie.say";
+    }
+
+    public void playStepSound()
+    {
+        makeSound("mob.zombie.step", 0.15F, 1.0F);
+    }
+
     public void setMyPet(MyPet myPet)
     {
 
@@ -52,36 +83,5 @@ public class EntityMyGiant extends EntityMyPet
         {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 8, 20));
         }
-    }
-
-    public void playStepSound()
-    {
-        makeSound("mob.zombie.step", 0.15F, 1.0F);
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
-    {
-        return "mob.zombie.hurt";
-    }
-
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.zombie.death";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.zombie.say";
     }
 }

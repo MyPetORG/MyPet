@@ -35,19 +35,19 @@ public class EntityMySquid extends EntityMyPet
     }
 
     /**
-     * Returns the sound that is played when the MyPet get hurt
+     * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String getHurtSound()
+    protected String getDeathSound()
     {
         return null;
     }
 
     /**
-     * Returns the sound that is played when the MyPet dies
+     * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String getDeathSound()
+    protected String getHurtSound()
     {
         return null;
     }

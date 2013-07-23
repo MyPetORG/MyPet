@@ -38,15 +38,28 @@ public class EntityMyVillager extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
+        return "mob.villager.defaultdeath";
+    }
 
-            this.setProfession(((MyVillager) myPet).getProfession());
-            this.setBaby(((MyVillager) myPet).isBaby());
-        }
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected String getHurtSound()
+    {
+        return "mob.villager.defaulthurt";
+    }
+
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
+    {
+        return !playIdleSound() ? null : "mob.villager.default";
     }
 
     public int getProfession()
@@ -58,31 +71,6 @@ public class EntityMyVillager extends EntityMyPet
     {
         this.datawatcher.watch(16, value);
         ((MyVillager) myPet).profession = value;
-    }
-
-    public boolean isBaby()
-    {
-        return ((MyVillager) myPet).isBaby;
-    }
-
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MyVillager) myPet).isBaby = flag;
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
-        this.datawatcher.a(16, new Integer(0)); // profession
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
@@ -115,27 +103,39 @@ public class EntityMyVillager extends EntityMyPet
         return false;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected String getHurtSound()
+    protected void initDatawatcher()
     {
-        return "mob.villager.defaulthurt";
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(16, new Integer(0)); // profession
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected String getDeathSound()
+    public boolean isBaby()
     {
-        return "mob.villager.defaultdeath";
+        return ((MyVillager) myPet).isBaby;
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    public void setBaby(boolean flag)
     {
-        return !playIdleSound() ? null : "mob.villager.default";
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MyVillager) myPet).isBaby = flag;
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setProfession(((MyVillager) myPet).getProfession());
+            this.setBaby(((MyVillager) myPet).isBaby());
+        }
     }
 }

@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 public interface IMyPetSlimeSize
 {
-    public void setSize(int value);
-
     public int getSize();
+
+    public void setSize(int value);
 }

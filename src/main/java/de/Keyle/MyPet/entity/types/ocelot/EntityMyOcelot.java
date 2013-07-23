@@ -34,47 +34,11 @@ import org.bukkit.entity.Ocelot.Type;
 public class EntityMyOcelot extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();
-
     private MyPetAISit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
     {
         super(world, myPet);
-    }
-
-    public void setPathfinder()
-    {
-        super.setPathfinder();
-        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
-    }
-
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
-            this.sitPathfinder = new MyPetAISit(this);
-
-            super.setMyPet(myPet);
-
-            this.setSitting(((MyOcelot) myPet).isSitting());
-            this.setBaby(((MyOcelot) myPet).isBaby());
-            this.setCatType(((MyOcelot) myPet).getCatType().getId());
-        }
-    }
-
-    public boolean canMove()
-    {
-        return !isSitting();
-    }
-
-    public void setSitting(boolean flag)
-    {
-        this.sitPathfinder.setSitting(flag);
-    }
-
-    public boolean isSitting()
-    {
-        return this.sitPathfinder.isSitting();
     }
 
     public void applySitting(boolean flag)
@@ -91,6 +55,11 @@ public class EntityMyOcelot extends EntityMyPet
         ((MyOcelot) myPet).isSitting = flag;
     }
 
+    public boolean canMove()
+    {
+        return !isSitting();
+    }
+
     public Type getCatType()
     {
         return ((MyOcelot) myPet).catType;
@@ -102,32 +71,28 @@ public class EntityMyOcelot extends EntityMyPet
         ((MyOcelot) myPet).catType = Type.getType(value);
     }
 
-    public boolean isBaby()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    protected String getDeathSound()
     {
-        return ((MyOcelot) myPet).isBaby;
+        return "mob.cat.hitt";
     }
 
-    public void setBaby(boolean flag)
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    protected String getHurtSound()
     {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MyOcelot) myPet).isBaby = flag;
+        return "mob.cat.hitt";
     }
 
-    protected void initDatawatcher()
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
     {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));     // age
-        this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
-        this.datawatcher.a(17, "");                 // ownername
-        this.datawatcher.a(18, new Byte((byte) 0)); // cat type
-
+        return !playIdleSound() ? null : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
     /**
@@ -194,27 +159,61 @@ public class EntityMyOcelot extends EntityMyPet
         return false;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    protected String getHurtSound()
+    protected void initDatawatcher()
     {
-        return "mob.cat.hitt";
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
+        this.datawatcher.a(17, "");                 // ownername
+        this.datawatcher.a(18, new Byte((byte) 0)); // cat type
+
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    protected String getDeathSound()
+    public boolean isBaby()
     {
-        return "mob.cat.hitt";
+        return ((MyOcelot) myPet).isBaby;
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
+    public void setBaby(boolean flag)
     {
-        return !playIdleSound() ? null : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MyOcelot) myPet).isBaby = flag;
+    }
+
+    public boolean isSitting()
+    {
+        return this.sitPathfinder.isSitting();
+    }
+
+    public void setSitting(boolean flag)
+    {
+        this.sitPathfinder.setSitting(flag);
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            this.sitPathfinder = new MyPetAISit(this);
+
+            super.setMyPet(myPet);
+
+            this.setSitting(((MyOcelot) myPet).isSitting());
+            this.setBaby(((MyOcelot) myPet).isBaby());
+            this.setCatType(((MyOcelot) myPet).getCatType().getId());
+        }
+    }
+
+    public void setPathfinder()
+    {
+        super.setPathfinder();
+        petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }
 }

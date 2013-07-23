@@ -40,39 +40,30 @@ public class EntityMyCow extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-
-            this.setBaby(((MyCow) myPet).isBaby());
-        }
+        return "mob.cow.hurt";
     }
 
-    public boolean isBaby()
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
     {
-        return ((MyCow) myPet).isBaby;
+        return "mob.cow.hurt";
     }
 
-    public void setBaby(boolean flag)
+    /**
+     * Returns the default sound of the MyPet
+     */
+    protected String getLivingSound()
     {
-        if (flag)
-        {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
-            this.datawatcher.watch(12, new Integer(0));
-        }
-        ((MyCow) myPet).isBaby = flag;
-    }
-
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
+        return !playIdleSound() ? null : "mob.cow.say";
     }
 
     /**
@@ -121,34 +112,42 @@ public class EntityMyCow extends EntityMyPet
         return false;
     }
 
+    protected void initDatawatcher()
+    {
+        super.initDatawatcher();
+        this.datawatcher.a(12, new Integer(0)); // age
+    }
+
+    public boolean isBaby()
+    {
+        return ((MyCow) myPet).isBaby;
+    }
+
+    public void setBaby(boolean flag)
+    {
+        if (flag)
+        {
+            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+        }
+        else
+        {
+            this.datawatcher.watch(12, new Integer(0));
+        }
+        ((MyCow) myPet).isBaby = flag;
+    }
+
     public void playStepSound()
     {
         makeSound("mob.cow.step", 0.15F, 1.0F);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    public void setMyPet(MyPet myPet)
     {
-        return "mob.cow.hurt";
-    }
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
-    {
-        return "mob.cow.hurt";
-    }
-
-    /**
-     * Returns the default sound of the MyPet
-     */
-    protected String getLivingSound()
-    {
-        return !playIdleSound() ? null : "mob.cow.say";
+            this.setBaby(((MyCow) myPet).isBaby());
+        }
     }
 }

@@ -41,21 +41,6 @@ public class MyMagmaCube extends MyPet implements IMyPetSlimeSize
         super(petOwner);
     }
 
-    public int getSize()
-    {
-        return size;
-    }
-
-    public void setSize(int value)
-    {
-        value = Math.max(1, value);
-        if (status == PetState.Here)
-        {
-            ((EntityMyMagmaCube) getCraftPet().getHandle()).setSize(value);
-        }
-        this.size = value;
-    }
-
     @Override
     public CompoundTag getExtendedInfo()
     {
@@ -77,6 +62,21 @@ public class MyMagmaCube extends MyPet implements IMyPetSlimeSize
     public MyPetType getPetType()
     {
         return MyPetType.MagmaCube;
+    }
+
+    public int getSize()
+    {
+        return size;
+    }
+
+    public void setSize(int value)
+    {
+        value = Math.max(1, value);
+        if (status == PetState.Here)
+        {
+            ((EntityMyMagmaCube) getCraftPet().getHandle()).setSize(value);
+        }
+        this.size = value;
     }
 
     @Override

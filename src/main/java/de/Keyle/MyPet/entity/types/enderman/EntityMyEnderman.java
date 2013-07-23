@@ -34,15 +34,9 @@ public class EntityMyEnderman extends EntityMyPet
         super(world, myPet);
     }
 
-    public void setMyPet(MyPet myPet)
+    public int getBlockData()
     {
-        if (myPet != null)
-        {
-            super.setMyPet(myPet);
-
-            this.setScreaming(((MyEnderman) myPet).isScreaming());
-            this.setBlock(((MyEnderman) myPet).getBlockID(), ((MyEnderman) myPet).getBlockData());
-        }
+        return ((MyEnderman) myPet).BlockData;
     }
 
     public int getBlockID()
@@ -50,37 +44,28 @@ public class EntityMyEnderman extends EntityMyPet
         return ((MyEnderman) myPet).BlockID;
     }
 
-    public int getBlockData()
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
+    @Override
+    protected String getDeathSound()
     {
-        return ((MyEnderman) myPet).BlockData;
+        return "mob.endermen.death";
     }
 
-    public void setBlock(int blockID, int blockData)
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
+    @Override
+    protected String getHurtSound()
     {
-        this.datawatcher.watch(16, (byte) (blockID & 0xFF));
-        ((MyEnderman) myPet).BlockID = blockID;
-
-        this.datawatcher.watch(17, (byte) (blockData & 0xFF));
-        ((MyEnderman) myPet).BlockData = blockData;
+        return "mob.endermen.hit";
     }
 
-    public boolean isScreaming()
+    @Override
+    protected String getLivingSound()
     {
-        return ((MyEnderman) myPet).isScreaming;
-    }
-
-    public void setScreaming(boolean screaming)
-    {
-        this.datawatcher.watch(18, (byte) (screaming ? 1 : 0));
-        ((MyEnderman) myPet).isScreaming = screaming;
-    }
-
-    protected void initDatawatcher()
-    {
-        super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) 0));  // blockID
-        this.datawatcher.a(17, new Byte((byte) 0));  // blockData
-        this.datawatcher.a(18, new Byte((byte) 0));  // face(angry)
+        return !playIdleSound() ? null : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 
     /**
@@ -130,27 +115,42 @@ public class EntityMyEnderman extends EntityMyPet
         return false;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
-    @Override
-    protected String getHurtSound()
+    protected void initDatawatcher()
     {
-        return "mob.endermen.hit";
+        super.initDatawatcher();
+        this.datawatcher.a(16, new Byte((byte) 0));  // blockID
+        this.datawatcher.a(17, new Byte((byte) 0));  // blockData
+        this.datawatcher.a(18, new Byte((byte) 0));  // face(angry)
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
-    @Override
-    protected String getDeathSound()
+    public boolean isScreaming()
     {
-        return "mob.endermen.death";
+        return ((MyEnderman) myPet).isScreaming;
     }
 
-    @Override
-    protected String getLivingSound()
+    public void setScreaming(boolean screaming)
     {
-        return !playIdleSound() ? null : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
+        this.datawatcher.watch(18, (byte) (screaming ? 1 : 0));
+        ((MyEnderman) myPet).isScreaming = screaming;
+    }
+
+    public void setBlock(int blockID, int blockData)
+    {
+        this.datawatcher.watch(16, (byte) (blockID & 0xFF));
+        ((MyEnderman) myPet).BlockID = blockID;
+
+        this.datawatcher.watch(17, (byte) (blockData & 0xFF));
+        ((MyEnderman) myPet).BlockData = blockData;
+    }
+
+    public void setMyPet(MyPet myPet)
+    {
+        if (myPet != null)
+        {
+            super.setMyPet(myPet);
+
+            this.setScreaming(((MyEnderman) myPet).isScreaming());
+            this.setBlock(((MyEnderman) myPet).getBlockID(), ((MyEnderman) myPet).getBlockData());
+        }
     }
 }

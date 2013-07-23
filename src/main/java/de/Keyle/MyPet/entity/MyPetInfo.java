@@ -32,11 +32,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface MyPetInfo
 {
-    public LeashFlag[] leashFlags() default {LeashFlag.LowHp};
-
     public Material[] food() default {};
 
     public double hp() default 20D;
+
+    public LeashFlag[] leashFlags() default {LeashFlag.LowHp};
 
     public double walkSpeed() default 0.30D;
 }
