@@ -84,18 +84,4 @@ public class EntityMyIronGolem extends EntityMyPet
     {
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
-
-    protected void setPlayerCreated(boolean flag)
-    {
-        byte b0 = this.datawatcher.getByte(16);
-
-        if (flag)
-        {
-            this.datawatcher.watch(16, (byte) (b0 | 0x1));
-        }
-        else
-        {
-            this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFE));
-        }
-    }
 }
