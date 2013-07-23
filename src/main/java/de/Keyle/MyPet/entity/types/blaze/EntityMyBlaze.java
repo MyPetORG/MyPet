@@ -23,6 +23,9 @@ package de.Keyle.MyPet.entity.types.blaze;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.Item;
+import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.6F, height = 1.7F)
@@ -48,6 +51,49 @@ public class EntityMyBlaze extends EntityMyPet
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.blaze.breathe";
+    }
+
+    public boolean handlePlayerInteraction(EntityHuman entityhuman)
+    {
+        if (super.handlePlayerInteraction(entityhuman))
+        {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
+        {
+            if (isOnFire() && itemStack.id == 373 && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking())
+            {
+                setOnFire(false);
+                makeSound("random.fizz", 1.0F, 1.0F);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    if (--itemStack.count <= 0)
+                    {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Item.GLASS_BOTTLE));
+                    }
+                    else
+                    {
+                        if (!entityhuman.inventory.pickup(new ItemStack(Item.GLASS_BOTTLE)))
+                        {
+                            entityhuman.drop(new ItemStack(Item.GLASS_BOTTLE));
+                        }
+                    }
+                }
+            }
+            else if (!isOnFire() && itemStack.id == Item.FLINT_AND_STEEL.id && getOwner().getPlayer().isSneaking())
+            {
+                setOnFire(true);
+                makeSound("fire.ignite", 1.0F, 1.0F);
+                if (!entityhuman.abilities.canInstantlyBuild)
+                {
+                    itemStack.damage(1, entityhuman);
+                }
+            }
+        }
+        return false;
     }
 
     protected void initDatawatcher()
