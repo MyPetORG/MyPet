@@ -33,27 +33,18 @@ public class EntityMyBlaze extends EntityMyPet
         super(world, myPet);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.blaze.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return "mob.blaze.hit";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.blaze.breathe";

@@ -71,36 +71,21 @@ public class EntityMyOcelot extends EntityMyPet
         ((MyOcelot) myPet).catType = Type.getType(value);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     protected String getDeathSound()
     {
         return "mob.cat.hitt";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     protected String getHurtSound()
     {
         return "mob.cat.hitt";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         if (super.handlePlayerInteraction(entityhuman))

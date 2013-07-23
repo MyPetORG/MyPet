@@ -38,25 +38,16 @@ public class EntityMyVillager extends EntityMyPet
         super(world, myPet);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     protected String getDeathSound()
     {
         return "mob.villager.defaultdeath";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     protected String getHurtSound()
     {
         return "mob.villager.defaulthurt";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.villager.default";

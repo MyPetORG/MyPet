@@ -35,27 +35,18 @@ public class EntityMyGhast extends EntityMyPet
         this.height = 3.5F;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.ghast.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return "mob.ghast.scream";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.ghast.moan";

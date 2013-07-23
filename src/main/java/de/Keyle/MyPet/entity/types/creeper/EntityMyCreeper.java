@@ -34,18 +34,12 @@ public class EntityMyCreeper extends EntityMyPet
         super(world, myPet);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.creeper.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {

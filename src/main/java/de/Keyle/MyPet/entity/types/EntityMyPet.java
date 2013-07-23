@@ -316,6 +316,12 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     // Obfuscated Method handler ------------------------------------------------------------------------------------
 
+    /**
+     * Is called when player rightclicks this MyPet
+     * return:
+     * true: there was a reaction on rightclick
+     * false: no reaction on rightclick
+     */
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
@@ -419,15 +425,28 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
     }
 
+    /**
+     * Returns the speed of played sounds
+     * The faster the higher the sound will be
+     */
     public float getSoundSpeed()
     {
         return super.ba();
     }
 
+    /**
+     * Returns the default sound of the MyPet
+     */
     protected abstract String getLivingSound();
 
+    /**
+     * Returns the sound that is played when the MyPet get hurt
+     */
     protected abstract String getHurtSound();
 
+    /**
+     * Returns the sound that is played when the MyPet dies
+     */
     protected abstract String getDeathSound();
 
     public void playStepSound()

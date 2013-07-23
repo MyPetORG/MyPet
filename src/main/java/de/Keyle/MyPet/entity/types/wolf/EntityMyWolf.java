@@ -75,38 +75,23 @@ public class EntityMyWolf extends EntityMyPet
         ((MyWolf) myPet).collarColor = DyeColor.getByWoolData(color);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.wolf.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return "mob.wolf.hurt";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : (this.random.nextInt(5) == 0 ? (getHealth() * 100 / getMaxHealth() <= 25 ? "mob.wolf.whine" : "mob.wolf.panting") : "mob.wolf.bark");
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         if (super.handlePlayerInteraction(entityhuman))

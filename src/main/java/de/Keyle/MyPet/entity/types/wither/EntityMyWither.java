@@ -33,27 +33,18 @@ public class EntityMyWither extends EntityMyPet
         super(world, myPet);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.wither.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return "mob.wither.hurt";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return !playIdleSound() ? null : "mob.wither.idle";

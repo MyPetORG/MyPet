@@ -39,9 +39,6 @@ public class EntityMySlime extends EntityMyPet
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
@@ -49,18 +46,12 @@ public class EntityMySlime extends EntityMyPet
 
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return getDeathSound();
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return null;
@@ -93,10 +84,6 @@ public class EntityMySlime extends EntityMyPet
         this.datawatcher.a(16, new Byte((byte) 1)); //size
     }
 
-    /**
-     * Method is called when pet moves
-     * Is used to create the hopping motion
-     */
     public void onLivingUpdate()
     {
         super.onLivingUpdate();

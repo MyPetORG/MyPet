@@ -44,18 +44,12 @@ public class EntityMyEnderman extends EntityMyPet
         return ((MyEnderman) myPet).BlockID;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.endermen.death";
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
@@ -68,12 +62,6 @@ public class EntityMyEnderman extends EntityMyPet
         return !playIdleSound() ? null : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         if (super.handlePlayerInteraction(entityhuman))

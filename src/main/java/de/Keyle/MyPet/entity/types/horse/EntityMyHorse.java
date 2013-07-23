@@ -112,9 +112,6 @@ public class EntityMyHorse extends EntityMyPet
         ((MyHorse) myPet).armor = value;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
@@ -145,9 +142,6 @@ public class EntityMyHorse extends EntityMyPet
         ((MyHorse) myPet).horseType = horseType;
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
@@ -167,9 +161,6 @@ public class EntityMyHorse extends EntityMyPet
         return "mob.horse.hit";
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         if (playIdleSound())
@@ -203,12 +194,6 @@ public class EntityMyHorse extends EntityMyPet
         ((MyHorse) myPet).variant = variant;
     }
 
-    /**
-     * Is called when player rightclicks this MyPet
-     * return:
-     * true: there was a reaction on rightclick
-     * false: no reaction on rightclick
-     */
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         if (super.handlePlayerInteraction(entityhuman))

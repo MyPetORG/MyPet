@@ -38,27 +38,18 @@ public class EntityMyMagmaCube extends EntityMyPet
         super(world, myPet);
     }
 
-    /**
-     * Returns the sound that is played when the MyPet dies
-     */
     @Override
     protected String getDeathSound()
     {
         return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
     }
 
-    /**
-     * Returns the sound that is played when the MyPet get hurt
-     */
     @Override
     protected String getHurtSound()
     {
         return getDeathSound();
     }
 
-    /**
-     * Returns the default sound of the MyPet
-     */
     protected String getLivingSound()
     {
         return null;
@@ -91,10 +82,6 @@ public class EntityMyMagmaCube extends EntityMyPet
         this.datawatcher.a(16, new Byte((byte) 1)); //size
     }
 
-    /**
-     * Method is called when pet moves
-     * Is used to create the hopping motion
-     */
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
