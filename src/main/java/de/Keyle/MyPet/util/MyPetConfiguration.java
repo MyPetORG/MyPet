@@ -72,6 +72,7 @@ public class MyPetConfiguration
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
     public static double RESPAWN_COSTS_FIXED = 0.0;
+    public static boolean ALWAYS_SHOW_LEASH_FOR_OWNER = false;
     public static boolean CONSUME_LEASH_ITEM = false;
     public static boolean SKILLTREE_SWITCH_PENALTY_ADMIN = false;
     public static boolean AUTOMATIC_SKILLTREE_ASSIGNMENT = true;
@@ -94,6 +95,7 @@ public class MyPetConfiguration
     {
         config.addDefault("MyPet.Leash.Item", LEASH_ITEM);
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
+        config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
         config.addDefault("MyPet.OwnerCanAttackPet", false);
         config.addDefault("MyPet.DisablePetVersusPlayer", false);
         config.addDefault("MyPet.CheckForUpdates", false);
@@ -237,6 +239,7 @@ public class MyPetConfiguration
     {
         LEASH_ITEM = config.getInt("MyPet.Leash.Item", Material.LEASH.getId());
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
+        ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
         Control.CONTROL_ITEM = config.getInt("MyPet.Skill.Control.Item", Material.LEASH.getId());
         Ride.RIDE_ITEM = config.getInt("MyPet.Skill.Ride.Item", Material.LEASH.getId());
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);

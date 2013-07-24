@@ -132,6 +132,10 @@ public class MyPetPlayerListener implements Listener
                         event.setCancelled(true);
                     }
                 }
+                else if (heldItem.getType() == Material.LEASH)
+                {
+                    craftMyPet.getHandle().applyLeash();
+                }
             }
         }
     }

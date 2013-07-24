@@ -47,7 +47,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public MyPetAIGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected double walkSpeed = 0.3F;
-    protected boolean isRidden = false;
+    protected boolean hasRider = false;
     protected boolean isMyPet = false;
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
@@ -91,6 +91,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public void applyLeash()
+    {
+        if (MyPetConfiguration.ALWAYS_SHOW_LEASH_FOR_OWNER)
+        {
+            ((EntityPlayer) this.bI()).playerConnection.sendPacket(new Packet39AttachEntity(1, this, this.bI()));
         }
     }
 
@@ -608,10 +616,24 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
     }
 
+    public Entity bI()
+    {
+        if (MyPetConfiguration.ALWAYS_SHOW_LEASH_FOR_OWNER)
+        {
+            return ((CraftPlayer) getOwner().getPlayer()).getHandle();
+        }
+        return null;
+    }
+
     public void e(float motionSideways, float motionForward)
     {
         if (this.passenger == null || !(this.passenger instanceof EntityPlayer))
         {
+            if (hasRider)
+            {
+                hasRider = false;
+                applyLeash();
+            }
             super.e(motionSideways, motionForward);
             this.Y = 0.5F; // climb height -> halfslab
             return;
@@ -626,6 +648,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 this.Y = 0.5F; // climb height -> halfslab
                 return;
             }
+        }
+
+        if (!hasRider)
+        {
+            hasRider = true;
         }
 
         this.Y = 1.0F; // climb height -> 1 block
