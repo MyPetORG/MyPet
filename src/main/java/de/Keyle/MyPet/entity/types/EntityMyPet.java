@@ -325,13 +325,24 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     public boolean handlePlayerInteraction(EntityHuman entityhuman)
     {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
+        Player owner = this.getOwner().getPlayer();
 
-        if (itemStack == null)
+        if (itemStack == null || itemStack.id == 0)
         {
+            if (Ride.RIDE_ITEM == 0 && myPet.getSkills().isSkillActive("Ride") && canMove())
+            {
+                if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
+                {
+                    ((CraftPlayer) owner).getHandle().setPassengerOf(this);
+                    return true;
+                }
+                else
+                {
+                    getMyPet().sendMessageToOwner(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                }
+            }
             return false;
         }
-
-        Player owner = this.getOwner().getPlayer();
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman))
         {
