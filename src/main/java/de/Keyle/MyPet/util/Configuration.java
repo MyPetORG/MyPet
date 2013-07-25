@@ -98,7 +98,6 @@ public class Configuration
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
         config.addDefault("MyPet.OwnerCanAttackPet", false);
         config.addDefault("MyPet.DisablePetVersusPlayer", false);
-        config.addDefault("MyPet.CheckForUpdates", false);
         config.addDefault("MyPet.DonatorEffect", true);
         config.addDefault("MyPet.EnableEvents", false);
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
