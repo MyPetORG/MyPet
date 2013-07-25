@@ -18,11 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.chatcommands;
+package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
@@ -34,7 +35,7 @@ import org.bukkit.entity.Player;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
-public class CommandCall implements CommandExecutor
+public class CommandSendAway implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -44,32 +45,23 @@ public class CommandCall implements CommandExecutor
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-
-                myPet.removePet(true);
-
-                switch (myPet.createPet())
+                if (myPet.getStatus() == PetState.Here)
                 {
-                    case Success:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call", petOwner), myPet.getPetName()));
-                        if (Configuration.ENABLE_EVENTS)
-                        {
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                        }
-                        break;
-                    case Canceled:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnPrevent", petOwner), myPet.getPetName()));
-                        break;
-                    case NoSpace:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnNoSpace", petOwner), myPet.getPetName()));
-                        break;
-                    case NotAllowed:
-                        sender.sendMessage(Locales.getString("Message.NotAllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
-                        break;
-                    case Dead:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
-                        break;
+                    myPet.removePet(false);
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.SendAway", petOwner), myPet.getPetName()));
+                    if (Configuration.ENABLE_EVENTS)
+                    {
+                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
+                    }
                 }
-                return true;
+                else if (myPet.getStatus() == PetState.Despawned)
+                {
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.AlreadyAway", petOwner), myPet.getPetName()));
+                }
+                else if (myPet.getStatus() == PetState.Dead)
+                {
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                }
             }
             else
             {

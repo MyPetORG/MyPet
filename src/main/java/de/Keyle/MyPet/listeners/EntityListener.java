@@ -22,8 +22,8 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.event.MyPetLeashEvent;
-import de.Keyle.MyPet.chatcommands.CommandInfo;
-import de.Keyle.MyPet.chatcommands.CommandInfo.PetInfoDisplay;
+import de.Keyle.MyPet.commands.CommandInfo;
+import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.ai.target.BehaviorDuelTarget;
 import de.Keyle.MyPet.entity.types.*;

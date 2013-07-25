@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.chatcommands;
+package de.Keyle.MyPet.commands;
 
 
 import de.Keyle.MyPet.entity.types.MyPet;

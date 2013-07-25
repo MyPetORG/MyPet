@@ -18,14 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.chatcommands;
+package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
@@ -33,9 +30,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static org.bukkit.Bukkit.getPluginManager;
-
-public class CommandSendAway implements CommandExecutor
+public class CommandStop implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -45,23 +40,21 @@ public class CommandSendAway implements CommandExecutor
             if (MyPetList.hasMyPet(petOwner))
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getStatus() == PetState.Here)
+
+                if (myPet.getStatus() == PetState.Despawned)
                 {
-                    myPet.removePet(false);
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.SendAway", petOwner), myPet.getPetName()));
-                    if (Configuration.ENABLE_EVENTS)
-                    {
-                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
-                    }
-                }
-                else if (myPet.getStatus() == PetState.Despawned)
-                {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.AlreadyAway", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
+                    return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    return true;
                 }
+                sender.sendMessage(Locales.getString("Message.StopAttack", petOwner).replace("%petname%", myPet.getPetName()));
+                myPet.getCraftPet().getHandle().setTarget(null);
+                myPet.getCraftPet().getHandle().setGoalTarget(null);
+                myPet.getCraftPet().getHandle().goalTarget = null;
             }
             else
             {

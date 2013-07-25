@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet;
 
-import de.Keyle.MyPet.chatcommands.*;
+import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;

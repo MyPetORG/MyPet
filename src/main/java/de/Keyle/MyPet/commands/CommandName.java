@@ -18,54 +18,68 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.chatcommands;
+package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.ISkillActive;
+import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandPickup implements CommandExecutor
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CommandName implements CommandExecutor
 {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         if (sender instanceof Player)
         {
-            Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
+            Player petOwner = (Player) sender;
+            if (MyPetList.hasMyPet(petOwner))
             {
-                MyPet myPet = MyPetList.getMyPet(owner);
+                if (args.length < 1)
+                {
+                    return false;
+                }
 
-                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
+                MyPet myPet = MyPetList.getMyPet(petOwner);
+                if (!Permissions.has(petOwner, "MyPet.user.command.name"))
                 {
-                    sender.sendMessage(Locales.getString("Message.NotAllowed", owner));
+                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", petOwner));
                     return true;
                 }
-                else if (myPet.getStatus() == PetState.Despawned)
+
+                String name = "";
+                for (String arg : args)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", owner), myPet.getPetName()));
-                    return true;
+                    if (!name.equals(""))
+                    {
+                        name += " ";
+                    }
+                    name += arg;
                 }
-                else if (myPet.getStatus() == PetState.Dead)
+                name = Colorizer.setColors(name);
+
+                Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
+                Matcher regexMatcher = regex.matcher(name);
+                if (regexMatcher.find())
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", owner), myPet.getPetName(), myPet.getRespawnTime()));
-                    return true;
+                    name += ChatColor.RESET;
                 }
-                if (myPet.getSkills().hasSkill("Pickup"))
-                {
-                    ((ISkillActive) myPet.getSkills().getSkill("Pickup")).activate();
-                }
+
+                myPet.setPetName(name);
+                sender.sendMessage(Util.formatText(Locales.getString("Message.NewName", petOwner), name));
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", owner));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }
