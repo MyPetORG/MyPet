@@ -133,36 +133,34 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
 
             if (skilltreeMap.containsKey("Level"))
             {
-                Map<String, Object> levelMap = (Map<String, Object>) skilltreeMap.get("Level");
-                if (levelMap == null)
+                if (!skilltreeMap.containsKey("Level"))
                 {
                     continue;
                 }
-                for (String thisLevel : levelMap.keySet())
+                Map<String, Object> levelsMap = (Map<String, Object>) skilltreeMap.get("Level");
+
+                for (String thisLevel : levelsMap.keySet())
                 {
                     //System.out.println("  " + thisLevel);
                     if (Util.isInt(thisLevel))
                     {
                         int lvl = Integer.parseInt(thisLevel);
-
-                        Map<String, Object> skillMap = (Map<String, Object>) levelMap.get(thisLevel);
-
-                        if (skillMap == null)
-                        {
-                            continue;
-                        }
-
                         SkillTreeLevel newLevel = skillTree.addLevel(lvl);
+
+                        Map<String, Object> levelMap = (Map<String, Object>) levelsMap.get(thisLevel);
+
                         if (levelMap.containsKey("Message"))
                         {
                             String message = (String) levelMap.get("Message");
                             newLevel.setLevelupMessage(message);
                         }
 
-                        if (skillMap.size() == 0)
+                        if (!levelMap.containsKey("Skills"))
                         {
                             continue;
                         }
+                        Map<String, Object> skillMap = (Map<String, Object>) levelMap.get("Skills");
+
                         for (String thisSkill : skillMap.keySet())
                         {
                             //System.out.println("    " + thisSkill);
