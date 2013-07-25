@@ -140,6 +140,7 @@ public class Configuration
         config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", false);
 
+        config.addDefault("MyPet.Support.PlayerDamageEntityEvent", false);
         config.addDefault("MyPet.Support.Towny", true);
         config.addDefault("MyPet.Support.Heroes", true);
         config.addDefault("MyPet.Support.Factions", true);
@@ -308,6 +309,7 @@ public class Configuration
         SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES = config.getBoolean("MyPet.Support.SurvivalGames.DisablePetsInGames", true);
         MyHungerGames.DISABLE_PETS_IN_HUNGER_GAMES = config.getBoolean("MyPet.Support.MyHungerGames.DisablePetsInGames", true);
         MobArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Support.MobArena.DisablePetsInArena", false);
+        PvPChecker.USE_PlayerDamageEntityEvent = config.getBoolean("MyPet.Support.PlayerDamageEntityEvent", false);
         PvPChecker.USE_PvPArena = config.getBoolean("MyPet.Support.PvPArena.PvP", true);
         PvPChecker.USE_Towny = config.getBoolean("MyPet.Support.Towny", true);
         PvPChecker.USE_Factions = config.getBoolean("MyPet.Support.Factions", true);

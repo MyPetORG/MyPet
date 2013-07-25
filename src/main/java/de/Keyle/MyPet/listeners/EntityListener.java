@@ -227,10 +227,30 @@ public class EntityListener implements Listener
         }
     }
 
+    boolean selfThrownEventRunning = false;
+
+    @EventHandler
+    public void onEntityDamageByMyPet(final EntityDamageByEntityEvent event)
+    {
+        if (event.getDamager() instanceof CraftMyPet && event.getEntity() instanceof LivingEntity)
+        {
+            MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
+            if (PvPChecker.USE_PlayerDamageEntityEvent)
+            {
+                selfThrownEventRunning = true;
+                if (!PvPChecker.canHurtEvent(myPet.getOwner().getPlayer(), (LivingEntity) event.getEntity()))
+                {
+                    event.setCancelled(true);
+                }
+                selfThrownEventRunning = false;
+            }
+        }
+    }
+
     @EventHandler
     public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event)
     {
-        if (!(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player)
+        if (!selfThrownEventRunning && !(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player)
         {
             if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
             {
