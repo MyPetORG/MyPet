@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.ThornsInfo;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.entity.LivingEntity;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
@@ -84,7 +84,7 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
                 chance = Math.min(chance, 100);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, reflectedDamagePercent));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Thorns.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, reflectedDamagePercent));
                 }
             }
         }
@@ -92,7 +92,7 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
 
     public String getFormattedValue()
     {
-        return chance + "% -> " + reflectedDamagePercent + "% " + MyPetLocales.getString("Name.Damage", myPet.getOwner().getLanguage());
+        return chance + "% -> " + reflectedDamagePercent + "% " + Locales.getString("Name.Damage", myPet.getOwner().getLanguage());
     }
 
     public void reset()
@@ -115,8 +115,8 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive
     {
         damager.damage(getReflectedDamage(damage), myPet.getCraftPet());
         myPet.getCraftPet().getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
-        MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "magicCrit", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-        MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "crit", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "magicCrit", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "crit", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
     }
 
     @Override

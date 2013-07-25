@@ -22,17 +22,17 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.HealthRegeneration;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("HPregeneration")
 @SkillProperties(
         parameterNames = {"hp_double", "time", "addset_hp", "addset_time"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "60", "add", "add"})
-public class HPregenerationInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class HPregenerationInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

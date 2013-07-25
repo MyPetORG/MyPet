@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.giant;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
@@ -72,7 +72,7 @@ public class EntityMyGiant extends EntityMyPet
         super.setPathfinder();
         if (myPet.getDamage() > 0)
         {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 8, 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8, 20));
         }
     }
 }

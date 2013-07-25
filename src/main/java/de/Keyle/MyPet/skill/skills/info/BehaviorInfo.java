@@ -22,10 +22,10 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Behavior;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ import java.util.Map;
         parameterNames = {"friend", "aggro", "farm", "raid", "duel"},
         parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},
         parameterDefaultValues = {"true", "true", "true", "true", "true"})
-public class BehaviorInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

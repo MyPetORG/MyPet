@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.skill.ISkillStorage;
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.SkillTree;
+import de.Keyle.MyPet.skill.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.NBTStorage;
@@ -42,7 +42,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage
     private int respawnTime = 0;
     private double exp = 0;
     private MyPetType petType = MyPetType.Wolf;
-    private MyPetSkillTree skillTree = null;
+    private SkillTree skillTree = null;
     private CompoundTag NBTSkills;
     private CompoundTag NBTextendetInfo;
 
@@ -146,12 +146,12 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         this.respawnTime = respawnTime;
     }
 
-    public MyPetSkillTree getSkillTree()
+    public SkillTree getSkillTree()
     {
         return skillTree;
     }
 
-    public void setSkillTree(MyPetSkillTree skillTree)
+    public void setSkillTree(SkillTree skillTree)
     {
         this.skillTree = skillTree;
     }
@@ -230,9 +230,9 @@ public class InactiveMyPet implements IMyPet, NBTStorage
             String skillTreeName = ((StringTag) myPetNBT.getValue().get("Skilltree")).getValue();
             if (skillTreeName != null)
             {
-                if (MyPetSkillTreeMobType.getMobTypeByPetType(petType) != null)
+                if (SkillTreeMobType.getMobTypeByPetType(petType) != null)
                 {
-                    MyPetSkillTreeMobType mobType = MyPetSkillTreeMobType.getMobTypeByPetType(petType);
+                    SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByPetType(petType);
 
                     if (mobType.hasSkillTree(skillTreeName))
                     {

@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
 import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
@@ -84,7 +84,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("projectile"))
@@ -116,7 +116,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + MyPetLocales.getString("Name.Damage", myPet.getOwner());
+        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset()

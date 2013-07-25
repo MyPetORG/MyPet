@@ -23,9 +23,9 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,9 +50,9 @@ public class CommandName implements CommandExecutor
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (!MyPetPermissions.has(petOwner, "MyPet.user.command.name"))
+                if (!Permissions.has(petOwner, "MyPet.user.command.name"))
                 {
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", petOwner));
+                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", petOwner));
                     return true;
                 }
 
@@ -75,11 +75,11 @@ public class CommandName implements CommandExecutor
                 }
 
                 myPet.setPetName(name);
-                sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.NewName", petOwner), name));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.NewName", petOwner), name));
             }
             else
             {
-                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }

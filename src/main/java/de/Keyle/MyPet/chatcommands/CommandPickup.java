@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,19 +43,19 @@ public class CommandPickup implements CommandExecutor
             {
                 MyPet myPet = MyPetList.getMyPet(owner);
 
-                if (!MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
+                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.NotAllowed", owner));
+                    sender.sendMessage(Locales.getString("Message.NotAllowed", owner));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", owner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", owner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Pickup"))
@@ -65,7 +65,7 @@ public class CommandPickup implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", owner));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", owner));
             }
             return true;
         }

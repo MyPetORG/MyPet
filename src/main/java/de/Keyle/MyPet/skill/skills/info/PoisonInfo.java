@@ -22,17 +22,17 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Poison;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Poison")
 @SkillProperties(
         parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
         parameterDefaultValues = {"5", "3", "add", "add"})
-public class PoisonInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class PoisonInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.magmacube;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.PathEntity;
@@ -71,7 +71,7 @@ public class EntityMyMagmaCube extends EntityMyPet
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack"))
         {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
         }
         ((MyMagmaCube) myPet).size = value;
     }
@@ -108,6 +108,6 @@ public class EntityMyMagmaCube extends EntityMyPet
     public void setPathfinder()
     {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 2 + getSize(), 20));
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }
 }

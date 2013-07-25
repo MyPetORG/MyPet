@@ -26,9 +26,9 @@ import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.MyPetWorldGroup;
+import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -59,7 +59,7 @@ public class MyBat extends MyPet
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 loc = loc.add(0, 1, 0);
                 petEntity.setLocation(loc);
-                if (!MyPetBukkitUtil.canSpawn(loc, petEntity))
+                if (!BukkitUtil.canSpawn(loc, petEntity))
                 {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
@@ -101,7 +101,7 @@ public class MyBat extends MyPet
 
                 if (worldGroup == null || worldGroup.equals(""))
                 {
-                    setWorldGroup(MyPetWorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
+                    setWorldGroup(WorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
                 }
 
                 autoAssignSkilltree();

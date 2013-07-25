@@ -23,12 +23,12 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.ISkillStorage;
-import de.Keyle.MyPet.skill.skills.implementation.inventory.MyPetCustomInventory;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import net.minecraft.server.v1_6_R2.Packet62NamedSoundEffect;
 import org.bukkit.GameMode;
@@ -41,7 +41,7 @@ import org.spout.nbt.IntTag;
 
 public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive
 {
-    public MyPetCustomInventory inv = new MyPetCustomInventory("Pet's Inventory", 0);
+    public CustomInventory inv = new CustomInventory("Pet's Inventory", 0);
     public static boolean OPEN_IN_CREATIVEMODE = true;
     public static boolean DROP_WHEN_OWNER_DIES = true;
     private MyPet myPet;
@@ -76,7 +76,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                 inv.setSize(rows * 9);
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), inv.getSize()));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), inv.getSize()));
                 }
             }
             if (upgrade.getProperties().getValue().containsKey("drop"))
@@ -88,7 +88,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public String getFormattedValue()
     {
-        return rows + " " + MyPetLocales.getString("Name.Rows", myPet.getOwner());
+        return rows + " " + Locales.getString("Name.Rows", myPet.getOwner());
     }
 
     public void reset()
@@ -101,14 +101,14 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
     {
         if (rows > 0)
         {
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !MyPetPermissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
+                myPet.sendMessageToOwner(Locales.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }
             if (myPet.getOwner().isInExternalGames())
             {
-                myPet.sendMessageToOwner(MyPetLocales.getString("Message.NotAllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
             if (!myPet.getLocation().getBlock().isLiquid())
@@ -119,13 +119,13 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             else
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()), myPet.getPetName()));
                 return false;
             }
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner()), myPet.getPetName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner()), myPet.getPetName()));
             return false;
         }
     }

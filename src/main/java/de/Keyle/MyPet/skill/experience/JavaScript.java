@@ -22,7 +22,7 @@ package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetUtil;
+import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
@@ -186,7 +186,7 @@ public class JavaScript extends Experience
     {
         try
         {
-            expScript = MyPetUtil.readFileAsString(path);
+            expScript = Util.readFileAsString(path);
             return true;
         }
         catch (IOException e)

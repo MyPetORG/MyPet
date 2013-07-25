@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,17 +54,17 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned)
                     {
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", player), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", player), myPet.getPetName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
                         return true;
                     }
-                    if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Inventory") && !MyPetPermissions.has(player, "MyPet.admin", false))
+                    if (!Permissions.hasExtended(player, "MyPet.user.extended.Inventory") && !Permissions.has(player, "MyPet.admin", false))
                     {
-                        myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", player));
+                        myPet.sendMessageToOwner(Locales.getString("Message.CantUse", player));
                         return true;
                     }
                     if (myPet.getSkills().hasSkill("Inventory"))
@@ -74,16 +74,16 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", player));
+                    sender.sendMessage(Locales.getString("Message.DontHavePet", player));
                 }
             }
-            else if (args.length == 1 && MyPetPermissions.has(player, "MyPet.admin", false))
+            else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false))
             {
                 Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.PlayerNotOnline", player));
+                    sender.sendMessage(Locales.getString("Message.PlayerNotOnline", player));
                 }
                 else if (MyPetList.hasMyPet(petOwner))
                 {
@@ -103,7 +103,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if (strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
+        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false))
         {
             return null;
         }

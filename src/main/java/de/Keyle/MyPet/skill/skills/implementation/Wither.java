@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.WitherInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
@@ -92,7 +92,7 @@ public class Wither extends WitherInfo implements ISkillInstance, ISkillActive
             chance = Math.min(chance, 100);
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Wither.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Wither.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
             }
         }
     }

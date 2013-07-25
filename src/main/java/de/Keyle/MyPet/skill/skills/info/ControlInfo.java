@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Control")
-public class ControlInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class ControlInfo extends SkillTreeSkill implements ISkillInfo
 {
     public ControlInfo(boolean addedByInheritance)
     {

@@ -52,19 +52,20 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
-import de.Keyle.MyPet.skill.MyPetSkills;
-import de.Keyle.MyPet.skill.MyPetSkillsInfo;
+import de.Keyle.MyPet.skill.SkillTreeMobType;
+import de.Keyle.MyPet.skill.Skills;
+import de.Keyle.MyPet.skill.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.info.*;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoader;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoader;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.configuration.NBT_Configuration;
-import de.Keyle.MyPet.util.configuration.YAML_Configuration;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Timer;
+import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
+import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
+import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.*;
@@ -111,7 +112,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
             MyPetList.clearList();
         }
-        MyPetTimer.reset();
+        Timer.reset();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -129,11 +130,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
-        MyPetPvP.reset();
-        MyPetEconomy.reset();
-        MyPetConfiguration.config = this.getConfig();
-        MyPetConfiguration.setDefault();
-        MyPetConfiguration.loadConfiguration();
+        PvPChecker.reset();
+        Economy.reset();
+        Configuration.config = this.getConfig();
+        Configuration.setDefault();
+        Configuration.loadConfiguration();
         DebugLogger.setup();
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
@@ -154,19 +155,19 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
-        MyPetPlayerListener playerListener = new MyPetPlayerListener();
+        PlayerListener playerListener = new PlayerListener();
         getServer().getPluginManager().registerEvents(playerListener, this);
 
-        MyPetVehicleListener vehicleListener = new MyPetVehicleListener();
+        VehicleListener vehicleListener = new VehicleListener();
         getServer().getPluginManager().registerEvents(vehicleListener, this);
 
-        MyPetEntityListener entityListener = new MyPetEntityListener();
+        EntityListener entityListener = new EntityListener();
         getServer().getPluginManager().registerEvents(entityListener, this);
 
-        MyPetLevelUpListener levelupListener = new MyPetLevelUpListener();
+        LevelUpListener levelupListener = new LevelUpListener();
         getServer().getPluginManager().registerEvents(levelupListener, this);
 
-        MyPetWorldListener worldListener = new MyPetWorldListener();
+        WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
 
         getCommand("petname").setExecutor(new CommandName());
@@ -226,16 +227,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             petTypes[i] = MyPetType.values()[i].getTypeName();
         }
 
-        MyPetSkillTreeMobType.clearMobTypes();
-        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
-        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        SkillTreeMobType.clearMobTypes();
+        SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
+        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
         for (MyPetType mobType : MyPetType.values())
         {
-            MyPetSkillTreeMobType skillTreeMobType = MyPetSkillTreeMobType.getMobTypeByName(mobType.getTypeName());
-            MyPetSkillTreeLoader.addDefault(skillTreeMobType);
-            MyPetSkillTreeLoader.manageInheritance(skillTreeMobType);
+            SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
+            SkillTreeLoader.addDefault(skillTreeMobType);
+            SkillTreeLoader.manageInheritance(skillTreeMobType);
         }
 
         registerMyPetEntity(EntityMyCreeper.class, "Creeper", 50);
@@ -277,18 +278,18 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
-        new MyPetLocales();
+        new Locales();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
-        if (MyPetBackup.MAKE_BACKUPS)
+        if (Backup.MAKE_BACKUPS)
         {
-            new MyPetBackup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
+            new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
         loadGroups(groupsFile);
         loadPets(NBTPetFile);
 
-        MyPetTimer.startTimer();
+        Timer.startTimer();
 
         MobArena.findPlugin();
         Minigames.findPlugin();
@@ -355,7 +356,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             if (MyPetPlayer.isMyPetPlayer(player))
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
-                MyPetWorldGroup joinGroup = MyPetWorldGroup.getGroup(player.getWorld().getName());
+                WorldGroup joinGroup = WorldGroup.getGroup(player.getWorld().getName());
                 if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
                 {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
@@ -377,7 +378,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        player.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.RespawnIn", MyPetBukkitUtil.getPlayerLanguage(player)), myPet.getPetName(), myPet.getRespawnTime()));
+                        player.sendMessage(Util.formatText(Locales.getString("Message.RespawnIn", BukkitUtil.getPlayerLanguage(player)), myPet.getPetName(), myPet.getRespawnTime()));
                     }
                     else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
                     {
@@ -392,52 +393,52 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         }
         this.isReady = true;
         savePets(false);
-        MyPetTimer.addTask(this);
+        Timer.addTask(this);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
     public static void registerSkills()
     {
-        MyPetSkills.registerSkill(Inventory.class);
-        MyPetSkills.registerSkill(HPregeneration.class);
-        MyPetSkills.registerSkill(Pickup.class);
-        MyPetSkills.registerSkill(Behavior.class);
-        MyPetSkills.registerSkill(Damage.class);
-        MyPetSkills.registerSkill(Control.class);
-        MyPetSkills.registerSkill(HP.class);
-        MyPetSkills.registerSkill(Poison.class);
-        MyPetSkills.registerSkill(Ride.class);
-        MyPetSkills.registerSkill(Thorns.class);
-        MyPetSkills.registerSkill(Fire.class);
-        MyPetSkills.registerSkill(Beacon.class);
-        MyPetSkills.registerSkill(Wither.class);
-        MyPetSkills.registerSkill(Lightning.class);
-        MyPetSkills.registerSkill(Slow.class);
-        MyPetSkills.registerSkill(Knockback.class);
-        MyPetSkills.registerSkill(Ranged.class);
-        MyPetSkills.registerSkill(Sprint.class);
+        Skills.registerSkill(Inventory.class);
+        Skills.registerSkill(HPregeneration.class);
+        Skills.registerSkill(Pickup.class);
+        Skills.registerSkill(Behavior.class);
+        Skills.registerSkill(Damage.class);
+        Skills.registerSkill(Control.class);
+        Skills.registerSkill(HP.class);
+        Skills.registerSkill(Poison.class);
+        Skills.registerSkill(Ride.class);
+        Skills.registerSkill(Thorns.class);
+        Skills.registerSkill(Fire.class);
+        Skills.registerSkill(Beacon.class);
+        Skills.registerSkill(Wither.class);
+        Skills.registerSkill(Lightning.class);
+        Skills.registerSkill(Slow.class);
+        Skills.registerSkill(Knockback.class);
+        Skills.registerSkill(Ranged.class);
+        Skills.registerSkill(Sprint.class);
     }
 
     public static void registerSkillsInfo()
     {
-        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
-        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
-        MyPetSkillsInfo.registerSkill(PickupInfo.class);
-        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
-        MyPetSkillsInfo.registerSkill(DamageInfo.class);
-        MyPetSkillsInfo.registerSkill(ControlInfo.class);
-        MyPetSkillsInfo.registerSkill(HPInfo.class);
-        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
-        MyPetSkillsInfo.registerSkill(RideInfo.class);
-        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
-        MyPetSkillsInfo.registerSkill(FireInfo.class);
-        MyPetSkillsInfo.registerSkill(BeaconInfo.class);
-        MyPetSkillsInfo.registerSkill(WitherInfo.class);
-        MyPetSkillsInfo.registerSkill(LightningInfo.class);
-        MyPetSkillsInfo.registerSkill(SlowInfo.class);
-        MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
-        MyPetSkillsInfo.registerSkill(RangedInfo.class);
-        MyPetSkillsInfo.registerSkill(SprintInfo.class);
+        SkillsInfo.registerSkill(InventoryInfo.class);
+        SkillsInfo.registerSkill(HPregenerationInfo.class);
+        SkillsInfo.registerSkill(PickupInfo.class);
+        SkillsInfo.registerSkill(BehaviorInfo.class);
+        SkillsInfo.registerSkill(DamageInfo.class);
+        SkillsInfo.registerSkill(ControlInfo.class);
+        SkillsInfo.registerSkill(HPInfo.class);
+        SkillsInfo.registerSkill(PoisonInfo.class);
+        SkillsInfo.registerSkill(RideInfo.class);
+        SkillsInfo.registerSkill(ThornsInfo.class);
+        SkillsInfo.registerSkill(FireInfo.class);
+        SkillsInfo.registerSkill(BeaconInfo.class);
+        SkillsInfo.registerSkill(WitherInfo.class);
+        SkillsInfo.registerSkill(LightningInfo.class);
+        SkillsInfo.registerSkill(SlowInfo.class);
+        SkillsInfo.registerSkill(KnockbackInfo.class);
+        SkillsInfo.registerSkill(RangedInfo.class);
+        SkillsInfo.registerSkill(SprintInfo.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -495,7 +496,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         }
         int petCount = 0;
 
-        NBT_Configuration nbtConfiguration = new NBT_Configuration(f);
+        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(f);
         if (!nbtConfiguration.load())
         {
             return 0;
@@ -533,9 +534,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
     public int savePets(boolean shutdown)
     {
-        autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
+        autoSaveTimer = Configuration.AUTOSAVE_TIME;
         int petCount = 0;
-        NBT_Configuration nbtConfiguration = new NBT_Configuration(NBTPetFile);
+        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
         List<CompoundTag> petList = new ArrayList<CompoundTag>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets())
@@ -572,7 +573,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
     }
 
-    private int loadPlayers(NBT_Configuration nbtConfiguration)
+    private int loadPlayers(ConfigurationNBT nbtConfiguration)
     {
         int playerCount = 0;
         ListTag playerList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Players");
@@ -591,7 +592,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
     private int loadGroups(File f)
     {
-        YAML_Configuration yamlConfiguration = new YAML_Configuration(f);
+        ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
         FileConfiguration config = yamlConfiguration.getConfig();
 
         if (config == null)
@@ -599,7 +600,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             return 0;
         }
 
-        MyPetWorldGroup.clearGroups();
+        WorldGroup.clearGroups();
 
         Set<String> nodes;
         try
@@ -616,7 +617,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         if (nodes.size() == 0)
         {
             List<String> worldNames = new ArrayList<String>();
-            MyPetWorldGroup defaultGroup = new MyPetWorldGroup("default");
+            WorldGroup defaultGroup = new WorldGroup("default");
             defaultGroup.registerGroup();
             for (org.bukkit.World world : this.getServer().getWorlds())
             {
@@ -635,7 +636,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 List<String> worlds = config.getStringList("Groups." + node);
                 if (worlds.size() > 0)
                 {
-                    MyPetWorldGroup newGroup = new MyPetWorldGroup(node);
+                    WorldGroup newGroup = new WorldGroup(node);
                     for (String world : worlds)
                     {
                         if (getServer().getWorld(world) != null)
@@ -652,8 +653,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 }
             }
 
-            MyPetWorldGroup defaultGroup = null;
-            for (MyPetWorldGroup group : MyPetWorldGroup.getGroups())
+            WorldGroup defaultGroup = null;
+            for (WorldGroup group : WorldGroup.getGroups())
             {
                 if (group.getName().equalsIgnoreCase("default"))
                 {
@@ -663,7 +664,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
             if (defaultGroup == null)
             {
-                defaultGroup = new MyPetWorldGroup("default");
+                defaultGroup = new WorldGroup("default");
                 defaultGroup.registerGroup();
                 DebugLogger.info("   registered 'default' group");
             }
@@ -671,7 +672,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             boolean saveConfig = false;
             for (org.bukkit.World world : getServer().getWorlds())
             {
-                if (MyPetWorldGroup.getGroup(world.getName()) == null)
+                if (WorldGroup.getGroup(world.getName()) == null)
                 {
                     MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                     defaultGroup.addWorld(world.getName());
@@ -691,10 +692,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     @Override
     public void schedule()
     {
-        if (MyPetConfiguration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0)
+        if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0)
         {
             MyPetPlugin.getPlugin().savePets(false);
-            autoSaveTimer = MyPetConfiguration.AUTOSAVE_TIME;
+            autoSaveTimer = Configuration.AUTOSAVE_TIME;
         }
     }
 

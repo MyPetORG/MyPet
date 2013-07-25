@@ -24,9 +24,9 @@ import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
 import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.MyPetConfiguration;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,30 +50,30 @@ public class CommandCall implements CommandExecutor
                 switch (myPet.createPet())
                 {
                     case Success:
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.Call", petOwner), myPet.getPetName()));
-                        if (MyPetConfiguration.ENABLE_EVENTS)
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call", petOwner), myPet.getPetName()));
+                        if (Configuration.ENABLE_EVENTS)
                         {
                             getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
                         }
                         break;
                     case Canceled:
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnPrevent", petOwner), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnPrevent", petOwner), myPet.getPetName()));
                         break;
                     case NoSpace:
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.SpawnNoSpace", petOwner), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnNoSpace", petOwner), myPet.getPetName()));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(MyPetLocales.getString("Message.NotAllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Locales.getString("Message.NotAllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
                         break;
                     case Dead:
-                        sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                         break;
                 }
                 return true;
             }
             else
             {
-                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }

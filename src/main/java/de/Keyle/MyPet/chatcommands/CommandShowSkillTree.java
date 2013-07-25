@@ -20,9 +20,9 @@
 
 package de.Keyle.MyPet.chatcommands;
 
-import de.Keyle.MyPet.skill.MyPetSkillTree;
-import de.Keyle.MyPet.skill.MyPetSkillTreeLevel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeMobType;
+import de.Keyle.MyPet.skill.SkillTree;
+import de.Keyle.MyPet.skill.SkillTreeLevel;
+import de.Keyle.MyPet.skill.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -41,10 +41,10 @@ public class CommandShowSkillTree implements CommandExecutor
         {
             if (args.length == 1)
             {
-                if (MyPetSkillTreeMobType.hasMobType(args[0]))
+                if (SkillTreeMobType.hasMobType(args[0]))
                 {
                     MyPetLogger.write("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
-                    for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames())
+                    for (String skillTreeName : SkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames())
                     {
                         MyPetLogger.write("   " + skillTreeName);
                     }
@@ -57,13 +57,13 @@ public class CommandShowSkillTree implements CommandExecutor
             }
             else if (args.length == 2)
             {
-                if (MyPetSkillTreeMobType.hasMobType(args[0]))
+                if (SkillTreeMobType.hasMobType(args[0]))
                 {
-                    if (MyPetSkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1]))
+                    if (SkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1]))
                     {
-                        MyPetSkillTree skillTree = MyPetSkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
+                        SkillTree skillTree = SkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
                         MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : ChatColor.DARK_GRAY + "none" + ChatColor.RESET) + " -----");
-                        for (MyPetSkillTreeLevel lvl : skillTree.getLevelList())
+                        for (SkillTreeLevel lvl : skillTree.getLevelList())
                         {
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ": (" + (lvl.hasLevelupMessage() ? Colorizer.setColors(lvl.getLevelupMessage()) + ChatColor.RESET : "-") + ")");
                             for (ISkillInfo skill : lvl.getSkills())

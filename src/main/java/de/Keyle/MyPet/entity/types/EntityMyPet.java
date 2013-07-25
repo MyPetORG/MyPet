@@ -21,17 +21,17 @@
 package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.MyPetAIGoalSelector;
-import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
-import de.Keyle.MyPet.entity.ai.attack.MyPetAIRangedAttack;
+import de.Keyle.MyPet.entity.ai.AIGoalSelector;
+import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
+import de.Keyle.MyPet.entity.ai.attack.RangedAttack;
 import de.Keyle.MyPet.entity.ai.movement.*;
+import de.Keyle.MyPet.entity.ai.movement.Float;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
-import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
@@ -44,7 +44,7 @@ import java.util.List;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster
 {
-    public MyPetAIGoalSelector petPathfinderSelector, petTargetSelector;
+    public AIGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
@@ -68,8 +68,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             setMyPet(myPet);
             myPet.craftMyPet = (CraftMyPet) this.getBukkitEntity();
 
-            this.petPathfinderSelector = new MyPetAIGoalSelector();
-            this.petTargetSelector = new MyPetAIGoalSelector();
+            this.petPathfinderSelector = new AIGoalSelector();
+            this.petTargetSelector = new AIGoalSelector();
 
             this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
             getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
@@ -96,7 +96,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void applyLeash()
     {
-        if (MyPetConfiguration.ALWAYS_SHOW_LEASH_FOR_OWNER)
+        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER)
         {
             ((EntityPlayer) this.bI()).playerConnection.sendPacket(new Packet39AttachEntity(1, this, this.bI()));
         }
@@ -122,21 +122,21 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void setPathfinder()
     {
-        petPathfinderSelector.addGoal("Float", new MyPetAIFloat(this));
-        petPathfinderSelector.addGoal("Sprint", new MyPetAISprint(this, 0.25F));
-        petPathfinderSelector.addGoal("RangedTarget", new MyPetAIRangedAttack(this, -0.1F, 35, 12.0F));
-        petPathfinderSelector.addGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 3, 20));
-        petPathfinderSelector.addGoal("Control", new MyPetAIControl(myPet, 0.1F));
-        petPathfinderSelector.addGoal("FollowOwner", new MyPetAIFollowOwner(this, 0F, MyPetConfiguration.MYPET_FOLLOW_START_DISTANCE, 2.0F, 17F));
-        petPathfinderSelector.addGoal("LookAtPlayer", new MyPetAILookAtPlayer(this, 8.0F));
-        petPathfinderSelector.addGoal("RandomLockaround", new MyPetAIRandomLookaround(this));
-        petTargetSelector.addGoal("OwnerHurtByTarget", new MyPetAIOwnerHurtByTarget(this));
-        petTargetSelector.addGoal("OwnerHurtTarget", new MyPetAIOwnerHurtTarget(this));
-        petTargetSelector.addGoal("HurtByTarget", new MyPetAIHurtByTarget(this));
-        petTargetSelector.addGoal("ControlTarget", new MyPetAIControlTarget(this, 1));
-        petTargetSelector.addGoal("AggressiveTarget", new MyPetAIAggressiveTarget(this, 15));
-        petTargetSelector.addGoal("FarmTarget", new MyPetAIFarmTarget(this, 15));
-        petTargetSelector.addGoal("DuelTarget", new MyPetAIDuelTarget(this, 5));
+        petPathfinderSelector.addGoal("Float", new Float(this));
+        petPathfinderSelector.addGoal("Sprint", new Sprint(this, 0.25F));
+        petPathfinderSelector.addGoal("RangedTarget", new RangedAttack(this, -0.1F, 35, 12.0F));
+        petPathfinderSelector.addGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3, 20));
+        petPathfinderSelector.addGoal("Control", new Control(myPet, 0.1F));
+        petPathfinderSelector.addGoal("FollowOwner", new FollowOwner(this, 0F, Configuration.MYPET_FOLLOW_START_DISTANCE, 2.0F, 17F));
+        petPathfinderSelector.addGoal("LookAtPlayer", new LookAtPlayer(this, 8.0F));
+        petPathfinderSelector.addGoal("RandomLockaround", new RandomLookaround(this));
+        petTargetSelector.addGoal("OwnerHurtByTarget", new OwnerHurtByTarget(this));
+        petTargetSelector.addGoal("OwnerHurtTarget", new OwnerHurtTarget(this));
+        petTargetSelector.addGoal("HurtByTarget", new HurtByTarget(this));
+        petTargetSelector.addGoal("ControlTarget", new ControlTarget(this, 1));
+        petTargetSelector.addGoal("AggressiveTarget", new BehaviorAggressiveTarget(this, 15));
+        petTargetSelector.addGoal("FarmTarget", new BehaviorFarmTarget(this, 15));
+        petTargetSelector.addGoal("DuelTarget", new BehaviorDuelTarget(this, 5));
     }
 
     public MyPet getMyPet()
@@ -179,7 +179,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             if (getCustomNameVisible())
             {
-                super.setCustomName(MyPetUtil.cutString(MyPetConfiguration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + MyPetConfiguration.PET_INFO_OVERHEAD_SUFFIX, 64));
+                super.setCustomName(Util.cutString(Configuration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + Configuration.PET_INFO_OVERHEAD_SUFFIX, 64));
                 this.setCustomNameVisible(false);
             }
         }
@@ -205,13 +205,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     @Override
     public boolean getCustomNameVisible()
     {
-        return MyPetConfiguration.PET_INFO_OVERHEAD_NAME;
+        return Configuration.PET_INFO_OVERHEAD_NAME;
     }
 
     @Override
     public void setCustomNameVisible(boolean ignored)
     {
-        this.datawatcher.watch(11, Byte.valueOf((byte) (MyPetConfiguration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
+        this.datawatcher.watch(11, Byte.valueOf((byte) (Configuration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
     }
 
     public boolean canMove()
@@ -239,7 +239,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public boolean canEquip()
     {
-        return MyPetPermissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
+        return Permissions.hasExtended(getOwner().getPlayer(), "MyPet.user.extended.Equip") && canUseItem();
     }
 
     public boolean canUseItem()
@@ -294,7 +294,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             if (entity instanceof EntityPlayer)
             {
                 Player victim = (Player) entity.getBukkitEntity();
-                if (!MyPetPvP.canHurt(myPet.getOwner().getPlayer(), victim))
+                if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), victim))
                 {
                     if (myPet.hasTarget())
                     {
@@ -339,14 +339,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         {
             if (Ride.RIDE_ITEM == 0 && myPet.getSkills().isSkillActive("Ride") && canMove())
             {
-                if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
+                if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                 {
                     ((CraftPlayer) owner).getHandle().setPassengerOf(this);
                     return true;
                 }
                 else
                 {
-                    getMyPet().sendMessageToOwner(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                    getMyPet().sendMessageToOwner(Locales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
                 }
             }
             return false;
@@ -358,20 +358,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
             {
                 if (itemStack.id == Ride.RIDE_ITEM && canMove())
                 {
-                    if (MyPetPermissions.hasExtended(owner, "MyPet.user.extended.Ride"))
+                    if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
                         ((CraftPlayer) owner).getHandle().setPassengerOf(this);
                         return true;
                     }
                     else
                     {
-                        getMyPet().sendMessageToOwner(MyPetLocales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                        getMyPet().sendMessageToOwner(Locales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
                     }
                 }
             }
             if (myPet.getSkills().isSkillActive("Control"))
             {
-                if (itemStack.id == Control.CONTROL_ITEM)
+                if (itemStack.id == de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM)
                 {
                     return true;
                 }
@@ -379,19 +379,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         }
         if (canEat(itemStack) && canUseItem())
         {
-            if (owner != null && !MyPetPermissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
+            if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
             {
                 return false;
             }
             if (this.petTargetSelector.hasGoal("DuelTarget"))
             {
-                MyPetAIDuelTarget duelTarget = (MyPetAIDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
+                BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
                 if (duelTarget.getDuelOpponent() != null)
                 {
                     return true;
                 }
             }
-            int addHunger = MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED;
+            int addHunger = Configuration.HUNGER_SYSTEM_POINTS_PER_FEED;
             if (getHealth() < getMaxHealth())
             {
                 if (!entityhuman.abilities.canInstantlyBuild)
@@ -404,7 +404,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
             }
             else if (myPet.getHungerValue() < 100)
             {
@@ -416,14 +416,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
-                MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
             }
             if (addHunger > 0 && myPet.getHungerValue() < 100)
             {
                 myPet.setHungerValue(myPet.getHungerValue() + addHunger);
                 addHunger = 0;
             }
-            if (addHunger < MyPetConfiguration.HUNGER_SYSTEM_POINTS_PER_FEED)
+            if (addHunger < Configuration.HUNGER_SYSTEM_POINTS_PER_FEED)
             {
                 return true;
             }
@@ -433,10 +433,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void onLivingUpdate()
     {
-        if (MyPetConfiguration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        if (Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
         {
             donatorParticleCounter = 20 + aC().nextInt(10);
-            MyPetBukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+            BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
         }
     }
 
@@ -618,7 +618,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public Entity bI()
     {
-        if (MyPetConfiguration.ALWAYS_SHOW_LEASH_FOR_OWNER)
+        if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER)
         {
             return ((CraftPlayer) getOwner().getPlayer()).getHandle();
         }

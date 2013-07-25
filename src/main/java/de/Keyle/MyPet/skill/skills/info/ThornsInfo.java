@@ -22,17 +22,17 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Thorns;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Thorns")
 @SkillProperties(
         parameterNames = {"chance", "addset_chance", "reflection", "addset_reflection"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
         parameterDefaultValues = {"5", "add", "15", "add"})
-public class ThornsInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class ThornsInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

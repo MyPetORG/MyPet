@@ -27,7 +27,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R2.EntityHuman;
@@ -250,7 +250,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     public void checkForDonation()
     {
-        if (donator || !MyPetConfiguration.DONATOR_EFFECT)
+        if (donator || !Configuration.DONATOR_EFFECT)
         {
             return;
         }
@@ -269,7 +269,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                     //   4 for helper
                     //   5 for creator
                     // no data will be saved on the server
-                    String donation = MyPetUtil.readUrlContent("http://donation.keyle.de/donated.php?userid=" + playerName);
+                    String donation = Util.readUrlContent("http://donation.keyle.de/donated.php?userid=" + playerName);
                     if (donation.equals("1"))
                     {
                         donator = true;
@@ -300,7 +300,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                 catch (Exception e)
                 {
                     DebugLogger.info("Can not connect to donation server.");
-                    MyPetConfiguration.DONATOR_EFFECT = false;
+                    Configuration.DONATOR_EFFECT = false;
                 }
             }
         }, 60L);
@@ -310,14 +310,14 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     {
         if (isOnline())
         {
-            lastLanguage = MyPetBukkitUtil.getPlayerLanguage(getPlayer());
+            lastLanguage = BukkitUtil.getPlayerLanguage(getPlayer());
         }
         return lastLanguage;
     }
 
     public boolean isMyPetAdmin()
     {
-        return isOnline() && MyPetPermissions.has(getPlayer(), "MyPet.admin", false);
+        return isOnline() && Permissions.has(getPlayer(), "MyPet.admin", false);
     }
 
     public boolean hasMyPet()
@@ -465,7 +465,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
             {
                 UUID lastActiveUUID = UUID.fromString(lastActive);
                 World newWorld = Bukkit.getServer().getWorlds().get(0);
-                MyPetWorldGroup lastActiveGroup = MyPetWorldGroup.getGroup(newWorld.getName());
+                WorldGroup lastActiveGroup = WorldGroup.getGroup(newWorld.getName());
                 this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
             }
         }
@@ -500,7 +500,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                     if (!myPet.getCraftPet().canMove())
                     {
                         myPet.removePet(true);
-                        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Despawn", getLanguage()), myPet.getPetName()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Despawn", getLanguage()), myPet.getPetName()));
                     }
                 }
             }

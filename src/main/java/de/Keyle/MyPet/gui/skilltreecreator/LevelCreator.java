@@ -23,8 +23,8 @@ package de.Keyle.MyPet.gui.skilltreecreator;
 import de.Keyle.MyPet.gui.GuiMain;
 import de.Keyle.MyPet.skill.*;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
+import de.Keyle.MyPet.util.Util;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -65,9 +65,9 @@ public class LevelCreator
     DefaultTreeModel skillTreeTreeModel;
     DefaultComboBoxModel inheritanceComboBoxModel;
 
-    MyPetSkillTree skillTree;
-    MyPetSkillTreeLevel selectedLevel = null;
-    MyPetSkillTreeMobType skillTreeMobType;
+    SkillTree skillTree;
+    SkillTreeLevel selectedLevel = null;
+    SkillTreeMobType skillTreeMobType;
 
     private static String[] skillNames = null;
 
@@ -77,9 +77,9 @@ public class LevelCreator
     {
         if (skillNames == null)
         {
-            skillNames = new String[MyPetSkillsInfo.getRegisteredSkillsInfo().size()];
+            skillNames = new String[SkillsInfo.getRegisteredSkillsInfo().size()];
             int skillCounter = 0;
-            for (Class<? extends MyPetSkillTreeSkill> clazz : MyPetSkillsInfo.getRegisteredSkillsInfo())
+            for (Class<? extends SkillTreeSkill> clazz : SkillsInfo.getRegisteredSkillsInfo())
             {
                 SkillName sn = clazz.getAnnotation(SkillName.class);
                 if (sn != null)
@@ -96,12 +96,12 @@ public class LevelCreator
                 String response = (String) JOptionPane.showInputDialog(null, "Enter the number for the new level.", "Create new Level", JOptionPane.QUESTION_MESSAGE, null, null, "" + (highestLevel + 1));
                 if (response != null)
                 {
-                    if (MyPetUtil.isInt(response))
+                    if (Util.isInt(response))
                     {
                         int newLevel = Integer.parseInt(response);
                         for (int i = 0 ; i < skillTreeTreeModel.getChildCount(skillTreeTreeModel.getRoot()) ; i++)
                         {
-                            if (MyPetUtil.isInt(((DefaultMutableTreeNode) skillTreeTreeModel.getRoot()).getChildAt(i).toString()))
+                            if (Util.isInt(((DefaultMutableTreeNode) skillTreeTreeModel.getRoot()).getChildAt(i).toString()))
                             {
                                 int level = Integer.parseInt(((DefaultMutableTreeNode) skillTreeTreeModel.getRoot()).getChildAt(i).toString());
                                 if (newLevel == level)
@@ -139,7 +139,7 @@ public class LevelCreator
                 int level;
                 if (skillTreeTree.getSelectionPath().getPath().length == 2 || skillTreeTree.getSelectionPath().getPath().length == 3)
                 {
-                    if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
+                    if (Util.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
                     {
                         level = Integer.parseInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
                     }
@@ -155,7 +155,7 @@ public class LevelCreator
                 String choosenSkill = (String) JOptionPane.showInputDialog(null, "Please select the skill you want to add to level " + level + '.', "", JOptionPane.QUESTION_MESSAGE, null, skillNames, "");
                 if (choosenSkill != null)
                 {
-                    ISkillInfo skill = MyPetSkillsInfo.getNewSkillInfoInstance(choosenSkill);
+                    ISkillInfo skill = SkillsInfo.getNewSkillInfoInstance(choosenSkill);
                     skillTree.addSkillToLevel(level, skill);
                     SkillTreeSkillNode skillNode = new SkillTreeSkillNode(skill);
                     skill.setDefaultProperties();
@@ -172,7 +172,7 @@ public class LevelCreator
 
                 if (skillTreeTree.getSelectionPath().getPath().length == 2)
                 {
-                    if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
+                    if (Util.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
                     {
                         int level = Integer.parseInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
                         skillTree.removeLevel(level);
@@ -184,7 +184,7 @@ public class LevelCreator
                 }
                 else if (skillTreeTree.getSelectionPath().getPath().length == 3)
                 {
-                    if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
+                    if (Util.isInt(skillTreeTree.getSelectionPath().getPathComponent(1).toString()))
                     {
                         short level = Short.parseShort(skillTreeTree.getSelectionPath().getPathComponent(1).toString());
                         int index = ((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(1)).getIndex(((DefaultMutableTreeNode) skillTreeTree.getSelectionPath().getPathComponent(2)));
@@ -223,7 +223,7 @@ public class LevelCreator
                     levelUpMessageInput.setEnabled(false);
                     levelUpMessageInput.setText("");
 
-                    if (MyPetUtil.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
+                    if (Util.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
                     {
                         int level = Integer.parseInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
                         if (level > 1 && skillTree.hasLevel(level))
@@ -367,7 +367,7 @@ public class LevelCreator
                                 JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
                                 return;
                             }
-                            if (MyPetSkillsInfo.isValidSkill(skill.getName()))
+                            if (SkillsInfo.isValidSkill(skill.getName()))
                             {
                                 if (skill.getGuiPanel() != null)
                                 {
@@ -488,7 +488,7 @@ public class LevelCreator
         return levelCreatorFrame;
     }
 
-    public void setSkillTree(MyPetSkillTree skillTree, MyPetSkillTreeMobType skillTreeMobType)
+    public void setSkillTree(SkillTree skillTree, SkillTreeMobType skillTreeMobType)
     {
         this.skillTree = skillTree;
         this.skillTreeMobType = skillTreeMobType;
@@ -522,7 +522,7 @@ public class LevelCreator
 
         inheritanceCheckBox.setSelected(false);
         inheritanceCheckBox.setEnabled(false);
-        if (skillTreeMobType.getSkillTreeNames().size() > 1 || (!skillTreeMobType.getMobTypeName().equals("default") && MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() > 0))
+        if (skillTreeMobType.getSkillTreeNames().size() > 1 || (!skillTreeMobType.getMobTypeName().equals("default") && SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() > 0))
         {
             inheritanceCheckBox.setEnabled(true);
             ArrayList<String> skilltreeNames = new ArrayList<String>();
@@ -534,7 +534,7 @@ public class LevelCreator
                     inheritanceComboBoxModel.addElement(skillTreeName);
                 }
             }
-            for (String skillTreeName : MyPetSkillTreeMobType.getMobTypeByName("default").getSkillTreeNames())
+            for (String skillTreeName : SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames())
             {
                 if (!skillTreeName.equals(skillTree.getName()) && !skilltreeNames.contains(skillTreeName))
                 {
@@ -558,7 +558,7 @@ public class LevelCreator
         SortedDefaultMutableTreeNode rootNode = new SortedDefaultMutableTreeNode(skillTree.getName());
         skillTreeTreeModel.setRoot(rootNode);
         int skillcount = 0;
-        for (MyPetSkillTreeLevel level : skillTree.getLevelList())
+        for (SkillTreeLevel level : skillTree.getLevelList())
         {
             highestLevel = Math.max(highestLevel, level.getLevel());
             DefaultMutableTreeNode levelNode = new DefaultMutableTreeNode(level.getLevel());
@@ -631,7 +631,7 @@ public class LevelCreator
         {
             public int compare(Object o1, Object o2)
             {
-                if (MyPetUtil.isInt(o1.toString()) && MyPetUtil.isInt(o2.toString()))
+                if (Util.isInt(o1.toString()) && Util.isInt(o2.toString()))
                 {
                     int n1 = Integer.parseInt(o1.toString());
                     int n2 = Integer.parseInt(o2.toString());

@@ -22,16 +22,16 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Inventory;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Inventory")
 @SkillProperties(parameterNames = {"add", "drop"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
         parameterDefaultValues = {"1", "false"})
-public class InventoryInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class InventoryInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

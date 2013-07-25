@@ -23,11 +23,11 @@ package de.Keyle.MyPet.gui;
 import de.Keyle.MyPet.gui.skilltreecreator.LevelCreator;
 import de.Keyle.MyPet.gui.skilltreecreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skilltreecreator.SkilltreeCreator;
-import de.Keyle.MyPet.skill.MyPetSkillsInfo;
+import de.Keyle.MyPet.skill.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.*;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderJSON;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderNBT;
-import de.Keyle.MyPet.skill.skilltreeloader.MyPetSkillTreeLoaderYAML;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
+import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,9 +74,9 @@ public class GuiMain
 
         String[] petTypes = new String[]{"Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Giant", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
 
-        MyPetSkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-        MyPetSkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-        MyPetSkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
+        SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
+        SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
+        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
 
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
@@ -203,23 +203,23 @@ public class GuiMain
 
     public static void registerSkillsInfo()
     {
-        MyPetSkillsInfo.registerSkill(BeaconInfo.class);
-        MyPetSkillsInfo.registerSkill(BehaviorInfo.class);
-        MyPetSkillsInfo.registerSkill(ControlInfo.class);
-        MyPetSkillsInfo.registerSkill(DamageInfo.class);
-        MyPetSkillsInfo.registerSkill(FireInfo.class);
-        MyPetSkillsInfo.registerSkill(HPInfo.class);
-        MyPetSkillsInfo.registerSkill(HPregenerationInfo.class);
-        MyPetSkillsInfo.registerSkill(InventoryInfo.class);
-        MyPetSkillsInfo.registerSkill(KnockbackInfo.class);
-        MyPetSkillsInfo.registerSkill(LightningInfo.class);
-        MyPetSkillsInfo.registerSkill(PickupInfo.class);
-        MyPetSkillsInfo.registerSkill(PoisonInfo.class);
-        MyPetSkillsInfo.registerSkill(RangedInfo.class);
-        MyPetSkillsInfo.registerSkill(RideInfo.class);
-        MyPetSkillsInfo.registerSkill(SlowInfo.class);
-        MyPetSkillsInfo.registerSkill(SprintInfo.class);
-        MyPetSkillsInfo.registerSkill(ThornsInfo.class);
-        MyPetSkillsInfo.registerSkill(WitherInfo.class);
+        SkillsInfo.registerSkill(BeaconInfo.class);
+        SkillsInfo.registerSkill(BehaviorInfo.class);
+        SkillsInfo.registerSkill(ControlInfo.class);
+        SkillsInfo.registerSkill(DamageInfo.class);
+        SkillsInfo.registerSkill(FireInfo.class);
+        SkillsInfo.registerSkill(HPInfo.class);
+        SkillsInfo.registerSkill(HPregenerationInfo.class);
+        SkillsInfo.registerSkill(InventoryInfo.class);
+        SkillsInfo.registerSkill(KnockbackInfo.class);
+        SkillsInfo.registerSkill(LightningInfo.class);
+        SkillsInfo.registerSkill(PickupInfo.class);
+        SkillsInfo.registerSkill(PoisonInfo.class);
+        SkillsInfo.registerSkill(RangedInfo.class);
+        SkillsInfo.registerSkill(RideInfo.class);
+        SkillsInfo.registerSkill(SlowInfo.class);
+        SkillsInfo.registerSkill(SprintInfo.class);
+        SkillsInfo.registerSkill(ThornsInfo.class);
+        SkillsInfo.registerSkill(WitherInfo.class);
     }
 }

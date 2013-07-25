@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.support;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -65,7 +65,7 @@ public class SurvivalGames implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet(true);
-                player.getPlayer().sendMessage(MyPetLocales.getString("Message.NotAllowedHere", player.getPlayer()));
+                player.getPlayer().sendMessage(Locales.getString("Message.NotAllowedHere", player.getPlayer()));
             }
         }
     }

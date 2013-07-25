@@ -22,17 +22,17 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Knockback;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Knockback")
 @SkillProperties(
         parameterNames = {"chance", "addset_chance"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
         parameterDefaultValues = {"5", "add"})
-public class KnockbackInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class KnockbackInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

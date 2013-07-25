@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -48,18 +48,18 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            if (args.length == 1 && !args[0].equalsIgnoreCase("stop") && MyPetPermissions.has(player, "MyPet.admin", false))
+            if (args.length == 1 && !args[0].equalsIgnoreCase("stop") && Permissions.has(player, "MyPet.admin", false))
             {
                 Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.PlayerNotOnline", player));
+                    sender.sendMessage(Locales.getString("Message.PlayerNotOnline", player));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.UserDontHavePet", player), petOwner.getName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.UserDontHavePet", player), petOwner.getName()));
                     return true;
                 }
 
@@ -73,30 +73,30 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
             if (MyPetList.hasMyPet(player))
             {
                 MyPet myPet = MyPetList.getMyPet(player);
-                if (!MyPetPermissions.hasExtended(player, "MyPet.user.extended.Beacon", true))
+                if (!Permissions.hasExtended(player, "MyPet.user.extended.Beacon", true))
                 {
-                    myPet.sendMessageToOwner(MyPetLocales.getString("Message.CantUse", player));
+                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", player));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", player), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", player), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
                 {
                     ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
-                    sender.sendMessage(MyPetLocales.getString("Message.Skill.Beacon.Stop", player).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Locales.getString("Message.Skill.Beacon.Stop", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
-                if (player.getGameMode() == GameMode.CREATIVE && !MyPetPermissions.has(player, "MyPet.admin", false))
+                if (player.getGameMode() == GameMode.CREATIVE && !Permissions.has(player, "MyPet.admin", false))
                 {
-                    sender.sendMessage(MyPetLocales.getString("Message.Skill.Beacon.Creative", player).replace("%petname%", myPet.getPetName()));
+                    sender.sendMessage(Locales.getString("Message.Skill.Beacon.Creative", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Beacon"))
@@ -106,7 +106,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", player));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", player));
             }
             return true;
         }
@@ -117,7 +117,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
     {
-        if (strings.length == 1 && MyPetPermissions.has((Player) commandSender, "MyPet.admin", false))
+        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false))
         {
             return null;
         }

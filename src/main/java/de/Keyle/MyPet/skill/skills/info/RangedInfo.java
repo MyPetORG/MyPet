@@ -22,17 +22,17 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Ranged;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
 import de.Keyle.MyPet.skill.SkillProperties;
 import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Ranged")
 @SkillProperties(
         parameterNames = {"damage_double", "addset_damage", "projectile"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "add", "Arrow"})
-public class RangedInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class RangedInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 

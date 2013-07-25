@@ -23,8 +23,8 @@ package de.Keyle.MyPet.chatcommands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,22 +43,22 @@ public class CommandStop implements CommandExecutor
 
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(MyPetUtil.formatText(MyPetLocales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                sender.sendMessage(MyPetLocales.getString("Message.StopAttack", petOwner).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(Locales.getString("Message.StopAttack", petOwner).replace("%petname%", myPet.getPetName()));
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
             }
             else
             {
-                sender.sendMessage(MyPetLocales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
             }
             return true;
         }

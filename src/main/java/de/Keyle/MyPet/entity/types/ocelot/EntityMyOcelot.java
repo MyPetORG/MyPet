@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.ocelot;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
+import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.EntityHuman;
@@ -34,7 +34,7 @@ import org.bukkit.entity.Ocelot.Type;
 public class EntityMyOcelot extends EntityMyPet
 {
     public static int GROW_UP_ITEM = Material.POTION.getId();
-    private MyPetAISit sitPathfinder;
+    private Sit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
     {
@@ -186,7 +186,7 @@ public class EntityMyOcelot extends EntityMyPet
     {
         if (myPet != null)
         {
-            this.sitPathfinder = new MyPetAISit(this);
+            this.sitPathfinder = new Sit(this);
 
             super.setMyPet(myPet);
 

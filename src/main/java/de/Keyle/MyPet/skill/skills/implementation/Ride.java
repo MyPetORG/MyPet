@@ -23,8 +23,8 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.Material;
 
 public class Ride extends RideInfo implements ISkillInstance
@@ -59,7 +59,7 @@ public class Ride extends RideInfo implements ISkillInstance
         {
             if (!active && !quiet)
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
             }
             active = true;
             /*
@@ -75,7 +75,7 @@ public class Ride extends RideInfo implements ISkillInstance
                 }
                 if (!quiet)
                 {
-                    myPet.sendMessageToOwner(Colorizer.setColors(MyPetLocales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add"))));
+                    myPet.sendMessageToOwner(Colorizer.setColors(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add"))));
                 }
             }
             */
@@ -84,7 +84,7 @@ public class Ride extends RideInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        //return MyPetLocales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
+        //return Locales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
         return "";
     }
 

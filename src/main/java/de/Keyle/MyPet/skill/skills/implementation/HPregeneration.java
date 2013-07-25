@@ -27,8 +27,8 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.info.HPregenerationInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.IScheduler;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R2.EntityLiving;
 import net.minecraft.server.v1_6_R2.PotionBrewer;
 import org.bukkit.Bukkit;
@@ -105,14 +105,14 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
             }
         }
     }
 
     public String getFormattedValue()
     {
-        return "+" + increaseHpBy + MyPetLocales.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
+        return "+" + increaseHpBy + Locales.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
     }
 
     public void reset()

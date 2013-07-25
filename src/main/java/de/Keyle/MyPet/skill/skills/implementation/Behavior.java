@@ -26,11 +26,11 @@ import de.Keyle.MyPet.skill.ISkillActive;
 import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.IScheduler;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetPermissions;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.Permissions;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundMap;
@@ -150,7 +150,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             }
             if (!quiet && valuesEdit)
             {
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Behavior.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
                 myPet.sendMessageToOwner("  " + activeModes);
             }
         }
@@ -158,11 +158,11 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
 
     public String getFormattedValue()
     {
-        String activeModes = ChatColor.GOLD + MyPetLocales.getString("Name.Normal", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+        String activeModes = ChatColor.GOLD + Locales.getString("Name.Normal", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         if (behaviorActive.get(BehaviorState.Friendly) && BehaviorState.Friendly.isActive())
         {
 
-            activeModes += ", " + ChatColor.GOLD + MyPetLocales.getString("Name.Friendly", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ", " + ChatColor.GOLD + Locales.getString("Name.Friendly", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Aggressive) && BehaviorState.Aggressive.isActive())
         {
@@ -170,7 +170,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + MyPetLocales.getString("Name.Aggressive", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Locales.getString("Name.Aggressive", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Farm) && BehaviorState.Farm.isActive())
         {
@@ -178,7 +178,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + MyPetLocales.getString("Name.Farm", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Locales.getString("Name.Farm", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Raid) && BehaviorState.Raid.isActive())
         {
@@ -186,7 +186,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + MyPetLocales.getString("Name.Raid", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Locales.getString("Name.Raid", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         }
         if (behaviorActive.get(BehaviorState.Duel) && BehaviorState.Duel.isActive())
         {
@@ -194,9 +194,9 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 activeModes += ", ";
             }
-            activeModes += ChatColor.GOLD + MyPetLocales.getString("Name.Duel", myPet.getOwner().getLanguage()) + ChatColor.RESET;
+            activeModes += ChatColor.GOLD + Locales.getString("Name.Duel", myPet.getOwner().getLanguage()) + ChatColor.RESET;
         }
-        return MyPetLocales.getString("Name.Modes", myPet.getOwner().getLanguage()) + ": " + activeModes;
+        return Locales.getString("Name.Modes", myPet.getOwner().getLanguage()) + ": " + activeModes;
     }
 
     public void reset()
@@ -214,7 +214,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     public void setBehavior(BehaviorState behaviorState)
     {
         behavior = behaviorState;
-        myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
+        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Locales.getString("Name." + behavior.name(), myPet.getOwner().getLanguage())));
         if (behavior == BehaviorState.Friendly)
         {
             myPet.getCraftPet().setTarget(null);
@@ -228,7 +228,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             if (behaviorActive.get(behaviorState))
             {
                 behavior = behaviorState;
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Locales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
                 if (behavior == BehaviorState.Friendly)
                 {
                     myPet.getCraftPet().getHandle().setGoalTarget(null);
@@ -237,7 +237,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
@@ -252,19 +252,19 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         {
             if (behavior == BehaviorState.Normal)
             {
-                if (BehaviorState.Friendly.isActive() && behaviorActive.get(BehaviorState.Friendly) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Friendly"))
+                if (BehaviorState.Friendly.isActive() && behaviorActive.get(BehaviorState.Friendly) && Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Friendly"))
                 {
                     behavior = BehaviorState.Friendly;
                     myPet.getCraftPet().setTarget(null);
                 }
-                else if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
+                else if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
                 {
                     behavior = BehaviorState.Aggressive;
                 }
             }
             else if (behavior == BehaviorState.Friendly)
             {
-                if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && MyPetPermissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
+                if (BehaviorState.Aggressive.isActive() && behaviorActive.get(BehaviorState.Aggressive) && Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Behavior.Aggressive"))
                 {
                     behavior = BehaviorState.Aggressive;
                 }
@@ -277,12 +277,12 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             {
                 behavior = BehaviorState.Normal;
             }
-            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), MyPetLocales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Behavior.NewMode", myPet.getOwner().getLanguage()), myPet.getPetName(), Locales.getString("Name." + behavior.name(), myPet.getOwner().getPlayer())));
             return true;
         }
         else
         {
-            myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
@@ -306,7 +306,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
     {
         if (behavior == BehaviorState.Aggressive && random.nextBoolean())
         {
-            MyPetBukkitUtil.playParticleEffect(myPet.getLocation().add(0, height, 0), "angryVillager", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, height, 0), "angryVillager", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
         }
         if (myPet instanceof MyEnderman)
         {

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.skill.MyPetSkillTree;
+import de.Keyle.MyPet.skill.SkillTree;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public interface IMyPet
 
     public int getRespawnTime();
 
-    public MyPetSkillTree getSkillTree();
+    public SkillTree getSkillTree();
 
     public UUID getUUID();
 

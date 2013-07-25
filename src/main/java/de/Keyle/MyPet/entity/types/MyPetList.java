@@ -28,7 +28,7 @@ import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
-import de.Keyle.MyPet.util.MyPetConfiguration;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.entity.Player;
@@ -204,7 +204,7 @@ public class MyPetList
         }
 
         boolean isCancelled = false;
-        if (MyPetConfiguration.ENABLE_EVENTS)
+        if (Configuration.ENABLE_EVENTS)
         {
             MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
             getServer().getPluginManager().callEvent(event);
@@ -232,7 +232,7 @@ public class MyPetList
             MyPet activeMyPet = owner.getMyPet();
 
             boolean isCancelled = false;
-            if (MyPetConfiguration.ENABLE_EVENTS)
+            if (Configuration.ENABLE_EVENTS)
             {
                 MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
                 getServer().getPluginManager().callEvent(event);

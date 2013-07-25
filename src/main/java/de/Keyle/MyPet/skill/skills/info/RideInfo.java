@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.MyPetSkillTreeSkill;
 import de.Keyle.MyPet.skill.SkillName;
+import de.Keyle.MyPet.skill.SkillTreeSkill;
 
 @SkillName("Ride")
-public class RideInfo extends MyPetSkillTreeSkill implements ISkillInfo
+public class RideInfo extends SkillTreeSkill implements ISkillInfo
 {
     //protected float speed = 0F;
 

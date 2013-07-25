@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.ghast;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.attack.MyPetAIMeleeAttack;
+import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
@@ -55,6 +55,6 @@ public class EntityMyGhast extends EntityMyPet
     public void setPathfinder()
     {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MyPetAIMeleeAttack(this, 0.1F, 5.5, 20));
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
     }
 }

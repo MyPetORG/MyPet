@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.sheep;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.MyPetAIEatGrass;
+import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.*;
@@ -203,6 +203,6 @@ public class EntityMySheep extends EntityMyPet
     public void setPathfinder()
     {
         super.setPathfinder();
-        petPathfinderSelector.addGoal("EatGrass", new MyPetAIEatGrass(this, 0.02));
+        petPathfinderSelector.addGoal("EatGrass", new EatGrass(this, 0.02));
     }
 }

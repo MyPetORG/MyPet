@@ -23,9 +23,9 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ControlInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
-import de.Keyle.MyPet.util.MyPetBukkitUtil;
-import de.Keyle.MyPet.util.MyPetUtil;
-import de.Keyle.MyPet.util.locale.MyPetLocales;
+import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.locale.Locales;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -64,8 +64,8 @@ public class Control extends ControlInfo implements ISkillInstance
         {
             if (!quiet && !active)
             {
-                String controlItemName = WordUtils.capitalizeFully(MyPetBukkitUtil.getMaterialName(CONTROL_ITEM).replace("_", " "));
-                myPet.sendMessageToOwner(MyPetUtil.formatText(MyPetLocales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), controlItemName));
+                String controlItemName = WordUtils.capitalizeFully(BukkitUtil.getMaterialName(CONTROL_ITEM).replace("_", " "));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), controlItemName));
 
             }
             active = true;

@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.types.wolf;
 
 import de.Keyle.MyPet.entity.EntitySize;
-import de.Keyle.MyPet.entity.ai.movement.MyPetAISit;
+import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.EntityHuman;
@@ -38,7 +38,7 @@ public class EntityMyWolf extends EntityMyPet
     protected boolean shaking;
     protected boolean isWet;
     protected float shakeCounter;
-    private MyPetAISit sitPathfinder;
+    private Sit sitPathfinder;
 
     public EntityMyWolf(World world, MyPet myPet)
     {
@@ -293,7 +293,7 @@ public class EntityMyWolf extends EntityMyPet
     {
         if (myPet != null)
         {
-            this.sitPathfinder = new MyPetAISit(this);
+            this.sitPathfinder = new Sit(this);
 
             super.setMyPet(myPet);
 
