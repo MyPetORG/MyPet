@@ -20,6 +20,9 @@
 
 package de.Keyle.MyPet.util;
 
+import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.WordUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -150,6 +153,16 @@ public class Util
             text = text.replaceAll("\\{" + i + "}", values[i].toString());
         }
         return text;
+    }
+
+    public static String capitalizeName(String name)
+    {
+        Validate.notNull(name, "Name can't be null");
+
+        name = name.replace("_", " ");
+        name = WordUtils.capitalizeFully(name);
+        name = name.replace(" ", "");
+        return name;
     }
 
     public static String readFileAsString(String filePath) throws java.io.IOException

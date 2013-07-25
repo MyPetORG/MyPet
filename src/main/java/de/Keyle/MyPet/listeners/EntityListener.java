@@ -39,8 +39,6 @@ import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -1080,7 +1078,7 @@ public class EntityListener implements Listener
                 else if (e.getDamager() instanceof Projectile)
                 {
                     Projectile projectile = (Projectile) e.getDamager();
-                    killer = Locales.getString("Name." + capitalizeName(projectile.getType().name()), myPet.getOwner().getLanguage()) + " (";
+                    killer = Locales.getString("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner().getLanguage()) + " (";
                     if (projectile.getShooter() instanceof Player)
                     {
                         if (projectile.getShooter() == myPet.getOwner().getPlayer())
@@ -1096,11 +1094,11 @@ public class EntityListener implements Listener
                     {
                         if (MyPetType.isLeashableEntityType(e.getDamager().getType()))
                         {
-                            killer = Locales.getString("Name." + capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
+                            killer = Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
                         }
                         else
                         {
-                            killer = Locales.getString("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
+                            killer = Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                         }
                     }
                     killer += ")";
@@ -1109,11 +1107,11 @@ public class EntityListener implements Listener
                 {
                     if (MyPetType.isLeashableEntityType(e.getDamager().getType()))
                     {
-                        killer = Locales.getString("Name." + capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
+                        killer = Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
                     }
                     else
                     {
-                        killer = Locales.getString("Name." + capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
+                        killer = Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                     }
                 }
             }
@@ -1121,7 +1119,7 @@ public class EntityListener implements Listener
             {
                 if (event.getEntity().getLastDamageCause() != null)
                 {
-                    killer = Locales.getString("Name." + capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner().getLanguage());
+                    killer = Locales.getString("Name." + Util.capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner().getLanguage());
                 }
                 else
                 {
@@ -1130,15 +1128,5 @@ public class EntityListener implements Listener
             }
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.DeathMessage", myPet.getOwner().getLanguage()), myPet.getPetName(), killer));
         }
-    }
-
-    private static String capitalizeName(String name)
-    {
-        Validate.notNull(name, "Name can't be null");
-
-        name = name.replace("_", " ");
-        name = WordUtils.capitalizeFully(name);
-        name = name.replace(" ", "");
-        return name;
     }
 }
