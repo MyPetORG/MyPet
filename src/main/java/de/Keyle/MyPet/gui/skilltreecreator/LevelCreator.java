@@ -447,7 +447,7 @@ public class LevelCreator
 
             public void keyReleased(KeyEvent arg0)
             {
-                if (levelUpMessageCheckBox.isSelected() && selectedLevel != null && !selectedLevel.getLevelupMessage().equals(levelUpMessageInput.getText()))
+                if (levelUpMessageCheckBox.isSelected() && selectedLevel != null && (selectedLevel.getLevelupMessage() == null || !selectedLevel.getLevelupMessage().equals(levelUpMessageInput.getText())))
                 {
                     if (!levelUpMessageInput.getText().equalsIgnoreCase(""))
                     {
