@@ -39,7 +39,6 @@ import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_6_R2.EntityHorse;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
@@ -400,11 +399,11 @@ public class EntityListener implements Listener
                         }
                         else if (leashTarget instanceof Horse)
                         {
-                            extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).getType()));
-                            extendedInfo.getValue().put("Variant", new IntTag("Variant", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).getVariant()));
-                            extendedInfo.getValue().put("Armor", new IntTag("Armor", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).cf()));
-                            extendedInfo.getValue().put("Chest", new ByteTag("Chest", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).hasChest()));
-                            extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((EntityHorse) ((CraftHorse) leashTarget).getHandle()).co()));
+                            extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((CraftHorse) leashTarget).getHandle().getType()));
+                            extendedInfo.getValue().put("Variant", new IntTag("Variant", ((CraftHorse) leashTarget).getHandle().getVariant()));
+                            extendedInfo.getValue().put("Armor", new IntTag("Armor", ((CraftHorse) leashTarget).getHandle().cf()));
+                            extendedInfo.getValue().put("Chest", new ByteTag("Chest", ((CraftHorse) leashTarget).getHandle().hasChest()));
+                            extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((CraftHorse) leashTarget).getHandle().co()));
                             extendedInfo.getValue().put("Age", new IntTag("Age", ((CraftHorse) leashTarget).getHandle().getAge()));
                         }
                         else if (leashTarget instanceof Zombie)
