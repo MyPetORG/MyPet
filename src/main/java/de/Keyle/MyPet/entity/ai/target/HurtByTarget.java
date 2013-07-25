@@ -114,6 +114,18 @@ public class HurtByTarget extends AIGoal
         {
             return true;
         }
+        else if (petEntity.getGoalTarget().world != petEntity.world)
+        {
+            return true;
+        }
+        else if (petEntity.e(petEntity.getGoalTarget()) > 400)
+        {
+            return true;
+        }
+        else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600)
+        {
+            return true;
+        }
         return false;
     }
 

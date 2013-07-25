@@ -31,10 +31,12 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.*;
 import net.minecraft.server.v1_6_R2.EntityHuman;
+import net.minecraft.server.v1_6_R2.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
@@ -355,6 +357,16 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     public Player getPlayer()
     {
         return Bukkit.getServer().getPlayer(playerName);
+    }
+
+    public EntityPlayer getEntityPlayer()
+    {
+        Player p = getPlayer();
+        if (p != null)
+        {
+            return ((CraftPlayer) p).getHandle();
+        }
+        return null;
     }
 
     public static MyPetPlayer getMyPetPlayer(String name)
