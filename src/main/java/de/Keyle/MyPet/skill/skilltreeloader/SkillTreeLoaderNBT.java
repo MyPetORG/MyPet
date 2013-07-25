@@ -53,32 +53,11 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader
         DebugLogger.info("Loading nbt skill configs in: " + configPath);
         File skillFile;
 
-        skillFile = new File(configPath + File.separator + "default.st");
-        SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName("default");
-        if (skillFile.exists())
-        {
-            skilltreeConfig = new ConfigurationNBT(skillFile);
-            if (skilltreeConfig.load())
-            {
-                try
-                {
-                    loadSkillTree(skilltreeConfig, skillTreeMobType);
-                    DebugLogger.info("  default.st");
-                }
-                catch (Exception e)
-                {
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.st");
-                    e.printStackTrace();
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.st");
-                }
-            }
-        }
-
         for (String mobType : mobtypes)
         {
             skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".st");
 
-            skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
+            SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {

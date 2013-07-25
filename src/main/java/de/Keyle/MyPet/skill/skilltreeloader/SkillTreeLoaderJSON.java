@@ -52,32 +52,11 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader
         DebugLogger.info("Loading json skill configs in: " + configPath);
         File skillFile;
 
-        skillFile = new File(configPath + File.separator + "default.json");
-        SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName("default");
-        if (skillFile.exists())
-        {
-            skilltreeConfig = new ConfigurationJSON(skillFile);
-            if (skilltreeConfig.load())
-            {
-                try
-                {
-                    loadSkillTree(skilltreeConfig, skillTreeMobType);
-                    DebugLogger.info("  default.json");
-                }
-                catch (Exception e)
-                {
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.json");
-                    e.printStackTrace();
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.json");
-                }
-            }
-        }
-
         for (String mobType : mobtypes)
         {
             skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".json");
 
-            skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
+            SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {

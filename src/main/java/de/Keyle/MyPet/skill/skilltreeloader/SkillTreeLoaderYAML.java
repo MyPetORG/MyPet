@@ -49,32 +49,11 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
         ConfigurationSnakeYAML skilltreeConfig;
         File skillFile;
 
-        skillFile = new File(configPath + File.separator + "default.yml");
-        SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName("default");
-        if (skillFile.exists())
-        {
-            skilltreeConfig = new ConfigurationSnakeYAML(skillFile);
-            if (skilltreeConfig.load())
-            {
-                try
-                {
-                    loadSkillTree(skilltreeConfig, skillTreeMobType);
-                    DebugLogger.info("  default.yml");
-                }
-                catch (Exception e)
-                {
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.yml");
-                    e.printStackTrace();
-                    MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: default.yml");
-                }
-            }
-        }
-
         for (String mobType : mobtypes)
         {
             skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".yml");
 
-            skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
+            SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
 
             if (!skillFile.exists())
             {
