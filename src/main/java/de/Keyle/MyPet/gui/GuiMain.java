@@ -25,9 +25,7 @@ import de.Keyle.MyPet.gui.skilltreecreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skilltreecreator.SkilltreeCreator;
 import de.Keyle.MyPet.skill.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.*;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderJSON;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
-import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,8 +73,6 @@ public class GuiMain
         new File(configPath + "skilltrees" + File.separator).mkdirs();
 
         SkillTreeLoaderNBT.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-        SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
-        SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(configPath + "skilltrees", petTypes);
 
         skilltreeCreator = new SkilltreeCreator();
         final JFrame skilltreeCreatorFrame = skilltreeCreator.getFrame();
