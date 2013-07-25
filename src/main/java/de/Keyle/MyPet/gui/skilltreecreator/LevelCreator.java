@@ -58,8 +58,8 @@ public class LevelCreator
     JCheckBox permissionCheckbox;
     JTextField displayNameTextField;
     JTextField permissionTextField;
-    private JCheckBox levelUpMessageCheckBox;
-    private JTextField levelUpMessageInput;
+    JCheckBox levelUpMessageCheckBox;
+    JTextField levelUpMessageInput;
     JFrame levelCreatorFrame;
 
     DefaultTreeModel skillTreeTreeModel;
