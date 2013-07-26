@@ -23,14 +23,12 @@ package de.Keyle.MyPet.skill.skilltree;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SkillTree
 {
     private String skillTreeName;
+    private List<String> description = new ArrayList<String>();
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
@@ -50,6 +48,34 @@ public class SkillTree
     public String getName()
     {
         return skillTreeName;
+    }
+
+    public List<String> getDescription()
+    {
+        return Collections.unmodifiableList(description);
+    }
+
+    public void addDescriptionLine(String line)
+    {
+        description.add(line);
+    }
+
+    public void addDescription(String[] lines)
+    {
+        for (String line : lines)
+        {
+            addDescriptionLine(line);
+        }
+    }
+
+    public void removeDescriptionLine(int index)
+    {
+        description.remove(index);
+    }
+
+    public void clearDescription()
+    {
+        description.clear();
     }
 
     public boolean hasLevel(int level)

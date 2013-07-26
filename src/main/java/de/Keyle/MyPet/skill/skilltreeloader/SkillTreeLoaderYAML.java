@@ -35,6 +35,7 @@ import org.bukkit.ChatColor;
 import org.spout.nbt.*;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 public class SkillTreeLoaderYAML extends SkillTreeLoader
@@ -132,6 +133,14 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
                     {
                         place = Integer.parseInt((String) skilltreeMap.get("Place"));
                     }
+                }
+            }
+            if (skilltreeMap.containsKey("Description"))
+            {
+                List<String> descriptionLines = (List<String>) skilltreeMap.get("Description");
+                for (String line : descriptionLines)
+                {
+                    skillTree.addDescriptionLine(line);
                 }
             }
 

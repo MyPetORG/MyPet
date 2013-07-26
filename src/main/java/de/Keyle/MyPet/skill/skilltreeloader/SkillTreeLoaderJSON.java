@@ -110,6 +110,15 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader
                 {
                     skillTree.setDisplayName((String) skilltreeObject.get("Display"));
                 }
+                if (skilltreeObject.containsKey("Description"))
+                {
+                    JSONArray descriptionArray = (JSONArray) skilltreeObject.get("Description");
+                    for (Object lvl_object : descriptionArray)
+                    {
+                        skillTree.addDescriptionLine(String.valueOf(lvl_object));
+                    }
+                }
+
                 JSONArray levelList = (JSONArray) skilltreeObject.get("Level");
                 for (Object lvl_object : levelList)
                 {

@@ -66,6 +66,7 @@ public class LevelCreator
     JTextField permissionTextField;
     JCheckBox levelUpMessageCheckBox;
     JTextField levelUpMessageInput;
+    private JButton editDescriptionButton;
     JFrame levelCreatorFrame;
 
     DefaultTreeModel skillTreeTreeModel;
@@ -476,6 +477,37 @@ public class LevelCreator
             public void actionPerformed(ActionEvent e)
             {
                 levelUpMessageInput.setEnabled(levelUpMessageCheckBox.isSelected());
+            }
+        });
+        editDescriptionButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String oldDescription = "";
+                for (String line : skillTree.getDescription())
+                {
+                    if (!oldDescription.equals(""))
+                    {
+                        oldDescription += "\n";
+                    }
+                    oldDescription += line;
+                }
+
+                JTextArea msg = new JTextArea(oldDescription);
+                msg.setRows(5);
+                msg.setColumns(50);
+                msg.setLineWrap(true);
+                msg.setWrapStyleWord(true);
+
+                JScrollPane scrollPane = new JScrollPane(msg);
+
+                JOptionPane.showMessageDialog(null, scrollPane);
+
+                String[] description = msg.getText().split("\\n");
+
+                skillTree.clearDescription();
+                skillTree.addDescription(description);
             }
         });
     }
