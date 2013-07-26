@@ -21,8 +21,14 @@
 package de.Keyle.MyPet.gui.skilltreecreator;
 
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.skill.*;
+import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skills.SkillProperties;
+import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeLevel;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Util;
 

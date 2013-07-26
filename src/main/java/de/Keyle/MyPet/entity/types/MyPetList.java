@@ -26,7 +26,7 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.ISkillStorage;
+import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetPlayer;

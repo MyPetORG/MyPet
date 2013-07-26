@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.gui.skilltreecreator;
 
 import de.Keyle.MyPet.gui.GuiMain;
-import de.Keyle.MyPet.skill.SkillTree;
-import de.Keyle.MyPet.skill.SkillTreeMobType;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.util.MyPetVersion;
 

@@ -21,8 +21,8 @@
 package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.SkillName;
-import de.Keyle.MyPet.skill.SkillTreeSkill;
+import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Sprint")
 public class SprintInfo extends SkillTreeSkill implements ISkillInfo

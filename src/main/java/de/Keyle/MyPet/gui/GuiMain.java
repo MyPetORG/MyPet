@@ -23,7 +23,7 @@ package de.Keyle.MyPet.gui;
 import de.Keyle.MyPet.gui.skilltreecreator.LevelCreator;
 import de.Keyle.MyPet.gui.skilltreecreator.SkillPropertyEditor;
 import de.Keyle.MyPet.gui.skilltreecreator.SkilltreeCreator;
-import de.Keyle.MyPet.skill.SkillsInfo;
+import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.*;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 

@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.skill.SkillTree;
-import de.Keyle.MyPet.skill.SkillTreeLevel;
-import de.Keyle.MyPet.skill.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeLevel;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.Configuration;
 
 import java.util.ArrayList;

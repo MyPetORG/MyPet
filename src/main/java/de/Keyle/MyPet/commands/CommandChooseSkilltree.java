@@ -22,8 +22,8 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.SkillTree;
-import de.Keyle.MyPet.skill.SkillTreeMobType;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;

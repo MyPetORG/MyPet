@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.skill.ISkillActive;
+import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PoisonInfo;
 import de.Keyle.MyPet.util.Util;

@@ -20,9 +20,13 @@
 
 package de.Keyle.MyPet.skill.skilltreeloader;
 
-import de.Keyle.MyPet.skill.*;
-import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.SkillProperties;
+import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeLevel;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.configuration.ConfigurationJSON;
 import de.Keyle.MyPet.util.logger.DebugLogger;

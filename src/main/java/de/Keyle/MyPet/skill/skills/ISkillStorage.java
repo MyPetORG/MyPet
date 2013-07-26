@@ -18,24 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skills;
 
+import de.Keyle.MyPet.util.NBTStorage;
 
-import java.lang.annotation.*;
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Inherited
-public @interface SkillProperties
+public interface ISkillStorage extends NBTStorage
 {
-    String[] parameterNames() default {};
-
-    String[] parameterDefaultValues() default {};
-
-    NBTdatatypes[] parameterTypes() default {};
-
-    public enum NBTdatatypes
-    {
-        Byte, Short, Int, Long, Float, Double, String, Boolean
-    }
 }

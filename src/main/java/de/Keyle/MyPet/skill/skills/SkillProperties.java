@@ -18,9 +18,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skills;
 
-public interface ISkillActive
+
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Inherited
+public @interface SkillProperties
 {
-    public boolean activate();
+    String[] parameterNames() default {};
+
+    String[] parameterDefaultValues() default {};
+
+    NBTdatatypes[] parameterTypes() default {};
+
+    public enum NBTdatatypes
+    {
+        Byte, Short, Int, Long, Float, Double, String, Boolean
+    }
 }

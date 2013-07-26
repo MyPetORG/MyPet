@@ -22,10 +22,10 @@ package de.Keyle.MyPet.skill.skills.info;
 
 import de.Keyle.MyPet.gui.skilltreecreator.skills.Ranged;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
-import de.Keyle.MyPet.skill.SkillName;
-import de.Keyle.MyPet.skill.SkillProperties;
-import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
-import de.Keyle.MyPet.skill.SkillTreeSkill;
+import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skills.SkillProperties;
+import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Ranged")
 @SkillProperties(

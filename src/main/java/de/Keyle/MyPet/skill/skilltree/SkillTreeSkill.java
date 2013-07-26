@@ -18,9 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.skill;
+package de.Keyle.MyPet.skill.skilltree;
 
-import de.Keyle.MyPet.skill.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skills.SkillProperties;
+import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import org.spout.nbt.*;
 
 public abstract class SkillTreeSkill

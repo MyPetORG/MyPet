@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-import de.Keyle.MyPet.skill.SkillTree;
+import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.util.MyPetPlayer;
 
 import java.util.UUID;

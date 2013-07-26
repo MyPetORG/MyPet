@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.ISkillActive;
+import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;

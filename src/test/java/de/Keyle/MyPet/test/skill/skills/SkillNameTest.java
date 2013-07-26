@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.test.skill.skills;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.skill.SkillName;
-import de.Keyle.MyPet.skill.SkillTreeSkill;
-import de.Keyle.MyPet.skill.Skills;
+import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skills.Skills;
+import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
