@@ -221,10 +221,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
         }
 
-        String[] petTypes = new String[MyPetType.values().length];
-        for (int i = 0 ; i < MyPetType.values().length ; i++)
+        String[] petTypes = new String[MyPetType.values().length + 1];
+        petTypes[0] = "default";
+        for (int i = 1 ; i <= MyPetType.values().length ; i++)
         {
-            petTypes[i] = MyPetType.values()[i].getTypeName();
+            petTypes[i] = MyPetType.values()[i - 1].getTypeName();
         }
 
         SkillTreeMobType.clearMobTypes();
