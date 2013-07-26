@@ -20,22 +20,26 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.Permissions;
-import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
 {
@@ -51,7 +55,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
         Player player = (Player) sender;
         if (MyPetList.hasMyPet(player))
         {
-            MyPet myPet = MyPetList.getMyPet(player);
+            final MyPet myPet = MyPetList.getMyPet(player);
+            final MyPetPlayer myPetOwner = myPet.getOwner();
             if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
                 myPet.autoAssignSkilltree();
@@ -108,14 +113,56 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.AvailableSkilltrees", player), myPet.getPetName()));
+                    List<SkillTree> availableSkilltrees = new ArrayList<SkillTree>();
                     for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
                     {
                         if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
                         {
-                            sender.sendMessage("   " + skillTree.getName());
+                            availableSkilltrees.add(skillTree);
                         }
                     }
+
+                    final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
+                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.AvailableSkilltrees", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler()
+                    {
+                        @Override
+                        public void onOptionClick(IconMenu.OptionClickEvent event)
+                        {
+                            if (myPet != myPetOwner.getMyPet())
+                            {
+                                event.setWillClose(true);
+                                event.setWillDestroy(true);
+                                return;
+                            }
+                            if (skilltreeSlotMap.containsKey(event.getPosition()))
+                            {
+                                SkillTree selecedSkilltree = skilltreeSlotMap.get(event.getPosition());
+                                if (selecedSkilltree != null)
+                                {
+                                    myPet.setSkilltree(selecedSkilltree);
+                                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SkilltreeSwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                }
+                            }
+                            event.setWillClose(true);
+                            event.setWillDestroy(true);
+                        }
+                    }, MyPetPlugin.getPlugin());
+
+                    for (int i = 0 ; i < availableSkilltrees.size() ; i++)
+                    {
+                        SkillTree addedSkilltree = availableSkilltrees.get(i);
+
+                        ItemStack shownItem = new ItemStack(Material.SAPLING);
+                        String[] descriptionArray = new String[addedSkilltree.getDescription().size()];
+                        for (int j = 0 ; j < addedSkilltree.getDescription().size() ; j++)
+                        {
+                            descriptionArray[j] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
+                        }
+
+                        menu.setOption(i, shownItem, ">--->  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  <---<", descriptionArray);
+                        skilltreeSlotMap.put(i, addedSkilltree);
+                    }
+                    menu.open(player);
                 }
             }
         }

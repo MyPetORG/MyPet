@@ -212,6 +212,7 @@ public class SkillTree
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);
+        newSkillTree.description = new ArrayList<String>(description);
 
         for (int level : skillsPerLevel.keySet())
         {
