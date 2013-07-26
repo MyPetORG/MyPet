@@ -58,6 +58,13 @@ public class IconMenu implements Listener
         inventory = Bukkit.createInventory(null, size, name);
     }
 
+    public IconMenu setOption(int position, ItemStack icon)
+    {
+        optionNames[position] = icon.getItemMeta().getDisplayName();
+        inventory.setItem(position, icon);
+        return this;
+    }
+
     public IconMenu setOption(int position, ItemStack icon, String name, String[] lore)
     {
         setItemNameAndLore(icon, name, lore);
@@ -125,7 +132,8 @@ public class IconMenu implements Listener
     {
         if (event.getPlugin().equals(plugin) && inventory != null)
         {
-            for (HumanEntity viewer : inventory.getViewers())
+            List<HumanEntity> viewers = new ArrayList<HumanEntity>(inventory.getViewers());
+            for (HumanEntity viewer : viewers)
             {
                 viewer.closeInventory();
             }
