@@ -157,7 +157,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         }
         if (myPetUUID == null)
         {
-            petUUIDWorld.remove(myPetUUID);
+            petWorldUUID.remove(worldGroup);
         }
         else
         {
