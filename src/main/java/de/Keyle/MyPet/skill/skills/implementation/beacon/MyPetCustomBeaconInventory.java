@@ -128,7 +128,7 @@ public class MyPetCustomBeaconInventory implements IInventory
 
     public String getName()
     {
-        return "inventory.mypet.beacon";
+        return "";
     }
 
     public int getMaxStackSize()
