@@ -39,7 +39,7 @@ public class CommandHelp implements CommandExecutor
             player.sendMessage("-------------------- " + ChatColor.GOLD + "MyPet - " + Locales.getString("Name.Help", player) + ChatColor.RESET + " --------------------");
             player.sendMessage(ChatColor.GOLD + "/petinfo" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetInfo", player));
             player.sendMessage(ChatColor.GOLD + "/pettype" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetType", player));
-            if (Permissions.has(player, "MyPet.user.capturehelper"))
+            if (Permissions.has(player, "MyPet.user.command.capturehelper"))
             {
                 player.sendMessage(ChatColor.GOLD + "/petcapturehelper" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetCaptureHelper", player));
             }
@@ -49,8 +49,14 @@ public class CommandHelp implements CommandExecutor
             }
             if (MyPetList.hasMyPet(player))
             {
-                player.sendMessage(ChatColor.GOLD + "/petname" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetName", player));
-                player.sendMessage(ChatColor.GOLD + "/petrelease" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetRelease", player));
+                if (Permissions.has(player, "MyPet.user.command.name"))
+                {
+                    player.sendMessage(ChatColor.GOLD + "/petname" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetName", player));
+                }
+                if (Permissions.has(player, "MyPet.user.command.release"))
+                {
+                    player.sendMessage(ChatColor.GOLD + "/petrelease" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetRelease", player));
+                }
                 player.sendMessage(ChatColor.GOLD + "/petstop" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetStop", player));
                 player.sendMessage(ChatColor.GOLD + "/petcall" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetCall", player));
                 player.sendMessage(ChatColor.GOLD + "/petsendaway" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetSendAway", player));
