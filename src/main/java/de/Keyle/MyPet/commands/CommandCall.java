@@ -20,19 +20,14 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import static org.bukkit.Bukkit.getPluginManager;
 
 public class CommandCall implements CommandExecutor
 {
@@ -51,10 +46,6 @@ public class CommandCall implements CommandExecutor
                 {
                     case Success:
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Call", petOwner), myPet.getPetName()));
-                        if (Configuration.ENABLE_EVENTS)
-                        {
-                            getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                        }
                         break;
                     case Canceled:
                         sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnPrevent", petOwner), myPet.getPetName()));

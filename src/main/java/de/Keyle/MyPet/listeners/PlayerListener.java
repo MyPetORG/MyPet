@@ -22,8 +22,6 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
@@ -48,8 +46,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
-
-import static org.bukkit.Bukkit.getPluginManager;
 
 public class PlayerListener implements Listener
 {
@@ -179,10 +175,6 @@ public class PlayerListener implements Listener
                     {
                         case Success:
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call", myPet.getOwner().getLanguage()), myPet.getPetName()));
-                            if (Configuration.ENABLE_EVENTS)
-                            {
-                                getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                            }
                             break;
                         case Canceled:
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
@@ -390,12 +382,6 @@ public class PlayerListener implements Listener
                 {
                     switch (myPet.createPet())
                     {
-                        case Success:
-                            if (Configuration.ENABLE_EVENTS)
-                            {
-                                getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.Call));
-                            }
-                            break;
                         case Canceled:
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;

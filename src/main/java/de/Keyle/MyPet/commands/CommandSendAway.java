@@ -20,20 +20,15 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import static org.bukkit.Bukkit.getPluginManager;
 
 public class CommandSendAway implements CommandExecutor
 {
@@ -49,10 +44,6 @@ public class CommandSendAway implements CommandExecutor
                 {
                     myPet.removePet(false);
                     sender.sendMessage(Util.formatText(Locales.getString("Message.SendAway", petOwner), myPet.getPetName()));
-                    if (Configuration.ENABLE_EVENTS)
-                    {
-                        getPluginManager().callEvent(new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.SendAway));
-                    }
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {

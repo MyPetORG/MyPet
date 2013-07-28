@@ -22,8 +22,6 @@ package de.Keyle.MyPet.entity.types;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
@@ -46,7 +44,6 @@ import org.spout.nbt.*;
 
 import java.util.*;
 
-import static org.bukkit.Bukkit.getPluginManager;
 import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPet implements IMyPet, NBTStorage
@@ -330,12 +327,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
             hunger = value;
         }
         hungerTime = Configuration.HUNGER_SYSTEM_TIME;
-
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
     }
 
     public static List<LeashFlag> getLeashFlags(Class<? extends MyPet> myPetClass)
@@ -397,10 +388,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
                 getCraftPet().getHandle().setCustomNameVisible(true);
                 getCraftPet().getHandle().setCustomName(Util.cutString(Configuration.PET_INFO_OVERHEAD_PREFIX + petName + Configuration.PET_INFO_OVERHEAD_SUFFIX, 64));
             }
-        }
-        if (Configuration.ENABLE_EVENTS)
-        {
-            getPluginManager().callEvent(new MyPetSpoutEvent(this, MyPetSpoutEventReason.Name));
         }
     }
 
@@ -681,12 +668,6 @@ public abstract class MyPet implements IMyPet, NBTStorage
             {
                 hunger--;
                 hungerTime = Configuration.HUNGER_SYSTEM_TIME;
-
-                if (Configuration.ENABLE_EVENTS)
-                {
-                    MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(this, MyPetSpoutEventReason.HungerChange);
-                    getServer().getPluginManager().callEvent(spoutEvent);
-                }
             }
         }
     }

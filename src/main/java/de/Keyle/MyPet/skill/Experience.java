@@ -23,8 +23,6 @@ package de.Keyle.MyPet.skill;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.event.MyPetExpEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent;
-import de.Keyle.MyPet.api.event.MyPetSpoutEvent.MyPetSpoutEventReason;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
@@ -84,12 +82,6 @@ public class Experience
     {
         exp = 0;
 
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
-
         for (int i = 1 ; i <= getLevel() ; i++)
         {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
@@ -110,12 +102,6 @@ public class Experience
         }
         int tmplvl = getLevel();
         this.exp = expEvent.getExp();
-
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
 
         for (int i = tmplvl ; i < getLevel() ; i++)
         {
@@ -142,13 +128,6 @@ public class Experience
         int tmpLvl = getLevel();
         this.exp = event.getExp();
 
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
-
-
         for (int i = tmpLvl ; i < getLevel() ; i++)
         {
             boolean quiet = i != getLevel() - 1;
@@ -172,12 +151,6 @@ public class Experience
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
-
-            if (Configuration.ENABLE_EVENTS)
-            {
-                MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-                getServer().getPluginManager().callEvent(spoutEvent);
-            }
 
             for (int i = tmpLvl ; i < getLevel() ; i++)
             {
@@ -206,12 +179,6 @@ public class Experience
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
 
-            if (Configuration.ENABLE_EVENTS)
-            {
-                MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-                getServer().getPluginManager().callEvent(spoutEvent);
-            }
-
             for (int i = tmpLvl ; i < getLevel() ; i++)
             {
                 boolean quiet = i != getLevel() - 1;
@@ -238,12 +205,6 @@ public class Experience
             return;
         }
         this.exp = expEvent.getExp();
-
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
     }
 
     public void removeExp(double exp)
@@ -259,12 +220,6 @@ public class Experience
             return;
         }
         this.exp = expEvent.getExp();
-
-        if (Configuration.ENABLE_EVENTS)
-        {
-            MyPetSpoutEvent spoutEvent = new MyPetSpoutEvent(myPet, MyPetSpoutEventReason.ExpChange);
-            getServer().getPluginManager().callEvent(spoutEvent);
-        }
     }
 
     public double getCurrentExp()
