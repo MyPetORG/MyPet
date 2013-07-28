@@ -161,7 +161,14 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         }
         else
         {
-            petWorldUUID.put(worldGroup, myPetUUID);
+            try
+            {
+                petWorldUUID.put(worldGroup, myPetUUID);
+            }
+            catch (IllegalArgumentException e)
+            {
+                DebugLogger.warning("There are two pets registered for one worldgroup or vice versa!");
+            }
         }
     }
 
