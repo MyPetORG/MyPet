@@ -143,11 +143,10 @@ public class ItemStackNBTConverter
                 return new StringTag(vanillaTag.getName(), ((NBTTagString) vanillaTag).data);
             case 9:
                 NBTTagList tagList = (NBTTagList) vanillaTag;
-                List<Tag<?>> compoundList = new ArrayList<Tag<?>>();
+                List compoundList = new ArrayList();
                 for (int i = 0 ; i < tagList.size() ; i++)
                 {
-                    Tag<?> t = VanillaCompoundToCompound(tagList.get(i));
-                    compoundList.add(t);
+                    compoundList.add(VanillaCompoundToCompound(tagList.get(i)));
                 }
                 Class type;
                 if (tagList.size() > 0)
@@ -156,7 +155,7 @@ public class ItemStackNBTConverter
                 }
                 else
                 {
-                    type = EndTag.class;
+                    type = CompoundTag.class;
                 }
                 return new ListTag(vanillaTag.getName(), type, compoundList);
             case 10:
