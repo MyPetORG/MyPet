@@ -54,6 +54,10 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage(ChatColor.GOLD + "/petstop" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetStop", player));
                 player.sendMessage(ChatColor.GOLD + "/petcall" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetCall", player));
                 player.sendMessage(ChatColor.GOLD + "/petsendaway" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetSendAway", player));
+                if (Permissions.has(player, "MyPet.user.command.respawn"))
+                {
+                    player.sendMessage(ChatColor.GOLD + "/petrespawn" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetRespawn", player));
+                }
                 player.sendMessage(ChatColor.GOLD + "/petskill" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetSkill", player));
                 player.sendMessage(ChatColor.GOLD + "/petchooseskilltree" + ChatColor.RESET + ": " + Locales.getString("Message.Help.PetChooseSkilltree", player));
 
