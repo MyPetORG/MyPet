@@ -77,6 +77,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
     protected SkillTree skillTree = null;
     protected Skills skills;
     protected Experience experience;
+    protected long lastUsed = -1;
 
     public static enum LeashFlag
     {
@@ -135,6 +136,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public SpawnFlags createPet()
     {
+        lastUsed = System.currentTimeMillis();
         if (status != PetState.Here && getOwner().isOnline())
         {
             if (respawnTime <= 0)
@@ -494,6 +496,12 @@ public abstract class MyPet implements IMyPet, NBTStorage
     }
 
     @Override
+    public long getLastUsed()
+    {
+        return lastUsed;
+    }
+
+    @Override
     public String getWorldGroup()
     {
         return this.worldGroup;
@@ -608,6 +616,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         petNBT.getValue().put("Name", new StringTag("Name", this.petName));
         petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
         petNBT.getValue().put("Exp", new DoubleTag("Exp", this.getExp()));
+        petNBT.getValue().put("LastUsed", new LongTag("LastUsed", this.lastUsed));
         petNBT.getValue().put("Info", getExtendedInfo());
         if (this.skillTree != null)
         {

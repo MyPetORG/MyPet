@@ -46,4 +46,6 @@ public interface IMyPet
     public UUID getUUID();
 
     public String getWorldGroup();
+
+    public long getLastUsed();
 }

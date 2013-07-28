@@ -58,6 +58,7 @@ public class MyPetList
             activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
             activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
+            activeMyPet.lastUsed = inactiveMyPet.lastUsed;
 
             if (activeMyPet.respawnTime > 0)
             {
@@ -167,6 +168,7 @@ public class MyPetList
         inactiveMyPet.setPetType(activeMyPet.getPetType());
         inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());
         inactiveMyPet.setWorldGroup(activeMyPet.getWorldGroup());
+        inactiveMyPet.lastUsed = activeMyPet.lastUsed;
 
         return inactiveMyPet;
     }

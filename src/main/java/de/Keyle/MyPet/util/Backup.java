@@ -71,7 +71,7 @@ public class Backup
         }, 20L * 60L * (SAVE_INTERVAL - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - this.lastBackup)), 20L * 60L * SAVE_INTERVAL);
     }
 
-    public void createBackup()
+    public String createBackup()
     {
         lastBackup = System.currentTimeMillis();
         try
@@ -79,15 +79,16 @@ public class Backup
             PrintWriter out = new PrintWriter(backupFolder.getAbsolutePath() + File.separator + "lastbackup");
             out.print(lastBackup);
             out.close();
-            backupFile();
+            return backupFile();
         }
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
         }
+        return "[No Backup Created!]";
     }
 
-    public void backupFile()
+    public String backupFile()
     {
         SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
         File destFile = new File(backupFolder, df.format(lastBackup) + "_My.Pets");
@@ -100,6 +101,7 @@ public class Backup
         {
             e.printStackTrace();
         }
+        return df.format(lastBackup) + "_My.Pets";
     }
 
     public static void copyFile(File source, File dest) throws IOException

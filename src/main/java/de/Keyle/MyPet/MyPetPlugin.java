@@ -94,6 +94,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     private File NBTPetFile;
     private boolean isReady = false;
     private int autoSaveTimer = 0;
+    private Backup backupManager;
 
     public static MyPetPlugin getPlugin()
     {
@@ -285,7 +286,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         if (Backup.MAKE_BACKUPS)
         {
-            new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
+            backupManager = new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
         loadGroups(groupsFile);
         loadPets(NBTPetFile);
@@ -698,6 +699,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetPlugin.getPlugin().savePets(false);
             autoSaveTimer = Configuration.AUTOSAVE_TIME;
         }
+    }
+
+    public Backup getBackupManager()
+    {
+        return backupManager;
     }
 
     public File getFile()

@@ -41,6 +41,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage
     private int hunger = 100;
     private int respawnTime = 0;
     private double exp = 0;
+    protected long lastUsed = -1;
     private MyPetType petType = MyPetType.Wolf;
     private SkillTree skillTree = null;
     private CompoundTag NBTSkills;
@@ -191,6 +192,12 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         return worldGroup;
     }
 
+    @Override
+    public long getLastUsed()
+    {
+        return lastUsed;
+    }
+
     public void setWorldGroup(String worldGroup)
     {
         if (worldGroup != null)
@@ -223,6 +230,11 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         if (myPetNBT.getValue().containsKey("Type"))
         {
             petType = MyPetType.valueOf(((StringTag) myPetNBT.getValue().get("Type")).getValue());
+        }
+
+        if (myPetNBT.getValue().containsKey("LastUsed"))
+        {
+            lastUsed = ((LongTag) myPetNBT.getValue().get("LastUsed")).getValue();
         }
 
         if (myPetNBT.getValue().containsKey("Skilltree"))
@@ -271,6 +283,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage
         petNBT.getValue().put("Name", new StringTag("Name", this.petName));
         petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
         petNBT.getValue().put("Exp", new DoubleTag("Exp", this.exp));
+        petNBT.getValue().put("LastUsed", new LongTag("LastUsed", this.lastUsed));
         petNBT.getValue().put("Info", getInfo());
         if (this.skillTree != null)
         {

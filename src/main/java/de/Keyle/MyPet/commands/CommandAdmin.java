@@ -50,6 +50,7 @@ import org.spout.nbt.IntTag;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,6 +75,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         optionsList.add("create");
         optionsList.add("clone");
         optionsList.add("remove");
+        optionsList.add("cleanup");
 
         addSetRemoveList.add("add");
         addSetRemoveList.add("set");
@@ -724,6 +726,40 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                         MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     }
                 }
+            }
+        }
+        else if (option.equalsIgnoreCase("cleanup"))
+        {
+            if (Util.isInt(parameter[0]))
+            {
+                int days = Integer.parseInt(parameter[0]);
+                boolean deleteOld = days == -1;
+                List<InactiveMyPet> deletionList = new ArrayList<InactiveMyPet>();
+                for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets())
+                {
+                    if (inactiveMyPet.getLastUsed() != -1 && !deleteOld)
+                    {
+                        if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - inactiveMyPet.getLastUsed()) > days)
+                        {
+                            deletionList.add(inactiveMyPet);
+                        }
+                    }
+                    else if (inactiveMyPet.getLastUsed() == -1 && deleteOld)
+                    {
+                        deletionList.add(inactiveMyPet);
+                    }
+                }
+                int deletedPetCount = deletionList.size();
+                if (deletedPetCount > 0)
+                {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] created backup -> " + MyPetPlugin.getPlugin().getBackupManager().createBackup());
+
+                    for (InactiveMyPet inactiveMyPet : deletionList)
+                    {
+                        MyPetList.removeInactiveMyPet(inactiveMyPet);
+                    }
+                }
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + deletedPetCount + " MyPets.");
             }
         }
         else if (option.equalsIgnoreCase("test"))
