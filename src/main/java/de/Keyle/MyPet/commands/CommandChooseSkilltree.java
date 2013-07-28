@@ -23,18 +23,20 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.spout.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,7 +154,38 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                     {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
-                        ItemStack shownItem = new ItemStack(Material.SAPLING);
+                        CompoundTag tag = addedSkilltree.getIconItem();
+                        net.minecraft.server.v1_6_R2.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
+                        ItemStack shownItem = CraftItemStack.asBukkitCopy(is);
+
+                        //First try to remove attributes (+# Attack Damage)
+                        /*
+                        try
+                        {
+                            Class clazz = Class.forName("org.bukkit.craftbukkit.v1_6_R2.inventory.CraftMetaItem");
+                            Object c = clazz.cast(shownItem.getItemMeta());
+                            Field attributes = clazz.getDeclaredField("attributes");
+                            attributes.setAccessible(true);
+                            MyPetLogger.write("g: " + attributes.get(c));
+                            NBTTagList list = new NBTTagList();
+                            attributes.set(c,list);
+                            MyPetLogger.write("s: " + attributes.get(c));
+
+                        }
+                        catch (ClassNotFoundException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        catch (NoSuchFieldException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        catch (IllegalAccessException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        */
+
                         String[] descriptionArray = new String[addedSkilltree.getDescription().size()];
                         for (int j = 0 ; j < addedSkilltree.getDescription().size() ; j++)
                         {

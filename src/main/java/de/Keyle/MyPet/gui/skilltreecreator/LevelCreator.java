@@ -31,6 +31,10 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Util;
+import org.spout.nbt.CompoundMap;
+import org.spout.nbt.CompoundTag;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.ShortTag;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -66,7 +70,8 @@ public class LevelCreator
     JTextField permissionTextField;
     JCheckBox levelUpMessageCheckBox;
     JTextField levelUpMessageInput;
-    private JButton editDescriptionButton;
+    JButton editDescriptionButton;
+    JButton editIconButton;
     JFrame levelCreatorFrame;
 
     DefaultTreeModel skillTreeTreeModel;
@@ -502,12 +507,118 @@ public class LevelCreator
 
                 JScrollPane scrollPane = new JScrollPane(msg);
 
-                JOptionPane.showMessageDialog(null, scrollPane);
+                JOptionPane.showMessageDialog(null, scrollPane, "Edit Skilltree Description", JOptionPane.QUESTION_MESSAGE);
 
                 String[] description = msg.getText().split("\\n");
 
                 skillTree.clearDescription();
                 skillTree.addDescription(description);
+            }
+        });
+        editIconButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                short id, damage;
+                boolean glowing = false;
+
+                CompoundMap values = skillTree.getIconItem().getValue();
+                id = ((ShortTag) values.get("id")).getValue();
+                damage = ((ShortTag) values.get("Damage")).getValue();
+                if (values.containsKey("tag"))
+                {
+                    CompoundMap tag = ((CompoundTag) values.get("tag")).getValue();
+                    glowing = tag.containsKey("ench");
+                }
+
+                JPanel iconPanel = new JPanel();
+
+                iconPanel.add(new JLabel("ID: "));
+                JTextField idTextField = new JTextField("" + id);
+                idTextField.setColumns(4);
+                iconPanel.add(idTextField);
+
+                iconPanel.add(new JLabel("Damage: "));
+                JTextField damageTextField = new JTextField("" + damage);
+                damageTextField.setColumns(4);
+                iconPanel.add(damageTextField);
+
+                JCheckBox glowingCheckbox = new JCheckBox("Glowing: ");
+                glowingCheckbox.setEnabled(false);
+                glowingCheckbox.setToolTipText("Not usable at the moment :/");
+                glowingCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
+                glowingCheckbox.setSelected(glowing);
+                iconPanel.add(glowingCheckbox);
+
+                JOptionPane.showMessageDialog(null, iconPanel, "Edit Skilltree Icon Item", JOptionPane.QUESTION_MESSAGE);
+
+                damage = -1;
+                if (Util.isShort(damageTextField.getText()))
+                {
+                    damage = Short.parseShort(damageTextField.getText());
+                }
+                id = -1;
+                if (Util.isShort(idTextField.getText()))
+                {
+                    id = Short.parseShort(idTextField.getText());
+                }
+                glowing = glowingCheckbox.isSelected();
+
+                skillTree.setIconItem(id, damage, glowing);
+
+                if (id >= 298 && id <= 301)
+                {
+                    int color = 0;
+                    if (values.containsKey("tag"))
+                    {
+                        CompoundMap tag = ((CompoundTag) values.get("tag")).getValue();
+                        if (tag.containsKey("display"))
+                        {
+                            CompoundMap display = ((CompoundTag) tag.get("display")).getValue();
+                            if (display.containsKey("color"))
+                            {
+                                color = ((IntTag) display.get("color")).getValue();
+                            }
+                        }
+                    }
+
+                    JPanel colorPanel = new JPanel();
+
+                    iconPanel.add(new JLabel("Color: "));
+                    JTextField colorTextField = new JTextField("" + color);
+                    colorTextField.setColumns(19);
+                    colorPanel.add(colorTextField);
+
+                    JOptionPane.showMessageDialog(null, colorPanel, "Edit Leather Armor Color", JOptionPane.QUESTION_MESSAGE);
+
+                    if (Util.isInt(colorTextField.getText()))
+                    {
+                        color = Integer.parseInt(colorTextField.getText());
+                    }
+                    color = Math.max(0, color);
+
+                    CompoundTag tag, display;
+                    if (!values.containsKey("tag"))
+                    {
+                        tag = new CompoundTag("tag", new CompoundMap());
+                        values.put("tag", tag);
+                    }
+                    else
+                    {
+                        tag = (CompoundTag) values.get("tag");
+                    }
+                    if (!values.containsKey("display"))
+                    {
+                        display = new CompoundTag("display", new CompoundMap());
+                        tag.getValue().put("display", display);
+                    }
+                    else
+                    {
+                        display = (CompoundTag) tag.getValue().get("display");
+                    }
+                    display.getValue().put("color", new IntTag("color", color));
+                }
             }
         });
     }

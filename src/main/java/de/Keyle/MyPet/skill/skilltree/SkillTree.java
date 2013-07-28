@@ -22,6 +22,7 @@ package de.Keyle.MyPet.skill.skilltree;
 
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import org.spout.nbt.*;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class SkillTree
 {
     private String skillTreeName;
     private List<String> description = new ArrayList<String>();
+    private CompoundTag iconItem = null;
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
@@ -76,6 +78,58 @@ public class SkillTree
     public void clearDescription()
     {
         description.clear();
+    }
+
+    public void setIconItem(CompoundTag iconItem)
+    {
+        iconItem = new CompoundTag("IconItem", new CompoundMap(iconItem.getValue()));
+        this.iconItem = iconItem;
+        getIconItem();
+    }
+
+    public void setIconItem(short id, short damage, boolean enchantetGlow)
+    {
+        getIconItem();
+
+        if (id > 0)
+        {
+            iconItem.getValue().put("id", new ShortTag("id", id));
+        }
+        if (damage >= 0)
+        {
+            iconItem.getValue().put("Damage", new ShortTag("Damage", damage));
+        }
+        if (!iconItem.getValue().containsKey("tag"))
+        {
+            iconItem.getValue().put("tag", new CompoundTag("tag", new CompoundMap()));
+        }
+        CompoundTag tagCompound = (CompoundTag) iconItem.getValue().get("tag");
+        if (enchantetGlow)
+        {
+            tagCompound.getValue().put("ench", new ListTag<CompoundTag>("ench", CompoundTag.class, new ArrayList<CompoundTag>()));
+        }
+        else
+        {
+            tagCompound.getValue().remove("ench");
+        }
+    }
+
+    public CompoundTag getIconItem()
+    {
+        if (iconItem == null)
+        {
+            iconItem = new CompoundTag("IconItem", new CompoundMap());
+        }
+        iconItem.getValue().put("Count", new ByteTag("Count", (byte) 1));
+        if (!iconItem.getValue().containsKey("id"))
+        {
+            iconItem.getValue().put("id", new ShortTag("id", (short) 6));
+        }
+        if (!iconItem.getValue().containsKey("Damage"))
+        {
+            iconItem.getValue().put("Damage", new ShortTag("Damage", (short) 0));
+        }
+        return iconItem;
     }
 
     public boolean hasLevel(int level)
@@ -213,6 +267,7 @@ public class SkillTree
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);
         newSkillTree.description = new ArrayList<String>(description);
+        newSkillTree.iconItem = new CompoundTag("IconItem", new CompoundMap(iconItem.getValue()));
 
         for (int level : skillsPerLevel.keySet())
         {

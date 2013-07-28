@@ -107,6 +107,10 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader
             {
                 skillTree.setDisplayName(((StringTag) skilltreeCompound.getValue().get("Display")).getValue());
             }
+            if (skilltreeCompound.getValue().containsKey("IconItem"))
+            {
+                skillTree.setIconItem(((CompoundTag) skilltreeCompound.getValue().get("IconItem")));
+            }
             if (skilltreeCompound.getValue().containsKey("Description"))
             {
                 ListTag descriptionTagList = (ListTag) skilltreeCompound.getValue().get("Description");
@@ -218,6 +222,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader
                     }
                     skilltreeCompound.getValue().put("Description", new ListTag<StringTag>("Description", StringTag.class, descriptionTagList));
                 }
+                skilltreeCompound.getValue().put("IconItem", skillTree.getIconItem());
 
                 List<CompoundTag> levelList = new ArrayList<CompoundTag>();
                 for (SkillTreeLevel level : skillTree.getLevelList())
