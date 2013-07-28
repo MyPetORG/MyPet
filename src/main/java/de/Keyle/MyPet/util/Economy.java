@@ -73,8 +73,7 @@ public class Economy
         {
             if (economy.has(petOwner.getName(), costs))
             {
-                economy.withdrawPlayer(petOwner.getName(), costs);
-                return true;
+                return economy.withdrawPlayer(petOwner.getName(), costs).transactionSuccess();
             }
             else
             {
