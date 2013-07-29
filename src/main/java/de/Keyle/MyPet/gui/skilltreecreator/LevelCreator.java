@@ -235,6 +235,11 @@ public class LevelCreator
                     levelUpMessageInput.setEnabled(false);
                     levelUpMessageInput.setText("");
 
+                    if (skillTreeTree.getSelectionPath() == null)
+                    {
+                        return;
+                    }
+
                     if (Util.isInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString()))
                     {
                         int level = Integer.parseInt(skillTreeTree.getSelectionPath().getLastPathComponent().toString());
