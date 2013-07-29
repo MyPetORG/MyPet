@@ -47,7 +47,7 @@ public class EntityMySpider extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.spider.say";
+        return "mob.spider.say";
     }
 
     protected void initDatawatcher()

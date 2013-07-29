@@ -83,7 +83,7 @@ public class EntityMyOcelot extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
+        return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)

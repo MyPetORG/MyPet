@@ -50,7 +50,7 @@ public class EntityMyBlaze extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.blaze.breathe";
+        return "mob.blaze.breathe";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)

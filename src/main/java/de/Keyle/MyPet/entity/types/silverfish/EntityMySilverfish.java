@@ -47,7 +47,7 @@ public class EntityMySilverfish extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.silverfish.say";
+        return "mob.silverfish.say";
     }
 
     @Override

@@ -50,7 +50,7 @@ public class EntityMyVillager extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.villager.default";
+        return "mob.villager.default";
     }
 
     public int getProfession()

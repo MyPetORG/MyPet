@@ -56,7 +56,7 @@ public class EntityMyBat extends EntityMyPet
     @Override
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.bat.idle";
+        return "mob.bat.idle";
     }
 
     public float getSoundSpeed()

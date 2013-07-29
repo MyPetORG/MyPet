@@ -85,7 +85,7 @@ public class EntityMySkeleton extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.skeleton.say";
+        return "mob.skeleton.say";
     }
 
     public ItemStack getPetEquipment(int slot)

@@ -50,7 +50,7 @@ public class EntityMyPig extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.pig.say";
+        return "mob.pig.say";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)

@@ -523,7 +523,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            getHurtSound();
+            return getHurtSound();
         }
         catch (Exception e)
         {
@@ -540,7 +540,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            getDeathSound();
+            return getDeathSound();
         }
         catch (Exception e)
         {
@@ -556,7 +556,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            getSoundSpeed();
+            return getSoundSpeed();
         }
         catch (Exception e)
         {
@@ -701,7 +701,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            getLivingSound();
+            return playIdleSound() ? getLivingSound() : null;
         }
         catch (Exception e)
         {

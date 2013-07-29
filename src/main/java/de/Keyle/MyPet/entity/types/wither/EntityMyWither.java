@@ -47,7 +47,7 @@ public class EntityMyWither extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.wither.idle";
+        return "mob.wither.idle";
     }
 
     protected void initDatawatcher()

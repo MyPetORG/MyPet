@@ -59,7 +59,7 @@ public class EntityMyEnderman extends EntityMyPet
     @Override
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
+        return isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)

@@ -48,7 +48,7 @@ public class EntityMyGiant extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.zombie.say";
+        return "mob.zombie.say";
     }
 
     public void playStepSound()

@@ -49,7 +49,7 @@ public class EntityMyGhast extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.ghast.moan";
+        return "mob.ghast.moan";
     }
 
     public void setPathfinder()

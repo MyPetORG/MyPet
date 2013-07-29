@@ -57,7 +57,7 @@ public class EntityMyChicken extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.chicken.say";
+        return "mob.chicken.say";
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman)

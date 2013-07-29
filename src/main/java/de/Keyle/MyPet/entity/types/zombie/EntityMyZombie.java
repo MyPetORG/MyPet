@@ -99,7 +99,7 @@ public class EntityMyZombie extends EntityMyPet
      */
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.zombie.say";
+        return "mob.zombie.say";
     }
 
     public ItemStack getPetEquipment(int slot)

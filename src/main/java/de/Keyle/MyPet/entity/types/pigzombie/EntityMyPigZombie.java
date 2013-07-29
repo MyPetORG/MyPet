@@ -87,7 +87,7 @@ public class EntityMyPigZombie extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "mob.zombiepig.zpig";
+        return "mob.zombiepig.zpig";
     }
 
     public ItemStack getPetEquipment(int slot)

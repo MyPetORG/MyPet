@@ -87,7 +87,7 @@ public class EntityMySnowman extends EntityMyPet
 
     protected String getLivingSound()
     {
-        return !playIdleSound() ? null : "step.snow";
+        return "step.snow";
     }
 
     public void onLivingUpdate()
