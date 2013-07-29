@@ -459,6 +459,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void playStepSound(int i, int j, int k, int l)
     {
+        playStepSound();
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
@@ -506,7 +507,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
     {
         try
         {
-            playStepSound();
             playStepSound(i, j, k, l);
         }
         catch (Exception e)
