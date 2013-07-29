@@ -335,6 +335,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
         Player owner = this.getOwner().getPlayer();
 
+        applyLeash();
+
         if (itemStack == null || itemStack.id == 0)
         {
             if (Ride.RIDE_ITEM == 0 && myPet.getSkills().isSkillActive("Ride") && canMove())
