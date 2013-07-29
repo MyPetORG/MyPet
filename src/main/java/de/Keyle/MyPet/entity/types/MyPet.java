@@ -145,6 +145,8 @@ public abstract class MyPet implements IMyPet, NBTStorage
                 net.minecraft.server.v1_6_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                loc.setPitch(0);
+                loc.setYaw(0);
                 petEntity.setLocation(loc);
                 if (!BukkitUtil.canSpawn(loc, petEntity))
                 {
