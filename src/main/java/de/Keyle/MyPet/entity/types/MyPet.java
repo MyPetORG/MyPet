@@ -145,6 +145,10 @@ public abstract class MyPet implements IMyPet, NBTStorage
                 net.minecraft.server.v1_6_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
+                if (getYSpawnOffset() > 0)
+                {
+                    loc = loc.add(0, getYSpawnOffset(), 0);
+                }
                 loc.setPitch(0);
                 loc.setYaw(0);
                 petEntity.setLocation(loc);
@@ -341,6 +345,11 @@ public abstract class MyPet implements IMyPet, NBTStorage
             leashFlagList.addAll(leashFlags.get(myPetClass));
         }
         return leashFlagList;
+    }
+
+    public double getYSpawnOffset()
+    {
+        return 0;
     }
 
     public Location getLocation()
