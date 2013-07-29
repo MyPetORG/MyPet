@@ -337,28 +337,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         applyLeash();
 
-        if (itemStack == null || itemStack.id == 0)
-        {
-            if (Ride.RIDE_ITEM == 0 && myPet.getSkills().isSkillActive("Ride") && canMove())
-            {
-                if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
-                {
-                    ((CraftPlayer) owner).getHandle().setPassengerOf(this);
-                    return true;
-                }
-                else
-                {
-                    getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
-                }
-            }
-            return false;
-        }
-
         if (isMyPet() && myPet.getOwner().equals(entityhuman))
         {
             if (myPet.getSkills().isSkillActive("Ride"))
             {
-                if (itemStack.id == Ride.RIDE_ITEM && canMove())
+                if ((itemStack.id == Ride.RIDE_ITEM || (Ride.RIDE_ITEM == 0 && (itemStack == null || itemStack.id == 0))) && canMove())
                 {
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
