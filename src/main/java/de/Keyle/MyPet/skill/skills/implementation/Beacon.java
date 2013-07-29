@@ -35,6 +35,7 @@ import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R2.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
@@ -324,6 +325,12 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range)))
             {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
+
+                if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName())))
+                {
+                    continue;
+                }
+
                 entityHuman.addEffect(new MobEffect(this.primaryEffectId, duration * 20, amplification, true));
 
                 if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
