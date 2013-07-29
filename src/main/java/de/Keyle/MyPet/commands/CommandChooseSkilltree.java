@@ -62,11 +62,11 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
             if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
             {
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Locales.getString("Message.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage()));
+                sender.sendMessage(Locales.getString("Message.Command.ChoseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage()));
             }
             else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
             {
-                sender.sendMessage(Util.formatText(Locales.getString("Message.OnlyChooseSkilltreeOnce", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner().getLanguage()), myPet.getPetName()));
             }
             else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
             {
@@ -86,7 +86,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                         {
                             if (myPet.setSkilltree(skillTree))
                             {
-                                sender.sendMessage(Util.formatText(Locales.getString("Message.SkilltreeSwitchedTo", player), skillTree.getName()));
+                                sender.sendMessage(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", player), skillTree.getName()));
                                 if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN)
                                 {
                                     myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
@@ -100,17 +100,17 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                             }
                             else
                             {
-                                sender.sendMessage(Locales.getString("Message.SkilltreeNotSwitched", player));
+                                sender.sendMessage(Locales.getString("Message.Skilltree.NotSwitched", player));
                             }
                         }
                         else
                         {
-                            sender.sendMessage(Util.formatText(Locales.getString("Message.CantFindSkilltree", player), skilltreeName));
+                            sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
                         }
                     }
                     else
                     {
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.CantFindSkilltree", player), skilltreeName));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
                     }
                 }
                 else
@@ -125,7 +125,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                     }
 
                     final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
-                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.AvailableSkilltrees", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler()
+                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler()
                     {
                         @Override
                         public void onOptionClick(IconMenu.OptionClickEvent event)
@@ -142,7 +142,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                                 if (selecedSkilltree != null)
                                 {
                                     myPet.setSkilltree(selecedSkilltree);
-                                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SkilltreeSwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
                                 }
                             }
                             event.setWillClose(true);
@@ -201,7 +201,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
         }
         else
         {
-            sender.sendMessage(Locales.getString("Message.DontHavePet", player));
+            sender.sendMessage(Locales.getString("Message.No.HasPet", player));
         }
         return true;
     }

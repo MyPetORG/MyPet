@@ -229,7 +229,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         {
             if (myPet.getOwner().isInExternalGames())
             {
-                myPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
             openBeacon(myPet.getOwner().getPlayer());
@@ -237,7 +237,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
@@ -250,7 +250,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            player.sendMessage(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            player.sendMessage(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
@@ -302,7 +302,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
         return false;
     }

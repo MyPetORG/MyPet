@@ -582,13 +582,13 @@ public abstract class MyPet implements IMyPet, NBTStorage
             switch (createPet())
             {
                 case Success:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.OnRespawn", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn", petOwner.getLanguage()), petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", petOwner.getLanguage()), petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", petOwner.getLanguage()), petName));
                     break;
             }
             if (Configuration.USE_HUNGER_SYSTEM)
@@ -664,7 +664,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
                     if (Economy.canPay(getOwner(), cost))
                     {
                         Economy.pay(getOwner(), cost);
-                        sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnPaid", petOwner.getLanguage()), petName, cost + " " + Economy.getEconomy().currencyNameSingular()));
+                        sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", petOwner.getLanguage()), petName, cost + " " + Economy.getEconomy().currencyNameSingular()));
                         respawnTime = 1;
                     }
                 }

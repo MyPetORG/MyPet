@@ -89,12 +89,12 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.RespawnIn", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length < 1)
@@ -299,7 +299,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     myPet.removePet();
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroup(petOwner.getWorld().getName()).getName(), null);
 
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Release", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
                     if (Configuration.STORE_PETS_ON_PET_RELEASE)
@@ -310,13 +310,13 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.ShowPetName", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.ShowPetName", petOwner), myPet.getPetName()));
                     return true;
                 }
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

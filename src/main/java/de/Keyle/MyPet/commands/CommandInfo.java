@@ -71,7 +71,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter
 
             if (petOwner == null || !petOwner.isOnline())
             {
-                sender.sendMessage(Locales.getString("Message.PlayerNotOnline", player));
+                sender.sendMessage(Locales.getString("Message.No.PlayerOnline", player));
             }
             else if (MyPetList.hasMyPet(playerName))
             {
@@ -165,11 +165,11 @@ public class CommandInfo implements CommandExecutor, TabCompleter
             {
                 if (args != null && args.length > 0)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.UserDontHavePet", player), playerName));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), playerName));
                 }
                 else
                 {
-                    sender.sendMessage(Locales.getString("Message.DontHavePet", player));
+                    sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                 }
             }
             return true;

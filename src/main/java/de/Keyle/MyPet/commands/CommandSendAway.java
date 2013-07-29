@@ -43,20 +43,20 @@ public class CommandSendAway implements CommandExecutor
                 if (myPet.getStatus() == PetState.Here)
                 {
                     myPet.removePet(false);
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.SendAway", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.AlreadyAway", petOwner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                 }
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

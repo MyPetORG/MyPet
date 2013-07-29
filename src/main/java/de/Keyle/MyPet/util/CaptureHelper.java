@@ -70,14 +70,14 @@ public class CaptureHelper
                     if (leashTarget instanceof Tameable && !((Tameable) leashTarget).isTamed())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotTamed", attacker));
+                        attacker.sendMessage(Locales.getString("Message.CaptureHelper.NotTamed", attacker));
                     }
                     break;
                 case UserCreated:
                     if (leashTarget instanceof IronGolem && !((IronGolem) leashTarget).isPlayerCreated())
                     {
                         tameNow = false;
-                        attacker.sendMessage(Locales.getString("Message.NotUserCreated", attacker));
+                        attacker.sendMessage(Locales.getString("Message.CaptureHelper.NotUserCreated", attacker));
                     }
                     break;
                 case Wild:
@@ -95,7 +95,7 @@ public class CaptureHelper
         }
         if (tameNow)
         {
-            attacker.sendMessage(Locales.getString("Message.TameNow", attacker));
+            attacker.sendMessage(Locales.getString("Message.CaptureHelper.TameNow", attacker));
         }
         return tameNow;
     }

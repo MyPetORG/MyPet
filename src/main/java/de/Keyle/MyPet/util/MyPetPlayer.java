@@ -519,7 +519,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                     if (!myPet.getCraftPet().canMove())
                     {
                         myPet.removePet(true);
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Despawn", getLanguage()), myPet.getPetName()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getLanguage()), myPet.getPetName()));
                     }
                 }
             }

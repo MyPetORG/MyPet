@@ -108,7 +108,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
             }
             if (myPet.getOwner().isInExternalGames())
             {
-                myPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
             if (!myPet.getLocation().getBlock().isLiquid())

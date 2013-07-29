@@ -52,12 +52,12 @@ public class CommandSkill implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(Locales.getString("Message.PlayerNotOnline", petOwner));
+                    sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.UserDontHavePet", petOwner), petOwner.getName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
@@ -66,7 +66,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
-                sender.sendMessage(Util.formatText(Locales.getString("Message.Skills", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills())
                 {
@@ -79,7 +79,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

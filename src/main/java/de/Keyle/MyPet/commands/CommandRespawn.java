@@ -60,7 +60,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (!Economy.canUseEconomy() || !Permissions.has(petOwner, "MyPet.command.user.respawn"))
                 {
-                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", petOwner));
+                    myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
 
@@ -76,7 +76,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                     {
                         costsString = costs + " " + Economy.getEconomy().currencyNameSingular();
                     }
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnShow", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                     return true;
                 }
 
@@ -89,13 +89,13 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                             if (Util.isInt(args[1]))
                             {
                                 myPet.getOwner().setAutoRespawnMin(Integer.parseInt(args[1]));
-                                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnAutoMin", petOwner), args[1]));
+                                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.AutoMin", petOwner), args[1]));
                             }
                         }
                         else
                         {
                             myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnAuto", petOwner), Locales.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Auto", petOwner), Locales.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
                         }
                     }
                     else if (args[0].equalsIgnoreCase("pay"))
@@ -103,12 +103,12 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                         if (Economy.canPay(myPet.getOwner(), costs))
                         {
                             Economy.pay(myPet.getOwner(), costs);
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnPaid", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                             myPet.setRespawnTime(1);
                         }
                         else
                         {
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnNoMoney", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                         }
                     }
                     else if (args[0].equalsIgnoreCase("show"))
@@ -122,13 +122,13 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
                         {
                             costsString = costs + " " + Economy.getEconomy().currencyNameSingular();
                         }
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnShow", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                     }
                 }
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

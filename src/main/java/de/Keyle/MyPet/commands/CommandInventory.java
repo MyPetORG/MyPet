@@ -54,17 +54,17 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                     MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Despawned)
                     {
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", player), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", player), myPet.getPetName()));
                         return true;
                     }
                     if (myPet.getStatus() == PetState.Dead)
                     {
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                         return true;
                     }
                     if (!Permissions.hasExtended(player, "MyPet.user.extended.Inventory") && !Permissions.has(player, "MyPet.admin", false))
                     {
-                        myPet.sendMessageToOwner(Locales.getString("Message.CantUse", player));
+                        myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", player));
                         return true;
                     }
                     if (myPet.getSkills().hasSkill("Inventory"))
@@ -74,7 +74,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                 }
                 else
                 {
-                    sender.sendMessage(Locales.getString("Message.DontHavePet", player));
+                    sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                 }
             }
             else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false))
@@ -83,7 +83,7 @@ public class CommandInventory implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(Locales.getString("Message.PlayerNotOnline", player));
+                    sender.sendMessage(Locales.getString("Message.No.PlayerOnline", player));
                 }
                 else if (MyPetList.hasMyPet(petOwner))
                 {

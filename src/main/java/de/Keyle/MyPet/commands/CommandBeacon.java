@@ -54,12 +54,12 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
 
                 if (petOwner == null || !petOwner.isOnline())
                 {
-                    sender.sendMessage(Locales.getString("Message.PlayerNotOnline", player));
+                    sender.sendMessage(Locales.getString("Message.No.PlayerOnline", player));
                     return true;
                 }
                 else if (!MyPetList.hasMyPet(petOwner))
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.UserDontHavePet", player), petOwner.getName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), petOwner.getName()));
                     return true;
                 }
 
@@ -75,17 +75,17 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 MyPet myPet = MyPetList.getMyPet(player);
                 if (!Permissions.hasExtended(player, "MyPet.user.extended.Beacon", true))
                 {
-                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", player));
+                    myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", player));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", player), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", player), myPet.getPetName()));
                     return true;
                 }
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", player), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
@@ -106,7 +106,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", player));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", player));
             }
             return true;
         }

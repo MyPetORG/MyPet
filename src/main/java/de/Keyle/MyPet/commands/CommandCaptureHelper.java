@@ -29,10 +29,10 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
             {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 String mode = myPetPlayer.isCaptureHelperActive() ? Locales.getString("Name.Enabled", player) : Locales.getString("Name.Disabled", player);
-                player.sendMessage(Util.formatText(Locales.getString("Message.CaptureHelperMode", player), mode));
+                player.sendMessage(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", player), mode));
                 return true;
             }
-            player.sendMessage(Locales.getString("Message.NotAllowed", player));
+            player.sendMessage(Locales.getString("Message.No.Allowed", player));
         }
         return true;
     }

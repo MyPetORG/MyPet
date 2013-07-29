@@ -67,7 +67,7 @@ public class PvPArena implements Listener
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
             {
                 player.getMyPet().removePet(true);
-                player.getPlayer().sendMessage(Locales.getString("Message.NotAllowedHere", player.getPlayer()));
+                player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }
         }
     }

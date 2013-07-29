@@ -237,7 +237,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         }
         else
         {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
@@ -282,7 +282,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         }
         else
         {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }

@@ -346,7 +346,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                 }
                 else
                 {
-                    getMyPet().sendMessageToOwner(Locales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                    getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                 }
             }
             return false;
@@ -365,7 +365,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                     else
                     {
-                        getMyPet().sendMessageToOwner(Locales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                        getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                     }
                 }
             }

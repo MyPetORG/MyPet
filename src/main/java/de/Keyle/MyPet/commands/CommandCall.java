@@ -45,26 +45,26 @@ public class CommandCall implements CommandExecutor
                 switch (myPet.createPet())
                 {
                     case Success:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call", petOwner), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Call.Success", petOwner), myPet.getPetName()));
                         break;
                     case Canceled:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnPrevent", petOwner), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Prevent", petOwner), myPet.getPetName()));
                         break;
                     case NoSpace:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.SpawnNoSpace", petOwner), myPet.getPetName()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.NoSpace", petOwner), myPet.getPetName()));
                         break;
                     case NotAllowed:
-                        sender.sendMessage(Locales.getString("Message.NotAllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
+                        sender.sendMessage(Locales.getString("Message.No.AllowedHere", petOwner).replace("%petname%", myPet.getPetName()));
                         break;
                     case Dead:
-                        sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                         break;
                 }
                 return true;
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

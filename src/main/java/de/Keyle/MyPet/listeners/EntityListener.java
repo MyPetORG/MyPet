@@ -187,7 +187,7 @@ public class EntityListener implements Listener
                     }
                     if (!infoShown)
                     {
-                        damager.sendMessage(Locales.getString("Message.NothingToSeeHere", myPet.getOwner().getLanguage()));
+                        damager.sendMessage(Locales.getString("Message.No.NothingToSeeHere", myPet.getOwner().getLanguage()));
                     }
 
                     event.setCancelled(true);
@@ -621,7 +621,7 @@ public class EntityListener implements Listener
                         {
                             DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                         }
-                        damager.sendMessage(Locales.getString("Message.AddLeash", myPet.getOwner().getLanguage()));
+                        damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
                     }
                 }
             }
@@ -658,13 +658,13 @@ public class EntityListener implements Listener
                 switch (myPet.createPet())
                 {
                     case Success:
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                     case Canceled:
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                     case NoSpace:
-                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
                         break;
                 }
             }
@@ -865,7 +865,7 @@ public class EntityListener implements Listener
                 }
             }
             sendDeathMessage(event);
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnIn", myPet.getOwner().getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner().getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
             if (Economy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.getRespawnTime() >= myPet.getOwner().getAutoRespawnMin() && Permissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
             {
@@ -873,12 +873,12 @@ public class EntityListener implements Listener
                 if (Economy.canPay(myPet.getOwner(), costs))
                 {
                     Economy.pay(myPet.getOwner(), costs);
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnPaid", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
                 }
                 else
                 {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.RespawnNoMoney", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.NoMoney", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                 }
             }
         }

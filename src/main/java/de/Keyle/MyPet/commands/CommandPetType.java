@@ -65,7 +65,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
             commandSender.sendMessage(Locales.getString("Name.HP", lang) + ": " + MyPet.getStartHP(myPetType.getMyPetClass()));
             return true;
         }
-        commandSender.sendMessage(Locales.getString("Message.UnknownPetType", lang));
+        commandSender.sendMessage(Locales.getString("Message.Command.PetType.Unknown", lang));
 
         return true;
     }

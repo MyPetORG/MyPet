@@ -45,17 +45,17 @@ public class CommandPickup implements CommandExecutor
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
                 {
-                    sender.sendMessage(Locales.getString("Message.NotAllowed", owner));
+                    sender.sendMessage(Locales.getString("Message.No.Allowed", owner));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Despawned)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallFirst", owner), myPet.getPetName()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", owner), myPet.getPetName()));
                     return true;
                 }
                 else if (myPet.getStatus() == PetState.Dead)
                 {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.CallWhenDead", owner), myPet.getPetName(), myPet.getRespawnTime()));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
                 if (myPet.getSkills().hasSkill("Pickup"))
@@ -65,7 +65,7 @@ public class CommandPickup implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", owner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", owner));
             }
             return true;
         }

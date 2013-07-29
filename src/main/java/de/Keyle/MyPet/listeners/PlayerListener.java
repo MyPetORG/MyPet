@@ -80,7 +80,7 @@ public class PlayerListener implements Listener
                     }
                     if (!Permissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control"))
                     {
-                        myPet.sendMessageToOwner(Locales.getString("Message.CantUse", myPet.getOwner().getLanguage()));
+                        myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
@@ -120,7 +120,7 @@ public class PlayerListener implements Listener
                         if (meta.hasDisplayName())
                         {
                             craftMyPet.getMyPet().setPetName(meta.getDisplayName());
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NewName", myPet.getOwner()), meta.getDisplayName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Name.New", myPet.getOwner()), meta.getDisplayName()));
                         }
                     }
                     else
@@ -152,13 +152,13 @@ public class PlayerListener implements Listener
                     {
                         MyPetList.setMyPetActive(inactiveMyPet);
                         MyPet activeMyPet = joinedPlayer.getMyPet();
-                        activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
+                        activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
                         break;
                     }
                 }
                 if (!joinedPlayer.hasMyPet())
                 {
-                    joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.NoActivePetInThisWorld", joinedPlayer));
+                    joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
                     joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                 }
             }
@@ -167,23 +167,23 @@ public class PlayerListener implements Listener
                 MyPet myPet = joinedPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Dead)
                 {
-                    myPet.sendMessageToOwner(Locales.getString("Message.RespawnIn", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                    myPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
                 }
                 else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
                 {
                     switch (myPet.createPet())
                     {
                         case Success:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;
                         case Canceled:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;
                         case NoSpace:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;
                         case NotAllowed:
-                            myPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                            myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                             break;
                     }
                 }
@@ -244,7 +244,7 @@ public class PlayerListener implements Listener
                         {
                             MyPetList.setMyPetActive(inactiveMyPet);
                             MyPet activeMyPet = myPetPlayer.getMyPet();
-                            activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
+                            activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
                             break;
                         }
                     }
@@ -257,7 +257,7 @@ public class PlayerListener implements Listener
             }
             if (!myPetPlayer.hasMyPet())
             {
-                myPetPlayer.getPlayer().sendMessage(Locales.getString("Message.NoActivePetInThisWorld", myPetPlayer));
+                myPetPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
             }
             else
             {
@@ -274,24 +274,24 @@ public class PlayerListener implements Listener
                                 switch (runMyPet.createPet())
                                 {
                                     case Canceled:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
                                     case NoSpace:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
                                     case NotAllowed:
-                                        runMyPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                                         break;
                                     case Dead:
                                         if (runMyPet != myPet)
                                         {
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.CallWhenDead", myPet.getOwner().getLanguage()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call.Dead", myPet.getOwner().getLanguage()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
                                         }
                                         break;
                                     case Success:
                                         if (runMyPet != myPet)
                                         {
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         }
                                         break;
                                 }
@@ -330,13 +330,13 @@ public class PlayerListener implements Listener
                                 switch (runMyPet.createPet())
                                 {
                                     case Canceled:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
                                     case NoSpace:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
                                     case NotAllowed:
-                                        runMyPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                                         break;
                                 }
                             }
@@ -383,13 +383,13 @@ public class PlayerListener implements Listener
                     switch (myPet.createPet())
                     {
                         case Canceled:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnPrevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;
                         case NoSpace:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.SpawnNoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
                             break;
                         case NotAllowed:
-                            myPet.sendMessageToOwner(Locales.getString("Message.NotAllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                            myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                             break;
                     }
                 }

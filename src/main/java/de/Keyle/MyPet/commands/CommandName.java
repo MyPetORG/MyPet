@@ -52,7 +52,7 @@ public class CommandName implements CommandExecutor
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 if (!Permissions.has(petOwner, "MyPet.user.command.name"))
                 {
-                    myPet.sendMessageToOwner(Locales.getString("Message.CantUse", petOwner));
+                    myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
 
@@ -75,11 +75,11 @@ public class CommandName implements CommandExecutor
                 }
 
                 myPet.setPetName(name);
-                sender.sendMessage(Util.formatText(Locales.getString("Message.NewName", petOwner), name));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
             }
             else
             {
-                sender.sendMessage(Locales.getString("Message.DontHavePet", petOwner));
+                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
         }

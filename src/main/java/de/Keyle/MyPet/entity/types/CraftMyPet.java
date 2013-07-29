@@ -134,7 +134,7 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
         if (getMyPet().getStatus() != PetState.Despawned)
         {
             getMyPet().removePet();
-            getMyPet().sendMessageToOwner(Util.formatText(Locales.getString("Message.Despawn", getOwner().getLanguage()), getMyPet().petName));
+            getMyPet().sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getOwner().getLanguage()), getMyPet().petName));
         }
         else
         {

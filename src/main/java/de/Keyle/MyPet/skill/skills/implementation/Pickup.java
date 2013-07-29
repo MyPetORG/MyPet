@@ -117,7 +117,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         }
         else
         {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.NoSkill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
+            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
