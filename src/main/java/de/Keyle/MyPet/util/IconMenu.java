@@ -20,7 +20,11 @@
 
 package de.Keyle.MyPet.util;
 
+import net.minecraft.server.v1_6_R2.NBTTagCompound;
+import net.minecraft.server.v1_6_R2.NBTTagList;
+import net.minecraft.server.v1_6_R2.NBTTagString;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,11 +36,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IconMenu implements Listener
@@ -58,16 +60,9 @@ public class IconMenu implements Listener
         inventory = Bukkit.createInventory(null, size, name);
     }
 
-    public IconMenu setOption(int position, ItemStack icon)
-    {
-        optionNames[position] = icon.getItemMeta().getDisplayName();
-        inventory.setItem(position, icon);
-        return this;
-    }
-
     public IconMenu setOption(int position, ItemStack icon, String name, String[] lore)
     {
-        setItemNameAndLore(icon, name, lore);
+        icon = setItemNameAndLore(icon, name, lore);
         optionNames[position] = name;
         inventory.setItem(position, icon);
         return this;
@@ -172,10 +167,55 @@ public class IconMenu implements Listener
 
     private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore)
     {
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName(name);
-        im.setLore(Arrays.asList(lore));
-        item.setItemMeta(im);
+        net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
+        if (is.tag == null)
+        {
+            is.tag = new NBTTagCompound("tag");
+        }
+        if (!is.tag.hasKey("display"))
+        {
+            is.tag.set("display", new NBTTagCompound("display"));
+        }
+        NBTTagCompound display = is.tag.getCompound("display");
+
+        display.setString("Name", name);
+
+        NBTTagList loreTag = new NBTTagList("Lore");
+        display.set("Lore", loreTag);
+
+        for (String loreLine : lore)
+        {
+            loreTag.add(new NBTTagString(null, loreLine));
+        }
+
+        is = removeAttributes(is);
+
+        item = CraftItemStack.asCraftMirror(is);
+
+        return item;
+    }
+
+    private net.minecraft.server.v1_6_R2.ItemStack removeAttributes(net.minecraft.server.v1_6_R2.ItemStack item)
+    {
+        NBTTagList emptyList = new NBTTagList();
+        if (item.tag == null)
+        {
+            item.tag = new NBTTagCompound("tag");
+        }
+        item.tag.set("AttributeModifiers", emptyList);
+
+        return item;
+    }
+
+    private net.minecraft.server.v1_6_R2.ItemStack setEnchantingGlow(net.minecraft.server.v1_6_R2.ItemStack item, boolean glowing)
+    {
+        NBTTagList emptyList = new NBTTagList();
+        if (item.tag == null)
+        {
+            item.tag = new NBTTagCompound("tag");
+        }
+        item.tag.set("ench", emptyList);
+
         return item;
     }
 

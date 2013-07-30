@@ -550,8 +550,6 @@ public class LevelCreator
                 iconPanel.add(damageTextField);
 
                 JCheckBox glowingCheckbox = new JCheckBox("Glowing: ");
-                glowingCheckbox.setEnabled(false);
-                glowingCheckbox.setToolTipText("Not usable at the moment :/");
                 glowingCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
                 glowingCheckbox.setSelected(glowing);
                 iconPanel.add(glowingCheckbox);

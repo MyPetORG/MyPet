@@ -156,35 +156,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
 
                         CompoundTag tag = addedSkilltree.getIconItem();
                         net.minecraft.server.v1_6_R2.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
-                        ItemStack shownItem = CraftItemStack.asBukkitCopy(is);
-
-                        //First try to remove attributes (+# Attack Damage)
-                        /*
-                        try
-                        {
-                            Class clazz = Class.forName("org.bukkit.craftbukkit.v1_6_R2.inventory.CraftMetaItem");
-                            Object c = clazz.cast(shownItem.getItemMeta());
-                            Field attributes = clazz.getDeclaredField("attributes");
-                            attributes.setAccessible(true);
-                            MyPetLogger.write("g: " + attributes.get(c));
-                            NBTTagList list = new NBTTagList();
-                            attributes.set(c,list);
-                            MyPetLogger.write("s: " + attributes.get(c));
-
-                        }
-                        catch (ClassNotFoundException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        catch (NoSuchFieldException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        catch (IllegalAccessException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        */
+                        ItemStack shownItem = CraftItemStack.asCraftMirror(is);
 
                         String[] descriptionArray = new String[addedSkilltree.getDescription().size()];
                         for (int j = 0 ; j < addedSkilltree.getDescription().size() ; j++)
