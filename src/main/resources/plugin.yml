@@ -111,7 +111,6 @@ permissions:
     description: Gives access to MyPet features for normal user.
     children:
       MyPet.user.leash.*: true
-      MyPet.user.release: true
       MyPet.user.command.respawn: true
       MyPet.user.command.release: true
       MyPet.user.command.capturehelper: true
