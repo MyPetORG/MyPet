@@ -107,6 +107,9 @@ permissions:
     description: Gives access to ALL (not includes admin) MyPet features.
     children:
       MyPet.user.*: true
+  MyPet.admin:
+    description: Gives access to the MyPet admin features.
+    default: op
   MyPet.user.*:
     description: Gives access to MyPet features for normal user.
     children:
@@ -115,10 +118,11 @@ permissions:
       MyPet.user.command.release: true
       MyPet.user.command.capturehelper: true
       MyPet.user.command.name: true
-  MyPet.user.release:
+  MyPet.user.command.release:
     description: Allows usage of /petrelease
-  MyPet.admin:
-    description: Gives access to admin MyPet features.
-    default: op
-  MyPet.user.capturehelper:
+  MyPet.user.command.capturehelper:
     description: Gives access to the CaptureHelper
+  MyPet.user.command.respawn:
+    description: Allows usage of /petrespawn
+  MyPet.user.command.name:
+    description: Allows usage of /petname
