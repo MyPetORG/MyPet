@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
-import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
@@ -55,7 +54,7 @@ public class Skills
                     skillNames.add(skill.getName().toLowerCase());
                     skillClassList.add(clazz);
                     skillMap.put(skill.getName().toLowerCase(), clazz);
-                    DebugLogger.info("registered skill: " + clazz.getName());
+                    //DebugLogger.info("registered skill: " + clazz.getName());
                 }
                 else
                 {
@@ -65,7 +64,6 @@ public class Skills
             catch (Exception e)
             {
                 MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
-                DebugLogger.warning(clazz.getName() + " is not a valid skill!");
             }
 
         }
@@ -110,7 +108,6 @@ public class Skills
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + getSkillClass(name).getName() + " is no valid Skill)!");
-            DebugLogger.warning(getSkillClass(name).getName() + " is no valid Skill!");
             e.printStackTrace();
         }
         return null;
@@ -146,7 +143,6 @@ public class Skills
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
-            DebugLogger.warning(skillClass.getName() + " is not a valid skill!");
             skillClassList.remove(skillClass);
         }
     }

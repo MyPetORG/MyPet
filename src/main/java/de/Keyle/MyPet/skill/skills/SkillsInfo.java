@@ -52,13 +52,12 @@ public class SkillsInfo
                     skillNames.add(skill.getName().toLowerCase());
                     skillClassList.add(clazz);
                     skillMap.put(skill.getName().toLowerCase(), clazz);
-                    DebugLogger.info("registered info skill: " + clazz.getName());
+                    //DebugLogger.info("registered info skill: " + clazz.getName());
                 }
             }
             catch (Exception e)
             {
                 MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid info skill!");
-                DebugLogger.warning(clazz.getName() + " is not a valid info skill!");
             }
 
         }
@@ -113,7 +112,6 @@ public class SkillsInfo
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + getSkillInfoClass(name).getName() + " is no valid Skill)!");
-            DebugLogger.warning(getSkillInfoClass(name).getName() + " is no valid Skill!");
             e.printStackTrace();
         }
         return null;
