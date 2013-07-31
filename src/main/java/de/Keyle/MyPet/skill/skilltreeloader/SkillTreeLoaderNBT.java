@@ -149,7 +149,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader
                     {
                         CompoundTag skillCompound = (CompoundTag) skillList.getValue().get(i_skill);
                         String skillName = ((StringTag) skillCompound.getValue().get("Name")).getValue();
-                        if (SkillsInfo.isValidSkill(skillName))
+                        if (SkillsInfo.getSkillInfoClass(skillName) != null)
                         {
                             CompoundTag skillPropertyCompound = (CompoundTag) skillCompound.getValue().get("Properties");
                             ISkillInfo skill = SkillsInfo.getNewSkillInfoInstance(skillName);

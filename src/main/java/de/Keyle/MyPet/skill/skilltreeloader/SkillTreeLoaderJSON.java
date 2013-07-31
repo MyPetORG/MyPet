@@ -139,7 +139,7 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader
                         String skillName = (String) skillObject.get("Name");
                         JSONObject skillPropertyObject = (JSONObject) skillObject.get("Properties");
 
-                        if (SkillsInfo.isValidSkill(skillName))
+                        if (SkillsInfo.getSkillInfoClass(skillName) != null)
                         {
                             ISkillInfo skill = SkillsInfo.getNewSkillInfoInstance(skillName);
 

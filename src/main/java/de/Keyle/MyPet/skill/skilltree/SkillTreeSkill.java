@@ -42,7 +42,7 @@ public abstract class SkillTreeSkill
         {
             return sn.value();
         }
-        return "BadSkillClass";
+        return null;
     }
 
     public void setProperties(CompoundTag propertiesCompound)

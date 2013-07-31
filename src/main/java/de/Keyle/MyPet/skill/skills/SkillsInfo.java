@@ -20,98 +20,108 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
-import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class SkillsInfo
 {
-    private static List<Class<? extends SkillTreeSkill>> skillClassList = new ArrayList<Class<? extends SkillTreeSkill>>();
-    private static List<String> skillNames = new ArrayList<String>();
-    private static Map<String, Class<? extends SkillTreeSkill>> skillMap = new HashMap<String, Class<? extends SkillTreeSkill>>();
+    private static BiMap<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = HashBiMap.create();
+    private static BiMap<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = registeredSkillsNames.inverse();
 
     public static void registerSkill(Class<? extends SkillTreeSkill> clazz)
     {
-        if (!skillClassList.contains(clazz))
+        if (!ISkillInfo.class.isAssignableFrom(clazz))
+        {
+            MyPetLogger.write(ChatColor.RED + clazz.getName() + " doesn't implements [ISkillInfo]!");
+            return;
+        }
+        if (!registeredSkillsNames.containsKey(clazz))
         {
             try
             {
-                Constructor<?> ctor = clazz.getConstructor(boolean.class);
-                Object obj = ctor.newInstance(false);
-                if (clazz.getAnnotation(SkillName.class) != null && obj instanceof ISkillInfo)
+                //MyPetLogger.write("Skill Annotations: " + Arrays.toString(clazz.getAnnotations()));
+                SkillName sn = clazz.getAnnotation(SkillName.class);
+                if (sn != null)
                 {
-                    SkillTreeSkill skill = (SkillTreeSkill) obj;
-                    skillNames.add(skill.getName());
-                    skillClassList.add(clazz);
-                    skillMap.put(skill.getName(), clazz);
-                    //DebugLogger.info("registered info skill: " + clazz.getName());
+                    String skillName = sn.value();
+                    if (!registeredNamesSkills.containsKey(skillName))
+                    {
+                        registeredSkillsNames.put(clazz, skillName);
+                        //DebugLogger.info("registered skill: " + clazz.getName());
+                    }
+                    else
+                    {
+                        MyPetLogger.write(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
+                    }
+                }
+                else
+                {
+                    MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not annotated with [SkillName]!");
                 }
             }
             catch (Exception e)
             {
-                MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid info skill!");
+                MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
             }
-
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Class<? extends SkillTreeSkill>> getRegisteredSkillsInfo()
+    public static Set<Class<? extends SkillTreeSkill>> getRegisteredSkillsInfo()
     {
-        return skillClassList;
+        return registeredSkillsNames.keySet();
     }
 
-    public static boolean isValidSkill(String name)
+    public static boolean isValidSkill(Class<? extends SkillTreeSkill> clazz)
     {
-        return skillNames.contains(name);
+        return ISkillInfo.class.isAssignableFrom(clazz) && clazz.getAnnotation(SkillName.class) != null;
     }
 
     public static Class<? extends SkillTreeSkill> getSkillInfoClass(String name)
     {
-        if (isValidSkill(name))
-        {
-            return skillMap.get(name);
-        }
-        return null;
+        return registeredNamesSkills.get(name);
     }
 
     public static ISkillInfo getNewSkillInfoInstance(String name)
     {
-        return getNewSkillInstance(name, false);
+        Class<? extends SkillTreeSkill> clazz = getSkillInfoClass(name);
+        if (clazz == null)
+        {
+            return null;
+        }
+        return getNewSkillInstance(clazz);
     }
 
-    public static ISkillInfo getNewSkillInstance(String name, boolean is)
+    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz)
     {
-        if (getSkillInfoClass(name) == null)
+        return getNewSkillInstance(clazz, false);
+    }
+
+    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is)
+    {
+        if (clazz == null)
         {
-            DebugLogger.warning(name + " skill is null when creating new instance!");
-            for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace())
-            {
-                DebugLogger.warning("  " + stackTraceElement.toString());
-            }
-            DebugLogger.warning("------------------");
             return null;
         }
         try
         {
-            Constructor<?> ctor = getSkillInfoClass(name).getConstructor(boolean.class);
+            Constructor<?> ctor = clazz.getConstructor(boolean.class);
             Object obj = ctor.newInstance(is);
-            if (obj instanceof ISkillInfo)
+            if (obj != null)
             {
                 return (ISkillInfo) obj;
             }
         }
         catch (Exception e)
         {
-            MyPetLogger.write(ChatColor.RED + getSkillInfoClass(name).getName() + " is no valid Skill)!");
+            MyPetLogger.write(ChatColor.RED + clazz.getName() + " is no valid Skill)!");
             e.printStackTrace();
         }
         return null;

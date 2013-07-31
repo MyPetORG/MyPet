@@ -177,7 +177,7 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
                         for (String thisSkill : skillMap.keySet())
                         {
                             //System.out.println("    " + thisSkill);
-                            if (SkillsInfo.isValidSkill(thisSkill))
+                            if (SkillsInfo.getSkillInfoClass(thisSkill) != null)
                             {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
                                 if (propertyMap == null)

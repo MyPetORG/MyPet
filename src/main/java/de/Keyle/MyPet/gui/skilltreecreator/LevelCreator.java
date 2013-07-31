@@ -384,7 +384,7 @@ public class LevelCreator
                                 JOptionPane.showMessageDialog(null, skill.getName() + " has no options.", "Skill options", JOptionPane.INFORMATION_MESSAGE);
                                 return;
                             }
-                            if (SkillsInfo.isValidSkill(skill.getName()))
+                            if (SkillsInfo.getSkillInfoClass(skill.getName()) != null)
                             {
                                 if (skill.getGuiPanel() != null)
                                 {
