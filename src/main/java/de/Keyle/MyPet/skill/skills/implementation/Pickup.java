@@ -102,7 +102,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
     {
         if (range > 0)
         {
-            if (myPet.getSkills().isSkillActive("Inventory"))
+            if (myPet.getSkills().isSkillActive(Inventory.class))
             {
                 pickup = !pickup;
                 String mode = pickup ? Locales.getString("Name.Enabled", myPet.getOwner()) : Locales.getString("Name.Disabled", myPet.getOwner());
@@ -130,7 +130,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
             myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Locales.getString("Name.Disabled", myPet.getOwner())));
             return;
         }
-        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive("Inventory"))
+        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class))
         {
             for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range))
             {
@@ -146,7 +146,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                         continue;
                     }
 
-                    CustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                    CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                     int itemAmount = inv.addItem(itemEntity.getItemStack());
                     if (itemAmount == 0)
                     {

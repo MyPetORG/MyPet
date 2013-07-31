@@ -112,9 +112,9 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                 }
                 if (ChatColor.stripColor(myPet.getPetName()).equalsIgnoreCase(name))
                 {
-                    if (myPet.getSkills().isSkillActive("Inventory"))
+                    if (myPet.getSkills().isSkillActive(Inventory.class))
                     {
-                        CustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         inv.dropContentAt(myPet.getLocation());
                     }
 

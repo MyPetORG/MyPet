@@ -45,9 +45,9 @@ public class BehaviorFarmTarget extends AIGoal
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill(Behavior.class))
         {
-            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 

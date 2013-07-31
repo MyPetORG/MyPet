@@ -169,9 +169,9 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity
             {
                 return;
             }
-            if (getHandle().myPet.getSkills().isSkillActive("Behavior"))
+            if (getHandle().myPet.getSkills().isSkillActive(Behavior.class))
             {
-                Behavior behaviorSkill = (Behavior) getMyPet().getSkills().getSkill("Behavior");
+                Behavior behaviorSkill = getMyPet().getSkills().getSkill(Behavior.class);
                 if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
                 {
                     return;

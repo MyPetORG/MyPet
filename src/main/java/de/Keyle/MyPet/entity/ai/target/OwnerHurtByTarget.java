@@ -44,9 +44,9 @@ public class OwnerHurtByTarget extends AIGoal
     {
         this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill(Behavior.class))
         {
-            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
         owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
     }

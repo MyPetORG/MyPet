@@ -23,7 +23,6 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
@@ -67,9 +66,9 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                         myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", player));
                         return true;
                     }
-                    if (myPet.getSkills().hasSkill("Inventory"))
+                    if (myPet.getSkills().hasSkill(Inventory.class))
                     {
-                        ((ISkillActive) myPet.getSkills().getSkill("Inventory")).activate();
+                        myPet.getSkills().getSkill(Inventory.class).activate();
                     }
                 }
                 else
@@ -88,9 +87,9 @@ public class CommandInventory implements CommandExecutor, TabCompleter
                 else if (MyPetList.hasMyPet(petOwner))
                 {
                     MyPet myPet = MyPetList.getMyPet(petOwner);
-                    if (myPet.getSkills().isSkillActive("Inventory"))
+                    if (myPet.getSkills().isSkillActive(Inventory.class))
                     {
-                        ((Inventory) myPet.getSkills().getSkill("Inventory")).openInventory(player);
+                        myPet.getSkills().getSkill(Inventory.class).openInventory(player);
                     }
                 }
             }

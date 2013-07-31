@@ -23,7 +23,6 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.skills.ISkillActive;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
@@ -64,9 +63,9 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getSkills().isSkillActive("Beacon"))
+                if (myPet.getSkills().isSkillActive(Beacon.class))
                 {
-                    ((Beacon) myPet.getSkills().getSkill("Beacon")).activate(player);
+                    myPet.getSkills().getSkill(Beacon.class).activate(player);
                 }
                 return true;
             }
@@ -90,7 +89,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop"))
                 {
-                    ((Beacon) myPet.getSkills().getSkill("Beacon")).stop(true);
+                    myPet.getSkills().getSkill(Beacon.class).stop(true);
                     sender.sendMessage(Locales.getString("Message.Skill.Beacon.Stop", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
@@ -99,9 +98,9 @@ public class CommandBeacon implements CommandExecutor, TabCompleter
                     sender.sendMessage(Locales.getString("Message.Skill.Beacon.Creative", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
-                if (myPet.getSkills().hasSkill("Beacon"))
+                if (myPet.getSkills().hasSkill(Beacon.class))
                 {
-                    ((ISkillActive) myPet.getSkills().getSkill("Beacon")).activate();
+                    myPet.getSkills().getSkill(Beacon.class).activate();
                 }
             }
             else

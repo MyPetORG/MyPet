@@ -47,9 +47,9 @@ public class BehaviorAggressiveTarget extends AIGoal
         this.myPet = petEntity.getMyPet();
         this.petOwnerEntity = ((CraftPlayer) myPet.getOwner().getPlayer()).getHandle();
         this.range = range;
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill(Behavior.class))
         {
-            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 

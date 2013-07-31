@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.skills.ISkillActive;
+import de.Keyle.MyPet.skill.skills.implementation.Pickup;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -58,9 +58,9 @@ public class CommandPickup implements CommandExecutor
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (myPet.getSkills().hasSkill("Pickup"))
+                if (myPet.getSkills().hasSkill(Pickup.class))
                 {
-                    ((ISkillActive) myPet.getSkills().getSkill("Pickup")).activate();
+                    myPet.getSkills().getSkill(Pickup.class).activate();
                 }
             }
             else

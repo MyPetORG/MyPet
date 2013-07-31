@@ -43,7 +43,7 @@ public class Control extends AIGoal implements IScheduler
         this.myPet = myPet;
         this.speedModifier = speedModifier;
         nav = this.myPet.getCraftPet().getHandle().petNavigation;
-        controlSkill = (de.Keyle.MyPet.skill.skills.implementation.Control) myPet.getSkills().getSkill("Control");
+        controlSkill = myPet.getSkills().getSkill(de.Keyle.MyPet.skill.skills.implementation.Control.class);
     }
 
     @Override

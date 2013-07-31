@@ -66,9 +66,9 @@ public class CommandBehavior implements CommandExecutor, TabCompleter
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
                 }
-                else if (myPet.getSkills().hasSkill("Behavior"))
+                else if (myPet.getSkills().hasSkill(Behavior.class))
                 {
-                    Behavior behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+                    Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
                     if (args.length == 1)
                     {
                         if ((args[0].equalsIgnoreCase("friendly") || args[0].equalsIgnoreCase("friend")))

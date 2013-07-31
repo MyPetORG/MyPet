@@ -238,7 +238,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public double getDamage()
     {
-        return (getSkills().hasSkill("Damage") ? ((Damage) getSkills().getSkill("Damage")).getDamage() : 0);
+        return getSkills().hasSkill(Damage.class) ? getSkills().getSkill(Damage.class).getDamage() : 0;
     }
 
     public static float[] getEntitySize(Class<? extends EntityMyPet> entityMyPetClass)
@@ -378,7 +378,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public double getMaxHealth()
     {
-        return getStartHP(this.getClass()) + (skills.isSkillActive("HP") ? ((HP) skills.getSkill("HP")).getHpIncrease() : 0);
+        return getStartHP(this.getClass()) + (skills.isSkillActive(HP.class) ? skills.getSkill(HP.class).getHpIncrease() : 0);
     }
 
     public MyPetPlayer getOwner()
@@ -408,7 +408,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public double getRangedDamage()
     {
-        return (getSkills().hasSkill("Ranged") ? ((Ranged) getSkills().getSkill("Ranged")).getDamage() : 0);
+        return (getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).getDamage() : 0);
     }
 
     public int getRespawnTime()

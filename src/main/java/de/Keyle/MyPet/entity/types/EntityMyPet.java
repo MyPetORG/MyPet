@@ -339,7 +339,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman))
         {
-            if (myPet.getSkills().isSkillActive("Ride"))
+            if (myPet.getSkills().isSkillActive(Ride.class))
             {
                 if ((itemStack.id == Ride.RIDE_ITEM || (Ride.RIDE_ITEM == 0 && (itemStack == null || itemStack.id == 0))) && canMove())
                 {
@@ -354,7 +354,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                 }
             }
-            if (myPet.getSkills().isSkillActive("Control"))
+            if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class))
             {
                 if (itemStack.id == de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM)
                 {

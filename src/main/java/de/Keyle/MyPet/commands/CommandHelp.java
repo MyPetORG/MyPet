@@ -21,6 +21,10 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.skill.skills.implementation.Beacon;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior;
+import de.Keyle.MyPet.skill.skills.implementation.Inventory;
+import de.Keyle.MyPet.skill.skills.implementation.Pickup;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
@@ -67,19 +71,19 @@ public class CommandHelp implements CommandExecutor
                 player.sendMessage(ChatColor.GOLD + "/petskill" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Skill", player));
                 player.sendMessage(ChatColor.GOLD + "/petchooseskilltree" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.ChooseSkilltree", player));
 
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Inventory"))
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive(Inventory.class))
                 {
                     player.sendMessage(ChatColor.GOLD + "/petinventory" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Inventory", player));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Beacon"))
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive(Beacon.class))
                 {
                     player.sendMessage(ChatColor.GOLD + "/petbeacon" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Beacon", player));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Pickup"))
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive(Pickup.class))
                 {
                     player.sendMessage(ChatColor.GOLD + "/petpickup" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Pickup", player));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive("Behavior"))
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive(Behavior.class))
                 {
                     player.sendMessage(ChatColor.GOLD + "/petbehavior" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Behavior", player));
                 }

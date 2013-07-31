@@ -43,9 +43,9 @@ public class OwnerHurtTarget extends AIGoal
     {
         this.petEntity = petEntity;
         this.myPet = petEntity.getMyPet();
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill(Behavior.class))
         {
-            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.skill.skills;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
@@ -27,87 +29,102 @@ import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.Set;
 
 public class Skills
 {
-    private static List<Class<? extends SkillTreeSkill>> skillClassList = new ArrayList<Class<? extends SkillTreeSkill>>();
-    private static List<String> skillNames = new ArrayList<String>();
-    private static Map<String, Class<? extends SkillTreeSkill>> skillMap = new HashMap<String, Class<? extends SkillTreeSkill>>();
+    private static BiMap<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = HashBiMap.create();
+    private static BiMap<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = registeredSkillsNames.inverse();
 
     private MyPet myPet;
 
-    private Map<String, ISkillInstance> skills = new HashMap<String, ISkillInstance>();
+    private BiMap<String, ISkillInstance> skillsNamesClass = HashBiMap.create();
+    private BiMap<ISkillInstance, String> skillsClassNames = skillsNamesClass.inverse();
 
     public static void registerSkill(Class<? extends SkillTreeSkill> clazz)
     {
-        if (!skillClassList.contains(clazz))
+        if (!ISkillInstance.class.isAssignableFrom(clazz))
+        {
+            MyPetLogger.write(ChatColor.RED + clazz.getName() + " doesn't implements [ISkillInstance]!");
+            return;
+        }
+        if (!registeredSkillsNames.containsKey(clazz))
         {
             try
             {
-                Constructor<?> ctor = clazz.getConstructor(boolean.class);
-                Object obj = ctor.newInstance(false);
-                //MyPetLogger.write("Annotations2: " + Arrays.toString(clazz.getAnnotations()));
-                if (clazz.getAnnotation(SkillName.class) != null && obj instanceof ISkillInstance)
+                //MyPetLogger.write("Skill Annotations: " + Arrays.toString(clazz.getAnnotations()));
+                SkillName sn = clazz.getAnnotation(SkillName.class);
+                if (sn != null)
                 {
-                    SkillTreeSkill skill = (SkillTreeSkill) obj;
-                    skillNames.add(skill.getName().toLowerCase());
-                    skillClassList.add(clazz);
-                    skillMap.put(skill.getName().toLowerCase(), clazz);
-                    //DebugLogger.info("registered skill: " + clazz.getName());
+                    String skillName = sn.value();
+                    if (!registeredNamesSkills.containsKey(skillName))
+                    {
+                        registeredSkillsNames.put(clazz, skillName);
+                        //DebugLogger.info("registered skill: " + clazz.getName());
+                    }
+                    else
+                    {
+                        MyPetLogger.write(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
+                    }
                 }
                 else
                 {
-                    System.out.println("Don't worry - be happy");
+                    MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not annotated with [SkillName]!");
                 }
             }
             catch (Exception e)
             {
                 MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
             }
-
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Class<? extends SkillTreeSkill>> getRegisteredSkills()
+    public static Set<Class<? extends SkillTreeSkill>> getRegisteredSkills()
     {
-        return skillClassList;
+        return registeredSkillsNames.keySet();
     }
 
-    public static boolean isValidSkill(String name)
+    public static boolean isValidSkill(Class<? extends SkillTreeSkill> clazz)
     {
-        return skillNames.contains(name.toLowerCase());
+        return ISkillInstance.class.isAssignableFrom(clazz) && clazz.getAnnotation(SkillName.class) != null;
     }
 
     public static Class<? extends SkillTreeSkill> getSkillClass(String name)
     {
-        if (isValidSkill(name))
-        {
-            return skillMap.get(name.toLowerCase());
-        }
-        return null;
+        return registeredNamesSkills.get(name);
     }
 
+    /*
     public static ISkillInstance getNewSkillInstance(String name)
     {
-        return getNewSkillInstance(name, false);
+        return getNewSkillInstance(getSkillClass(name), false);
+    }
+    */
+
+    public static ISkillInstance getNewSkillInstance(Class<? extends SkillTreeSkill> clazz)
+    {
+        return getNewSkillInstance(clazz, false);
     }
 
-    public static ISkillInstance getNewSkillInstance(String name, boolean is)
+    public static ISkillInstance getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is)
     {
+        if (clazz == null)
+        {
+            return null;
+        }
         try
         {
-            Constructor<?> ctor = getSkillClass(name).getConstructor(boolean.class);
+            Constructor<?> ctor = clazz.getConstructor(boolean.class);
             Object obj = ctor.newInstance(is);
-            if (obj instanceof SkillTreeSkill)
+            if (obj != null)
             {
                 return (ISkillInstance) obj;
             }
         }
         catch (Exception e)
         {
-            MyPetLogger.write(ChatColor.RED + getSkillClass(name).getName() + " is no valid Skill)!");
+            MyPetLogger.write(ChatColor.RED + clazz.getName() + " is no valid Skill)!");
             e.printStackTrace();
         }
         return null;
@@ -116,77 +133,116 @@ public class Skills
     public Skills(MyPet myPet)
     {
         this.myPet = myPet;
-        addSkills(skillClassList);
+        try
+        {
+            for (Class<? extends SkillTreeSkill> clazz : registeredSkillsNames.keySet())
+            {
+                addSkill(clazz);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void addSkill(Class<? extends SkillTreeSkill> skillClass)
     {
-        String skillName;
-        ISkillInstance skill;
-
+        if (!isValidSkill(skillClass))
+        {
+            MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
+        }
         try
         {
             Constructor<?> ctor = skillClass.getConstructor(boolean.class);
             Object obj = ctor.newInstance(false);
             if (obj instanceof ISkillInstance)
             {
-                skill = (ISkillInstance) obj;
-                skillName = skill.getName();
+                ISkillInstance skill = (ISkillInstance) obj;
+                String skillName = skill.getName();
 
-                if (!skills.containsKey(skillName))
-                {
-                    skill.setMyPet(this.myPet);
-                    skills.put(skillName, skill);
-                }
+                skill.setMyPet(this.myPet);
+                skillsNamesClass.put(skillName, skill);
             }
         }
         catch (Exception e)
         {
             MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
-            skillClassList.remove(skillClass);
-        }
-    }
-
-    public void addSkills(List<Class<? extends SkillTreeSkill>> classList)
-    {
-        for (Class<? extends SkillTreeSkill> clazz : classList)
-        {
-            addSkill(clazz);
+            registeredSkillsNames.remove(skillClass);
         }
     }
 
     public ISkillInstance getSkill(String skillName)
     {
-        if (skills.containsKey(skillName))
-        {
-            return skills.get(skillName);
-        }
-        return null;
+        return skillsNamesClass.get(skillName);
     }
 
-    public Collection<ISkillInstance> getSkills()
+    @SuppressWarnings("unchecked")
+    public <T extends ISkillInstance> T getSkill(Class<T> clazz)
     {
-        return skills.values();
+        SkillName sn = clazz.getAnnotation(SkillName.class);
+        if (sn == null)
+        {
+            return null;
+        }
+        if (!skillsNamesClass.containsKey(sn.value()))
+        {
+            return null;
+        }
+        ISkillInstance skill = skillsNamesClass.get(sn.value());
+        if (!clazz.isInstance(skill))
+        {
+            return null;
+        }
+        return (T) skill;
+    }
+
+    public Set<ISkillInstance> getSkills()
+    {
+        return skillsClassNames.keySet();
     }
 
     public Set<String> getSkillNames()
     {
-        return skills.keySet();
+        return skillsNamesClass.keySet();
     }
 
+    /*
     public boolean hasSkill(String skillName)
     {
-        return skills.containsKey(skillName);
+        return skillsNamesClass.containsKey(skillName);
+    }
+    */
+
+    public boolean hasSkill(Class<? extends ISkillInstance> clazz)
+    {
+        SkillName sn = clazz.getAnnotation(SkillName.class);
+        if (sn == null)
+        {
+            return false;
+        }
+        if (!skillsNamesClass.containsKey(sn.value()))
+        {
+            return false;
+        }
+        return clazz.isInstance(skillsNamesClass.get(sn.value()));
     }
 
+    /*
     public boolean isSkillActive(String skillName)
     {
         return hasSkill(skillName) && getSkill(skillName).isActive();
     }
+    */
+
+    public boolean isSkillActive(Class<? extends ISkillInstance> clazz)
+    {
+        return hasSkill(clazz) && getSkill(clazz).isActive();
+    }
 
     public void reset()
     {
-        for (ISkillInstance skill : skills.values())
+        for (ISkillInstance skill : skillsClassNames.keySet())
         {
             skill.reset();
         }

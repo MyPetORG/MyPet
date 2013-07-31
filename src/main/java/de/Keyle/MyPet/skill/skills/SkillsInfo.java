@@ -49,9 +49,9 @@ public class SkillsInfo
                 if (clazz.getAnnotation(SkillName.class) != null && obj instanceof ISkillInfo)
                 {
                     SkillTreeSkill skill = (SkillTreeSkill) obj;
-                    skillNames.add(skill.getName().toLowerCase());
+                    skillNames.add(skill.getName());
                     skillClassList.add(clazz);
-                    skillMap.put(skill.getName().toLowerCase(), clazz);
+                    skillMap.put(skill.getName(), clazz);
                     //DebugLogger.info("registered info skill: " + clazz.getName());
                 }
             }
@@ -71,14 +71,14 @@ public class SkillsInfo
 
     public static boolean isValidSkill(String name)
     {
-        return skillNames.contains(name.toLowerCase());
+        return skillNames.contains(name);
     }
 
     public static Class<? extends SkillTreeSkill> getSkillInfoClass(String name)
     {
         if (isValidSkill(name))
         {
-            return skillMap.get(name.toLowerCase());
+            return skillMap.get(name);
         }
         return null;
     }

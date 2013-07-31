@@ -46,7 +46,7 @@ public class Sprint extends AIGoal
     @Override
     public boolean shouldStart()
     {
-        if (!myPet.getSkills().isSkillActive("Sprint"))
+        if (!myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Sprint.class))
         {
             return false;
         }

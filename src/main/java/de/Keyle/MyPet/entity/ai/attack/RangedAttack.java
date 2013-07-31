@@ -139,9 +139,9 @@ public class RangedAttack extends AIGoal
     private Projectiles getProjectile()
     {
         Skills skills = entityMyPet.getMyPet().getSkills();
-        if (skills.isSkillActive("Ranged"))
+        if (skills.isSkillActive(Ranged.class))
         {
-            return ((Ranged) skills.getSkill("Ranged")).getProjectile();
+            return skills.getSkill(Ranged.class).getProjectile();
         }
         return Projectiles.Arrow;
     }

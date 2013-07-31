@@ -30,6 +30,7 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
+import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
@@ -59,18 +60,18 @@ public class PlayerListener implements Listener
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove())
             {
-                if (myPet.getSkills().isSkillActive("Control"))
+                if (myPet.getSkills().isSkillActive(Control.class))
                 {
-                    if (myPet.getSkills().isSkillActive("Behavior"))
+                    if (myPet.getSkills().isSkillActive(Behavior.class))
                     {
-                        Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
+                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
                         if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
                         {
                             event.getPlayer().sendMessage(Util.formatText(Locales.getString("Message.Skill.Control.AggroFarm", event.getPlayer()), myPet.getPetName(), behavior.getBehavior().name()));
                             return;
                         }
                     }
-                    if (myPet.getSkills().isSkillActive("Ride"))
+                    if (myPet.getSkills().isSkillActive(Ride.class))
                     {
                         if (myPet.getCraftPet().getHandle().hasRider())
                         {
@@ -94,7 +95,7 @@ public class PlayerListener implements Listener
                                 break;
                             }
                         }
-                        ((Control) myPet.getSkills().getSkill("Control")).setMoveTo(block.getLocation());
+                        myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
                     }
                 }
             }
@@ -201,9 +202,9 @@ public class PlayerListener implements Listener
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getSkills().isSkillActive("Behavior"))
+            if (myPet.getSkills().isSkillActive(Behavior.class))
             {
-                Behavior behavior = (Behavior) myPet.getSkills().getSkill("Behavior");
+                Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
                 if (behavior.getBehavior() != BehaviorState.Normal && behavior.getBehavior() != BehaviorState.Friendly)
                 {
                     behavior.setBehavior(BehaviorState.Normal);
@@ -358,9 +359,9 @@ public class PlayerListener implements Listener
                 final MyPet myPet = myPetPlayer.getMyPet();
                 if (myPet.getStatus() == PetState.Here && Inventory.DROP_WHEN_OWNER_DIES)
                 {
-                    if (myPet.getSkills().isSkillActive("Inventory"))
+                    if (myPet.getSkills().isSkillActive(Inventory.class))
                     {
-                        CustomInventory inv = ((Inventory) myPet.getSkills().getSkill("Inventory")).inv;
+                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         inv.dropContentAt(myPet.getLocation());
                     }
                 }

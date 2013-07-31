@@ -44,9 +44,9 @@ public class BehaviorDuelTarget extends AIGoal
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
-        if (myPet.getSkills().hasSkill("Behavior"))
+        if (myPet.getSkills().hasSkill(Behavior.class))
         {
-            behaviorSkill = (Behavior) myPet.getSkills().getSkill("Behavior");
+            behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 
@@ -82,11 +82,11 @@ public class BehaviorDuelTarget extends AIGoal
 
             if (petEntity.getEntitySenses().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
             {
-                if (!targetMyPet.getSkills().isSkillActive("Behavior") || !targetMyPet.getCraftPet().canMove())
+                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getCraftPet().canMove())
                 {
                     continue;
                 }
-                Behavior targetbehavior = (Behavior) targetMyPet.getSkills().getSkill("Behavior");
+                Behavior targetbehavior = targetMyPet.getSkills().getSkill(Behavior.class);
                 if (targetbehavior.getBehavior() != BehaviorState.Duel)
                 {
                     continue;
