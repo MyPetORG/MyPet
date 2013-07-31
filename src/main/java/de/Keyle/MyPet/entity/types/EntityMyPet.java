@@ -146,11 +146,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void setSize()
     {
-        EntitySize es = this.getClass().getAnnotation(EntitySize.class);
-        if (es != null)
-        {
-            this.a(es.width(), es.height());
-        }
+        setSize(0F);
     }
 
     public void setSize(float extra)
