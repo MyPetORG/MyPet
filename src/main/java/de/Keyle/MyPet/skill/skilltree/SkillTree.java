@@ -267,7 +267,7 @@ public class SkillTree
         newSkillTree.setDisplayName(displayName);
         newSkillTree.setPermission(permission);
         newSkillTree.description = new ArrayList<String>(description);
-        newSkillTree.iconItem = new CompoundTag("IconItem", new CompoundMap(iconItem.getValue()));
+        newSkillTree.iconItem = new CompoundTag("IconItem", new CompoundMap(getIconItem().getValue()));
 
         for (int level : skillsPerLevel.keySet())
         {
