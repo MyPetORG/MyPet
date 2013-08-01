@@ -36,7 +36,6 @@ import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -217,7 +216,6 @@ public class PlayerListener implements Listener
                         MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
                         if (myPetPlayerDamagee.getMyPet() == projectile.getShooter().getMyPet())
                         {
-                            MyPetLogger.write("block damage from: " + projectile);
                             event.setCancelled(true);
                         }
                         else if (!PvPChecker.canHurtEvent(projectile.getShooter().getOwner().getPlayer(), victim))
