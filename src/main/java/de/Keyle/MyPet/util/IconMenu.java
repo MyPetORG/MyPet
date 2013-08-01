@@ -103,6 +103,27 @@ public class IconMenu implements Listener
         return -1;
     }
 
+    public int addOption(ItemStack icon, String name, List<String> loreList, boolean glowing)
+    {
+        String[] lore = new String[loreList.size()];
+        for (int i = 0 ; i < lore.length ; i++)
+        {
+            lore[i] = loreList.get(i);
+        }
+        for (int i = 0 ; i < size ; i++)
+        {
+            if (inventory.getContents()[i] == null)
+            {
+                icon = setItemNameAndLore(icon, name, lore);
+                icon = setEnchantingGlow(icon, glowing);
+                optionNames[i] = name;
+                inventory.setItem(i, icon);
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void open(Player player)
     {
         Inventory openInv = player.openInventory(inventory).getTopInventory();
@@ -207,14 +228,25 @@ public class IconMenu implements Listener
         return item;
     }
 
-    private net.minecraft.server.v1_6_R2.ItemStack setEnchantingGlow(net.minecraft.server.v1_6_R2.ItemStack item, boolean glowing)
+    private ItemStack setEnchantingGlow(ItemStack item, boolean glowing)
     {
+        net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
+
         NBTTagList emptyList = new NBTTagList();
-        if (item.tag == null)
+        if (is.tag == null)
         {
-            item.tag = new NBTTagCompound("tag");
+            is.tag = new NBTTagCompound("tag");
         }
-        item.tag.set("ench", emptyList);
+        if (glowing)
+        {
+            is.tag.set("ench", emptyList);
+        }
+        else
+        {
+            is.tag.remove("ench");
+        }
+
+        item = CraftItemStack.asCraftMirror(is);
 
         return item;
     }
