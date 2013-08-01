@@ -74,7 +74,7 @@ public class IconMenu implements Listener
         {
             if (inventory.getContents()[i] == null)
             {
-                setItemNameAndLore(icon, name, lore);
+                icon = setItemNameAndLore(icon, name, lore);
                 optionNames[i] = name;
                 inventory.setItem(i, icon);
                 return i;
@@ -94,7 +94,7 @@ public class IconMenu implements Listener
         {
             if (inventory.getContents()[i] == null)
             {
-                setItemNameAndLore(icon, name, lore);
+                icon = setItemNameAndLore(icon, name, lore);
                 optionNames[i] = name;
                 inventory.setItem(i, icon);
                 return i;
