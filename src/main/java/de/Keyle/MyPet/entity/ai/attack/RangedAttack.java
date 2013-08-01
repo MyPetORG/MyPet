@@ -96,6 +96,8 @@ public class RangedAttack extends AIGoal
         this.target = null;
         this.lastSeenTimer = 0;
         this.shootTimer = -1;
+
+        this.entityMyPet.petNavigation.getParameters().removeSpeedModifier("RangedAttack");
     }
 
     @Override
