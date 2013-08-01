@@ -32,15 +32,20 @@ import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -191,6 +196,35 @@ public class PlayerListener implements Listener
                 else
                 {
                     myPet.setStatus(PetState.Despawned);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event)
+    {
+        if (event.getEntity() instanceof Player)
+        {
+            Player victim = (Player) event.getEntity();
+            if (MyPetPlayer.isMyPetPlayer(victim))
+            {
+                MyPetPlayer myPetPlayerDamagee = MyPetPlayer.getMyPetPlayer(victim);
+                if (myPetPlayerDamagee.hasMyPet())
+                {
+                    if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile)
+                    {
+                        MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+                        if (myPetPlayerDamagee.getMyPet() == projectile.getShooter().getMyPet())
+                        {
+                            MyPetLogger.write("block damage from: " + projectile);
+                            event.setCancelled(true);
+                        }
+                        else if (!PvPChecker.canHurtEvent(projectile.getShooter().getOwner().getPlayer(), victim))
+                        {
+                            event.setCancelled(true);
+                        }
+                    }
                 }
             }
         }

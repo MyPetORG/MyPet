@@ -26,11 +26,17 @@ import net.minecraft.server.v1_6_R2.EntityLiving;
 import net.minecraft.server.v1_6_R2.NBTTagCompound;
 import net.minecraft.server.v1_6_R2.World;
 
-public class MyPetArrow extends EntityArrow
+public class MyPetArrow extends EntityArrow implements MyPetProjectile
 {
     public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i)
     {
         super(world, entityMyPet, target, v, i);
+    }
+
+    @Override
+    public EntityMyPet getShooter()
+    {
+        return (EntityMyPet) this.shooter;
     }
 
     @Override

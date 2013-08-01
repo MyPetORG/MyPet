@@ -20,15 +20,22 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
+import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_6_R2.*;
 
-public class MyPetSnowball extends EntitySnowball
+public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
 {
     protected int damage = 0;
 
-    public MyPetSnowball(World world, EntityLiving entityLiving)
+    public MyPetSnowball(World world, EntityMyPet entityLiving)
     {
         super(world, entityLiving);
+    }
+
+    @Override
+    public EntityMyPet getShooter()
+    {
+        return (EntityMyPet) this.shooter;
     }
 
     public void setDamage(int damage)
