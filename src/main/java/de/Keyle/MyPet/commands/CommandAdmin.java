@@ -477,10 +477,17 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             {
                 return false;
             }
-            MyPetType myPetType = MyPetType.getMyPetTypeByName(parameter[1]);
+
+            int forceOffset = 0;
+            if (parameter[0].equalsIgnoreCase("-f"))
+            {
+                forceOffset = 1;
+            }
+
+            MyPetType myPetType = MyPetType.getMyPetTypeByName(parameter[1 + forceOffset]);
             if (myPetType != null)
             {
-                Player owner = Bukkit.getPlayer(parameter[0]);
+                Player owner = Bukkit.getPlayer(parameter[forceOffset]);
                 if (owner == null || !owner.isOnline())
                 {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
@@ -488,6 +495,11 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                 }
 
                 MyPetPlayer newOwner = MyPetPlayer.getMyPetPlayer(owner);
+                if (newOwner.hasMyPet() && forceOffset == 1)
+                {
+                    MyPetList.setMyPetInactive(newOwner);
+                }
+
                 if (!newOwner.hasMyPet())
                 {
                     InactiveMyPet inactiveMyPet = new InactiveMyPet(newOwner);
@@ -495,9 +507,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
                     inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
 
                     CompoundTag compoundTag = inactiveMyPet.getInfo();
-                    if (parameter.length > 2)
+                    if (parameter.length > 2 + forceOffset)
                     {
-                        for (int i = 2 ; i < parameter.length ; i++)
+                        for (int i = 2 + forceOffset ; i < parameter.length ; i++)
                         {
                             if (parameter[i].equalsIgnoreCase("baby"))
                             {
