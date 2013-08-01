@@ -64,9 +64,6 @@ public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
         {
             this.world.addParticle("snowballpoof", this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
         }
-        if (!this.world.isStatic)
-        {
-            die();
-        }
+        die();
     }
 }
