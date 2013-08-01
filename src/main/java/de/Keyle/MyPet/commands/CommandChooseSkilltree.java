@@ -164,7 +164,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                             descriptionArray[j] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
                         }
 
-                        menu.setOption(i, shownItem, ">--->  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  <---<", descriptionArray);
+                        menu.setOption(i, shownItem, ChatColor.RESET + ">--->  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  <---<", descriptionArray);
                         skilltreeSlotMap.put(i, addedSkilltree);
                     }
                     menu.open(player);
