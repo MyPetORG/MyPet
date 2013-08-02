@@ -118,16 +118,35 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public boolean autoAssignSkilltree()
     {
-        if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && skillTree == null && this.petOwner.isOnline())
+        if (skillTree == null && this.petOwner.isOnline())
         {
-            if (SkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
+            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT)
             {
+                if (SkillTreeMobType.getSkillTreeNames(this.getPetType()).size() > 0)
+                {
+                    for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType()))
+                    {
+                        if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
+                        {
+                            return setSkilltree(skillTree);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                boolean skilltreeAvailable = false;
                 for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType()))
                 {
                     if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
                     {
-                        return setSkilltree(skillTree);
+                        skilltreeAvailable = true;
+                        break;
                     }
+                }
+                if (skilltreeAvailable)
+                {
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                 }
             }
         }
