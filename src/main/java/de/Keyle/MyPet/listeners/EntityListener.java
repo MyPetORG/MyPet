@@ -936,7 +936,10 @@ public class EntityListener implements Listener
                         MyPet myPet = ((CraftMyPet) entity).getMyPet();
                         if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
                         {
-                            continue;
+                            if (!myPet.autoAssignSkilltree())
+                            {
+                                continue;
+                            }
                         }
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
                         myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
@@ -949,7 +952,10 @@ public class EntityListener implements Listener
                             MyPet myPet = MyPetList.getMyPet(owner);
                             if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
                             {
-                                continue;
+                                if (!myPet.autoAssignSkilltree())
+                                {
+                                    continue;
+                                }
                             }
                             if (myPet.isPassiv())
                             {
@@ -971,7 +977,10 @@ public class EntityListener implements Listener
                     MyPet myPet = ((CraftMyPet) edbee.getDamager()).getMyPet();
                     if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE)
                     {
-                        return;
+                        if (!myPet.autoAssignSkilltree())
+                        {
+                            return;
+                        }
                     }
                     myPet.getExperience().addExp(edbee.getEntity().getType());
                 }
@@ -983,7 +992,10 @@ public class EntityListener implements Listener
                         MyPet myPet = MyPetList.getMyPet(owner);
                         if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
                         {
-                            return;
+                            if (!myPet.autoAssignSkilltree())
+                            {
+                                return;
+                            }
                         }
                         if (myPet.isPassiv())
                         {

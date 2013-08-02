@@ -148,9 +148,10 @@ public abstract class MyPet implements IMyPet, NBTStorage
                 {
                     sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                 }
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public SpawnFlags createPet()
