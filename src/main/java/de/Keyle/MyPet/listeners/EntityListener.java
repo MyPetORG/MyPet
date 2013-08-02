@@ -949,7 +949,7 @@ public class EntityListener implements Listener
                             MyPet myPet = MyPetList.getMyPet(owner);
                             if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
                             {
-                                return;
+                                continue;
                             }
                             if (myPet.isPassiv())
                             {
