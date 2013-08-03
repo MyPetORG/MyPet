@@ -335,9 +335,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman))
         {
-            if (myPet.getSkills().isSkillActive(Ride.class))
+            if (itemStack == null && Ride.RIDE_ITEM == 0)
             {
-                if ((itemStack.id == Ride.RIDE_ITEM || (Ride.RIDE_ITEM == 0 && (itemStack == null || itemStack.id == 0))) && canMove())
+                if (myPet.getSkills().isSkillActive(Ride.class) && canMove())
                 {
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
                     {
@@ -350,63 +350,81 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                 }
             }
-            if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class))
+            if (itemStack != null)
             {
+                if (itemStack.id == Ride.RIDE_ITEM)
+                {
+                    if (myPet.getSkills().isSkillActive(Ride.class) && canMove())
+                    {
+                        if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
+                        {
+                            ((CraftPlayer) owner).getHandle().setPassengerOf(this);
+                            return true;
+                        }
+                        else
+                        {
+                            getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
+                        }
+                    }
+                }
                 if (itemStack.id == de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM)
                 {
-                    return true;
+                    if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class))
+                    {
+                        return true;
+                    }
                 }
-            }
-        }
-        if (canEat(itemStack) && canUseItem())
-        {
-            if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
-            {
-                return false;
-            }
-            if (this.petTargetSelector.hasGoal("DuelTarget"))
-            {
-                BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
-                if (duelTarget.getDuelOpponent() != null)
+                if (canEat(itemStack) && canUseItem())
                 {
-                    return true;
+                    if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))
+                    {
+                        return false;
+                    }
+                    if (this.petTargetSelector.hasGoal("DuelTarget"))
+                    {
+                        BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) this.petTargetSelector.getGoal("DuelTarget");
+                        if (duelTarget.getDuelOpponent() != null)
+                        {
+                            return true;
+                        }
+                    }
+                    int addHunger = Configuration.HUNGER_SYSTEM_POINTS_PER_FEED;
+                    if (getHealth() < getMaxHealth())
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            --itemStack.count;
+                        }
+                        addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
+                        this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
+                        if (itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                    }
+                    else if (myPet.getHungerValue() < 100)
+                    {
+                        if (!entityhuman.abilities.canInstantlyBuild)
+                        {
+                            --itemStack.count;
+                        }
+                        if (itemStack.count <= 0)
+                        {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
+                    }
+                    if (addHunger > 0 && myPet.getHungerValue() < 100)
+                    {
+                        myPet.setHungerValue(myPet.getHungerValue() + addHunger);
+                        addHunger = 0;
+                    }
+                    if (addHunger < Configuration.HUNGER_SYSTEM_POINTS_PER_FEED)
+                    {
+                        return true;
+                    }
                 }
-            }
-            int addHunger = Configuration.HUNGER_SYSTEM_POINTS_PER_FEED;
-            if (getHealth() < getMaxHealth())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                addHunger -= Math.min(3, getMaxHealth() - getHealth()) * 2;
-                this.heal(Math.min(3, getMaxHealth() - getHealth()), RegainReason.EATING);
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-            }
-            else if (myPet.getHungerValue() < 100)
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    --itemStack.count;
-                }
-                if (itemStack.count <= 0)
-                {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                BukkitUtil.playParticleEffect(myPet.getLocation().add(0, MyPet.getEntitySize(this.getClass())[0] + 0.15, 0), "heart", 0.5F, 0.5F, 0.5F, 0.5F, 5, 20);
-            }
-            if (addHunger > 0 && myPet.getHungerValue() < 100)
-            {
-                myPet.setHungerValue(myPet.getHungerValue() + addHunger);
-                addHunger = 0;
-            }
-            if (addHunger < Configuration.HUNGER_SYSTEM_POINTS_PER_FEED)
-            {
-                return true;
             }
         }
         return false;
