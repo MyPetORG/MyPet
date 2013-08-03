@@ -298,7 +298,7 @@ public class EntityListener implements Listener
                         }
                         else if (flag == LeashFlag.LowHp)
                         {
-                            willBeLeashed = leashTarget.getHealth() <= 2;
+                            willBeLeashed = leashTarget.getHealth() - event.getDamage() <= 2;
                         }
                         else if (flag == LeashFlag.UserCreated)
                         {
