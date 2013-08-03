@@ -622,6 +622,12 @@ public class EntityListener implements Listener
                             DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                         }
                         damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
+
+                        if (myPet.getOwner().isCaptureHelperActive())
+                        {
+                            myPet.getOwner().setCaptureHelperActive(false);
+                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
+                        }
                     }
                 }
             }
