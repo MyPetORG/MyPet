@@ -118,10 +118,14 @@ permissions:
       MyPet.user.command.capturehelper: true
       MyPet.user.command.name: true
   MyPet.user.command.release:
+    default: true
     description: Allows usage of /petrelease
   MyPet.user.command.capturehelper:
+    default: true
     description: Gives access to the CaptureHelper
   MyPet.user.command.respawn:
+    default: true
     description: Allows usage of /petrespawn
   MyPet.user.command.name:
+    default: true
     description: Allows usage of /petname
