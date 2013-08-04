@@ -106,14 +106,13 @@ public abstract class MyPet implements IMyPet, NBTStorage
         Dead, Despawned, Here
     }
 
-    public MyPet(MyPetPlayer Owner)
+    protected MyPet(MyPetPlayer Owner)
     {
         this.petOwner = Owner;
         skills = new Skills(this);
         experience = new Experience(this);
         hungerTime = Configuration.HUNGER_SYSTEM_TIME;
-        autoAssignSkilltree();
-        petName = Locales.getString("Name." + getPetType().getTypeName(), petOwner.getLanguage());
+        petName = Locales.getString("Name." + getPetType().getTypeName(), petOwner);
     }
 
     public boolean autoAssignSkilltree()
