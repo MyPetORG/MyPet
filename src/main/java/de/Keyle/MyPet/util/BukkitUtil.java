@@ -25,6 +25,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.util.UnsafeList;
@@ -176,5 +177,15 @@ public class BukkitUtil
         {
             return "en_US";
         }
+    }
+
+    public static String getCommandSenderLanguage(CommandSender sender)
+    {
+        String lang = "en";
+        if (sender instanceof Player)
+        {
+            lang = getPlayerLanguage((Player) sender);
+        }
+        return lang;
     }
 }
