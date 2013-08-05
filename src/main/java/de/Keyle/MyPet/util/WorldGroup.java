@@ -20,14 +20,11 @@
 
 package de.Keyle.MyPet.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorldGroup
 {
-    private static List<WorldGroup> allGroups = new ArrayList<WorldGroup>();
+    private static Map<String, WorldGroup> allGroups = new HashMap<String, WorldGroup>();
     private static Map<String, WorldGroup> groupWorlds = new HashMap<String, WorldGroup>();
 
     private String name;
@@ -41,24 +38,18 @@ public class WorldGroup
 
     public void registerGroup()
     {
-        for (WorldGroup group : getGroups())
+        if (allGroups.containsKey(this.getName()))
         {
-            if (group.getName().equalsIgnoreCase(name))
-            {
-                return;
-            }
+            return;
         }
-        allGroups.add(this);
+        allGroups.put(this.getName(), this);
     }
 
     public boolean addWorld(String world)
     {
-        for (WorldGroup group : getGroups())
+        if (groupWorlds.containsKey(world))
         {
-            if (group.containsWorld(world))
-            {
-                return false;
-            }
+            return false;
         }
         if (!this.worlds.contains(world))
         {
@@ -79,12 +70,6 @@ public class WorldGroup
         return this.worlds;
     }
 
-    @Override
-    public String toString()
-    {
-        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
-    }
-
     /**
      * Checks whether a world group contains the world
      *
@@ -96,19 +81,20 @@ public class WorldGroup
         return this.worlds.contains(worldName);
     }
 
+    @Override
+    public String toString()
+    {
+        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
+    }
+
     /**
      * Returns all available world groups
      *
      * @return WorldGroup[]
      */
-    public static WorldGroup[] getGroups()
+    public static Collection<WorldGroup> getGroups()
     {
-        WorldGroup[] groups = new WorldGroup[allGroups.size()];
-        for (int i = 0 ; i < allGroups.size() ; i++)
-        {
-            groups[i] = allGroups.get(i);
-        }
-        return groups;
+        return Collections.unmodifiableCollection(allGroups.values());
     }
 
     /**
@@ -130,14 +116,7 @@ public class WorldGroup
      */
     public static WorldGroup getGroupByName(String name)
     {
-        for (WorldGroup wg : allGroups)
-        {
-            if (wg.getName().equals(name))
-            {
-                return wg;
-            }
-        }
-        return null;
+        return allGroups.get(name);
     }
 
     /**
