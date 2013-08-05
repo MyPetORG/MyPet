@@ -117,9 +117,27 @@ public class WorldGroup
      * @param name World
      * @return WorldGroup
      */
-    public static WorldGroup getGroup(String name)
+    public static WorldGroup getGroupByWorld(String name)
     {
         return groupWorlds.get(name);
+    }
+
+    /**
+     * Returns the group the world is in
+     *
+     * @param name World
+     * @return WorldGroup
+     */
+    public static WorldGroup getGroupByName(String name)
+    {
+        for (WorldGroup wg : allGroups)
+        {
+            if (wg.getName().equals(name))
+            {
+                return wg;
+            }
+        }
+        return null;
     }
 
     /**

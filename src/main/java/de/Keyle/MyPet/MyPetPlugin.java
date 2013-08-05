@@ -358,7 +358,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             if (MyPetPlayer.isMyPetPlayer(player))
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
-                WorldGroup joinGroup = WorldGroup.getGroup(player.getWorld().getName());
+                WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                 if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
                 {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
@@ -674,7 +674,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             boolean saveConfig = false;
             for (org.bukkit.World world : getServer().getWorlds())
             {
-                if (WorldGroup.getGroup(world.getName()) == null)
+                if (WorldGroup.getGroupByWorld(world.getName()) == null)
                 {
                     MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                     defaultGroup.addWorld(world.getName());

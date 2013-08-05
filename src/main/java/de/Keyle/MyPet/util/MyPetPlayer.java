@@ -484,7 +484,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
             {
                 UUID lastActiveUUID = UUID.fromString(lastActive);
                 World newWorld = Bukkit.getServer().getWorlds().get(0);
-                WorldGroup lastActiveGroup = WorldGroup.getGroup(newWorld.getName());
+                WorldGroup lastActiveGroup = WorldGroup.getGroupByWorld(newWorld.getName());
                 this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
             }
         }

@@ -375,6 +375,11 @@ public class EntityListener implements Listener
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                         inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
+
+                        WorldGroup worldGroup = WorldGroup.getGroupByWorld(damager.getWorld().getName());
+                        inactiveMyPet.setWorldGroup(worldGroup.getName());
+                        inactiveMyPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), inactiveMyPet.getUUID());
+
                         /*
                         if(leashTarget.getCustomName() != null)
                         {
@@ -606,10 +611,6 @@ public class EntityListener implements Listener
                                 damager.setItemInHand(null);
                             }
                         }
-
-                        WorldGroup worldGroup = WorldGroup.getGroup(damager.getWorld().getName());
-                        myPet.setWorldGroup(worldGroup.getName());
-                        myPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), myPet.getUUID());
 
                         if (Configuration.ENABLE_EVENTS)
                         {

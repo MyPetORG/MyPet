@@ -37,7 +37,7 @@ public class WorldListener implements Listener
     @EventHandler
     public void onWorldInit(final WorldInitEvent event)
     {
-        WorldGroup defaultGroup = WorldGroup.getGroup("default");
+        WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
         if (defaultGroup == null)
         {
             defaultGroup = new WorldGroup("default");

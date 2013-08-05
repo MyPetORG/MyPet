@@ -213,13 +213,14 @@ public class CommandOptionCreate implements CommandOption
                     }
                 }
 
+                WorldGroup wg = WorldGroup.getGroupByWorld(owner.getWorld().getName());
+
+                inactiveMyPet.setWorldGroup(wg.getName());
+                inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
+
                 MyPetList.addInactiveMyPet(inactiveMyPet);
                 MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                 myPet.createPet();
-
-                WorldGroup wg = WorldGroup.getGroup(owner.getWorld().getName());
-                myPet.setWorldGroup(wg.getName());
-                myPet.getOwner().setMyPetForWorldGroup(wg.getName(), myPet.getUUID());
             }
             else
             {

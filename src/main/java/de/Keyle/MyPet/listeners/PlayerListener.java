@@ -147,7 +147,7 @@ public class PlayerListener implements Listener
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            WorldGroup joinGroup = WorldGroup.getGroup(event.getPlayer().getWorld().getName());
+            WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
             if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
             {
                 UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
@@ -267,8 +267,8 @@ public class PlayerListener implements Listener
         {
             final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
 
-            WorldGroup fromGroup = WorldGroup.getGroup(event.getFrom().getName());
-            WorldGroup toGroup = WorldGroup.getGroup(event.getPlayer().getWorld().getName());
+            WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
+            WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
 
             boolean callAfterSwap = myPetPlayer.hasMyPet() && myPetPlayer.getMyPet().getStatus() == PetState.Here;
 

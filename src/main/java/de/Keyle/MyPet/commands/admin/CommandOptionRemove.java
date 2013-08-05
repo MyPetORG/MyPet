@@ -56,7 +56,7 @@ public class CommandOptionRemove implements CommandOption
 
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
 
-                    myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroup(player.getWorld().getName()).getName(), null);
+                    myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName(), null);
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                 }
             }

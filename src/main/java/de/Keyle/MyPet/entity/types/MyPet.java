@@ -208,7 +208,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
                 if (worldGroup == null || worldGroup.equals(""))
                 {
-                    setWorldGroup(WorldGroup.getGroup(craftMyPet.getWorld().getName()).getName());
+                    setWorldGroup(WorldGroup.getGroupByWorld(craftMyPet.getWorld().getName()).getName());
                 }
 
                 autoAssignSkilltree();
@@ -538,7 +538,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         {
             return;
         }
-        if (WorldGroup.getGroup(worldGroup) == null)
+        if (WorldGroup.getGroupByName(worldGroup) == null)
         {
             worldGroup = "default";
         }
