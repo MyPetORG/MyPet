@@ -79,6 +79,12 @@ public class WorldGroup
         return this.worlds;
     }
 
+    @Override
+    public String toString()
+    {
+        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
+    }
+
     /**
      * Checks whether a world group contains the world
      *
