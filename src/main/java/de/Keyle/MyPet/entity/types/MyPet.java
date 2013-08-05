@@ -134,18 +134,13 @@ public abstract class MyPet implements IMyPet, NBTStorage
             }
             else
             {
-                boolean skilltreeAvailable = false;
                 for (SkillTree skillTree : SkillTreeMobType.getSkillTrees(this.getPetType()))
                 {
                     if (Permissions.has(this.petOwner.getPlayer(), "MyPet.custom.skilltree." + skillTree.getPermission()))
                     {
-                        skilltreeAvailable = true;
+                        sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                         break;
                     }
-                }
-                if (skilltreeAvailable)
-                {
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SelectionPrompt", getOwner()), getPetName()));
                 }
                 return false;
             }
