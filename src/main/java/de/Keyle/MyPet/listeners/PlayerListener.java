@@ -161,7 +161,7 @@ public class PlayerListener implements Listener
                         break;
                     }
                 }
-                if (!joinedPlayer.hasMyPet())
+                if (!joinedPlayer.hasMyPet() && joinedPlayer.getInactiveMyPets().size() > 0)
                 {
                     joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
                     joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
