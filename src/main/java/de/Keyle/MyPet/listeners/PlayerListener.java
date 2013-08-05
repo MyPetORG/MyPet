@@ -169,28 +169,38 @@ public class PlayerListener implements Listener
             }
             if (joinedPlayer.hasMyPet())
             {
-                MyPet myPet = joinedPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Dead)
+                final MyPet myPet = joinedPlayer.getMyPet();
+                final MyPetPlayer myPetPlayer = myPet.getOwner();
+                if (myPet.wantToRespawn())
                 {
-                    myPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
-                }
-                else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == event.getPlayer().getLocation().getWorld() && myPet.getLocation().distance(event.getPlayer().getLocation()) < 75)
-                {
-                    switch (myPet.createPet())
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
                     {
-                        case Success:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), myPet.getPetName()));
-                            break;
-                        case Canceled:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), myPet.getPetName()));
-                            break;
-                        case NoSpace:
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), myPet.getPetName()));
-                            break;
-                        case NotAllowed:
-                            myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
-                            break;
-                    }
+                        public void run()
+                        {
+                            if (myPetPlayer.hasMyPet())
+                            {
+                                MyPet runMyPet = myPetPlayer.getMyPet();
+                                switch (runMyPet.createPet())
+                                {
+                                    case Canceled:
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        break;
+                                    case NoSpace:
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        break;
+                                    case NotAllowed:
+                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                                        break;
+                                    case Dead:
+                                        runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                        break;
+                                    case Success:
+                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                        break;
+                                }
+                            }
+                        }
+                    }, 10L);
                 }
                 else
                 {
