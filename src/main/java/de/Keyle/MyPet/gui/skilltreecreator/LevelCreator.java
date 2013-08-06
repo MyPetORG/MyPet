@@ -48,6 +48,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -99,6 +100,7 @@ public class LevelCreator
                     skillNames[skillCounter++] = sn.value();
                 }
             }
+            Arrays.sort(skillNames);
         }
 
         addLevelButton.addActionListener(new ActionListener()
