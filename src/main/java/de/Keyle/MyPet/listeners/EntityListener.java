@@ -109,20 +109,18 @@ public class EntityListener implements Listener
                 }
                 if (damager.getItemInHand().getTypeId() == Configuration.LEASH_ITEM)
                 {
-                    MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(damager);
-
                     boolean infoShown = false;
-                    if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, myPetPlayer, myPet))
+                    if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet))
                     {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, myPetPlayer, myPet) && myPet.getOwner() != myPetPlayer)
+                    if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, myPet) && myPet.getOwner().getPlayer() != damager)
                     {
-                        damager.sendMessage("   " + Locales.getString("Name.Owner", damager) + ": " + myPetPlayer.getName());
+                        damager.sendMessage("   " + Locales.getString("Name.Owner", damager) + ": " + myPet.getOwner().getName());
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, myPetPlayer, myPet))
+                    if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet))
                     {
                         String msg;
                         if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
@@ -141,37 +139,37 @@ public class EntityListener implements Listener
                         damager.sendMessage("   " + Locales.getString("Name.HP", damager) + ": " + msg);
                         infoShown = true;
                     }
-                    if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, myPetPlayer, myPet))
+                    if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet))
                     {
                         double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
                         damager.sendMessage("   " + Locales.getString("Name.Damage", damager) + ": " + String.format("%1.2f", damage));
                         infoShown = true;
                     }
-                    if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, myPetPlayer, myPet))
+                    if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet))
                     {
                         double damage = myPet.getRangedDamage();
                         damager.sendMessage("   " + Locales.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", damage));
                         infoShown = true;
                     }
-                    if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, myPetPlayer, myPet))
+                    if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet))
                     {
                         damager.sendMessage("   " + Locales.getString("Name.Hunger", damager) + ": " + myPet.getHungerValue());
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, myPetPlayer, myPet) && myPet.getSkillTree() != null)
+                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkillTree() != null)
                     {
                         damager.sendMessage("   " + Locales.getString("Name.Skilltree", damager) + ": " + myPet.getSkillTree().getName());
                         infoShown = true;
                     }
                     if (Configuration.USE_LEVEL_SYSTEM)
                     {
-                        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, myPetPlayer, myPet))
+                        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet))
                         {
                             int lvl = myPet.getExperience().getLevel();
                             damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
                             infoShown = true;
                         }
-                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, myPetPlayer, myPet))
+                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet))
                         {
                             double exp = myPet.getExperience().getCurrentExp();
                             double reqEXP = myPet.getExperience().getRequiredExp();
