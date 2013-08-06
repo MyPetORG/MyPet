@@ -20,20 +20,20 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class SkillsInfo
 {
-    private static BiMap<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = HashBiMap.create();
-    private static BiMap<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = registeredSkillsNames.inverse();
+    private static Map<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = new HashMap<Class<? extends SkillTreeSkill>, String>();
+    private static Map<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = new HashMap<String, Class<? extends SkillTreeSkill>>();
 
     public static void registerSkill(Class<? extends SkillTreeSkill> clazz)
     {
@@ -42,34 +42,32 @@ public class SkillsInfo
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " doesn't implements [ISkillInfo]!");
             return;
         }
-        if (!registeredSkillsNames.containsKey(clazz))
+        try
         {
-            try
+            //MyPetLogger.write("Skill Annotations: " + Arrays.toString(clazz.getAnnotations()));
+            SkillName sn = clazz.getAnnotation(SkillName.class);
+            if (sn != null)
             {
-                //MyPetLogger.write("Skill Annotations: " + Arrays.toString(clazz.getAnnotations()));
-                SkillName sn = clazz.getAnnotation(SkillName.class);
-                if (sn != null)
+                String skillName = sn.value();
+                if (!registeredNamesSkills.containsKey(skillName) && !registeredSkillsNames.containsKey(clazz))
                 {
-                    String skillName = sn.value();
-                    if (!registeredNamesSkills.containsKey(skillName))
-                    {
-                        registeredSkillsNames.put(clazz, skillName);
-                        //DebugLogger.info("registered skill: " + clazz.getName());
-                    }
-                    else
-                    {
-                        MyPetLogger.write(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
-                    }
+                    registeredSkillsNames.put(clazz, skillName);
+                    registeredNamesSkills.put(skillName, clazz);
+                    //DebugLogger.info("registered skill: " + clazz.getName());
                 }
                 else
                 {
-                    MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not annotated with [SkillName]!");
+                    MyPetLogger.write(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
                 }
             }
-            catch (Exception e)
+            else
             {
-                MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
+                MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not annotated with [SkillName]!");
             }
+        }
+        catch (Exception e)
+        {
+            MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
         }
     }
 
