@@ -694,11 +694,20 @@ public class LevelCreator
                     inheritanceComboBoxModel.addElement(skillTreeName);
                 }
             }
-            if (skillTree.getInheritance() != null && skillTreeMobType.getSkillTreeNames().contains(skillTree.getInheritance()))
+            if (skillTree.getInheritance() != null)
             {
-                inheritanceCheckBox.setSelected(true);
-                inheritanceComboBox.setEnabled(true);
-                this.inheritanceComboBoxModel.setSelectedItem(skillTree.getInheritance());
+                if (skillTreeMobType.getSkillTreeNames().contains(skillTree.getInheritance()))
+                {
+                    inheritanceCheckBox.setSelected(true);
+                    inheritanceComboBox.setEnabled(true);
+                    this.inheritanceComboBoxModel.setSelectedItem(skillTree.getInheritance());
+                }
+                if (SkillTreeMobType.hasMobType("default") && SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().contains(skillTree.getInheritance()))
+                {
+                    inheritanceCheckBox.setSelected(true);
+                    inheritanceComboBox.setEnabled(true);
+                    this.inheritanceComboBoxModel.setSelectedItem(skillTree.getInheritance());
+                }
             }
             else
             {
