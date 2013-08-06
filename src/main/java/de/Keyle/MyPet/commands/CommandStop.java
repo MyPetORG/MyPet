@@ -51,7 +51,7 @@ public class CommandStop implements CommandExecutor
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                sender.sendMessage(Locales.getString("Message.Commad.Stop.Attack", petOwner).replace("%petname%", myPet.getPetName()));
+                sender.sendMessage(Locales.getString("Message.Command.Stop.Attack", petOwner).replace("%petname%", myPet.getPetName()));
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
