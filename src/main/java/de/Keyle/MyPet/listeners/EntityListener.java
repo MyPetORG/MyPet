@@ -693,7 +693,6 @@ public class EntityListener implements Listener
         }
     }
 
-    @SuppressWarnings("unchecked")
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityDamageByEntityDamageMonitor(final EntityDamageByEntityEvent event)
     {
@@ -977,9 +976,15 @@ public class EntityListener implements Listener
             else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent)
             {
                 EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
-                if (edbee.getDamager() instanceof CraftMyPet)
+
+                Entity damager = edbee.getDamager();
+                if (damager instanceof Projectile)
                 {
-                    MyPet myPet = ((CraftMyPet) edbee.getDamager()).getMyPet();
+                    damager = ((Projectile) damager).getShooter();
+                }
+                if (damager instanceof CraftMyPet)
+                {
+                    MyPet myPet = ((CraftMyPet) damager).getMyPet();
                     if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE)
                     {
                         if (!myPet.autoAssignSkilltree())
@@ -989,9 +994,9 @@ public class EntityListener implements Listener
                     }
                     myPet.getExperience().addExp(edbee.getEntity().getType());
                 }
-                else if (edbee.getDamager() instanceof Player)
+                else if (damager instanceof Player)
                 {
-                    Player owner = (Player) edbee.getDamager();
+                    Player owner = (Player) damager;
                     if (MyPetList.hasMyPet(owner))
                     {
                         MyPet myPet = MyPetList.getMyPet(owner);
