@@ -70,7 +70,7 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
     {
         if (movingobjectposition.entity != null)
         {
-            movingobjectposition.entity.damageEntity(DamageSource.MAGIC, damage);
+            movingobjectposition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
         }
         die();
     }
