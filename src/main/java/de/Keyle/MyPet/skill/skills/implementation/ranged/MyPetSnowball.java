@@ -22,6 +22,8 @@ package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_6_R2.*;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftSnowball;
 
 public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
 {
@@ -41,6 +43,16 @@ public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
     public void setDamage(int damage)
     {
         this.damage = damage;
+    }
+
+    @Override
+    public CraftEntity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftSnowball(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
     }
 
     @Override

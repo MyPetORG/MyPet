@@ -22,6 +22,8 @@ package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_6_R2.*;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLargeFireball;
 
 public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile
 {
@@ -53,6 +55,16 @@ public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProj
         this.dirX = (d0 / d3 * 0.1D);
         this.dirY = (d1 / d3 * 0.1D);
         this.dirZ = (d2 / d3 * 0.1D);
+    }
+
+    @Override
+    public CraftEntity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftLargeFireball(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
     }
 
     @Override

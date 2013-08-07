@@ -25,6 +25,8 @@ import net.minecraft.server.v1_6_R2.EntityArrow;
 import net.minecraft.server.v1_6_R2.EntityLiving;
 import net.minecraft.server.v1_6_R2.NBTTagCompound;
 import net.minecraft.server.v1_6_R2.World;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
 
 public class MyPetArrow extends EntityArrow implements MyPetProjectile
 {
@@ -37,6 +39,16 @@ public class MyPetArrow extends EntityArrow implements MyPetProjectile
     public EntityMyPet getShooter()
     {
         return (EntityMyPet) this.shooter;
+    }
+
+    @Override
+    public CraftEntity getBukkitEntity()
+    {
+        if (this.bukkitEntity == null)
+        {
+            this.bukkitEntity = new CraftArrow(this.world.getServer(), this);
+        }
+        return this.bukkitEntity;
     }
 
     @Override
