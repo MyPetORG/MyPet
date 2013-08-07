@@ -26,7 +26,6 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.PoisonInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
-import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -120,9 +119,8 @@ public class Poison extends PoisonInfo implements ISkillInstance, ISkillActive
 
     public void poisonTarget(LivingEntity target)
     {
-        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, getDuration() * 20, 1);
+        PotionEffect effect = new PotionEffect(PotionEffectType.POISON, getDuration() * 20, 1, false);
         target.addPotionEffect(effect);
-        target.getWorld().playEffect(target.getLocation(), Effect.POTION_BREAK, 0x008040);
     }
 
     @Override

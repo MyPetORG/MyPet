@@ -26,7 +26,6 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.WitherInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
-import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -120,9 +119,8 @@ public class Wither extends WitherInfo implements ISkillInstance, ISkillActive
 
     public void witherTarget(LivingEntity target)
     {
-        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, getDuration() * 20, 1);
+        PotionEffect effect = new PotionEffect(PotionEffectType.WITHER, getDuration() * 20, 1, false);
         target.addPotionEffect(effect);
-        target.getWorld().playEffect(target.getLocation(), Effect.POTION_BREAK, 0x000000);
     }
 
     @Override
