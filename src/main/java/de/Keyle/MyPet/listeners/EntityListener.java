@@ -753,68 +753,71 @@ public class EntityListener implements Listener
                     }
                 }
             }
-            else if (damager instanceof CraftMyPet && !isSkillActive)
+            else if (damager instanceof CraftMyPet)
             {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 // fix influence of other plugins
                 event.setDamage(myPet.getDamage());
 
-                //  --  Skills  --
-                boolean skillUsed = false;
-                if (myPet.getSkills().hasSkill(Poison.class))
+                if (!isSkillActive)
                 {
-                    Poison poisonSkill = myPet.getSkills().getSkill(Poison.class);
-                    if (poisonSkill.activate())
+                    //  --  Skills  --
+                    boolean skillUsed = false;
+                    if (myPet.getSkills().hasSkill(Poison.class))
                     {
-                        poisonSkill.poisonTarget((LivingEntity) damagedEntity);
-                        skillUsed = true;
+                        Poison poisonSkill = myPet.getSkills().getSkill(Poison.class);
+                        if (poisonSkill.activate())
+                        {
+                            poisonSkill.poisonTarget((LivingEntity) damagedEntity);
+                            skillUsed = true;
+                        }
                     }
-                }
-                if (!skillUsed && myPet.getSkills().hasSkill(Wither.class))
-                {
-                    Wither witherSkill = myPet.getSkills().getSkill(Wither.class);
-                    if (witherSkill.activate())
+                    if (!skillUsed && myPet.getSkills().hasSkill(Wither.class))
                     {
-                        witherSkill.witherTarget((LivingEntity) damagedEntity);
-                        skillUsed = true;
+                        Wither witherSkill = myPet.getSkills().getSkill(Wither.class);
+                        if (witherSkill.activate())
+                        {
+                            witherSkill.witherTarget((LivingEntity) damagedEntity);
+                            skillUsed = true;
+                        }
                     }
-                }
-                if (!skillUsed && myPet.getSkills().hasSkill(Fire.class))
-                {
-                    Fire fireSkill = myPet.getSkills().getSkill(Fire.class);
-                    if (fireSkill.activate())
+                    if (!skillUsed && myPet.getSkills().hasSkill(Fire.class))
                     {
-                        fireSkill.igniteTarget((LivingEntity) damagedEntity);
-                        skillUsed = true;
+                        Fire fireSkill = myPet.getSkills().getSkill(Fire.class);
+                        if (fireSkill.activate())
+                        {
+                            fireSkill.igniteTarget((LivingEntity) damagedEntity);
+                            skillUsed = true;
+                        }
                     }
-                }
-                if (!skillUsed && myPet.getSkills().hasSkill(Slow.class))
-                {
-                    Slow slowSkill = myPet.getSkills().getSkill(Slow.class);
-                    if (slowSkill.activate())
+                    if (!skillUsed && myPet.getSkills().hasSkill(Slow.class))
                     {
-                        slowSkill.slowTarget((LivingEntity) damagedEntity);
-                        skillUsed = true;
+                        Slow slowSkill = myPet.getSkills().getSkill(Slow.class);
+                        if (slowSkill.activate())
+                        {
+                            slowSkill.slowTarget((LivingEntity) damagedEntity);
+                            skillUsed = true;
+                        }
                     }
-                }
-                if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class))
-                {
-                    Knockback knockbackSkill = myPet.getSkills().getSkill(Knockback.class);
-                    if (knockbackSkill.activate())
+                    if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class))
                     {
-                        knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
-                        skillUsed = true;
+                        Knockback knockbackSkill = myPet.getSkills().getSkill(Knockback.class);
+                        if (knockbackSkill.activate())
+                        {
+                            knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
+                            skillUsed = true;
+                        }
                     }
-                }
-                if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class))
-                {
-                    Lightning lightningSkill = myPet.getSkills().getSkill(Lightning.class);
-                    if (lightningSkill.activate())
+                    if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class))
                     {
-                        isSkillActive = true;
-                        lightningSkill.strikeLightning(damagedEntity.getLocation());
-                        isSkillActive = false;
+                        Lightning lightningSkill = myPet.getSkills().getSkill(Lightning.class);
+                        if (lightningSkill.activate())
+                        {
+                            isSkillActive = true;
+                            lightningSkill.strikeLightning(damagedEntity.getLocation());
+                            isSkillActive = false;
+                        }
                     }
                 }
             }
