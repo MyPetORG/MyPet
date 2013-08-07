@@ -730,25 +730,32 @@ public class EntityListener implements Listener
 
         if (damagedEntity instanceof LivingEntity)
         {
-            if (event.getDamager() instanceof Player)
+            Entity damager = event.getDamager();
+
+            if (damager instanceof Projectile)
             {
-                Player damager = (Player) event.getDamager();
-                if (damager.getItemInHand().getTypeId() == Configuration.LEASH_ITEM && damagedEntity instanceof CraftMyPet)
+                damager = ((Projectile) damager).getShooter();
+            }
+
+            if (damager instanceof Player)
+            {
+                Player player = (Player) damager;
+                if (player.getItemInHand().getTypeId() == Configuration.LEASH_ITEM && damagedEntity instanceof CraftMyPet)
                 {
                     return;
                 }
-                if (MyPetList.hasMyPet(damager))
+                if (MyPetList.hasMyPet(player))
                 {
-                    MyPet myPet = MyPetList.getMyPet(damager);
+                    MyPet myPet = MyPetList.getMyPet(player);
                     if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getCraftPet())
                     {
                         myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) damagedEntity).getHandle();
                     }
                 }
             }
-            else if (event.getDamager() instanceof CraftMyPet && !isSkillActive)
+            else if (damager instanceof CraftMyPet && !isSkillActive)
             {
-                MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
+                MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 // fix influence of other plugins
                 event.setDamage(myPet.getDamage());
