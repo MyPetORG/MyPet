@@ -124,6 +124,12 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                         }
                     }
 
+                    if (availableSkilltrees.size() == 0)
+                    {
+                        sender.sendMessage(Locales.getString("Message.No.CanUse", player));
+                        return true;
+                    }
+
                     final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
                     IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler()
                     {
