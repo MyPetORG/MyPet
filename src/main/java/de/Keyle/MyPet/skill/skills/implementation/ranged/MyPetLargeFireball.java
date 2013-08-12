@@ -27,7 +27,7 @@ import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLargeFireball;
 
 public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile
 {
-    protected int damage = 0;
+    protected float damage = 0;
 
     public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2)
     {
@@ -40,7 +40,7 @@ public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProj
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(int damage)
+    public void setDamage(float damage)
     {
         this.damage = damage;
     }

@@ -156,6 +156,7 @@ public class RangedAttack extends AIGoal
         {
             EntityArrow arrow = new MyPetArrow(world, entityMyPet, target, 1.6F, 1);
             arrow.b(damage);
+            arrow.a(false);
             entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.aC().nextFloat() * 0.4F + 0.8F));
             world.addEntity(arrow);
         }
@@ -166,7 +167,7 @@ public class RangedAttack extends AIGoal
             double distanceY = target.locY + target.getHeadHeight() - 1.100000023841858D - snowball.locY;
             double distanceZ = target.locZ - entityMyPet.locZ;
             float distance20percent = MathHelper.sqrt(distanceX * distanceX + distanceZ * distanceZ) * 0.2F;
-            snowball.setDamage((int) damage);
+            snowball.setDamage(damage);
             snowball.shoot(distanceX, distanceY + distance20percent, distanceZ, 1.6F, 1);
             entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.aC().nextFloat() * 0.4F + 0.8F));
             world.addEntity(snowball);
@@ -178,7 +179,7 @@ public class RangedAttack extends AIGoal
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetLargeFireball largeFireball = new MyPetLargeFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             largeFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
-            largeFireball.setDamage((int) damage);
+            largeFireball.setDamage(damage);
             world.addEntity(largeFireball);
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.aC().nextFloat(), entityMyPet.aC().nextFloat() * 0.7F + 0.3F);
         }
@@ -189,7 +190,7 @@ public class RangedAttack extends AIGoal
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetSmallFireball smallFireball = new MyPetSmallFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             smallFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
-            smallFireball.setDamage((int) damage);
+            smallFireball.setDamage(damage);
             world.addEntity(smallFireball);
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.aC().nextFloat(), entityMyPet.aC().nextFloat() * 0.7F + 0.3F);
         }
@@ -200,7 +201,7 @@ public class RangedAttack extends AIGoal
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetWitherSkull witherSkull = new MyPetWitherSkull(world, entityMyPet, distanceX, distanceY, distanceZ);
             witherSkull.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
-            witherSkull.setDamage((int) damage);
+            witherSkull.setDamage(damage);
             world.addEntity(witherSkull);
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.wither.shoot", 1.0F + entityMyPet.aC().nextFloat(), entityMyPet.aC().nextFloat() * 0.7F + 0.3F);
         }

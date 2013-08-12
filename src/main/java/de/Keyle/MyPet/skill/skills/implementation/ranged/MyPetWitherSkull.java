@@ -27,7 +27,7 @@ import org.bukkit.craftbukkit.v1_6_R2.entity.CraftWitherSkull;
 
 public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjectile
 {
-    protected int damage = 0;
+    protected float damage = 0;
 
     public MyPetWitherSkull(World world, EntityMyPet entityliving, double d0, double d1, double d2)
     {
@@ -40,7 +40,7 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(int damage)
+    public void setDamage(float damage)
     {
         this.damage = damage;
     }
@@ -82,7 +82,7 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
     {
         if (movingobjectposition.entity != null)
         {
-            movingobjectposition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
+            movingobjectposition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
         }
         die();
     }

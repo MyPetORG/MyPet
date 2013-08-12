@@ -27,7 +27,7 @@ import org.bukkit.craftbukkit.v1_6_R2.entity.CraftSnowball;
 
 public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
 {
-    protected int damage = 0;
+    protected float damage = 0;
 
     public MyPetSnowball(World world, EntityMyPet entityLiving)
     {
@@ -40,7 +40,7 @@ public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(int damage)
+    public void setDamage(float damage)
     {
         this.damage = damage;
     }
