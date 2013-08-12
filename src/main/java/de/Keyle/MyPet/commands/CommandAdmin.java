@@ -281,19 +281,24 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
             }
             else if (strings[0].equalsIgnoreCase("create"))
             {
-                if (strings.length == 2)
+                int forceOffset = 0;
+                if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f"))
+                {
+                    forceOffset = 1;
+                }
+                if (strings.length == 2 + forceOffset)
                 {
                     return null;
                 }
-                if (strings.length == 3)
+                if (strings.length == 3 + forceOffset)
                 {
                     return petTypeList;
                 }
-                if (strings.length >= 4)
+                if (strings.length >= 4 + forceOffset)
                 {
-                    if (petTypeOptionMap.containsKey(strings[2].toLowerCase()))
+                    if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase()))
                     {
-                        return petTypeOptionMap.get(strings[2].toLowerCase());
+                        return petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
                     }
                     return emptyList;
                 }
