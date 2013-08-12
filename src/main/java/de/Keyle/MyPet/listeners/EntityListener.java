@@ -228,11 +228,17 @@ public class EntityListener implements Listener
     @EventHandler
     public void onEntityDamageByMyPet(final EntityDamageByEntityEvent event)
     {
-        if (event.getDamager() instanceof CraftMyPet && event.getEntity() instanceof LivingEntity)
+        if (PvPChecker.USE_PlayerDamageEntityEvent)
         {
-            MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
-            if (PvPChecker.USE_PlayerDamageEntityEvent)
+            Entity damager = event.getDamager();
+            if (damager instanceof Projectile)
             {
+                damager = ((Projectile) damager).getShooter();
+            }
+            if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity)
+            {
+                MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
+
                 selfThrownEventRunning = true;
                 if (!PvPChecker.canHurtEvent(myPet.getOwner().getPlayer(), (LivingEntity) event.getEntity()))
                 {
@@ -759,6 +765,11 @@ public class EntityListener implements Listener
 
                 // fix influence of other plugins
                 event.setDamage(myPet.getDamage());
+
+                if (damagedEntity instanceof Player && event.isCancelled())
+                {
+                    return;
+                }
 
                 if (!isSkillActive)
                 {
