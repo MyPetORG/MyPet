@@ -764,7 +764,14 @@ public class EntityListener implements Listener
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 // fix influence of other plugins
-                event.setDamage(myPet.getDamage());
+                if (event.getDamager() instanceof Projectile)
+                {
+                    event.setDamage(myPet.getRangedDamage());
+                }
+                else
+                {
+                    event.setDamage(myPet.getDamage());
+                }
 
                 if (damagedEntity instanceof Player && event.isCancelled())
                 {
