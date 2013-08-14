@@ -31,7 +31,7 @@ import java.util.List;
 
 public class Timer
 {
-    private static int timerID = -1;
+    private static List<Integer> timerIDs = new ArrayList<Integer>();
     private static final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
 
     private Timer()
@@ -40,11 +40,14 @@ public class Timer
 
     public static void stopTimer()
     {
-        if (timerID != -1)
+        if (timerIDs.size() > 0)
         {
             DebugLogger.info("Timer stop");
-            Bukkit.getScheduler().cancelTask(timerID);
-            timerID = -1;
+            for (int timerID : timerIDs)
+            {
+                Bukkit.getScheduler().cancelTask(timerID);
+            }
+            timerIDs.clear();
         }
     }
 
@@ -53,7 +56,7 @@ public class Timer
         stopTimer();
         DebugLogger.info("Timer start");
 
-        timerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
         {
             public void run()
             {
@@ -61,16 +64,28 @@ public class Timer
                 {
                     myPet.scheduleTask();
                 }
+            }
+        }, 0L, 20L));
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
+        {
+            public void run()
+            {
                 for (IScheduler task : tasksToSchedule)
                 {
                     task.schedule();
                 }
+            }
+        }, 5L, 20L));
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
+        {
+            public void run()
+            {
                 for (MyPetPlayer player : MyPetPlayer.getMyPetPlayers())
                 {
                     player.schedule();
                 }
             }
-        }, 0L, 20L);
+        }, 10L, 20L));
     }
 
     public static void reset()
