@@ -40,18 +40,18 @@ public class RangedAttack extends AIGoal
     private int shootTimer;
     private float walkSpeedModifier;
     private int lastSeenTimer;
-    private int fireRate;
     private float rangeSquared;
+    private Ranged rangedSkill;
 
-    public RangedAttack(EntityMyPet entityMyPet, float walkSpeedModifier, int fireRate, float range)
+    public RangedAttack(EntityMyPet entityMyPet, float walkSpeedModifier, float range)
     {
         this.entityMyPet = entityMyPet;
         this.myPet = entityMyPet.getMyPet();
         this.shootTimer = -1;
         this.lastSeenTimer = 0;
         this.walkSpeedModifier = walkSpeedModifier;
-        this.fireRate = fireRate;
         this.rangeSquared = (range * range);
+        rangedSkill = entityMyPet.getMyPet().getSkills().getSkill(Ranged.class);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class RangedAttack extends AIGoal
             if (distanceToTarget < this.rangeSquared && canSee)
             {
                 shootProjectile(this.target, (float) myPet.getRangedDamage(), getProjectile());
-                this.shootTimer = this.fireRate;
+                this.shootTimer = this.rangedSkill.getRateOfFire();
             }
         }
     }

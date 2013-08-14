@@ -20,12 +20,15 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
+import de.Keyle.MyPet.util.Util;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -37,6 +40,10 @@ public class Ranged implements SkillPropertiesPanel
     private JRadioButton addDamageRadioButton;
     private JRadioButton setDamageRadioButton;
     private JComboBox projectileComboBox;
+    private JLabel arrowsPerSecondLabel;
+    private JRadioButton setRateOfFireRadioButton;
+    private JRadioButton addRateOfFireRadioButton;
+    private JTextField rateOfFireInput;
 
     private CompoundTag compoundTag;
 
@@ -44,6 +51,29 @@ public class Ranged implements SkillPropertiesPanel
     {
         this.compoundTag = compoundTag;
         load(compoundTag);
+
+        rateOfFireInput.addKeyListener(new KeyListener()
+        {
+            public void keyTyped(KeyEvent arg0)
+            {
+            }
+
+            public void keyReleased(KeyEvent arg0)
+            {
+                if (Util.isInt(rateOfFireInput.getText()))
+                {
+                    arrowsPerSecondLabel.setText(String.format("%1.2f", 1. / ((Integer.parseInt(rateOfFireInput.getText()) * 50.) / 1000.)) + " Arrows/Second");
+                }
+                else
+                {
+                    arrowsPerSecondLabel.setText("- Arrows/Second");
+                }
+            }
+
+            public void keyPressed(KeyEvent arg0)
+            {
+            }
+        });
     }
 
     @Override
@@ -55,6 +85,14 @@ public class Ranged implements SkillPropertiesPanel
     @Override
     public void verifyInput()
     {
+        if (!rateOfFireInput.getText().replaceAll("[^0-9]*", "").equals(rateOfFireInput.getText()))
+        {
+            rateOfFireInput.setText(rateOfFireInput.getText().replaceAll("[^0-9]*", ""));
+        }
+        if (!rateOfFireInput.getText().matches("[1-9][0-9]*"))
+        {
+            rateOfFireInput.setText("1");
+        }
         damageInput.setText(damageInput.getText().replaceAll("[^0-9\\.]*", ""));
         if (damageInput.getText().length() > 0)
         {
@@ -90,6 +128,9 @@ public class Ranged implements SkillPropertiesPanel
 
         compoundTag.getValue().put("addset_damage", new StringTag("addset_damage", addDamageRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", Double.parseDouble(damageInput.getText())));
+
+        compoundTag.getValue().put("addset_rateoffire", new StringTag("addset_rateoffire", addRateOfFireRadioButton.isSelected() ? "add" : "set"));
+        compoundTag.getValue().put("rateoffire", new IntTag("rateoffire", Integer.parseInt(rateOfFireInput.getText())));
         return compoundTag;
     }
 
@@ -126,6 +167,19 @@ public class Ranged implements SkillPropertiesPanel
                     break;
                 }
             }
+        }
+
+        if (!compoundTag.getValue().containsKey("addset_rateoffire") || ((StringTag) compoundTag.getValue().get("addset_rateoffire")).getValue().equals("add"))
+        {
+            addRateOfFireRadioButton.setSelected(true);
+        }
+        else
+        {
+            setRateOfFireRadioButton.setSelected(true);
+        }
+        if (compoundTag.getValue().containsKey("rateoffire"))
+        {
+            rateOfFireInput.setText("" + ((IntTag) compoundTag.getValue().get("rateoffire")).getValue());
         }
     }
 }

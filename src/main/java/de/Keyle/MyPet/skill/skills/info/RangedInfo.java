@@ -29,14 +29,15 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Ranged")
 @SkillProperties(
-        parameterNames = {"damage_double", "addset_damage", "projectile"},
-        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String},
-        parameterDefaultValues = {"1.0", "add", "Arrow"})
+        parameterNames = {"damage_double", "addset_damage", "projectile", "rateoffire", "addset_rateoffire"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
+        parameterDefaultValues = {"1.0", "add", "Arrow", "35", "add"})
 public class RangedInfo extends SkillTreeSkill implements ISkillInfo
 {
     private SkillPropertiesPanel panel = null;
 
     protected double damage = 0;
+    protected int rateOfFire = 0;
 
     public enum Projectiles
     {

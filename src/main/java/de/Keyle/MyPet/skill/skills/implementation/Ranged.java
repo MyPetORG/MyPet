@@ -82,10 +82,6 @@ public class Ranged extends RangedInfo implements ISkillInstance
                 {
                     damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
-                if (!quiet)
-                {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
-                }
             }
             if (upgrade.getProperties().getValue().containsKey("projectile"))
             {
@@ -97,6 +93,21 @@ public class Ranged extends RangedInfo implements ISkillInstance
                         selectedProjectile = projectile;
                     }
                 }
+            }
+            if (upgrade.getProperties().getValue().containsKey("rateoffire"))
+            {
+                if (!upgrade.getProperties().getValue().containsKey("addset_rateoffire") || ((StringTag) upgrade.getProperties().getValue().get("addset_rateoffire")).getValue().equals("add"))
+                {
+                    rateOfFire += ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
+                }
+                else
+                {
+                    rateOfFire = ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
+                }
+            }
+            if (!quiet)
+            {
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner()), myPet.getPetName(), Locales.getString("Name." + getProjectile().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)));
             }
             if (isPassive != (damage <= 0))
             {
@@ -116,12 +127,13 @@ public class Ranged extends RangedInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
+        return ChatColor.GOLD + String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.) + ChatColor.RESET + " " + Locales.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset()
     {
         damage = 0;
+        rateOfFire = 0;
         if (myPet.getStatus() == PetState.Here)
         {
             getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
@@ -134,6 +146,15 @@ public class Ranged extends RangedInfo implements ISkillInstance
     public double getDamage()
     {
         return damage;
+    }
+
+    public int getRateOfFire()
+    {
+        if (rateOfFire == 0)
+        {
+            rateOfFire = 1;
+        }
+        return rateOfFire;
     }
 
     public ISkillInstance cloneSkill()
