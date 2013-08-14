@@ -61,12 +61,24 @@ public class SkillTreeLevel
 
     public void addSkill(ISkillInfo skill)
     {
+        addSkill(skill, false);
+    }
+
+    public void addSkill(ISkillInfo skill, boolean top)
+    {
         if (skill == null)
         {
             MyPetLogger.write("Skills->null:");
             MyPetLogger.write(Arrays.toString(Thread.currentThread().getStackTrace()));
         }
-        skillList.add(skill);
+        if (top)
+        {
+            skillList.add(0, skill);
+        }
+        else
+        {
+            skillList.add(skill);
+        }
     }
 
     public void removeSkill(int index)

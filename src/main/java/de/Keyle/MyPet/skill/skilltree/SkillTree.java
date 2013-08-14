@@ -173,11 +173,16 @@ public class SkillTree
 
     public void addSkillToLevel(int level, ISkillInfo skill)
     {
+        addSkillToLevel(level, skill, false);
+    }
+
+    public void addSkillToLevel(int level, ISkillInfo skill, boolean top)
+    {
         if (skill == null)
         {
             MyPetLogger.write("Skills->null:level " + level);
         }
-        addLevel(level).addSkill(skill);
+        addLevel(level).addSkill(skill, top);
     }
 
     public void addSkillToLevel(int level, List<ISkillInfo> skillList)

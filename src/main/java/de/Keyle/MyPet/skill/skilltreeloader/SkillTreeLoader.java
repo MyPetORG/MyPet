@@ -104,7 +104,7 @@ public abstract class SkillTreeLoader
                             if (skillClone != null)
                             {
                                 skillClone.setIsInherited(true);
-                                startSkillTree.addSkillToLevel(level.getLevel(), skillClone);
+                                startSkillTree.addSkillToLevel(level.getLevel(), skillClone, true);
                             }
                         }
                     }
