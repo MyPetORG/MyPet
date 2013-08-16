@@ -34,13 +34,17 @@ import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import net.minecraft.server.v1_6_R2.EntityItem;
+import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R2.entity.*;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
@@ -851,6 +855,41 @@ public class EntityListener implements Listener
             MyPet myPet = ((CraftMyPet) deadEntity).getMyPet();
             if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
             {
+                return;
+            }
+
+            if (Configuration.RELEASE_PETS_ON_DEATH && !myPet.getOwner().isMyPetAdmin())
+            {
+                if (myPet.getSkills().isSkillActive(Inventory.class))
+                {
+                    CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
+                    inv.dropContentAt(myPet.getLocation());
+                }
+                if (myPet instanceof IMyPetEquipment)
+                {
+                    World world = myPet.getCraftPet().getHandle().world;
+                    Location petLocation = myPet.getLocation();
+                    for (net.minecraft.server.v1_6_R2.ItemStack is : ((IMyPetEquipment) myPet).getEquipment())
+                    {
+                        if (is != null)
+                        {
+                            EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
+                            itemEntity.pickupDelay = 10;
+                            world.addEntity(itemEntity);
+                        }
+                    }
+                }
+
+                myPet.removePet();
+                myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(myPet.getOwner().getPlayer().getWorld().getName()).getName(), null);
+
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Release.Dead", myPet.getOwner()), myPet.getPetName()));
+                MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
+                DebugLogger.info(myPet.getOwner().getName() + " released pet (dead).");
+                if (Configuration.STORE_PETS_ON_PET_RELEASE)
+                {
+                    DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
+                }
                 return;
             }
 

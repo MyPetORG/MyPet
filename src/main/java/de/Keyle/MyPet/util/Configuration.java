@@ -87,6 +87,7 @@ public class Configuration
     public static boolean STORE_PETS_ON_PET_LEASH = true;
     public static boolean STORE_PETS_ON_PET_RELEASE = true;
     public static boolean DONATOR_EFFECT = true;
+    public static boolean RELEASE_PETS_ON_DEATH = false;
 
     public static void setDefault()
     {
@@ -99,6 +100,7 @@ public class Configuration
         config.addDefault("MyPet.EnableEvents", false);
         config.addDefault("MyPet.RemovePetsAfterRelease", false);
         config.addDefault("MyPet.FollowStartDistance", 7.0D);
+        config.addDefault("MyPet.ReleasePetsOnDeath", false);
 
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
@@ -274,6 +276,7 @@ public class Configuration
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         DONATOR_EFFECT = config.getBoolean("MyPet.DonatorEffect", true);
+        RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         LEVELUP_FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
