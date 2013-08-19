@@ -241,7 +241,7 @@ public class EntityListener implements Listener
             }
             if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity)
             {
-                MyPet myPet = ((CraftMyPet) event.getDamager()).getMyPet();
+                MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 selfThrownEventRunning = true;
                 if (!PvPChecker.canHurtEvent(myPet.getOwner().getPlayer(), (LivingEntity) event.getEntity()))
