@@ -79,7 +79,7 @@ public class EntityMySheep extends EntityMyPet
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
         {
-            if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData())
+            if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData() && !isSheared())
             {
                 if (itemStack.getData() <= 15)
                 {
