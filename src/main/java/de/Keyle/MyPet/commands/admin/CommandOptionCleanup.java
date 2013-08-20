@@ -24,6 +24,7 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -64,7 +65,10 @@ public class CommandOptionCleanup implements CommandOption
             int deletedPetCount = deletionList.size();
             if (deletedPetCount > 0)
             {
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] created backup -> " + MyPetPlugin.getPlugin().getBackupManager().createBackup());
+                if (Backup.MAKE_BACKUPS)
+                {
+                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] created backup -> " + MyPetPlugin.getPlugin().getBackupManager().createBackup());
+                }
 
                 for (InactiveMyPet inactiveMyPet : deletionList)
                 {
