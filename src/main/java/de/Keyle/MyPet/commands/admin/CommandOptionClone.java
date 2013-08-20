@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
@@ -36,7 +37,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.spout.nbt.CompoundTag;
 
-public class CommandOptionClone implements CommandOption
+import java.util.List;
+
+public class CommandOptionClone implements CommandOptionTabCompleter
 {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args)
@@ -105,5 +108,19 @@ public class CommandOptionClone implements CommandOption
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newOwner.getName() + " successfully cloned!");
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
+    {
+        if (strings.length == 2)
+        {
+            return null;
+        }
+        if (strings.length == 3)
+        {
+            return null;
+        }
+        return CommandAdmin.emptyList;
     }
 }

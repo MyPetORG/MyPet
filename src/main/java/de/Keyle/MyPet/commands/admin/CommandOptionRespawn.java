@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
@@ -32,8 +33,19 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandOptionRespawn implements CommandOption
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandOptionRespawn implements CommandOptionTabCompleter
 {
+    private static List<String> showList = new ArrayList<String>();
+
+    static
+    {
+        showList.add("show");
+        showList.add("<number>");
+    }
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args)
     {
@@ -82,5 +94,19 @@ public class CommandOptionRespawn implements CommandOption
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
+    {
+        if (strings.length == 2)
+        {
+            return null;
+        }
+        if (strings.length == 3)
+        {
+            return showList;
+        }
+        return CommandAdmin.emptyList;
     }
 }

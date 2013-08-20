@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
@@ -33,7 +34,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandOptionSkilltree implements CommandOption
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandOptionSkilltree implements CommandOptionTabCompleter
 {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args)
@@ -77,5 +81,35 @@ public class CommandOptionSkilltree implements CommandOption
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
+    {
+        if (strings.length == 2)
+        {
+            return null;
+        }
+        if (strings.length == 3)
+        {
+            Player player = Bukkit.getServer().getPlayer(strings[1]);
+            if (player == null || !player.isOnline())
+            {
+                return CommandAdmin.emptyList;
+            }
+            if (MyPetList.hasMyPet(player))
+            {
+                MyPet myPet = MyPetList.getMyPet(player);
+                SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
+
+                List<String> skilltreeList = new ArrayList<String>();
+                for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
+                {
+                    skilltreeList.add(skillTree.getName());
+                }
+                return skilltreeList;
+            }
+        }
+        return CommandAdmin.emptyList;
     }
 }

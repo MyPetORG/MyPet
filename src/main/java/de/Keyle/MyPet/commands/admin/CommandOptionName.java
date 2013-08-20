@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -32,10 +33,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandOptionName implements CommandOption
+public class CommandOptionName implements CommandOptionTabCompleter
 {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args)
@@ -82,5 +84,15 @@ public class CommandOptionName implements CommandOption
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] new name is now: " + name);
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
+    {
+        if (strings.length == 2)
+        {
+            return null;
+        }
+        return CommandAdmin.emptyList;
     }
 }

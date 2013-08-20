@@ -20,7 +20,8 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
+import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
@@ -38,8 +39,96 @@ import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 
-public class CommandOptionCreate implements CommandOption
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class CommandOptionCreate implements CommandOptionTabCompleter
 {
+    private static List<String> petTypeList = new ArrayList<String>();
+    private static Map<String, List<String>> petTypeOptionMap = new HashMap<String, List<String>>();
+
+    static
+    {
+        List<String> petTypeOptionList = new ArrayList<String>();
+
+        petTypeOptionList.add("fire");
+        petTypeOptionMap.put("blaze", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("chicken", petTypeOptionList);
+        petTypeOptionMap.put("cow", petTypeOptionList);
+        petTypeOptionMap.put("mooshroom", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("powered");
+        petTypeOptionMap.put("creeper", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("block:");
+        petTypeOptionMap.put("enderman", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("size:");
+        petTypeOptionMap.put("magmacube", petTypeOptionList);
+        petTypeOptionMap.put("slime", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("cat:");
+        petTypeOptionMap.put("ocelot", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("saddle");
+        petTypeOptionMap.put("pig", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("color:");
+        petTypeOptionMap.put("sheep", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("wither");
+        petTypeOptionMap.put("skeleton", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("profession:");
+        petTypeOptionMap.put("villager", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("angry");
+        petTypeOptionList.add("tamed");
+        petTypeOptionList.add("collar:");
+        petTypeOptionMap.put("wolf", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("villager");
+        petTypeOptionMap.put("zombie", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionMap.put("pigzombie", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("chest");
+        petTypeOptionList.add("saddle");
+        petTypeOptionList.add("horse:");
+        petTypeOptionList.add("variant:");
+        petTypeOptionMap.put("horse", petTypeOptionList);
+
+        for (MyPetType petType : MyPetType.values())
+        {
+            petTypeList.add(petType.getTypeName());
+        }
+    }
+
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args)
     {
@@ -229,5 +318,31 @@ public class CommandOptionCreate implements CommandOption
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
+    {
+        int forceOffset = 0;
+        if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f"))
+        {
+            forceOffset = 1;
+        }
+        if (strings.length == 2 + forceOffset)
+        {
+            return null;
+        }
+        if (strings.length == 3 + forceOffset)
+        {
+            return petTypeList;
+        }
+        if (strings.length >= 4 + forceOffset)
+        {
+            if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase()))
+            {
+                return petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
+            }
+        }
+        return CommandAdmin.emptyList;
     }
 }

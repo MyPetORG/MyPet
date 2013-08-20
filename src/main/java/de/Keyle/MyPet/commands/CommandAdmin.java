@@ -21,16 +21,11 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.admin.*;
-import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.skill.skilltree.SkillTree;
-import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,111 +38,8 @@ import java.util.*;
 public class CommandAdmin implements CommandExecutor, TabCompleter
 {
     private static List<String> optionsList = new ArrayList<String>();
-    private static List<String> emptyList = new ArrayList<String>();
-    private static List<String> addSetRemoveList = new ArrayList<String>();
-    private static List<String> showList = new ArrayList<String>();
-    private static List<String> petTypeList = new ArrayList<String>();
-    private static Map<String, List<String>> petTypeOptionMap = new HashMap<String, List<String>>();
+    public final static List<String> emptyList = Collections.unmodifiableList(new ArrayList<String>());
     private static Map<String, CommandOption> commandOptions = new HashMap<String, CommandOption>();
-
-    static
-    {
-        optionsList.add("name");
-        optionsList.add("exp");
-        optionsList.add("respawn");
-        optionsList.add("reload");
-        optionsList.add("reloadskills");
-        optionsList.add("skilltree");
-        optionsList.add("build");
-        optionsList.add("create");
-        optionsList.add("clone");
-        optionsList.add("remove");
-        optionsList.add("cleanup");
-
-        addSetRemoveList.add("add");
-        addSetRemoveList.add("set");
-        addSetRemoveList.add("remove");
-
-        showList.add("show");
-        showList.add("<number>");
-
-        List<String> petTypeOptionList = new ArrayList<String>();
-
-        petTypeOptionList.add("fire");
-        petTypeOptionMap.put("blaze", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("chicken", petTypeOptionList);
-        petTypeOptionMap.put("cow", petTypeOptionList);
-        petTypeOptionMap.put("mooshroom", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("powered");
-        petTypeOptionMap.put("creeper", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("block:");
-        petTypeOptionMap.put("enderman", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("size:");
-        petTypeOptionMap.put("magmacube", petTypeOptionList);
-        petTypeOptionMap.put("slime", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("cat:");
-        petTypeOptionMap.put("ocelot", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("saddle");
-        petTypeOptionMap.put("pig", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("color:");
-        petTypeOptionMap.put("sheep", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("wither");
-        petTypeOptionMap.put("skeleton", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("profession:");
-        petTypeOptionMap.put("villager", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("angry");
-        petTypeOptionList.add("tamed");
-        petTypeOptionList.add("collar:");
-        petTypeOptionMap.put("wolf", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("villager");
-        petTypeOptionMap.put("zombie", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionMap.put("pigzombie", petTypeOptionList);
-
-        petTypeOptionList = new ArrayList<String>();
-        petTypeOptionList.add("baby");
-        petTypeOptionList.add("chest");
-        petTypeOptionList.add("saddle");
-        petTypeOptionList.add("horse:");
-        petTypeOptionList.add("variant:");
-        petTypeOptionMap.put("horse", petTypeOptionList);
-
-        for (MyPetType petType : MyPetType.values())
-        {
-            petTypeList.add(petType.getTypeName());
-        }
-    }
 
     public CommandAdmin()
     {
@@ -210,115 +102,21 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         }
         if (strings.length == 1)
         {
+            if (optionsList.size() != commandOptions.keySet().size())
+            {
+                optionsList = new ArrayList<String>(commandOptions.keySet());
+                Collections.sort(optionsList);
+            }
             return optionsList;
         }
         else if (strings.length >= 1)
         {
-            if (strings[0].equalsIgnoreCase("name"))
+            CommandOption co = commandOptions.get(strings[0]);
+            if (co != null)
             {
-                if (strings.length == 2)
+                if (co instanceof CommandOptionTabCompleter)
                 {
-                    return null;
-                }
-                if (strings.length > 2)
-                {
-                    return emptyList;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("exp"))
-            {
-                if (strings.length == 2)
-                {
-                    return null;
-                }
-                else if (strings.length == 3)
-                {
-                    return emptyList;
-                }
-                else if (strings.length == 4)
-                {
-                    return addSetRemoveList;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("respawn"))
-            {
-                if (strings.length == 2)
-                {
-                    return null;
-                }
-                if (strings.length == 3)
-                {
-                    return showList;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("skilltree"))
-            {
-                if (strings.length == 2)
-                {
-                    return null;
-                }
-                if (strings.length == 3)
-                {
-                    Player player = Bukkit.getServer().getPlayer(strings[1]);
-                    if (player == null || !player.isOnline())
-                    {
-                        return emptyList;
-                    }
-                    if (MyPetList.hasMyPet(player))
-                    {
-                        MyPet myPet = MyPetList.getMyPet(player);
-                        SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
-
-                        List<String> skilltreeList = new ArrayList<String>();
-                        for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
-                        {
-                            skilltreeList.add(skillTree.getName());
-                        }
-                        return skilltreeList;
-                    }
-                    return emptyList;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("create"))
-            {
-                int forceOffset = 0;
-                if (strings.length >= 2 && strings[1].equalsIgnoreCase("-f"))
-                {
-                    forceOffset = 1;
-                }
-                if (strings.length == 2 + forceOffset)
-                {
-                    return null;
-                }
-                if (strings.length == 3 + forceOffset)
-                {
-                    return petTypeList;
-                }
-                if (strings.length >= 4 + forceOffset)
-                {
-                    if (petTypeOptionMap.containsKey(strings[2 + forceOffset].toLowerCase()))
-                    {
-                        return petTypeOptionMap.get(strings[2 + forceOffset].toLowerCase());
-                    }
-                    return emptyList;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("clone"))
-            {
-                if (strings.length == 2)
-                {
-                    return null;
-                }
-                if (strings.length == 3)
-                {
-                    return null;
-                }
-            }
-            else if (strings[0].equalsIgnoreCase("remove"))
-            {
-                if (strings.length == 2)
-                {
-                    return null;
+                    return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
                 }
             }
         }
