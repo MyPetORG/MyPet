@@ -432,7 +432,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public void onLivingUpdate()
     {
-        if (Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
+        if (!this.isInvisible() && Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0)
         {
             donatorParticleCounter = 20 + aC().nextInt(10);
             BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
