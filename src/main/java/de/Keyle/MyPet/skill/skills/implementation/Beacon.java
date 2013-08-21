@@ -397,7 +397,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }
 
         int containerCounter = entityPlayer.nextContainerCounter();
-        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, myPet.getPetName() + "'s - Beacon", beaconInv.getSize(), true));
+        entityPlayer.playerConnection.sendPacket(new Packet100OpenWindow(containerCounter, 7, "MyPet Beacon", beaconInv.getSize(), true));
         entityPlayer.activeContainer = container;
         entityPlayer.activeContainer.windowId = containerCounter;
         entityPlayer.activeContainer.addSlotListener(entityPlayer);
