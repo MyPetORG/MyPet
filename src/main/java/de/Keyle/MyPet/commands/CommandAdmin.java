@@ -53,7 +53,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         commandOptions.put("clone", new CommandOptionClone());
         commandOptions.put("remove", new CommandOptionRemove());
         commandOptions.put("cleanup", new CommandOptionCleanup());
-        commandOptions.put("test", new CommandOptionTest());
+        //commandOptions.put("test", new CommandOptionTest());
 
         commandOptions.put("build", new CommandOption()
         {
