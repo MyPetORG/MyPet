@@ -41,12 +41,11 @@ import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MyPetPlayer implements IScheduler, NBTStorage
 {
+    public final static Set<String> onlinePlayerList = new HashSet<String>();
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
     private String playerName;
@@ -230,7 +229,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     public boolean isOnline()
     {
-        return getPlayer() != null && getPlayer().isOnline();
+        return onlinePlayerList.contains(playerName);
     }
 
     public boolean isInExternalGames()
@@ -363,7 +362,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     public Player getPlayer()
     {
-        return Bukkit.getServer().getPlayer(playerName);
+        return Bukkit.getServer().getPlayerExact(playerName);
     }
 
     public EntityPlayer getEntityPlayer()

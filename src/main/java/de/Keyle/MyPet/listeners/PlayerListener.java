@@ -144,6 +144,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onMyPetPlayerJoin(final PlayerJoinEvent event)
     {
+        MyPetPlayer.onlinePlayerList.add(event.getPlayer().getName());
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
@@ -241,6 +242,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event)
     {
+        MyPetPlayer.onlinePlayerList.remove(event.getPlayer().getName());
         if (MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());

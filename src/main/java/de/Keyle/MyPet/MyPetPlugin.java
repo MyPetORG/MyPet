@@ -114,6 +114,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             MyPetList.clearList();
         }
         Timer.reset();
+        MyPetPlayer.onlinePlayerList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -355,6 +356,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         for (Player player : getServer().getOnlinePlayers())
         {
+            MyPetPlayer.onlinePlayerList.add(player.getName());
             if (MyPetPlayer.isMyPetPlayer(player))
             {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
