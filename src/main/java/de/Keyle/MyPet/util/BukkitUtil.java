@@ -165,6 +165,10 @@ public class BukkitUtil
 
     public static String getPlayerLanguage(Player player)
     {
+        if (!(player instanceof CraftPlayer))
+        {
+            return "en_US";
+        }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         try
         {
