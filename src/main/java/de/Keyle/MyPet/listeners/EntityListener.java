@@ -46,7 +46,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R2.entity.*;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEnderman;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftSkeleton;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -312,20 +315,14 @@ public class EntityListener implements Listener
                         {
                             if (leashTarget instanceof IronGolem)
                             {
-                                //willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
-
-                                //temporary fix
-                                willBeLeashed = ((CraftIronGolem) leashTarget).getHandle().bW();
+                                willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
                             }
                         }
                         else if (flag == LeashFlag.Wild)
                         {
                             if (leashTarget instanceof IronGolem)
                             {
-                                //willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
-
-                                //temporary fix
-                                willBeLeashed = !((CraftIronGolem) leashTarget).getHandle().bW();
+                                willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
                             }
                             else if (leashTarget instanceof Tameable)
                             {
