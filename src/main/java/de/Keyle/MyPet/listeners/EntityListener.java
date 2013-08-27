@@ -751,6 +751,10 @@ public class EntityListener implements Listener
                 {
                     return;
                 }
+                else if (event.getDamage() == 0)
+                {
+                    return;
+                }
                 if (MyPetList.hasMyPet(player))
                 {
                     MyPet myPet = MyPetList.getMyPet(player);
