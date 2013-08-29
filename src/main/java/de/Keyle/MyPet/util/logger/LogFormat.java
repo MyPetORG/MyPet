@@ -36,19 +36,7 @@ public class LogFormat extends Formatter
         String text = new SimpleDateFormat("MM-dd-yyyy HH:mm").format(new Date(record.getMillis()));
         Level level = record.getLevel();
 
-        if (level == Level.FINEST)
-        {
-            text += " [FINEST]";
-        }
-        else if (level == Level.FINER)
-        {
-            text += " [FINER]";
-        }
-        else if (level == Level.FINE)
-        {
-            text += " [FINE]";
-        }
-        else if (level == Level.WARNING)
+        if (level == Level.WARNING)
         {
             text += " [WARNING]";
         }
