@@ -127,7 +127,7 @@ public class Ranged extends RangedInfo implements ISkillInstance
 
     public String getFormattedValue()
     {
-        return ChatColor.GOLD + String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.) + ChatColor.RESET + " " + Locales.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
+        return Util.formatText(Locales.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
     }
 
     public void reset()
