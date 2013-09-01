@@ -38,6 +38,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.*;
 
 public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive
@@ -137,32 +138,37 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                 if (entity instanceof Item)
                 {
                     Item itemEntity = (Item) entity;
+                    ItemStack itemStack = itemEntity.getItemStack();
 
-                    PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemEntity.getItemStack().getAmount());
-                    Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
-
-                    if (playerPickupEvent.isCancelled())
+                    if (itemStack.getAmount() > 0)
                     {
-                        continue;
-                    }
+                        PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
+                        Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
-                    CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
-                    int itemAmount = inv.addItem(itemEntity.getItemStack());
-                    if (itemAmount == 0)
-                    {
-                        for (Entity p : itemEntity.getNearbyEntities(20, 20, 20))
+                        if (playerPickupEvent.isCancelled())
                         {
-                            if (p instanceof Player)
-                            {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
-                            }
+                            continue;
                         }
-                        myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
-                        itemEntity.remove();
-                    }
-                    else
-                    {
-                        itemEntity.getItemStack().setAmount(itemAmount);
+
+                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
+                        int itemAmount = inv.addItem(itemStack);
+                        if (itemAmount == 0)
+                        {
+                            for (Entity p : itemEntity.getNearbyEntities(20, 20, 20))
+                            {
+                                if (p instanceof Player)
+                                {
+                                    ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                }
+                            }
+                            myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
+                            itemStack.setAmount(0);
+                            itemEntity.remove();
+                        }
+                        else
+                        {
+                            itemStack.setAmount(itemAmount);
+                        }
                     }
                 }
             }
