@@ -74,7 +74,7 @@ public class BehaviorFarmTarget extends AIGoal
         for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range)))
         {
             EntityMonster entityMonster = (EntityMonster) entityObj;
-            if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91 || !petEntity.getEntitySenses().canSee(entityMonster))
+            if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91)
             {
                 continue;
             }

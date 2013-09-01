@@ -68,7 +68,7 @@ public class MeleeAttack extends AIGoal
             return false;
         }
         this.targetEntity = targetEntity;
-        return this.petEntity.getEntitySenses().canSee(targetEntity);
+        return true;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class MeleeAttack extends AIGoal
     public void tick()
     {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
-        if (((this.petEntity.getEntitySenses().canSee(targetEntity))) && (--this.timeUntilNextNavigationUpdate <= 0))
+        if (--this.timeUntilNextNavigationUpdate <= 0)
         {
             this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aC().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);

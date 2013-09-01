@@ -77,7 +77,7 @@ public class BehaviorAggressiveTarget extends AIGoal
         {
             EntityLiving entityLiving = (EntityLiving) entityObj;
 
-            if (petEntity.getEntitySenses().canSee(entityLiving) && entityLiving != petEntity && entityLiving.isAlive() && petEntity.e(entityLiving) <= 91)
+            if (entityLiving != petEntity && entityLiving.isAlive() && petEntity.e(entityLiving) <= 91)
             {
                 if (entityLiving instanceof EntityPlayer)
                 {

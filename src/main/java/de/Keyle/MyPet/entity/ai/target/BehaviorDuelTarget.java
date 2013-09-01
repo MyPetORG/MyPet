@@ -80,7 +80,7 @@ public class BehaviorDuelTarget extends AIGoal
             EntityMyPet entityMyPet = (EntityMyPet) entityObj;
             MyPet targetMyPet = entityMyPet.getMyPet();
 
-            if (petEntity.getEntitySenses().canSee(entityMyPet) && entityMyPet != petEntity && entityMyPet.isAlive())
+            if (entityMyPet != petEntity && entityMyPet.isAlive())
             {
                 if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getCraftPet().canMove())
                 {

@@ -73,7 +73,7 @@ public class Sprint extends AIGoal
             return false;
         }
         this.lastTarget = targetEntity;
-        return this.petEntity.getEntitySenses().canSee(targetEntity);
+        return true;
     }
 
     @Override

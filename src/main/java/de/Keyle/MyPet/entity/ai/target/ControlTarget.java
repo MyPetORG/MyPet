@@ -80,7 +80,7 @@ public class ControlTarget extends AIGoal
             {
                 EntityLiving entityLiving = (EntityLiving) entityObj;
 
-                if (petEntity.getEntitySenses().canSee(entityLiving) && entityLiving != petEntity)
+                if (entityLiving != petEntity)
                 {
                     if (entityLiving instanceof EntityPlayer)
                     {
