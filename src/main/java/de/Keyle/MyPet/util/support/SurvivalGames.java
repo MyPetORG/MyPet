@@ -51,7 +51,14 @@ public class SurvivalGames implements Listener
     {
         if (active)
         {
-            return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
+            try
+            {
+                return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -59,7 +66,7 @@ public class SurvivalGames implements Listener
     @EventHandler
     public void onJoinPvPArena(PlayerJoinArenaEvent event)
     {
-        if (DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)

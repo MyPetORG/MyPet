@@ -58,7 +58,14 @@ public class MobArena implements Listener
     {
         if (active && arenaHandler != null)
         {
-            return arenaHandler.isPlayerInArena(owner.getPlayer());
+            try
+            {
+                return arenaHandler.isPlayerInArena(owner.getPlayer());
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -66,7 +73,7 @@ public class MobArena implements Listener
     @EventHandler
     public void onJoinPvPArena(ArenaPlayerJoinEvent event)
     {
-        if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
@@ -80,6 +87,10 @@ public class MobArena implements Listener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMyPetDamageInArena(EntityDamageByEntityEvent event)
     {
+        if (!active)
+        {
+            return;
+        }
         MyPetEntity damager;
 
         if (event.getDamager() instanceof MyPetEntity)

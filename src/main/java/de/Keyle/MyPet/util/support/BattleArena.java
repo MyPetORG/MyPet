@@ -51,8 +51,15 @@ public class BattleArena implements Listener
     {
         if (active)
         {
-            Player p = owner.getPlayer();
-            return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
+            try
+            {
+                Player p = owner.getPlayer();
+                return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -60,7 +67,7 @@ public class BattleArena implements Listener
     @EventHandler
     public void onJoinBattleArena(ArenaPlayerEnterEvent event)
     {
-        if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer().getName());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)

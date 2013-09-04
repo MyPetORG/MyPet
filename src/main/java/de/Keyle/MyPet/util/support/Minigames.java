@@ -17,10 +17,10 @@ public class Minigames implements Listener
     public static boolean DISABLE_PETS_IN_MINIGAMES = true;
 
     private static com.pauldavdesign.mineauz.minigames.Minigames plugin;
+    private static boolean active = false;
 
     public static void findPlugin()
     {
-        boolean active = false;
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("Minigames"))
         {
             plugin = (com.pauldavdesign.mineauz.minigames.Minigames) Bukkit.getServer().getPluginManager().getPlugin("Minigames");
@@ -32,10 +32,20 @@ public class Minigames implements Listener
 
     public static boolean isInMinigame(MyPetPlayer owner)
     {
-        if (plugin != null)
+        if (active)
         {
-            Player p = owner.getPlayer();
-            return plugin.pdata.playersInMinigame().contains(p);
+            try
+            {
+                if (plugin != null)
+                {
+                    Player p = owner.getPlayer();
+                    return plugin.pdata.playersInMinigame().contains(p);
+                }
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -43,7 +53,7 @@ public class Minigames implements Listener
     @EventHandler
     public void onJoinMinigame(JoinMinigameEvent event)
     {
-        if (DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
@@ -57,7 +67,7 @@ public class Minigames implements Listener
     @EventHandler
     public void onSpectateMinigame(SpectateMinigameEvent event)
     {
-        if (DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)

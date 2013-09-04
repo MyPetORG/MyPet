@@ -54,7 +54,14 @@ public class MyHungerGames implements Listener
     {
         if (active)
         {
-            return gameManager.getSpectating(owner.getPlayer()) != null || HungerGames.getInstance().getGameManager().getRawPlayingSession(owner.getPlayer()) != null;
+            try
+            {
+                return gameManager.getSpectating(owner.getPlayer()) != null || HungerGames.getInstance().getGameManager().getRawPlayingSession(owner.getPlayer()) != null;
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -62,7 +69,7 @@ public class MyHungerGames implements Listener
     @EventHandler
     public void onJoinPvPArena(PlayerJoinGameEvent event)
     {
-        if (DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)

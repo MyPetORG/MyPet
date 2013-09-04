@@ -28,7 +28,6 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -52,8 +51,14 @@ public class PvPArena implements Listener
     {
         if (active)
         {
-            Player p = owner.getPlayer();
-            return !PVPArenaAPI.getArenaName(p).equals("");
+            try
+            {
+                return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
+            }
+            catch (Exception e)
+            {
+                active = false;
+            }
         }
         return false;
     }
@@ -61,7 +66,7 @@ public class PvPArena implements Listener
     @EventHandler
     public void onJoinPvPArena(PAJoinEvent event)
     {
-        if (DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
         {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
