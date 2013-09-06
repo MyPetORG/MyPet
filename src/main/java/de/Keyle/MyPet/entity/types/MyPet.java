@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.EntitySize;
@@ -51,18 +52,10 @@ public abstract class MyPet implements IMyPet, NBTStorage
 {
     private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<Class<? extends MyPet>, Double>();
     private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<Class<? extends MyPet>, Double>();
-    private static Map<Class<? extends MyPet>, List<ConfigItem>> food = new HashMap<Class<? extends MyPet>, List<ConfigItem>>();
-    private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
+    private static ArrayListMultimap<Class<? extends MyPet>, ConfigItem> food = ArrayListMultimap.create();
+    private static ArrayListMultimap<Class<? extends MyPet>, LeashFlag> leashFlags = ArrayListMultimap.create();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
-
-    static
-    {
-        for (MyPetType petType : MyPetType.values())
-        {
-            startHP.put(petType.getMyPetClass(), 20D);
-        }
-    }
 
     protected final MyPetPlayer petOwner;
     protected CraftMyPet craftMyPet;
@@ -287,12 +280,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public static List<ConfigItem> getFood(Class<? extends MyPet> myPetClass)
     {
-        List<ConfigItem> foodList = new ArrayList<ConfigItem>();
-        if (food.containsKey(myPetClass))
-        {
-            foodList.addAll(food.get(myPetClass));
-        }
-        return foodList;
+        return food.get(myPetClass);
     }
 
     public double getHealth()
@@ -354,12 +342,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public static List<LeashFlag> getLeashFlags(Class<? extends MyPet> myPetClass)
     {
-        List<LeashFlag> leashFlagList = new ArrayList<LeashFlag>();
-        if (leashFlags.containsKey(myPetClass))
-        {
-            leashFlagList.addAll(leashFlags.get(myPetClass));
-        }
-        return leashFlagList;
+        return leashFlags.get(myPetClass);
     }
 
     public double getYSpawnOffset()
@@ -452,7 +435,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         {
             return startHP.get(myPetClass);
         }
-        return 1;
+        return 20;
     }
 
     public static double getStartSpeed(Class<? extends MyPet> myPetClass)
@@ -548,11 +531,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public static boolean hasLeashFlag(Class<? extends MyPet> myPetClass, LeashFlag flag)
     {
-        if (leashFlags.containsKey(myPetClass))
-        {
-            return leashFlags.get(myPetClass).contains(flag);
-        }
-        return false;
+        return leashFlags.get(myPetClass).contains(flag);
     }
 
     public boolean hasTarget()
@@ -594,10 +573,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
         leashFlags.clear();
         food.clear();
         startSpeed.clear();
-        for (MyPetType petType : MyPetType.values())
-        {
-            startHP.put(petType.getMyPetClass(), 20D);
-        }
+        startHP.clear();
     }
 
     public void respawnPet()
@@ -727,41 +703,21 @@ public abstract class MyPet implements IMyPet, NBTStorage
 
     public static void setFood(Class<? extends MyPet> myPetClass, ConfigItem foodToAdd)
     {
-        if (food.containsKey(myPetClass))
+        for (ConfigItem configItem : food.get(myPetClass))
         {
-            List<ConfigItem> foodList = food.get(myPetClass);
-            for (ConfigItem configItem : foodList)
+            if (configItem.compare(foodToAdd.getItem()))
             {
-                if (configItem.compare(foodToAdd.getItem()))
-                {
-                    return;
-                }
+                return;
             }
-            foodList.add(foodToAdd);
         }
-        else
-        {
-            List<ConfigItem> foodList = new ArrayList<ConfigItem>();
-            foodList.add(foodToAdd);
-            food.put(myPetClass, foodList);
-        }
+        food.put(myPetClass, foodToAdd);
     }
 
     public static void setLeashFlags(Class<? extends MyPet> myPetClass, LeashFlag leashFlagToAdd)
     {
-        if (leashFlags.containsKey(myPetClass))
+        if (!leashFlags.get(myPetClass).contains(leashFlagToAdd))
         {
-            List<LeashFlag> leashFlagList = leashFlags.get(myPetClass);
-            if (!leashFlagList.contains(leashFlagToAdd))
-            {
-                leashFlagList.add(leashFlagToAdd);
-            }
-        }
-        else
-        {
-            List<LeashFlag> leashFlagList = new ArrayList<LeashFlag>();
-            leashFlagList.add(leashFlagToAdd);
-            leashFlags.put(myPetClass, leashFlagList);
+            leashFlags.put(myPetClass, leashFlagToAdd);
         }
     }
 
