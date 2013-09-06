@@ -25,14 +25,14 @@ import de.Keyle.MyPet.skill.skills.info.ControlInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
-import org.bukkit.Material;
 
 public class Control extends ControlInfo implements ISkillInstance
 {
-    public static int CONTROL_ITEM = Material.LEASH.getId();
+    public static ConfigItem CONTROL_ITEM;
     private Location moveTo;
     private Location prevMoveTo;
     private boolean active = false;
@@ -64,7 +64,7 @@ public class Control extends ControlInfo implements ISkillInstance
         {
             if (!quiet && !active)
             {
-                String controlItemName = WordUtils.capitalizeFully(BukkitUtil.getMaterialName(CONTROL_ITEM).replace("_", " "));
+                String controlItemName = WordUtils.capitalizeFully(BukkitUtil.getMaterialName(CONTROL_ITEM.getItem().getTypeId()).replace("_", " "));
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), controlItemName));
 
             }

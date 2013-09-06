@@ -23,17 +23,17 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 import net.minecraft.server.v1_6_R2.Item;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
-import org.bukkit.Material;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet
 {
     public static boolean CAN_LAY_EGGS = true;
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
 
     private int nextEggTimer;
 
@@ -71,7 +71,7 @@ public class EntityMyChicken extends EntityMyPet
 
         if (getOwner().equals(entityhuman) && itemStack != null)
         {
-            if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (isBaby())
                 {

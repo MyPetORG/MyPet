@@ -33,6 +33,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.*;
 import org.bukkit.ChatColor;
@@ -50,7 +51,7 @@ public abstract class MyPet implements IMyPet, NBTStorage
 {
     private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<Class<? extends MyPet>, Double>();
     private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<Class<? extends MyPet>, Double>();
-    private static Map<Class<? extends MyPet>, List<Integer>> food = new HashMap<Class<? extends MyPet>, List<Integer>>();
+    private static Map<Class<? extends MyPet>, List<ConfigItem>> food = new HashMap<Class<? extends MyPet>, List<ConfigItem>>();
     private static Map<Class<? extends MyPet>, List<LeashFlag>> leashFlags = new HashMap<Class<? extends MyPet>, List<LeashFlag>>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
@@ -284,9 +285,9 @@ public abstract class MyPet implements IMyPet, NBTStorage
     {
     }
 
-    public static List<Integer> getFood(Class<? extends MyPet> myPetClass)
+    public static List<ConfigItem> getFood(Class<? extends MyPet> myPetClass)
     {
-        List<Integer> foodList = new ArrayList<Integer>();
+        List<ConfigItem> foodList = new ArrayList<ConfigItem>();
         if (food.containsKey(myPetClass))
         {
             foodList.addAll(food.get(myPetClass));
@@ -724,19 +725,23 @@ public abstract class MyPet implements IMyPet, NBTStorage
         customRespawnTimeFixed.put(myPetClass, factor);
     }
 
-    public static void setFood(Class<? extends MyPet> myPetClass, int foodToAdd)
+    public static void setFood(Class<? extends MyPet> myPetClass, ConfigItem foodToAdd)
     {
         if (food.containsKey(myPetClass))
         {
-            List<Integer> foodList = food.get(myPetClass);
-            if (!foodList.contains(foodToAdd))
+            List<ConfigItem> foodList = food.get(myPetClass);
+            for (ConfigItem configItem : foodList)
             {
-                foodList.add(foodToAdd);
+                if (configItem.compare(foodToAdd.getItem()))
+                {
+                    return;
+                }
             }
+            foodList.add(foodToAdd);
         }
         else
         {
-            List<Integer> foodList = new ArrayList<Integer>();
+            List<ConfigItem> foodList = new ArrayList<ConfigItem>();
             foodList.add(foodToAdd);
             food.put(myPetClass, foodList);
         }

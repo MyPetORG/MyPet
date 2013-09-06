@@ -114,7 +114,7 @@ public class EntityListener implements Listener
                 {
                     damager = (Player) event.getDamager();
                 }
-                if (damager.getItemInHand().getTypeId() == Configuration.LEASH_ITEM)
+                if (Configuration.LEASH_ITEM.compare(damager.getItemInHand()))
                 {
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet))
@@ -271,7 +271,7 @@ public class EntityListener implements Listener
 
                     Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
 
-                    if (damager.getItemInHand().getTypeId() != Configuration.LEASH_ITEM || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
+                    if (Configuration.LEASH_ITEM.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
                     {
                         return;
                     }
@@ -747,7 +747,7 @@ public class EntityListener implements Listener
             if (damager instanceof Player)
             {
                 Player player = (Player) damager;
-                if (player.getItemInHand().getTypeId() == Configuration.LEASH_ITEM && damagedEntity instanceof CraftMyPet)
+                if (Configuration.LEASH_ITEM.compare(player.getItemInHand()) && damagedEntity instanceof CraftMyPet)
                 {
                     return;
                 }

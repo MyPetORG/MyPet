@@ -24,16 +24,16 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
-import org.bukkit.Material;
 import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
     private Sit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet)
@@ -122,7 +122,7 @@ public class EntityMyOcelot extends EntityMyPet
                         return true;
                     }
                 }
-                else if (itemStack.id == GROW_UP_ITEM && canUseItem() && getOwner().getPlayer().isSneaking())
+                else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getOwner().getPlayer().isSneaking())
                 {
                     if (isBaby())
                     {

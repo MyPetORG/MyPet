@@ -26,13 +26,13 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.*;
-import org.bukkit.Material;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
 
     public EntityMyZombie(World world, MyPet myPet)
     {
@@ -177,7 +177,7 @@ public class EntityMyZombie extends EntityMyPet
                 }
                 return true;
             }
-            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (isBaby())
                 {

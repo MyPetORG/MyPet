@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -128,6 +129,15 @@ public class ItemStackComparator
             return true;
         }
         //MyPetLogger.write("has: " + i1.hasItemMeta() + "<->" + i2.hasItemMeta());
+        return false;
+    }
+
+    public static boolean compareTagData(ItemStack i1, ItemStack i2)
+    {
+        if (i1.hasItemMeta() == i2.hasItemMeta())
+        {
+            return CraftItemStack.asNMSCopy(i1).tag.equals(CraftItemStack.asNMSCopy(i2).tag);
+        }
         return false;
     }
 }

@@ -23,17 +23,17 @@ package de.Keyle.MyPet.entity.types.cow;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 import net.minecraft.server.v1_6_R2.Item;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
-import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet
 {
     public static boolean CAN_GIVE_MILK = true;
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
 
     public EntityMyCow(World world, MyPet myPet)
     {
@@ -78,7 +78,7 @@ public class EntityMyCow extends EntityMyPet
                     return true;
                 }
             }
-            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (isBaby())
                 {

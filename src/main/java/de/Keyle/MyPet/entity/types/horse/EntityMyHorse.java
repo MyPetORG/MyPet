@@ -23,13 +23,14 @@ package de.Keyle.MyPet.entity.types.horse;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Material;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.BREAD.getId();
+    public static ConfigItem GROW_UP_ITEM;
     int soundCounter = 0;
     int rearCounter = -1;
     int ageCounter = -1;
@@ -275,7 +276,7 @@ public class EntityMyHorse extends EntityMyPet
                 setArmor(0);
                 return true;
             }
-            else if (itemStack.id == GROW_UP_ITEM)
+            else if (GROW_UP_ITEM.compare(itemStack))
             {
                 if (isBaby())
                 {

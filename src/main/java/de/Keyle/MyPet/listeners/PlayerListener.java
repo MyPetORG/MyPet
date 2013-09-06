@@ -59,7 +59,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event)
     {
-        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && event.getPlayer().getItemInHand().getTypeId() == Control.CONTROL_ITEM && MyPetList.hasMyPet(event.getPlayer()))
+        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasMyPet(event.getPlayer()))
         {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove())

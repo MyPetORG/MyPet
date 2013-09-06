@@ -23,15 +23,15 @@ package de.Keyle.MyPet.entity.types.mooshroom;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
-import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
 
     public EntityMyMooshroom(World world, MyPet myPet)
     {
@@ -66,7 +66,7 @@ public class EntityMyMooshroom extends EntityMyPet
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
         {
-            if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (isBaby())
                 {

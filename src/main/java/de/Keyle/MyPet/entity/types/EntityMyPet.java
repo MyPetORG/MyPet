@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Location;
@@ -222,10 +223,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
     public boolean canEat(ItemStack itemstack)
     {
-        List<Integer> foodList = MyPet.getFood(myPet.getClass());
-        for (int foodItem : foodList)
+        List<ConfigItem> foodList = MyPet.getFood(myPet.getClass());
+        for (ConfigItem foodItem : foodList)
         {
-            if (itemstack.id == foodItem)
+            if (foodItem.compare(itemstack))
             {
                 return true;
             }
@@ -335,7 +336,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman))
         {
-            if (itemStack == null && Ride.RIDE_ITEM == 0)
+            if (Ride.RIDE_ITEM.compare(itemStack))
             {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove())
                 {
@@ -350,30 +351,15 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
                     }
                 }
             }
+            if (de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM.compare(itemStack))
+            {
+                if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class))
+                {
+                    return true;
+                }
+            }
             if (itemStack != null)
             {
-                if (itemStack.id == Ride.RIDE_ITEM)
-                {
-                    if (myPet.getSkills().isSkillActive(Ride.class) && canMove())
-                    {
-                        if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride"))
-                        {
-                            ((CraftPlayer) owner).getHandle().setPassengerOf(this);
-                            return true;
-                        }
-                        else
-                        {
-                            getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
-                        }
-                    }
-                }
-                if (itemStack.id == de.Keyle.MyPet.skill.skills.implementation.Control.CONTROL_ITEM)
-                {
-                    if (myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Control.class))
-                    {
-                        return true;
-                    }
-                }
                 if (canEat(itemStack) && canUseItem())
                 {
                     if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed"))

@@ -23,13 +23,13 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.*;
-import org.bukkit.Material;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet
 {
-    public static int GROW_UP_ITEM = Material.POTION.getId();
+    public static ConfigItem GROW_UP_ITEM;
 
     public EntityMyPig(World world, MyPet myPet)
     {
@@ -90,7 +90,7 @@ public class EntityMyPig extends EntityMyPet
                 makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 itemStack.damage(1, entityhuman);
             }
-            else if (itemStack.id == GROW_UP_ITEM && getOwner().getPlayer().isSneaking())
+            else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
             {
                 if (isBaby())
                 {

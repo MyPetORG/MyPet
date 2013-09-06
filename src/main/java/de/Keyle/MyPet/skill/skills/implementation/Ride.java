@@ -24,12 +24,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
-import org.bukkit.Material;
 
 public class Ride extends RideInfo implements ISkillInstance
 {
-    public static int RIDE_ITEM = Material.LEASH.getId();
+    public static ConfigItem RIDE_ITEM;
     private boolean active = false;
     private MyPet myPet;
 
