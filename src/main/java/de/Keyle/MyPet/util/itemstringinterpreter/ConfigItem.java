@@ -141,7 +141,7 @@ public class ConfigItem
 
     public String toString()
     {
-        return "ConfigItem{mode: " + durabilityMode.name() + ", item: " + item.toString() + "}";
+        return "ConfigItem{mode: " + durabilityMode.name() + ", item: " + item + "}";
     }
 
     public static ConfigItem createConfigItem(String data)
