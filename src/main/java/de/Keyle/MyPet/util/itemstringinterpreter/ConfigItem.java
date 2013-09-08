@@ -22,8 +22,10 @@ package de.Keyle.MyPet.util.itemstringinterpreter;
 
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackComparator;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_6_R2.NBTBase;
 import net.minecraft.server.v1_6_R2.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -157,7 +159,8 @@ public class ConfigItem
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                MyPetLogger.write(ChatColor.RED + "Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
+                MyPetLogger.write(data + tagString);
             }
         }
 

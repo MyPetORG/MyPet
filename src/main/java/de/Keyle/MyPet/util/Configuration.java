@@ -425,7 +425,6 @@ public class Configuration
         {
             MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodString));
         }
-        MyPetLogger.write("n: " + MyPet.getFood(myPetClass).size());
     }
 
     private static String linkLeashFlags(LeashFlag[] leashFlags)
