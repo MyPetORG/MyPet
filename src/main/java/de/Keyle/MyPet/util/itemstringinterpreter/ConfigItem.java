@@ -164,7 +164,7 @@ public class ConfigItem
             }
         }
 
-        String[] splitData = data.split("\\s");
+        String[] splitData = data.split("\\s+");
 
         int itemId = 1;
         int itemDamage = -1;
