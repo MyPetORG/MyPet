@@ -399,13 +399,26 @@ public class Configuration
 
     private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString)
     {
-        MyPetLogger.write("v: " + MyPet.getFood(myPetClass).size());
         foodString = foodString.trim();
+        while (true)
+        {
+            if (foodString.endsWith("\\;"))
+            {
+                foodString = foodString.substring(0, foodString.length() - 2);
+                continue;
+            }
+            if (foodString.endsWith(";"))
+            {
+                foodString = foodString.substring(0, foodString.length() - 1);
+                continue;
+            }
+            break;
+        }
         if (foodString.contains(";"))
         {
-            for (String foodIDString : foodString.split(";"))
+            for (String foodIDString : foodString.split("(?<!\\\\);"))
             {
-                MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodIDString));
+                MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodIDString.replace("\\;", ";")));
             }
         }
         else
