@@ -99,6 +99,21 @@ public class ConfigItem
 
     public boolean compare(net.minecraft.server.v1_6_R2.ItemStack compareItem)
     {
+        if (item == null || item.getTypeId() == 0)
+        {
+            if (compareItem == null || compareItem.id == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        if (compareItem == null)
+        {
+            return false;
+        }
         if (item.getTypeId() != compareItem.id)
         {
             return false;
