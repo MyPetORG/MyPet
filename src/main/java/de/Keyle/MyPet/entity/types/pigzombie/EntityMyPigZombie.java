@@ -169,6 +169,15 @@ public class EntityMyPigZombie extends EntityMyPet
         getDataWatcher().a(12, new Byte((byte) 0)); // is baby
     }
 
+    /**
+     * Returns the speed of played sounds
+     * The faster the higher the sound will be
+     */
+    public float getSoundSpeed()
+    {
+        return super.getSoundSpeed() + 0.4F;
+    }
+
     public boolean isBaby()
     {
         return ((MyPigZombie) myPet).isBaby;

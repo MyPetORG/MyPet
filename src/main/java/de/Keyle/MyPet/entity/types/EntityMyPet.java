@@ -435,7 +435,15 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster
      */
     public float getSoundSpeed()
     {
-        return super.ba();
+        float pitchAddition = 0;
+        if (getMyPet() instanceof IMyPetBaby)
+        {
+            if (((IMyPetBaby) getMyPet()).isBaby())
+            {
+                pitchAddition += 0.5F;
+            }
+        }
+        return (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1 + pitchAddition;
     }
 
     /**
