@@ -58,7 +58,6 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                 }
             }
         }
-
         return true;
     }
 

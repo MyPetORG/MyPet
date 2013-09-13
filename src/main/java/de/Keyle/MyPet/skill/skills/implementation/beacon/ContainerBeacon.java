@@ -122,7 +122,6 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
 
             slot.a(entityhuman, slotItem);
         }
-
         return slotItemClone;
     }
 

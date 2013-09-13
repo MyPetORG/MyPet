@@ -388,7 +388,6 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         if (this.uuid == null) {
             this.uuid = UUID.randomUUID();
         }
-
         return this.uuid;
     }
 

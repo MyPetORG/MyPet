@@ -67,7 +67,6 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
         } else {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", lang), args[2]));
         }
-
         return true;
     }
 

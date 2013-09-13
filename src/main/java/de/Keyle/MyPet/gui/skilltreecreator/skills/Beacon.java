@@ -227,7 +227,6 @@ public class Beacon implements SkillPropertiesPanel {
             resistanceSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_11")).getBooleanValue());
         }
 
-
         if (!compoundTag.getValue().containsKey("addset_duration") || ((StringTag) compoundTag.getValue().get("addset_duration")).getValue().equals("add")) {
             addDurationRadioButton.setSelected(true);
         } else {

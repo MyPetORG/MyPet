@@ -94,7 +94,6 @@ public class Locales {
         if (locale.containsKey(key)) {
             return Colorizer.setColors(locale.getString(key));
         }
-
         return key;
     }
 

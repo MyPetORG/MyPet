@@ -41,7 +41,6 @@ public class NBTTagListHolder extends NBTHolder {
         for (NBTHolder localcs : this.holderList) {
             tagList.add(localcs.getNBT());
         }
-
         return tagList;
     }
 }

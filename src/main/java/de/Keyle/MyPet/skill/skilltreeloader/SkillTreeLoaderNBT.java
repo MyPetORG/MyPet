@@ -151,7 +151,6 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                 savedPetTypes.add(petType);
             }
         }
-
         return savedPetTypes;
     }
 

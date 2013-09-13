@@ -61,7 +61,6 @@ public class MyPetVersion {
         Manifest mf = jf.getManifest();
         jf.close();
         return mf;
-
     }
 
     public static String getMyPetVersion() {

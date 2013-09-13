@@ -144,7 +144,6 @@ public class JavaScript extends Experience {
             }
 
         }
-
         return lastCurrentExp;
     }
 

@@ -223,7 +223,6 @@ public class ItemStringInterpreter {
 
             k++;
         }
-
         return paramString.substring(0, k);
     }
 

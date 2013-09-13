@@ -504,6 +504,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         nbtConfiguration.getNBTCompound().getValue().put("Pets", new ListTag<CompoundTag>("Pets", CompoundTag.class, petList));
         nbtConfiguration.getNBTCompound().getValue().put("Players", savePlayers());
         nbtConfiguration.save();
+
         return petCount;
     }
 

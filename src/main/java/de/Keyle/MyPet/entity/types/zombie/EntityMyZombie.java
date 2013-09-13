@@ -54,9 +54,8 @@ public class EntityMyZombie extends EntityMyPet {
                 return true;
             }
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

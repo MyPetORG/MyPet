@@ -84,7 +84,6 @@ public class SkillTreeLevel {
         for (ISkillInfo skill : skillList) {
             newLevel.addSkill(skill.cloneSkill());
         }
-
         return newLevel;
     }
 

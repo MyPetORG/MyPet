@@ -80,7 +80,6 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         if (option != null) {
             return option.onCommandOption(sender, parameter);
         }
-
         return false;
     }
 

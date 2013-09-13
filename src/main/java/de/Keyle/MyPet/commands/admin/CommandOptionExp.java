@@ -101,7 +101,6 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
                 }
             }
         }
-
         return true;
     }
 

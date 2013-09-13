@@ -63,7 +63,7 @@ public class SkilltreeCreator {
     SkillTreeMobType selectedMobtype;
 
     public SkilltreeCreator() {
-        this.mobTypeComboBox.addItemListener(new ItemListener() {
+        mobTypeComboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     selectedMobtype = SkillTreeMobType.getMobTypeByName(mobTypeComboBox.getSelectedItem().toString());
@@ -71,7 +71,6 @@ public class SkilltreeCreator {
                 }
             }
         });
-
         skilltreeTree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent e) {
                 if (skilltreeTree.getSelectionPath() != null && skilltreeTree.getSelectionPath().getPathCount() == 2) {
@@ -245,7 +244,6 @@ public class SkilltreeCreator {
 
             }
         });
-
         copyMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 skilltreeCopyPaste = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();

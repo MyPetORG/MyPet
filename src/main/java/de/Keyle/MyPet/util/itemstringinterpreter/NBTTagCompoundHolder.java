@@ -41,7 +41,6 @@ public class NBTTagCompoundHolder extends NBTHolder {
         for (NBTHolder holder : this.holderList) {
             localcb.set(holder.name, holder.getNBT());
         }
-
         return localcb;
     }
 }

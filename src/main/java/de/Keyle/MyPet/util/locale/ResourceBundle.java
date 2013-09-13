@@ -52,7 +52,6 @@ public class ResourceBundle extends java.util.ResourceBundle {
         for (java.util.ResourceBundle bundle : this.extensionBundles) {
             keys.addAll(bundle.keySet());
         }
-
         return Collections.enumeration(keys);
     }
 
@@ -62,7 +61,6 @@ public class ResourceBundle extends java.util.ResourceBundle {
         if ((object = getObjectFromExtensionBundles(key)) != null) {
             return object;
         }
-
         return this.parent.getObject(key);
     }
 

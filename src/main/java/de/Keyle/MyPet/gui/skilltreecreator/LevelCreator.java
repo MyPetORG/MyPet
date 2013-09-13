@@ -395,7 +395,6 @@ public class LevelCreator {
                 msg.setWrapStyleWord(true);
 
                 JScrollPane scrollPane = new JScrollPane(msg);
-
                 JOptionPane.showMessageDialog(null, scrollPane, "Edit Skilltree Description", JOptionPane.QUESTION_MESSAGE);
 
                 String[] description = msg.getText().split("\\n");

@@ -55,7 +55,6 @@ public class Experience {
     public Experience(MyPet pet) {
         this.myPet = pet;
 
-
         if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
             expMode = new JavaScript(myPet);
         } else {

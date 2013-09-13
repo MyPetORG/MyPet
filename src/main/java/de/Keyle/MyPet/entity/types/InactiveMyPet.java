@@ -217,7 +217,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
 
         setSkills((CompoundTag) myPetNBT.getValue().get("Skills"));
         setInfo((CompoundTag) myPetNBT.getValue().get("Info"));
-
     }
 
     @Override

@@ -65,7 +65,6 @@ public class CommandOptionCleanup implements CommandOption {
             }
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + deletedPetCount + " MyPets.");
         }
-
         return true;
     }
 }

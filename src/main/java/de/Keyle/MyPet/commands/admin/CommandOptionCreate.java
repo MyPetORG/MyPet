@@ -256,7 +256,6 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
             }
         }
-
         return true;
     }
 
