@@ -23,88 +23,68 @@ package de.Keyle.MyPet.util;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class Economy
-{
+public class Economy {
     public static boolean USE_ECONOMY = true;
     private static boolean searchedVaultEconomy = false;
     private static net.milkbowl.vault.economy.Economy economy = null;
 
-    public static boolean canUseEconomy()
-    {
-        if (!USE_ECONOMY)
-        {
+    public static boolean canUseEconomy() {
+        if (!USE_ECONOMY) {
             return false;
         }
-        if (!searchedVaultEconomy)
-        {
+        if (!searchedVaultEconomy) {
             setupEconomy();
         }
         return economy != null;
     }
 
-    public static boolean canPay(MyPetPlayer petOwner, double costs)
-    {
-        if (!USE_ECONOMY)
-        {
+    public static boolean canPay(MyPetPlayer petOwner, double costs) {
+        if (!USE_ECONOMY) {
             return true;
         }
-        if (!searchedVaultEconomy)
-        {
+        if (!searchedVaultEconomy) {
             setupEconomy();
         }
-        if (economy != null && economy.isEnabled())
-        {
+        if (economy != null && economy.isEnabled()) {
             return economy.has(petOwner.getName(), costs);
         }
         return true;
     }
 
-    public static boolean pay(MyPetPlayer petOwner, double costs)
-    {
-        if (!USE_ECONOMY)
-        {
+    public static boolean pay(MyPetPlayer petOwner, double costs) {
+        if (!USE_ECONOMY) {
             return true;
         }
-        if (!searchedVaultEconomy)
-        {
+        if (!searchedVaultEconomy) {
             setupEconomy();
         }
-        if (economy != null && economy.isEnabled())
-        {
-            if (economy.has(petOwner.getName(), costs))
-            {
+        if (economy != null && economy.isEnabled()) {
+            if (economy.has(petOwner.getName(), costs)) {
                 return economy.withdrawPlayer(petOwner.getName(), costs).transactionSuccess();
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
         return true;
     }
 
-    public static void reset()
-    {
+    public static void reset() {
         USE_ECONOMY = false;
         searchedVaultEconomy = false;
         economy = null;
     }
 
-    public static net.milkbowl.vault.economy.Economy getEconomy()
-    {
+    public static net.milkbowl.vault.economy.Economy getEconomy() {
         return economy;
     }
 
-    public static void setupEconomy()
-    {
-        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("Vault"))
-        {
+    public static void setupEconomy() {
+        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("Vault")) {
             searchedVaultEconomy = true;
             return;
         }
         RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null)
-        {
+        if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }
         searchedVaultEconomy = true;

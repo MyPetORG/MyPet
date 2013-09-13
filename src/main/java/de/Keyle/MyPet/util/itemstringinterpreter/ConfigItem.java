@@ -29,151 +29,115 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
-public class ConfigItem
-{
-    public enum DurabilityMode
-    {
+public class ConfigItem {
+    public enum DurabilityMode {
         Smaller, Bigger, NotUsed, Equal
     }
 
     ItemStack item;
     DurabilityMode durabilityMode = DurabilityMode.NotUsed;
 
-    public ConfigItem(ItemStack item, DurabilityMode durabilityMode)
-    {
+    public ConfigItem(ItemStack item, DurabilityMode durabilityMode) {
         this.item = item;
         this.durabilityMode = durabilityMode;
     }
 
-    public boolean compare(ItemStack compareItem)
-    {
-        if (item == null || item.getTypeId() == 0)
-        {
-            if (compareItem == null || compareItem.getTypeId() == 0)
-            {
+    public boolean compare(ItemStack compareItem) {
+        if (item == null || item.getTypeId() == 0) {
+            if (compareItem == null || compareItem.getTypeId() == 0) {
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
-        if (compareItem == null)
-        {
+        if (compareItem == null) {
             return false;
         }
-        if (item.getTypeId() != compareItem.getTypeId())
-        {
+        if (item.getTypeId() != compareItem.getTypeId()) {
             return false;
         }
-        switch (durabilityMode)
-        {
+        switch (durabilityMode) {
             case Bigger:
-                if (compareItem.getDurability() <= item.getDurability())
-                {
+                if (compareItem.getDurability() <= item.getDurability()) {
                     return false;
                 }
                 break;
             case Smaller:
-                if (compareItem.getDurability() >= item.getDurability())
-                {
+                if (compareItem.getDurability() >= item.getDurability()) {
                     return false;
                 }
                 break;
             case Equal:
-                if (compareItem.getDurability() != item.getDurability())
-                {
+                if (compareItem.getDurability() != item.getDurability()) {
                     return false;
                 }
                 break;
         }
-        if (item.hasItemMeta())
-        {
-            if (!ItemStackComparator.compareTagData(item, compareItem))
-            {
+        if (item.hasItemMeta()) {
+            if (!ItemStackComparator.compareTagData(item, compareItem)) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean compare(net.minecraft.server.v1_6_R2.ItemStack compareItem)
-    {
-        if (item == null || item.getTypeId() == 0)
-        {
-            if (compareItem == null || compareItem.id == 0)
-            {
+    public boolean compare(net.minecraft.server.v1_6_R2.ItemStack compareItem) {
+        if (item == null || item.getTypeId() == 0) {
+            if (compareItem == null || compareItem.id == 0) {
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
-        if (compareItem == null)
-        {
+        if (compareItem == null) {
             return false;
         }
-        if (item.getTypeId() != compareItem.id)
-        {
+        if (item.getTypeId() != compareItem.id) {
             return false;
         }
-        switch (durabilityMode)
-        {
+        switch (durabilityMode) {
             case Bigger:
-                if (compareItem.getData() <= item.getDurability())
-                {
+                if (compareItem.getData() <= item.getDurability()) {
                     return false;
                 }
                 break;
             case Smaller:
-                if (compareItem.getData() >= item.getDurability())
-                {
+                if (compareItem.getData() >= item.getDurability()) {
                     return false;
                 }
                 break;
             case Equal:
-                if (compareItem.getData() != item.getDurability())
-                {
+                if (compareItem.getData() != item.getDurability()) {
                     return false;
                 }
                 break;
         }
-        if (item.hasItemMeta())
-        {
+        if (item.hasItemMeta()) {
             return CraftItemStack.asNMSCopy(item).tag.equals(compareItem.tag);
         }
         return true;
     }
 
-    public ItemStack getItem()
-    {
+    public ItemStack getItem() {
         return item;
     }
 
-    public DurabilityMode getDurabilityMode()
-    {
+    public DurabilityMode getDurabilityMode() {
         return durabilityMode;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "ConfigItem{mode: " + durabilityMode.name() + ", item: " + item + "}";
     }
 
-    public static ConfigItem createConfigItem(String data)
-    {
+    public static ConfigItem createConfigItem(String data) {
         NBTBase nbtBase = null;
-        if (data.contains("{"))
-        {
+        if (data.contains("{")) {
             String tagString = data.substring(data.indexOf("{"));
             data = data.substring(0, data.indexOf("{"));
-            try
-            {
+            try {
                 nbtBase = ItemStringInterpreter.convertString(tagString);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                 MyPetLogger.write(data + tagString);
             }
@@ -185,44 +149,32 @@ public class ConfigItem
         int itemDamage = -1;
         DurabilityMode mode = DurabilityMode.NotUsed;
 
-        if (splitData.length == 0)
-        {
+        if (splitData.length == 0) {
             return new ConfigItem(null, mode);
         }
-        if (splitData.length >= 1)
-        {
-            if (Util.isInt(splitData[0]))
-            {
+        if (splitData.length >= 1) {
+            if (Util.isInt(splitData[0])) {
                 itemId = Integer.parseInt(splitData[0]);
             }
         }
-        if (itemId != 0)
-        {
-            if (splitData.length >= 2)
-            {
-                if (splitData[1].startsWith("<"))
-                {
+        if (itemId != 0) {
+            if (splitData.length >= 2) {
+                if (splitData[1].startsWith("<")) {
                     mode = DurabilityMode.Smaller;
                     splitData[1] = splitData[1].substring(1);
-                }
-                else if (splitData[1].startsWith(">"))
-                {
+                } else if (splitData[1].startsWith(">")) {
                     mode = DurabilityMode.Bigger;
                     splitData[1] = splitData[1].substring(1);
-                }
-                else
-                {
+                } else {
                     mode = DurabilityMode.Equal;
                 }
-                if (Util.isInt(splitData[1]))
-                {
+                if (Util.isInt(splitData[1])) {
                     itemDamage = Integer.parseInt(splitData[1]);
                 }
             }
 
             net.minecraft.server.v1_6_R2.ItemStack is = new net.minecraft.server.v1_6_R2.ItemStack(itemId, 1, itemDamage);
-            if (nbtBase != null && nbtBase instanceof NBTTagCompound)
-            {
+            if (nbtBase != null && nbtBase instanceof NBTTagCompound) {
                 is.setTag((NBTTagCompound) nbtBase);
             }
 

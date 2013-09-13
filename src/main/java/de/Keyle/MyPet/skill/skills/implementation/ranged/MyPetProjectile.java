@@ -22,7 +22,6 @@ package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 
-public interface MyPetProjectile
-{
+public interface MyPetProjectile {
     public EntityMyPet getShooter();
 }

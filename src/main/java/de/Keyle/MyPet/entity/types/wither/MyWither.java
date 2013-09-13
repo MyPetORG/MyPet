@@ -30,23 +30,19 @@ import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Impossible;
 import static org.bukkit.Material.BONE;
 
 @MyPetInfo(food = {BONE}, leashFlags = {Impossible})
-public class MyWither extends MyPet
-{
+public class MyWither extends MyPet {
 
-    public MyWither(MyPetPlayer petOwner)
-    {
+    public MyWither(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Wither;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyWither{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

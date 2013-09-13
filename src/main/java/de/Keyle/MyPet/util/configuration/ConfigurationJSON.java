@@ -29,87 +29,65 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 
-public class ConfigurationJSON
-{
+public class ConfigurationJSON {
     public File jsonFile;
     private JSONObject config;
 
-    public ConfigurationJSON(String path)
-    {
+    public ConfigurationJSON(String path) {
         this(new File(path));
     }
 
-    public ConfigurationJSON(File file)
-    {
+    public ConfigurationJSON(File file) {
         jsonFile = file;
     }
 
-    public JSONObject getJSONObject()
-    {
-        if (config == null)
-        {
+    public JSONObject getJSONObject() {
+        if (config == null) {
             config = new JSONObject();
         }
         return config;
     }
 
-    public boolean load()
-    {
+    public boolean load() {
         config = new JSONObject();
         BufferedReader reader = null;
-        try
-        {
+        try {
             reader = new BufferedReader(new FileReader(jsonFile));
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(reader);
             config = (JSONObject) obj;
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             MyPetLogger.write(ChatColor.RED + "Could not parse/load " + jsonFile.getName());
             DebugLogger.warning("Could not parse/load " + jsonFile.getName());
             return false;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-        finally
-        {
-            if (reader != null)
-            {
-                try
-                {
+        } finally {
+            if (reader != null) {
+                try {
                     reader.close();
-                }
-                catch (IOException ignored)
-                {
+                } catch (IOException ignored) {
                 }
             }
         }
         return true;
     }
 
-    public boolean save()
-    {
-        try
-        {
+    public boolean save() {
+        try {
             // http://jsonformatter.curiousconcept.com/
             BufferedWriter writer = new BufferedWriter(new FileWriter(jsonFile));
             writer.write(config.toJSONString());
             writer.close();
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public void clearConfig()
-    {
+    public void clearConfig() {
         config = new JSONObject();
     }
 }

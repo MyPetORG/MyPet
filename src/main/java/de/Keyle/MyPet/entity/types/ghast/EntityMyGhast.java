@@ -27,33 +27,27 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 4.F, height = 4.F)
-public class EntityMyGhast extends EntityMyPet
-{
-    public EntityMyGhast(World world, MyPet myPet)
-    {
+public class EntityMyGhast extends EntityMyPet {
+    public EntityMyGhast(World world, MyPet myPet) {
         super(world, myPet);
         this.height = 3.5F;
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.ghast.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.ghast.scream";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.ghast.moan";
     }
 
-    public void setPathfinder()
-    {
+    public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
     }

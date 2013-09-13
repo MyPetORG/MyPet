@@ -28,68 +28,56 @@ import net.minecraft.server.v1_6_R2.PathEntity;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
-public class EntityMySlime extends EntityMyPet
-{
+public class EntityMySlime extends EntityMyPet {
     int jumpDelay;
     PathEntity lastPathEntity = null;
 
-    public EntityMySlime(World world, MyPet myPet)
-    {
+    public EntityMySlime(World world, MyPet myPet) {
         super(world, myPet);
         this.jumpDelay = (this.random.nextInt(20) + 10);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.slime." + (getSize() > 1 ? "big" : "small");
 
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return getDeathSound();
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return null;
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return ((MySlime) myPet).size;
     }
 
-    public void setSize(int value)
-    {
+    public void setSize(int value) {
         value = Math.max(1, value);
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
-        if (es != null)
-        {
+        if (es != null) {
             this.a(es.height() * value, es.width() * value);
         }
-        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack"))
-        {
+        if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
         }
         ((MySlime) myPet).size = value;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 1)); //size
     }
 
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e())
-        {
+        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e()) {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 10);
             lastPathEntity = getNavigation().e();
@@ -97,18 +85,15 @@ public class EntityMySlime extends EntityMyPet
         }
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             setSize(((MySlime) myPet).getSize());
         }
     }
 
-    public void setPathfinder()
-    {
+    public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
     }

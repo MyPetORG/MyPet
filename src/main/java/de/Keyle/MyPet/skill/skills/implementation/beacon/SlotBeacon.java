@@ -25,21 +25,17 @@ import net.minecraft.server.v1_6_R2.Item;
 import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.Slot;
 
-public class SlotBeacon extends Slot
-{
+public class SlotBeacon extends Slot {
 
-    public SlotBeacon(IInventory beaconInventory, int index, int posX, int posY)
-    {
+    public SlotBeacon(IInventory beaconInventory, int index, int posX, int posY) {
         super(beaconInventory, index, posX, posY);
     }
 
-    public boolean isAllowed(ItemStack paramItemStack)
-    {
+    public boolean isAllowed(ItemStack paramItemStack) {
         return paramItemStack != null && (paramItemStack.id == Item.EMERALD.id || paramItemStack.id == Item.DIAMOND.id || paramItemStack.id == Item.GOLD_INGOT.id || paramItemStack.id == Item.IRON_INGOT.id);
     }
 
-    public int a()
-    {
+    public int a() {
         return 1;
     }
 }

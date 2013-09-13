@@ -24,41 +24,34 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_6_R2.Entity;
 
-public class LookAtPlayer extends AIGoal
-{
+public class LookAtPlayer extends AIGoal {
     private EntityMyPet petEntity;
     protected Entity targetPlayer;
     private float range;
     private int ticksUntilStopLooking;
     private float lookAtPlayerChance;
 
-    public LookAtPlayer(EntityMyPet petEntity, float range)
-    {
+    public LookAtPlayer(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
         this.range = range;
         this.lookAtPlayerChance = 0.02F;
     }
 
-    public LookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance)
-    {
+    public LookAtPlayer(EntityMyPet petEntity, float range, float lookAtPlayerChance) {
         this.petEntity = petEntity;
         this.range = range;
         this.lookAtPlayerChance = lookAtPlayerChance;
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (this.petEntity.aC().nextFloat() >= this.lookAtPlayerChance)
-        {
+    public boolean shouldStart() {
+        if (this.petEntity.aC().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
-        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
-        {
+        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
             return false;
         }
-        if (this.petEntity.passenger != null)
-        {
+        if (this.petEntity.passenger != null) {
             return false;
         }
         this.targetPlayer = this.petEntity.world.findNearbyPlayer(this.petEntity, this.range);
@@ -66,38 +59,31 @@ public class LookAtPlayer extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
-        if (!this.targetPlayer.isAlive())
-        {
+    public boolean shouldFinish() {
+        if (!this.targetPlayer.isAlive()) {
             return true;
         }
-        if (this.petEntity.e(this.targetPlayer) > this.range * this.range)
-        {
+        if (this.petEntity.e(this.targetPlayer) > this.range * this.range) {
             return true;
         }
-        if (this.petEntity.passenger != null)
-        {
+        if (this.petEntity.passenger != null) {
             return true;
         }
         return this.ticksUntilStopLooking <= 0;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         this.ticksUntilStopLooking = (40 + this.petEntity.aC().nextInt(40));
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         this.targetPlayer = null;
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.petEntity.getControllerLook().a(this.targetPlayer.locX, this.targetPlayer.locY + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ, 10.0F, this.petEntity.bp());
         this.ticksUntilStopLooking -= 1;
     }

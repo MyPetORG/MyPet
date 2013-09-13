@@ -23,70 +23,51 @@ package de.Keyle.MyPet.skill.skills.implementation.beacon;
 import de.Keyle.MyPet.skill.skills.implementation.Beacon;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 
-public class TileEntityBeacon extends net.minecraft.server.v1_6_R2.TileEntityBeacon
-{
+public class TileEntityBeacon extends net.minecraft.server.v1_6_R2.TileEntityBeacon {
     private Beacon beaconSkill;
     private boolean primaryBuffCheck = false;
 
-    public TileEntityBeacon(Beacon beaconSkill)
-    {
+    public TileEntityBeacon(Beacon beaconSkill) {
         this.beaconSkill = beaconSkill;
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public boolean a(EntityHuman entityhuman)
-    {
+    public boolean a(EntityHuman entityhuman) {
         return true;
     }
 
     @Override
-    public void d(int effectId)
-    {
-        try
-        {
-            if (!beaconSkill.activate(true, effectId))
-            {
+    public void d(int effectId) {
+        try {
+            if (!beaconSkill.activate(true, effectId)) {
                 beaconSkill.setTributeItem(beaconSkill.getTributeItem());
-            }
-            else
-            {
+            } else {
                 beaconSkill.setTributeItem(null);
                 primaryBuffCheck = true;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void e(int effectId)
-    {
-        try
-        {
-            if (!beaconSkill.activate(false, effectId))
-            {
+    public void e(int effectId) {
+        try {
+            if (!beaconSkill.activate(false, effectId)) {
                 beaconSkill.setTributeItem(beaconSkill.getTributeItem());
-            }
-            else
-            {
+            } else {
                 beaconSkill.setTributeItem(null);
             }
-            if (primaryBuffCheck)
-            {
+            if (primaryBuffCheck) {
                 beaconSkill.setTributeItem(null);
                 primaryBuffCheck = false;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

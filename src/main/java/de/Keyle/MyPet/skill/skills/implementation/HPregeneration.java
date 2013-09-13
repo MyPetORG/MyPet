@@ -37,99 +37,75 @@ import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
-public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler
-{
+public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler {
     private int timeCounter = 0;
     private MyPet myPet;
 
-    public HPregeneration(boolean addedByInheritance)
-    {
+    public HPregeneration(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return increaseHpBy > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof HPregenerationInfo)
-        {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof HPregenerationInfo) {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().getValue().containsKey("hp"))
-            {
+            if (upgrade.getProperties().getValue().containsKey("hp")) {
                 int hp = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 upgrade.getProperties().getValue().remove("hp");
                 DoubleTag doubleTag = new DoubleTag("hp_double", hp);
                 upgrade.getProperties().getValue().put("hp_double", doubleTag);
             }
-            if (upgrade.getProperties().getValue().containsKey("hp_double"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("hp_double")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add")) {
                     increaseHpBy += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
-                }
-                else
-                {
+                } else {
                     increaseHpBy = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("time"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_time") || ((StringTag) upgrade.getProperties().getValue().get("addset_time")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("time")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_time") || ((StringTag) upgrade.getProperties().getValue().get("addset_time")).getValue().equals("add")) {
                     regenTime -= ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
-                }
-                else
-                {
+                } else {
                     regenTime = ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
                 }
-                if (regenTime < 1)
-                {
+                if (regenTime < 1) {
                     regenTime = 1;
                 }
                 timeCounter = regenTime;
                 valuesEdit = true;
             }
-            if (!quiet && valuesEdit)
-            {
+            if (!quiet && valuesEdit) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.HpRegeneration.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), increaseHpBy, regenTime));
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return "+" + increaseHpBy + Locales.getString("Name.HP", myPet.getOwner().getLanguage()) + " ->" + regenTime + "sec";
     }
 
-    public void reset()
-    {
+    public void reset() {
         regenTime = 0;
         increaseHpBy = 0;
         timeCounter = 0;
     }
 
-    public void schedule()
-    {
-        if (increaseHpBy > 0 && myPet.getStatus() == PetState.Here)
-        {
-            if (timeCounter-- <= 0)
-            {
-                if (myPet.getHealth() < myPet.getMaxHealth())
-                {
+    public void schedule() {
+        if (increaseHpBy > 0 && myPet.getStatus() == PetState.Here) {
+            if (timeCounter-- <= 0) {
+                if (myPet.getHealth() < myPet.getMaxHealth()) {
                     addPotionGraphicalEffect(myPet.getCraftPet(), 0x00FF00, 40); //Green Potion Effect
                     myPet.getCraftPet().getHandle().heal((float) increaseHpBy, EntityRegainHealthEvent.RegainReason.REGEN);
                 }
@@ -139,25 +115,20 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         HPregeneration newSkill = new HPregeneration(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }
 
-    public void addPotionGraphicalEffect(CraftMyPet entity, int color, int duration)
-    {
+    public void addPotionGraphicalEffect(CraftMyPet entity, int color, int duration) {
         final EntityLiving entityLiving = entity.getHandle();
         entityLiving.getDataWatcher().watch(7, new Integer(color));
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
                 int potionEffects = 0;
-                if (!entityLiving.effects.isEmpty())
-                {
+                if (!entityLiving.effects.isEmpty()) {
                     potionEffects = PotionBrewer.a(entityLiving.effects.values());
                 }
                 entityLiving.getDataWatcher().watch(7, new Integer(potionEffects));

@@ -25,22 +25,18 @@ import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Ride")
-public class RideInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class RideInfo extends SkillTreeSkill implements ISkillInfo {
     //protected float speed = 0F;
 
-    public RideInfo(boolean addedByInheritance)
-    {
+    public RideInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
+    public SkillPropertiesPanel getGuiPanel() {
         return null;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         RideInfo newSkill = new RideInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

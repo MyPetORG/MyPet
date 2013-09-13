@@ -37,36 +37,28 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandOptionName implements CommandOptionTabCompleter
-{
+public class CommandOptionName implements CommandOptionTabCompleter {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
-        if (args.length < 2)
-        {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length < 2) {
             return false;
         }
 
         String lang = BukkitUtil.getCommandSenderLanguage(sender);
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-        if (petOwner == null || !petOwner.isOnline())
-        {
+        if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
             return true;
-        }
-        else if (!MyPetList.hasMyPet(petOwner))
-        {
+        } else if (!MyPetList.hasMyPet(petOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
         MyPet myPet = MyPetList.getMyPet(petOwner);
 
         String name = "";
-        for (int i = 1 ; i < args.length ; i++)
-        {
-            if (!name.equals(""))
-            {
+        for (int i = 1; i < args.length; i++) {
+            if (!name.equals("")) {
                 name += " ";
             }
             name += args[i];
@@ -75,8 +67,7 @@ public class CommandOptionName implements CommandOptionTabCompleter
 
         Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
         Matcher regexMatcher = regex.matcher(name);
-        if (regexMatcher.find())
-        {
+        if (regexMatcher.find()) {
             name += ChatColor.RESET;
         }
 
@@ -87,10 +78,8 @@ public class CommandOptionName implements CommandOptionTabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
-    {
-        if (strings.length == 2)
-        {
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        if (strings.length == 2) {
             return null;
         }
         return CommandAdmin.emptyList;

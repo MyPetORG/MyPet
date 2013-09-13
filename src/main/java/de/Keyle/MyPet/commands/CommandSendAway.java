@@ -30,32 +30,21 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandSendAway implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandSendAway implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getStatus() == PetState.Here)
-                {
+                if (myPet.getStatus() == PetState.Here) {
                     myPet.removePet(false);
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
-                }
-                else if (myPet.getStatus() == PetState.Despawned)
-                {
+                } else if (myPet.getStatus() == PetState.Despawned) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
+                } else if (myPet.getStatus() == PetState.Dead) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                 }
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;

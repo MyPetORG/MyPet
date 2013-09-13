@@ -29,31 +29,26 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Inventory")
 @SkillProperties(parameterNames = {"add", "drop"},
-        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
-        parameterDefaultValues = {"1", "false"})
-public class InventoryInfo extends SkillTreeSkill implements ISkillInfo
-{
+                 parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
+                 parameterDefaultValues = {"1", "false"})
+public class InventoryInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected int rows = 0;
     protected boolean dropOnDeath = false;
 
-    public InventoryInfo(boolean addedByInheritance)
-    {
+    public InventoryInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Inventory(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         InventoryInfo newSkill = new InventoryInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

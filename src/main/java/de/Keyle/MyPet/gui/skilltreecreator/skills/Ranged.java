@@ -33,8 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Ranged implements SkillPropertiesPanel
-{
+public class Ranged implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JTextField damageInput;
     private JRadioButton addDamageRadioButton;
@@ -47,83 +46,61 @@ public class Ranged implements SkillPropertiesPanel
 
     private CompoundTag compoundTag;
 
-    public Ranged(CompoundTag compoundTag)
-    {
+    public Ranged(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
 
-        rateOfFireInput.addKeyListener(new KeyListener()
-        {
-            public void keyTyped(KeyEvent arg0)
-            {
+        rateOfFireInput.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
             }
 
-            public void keyReleased(KeyEvent arg0)
-            {
-                if (Util.isInt(rateOfFireInput.getText()))
-                {
+            public void keyReleased(KeyEvent arg0) {
+                if (Util.isInt(rateOfFireInput.getText())) {
                     arrowsPerSecondLabel.setText(String.format("%1.2f", 1. / ((Integer.parseInt(rateOfFireInput.getText()) * 50.) / 1000.)) + " Arrows/Second");
-                }
-                else
-                {
+                } else {
                     arrowsPerSecondLabel.setText("- Arrows/Second");
                 }
             }
 
-            public void keyPressed(KeyEvent arg0)
-            {
+            public void keyPressed(KeyEvent arg0) {
             }
         });
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
-        if (!rateOfFireInput.getText().replaceAll("[^0-9]*", "").equals(rateOfFireInput.getText()))
-        {
+    public void verifyInput() {
+        if (!rateOfFireInput.getText().replaceAll("[^0-9]*", "").equals(rateOfFireInput.getText())) {
             rateOfFireInput.setText(rateOfFireInput.getText().replaceAll("[^0-9]*", ""));
         }
-        if (!rateOfFireInput.getText().matches("[1-9][0-9]*"))
-        {
+        if (!rateOfFireInput.getText().matches("[1-9][0-9]*")) {
             rateOfFireInput.setText("1");
         }
         damageInput.setText(damageInput.getText().replaceAll("[^0-9\\.]*", ""));
-        if (damageInput.getText().length() > 0)
-        {
-            if (damageInput.getText().matches("\\.+"))
-            {
+        if (damageInput.getText().length() > 0) {
+            if (damageInput.getText().matches("\\.+")) {
                 damageInput.setText("0.0");
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
                     Matcher regexMatcher = regex.matcher(damageInput.getText());
                     regexMatcher.find();
                     damageInput.setText(regexMatcher.group());
-                }
-                catch (PatternSyntaxException ignored)
-                {
+                } catch (PatternSyntaxException ignored) {
                     damageInput.setText("0.0");
                 }
             }
-        }
-        else
-        {
+        } else {
             damageInput.setText("0.0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("projectile", new StringTag("projectile", ((String) projectileComboBox.getSelectedItem()).replace(" ", "")));
 
         compoundTag.getValue().put("addset_damage", new StringTag("addset_damage", addDamageRadioButton.isSelected() ? "add" : "set"));
@@ -135,50 +112,37 @@ public class Ranged implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (!compoundTag.getValue().containsKey("addset_damage") || ((StringTag) compoundTag.getValue().get("addset_damage")).getValue().equals("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (!compoundTag.getValue().containsKey("addset_damage") || ((StringTag) compoundTag.getValue().get("addset_damage")).getValue().equals("add")) {
             addDamageRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setDamageRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("damage"))
-        {
+        if (compoundTag.getValue().containsKey("damage")) {
             compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", ((IntTag) compoundTag.getValue().get("damage")).getValue()));
             compoundTag.getValue().remove("damage");
         }
-        if (compoundTag.getValue().containsKey("damage_double"))
-        {
+        if (compoundTag.getValue().containsKey("damage_double")) {
             damageInput.setText("" + ((DoubleTag) compoundTag.getValue().get("damage_double")).getValue());
         }
 
-        if (compoundTag.getValue().containsKey("projectile"))
-        {
+        if (compoundTag.getValue().containsKey("projectile")) {
             String projectileName = ((StringTag) compoundTag.getValue().get("projectile")).getValue();
 
-            for (int i = 0 ; i < projectileComboBox.getItemCount() ; i++)
-            {
-                if (((String) projectileComboBox.getItemAt(i)).replace(" ", "").equalsIgnoreCase(projectileName))
-                {
+            for (int i = 0; i < projectileComboBox.getItemCount(); i++) {
+                if (((String) projectileComboBox.getItemAt(i)).replace(" ", "").equalsIgnoreCase(projectileName)) {
                     projectileComboBox.setSelectedIndex(i);
                     break;
                 }
             }
         }
 
-        if (!compoundTag.getValue().containsKey("addset_rateoffire") || ((StringTag) compoundTag.getValue().get("addset_rateoffire")).getValue().equals("add"))
-        {
+        if (!compoundTag.getValue().containsKey("addset_rateoffire") || ((StringTag) compoundTag.getValue().get("addset_rateoffire")).getValue().equals("add")) {
             addRateOfFireRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setRateOfFireRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("rateoffire"))
-        {
+        if (compoundTag.getValue().containsKey("rateoffire")) {
             rateOfFireInput.setText("" + ((IntTag) compoundTag.getValue().get("rateoffire")).getValue());
         }
     }

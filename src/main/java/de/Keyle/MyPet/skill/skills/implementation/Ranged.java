@@ -31,93 +31,69 @@ import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
-public class Ranged extends RangedInfo implements ISkillInstance
-{
+public class Ranged extends RangedInfo implements ISkillInstance {
     private MyPet myPet;
 
-    public Ranged(boolean addedByInheritance)
-    {
+    public Ranged(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public Projectiles getProjectile()
-    {
+    public Projectiles getProjectile() {
         return selectedProjectile;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return damage > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof RangedInfo)
-        {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof RangedInfo) {
             boolean isPassive = damage <= 0;
-            if (upgrade.getProperties().getValue().containsKey("damage"))
-            {
+            if (upgrade.getProperties().getValue().containsKey("damage")) {
                 int damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 upgrade.getProperties().getValue().remove("damage");
                 DoubleTag doubleTag = new DoubleTag("damage_double", damage);
                 upgrade.getProperties().getValue().put("damage_double", doubleTag);
             }
-            if (upgrade.getProperties().getValue().containsKey("damage_double"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("damage_double")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add")) {
                     damage += ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
-                }
-                else
-                {
+                } else {
                     damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("projectile"))
-            {
+            if (upgrade.getProperties().getValue().containsKey("projectile")) {
                 String projectileName = ((StringTag) upgrade.getProperties().getValue().get("projectile")).getValue();
-                for (Projectiles projectile : Projectiles.values())
-                {
-                    if (projectile.name().equalsIgnoreCase(projectileName))
-                    {
+                for (Projectiles projectile : Projectiles.values()) {
+                    if (projectile.name().equalsIgnoreCase(projectileName)) {
                         selectedProjectile = projectile;
                     }
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("rateoffire"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_rateoffire") || ((StringTag) upgrade.getProperties().getValue().get("addset_rateoffire")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("rateoffire")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_rateoffire") || ((StringTag) upgrade.getProperties().getValue().get("addset_rateoffire")).getValue().equals("add")) {
                     rateOfFire += ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
-                }
-                else
-                {
+                } else {
                     rateOfFire = ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
                 }
             }
-            if (!quiet)
-            {
+            if (!quiet) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ranged.Upgrade", myPet.getOwner()), myPet.getPetName(), Locales.getString("Name." + getProjectile().name(), myPet.getOwner()), damage, String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)));
             }
-            if (isPassive != (damage <= 0))
-            {
-                if (myPet.getStatus() == PetState.Here)
-                {
+            if (isPassive != (damage <= 0)) {
+                if (myPet.getStatus() == PetState.Here) {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().setPathfinder();
-                    if (damage == 0)
-                    {
+                    if (damage == 0) {
                         getMyPet().getCraftPet().getHandle().setGoalTarget(null);
                     }
                 }
@@ -125,17 +101,14 @@ public class Ranged extends RangedInfo implements ISkillInstance
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return Util.formatText(Locales.getString("Message.Skill.Ranged.RoundsPerMinute", myPet.getOwner()), String.format("%1.2f", (1. / ((getRateOfFire() * 50.) / 1000.)) * 60.)) + " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
     }
 
-    public void reset()
-    {
+    public void reset() {
         damage = 0;
         rateOfFire = 0;
-        if (myPet.getStatus() == PetState.Here)
-        {
+        if (myPet.getStatus() == PetState.Here) {
             getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
             getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
             getMyPet().getCraftPet().getHandle().setPathfinder();
@@ -143,22 +116,18 @@ public class Ranged extends RangedInfo implements ISkillInstance
         }
     }
 
-    public double getDamage()
-    {
+    public double getDamage() {
         return damage;
     }
 
-    public int getRateOfFire()
-    {
-        if (rateOfFire == 0)
-        {
+    public int getRateOfFire() {
+        if (rateOfFire == 0) {
             rateOfFire = 1;
         }
         return rateOfFire;
     }
 
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Ranged newSkill = new Ranged(isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

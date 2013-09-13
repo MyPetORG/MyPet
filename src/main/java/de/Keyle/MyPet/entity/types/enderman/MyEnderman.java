@@ -34,31 +34,26 @@ import org.spout.nbt.TagType;
 import static org.bukkit.Material.SOUL_SAND;
 
 @MyPetInfo(food = {SOUL_SAND})
-public class MyEnderman extends MyPet
-{
+public class MyEnderman extends MyPet {
 
     public boolean isScreaming = false;
     int BlockID = 0;
     int BlockData = 0;
 
-    public MyEnderman(MyPetPlayer petOwner)
-    {
+    public MyEnderman(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public int getBlockData()
-    {
+    public int getBlockData() {
         return BlockData;
     }
 
-    public int getBlockID()
-    {
+    public int getBlockID() {
         return BlockID;
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("BlockID", new IntTag("BlockID", getBlockID()));
         info.getValue().put("BlockData", new IntTag("BlockData", getBlockData()));
@@ -67,29 +62,20 @@ public class MyEnderman extends MyPet
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
+    public void setExtendedInfo(CompoundTag info) {
         int id = 0;
         int data = 0;
-        if (info.getValue().containsKey("BlockID"))
-        {
-            if (info.getValue().get("BlockID").getType() == TagType.TAG_SHORT)
-            {
+        if (info.getValue().containsKey("BlockID")) {
+            if (info.getValue().get("BlockID").getType() == TagType.TAG_SHORT) {
                 id = ((ShortTag) info.getValue().get("BlockID")).getValue();
-            }
-            else
-            {
+            } else {
                 id = ((IntTag) info.getValue().get("BlockID")).getValue();
             }
         }
-        if (info.getValue().containsKey("BlockData"))
-        {
-            if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT)
-            {
+        if (info.getValue().containsKey("BlockData")) {
+            if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT) {
                 data = ((ShortTag) info.getValue().get("BlockData")).getValue();
-            }
-            else
-            {
+            } else {
                 data = ((IntTag) info.getValue().get("BlockData")).getValue();
             }
         }
@@ -98,29 +84,23 @@ public class MyEnderman extends MyPet
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Enderman;
     }
 
-    public boolean isScreaming()
-    {
+    public boolean isScreaming() {
         return isScreaming;
     }
 
-    public void setScreaming(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setScreaming(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyEnderman) getCraftPet().getHandle()).setScreaming(flag);
         }
         this.isScreaming = flag;
     }
 
-    public void setBlock(int id, int data)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBlock(int id, int data) {
+        if (status == PetState.Here) {
             ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(id, data);
         }
         this.BlockID = id;
@@ -128,8 +108,7 @@ public class MyEnderman extends MyPet
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
     }
 

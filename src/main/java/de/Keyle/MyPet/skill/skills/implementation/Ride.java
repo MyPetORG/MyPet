@@ -27,38 +27,30 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 
-public class Ride extends RideInfo implements ISkillInstance
-{
+public class Ride extends RideInfo implements ISkillInstance {
     public static ConfigItem RIDE_ITEM;
     private boolean active = false;
     private MyPet myPet;
 
-    public Ride(boolean addedByInheritance)
-    {
+    public Ride(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof RideInfo)
-        {
-            if (!active && !quiet)
-            {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof RideInfo) {
+            if (!active && !quiet) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
             }
             active = true;
@@ -82,27 +74,23 @@ public class Ride extends RideInfo implements ISkillInstance
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         //return Locales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
         return "";
     }
 
-    public void reset()
-    {
+    public void reset() {
         //speed = 0F;
         active = false;
     }
 
-    public float getSpeed()
-    {
+    public float getSpeed() {
         //return speed;
         return 0F;
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Ride newSkill = new Ride(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

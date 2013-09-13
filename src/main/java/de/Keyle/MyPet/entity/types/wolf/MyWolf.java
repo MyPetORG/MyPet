@@ -35,36 +35,30 @@ import static org.bukkit.Material.RAW_BEEF;
 import static org.bukkit.Material.RAW_CHICKEN;
 
 @MyPetInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {Tamed})
-public class MyWolf extends MyPet implements IMyPetBaby
-{
+public class MyWolf extends MyPet implements IMyPetBaby {
     protected boolean isSitting = false;
     protected boolean isBaby = false;
     protected boolean isTamed = false;
     protected boolean isAngry = false;
     protected DyeColor collarColor = DyeColor.RED;
 
-    public MyWolf(MyPetPlayer petOwner)
-    {
+    public MyWolf(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public DyeColor getCollarColor()
-    {
+    public DyeColor getCollarColor() {
         return collarColor;
     }
 
-    public void setCollarColor(DyeColor value)
-    {
-        if (status == PetState.Here)
-        {
+    public void setCollarColor(DyeColor value) {
+        if (status == PetState.Here) {
             ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getDyeData());
         }
         this.collarColor = value;
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Sitting", new ByteTag("Sitting", isSitting()));
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
@@ -75,95 +69,75 @@ public class MyWolf extends MyPet implements IMyPetBaby
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Sitting"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Sitting")) {
             setSitting(((ByteTag) info.getValue().get("Sitting")).getBooleanValue());
         }
-        if (info.getValue().containsKey("CollarColor"))
-        {
+        if (info.getValue().containsKey("CollarColor")) {
             setCollarColor(DyeColor.getByDyeData(((ByteTag) info.getValue().get("CollarColor")).getValue()));
         }
-        if (info.getValue().containsKey("Tamed"))
-        {
+        if (info.getValue().containsKey("Tamed")) {
             setTamed(((ByteTag) info.getValue().get("Tamed")).getBooleanValue());
         }
-        if (info.getValue().containsKey("Baby"))
-        {
+        if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
-        if (info.getValue().containsKey("Angry"))
-        {
+        if (info.getValue().containsKey("Angry")) {
             setAngry(((ByteTag) info.getValue().get("Angry")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Wolf;
     }
 
-    public boolean isAngry()
-    {
+    public boolean isAngry() {
         return isAngry;
     }
 
-    public void setAngry(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setAngry(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyWolf) getCraftPet().getHandle()).setAngry(flag);
         }
         this.isAngry = flag;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBaby(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyWolf) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
-    public boolean isSitting()
-    {
+    public boolean isSitting() {
         return isSitting;
     }
 
-    public void setSitting(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setSitting(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyWolf) getCraftPet().getHandle()).setSitting(flag);
         }
         this.isSitting = flag;
     }
 
-    public boolean isTamed()
-    {
+    public boolean isTamed() {
         return isTamed;
     }
 
-    public void setTamed(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setTamed(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyWolf) getCraftPet().getHandle()).setTamed(flag);
         }
         this.isTamed = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyWolf{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", sitting=" + isSitting() + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 }

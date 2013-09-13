@@ -38,96 +38,68 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandRespawn implements CommandExecutor, TabCompleter
-{
+public class CommandRespawn implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<String>();
     private static List<String> emptyList = new ArrayList<String>();
 
-    static
-    {
+    static {
         optionsList.add("show");
         optionsList.add("pay");
         optionsList.add("auto");
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (!Economy.canUseEconomy() || !Permissions.has(petOwner, "MyPet.command.user.respawn"))
-                {
+                if (!Economy.canUseEconomy() || !Permissions.has(petOwner, "MyPet.command.user.respawn")) {
                     myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
 
                 double costs = myPet.getRespawnTime() * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
-                if (args.length == 0)
-                {
+                if (args.length == 0) {
                     String costsString;
-                    if (myPet.getStatus() != PetState.Dead)
-                    {
+                    if (myPet.getStatus() != PetState.Dead) {
                         costsString = "-";
-                    }
-                    else
-                    {
+                    } else {
                         costsString = costs + " " + Economy.getEconomy().currencyNameSingular();
                     }
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                     return true;
                 }
 
-                if (args.length >= 1)
-                {
-                    if (args[0].equalsIgnoreCase("AUTO"))
-                    {
-                        if (args.length >= 2)
-                        {
-                            if (Util.isInt(args[1]))
-                            {
+                if (args.length >= 1) {
+                    if (args[0].equalsIgnoreCase("AUTO")) {
+                        if (args.length >= 2) {
+                            if (Util.isInt(args[1])) {
                                 myPet.getOwner().setAutoRespawnMin(Integer.parseInt(args[1]));
                                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.AutoMin", petOwner), args[1]));
                             }
-                        }
-                        else
-                        {
+                        } else {
                             myPet.getOwner().setAutoRespawnEnabled(!myPet.getOwner().hasAutoRespawnEnabled());
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Auto", petOwner), Locales.getString("Name." + (myPet.getOwner().hasAutoRespawnEnabled() ? "Enabled" : "Disabled"), petOwner)));
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("pay"))
-                    {
-                        if (Economy.canPay(myPet.getOwner(), costs))
-                        {
+                    } else if (args[0].equalsIgnoreCase("pay")) {
+                        if (Economy.canPay(myPet.getOwner(), costs)) {
                             Economy.pay(myPet.getOwner(), costs);
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                             myPet.setRespawnTime(1);
-                        }
-                        else
-                        {
+                        } else {
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.NoMoney", petOwner), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                         }
-                    }
-                    else if (args[0].equalsIgnoreCase("show"))
-                    {
+                    } else if (args[0].equalsIgnoreCase("show")) {
                         String costsString;
-                        if (myPet.getStatus() != PetState.Dead)
-                        {
+                        if (myPet.getStatus() != PetState.Dead) {
                             costsString = "-";
-                        }
-                        else
-                        {
+                        } else {
                             costsString = costs + " " + Economy.getEconomy().currencyNameSingular();
                         }
                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Show", petOwner), myPet.getPetName(), costsString, (myPet.getOwner().hasAutoRespawnEnabled() ? ChatColor.GREEN : ChatColor.RED).toString()));
                     }
                 }
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
@@ -137,10 +109,8 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (strings.length == 1)
-        {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (strings.length == 1) {
             return optionsList;
         }
         return emptyList;

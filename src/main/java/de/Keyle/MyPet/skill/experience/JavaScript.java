@@ -34,8 +34,7 @@ import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
 
-public class JavaScript extends Experience
-{
+public class JavaScript extends Experience {
     private static String expScript = null;
     private ScriptEngine scriptEngine = null;
     private boolean isUsable = false;
@@ -47,19 +46,14 @@ public class JavaScript extends Experience
     private double lastCurrentExp = 0.0;
     private double lastRequiredExp = 0.0;
 
-    public JavaScript(MyPet myPet)
-    {
+    public JavaScript(MyPet myPet) {
         super(myPet);
 
-        if (expScript == null)
-        {
-            if (setScriptPath(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "exp.js"))
-            {
+        if (expScript == null) {
+            if (setScriptPath(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "exp.js")) {
                 MyPetLogger.write("Custom EXP-Script loaded!");
                 DebugLogger.info("loaded exp.js.");
-            }
-            else
-            {
+            } else {
                 MyPetLogger.write("No custom EXP-Script found (exp.js).");
                 DebugLogger.info("exp.js not loaded.");
                 isUsable = false;
@@ -67,12 +61,9 @@ public class JavaScript extends Experience
             }
         }
 
-        try
-        {
+        try {
             initScriptEngine();
-        }
-        catch (ScriptException e)
-        {
+        } catch (ScriptException e) {
             MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
             DebugLogger.warning("Error in EXP-Script!");
             isUsable = false;
@@ -85,33 +76,24 @@ public class JavaScript extends Experience
         getCurrentExp(0);
     }
 
-    public boolean isUsable()
-    {
+    public boolean isUsable() {
         return isUsable;
     }
 
-    public int getLevel(double exp)
-    {
-        if (lastExpL == exp)
-        {
+    public int getLevel(double exp) {
+        if (lastExpL == exp) {
             return lastLevel;
         }
         lastExpL = exp;
-        if (scriptEngine instanceof Invocable)
-        {
-            try
-            {
+        if (scriptEngine instanceof Invocable) {
+            try {
                 Object result = ((Invocable) scriptEngine).invokeFunction("getLevel", exp);
                 lastLevel = ((Double) result).intValue();
-            }
-            catch (ScriptException e)
-            {
+            } catch (ScriptException e) {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
                 DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
-            }
-            catch (NoSuchMethodException e)
-            {
+            } catch (NoSuchMethodException e) {
                 MyPetLogger.write(ChatColor.RED + "getRequiredExp(exp) Method is missing!");
                 DebugLogger.warning("getRequiredExp(exp) Method is missing!");
                 isUsable = false;
@@ -120,28 +102,20 @@ public class JavaScript extends Experience
         return lastLevel;
     }
 
-    public double getRequiredExp(double exp)
-    {
-        if (lastExpR == exp)
-        {
+    public double getRequiredExp(double exp) {
+        if (lastExpR == exp) {
             return lastRequiredExp;
         }
         lastExpR = exp;
-        if (scriptEngine instanceof Invocable)
-        {
-            try
-            {
+        if (scriptEngine instanceof Invocable) {
+            try {
                 Object result = ((Invocable) scriptEngine).invokeFunction("getRequiredExp", exp);
                 lastRequiredExp = (Double) result;
-            }
-            catch (ScriptException e)
-            {
+            } catch (ScriptException e) {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
                 DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
-            }
-            catch (NoSuchMethodException e)
-            {
+            } catch (NoSuchMethodException e) {
                 MyPetLogger.write(ChatColor.RED + "getRequiredExp(exp) Method is missing!");
                 DebugLogger.warning("getRequiredExp(exp) Method is missing!");
                 isUsable = false;
@@ -150,28 +124,20 @@ public class JavaScript extends Experience
         return lastRequiredExp;
     }
 
-    public double getCurrentExp(double exp)
-    {
-        if (lastExpC == exp)
-        {
+    public double getCurrentExp(double exp) {
+        if (lastExpC == exp) {
             return lastCurrentExp;
         }
         lastExpC = exp;
-        if (scriptEngine instanceof Invocable)
-        {
-            try
-            {
+        if (scriptEngine instanceof Invocable) {
+            try {
                 Object result = ((Invocable) scriptEngine).invokeFunction("getCurrentExp", exp);
                 lastCurrentExp = (Double) result;
-            }
-            catch (ScriptException e)
-            {
+            } catch (ScriptException e) {
                 MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
                 DebugLogger.warning("Error in EXP-Script!");
                 isUsable = false;
-            }
-            catch (NoSuchMethodException e)
-            {
+            } catch (NoSuchMethodException e) {
                 MyPetLogger.write(ChatColor.RED + "getCurrentExp(exp) Method is missing!");
                 DebugLogger.warning("getCurrentExp(exp) Method is missing!");
                 isUsable = false;
@@ -182,33 +148,27 @@ public class JavaScript extends Experience
         return lastCurrentExp;
     }
 
-    public static boolean setScriptPath(String path)
-    {
-        try
-        {
+    public static boolean setScriptPath(String path) {
+        try {
             expScript = Util.readFileAsString(path);
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             expScript = null;
             return false;
         }
     }
 
-    public static void reset()
-    {
+    public static void reset() {
         expScript = null;
     }
 
-    private ScriptEngine initScriptEngine() throws ScriptException
-    {
+    private ScriptEngine initScriptEngine() throws ScriptException {
         ScriptEngineManager manager = new ScriptEngineManager();
         scriptEngine = manager.getEngineByName("js");
 
         scriptEngine.eval("MyPet = new Object();" +
-                "MyPet.getType = function() { return \"" + getMyPet().getPetType().getTypeName() + "\"; };" +
-                "MyPet.getOwnerName = function() { return \"" + getMyPet().getOwner().getName() + "\"; };");
+                                  "MyPet.getType = function() { return \"" + getMyPet().getPetType().getTypeName() + "\"; };" +
+                                  "MyPet.getOwnerName = function() { return \"" + getMyPet().getOwner().getName() + "\"; };");
 
         scriptEngine.eval(expScript);
 

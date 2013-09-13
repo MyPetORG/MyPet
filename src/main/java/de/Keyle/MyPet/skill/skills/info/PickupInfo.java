@@ -32,28 +32,23 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"range", "addset_range"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "add"})
-public class PickupInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class PickupInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double range = 0;
 
-    public PickupInfo(boolean addedByInheritance)
-    {
+    public PickupInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Pickup(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         PickupInfo newSkill = new PickupInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

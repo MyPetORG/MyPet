@@ -70,66 +70,49 @@ import org.bukkit.material.MaterialData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandRelease implements CommandExecutor, TabCompleter
-{
+public class CommandRelease implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (!Permissions.has(petOwner, "MyPet.user.command.release"))
-                {
+                if (!Permissions.has(petOwner, "MyPet.user.command.release")) {
                     return true;
                 }
-                if (myPet.getStatus() == PetState.Despawned)
-                {
+                if (myPet.getStatus() == PetState.Despawned) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
+                } else if (myPet.getStatus() == PetState.Dead) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (args.length < 1)
-                {
+                if (args.length < 1) {
                     return false;
                 }
                 String name = "";
-                for (String arg : args)
-                {
-                    if (!name.equals(""))
-                    {
+                for (String arg : args) {
+                    if (!name.equals("")) {
                         name += " ";
                     }
                     name += arg;
                 }
-                if (ChatColor.stripColor(myPet.getPetName()).equalsIgnoreCase(name))
-                {
-                    if (myPet.getSkills().isSkillActive(Inventory.class))
-                    {
+                if (ChatColor.stripColor(myPet.getPetName()).equalsIgnoreCase(name)) {
+                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         inv.dropContentAt(myPet.getLocation());
                     }
 
-                    if (!Configuration.REMOVE_PETS_AFTER_RELEASE)
-                    {
+                    if (!Configuration.REMOVE_PETS_AFTER_RELEASE) {
                         LivingEntity normalEntity = (LivingEntity) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), myPet.getPetType().getEntityType());
 
-                        if (myPet instanceof IMyPetEquipment)
-                        {
+                        if (myPet instanceof IMyPetEquipment) {
                             World world = myPet.getCraftPet().getHandle().world;
                             Location petLocation = myPet.getLocation();
-                            for (ItemStack is : ((IMyPetEquipment) myPet).getEquipment())
-                            {
-                                if (is != null)
-                                {
+                            for (ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
+                                if (is != null) {
                                     EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
                                     itemEntity.pickupDelay = 10;
                                     world.addEntity(itemEntity);
@@ -137,161 +120,97 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                             }
                         }
 
-                        if (myPet instanceof MyChicken)
-                        {
-                            if (((MyChicken) myPet).isBaby())
-                            {
+                        if (myPet instanceof MyChicken) {
+                            if (((MyChicken) myPet).isBaby()) {
                                 ((Chicken) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Chicken) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyCow)
-                        {
-                            if (((MyCow) myPet).isBaby())
-                            {
+                        } else if (myPet instanceof MyCow) {
+                            if (((MyCow) myPet).isBaby()) {
                                 ((Cow) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Cow) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyCreeper)
-                        {
+                        } else if (myPet instanceof MyCreeper) {
                             ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
-                        }
-                        else if (myPet instanceof MyEnderman)
-                        {
+                        } else if (myPet instanceof MyEnderman) {
                             MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlockID(), (byte) ((MyEnderman) myPet).getBlockData());
                             ((Enderman) normalEntity).setCarriedMaterial(materialData);
-                        }
-                        else if (myPet instanceof MyIronGolem)
-                        {
+                        } else if (myPet instanceof MyIronGolem) {
                             ((IronGolem) normalEntity).setPlayerCreated(true);
-                        }
-                        else if (myPet instanceof MyMooshroom)
-                        {
-                            if (((MyMooshroom) myPet).isBaby())
-                            {
+                        } else if (myPet instanceof MyMooshroom) {
+                            if (((MyMooshroom) myPet).isBaby()) {
                                 ((MushroomCow) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((MushroomCow) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyMagmaCube)
-                        {
+                        } else if (myPet instanceof MyMagmaCube) {
                             ((MagmaCube) normalEntity).setSize(((MyMagmaCube) myPet).getSize());
-                        }
-                        else if (myPet instanceof MyOcelot)
-                        {
+                        } else if (myPet instanceof MyOcelot) {
                             ((Ocelot) normalEntity).setCatType(Type.WILD_OCELOT);
                             ((Ocelot) normalEntity).setTamed(false);
-                            if (((MyOcelot) myPet).isBaby())
-                            {
+                            if (((MyOcelot) myPet).isBaby()) {
                                 ((Ocelot) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Ocelot) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyPig)
-                        {
+                        } else if (myPet instanceof MyPig) {
                             ((Pig) normalEntity).setSaddle(((MyPig) myPet).hasSaddle());
-                            if (((MyPig) myPet).isBaby())
-                            {
+                            if (((MyPig) myPet).isBaby()) {
                                 ((Pig) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Pig) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MySheep)
-                        {
+                        } else if (myPet instanceof MySheep) {
                             ((Sheep) normalEntity).setSheared(((MySheep) myPet).isSheared());
                             ((Sheep) normalEntity).setColor(((MySheep) myPet).getColor());
-                            if (((MySheep) myPet).isBaby())
-                            {
+                            if (((MySheep) myPet).isBaby()) {
                                 ((Sheep) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Sheep) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyVillager)
-                        {
+                        } else if (myPet instanceof MyVillager) {
                             ((Villager) normalEntity).setProfession(Profession.getProfession(((MyVillager) myPet).getProfession()));
-                            if (((MyVillager) myPet).isBaby())
-                            {
+                            if (((MyVillager) myPet).isBaby()) {
                                 ((Villager) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Villager) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MyWolf)
-                        {
+                        } else if (myPet instanceof MyWolf) {
                             ((Wolf) normalEntity).setTamed(false);
-                            if (((MyWolf) myPet).isBaby())
-                            {
+                            if (((MyWolf) myPet).isBaby()) {
                                 ((Wolf) normalEntity).setBaby();
-                            }
-                            else
-                            {
+                            } else {
                                 ((Wolf) normalEntity).setAdult();
                             }
-                        }
-                        else if (myPet instanceof MySlime)
-                        {
+                        } else if (myPet instanceof MySlime) {
                             ((Slime) normalEntity).setSize(((MySlime) myPet).getSize());
-                        }
-                        else if (myPet instanceof MyZombie)
-                        {
+                        } else if (myPet instanceof MyZombie) {
                             ((Zombie) normalEntity).setBaby(((MyZombie) myPet).isBaby());
-                        }
-                        else if (myPet instanceof MySkeleton)
-                        {
-                            if (((MySkeleton) myPet).isWither())
-                            {
+                        } else if (myPet instanceof MySkeleton) {
+                            if (((MySkeleton) myPet).isWither()) {
                                 ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
                                 ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.STONE_SWORD));
-                            }
-                            else
-                            {
+                            } else {
                                 ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
                             }
-                        }
-                        else if (myPet instanceof MyPigZombie)
-                        {
+                        } else if (myPet instanceof MyPigZombie) {
                             ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
                             ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
-                        }
-                        else if (myPet instanceof MyHorse)
-                        {
+                        } else if (myPet instanceof MyHorse) {
                             ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());
                             ((CraftHorse) normalEntity).getHandle().setVariant(((MyHorse) myPet).getVariant());
                             ((CraftHorse) normalEntity).getHandle().setType(((MyHorse) myPet).getHorseType());
                             ((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
 
-                            if (((MyHorse) myPet).hasSaddle())
-                            {
+                            if (((MyHorse) myPet).hasSaddle()) {
                                 ((Horse) normalEntity).getInventory().setSaddle(new org.bukkit.inventory.ItemStack(Material.SADDLE));
                                 ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
-                            }
-                            else
-                            {
+                            } else {
                                 ((Horse) normalEntity).setTamed(false);
                             }
-                            if (((MyHorse) myPet).getArmor() > 0)
-                            {
+                            if (((MyHorse) myPet).getArmor() > 0) {
                                 ((Horse) normalEntity).getInventory().setArmor(new org.bukkit.inventory.ItemStack(416 + ((MyHorse) myPet).getArmor()));
                             }
                         }
@@ -302,20 +221,15 @@ public class CommandRelease implements CommandExecutor, TabCompleter
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
-                    if (Configuration.STORE_PETS_ON_PET_RELEASE)
-                    {
+                    if (Configuration.STORE_PETS_ON_PET_RELEASE) {
                         DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                     }
                     return true;
-                }
-                else
-                {
+                } else {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.ShowPetName", petOwner), myPet.getPetName()));
                     return true;
                 }
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
@@ -325,10 +239,8 @@ public class CommandRelease implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (MyPetList.hasMyPet((Player) commandSender))
-        {
+    public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
+        if (MyPetList.hasMyPet((Player) commandSender)) {
             List<String> petnameList = new ArrayList<String>();
             petnameList.add(MyPetPlayer.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
             return petnameList;

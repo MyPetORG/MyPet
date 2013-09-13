@@ -31,8 +31,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyPetCustomBeaconInventory implements IInventory
-{
+public class MyPetCustomBeaconInventory implements IInventory {
     public List<HumanEntity> transaction = new ArrayList<HumanEntity>();
     private int maxStack = 64;
     private ItemStack tributeItem;
@@ -40,52 +39,41 @@ public class MyPetCustomBeaconInventory implements IInventory
 
     // Inventory Methods --------------------------------------------------------------------------------------------
 
-    public MyPetCustomBeaconInventory(Beacon beaconSkill)
-    {
+    public MyPetCustomBeaconInventory(Beacon beaconSkill) {
         this.beaconSkill = beaconSkill;
     }
 
-    public ItemStack[] getContents()
-    {
+    public ItemStack[] getContents() {
         return null;
     }
 
-    public void onOpen(CraftHumanEntity who)
-    {
+    public void onOpen(CraftHumanEntity who) {
         this.transaction.add(who);
     }
 
-    public void onClose(CraftHumanEntity who)
-    {
+    public void onClose(CraftHumanEntity who) {
         this.transaction.remove(who);
     }
 
-    public List<HumanEntity> getViewers()
-    {
+    public List<HumanEntity> getViewers() {
         return this.transaction;
     }
 
-    public InventoryHolder getOwner()
-    {
+    public InventoryHolder getOwner() {
         return null;
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return 1;
     }
 
-    public ItemStack getItem(int slot)
-    {
+    public ItemStack getItem(int slot) {
         return slot == 0 ? this.tributeItem : null;
     }
 
-    public ItemStack splitStack(int slot, int amount)
-    {
-        if (slot == 0 && this.tributeItem != null)
-        {
-            if (amount >= this.tributeItem.count)
-            {
+    public ItemStack splitStack(int slot, int amount) {
+        if (slot == 0 && this.tributeItem != null) {
+            if (amount >= this.tributeItem.count) {
                 ItemStack itemstack = this.tributeItem;
 
                 this.tributeItem = null;
@@ -97,10 +85,8 @@ public class MyPetCustomBeaconInventory implements IInventory
         return null;
     }
 
-    public ItemStack splitWithoutUpdate(int i)
-    {
-        if (i == 0 && this.tributeItem != null)
-        {
+    public ItemStack splitWithoutUpdate(int i) {
+        if (i == 0 && this.tributeItem != null) {
             ItemStack itemstack = this.tributeItem;
 
             beaconSkill.tributeItem = null;
@@ -110,63 +96,49 @@ public class MyPetCustomBeaconInventory implements IInventory
         return null;
     }
 
-    public void setItem(int i, ItemStack itemStack)
-    {
-        if (i == 0)
-        {
-            if (itemStack != null)
-            {
+    public void setItem(int i, ItemStack itemStack) {
+        if (i == 0) {
+            if (itemStack != null) {
                 beaconSkill.tributeItem = itemStack.cloneItemStack();
-            }
-            else
-            {
+            } else {
                 beaconSkill.tributeItem = null;
             }
             this.tributeItem = itemStack;
         }
     }
 
-    public String getName()
-    {
+    public String getName() {
         return "";
     }
 
-    public int getMaxStackSize()
-    {
+    public int getMaxStackSize() {
         return this.maxStack;
     }
 
-    public void setMaxStackSize(int size)
-    {
+    public void setMaxStackSize(int size) {
         this.maxStack = size;
     }
 
-    public void update()
-    {
+    public void update() {
     }
 
-    public void startOpen()
-    {
+    public void startOpen() {
     }
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public boolean a(EntityHuman entityHuman)
-    {
+    public boolean a(EntityHuman entityHuman) {
         return true;
     }
 
-    public boolean b(int paramInt, ItemStack paramItemStack)
-    {
+    public boolean b(int paramInt, ItemStack paramItemStack) {
         return true;
     }
 
-    public boolean c()
-    {
+    public boolean c() {
         return true;
     }
 
-    public void g()
-    {
+    public void g() {
     }
 }

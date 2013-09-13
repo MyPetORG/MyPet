@@ -32,99 +32,75 @@ import net.minecraft.server.v1_6_R2.EntityTameableAnimal;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public class OwnerHurtByTarget extends AIGoal
-{
+public class OwnerHurtByTarget extends AIGoal {
     private EntityMyPet petEntity;
     private EntityLiving lastDamager;
     private MyPet myPet;
     private Behavior behaviorSkill = null;
     private EntityPlayer owner;
 
-    public OwnerHurtByTarget(EntityMyPet entityMyPet)
-    {
+    public OwnerHurtByTarget(EntityMyPet entityMyPet) {
         this.petEntity = entityMyPet;
         myPet = entityMyPet.getMyPet();
-        if (myPet.getSkills().hasSkill(Behavior.class))
-        {
+        if (myPet.getSkills().hasSkill(Behavior.class)) {
             behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
         owner = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (!petEntity.canMove())
-        {
+    public boolean shouldStart() {
+        if (!petEntity.canMove()) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
         this.lastDamager = owner.getLastDamager();
 
 
-        if (this.lastDamager == null || !lastDamager.isAlive())
-        {
+        if (this.lastDamager == null || !lastDamager.isAlive()) {
             return false;
         }
-        if (lastDamager == petEntity)
-        {
+        if (lastDamager == petEntity) {
             return false;
         }
-        if (lastDamager instanceof EntityPlayer)
-        {
-            if (owner == lastDamager)
-            {
+        if (lastDamager instanceof EntityPlayer) {
+            if (owner == lastDamager) {
                 return false;
             }
 
             Player targetPlayer = (Player) lastDamager.getBukkitEntity();
 
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
-            {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
                 return false;
             }
-        }
-        else if (lastDamager instanceof EntityMyPet)
-        {
+        } else if (lastDamager instanceof EntityMyPet) {
             MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
-            {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
                 return false;
             }
-        }
-        else if (lastDamager instanceof EntityTameableAnimal)
-        {
+        } else if (lastDamager instanceof EntityTameableAnimal) {
             EntityTameableAnimal tameable = (EntityTameableAnimal) lastDamager;
-            if (tameable.isTamed() && tameable.getOwner() != null)
-            {
+            if (tameable.isTamed() && tameable.getOwner() != null) {
                 Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-                if (myPet.getOwner().equals(tameableOwner))
-                {
+                if (myPet.getOwner().equals(tameableOwner)) {
                     return false;
                 }
             }
         }
-        if (behaviorSkill != null && behaviorSkill.isActive())
-        {
-            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-            {
+        if (behaviorSkill != null && behaviorSkill.isActive()) {
+            if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                 return false;
             }
-            if (behaviorSkill.getBehavior() == BehaviorState.Raid)
-            {
-                if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed())
-                {
+            if (behaviorSkill.getBehavior() == BehaviorState.Raid) {
+                if (lastDamager instanceof EntityTameableAnimal && ((EntityTameableAnimal) lastDamager).isTamed()) {
                     return false;
                 }
-                if (lastDamager instanceof EntityMyPet)
-                {
+                if (lastDamager instanceof EntityMyPet) {
                     return false;
                 }
-                if (lastDamager instanceof EntityPlayer)
-                {
+                if (lastDamager instanceof EntityPlayer) {
                     return false;
                 }
             }
@@ -133,46 +109,32 @@ public class OwnerHurtByTarget extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
+    public boolean shouldFinish() {
         EntityLiving entityliving = petEntity.getGoalTarget();
 
-        if (!petEntity.canMove())
-        {
+        if (!petEntity.canMove()) {
             return true;
-        }
-        else if (entityliving == null)
-        {
+        } else if (entityliving == null) {
             return true;
-        }
-        else if (!entityliving.isAlive())
-        {
+        } else if (!entityliving.isAlive()) {
             return true;
-        }
-        else if (petEntity.getGoalTarget().world != petEntity.world)
-        {
+        } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getGoalTarget()) > 400)
-        {
+        } else if (petEntity.e(petEntity.getGoalTarget()) > 400) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600)
-        {
+        } else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         petEntity.setGoalTarget(this.lastDamager);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         petEntity.setGoalTarget(null);
     }
 }

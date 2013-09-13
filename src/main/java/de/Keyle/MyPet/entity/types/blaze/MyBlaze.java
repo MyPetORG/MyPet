@@ -31,55 +31,45 @@ import org.spout.nbt.CompoundTag;
 import static org.bukkit.Material.SULPHUR;
 
 @MyPetInfo(food = {SULPHUR})
-public class MyBlaze extends MyPet
-{
+public class MyBlaze extends MyPet {
     protected boolean isOnFire = false;
 
-    public MyBlaze(MyPetPlayer petOwner)
-    {
+    public MyBlaze(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Fire", new ByteTag("Fire", isOnFire()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Fire"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Fire")) {
             setOnFire(((ByteTag) info.getValue().get("Fire")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Blaze;
     }
 
-    public boolean isOnFire()
-    {
+    public boolean isOnFire() {
         return isOnFire;
     }
 
-    public void setOnFire(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setOnFire(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyBlaze) getCraftPet().getHandle()).setOnFire(flag);
         }
         isOnFire = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyBlaze{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", isOnFire=" + isOnFire + "}";
     }
 }

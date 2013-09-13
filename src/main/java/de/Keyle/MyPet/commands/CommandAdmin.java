@@ -35,14 +35,12 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CommandAdmin implements CommandExecutor, TabCompleter
-{
+public class CommandAdmin implements CommandExecutor, TabCompleter {
     private static List<String> optionsList = new ArrayList<String>();
     public final static List<String> emptyList = Collections.unmodifiableList(new ArrayList<String>());
     private static Map<String, CommandOption> commandOptions = new HashMap<String, CommandOption>();
 
-    public CommandAdmin()
-    {
+    public CommandAdmin() {
         commandOptions.put("name", new CommandOptionName());
         commandOptions.put("exp", new CommandOptionExp());
         commandOptions.put("respawn", new CommandOptionRespawn());
@@ -55,11 +53,9 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         commandOptions.put("cleanup", new CommandOptionCleanup());
         //commandOptions.put("test", new CommandOptionTest());
 
-        commandOptions.put("build", new CommandOption()
-        {
+        commandOptions.put("build", new CommandOption() {
             @Override
-            public boolean onCommandOption(CommandSender sender, String[] parameter)
-            {
+            public boolean onCommandOption(CommandSender sender, String[] parameter) {
                 DebugLogger.info("MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
                 return true;
@@ -67,26 +63,21 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
         });
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
-            if (!Permissions.has((Player) sender, "MyPet.admin", false))
-            {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
+            if (!Permissions.has((Player) sender, "MyPet.admin", false)) {
                 return true;
             }
         }
 
-        if (args.length < 1)
-        {
+        if (args.length < 1) {
             return false;
         }
 
         String[] parameter = Arrays.copyOfRange(args, 1, args.length);
         CommandOption option = commandOptions.get(args[0].toLowerCase());
 
-        if (option != null)
-        {
+        if (option != null) {
             return option.onCommandOption(sender, parameter);
         }
 
@@ -94,28 +85,20 @@ public class CommandAdmin implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (!Permissions.has((Player) commandSender, "MyPet.admin", false))
-        {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (!Permissions.has((Player) commandSender, "MyPet.admin", false)) {
             return emptyList;
         }
-        if (strings.length == 1)
-        {
-            if (optionsList.size() != commandOptions.keySet().size())
-            {
+        if (strings.length == 1) {
+            if (optionsList.size() != commandOptions.keySet().size()) {
                 optionsList = new ArrayList<String>(commandOptions.keySet());
                 Collections.sort(optionsList);
             }
             return optionsList;
-        }
-        else if (strings.length >= 1)
-        {
+        } else if (strings.length >= 1) {
             CommandOption co = commandOptions.get(strings[0]);
-            if (co != null)
-            {
-                if (co instanceof CommandOptionTabCompleter)
-                {
+            if (co != null) {
+                if (co instanceof CommandOptionTabCompleter) {
                     return ((CommandOptionTabCompleter) co).onTabComplete(commandSender, strings);
                 }
             }

@@ -26,64 +26,53 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetSelectEvent extends Event implements Cancellable
-{
+public class MyPetSelectEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     boolean isCancelled = false;
 
-    public enum NewStatus
-    {
+    public enum NewStatus {
         Active, Inactive
     }
 
     private final IMyPet myPet;
     private final NewStatus newStatus;
 
-    public MyPetSelectEvent(IMyPet myPet, NewStatus newStatus)
-    {
+    public MyPetSelectEvent(IMyPet myPet, NewStatus newStatus) {
         this.myPet = myPet;
         this.newStatus = newStatus;
     }
 
-    public IMyPet getMyPet()
-    {
+    public IMyPet getMyPet() {
         return myPet;
     }
 
-    public NewStatus getNewStatus()
-    {
+    public NewStatus getNewStatus() {
         return newStatus;
     }
 
-    public MyPetPlayer getOwner()
-    {
-        if (myPet != null)
-        {
+    public MyPetPlayer getOwner() {
+        if (myPet != null) {
             return myPet.getOwner();
         }
         return null;
     }
 
     @Override
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return isCancelled;
     }
 
     @Override
-    public void setCancelled(boolean cancelled)
-    {
+    public void setCancelled(boolean cancelled) {
         isCancelled = cancelled;
     }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

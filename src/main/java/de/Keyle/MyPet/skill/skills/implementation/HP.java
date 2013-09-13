@@ -30,83 +30,65 @@ import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
-public class HP extends HPInfo implements ISkillInstance
-{
+public class HP extends HPInfo implements ISkillInstance {
     private MyPet myPet;
 
-    public HP(boolean addedByInheritance)
-    {
+    public HP(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return hpIncrease > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof HPInfo)
-        {
-            if (upgrade.getProperties().getValue().containsKey("hp"))
-            {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof HPInfo) {
+            if (upgrade.getProperties().getValue().containsKey("hp")) {
                 int hp = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
                 upgrade.getProperties().getValue().remove("hp");
                 DoubleTag doubleTag = new DoubleTag("hp_double", hp);
                 upgrade.getProperties().getValue().put("hp_double", doubleTag);
             }
-            if (upgrade.getProperties().getValue().containsKey("hp_double"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("hp_double")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add")) {
                     hpIncrease += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
-                }
-                else
-                {
+                } else {
                     hpIncrease = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
                 }
 
-                if (getMyPet().getStatus() == PetState.Here)
-                {
+                if (getMyPet().getStatus() == PetState.Here) {
                     getMyPet().getCraftPet().setMaxHealth(getMyPet().getMaxHealth());
                 }
 
-                if (!quiet)
-                {
+                if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Hp.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), myPet.getMaxHealth()));
                 }
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return "+" + hpIncrease;
     }
 
-    public void reset()
-    {
+    public void reset() {
         hpIncrease = 0;
     }
 
-    public double getHpIncrease()
-    {
+    public double getHpIncrease() {
         return hpIncrease;
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         HP newSkill = new HP(isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

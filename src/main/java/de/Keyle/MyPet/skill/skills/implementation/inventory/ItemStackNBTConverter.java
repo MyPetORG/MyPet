@@ -28,37 +28,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ItemStackNBTConverter
-{
-    public static CompoundTag ItemStackToCompund(ItemStack itemStack)
-    {
+public class ItemStackNBTConverter {
+    public static CompoundTag ItemStackToCompund(ItemStack itemStack) {
         return ItemStackToCompund(itemStack, "Item");
     }
 
-    public static CompoundTag ItemStackToCompund(ItemStack itemStack, String tagName)
-    {
+    public static CompoundTag ItemStackToCompund(ItemStack itemStack, String tagName) {
         CompoundTag compound = new CompoundTag(tagName, new CompoundMap());
 
         compound.getValue().put("id", new ShortTag("id", (short) itemStack.id));
         compound.getValue().put("Count", new ByteTag("Count", (byte) itemStack.count));
         compound.getValue().put("Damage", new ShortTag("Damage", (short) itemStack.getData()));
 
-        if (itemStack.tag != null)
-        {
+        if (itemStack.tag != null) {
             compound.getValue().put("tag", VanillaCompoundToCompound(itemStack.tag.setName("tag")));
         }
         return compound;
     }
 
-    public static ItemStack CompundToItemStack(CompoundTag compound)
-    {
+    public static ItemStack CompundToItemStack(CompoundTag compound) {
         int id = ((ShortTag) compound.getValue().get("id")).getValue();
         int count = ((ByteTag) compound.getValue().get("Count")).getValue();
         int damage = ((ShortTag) compound.getValue().get("Damage")).getValue();
 
         ItemStack itemstack = new ItemStack(id, count, damage);
-        if (compound.getValue().containsKey("tag"))
-        {
+        if (compound.getValue().containsKey("tag")) {
             CompoundTag compoundToConvert = (CompoundTag) compound.getValue().get("tag");
             itemstack.tag = (NBTTagCompound) CompoundToVanillaCompound(compoundToConvert);
         }
@@ -66,10 +60,8 @@ public class ItemStackNBTConverter
     }
 
     @SuppressWarnings("unchecked")
-    public static NBTBase CompoundToVanillaCompound(Tag<?> tag)
-    {
-        switch (tag.getType())
-        {
+    public static NBTBase CompoundToVanillaCompound(Tag<?> tag) {
+        switch (tag.getType()) {
             case TAG_INT:
                 return new NBTTagInt(tag.getName(), ((IntTag) tag).getValue());
             case TAG_SHORT:
@@ -91,24 +83,21 @@ public class ItemStackNBTConverter
             case TAG_SHORT_ARRAY:
                 short[] shortArray = ((ShortArrayTag) tag).getValue();
                 int[] intArray = new int[shortArray.length];
-                for (int i = 0 ; i < shortArray.length ; i++)
-                {
+                for (int i = 0; i < shortArray.length; i++) {
                     intArray[i] = shortArray[i];
                 }
                 return new NBTTagIntArray(tag.getName(), intArray);
             case TAG_LIST:
                 ListTag<Tag<?>> listTag = (ListTag<Tag<?>>) tag;
                 NBTTagList tagList = new NBTTagList(listTag.getName());
-                for (Tag tagInList : listTag.getValue())
-                {
+                for (Tag tagInList : listTag.getValue()) {
                     tagList.add(CompoundToVanillaCompound(tagInList));
                 }
                 return tagList;
             case TAG_COMPOUND:
                 CompoundTag compoundTag = (CompoundTag) tag;
                 NBTTagCompound tagCompound = new NBTTagCompound(tag.getName());
-                for (String name : compoundTag.getValue().keySet())
-                {
+                for (String name : compoundTag.getValue().keySet()) {
                     tagCompound.set(name, CompoundToVanillaCompound(compoundTag.getValue().get(name)));
                 }
                 return tagCompound;
@@ -119,10 +108,8 @@ public class ItemStackNBTConverter
     }
 
     @SuppressWarnings("unchecked")
-    public static Tag VanillaCompoundToCompound(NBTBase vanillaTag)
-    {
-        switch (vanillaTag.getTypeId())
-        {
+    public static Tag VanillaCompoundToCompound(NBTBase vanillaTag) {
+        switch (vanillaTag.getTypeId()) {
             case 0:
                 return new EndTag();
             case 1:
@@ -144,39 +131,29 @@ public class ItemStackNBTConverter
             case 9:
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
-                for (int i = 0 ; i < tagList.size() ; i++)
-                {
+                for (int i = 0; i < tagList.size(); i++) {
                     compoundList.add(VanillaCompoundToCompound(tagList.get(i)));
                 }
                 Class type;
-                if (tagList.size() > 0)
-                {
+                if (tagList.size() > 0) {
                     type = compoundList.get(compoundList.size() - 1).getClass();
-                }
-                else
-                {
+                } else {
                     type = CompoundTag.class;
                 }
                 return new ListTag(vanillaTag.getName(), type, compoundList);
             case 10:
                 CompoundTag compound = new CompoundTag(vanillaTag.getName(), new CompoundMap());
                 Map<String, NBTBase> compoundMap;
-                try
-                {
+                try {
                     Field f = NBTTagCompound.class.getDeclaredField("map");
                     f.setAccessible(true);
                     compoundMap = (Map<String, NBTBase>) f.get(vanillaTag);
-                }
-                catch (NoSuchFieldException e)
-                {
+                } catch (NoSuchFieldException e) {
+                    return compound;
+                } catch (IllegalAccessException e) {
                     return compound;
                 }
-                catch (IllegalAccessException e)
-                {
-                    return compound;
-                }
-                for (String tagName : compoundMap.keySet())
-                {
+                for (String tagName : compoundMap.keySet()) {
                     compound.getValue().put(tagName, VanillaCompoundToCompound(compoundMap.get(tagName)));
                 }
                 return compound;

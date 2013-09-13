@@ -28,8 +28,7 @@ import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 
-public class BehaviorDuelTarget extends AIGoal
-{
+public class BehaviorDuelTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;
@@ -38,61 +37,48 @@ public class BehaviorDuelTarget extends AIGoal
     private float range;
     private Behavior behaviorSkill = null;
 
-    public BehaviorDuelTarget(EntityMyPet petEntity, float range)
-    {
+    public BehaviorDuelTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
-        if (myPet.getSkills().hasSkill(Behavior.class))
-        {
+        if (myPet.getSkills().hasSkill(Behavior.class)) {
             behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Duel)
-        {
+    public boolean shouldStart() {
+        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Duel) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!myPet.getCraftPet().canMove())
-        {
+        if (!myPet.getCraftPet().canMove()) {
             return false;
         }
-        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive())
-        {
+        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive()) {
             return false;
         }
-        if (duelOpponent != null)
-        {
+        if (duelOpponent != null) {
             this.target = duelOpponent;
             return true;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range)))
-        {
+        for (Object entityObj : this.petEntity.world.a(EntityMyPet.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
             EntityMyPet entityMyPet = (EntityMyPet) entityObj;
             MyPet targetMyPet = entityMyPet.getMyPet();
 
-            if (entityMyPet != petEntity && entityMyPet.isAlive())
-            {
-                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getCraftPet().canMove())
-                {
+            if (entityMyPet != petEntity && entityMyPet.isAlive()) {
+                if (!targetMyPet.getSkills().isSkillActive(Behavior.class) || !targetMyPet.getCraftPet().canMove()) {
                     continue;
                 }
                 Behavior targetbehavior = targetMyPet.getSkills().getSkill(Behavior.class);
-                if (targetbehavior.getBehavior() != BehaviorState.Duel)
-                {
+                if (targetbehavior.getBehavior() != BehaviorState.Duel) {
                     continue;
                 }
-                if (targetMyPet.getDamage() == 0)
-                {
+                if (targetMyPet.getDamage() == 0) {
                     continue;
                 }
                 this.target = entityMyPet;
@@ -103,70 +89,49 @@ public class BehaviorDuelTarget extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
-        if (!petEntity.canMove())
-        {
+    public boolean shouldFinish() {
+        if (!petEntity.canMove()) {
             return true;
-        }
-        else if (petEntity.getGoalTarget() == null)
-        {
+        } else if (petEntity.getGoalTarget() == null) {
             return true;
-        }
-        else if (!petEntity.getGoalTarget().isAlive())
-        {
+        } else if (!petEntity.getGoalTarget().isAlive()) {
             return true;
-        }
-        else if (behaviorSkill.getBehavior() != BehaviorState.Duel)
-        {
+        } else if (behaviorSkill.getBehavior() != BehaviorState.Duel) {
             return true;
-        }
-        else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        } else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return true;
-        }
-        else if (petEntity.getGoalTarget().world != petEntity.world)
-        {
+        } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getGoalTarget()) > 400)
-        {
+        } else if (petEntity.e(petEntity.getGoalTarget()) > 400) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600)
-        {
+        } else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         petEntity.setGoalTarget(this.target);
         setDuelOpponent(this.target);
-        if (target.petTargetSelector.hasGoal("DuelTarget"))
-        {
+        if (target.petTargetSelector.hasGoal("DuelTarget")) {
             BehaviorDuelTarget duelGoal = (BehaviorDuelTarget) target.petTargetSelector.getGoal("DuelTarget");
             duelGoal.setDuelOpponent(this.petEntity);
         }
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         petEntity.setGoalTarget(null);
         duelOpponent = null;
         target = null;
     }
 
-    public EntityMyPet getDuelOpponent()
-    {
+    public EntityMyPet getDuelOpponent() {
         return duelOpponent;
     }
 
-    public void setDuelOpponent(EntityMyPet opponent)
-    {
+    public void setDuelOpponent(EntityMyPet opponent) {
         this.duelOpponent = opponent;
     }
 }

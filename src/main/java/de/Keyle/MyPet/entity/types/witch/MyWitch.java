@@ -29,22 +29,18 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.MUSHROOM_SOUP;
 
 @MyPetInfo(food = {MUSHROOM_SOUP})
-public class MyWitch extends MyPet
-{
-    public MyWitch(MyPetPlayer petOwner)
-    {
+public class MyWitch extends MyPet {
+    public MyWitch(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Witch;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyWitch{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

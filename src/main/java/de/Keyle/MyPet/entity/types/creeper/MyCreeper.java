@@ -31,55 +31,45 @@ import org.spout.nbt.CompoundTag;
 import static org.bukkit.Material.SULPHUR;
 
 @MyPetInfo(food = {SULPHUR})
-public class MyCreeper extends MyPet
-{
+public class MyCreeper extends MyPet {
     boolean isPowered = false;
 
-    public MyCreeper(MyPetPlayer petOwner)
-    {
+    public MyCreeper(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Powered", new ByteTag("Powered", isPowered()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Powered"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Powered")) {
             setPowered(((ByteTag) info.getValue().get("Powered")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Creeper;
     }
 
-    public boolean isPowered()
-    {
+    public boolean isPowered() {
         return isPowered;
     }
 
-    public void setPowered(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setPowered(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyCreeper) getCraftPet().getHandle()).setPowered(flag);
         }
         this.isPowered = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyCreeper{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",powered=" + isPowered() + "}";
     }
 }

@@ -28,17 +28,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SkillPropertiesTest
-{
+public class SkillPropertiesTest {
     @Test
-    public void testSkillProperties()
-    {
+    public void testSkillProperties() {
         MyPetPlugin.registerSkills();
-        for (Class<? extends SkillTreeSkill> registeredSkills : Skills.getRegisteredSkills())
-        {
+        for (Class<? extends SkillTreeSkill> registeredSkills : Skills.getRegisteredSkills()) {
             SkillProperties sn = registeredSkills.getAnnotation(SkillProperties.class);
-            if (sn != null)
-            {
+            if (sn != null) {
                 assertEquals(sn.parameterNames().length, sn.parameterTypes().length);
                 assertEquals(sn.parameterNames().length, sn.parameterDefaultValues().length);
             }

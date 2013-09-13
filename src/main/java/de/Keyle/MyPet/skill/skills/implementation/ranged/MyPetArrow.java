@@ -28,51 +28,39 @@ import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftArrow;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
 
-public class MyPetArrow extends EntityArrow implements MyPetProjectile
-{
-    public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i)
-    {
+public class MyPetArrow extends EntityArrow implements MyPetProjectile {
+    public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i) {
         super(world, entityMyPet, target, v, i);
     }
 
     @Override
-    public EntityMyPet getShooter()
-    {
+    public EntityMyPet getShooter() {
         return (EntityMyPet) this.shooter;
     }
 
     @Override
-    public CraftEntity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
+    public CraftEntity getBukkitEntity() {
+        if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftArrow(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound)
-    {
+    public void a(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound)
-    {
+    public void b(NBTTagCompound nbtTagCompound) {
     }
 
-    public void l_()
-    {
-        try
-        {
+    public void l_() {
+        try {
             super.l_();
-            if (this.isInGround())
-            {
+            if (this.isInGround()) {
                 die();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

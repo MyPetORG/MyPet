@@ -27,8 +27,7 @@ import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.EntityLiving;
 
-public class MeleeAttack extends AIGoal
-{
+public class MeleeAttack extends AIGoal {
     MyPet myPet;
     EntityMyPet petEntity;
     EntityLiving targetEntity;
@@ -38,8 +37,7 @@ public class MeleeAttack extends AIGoal
     private int ticksUntilNextHit;
     private int timeUntilNextNavigationUpdate;
 
-    public MeleeAttack(EntityMyPet petEntity, float walkSpeedModifier, double range, int ticksUntilNextHit)
-    {
+    public MeleeAttack(EntityMyPet petEntity, float walkSpeedModifier, double range, int ticksUntilNextHit) {
         this.petEntity = petEntity;
         this.myPet = petEntity.getMyPet();
         this.walkSpeedModifier = walkSpeedModifier;
@@ -48,23 +46,18 @@ public class MeleeAttack extends AIGoal
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (myPet.getDamage() <= 0)
-        {
+    public boolean shouldStart() {
+        if (myPet.getDamage() <= 0) {
             return false;
         }
         EntityLiving targetEntity = this.petEntity.getGoalTarget();
-        if (targetEntity == null)
-        {
+        if (targetEntity == null) {
             return false;
         }
-        if (!targetEntity.isAlive())
-        {
+        if (!targetEntity.isAlive()) {
             return false;
         }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
-        {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16) {
             return false;
         }
         this.targetEntity = targetEntity;
@@ -72,55 +65,43 @@ public class MeleeAttack extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
-        if (this.petEntity.getGoalTarget() == null || !this.targetEntity.isAlive())
-        {
+    public boolean shouldFinish() {
+        if (this.petEntity.getGoalTarget() == null || !this.targetEntity.isAlive()) {
+            return true;
+        } else if (this.targetEntity != this.petEntity.getGoalTarget()) {
             return true;
         }
-        else if (this.targetEntity != this.petEntity.getGoalTarget())
-        {
-            return true;
-        }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16)
-        {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) >= 16) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         this.petEntity.petNavigation.getParameters().addSpeedModifier("MeleeAttack", walkSpeedModifier);
         this.petEntity.petNavigation.navigateTo(this.targetEntity);
         this.timeUntilNextNavigationUpdate = 0;
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         this.petEntity.petNavigation.getParameters().removeSpeedModifier("MeleeAttack");
         this.targetEntity = null;
         this.petEntity.petNavigation.stop();
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
-        if (--this.timeUntilNextNavigationUpdate <= 0)
-        {
+        if (--this.timeUntilNextNavigationUpdate <= 0) {
             this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aC().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);
         }
-        if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0))
-        {
+        if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0)) {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
-            if (this.petEntity instanceof IMyPetEquipment)
-            {
-                if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null)
-                {
+            if (this.petEntity instanceof IMyPetEquipment) {
+                if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
                     this.petEntity.aR(); // -> swingItem()
                 }
             }

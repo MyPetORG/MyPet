@@ -13,20 +13,16 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandCaptureHelper implements CommandExecutor, TabCompleter
-{
+public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args)
-    {
-        if (commandSender instanceof Player)
-        {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
 
-            if (Permissions.has(player, "MyPet.user.command.capturehelper"))
-            {
+            if (Permissions.has(player, "MyPet.user.command.capturehelper")) {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 String mode = myPetPlayer.isCaptureHelperActive() ? Locales.getString("Name.Enabled", player) : Locales.getString("Name.Disabled", player);
                 player.sendMessage(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", player), mode));
@@ -38,8 +34,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings)
-    {
+    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] strings) {
         return emptyList;
     }
 }

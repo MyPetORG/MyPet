@@ -29,60 +29,46 @@ import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyVillager extends EntityMyPet
-{
+public class EntityMyVillager extends EntityMyPet {
     public static ConfigItem GROW_UP_ITEM;
 
-    public EntityMyVillager(World world, MyPet myPet)
-    {
+    public EntityMyVillager(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.villager.defaultdeath";
     }
 
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.villager.defaulthurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.villager.default";
     }
 
-    public int getProfession()
-    {
+    public int getProfession() {
         return ((MyVillager) myPet).profession;
     }
 
-    public void setProfession(int value)
-    {
+    public void setProfession(int value) {
         this.datawatcher.watch(16, value);
         ((MyVillager) myPet).profession = value;
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-        {
-            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
-            {
-                if (isBaby())
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
+                if (isBaby()) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                     }
@@ -94,35 +80,27 @@ public class EntityMyVillager extends EntityMyPet
         return false;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
         this.datawatcher.a(16, new Integer(0)); // profession
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyVillager) myPet).isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
+    public void setBaby(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(12, new Integer(0));
         }
         ((MyVillager) myPet).isBaby = flag;
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setProfession(((MyVillager) myPet).getProfession());

@@ -34,77 +34,60 @@ import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
-public class Knockback extends KnockbackInfo implements ISkillInstance, ISkillActive
-{
+public class Knockback extends KnockbackInfo implements ISkillInstance, ISkillActive {
     private static Random random = new Random();
     private MyPet myPet;
 
-    public Knockback(boolean addedByInheritance)
-    {
+    public Knockback(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return chance > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof KnockbackInfo)
-        {
-            if (upgrade.getProperties().getValue().containsKey("chance"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add"))
-                {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof KnockbackInfo) {
+            if (upgrade.getProperties().getValue().containsKey("chance")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add")) {
                     chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
-                }
-                else
-                {
+                } else {
                     chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 chance = Math.min(chance, 100);
-                if (!quiet)
-                {
+                if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Knockback.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance));
                 }
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return chance + "%";
     }
 
-    public void reset()
-    {
+    public void reset() {
         chance = 0;
     }
 
-    public boolean activate()
-    {
+    public boolean activate() {
         return random.nextDouble() < chance / 100.;
     }
 
-    public void knockbackTarget(LivingEntity target)
-    {
+    public void knockbackTarget(LivingEntity target) {
         ((CraftEntity) target).getHandle().g(-MathHelper.sin(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F, 0.1D, MathHelper.cos(myPet.getLocation().getYaw() * 3.141593F / 180.0F) * 2 * 0.5F);
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Knockback newSkill = new Knockback(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

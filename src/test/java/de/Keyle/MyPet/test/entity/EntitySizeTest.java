@@ -28,13 +28,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class EntitySizeTest
-{
+public class EntitySizeTest {
     @Test
-    public void testEntitySizes()
-    {
-        for (MyPetType petType : MyPetType.values())
-        {
+    public void testEntitySizes() {
+        for (MyPetType petType : MyPetType.values()) {
             Class<? extends EntityMyPet> entityClass = petType.getEntityClass();
             EntitySize es = entityClass.getAnnotation(EntitySize.class);
             assertNotNull(es);

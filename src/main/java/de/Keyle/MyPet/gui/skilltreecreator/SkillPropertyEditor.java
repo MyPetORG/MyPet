@@ -32,8 +32,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SkillPropertyEditor
-{
+public class SkillPropertyEditor {
     protected JPanel propertyPanel;
     protected JPanel skillPropertyEditorPanel;
     protected JButton cancelButton;
@@ -45,12 +44,9 @@ public class SkillPropertyEditor
 
     private GridConstraints constraints = new GridConstraints();
 
-    public SkillPropertyEditor()
-    {
-        saveButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+    public SkillPropertyEditor() {
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 skillPropertiesPanel.verifyInput();
                 skillPropertiesPanel.save();
                 GuiMain.levelCreator.getFrame().setEnabled(true);
@@ -58,10 +54,8 @@ public class SkillPropertyEditor
             }
         });
 
-        cancelButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 skillPropertiesPanel.load(skill.getProperties());
                 GuiMain.levelCreator.getFrame().setEnabled(true);
                 skillPropertyEditorFrame.setVisible(false);
@@ -69,38 +63,31 @@ public class SkillPropertyEditor
         });
     }
 
-    public void setSkill(ISkillInfo skill)
-    {
+    public void setSkill(ISkillInfo skill) {
         this.skill = skill;
         propertyPanel.removeAll();
         skillPropertiesPanel = skill.getGuiPanel();
         propertyPanel.add(skillPropertiesPanel.getMainPanel(), constraints);
     }
 
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return skillPropertyEditorPanel;
     }
 
-    public JFrame getFrame()
-    {
-        if (skillPropertyEditorFrame == null)
-        {
+    public JFrame getFrame() {
+        if (skillPropertyEditorFrame == null) {
             skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return skillPropertyEditorFrame;
     }
 
-    public Map<String, String> seperateParameter(String parameterString)
-    {
+    public Map<String, String> seperateParameter(String parameterString) {
         Map<String, String> parameterMap = new HashMap<String, String>();
 
         String[] splittedParameters = parameterString.split("&");
 
-        for (String splittedParameter : splittedParameters)
-        {
-            if (splittedParameter.contains("="))
-            {
+        for (String splittedParameter : splittedParameters) {
+            if (splittedParameter.contains("=")) {
                 String[] parameters = splittedParameter.split("=", 2);
                 parameterMap.put(parameters[0], parameters[1]);
             }

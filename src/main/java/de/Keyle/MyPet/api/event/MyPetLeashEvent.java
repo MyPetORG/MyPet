@@ -25,35 +25,29 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLeashEvent extends Event
-{
+public class MyPetLeashEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
 
-    public MyPetLeashEvent(MyPet myPet)
-    {
+    public MyPetLeashEvent(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPetPlayer getLeasher()
-    {
+    public MyPetPlayer getLeasher() {
         return myPet.getOwner();
     }
 
-    public MyPet getPet()
-    {
+    public MyPet getPet() {
         return myPet;
     }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

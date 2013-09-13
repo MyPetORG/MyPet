@@ -30,8 +30,7 @@ import net.minecraft.server.v1_6_R2.EntityMonster;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 
-public class BehaviorFarmTarget extends AIGoal
-{
+public class BehaviorFarmTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityPlayer petOwnerEntity;
@@ -39,43 +38,34 @@ public class BehaviorFarmTarget extends AIGoal
     private float range;
     private Behavior behaviorSkill = null;
 
-    public BehaviorFarmTarget(EntityMyPet petEntity, float range)
-    {
+    public BehaviorFarmTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
         this.petOwnerEntity = ((CraftPlayer) petEntity.getOwner().getPlayer()).getHandle();
         this.myPet = petEntity.getMyPet();
         this.range = range;
-        if (myPet.getSkills().hasSkill(Behavior.class))
-        {
+        if (myPet.getSkills().hasSkill(Behavior.class)) {
             behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
         }
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Farm)
-        {
+    public boolean shouldStart() {
+        if (behaviorSkill == null || !behaviorSkill.isActive() || behaviorSkill.getBehavior() != BehaviorState.Farm) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (!myPet.getCraftPet().canMove())
-        {
+        if (!myPet.getCraftPet().canMove()) {
             return false;
         }
-        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive())
-        {
+        if (petEntity.getGoalTarget() != null && petEntity.getGoalTarget().isAlive()) {
             return false;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range)))
-        {
+        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
             EntityMonster entityMonster = (EntityMonster) entityObj;
-            if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91)
-            {
+            if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91) {
                 continue;
             }
             this.target = entityMonster;
@@ -85,54 +75,36 @@ public class BehaviorFarmTarget extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
+    public boolean shouldFinish() {
         EntityLiving entityliving = petEntity.getGoalTarget();
 
-        if (!petEntity.canMove())
-        {
+        if (!petEntity.canMove()) {
             return true;
-        }
-        else if (entityliving == null)
-        {
+        } else if (entityliving == null) {
             return true;
-        }
-        else if (!entityliving.isAlive())
-        {
+        } else if (!entityliving.isAlive()) {
             return true;
-        }
-        else if (behaviorSkill.getBehavior() != BehaviorState.Farm)
-        {
+        } else if (behaviorSkill.getBehavior() != BehaviorState.Farm) {
             return true;
-        }
-        else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        } else if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return true;
-        }
-        else if (petEntity.getGoalTarget().world != petEntity.world)
-        {
+        } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getGoalTarget()) > 400)
-        {
+        } else if (petEntity.e(petEntity.getGoalTarget()) > 400) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600)
-        {
+        } else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         petEntity.setGoalTarget(this.target);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         petEntity.setGoalTarget(null);
         target = null;
     }

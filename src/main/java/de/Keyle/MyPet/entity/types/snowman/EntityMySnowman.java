@@ -34,18 +34,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 @EntitySize(width = 0.4F, height = 1.8F)
-public class EntityMySnowman extends EntityMyPet
-{
+public class EntityMySnowman extends EntityMyPet {
     public static boolean FIX_SNOW_TRACK = true;
     Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
 
-    public EntityMySnowman(World world, MyPet myPet)
-    {
+    public EntityMySnowman(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    private void addAirBlocksInBB(org.bukkit.World world, AxisAlignedBB axisalignedbb)
-    {
+    private void addAirBlocksInBB(org.bukkit.World world, AxisAlignedBB axisalignedbb) {
         int minX = MathHelper.floor(axisalignedbb.a - 0.1);
         int maxX = MathHelper.floor(axisalignedbb.d + 1.1D);
         int minY = MathHelper.floor(axisalignedbb.b - 0.1);
@@ -53,18 +50,13 @@ public class EntityMySnowman extends EntityMyPet
         int minZ = MathHelper.floor(axisalignedbb.c - 0.1);
         int maxZ = MathHelper.floor(axisalignedbb.f + 1.1D);
 
-        for (int x = minX ; x < maxX ; x++)
-        {
-            for (int z = minZ ; z < maxZ ; z++)
-            {
-                if (world.getChunkAt(x, z).isLoaded())
-                {
-                    for (int y = minY - 1 ; y < maxY ; y++)
-                    {
+        for (int x = minX; x < maxX; x++) {
+            for (int z = minZ; z < maxZ; z++) {
+                if (world.getChunkAt(x, z).isLoaded()) {
+                    for (int y = minY - 1; y < maxY; y++) {
                         Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
 
-                        if (block == null)
-                        {
+                        if (block == null) {
                             snowMap.put(new Location(world, x, y, z), 10);
                         }
                     }
@@ -74,54 +66,42 @@ public class EntityMySnowman extends EntityMyPet
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "step.snow";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "step.snow";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "step.snow";
     }
 
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (FIX_SNOW_TRACK)
-        {
-            if (this.motX != 0D || this.motZ != 0D)
-            {
+        if (FIX_SNOW_TRACK) {
+            if (this.motX != 0D || this.motZ != 0D) {
                 addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
             }
-            if (snowMap.size() > 0)
-            {
+            if (snowMap.size() > 0) {
                 Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();
-                while (iter.hasNext())
-                {
+                while (iter.hasNext()) {
                     Map.Entry<Location, Integer> entry = iter.next();
 
                     int oldCounter = entry.getValue();
                     Location loc = entry.getKey();
 
-                    if (oldCounter - 1 == 0)
-                    {
+                    if (oldCounter - 1 == 0) {
                         iter.remove();
-                        if (loc.getBlock().getTypeId() == 0)
-                        {
+                        if (loc.getBlock().getTypeId() == 0) {
                             byte data = loc.getBlock().getData();
                             loc.getBlock().setData((byte) 1);
                             loc.getBlock().setData(data);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         snowMap.put(loc, oldCounter - 1);
                     }
                 }
@@ -130,8 +110,7 @@ public class EntityMySnowman extends EntityMyPet
     }
 
     @Override
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("step.snow", 0.15F, 1.0F);
     }
 }

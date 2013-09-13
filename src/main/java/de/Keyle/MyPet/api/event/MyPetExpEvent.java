@@ -26,8 +26,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetExpEvent extends Event implements Cancellable
-{
+public class MyPetExpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
@@ -35,68 +34,54 @@ public class MyPetExpEvent extends Event implements Cancellable
     private double oldExp;
     private double newExp;
 
-    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp)
-    {
+    public MyPetExpEvent(MyPet myPet, double oldExp, double newExp) {
         this.myPet = myPet;
         this.oldExp = oldExp;
         this.newExp = newExp;
     }
 
-    public MyPetPlayer getOwner()
-    {
+    public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
 
-    public MyPet getPet()
-    {
+    public MyPet getPet() {
         return myPet;
     }
 
-    public double getOldExp()
-    {
+    public double getOldExp() {
         return oldExp;
     }
 
-    public double getNewExp()
-    {
+    public double getNewExp() {
         return newExp;
     }
 
-    public void setNewEXP(double newExp)
-    {
+    public void setNewEXP(double newExp) {
         this.newExp = newExp;
     }
 
-    public double getExp()
-    {
-        if (isCancelled)
-        {
+    public double getExp() {
+        if (isCancelled) {
             return oldExp;
-        }
-        else
-        {
+        } else {
             return newExp;
         }
     }
 
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return isCancelled;
     }
 
-    public void setCancelled(boolean flag)
-    {
+    public void setCancelled(boolean flag) {
         isCancelled = flag;
     }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

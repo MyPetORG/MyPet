@@ -38,43 +38,33 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public class SkillTreeLoaderYAML extends SkillTreeLoader
-{
-    public static SkillTreeLoaderYAML getSkilltreeLoader()
-    {
+public class SkillTreeLoaderYAML extends SkillTreeLoader {
+    public static SkillTreeLoaderYAML getSkilltreeLoader() {
         return new SkillTreeLoaderYAML();
     }
 
-    private SkillTreeLoaderYAML()
-    {
+    private SkillTreeLoaderYAML() {
     }
 
-    public void loadSkillTrees(String configPath, String[] mobtypes)
-    {
+    public void loadSkillTrees(String configPath, String[] mobtypes) {
         ConfigurationSnakeYAML skilltreeConfig;
         File skillFile;
 
-        for (String mobType : mobtypes)
-        {
+        for (String mobType : mobtypes) {
             skillFile = new File(configPath + File.separator + mobType.toLowerCase() + ".yml");
 
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType);
 
-            if (!skillFile.exists())
-            {
+            if (!skillFile.exists()) {
                 continue;
             }
 
             skilltreeConfig = new ConfigurationSnakeYAML(skillFile);
-            if (skilltreeConfig.load())
-            {
-                try
-                {
+            if (skilltreeConfig.load()) {
+                try {
                     loadSkillTree(skilltreeConfig, skillTreeMobType);
                     DebugLogger.info("  " + mobType.toLowerCase() + ".yml");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".yml");
                     e.printStackTrace();
                 }
@@ -83,167 +73,128 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
     }
 
     @SuppressWarnings("unchecked")
-    private void loadSkillTree(ConfigurationSnakeYAML yamlConfiguration, SkillTreeMobType skillTreeMobType)
-    {
+    private void loadSkillTree(ConfigurationSnakeYAML yamlConfiguration, SkillTreeMobType skillTreeMobType) {
         Map<String, Object> config = yamlConfiguration.getConfig();
-        if (config == null || config.size() == 0)
-        {
+        if (config == null || config.size() == 0) {
             return;
         }
         Map<String, Object> skilltrees = (Map<String, Object>) config.get("Skilltrees");
-        for (String skillTreeName : skilltrees.keySet())
-        {
+        for (String skillTreeName : skilltrees.keySet()) {
             Integer place = null;
             //System.out.println(skillTreeName);
             SkillTree skillTree;
             Map<String, Object> skilltreeMap = (Map<String, Object>) skilltrees.get(skillTreeName);
-            if (skilltreeMap == null)
-            {
+            if (skilltreeMap == null) {
                 continue;
             }
-            if (skilltreeMap.containsKey("Inherit"))
-            {
+            if (skilltreeMap.containsKey("Inherit")) {
                 String inherit = (String) skilltreeMap.get("Inherit");
                 skillTree = new SkillTree(skillTreeName, inherit);
-            }
-            else
-            {
+            } else {
                 skillTree = new SkillTree(skillTreeName);
             }
-            if (skilltreeMap.containsKey("Permission"))
-            {
+            if (skilltreeMap.containsKey("Permission")) {
                 String permission = (String) skilltreeMap.get("Permission");
                 skillTree.setPermission(permission);
             }
-            if (skilltreeMap.containsKey("Display"))
-            {
+            if (skilltreeMap.containsKey("Display")) {
                 String display = (String) skilltreeMap.get("Display");
                 skillTree.setDisplayName(display);
             }
-            if (skilltreeMap.containsKey("Place"))
-            {
-                if (skilltreeMap.get("Place") instanceof Integer)
-                {
+            if (skilltreeMap.containsKey("Place")) {
+                if (skilltreeMap.get("Place") instanceof Integer) {
                     place = (Integer) skilltreeMap.get("Place");
-                }
-                else if (skilltreeMap.get("Place") instanceof String)
-                {
-                    if (Util.isInt((String) skilltreeMap.get("Place")))
-                    {
+                } else if (skilltreeMap.get("Place") instanceof String) {
+                    if (Util.isInt((String) skilltreeMap.get("Place"))) {
                         place = Integer.parseInt((String) skilltreeMap.get("Place"));
                     }
                 }
             }
-            if (skilltreeMap.containsKey("Description"))
-            {
+            if (skilltreeMap.containsKey("Description")) {
                 List<String> descriptionLines = (List<String>) skilltreeMap.get("Description");
-                for (String line : descriptionLines)
-                {
+                for (String line : descriptionLines) {
                     skillTree.addDescriptionLine(line);
                 }
             }
 
-            if (skilltreeMap.containsKey("Level"))
-            {
-                if (!skilltreeMap.containsKey("Level"))
-                {
+            if (skilltreeMap.containsKey("Level")) {
+                if (!skilltreeMap.containsKey("Level")) {
                     continue;
                 }
                 Map<String, Object> levelsMap = (Map<String, Object>) skilltreeMap.get("Level");
 
-                for (String thisLevel : levelsMap.keySet())
-                {
+                for (String thisLevel : levelsMap.keySet()) {
                     //System.out.println("  " + thisLevel);
-                    if (Util.isInt(thisLevel))
-                    {
+                    if (Util.isInt(thisLevel)) {
                         int lvl = Integer.parseInt(thisLevel);
                         SkillTreeLevel newLevel = skillTree.addLevel(lvl);
 
                         Map<String, Object> levelMap = (Map<String, Object>) levelsMap.get(thisLevel);
 
-                        if (levelMap.containsKey("Message"))
-                        {
+                        if (levelMap.containsKey("Message")) {
                             String message = (String) levelMap.get("Message");
                             newLevel.setLevelupMessage(message);
                         }
 
-                        if (!levelMap.containsKey("Skills"))
-                        {
+                        if (!levelMap.containsKey("Skills")) {
                             continue;
                         }
                         Map<String, Object> skillMap = (Map<String, Object>) levelMap.get("Skills");
 
-                        for (String thisSkill : skillMap.keySet())
-                        {
+                        for (String thisSkill : skillMap.keySet()) {
                             //System.out.println("    " + thisSkill);
-                            if (SkillsInfo.getSkillInfoClass(thisSkill) != null)
-                            {
+                            if (SkillsInfo.getSkillInfoClass(thisSkill) != null) {
                                 Map<String, Object> propertyMap = (Map<String, Object>) skillMap.get(thisSkill);
-                                if (propertyMap == null)
-                                {
+                                if (propertyMap == null) {
                                     continue;
                                 }
                                 ISkillInfo skill = SkillsInfo.getNewSkillInfoInstance(thisSkill);
 
-                                if (skill != null)
-                                {
+                                if (skill != null) {
                                     SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
-                                    if (sp != null)
-                                    {
+                                    if (sp != null) {
                                         CompoundTag propertiesCompound = skill.getProperties();
-                                        for (int i = 0 ; i < sp.parameterNames().length ; i++)
-                                        {
+                                        for (int i = 0; i < sp.parameterNames().length; i++) {
                                             String propertyName = sp.parameterNames()[i];
                                             NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                            if (!propertiesCompound.getValue().containsKey(propertyName) && propertyMap.containsKey(propertyName))
-                                            {
+                                            if (!propertiesCompound.getValue().containsKey(propertyName) && propertyMap.containsKey(propertyName)) {
                                                 String value = String.valueOf(propertyMap.get(propertyName));
                                                 //System.out.println("      " + propertyName + " : " + value);
-                                                switch (propertyType)
-                                                {
+                                                switch (propertyType) {
                                                     case Short:
-                                                        if (Util.isShort(value))
-                                                        {
+                                                        if (Util.isShort(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
                                                         }
                                                         break;
                                                     case Int:
-                                                        if (Util.isInt(value))
-                                                        {
+                                                        if (Util.isInt(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
                                                         }
                                                         break;
                                                     case Long:
-                                                        if (Util.isLong(value))
-                                                        {
+                                                        if (Util.isLong(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
                                                         }
                                                         break;
                                                     case Float:
-                                                        if (Util.isFloat(value))
-                                                        {
+                                                        if (Util.isFloat(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
                                                         }
                                                         break;
                                                     case Double:
-                                                        if (Util.isDouble(value))
-                                                        {
+                                                        if (Util.isDouble(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
                                                         }
                                                         break;
                                                     case Byte:
-                                                        if (Util.isByte(value))
-                                                        {
+                                                        if (Util.isByte(value)) {
                                                             propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
                                                         }
                                                         break;
                                                     case Boolean:
-                                                        if (value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false"))
-                                                        {
+                                                        if (value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false")) {
                                                             propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
-                                                        }
-                                                        else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true"))
-                                                        {
+                                                        } else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true")) {
                                                             propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
                                                         }
                                                         break;
@@ -257,9 +208,7 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
                                         skill.setDefaultProperties();
                                     }
                                     newLevel.addSkill(skill);
-                                }
-                                else
-                                {
+                                } else {
                                     System.out.println("null: " + thisSkill);
                                 }
                             }
@@ -267,12 +216,9 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader
                     }
                 }
             }
-            if (place != null)
-            {
+            if (place != null) {
                 skillTreeMobType.addSkillTree(skillTree, place);
-            }
-            else
-            {
+            } else {
                 skillTreeMobType.addSkillTree(skillTree);
             }
         }

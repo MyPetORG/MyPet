@@ -26,43 +26,36 @@ import org.spout.nbt.IntTag;
 
 import javax.swing.*;
 
-public class Inventory implements SkillPropertiesPanel
-{
+public class Inventory implements SkillPropertiesPanel {
     private JTextField rowsInput;
     private JPanel mainPanel;
     private JCheckBox dropContentCheckBox;
 
     private CompoundTag compoundTag;
 
-    public Inventory(CompoundTag compoundTag)
-    {
+    public Inventory(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         rowsInput.setText(rowsInput.getText().replaceAll("[^0-6]*", ""));
-        if (rowsInput.getText().length() > 1)
-        {
+        if (rowsInput.getText().length() > 1) {
             rowsInput.setText(rowsInput.getText().substring(0, 1));
         }
-        if (rowsInput.getText().length() == 0)
-        {
+        if (rowsInput.getText().length() == 0) {
             rowsInput.setText("0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("add", new IntTag("add", Integer.parseInt(rowsInput.getText())));
         compoundTag.getValue().put("drop", new ByteTag("drop", dropContentCheckBox.isSelected()));
 
@@ -70,14 +63,11 @@ public class Inventory implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (compoundTag.getValue().containsKey("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (compoundTag.getValue().containsKey("add")) {
             rowsInput.setText("" + ((IntTag) compoundTag.getValue().get("add")).getValue());
         }
-        if (compoundTag.getValue().containsKey("drop"))
-        {
+        if (compoundTag.getValue().containsKey("drop")) {
             dropContentCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("drop")).getBooleanValue());
         }
     }

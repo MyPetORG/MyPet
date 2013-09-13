@@ -25,55 +25,44 @@ import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftSnowball;
 
-public class MyPetSnowball extends EntitySnowball implements MyPetProjectile
-{
+public class MyPetSnowball extends EntitySnowball implements MyPetProjectile {
     protected float damage = 0;
 
-    public MyPetSnowball(World world, EntityMyPet entityLiving)
-    {
+    public MyPetSnowball(World world, EntityMyPet entityLiving) {
         super(world, entityLiving);
     }
 
     @Override
-    public EntityMyPet getShooter()
-    {
+    public EntityMyPet getShooter() {
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(float damage)
-    {
+    public void setDamage(float damage) {
         this.damage = damage;
     }
 
     @Override
-    public CraftEntity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
+    public CraftEntity getBukkitEntity() {
+        if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftSnowball(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound)
-    {
+    public void a(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound)
-    {
+    public void b(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition paramMovingObjectPosition)
-    {
-        if (paramMovingObjectPosition.entity != null)
-        {
+    protected void a(MovingObjectPosition paramMovingObjectPosition) {
+        if (paramMovingObjectPosition.entity != null) {
             paramMovingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
         }
-        for (int i = 0 ; i < 8 ; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             this.world.addParticle("snowballpoof", this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
         }
         die();

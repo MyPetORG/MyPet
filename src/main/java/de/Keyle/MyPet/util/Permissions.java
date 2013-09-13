@@ -24,26 +24,20 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
-public class Permissions
-{
+public class Permissions {
     public static boolean USE_EXTENDET_PERMISSIONS = false;
     public static boolean ENABLED = true;
 
-    public static boolean has(Player player, String node)
-    {
-        if (player != null)
-        {
+    public static boolean has(Player player, String node) {
+        if (player != null) {
             return !ENABLED || player.hasPermission(node);
         }
         return false;
     }
 
-    public static boolean has(Player player, String node, boolean defaultValue)
-    {
-        if (player != null)
-        {
-            if (ENABLED)
-            {
+    public static boolean has(Player player, String node, boolean defaultValue) {
+        if (player != null) {
+            if (ENABLED) {
                 return player.isOp() || player.hasPermission(node);
             }
             return defaultValue || player.isOp();
@@ -51,30 +45,22 @@ public class Permissions
         return false;
     }
 
-    public static boolean hasExtended(Player player, String node)
-    {
+    public static boolean hasExtended(Player player, String node) {
         return !USE_EXTENDET_PERMISSIONS || has(player, node);
     }
 
-    public static boolean hasExtended(Player player, String node, boolean defaultValue)
-    {
-        if (USE_EXTENDET_PERMISSIONS)
-        {
+    public static boolean hasExtended(Player player, String node, boolean defaultValue) {
+        if (USE_EXTENDET_PERMISSIONS) {
             return has(player, node, defaultValue);
         }
         return defaultValue;
     }
 
-    public static boolean has(OfflinePlayer player, String node)
-    {
-        if (player != null)
-        {
-            if (!ENABLED || player.isOp())
-            {
+    public static boolean has(OfflinePlayer player, String node) {
+        if (player != null) {
+            if (!ENABLED || player.isOp()) {
                 return true;
-            }
-            else
-            {
+            } else {
                 PermissibleBase pb = new PermissibleBase(player);
                 return pb.hasPermission(node);
             }
@@ -82,36 +68,26 @@ public class Permissions
         return false;
     }
 
-    public static boolean has(OfflinePlayer player, String node, boolean defaultValue)
-    {
-        if (player != null)
-        {
-            if (player.isOp())
-            {
+    public static boolean has(OfflinePlayer player, String node, boolean defaultValue) {
+        if (player != null) {
+            if (player.isOp()) {
                 return true;
-            }
-            else if (ENABLED)
-            {
+            } else if (ENABLED) {
                 PermissibleBase pb = new PermissibleBase(player);
                 return pb.hasPermission(node);
-            }
-            else
-            {
+            } else {
                 return defaultValue;
             }
         }
         return false;
     }
 
-    public static boolean hasExtended(OfflinePlayer player, String node)
-    {
+    public static boolean hasExtended(OfflinePlayer player, String node) {
         return !USE_EXTENDET_PERMISSIONS || has(player, node);
     }
 
-    public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue)
-    {
-        if (USE_EXTENDET_PERMISSIONS)
-        {
+    public static boolean hasExtended(OfflinePlayer player, String node, boolean defaultValue) {
+        if (USE_EXTENDET_PERMISSIONS) {
             return has(player, node, defaultValue);
         }
         return defaultValue;

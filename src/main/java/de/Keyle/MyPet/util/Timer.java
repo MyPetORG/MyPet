@@ -29,78 +29,60 @@ import org.bukkit.Bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Timer
-{
+public class Timer {
     private static List<Integer> timerIDs = new ArrayList<Integer>();
     private static final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
 
-    private Timer()
-    {
+    private Timer() {
     }
 
-    public static void stopTimer()
-    {
-        if (timerIDs.size() > 0)
-        {
+    public static void stopTimer() {
+        if (timerIDs.size() > 0) {
             DebugLogger.info("Timer stop");
-            for (int timerID : timerIDs)
-            {
+            for (int timerID : timerIDs) {
                 Bukkit.getScheduler().cancelTask(timerID);
             }
             timerIDs.clear();
         }
     }
 
-    public static void startTimer()
-    {
+    public static void startTimer() {
         stopTimer();
         DebugLogger.info("Timer start");
 
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
-                for (MyPet myPet : MyPetList.getAllActiveMyPets())
-                {
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                     myPet.scheduleTask();
                 }
             }
         }, 0L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
-                for (IScheduler task : tasksToSchedule)
-                {
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                for (IScheduler task : tasksToSchedule) {
                     task.schedule();
                 }
             }
         }, 5L, 20L));
-        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
-                for (MyPetPlayer player : MyPetPlayer.getMyPetPlayers())
-                {
+        timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                for (MyPetPlayer player : MyPetPlayer.getMyPetPlayers()) {
                     player.schedule();
                 }
             }
         }, 10L, 20L));
     }
 
-    public static void reset()
-    {
+    public static void reset() {
         tasksToSchedule.clear();
         stopTimer();
     }
 
-    public static void addTask(IScheduler task)
-    {
+    public static void addTask(IScheduler task) {
         tasksToSchedule.add(task);
     }
 
-    public static void removeTask(IScheduler task)
-    {
+    public static void removeTask(IScheduler task) {
         tasksToSchedule.remove(task);
     }
 }

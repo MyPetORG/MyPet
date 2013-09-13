@@ -32,56 +32,46 @@ import org.spout.nbt.IntTag;
 import static org.bukkit.Material.SUGAR;
 
 @MyPetInfo(food = {SUGAR})
-public class MySlime extends MyPet implements IMyPetSlimeSize
-{
+public class MySlime extends MyPet implements IMyPetSlimeSize {
     protected int size = 1;
 
-    public MySlime(MyPetPlayer petOwner)
-    {
+    public MySlime(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Size", new IntTag("Size", getSize()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Size"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Size")) {
             setSize(((IntTag) info.getValue().get("Size")).getValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Slime;
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(int value)
-    {
+    public void setSize(int value) {
         value = Math.max(1, value);
-        if (status == PetState.Here)
-        {
+        if (status == PetState.Here) {
             ((EntityMySlime) getCraftPet().getHandle()).setSize(value);
         }
         this.size = value;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MySlime{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", size=" + getSize() + "}";
     }
 }

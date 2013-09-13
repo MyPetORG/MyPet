@@ -27,36 +27,29 @@ import de.Keyle.MyPet.util.BukkitUtil;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.95F, height = 0.95F)
-public class EntityMySquid extends EntityMyPet
-{
-    public EntityMySquid(World world, MyPet myPet)
-    {
+public class EntityMySquid extends EntityMyPet {
+    public EntityMySquid(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return null;
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return null;
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return null;
     }
 
     @Override
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.random.nextBoolean())
-        {
+        if (this.random.nextBoolean()) {
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 0.7, 0), "splash", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
         }
     }

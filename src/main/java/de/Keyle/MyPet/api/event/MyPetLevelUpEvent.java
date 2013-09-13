@@ -25,56 +25,47 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class MyPetLevelUpEvent extends Event
-{
+public class MyPetLevelUpEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final MyPet myPet;
     private final int level;
     private final boolean beQuiet;
 
-    public MyPetLevelUpEvent(MyPet myPet, int Level)
-    {
+    public MyPetLevelUpEvent(MyPet myPet, int Level) {
         this.myPet = myPet;
         this.level = Level;
         this.beQuiet = false;
     }
 
-    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet)
-    {
+    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet) {
         this.myPet = myPet;
         this.level = level;
         this.beQuiet = beQuiet;
     }
 
-    public MyPetPlayer getOwner()
-    {
+    public MyPetPlayer getOwner() {
         return myPet.getOwner();
     }
 
-    public boolean isQuiet()
-    {
+    public boolean isQuiet() {
         return beQuiet;
     }
 
-    public MyPet getPet()
-    {
+    public MyPet getPet() {
         return myPet;
     }
 
-    public int getLevel()
-    {
+    public int getLevel() {
         return level;
     }
 
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

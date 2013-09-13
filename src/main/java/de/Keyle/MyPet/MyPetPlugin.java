@@ -88,27 +88,22 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class MyPetPlugin extends JavaPlugin implements IScheduler
-{
+public class MyPetPlugin extends JavaPlugin implements IScheduler {
     private static MyPetPlugin plugin;
     private File NBTPetFile;
     private boolean isReady = false;
     private int autoSaveTimer = 0;
     private Backup backupManager;
 
-    public static MyPetPlugin getPlugin()
-    {
+    public static MyPetPlugin getPlugin() {
         return plugin;
     }
 
-    public void onDisable()
-    {
-        if (isReady)
-        {
+    public void onDisable() {
+        if (isReady) {
             int petCount = savePets(true);
             MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) saved");
-            for (MyPet myPet : MyPetList.getAllActiveMyPets())
-            {
+            for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                 myPet.removePet(myPet.wantToRespawn());
             }
             MyPetList.clearList();
@@ -120,8 +115,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.info("MyPet disabled!");
     }
 
-    public void onEnable()
-    {
+    public void onEnable() {
         plugin = this;
         this.isReady = false;
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
@@ -140,8 +134,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.setup();
 
         String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
-        if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion))
-        {
+        if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion)) {
             MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
             MyPetLogger.write(ChatColor.RED + "This version of MyPet only works with:");
             MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
@@ -198,26 +191,21 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         File defaultSkillConfigYAML = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.yml");
         File defaultSkillConfigJSON = new File(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees" + File.separator + "default.json");
 
-        if (!defaultSkillConfigNBT.exists() && !defaultSkillConfigYAML.exists() && !defaultSkillConfigJSON.exists())
-        {
-            try
-            {
+        if (!defaultSkillConfigNBT.exists() && !defaultSkillConfigYAML.exists() && !defaultSkillConfigJSON.exists()) {
+            try {
                 InputStream template = getPlugin().getResource("skilltrees/default.st");
                 OutputStream out = new FileOutputStream(defaultSkillConfigNBT);
 
                 byte[] buf = new byte[1024];
                 int len;
-                while ((len = template.read(buf)) > 0)
-                {
+                while ((len = template.read(buf)) > 0) {
                     out.write(buf, 0, len);
                 }
                 template.close();
                 out.close();
                 MyPetLogger.write("Default skilltree configfile created.");
                 DebugLogger.info("created default.st");
-            }
-            catch (IOException ex)
-            {
+            } catch (IOException ex) {
                 MyPetLogger.write(ChatColor.RED + "Unable" + ChatColor.RESET + " to create the default.st!");
                 DebugLogger.info("unable to create default.st");
             }
@@ -225,8 +213,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
         String[] petTypes = new String[MyPetType.values().length + 1];
         petTypes[0] = "default";
-        for (int i = 1 ; i <= MyPetType.values().length ; i++)
-        {
+        for (int i = 1; i <= MyPetType.values().length; i++) {
             petTypes[i] = MyPetType.values()[i - 1].getTypeName();
         }
 
@@ -235,8 +222,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
-        for (MyPetType mobType : MyPetType.values())
-        {
+        for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);
             SkillTreeLoader.manageInheritance(skillTreeMobType);
@@ -272,21 +258,19 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
         DebugLogger.info("Pet type: ----------");
-        for (MyPetType myPetType : MyPetType.values())
-        {
+        for (MyPetType myPetType : MyPetType.values()) {
             DebugLogger.info("  " + myPetType.getTypeName() + " { " +
-                    "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
-                    "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
-                    "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
-                    "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
+                                     "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
+                                     "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
+                                     "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
+                                     "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
         new Locales();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
-        if (Backup.MAKE_BACKUPS)
-        {
+        if (Backup.MAKE_BACKUPS) {
             backupManager = new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
         loadGroups(groupsFile);
@@ -301,23 +285,19 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         SurvivalGames.findPlugin();
         MyHungerGames.findPlugin();
 
-        try
-        {
+        try {
             Metrics metrics = new Metrics(this);
 
             Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
             Graph graphCount = metrics.createGraph("Counted MyPets per type");
             Graph graphTotalCount = metrics.createGraph("Total MyPets");
 
-            for (final MyPetType petType : MyPetType.values())
-            {
-                Plotter plotter = new Metrics.Plotter(petType.getTypeName())
-                {
+            for (final MyPetType petType : MyPetType.values()) {
+                Plotter plotter = new Metrics.Plotter(petType.getTypeName()) {
                     final MyPetType type = petType;
 
                     @Override
-                    public int getValue()
-                    {
+                    public int getValue() {
                         return MyPetList.countMyPets(type);
                     }
                 };
@@ -325,20 +305,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
                 graphCount.addPlotter(plotter);
             }
 
-            Plotter plotter = new Metrics.Plotter("Total MyPets")
-            {
+            Plotter plotter = new Metrics.Plotter("Total MyPets") {
                 @Override
-                public int getValue()
-                {
+                public int getValue() {
                     return MyPetList.countMyPets();
                 }
             };
             graphTotalCount.addPlotter(plotter);
-            plotter = new Metrics.Plotter("Active MyPets")
-            {
+            plotter = new Metrics.Plotter("Active MyPets") {
                 @Override
-                public int getValue()
-                {
+                public int getValue() {
                     return MyPetList.countActiveMyPets();
                 }
             };
@@ -346,50 +322,36 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
 
             boolean metricsActive = metrics.start();
             DebugLogger.info("Metrics " + (metricsActive ? "" : "not ") + "activated");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             MyPetLogger.write(e.getMessage());
         }
 
         MyPetLogger.write("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + ChatColor.GREEN + " ENABLED");
 
-        for (Player player : getServer().getOnlinePlayers())
-        {
+        for (Player player : getServer().getOnlinePlayers()) {
             MyPetPlayer.onlinePlayerList.add(player.getName());
-            if (MyPetPlayer.isMyPetPlayer(player))
-            {
+            if (MyPetPlayer.isMyPetPlayer(player)) {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
                 WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
-                {
+                if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets())
-                    {
-                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
-                        {
+                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
+                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
                             MyPetList.setMyPetActive(inactiveMyPet);
                             break;
                         }
                     }
-                    if (!myPetPlayer.hasMyPet())
-                    {
+                    if (!myPetPlayer.hasMyPet()) {
                         myPetPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                     }
                 }
-                if (myPetPlayer.hasMyPet())
-                {
+                if (myPetPlayer.hasMyPet()) {
                     MyPet myPet = MyPetList.getMyPet(player);
-                    if (myPet.getStatus() == PetState.Dead)
-                    {
+                    if (myPet.getStatus() == PetState.Dead) {
                         player.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", BukkitUtil.getPlayerLanguage(player)), myPet.getPetName(), myPet.getRespawnTime()));
-                    }
-                    else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75)
-                    {
+                    } else if (myPet.wantToRespawn() && myPet.getLocation().getWorld() == player.getLocation().getWorld() && myPet.getLocation().distance(player.getLocation()) < 75) {
                         myPet.createPet();
-                    }
-                    else
-                    {
+                    } else {
                         myPet.setStatus(PetState.Despawned);
                     }
                 }
@@ -401,8 +363,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
-    public static void registerSkills()
-    {
+    public static void registerSkills() {
         Skills.registerSkill(Inventory.class);
         Skills.registerSkill(HPregeneration.class);
         Skills.registerSkill(Pickup.class);
@@ -423,8 +384,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         Skills.registerSkill(Sprint.class);
     }
 
-    public static void registerSkillsInfo()
-    {
+    public static void registerSkillsInfo() {
         SkillsInfo.registerSkill(InventoryInfo.class);
         SkillsInfo.registerSkill(HPregenerationInfo.class);
         SkillsInfo.registerSkill(PickupInfo.class);
@@ -446,10 +406,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     }
 
     @SuppressWarnings("unchecked")
-    public static boolean registerMyPetEntity(Class<? extends EntityMyPet> myPetEntityClass, String entityTypeName, int entityTypeId)
-    {
-        try
-        {
+    public static boolean registerMyPetEntity(Class<? extends EntityMyPet> myPetEntityClass, String entityTypeName, int entityTypeId) {
+        try {
             Field EntityTypes_c = EntityTypes.class.getDeclaredField("c");
             Field EntityTypes_e = EntityTypes.class.getDeclaredField("e");
             EntityTypes_c.setAccessible(true);
@@ -459,21 +417,17 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             Map<Class, Integer> e = (Map) EntityTypes_e.get(EntityTypes_e);
 
             Iterator cIterator = c.keySet().iterator();
-            while (cIterator.hasNext())
-            {
+            while (cIterator.hasNext()) {
                 Class clazz = (Class) cIterator.next();
-                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName()))
-                {
+                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName())) {
                     cIterator.remove();
                 }
             }
 
             Iterator eIterator = e.keySet().iterator();
-            while (eIterator.hasNext())
-            {
+            while (eIterator.hasNext()) {
                 Class clazz = (Class) eIterator.next();
-                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName()))
-                {
+                if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName())) {
                     eIterator.remove();
                 }
             }
@@ -482,45 +436,37 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             e.put(myPetEntityClass, entityTypeId);
 
             return true;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             DebugLogger.severe("error while registering " + myPetEntityClass.getCanonicalName());
             DebugLogger.severe(e.getMessage());
             return false;
         }
     }
 
-    int loadPets(File f)
-    {
-        if (!f.exists())
-        {
+    int loadPets(File f) {
+        if (!f.exists()) {
             MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet(s) loaded");
             return 0;
         }
         int petCount = 0;
 
         ConfigurationNBT nbtConfiguration = new ConfigurationNBT(f);
-        if (!nbtConfiguration.load())
-        {
+        if (!nbtConfiguration.load()) {
             return 0;
         }
         ListTag petList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Pets");
-        if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown"))
-        {
+        if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown")) {
             DebugLogger.info("Clean shutdown: " + ((ByteTag) nbtConfiguration.getNBTCompound().getValue().get("CleanShutdown")).getBooleanValue());
         }
 
         DebugLogger.info("Loading players -------------------------");
-        if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players"))
-        {
+        if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players")) {
             DebugLogger.info(loadPlayers(nbtConfiguration) + " PetPlayer(s) loaded");
         }
         DebugLogger.info("-----------------------------------------");
 
         DebugLogger.info("loading Pets: -----------------------------");
-        for (int i = 0 ; i < petList.getValue().size() ; i++)
-        {
+        for (int i = 0; i < petList.getValue().size(); i++) {
             CompoundTag myPetNBT = (CompoundTag) petList.getValue().get(i);
             String petOwner = ((StringTag) myPetNBT.getValue().get("Owner")).getValue();
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
@@ -536,21 +482,18 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         return petCount;
     }
 
-    public int savePets(boolean shutdown)
-    {
+    public int savePets(boolean shutdown) {
         autoSaveTimer = Configuration.AUTOSAVE_TIME;
         int petCount = 0;
         ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
         List<CompoundTag> petList = new ArrayList<CompoundTag>();
 
-        for (MyPet myPet : MyPetList.getAllActiveMyPets())
-        {
+        for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             CompoundTag petNBT = myPet.save();
             petList.add(petNBT);
             petCount++;
         }
-        for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets())
-        {
+        for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
             CompoundTag petNBT = inactiveMyPet.save();
             petList.add(petNBT);
             petCount++;
@@ -564,26 +507,21 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         return petCount;
     }
 
-    private ListTag savePlayers()
-    {
+    private ListTag savePlayers() {
         List<CompoundTag> playerList = new ArrayList<CompoundTag>();
-        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers())
-        {
-            if (myPetPlayer.hasCustomData())
-            {
+        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers()) {
+            if (myPetPlayer.hasCustomData()) {
                 playerList.add(myPetPlayer.save());
             }
         }
         return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
     }
 
-    private int loadPlayers(ConfigurationNBT nbtConfiguration)
-    {
+    private int loadPlayers(ConfigurationNBT nbtConfiguration) {
         int playerCount = 0;
         ListTag playerList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Players");
 
-        for (int i = 0 ; i < playerList.getValue().size() ; i++)
-        {
+        for (int i = 0; i < playerList.getValue().size(); i++) {
             CompoundTag myplayerNBT = (CompoundTag) playerList.getValue().get(i);
             MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(((StringTag) myplayerNBT.getValue().get("Name")).getValue());
             petPlayer.load(myplayerNBT);
@@ -594,37 +532,30 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
         return playerCount;
     }
 
-    private int loadGroups(File f)
-    {
+    private int loadGroups(File f) {
         ConfigurationYAML yamlConfiguration = new ConfigurationYAML(f);
         FileConfiguration config = yamlConfiguration.getConfig();
 
-        if (config == null)
-        {
+        if (config == null) {
             return 0;
         }
 
         WorldGroup.clearGroups();
 
         Set<String> nodes;
-        try
-        {
+        try {
             nodes = config.getConfigurationSection("Groups").getKeys(false);
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             nodes = new HashSet<String>();
             MyPetLogger.write("No groups found. Everything will be in 'default' group.");
         }
 
         DebugLogger.info("--- Load WorldGroups ---------------------------");
-        if (nodes.size() == 0)
-        {
+        if (nodes.size() == 0) {
             List<String> worldNames = new ArrayList<String>();
             WorldGroup defaultGroup = new WorldGroup("default");
             defaultGroup.registerGroup();
-            for (org.bukkit.World world : this.getServer().getWorlds())
-            {
+            for (org.bukkit.World world : this.getServer().getWorlds()) {
                 MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
                 DebugLogger.info("   added " + world.getName() + " to " + defaultGroup.getName());
@@ -632,25 +563,18 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
             config.set("Groups.default", worldNames);
             yamlConfiguration.saveConfig();
-        }
-        else
-        {
-            for (String node : nodes)
-            {
+        } else {
+            for (String node : nodes) {
                 List<String> worlds = config.getStringList("Groups." + node);
-                if (worlds.size() > 0)
-                {
+                if (worlds.size() > 0) {
                     WorldGroup newGroup = new WorldGroup(node);
-                    for (String world : worlds)
-                    {
-                        if (getServer().getWorld(world) != null)
-                        {
+                    for (String world : worlds) {
+                        if (getServer().getWorld(world) != null) {
                             DebugLogger.info("   added '" + world + "' to '" + newGroup.getName() + "'");
                             newGroup.addWorld(world);
                         }
                     }
-                    if (newGroup.getWorlds().size() > 0)
-                    {
+                    if (newGroup.getWorlds().size() > 0) {
                         DebugLogger.info("   registered '" + newGroup.getName() + "' group");
                         newGroup.registerGroup();
                     }
@@ -658,33 +582,27 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
             }
 
             WorldGroup defaultGroup = null;
-            for (WorldGroup group : WorldGroup.getGroups())
-            {
-                if (group.getName().equalsIgnoreCase("default"))
-                {
+            for (WorldGroup group : WorldGroup.getGroups()) {
+                if (group.getName().equalsIgnoreCase("default")) {
                     defaultGroup = group;
                     break;
                 }
             }
-            if (defaultGroup == null)
-            {
+            if (defaultGroup == null) {
                 defaultGroup = new WorldGroup("default");
                 defaultGroup.registerGroup();
                 DebugLogger.info("   registered 'default' group");
             }
 
             boolean saveConfig = false;
-            for (org.bukkit.World world : getServer().getWorlds())
-            {
-                if (WorldGroup.getGroupByWorld(world.getName()) == null)
-                {
+            for (org.bukkit.World world : getServer().getWorlds()) {
+                if (WorldGroup.getGroupByWorld(world.getName()) == null) {
                     MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                     defaultGroup.addWorld(world.getName());
                     saveConfig = true;
                 }
             }
-            if (saveConfig)
-            {
+            if (saveConfig) {
                 config.set("Groups.default", defaultGroup.getWorlds());
                 yamlConfiguration.saveConfig();
             }
@@ -694,22 +612,18 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler
     }
 
     @Override
-    public void schedule()
-    {
-        if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0)
-        {
+    public void schedule() {
+        if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
             MyPetPlugin.getPlugin().savePets(false);
             autoSaveTimer = Configuration.AUTOSAVE_TIME;
         }
     }
 
-    public Backup getBackupManager()
-    {
+    public Backup getBackupManager() {
         return backupManager;
     }
 
-    public File getFile()
-    {
+    public File getFile() {
         return super.getFile();
     }
 }

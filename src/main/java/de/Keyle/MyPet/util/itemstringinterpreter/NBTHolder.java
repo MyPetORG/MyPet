@@ -25,8 +25,7 @@ import net.minecraft.server.v1_6_R2.NBTBase;
 /**
  * This class will be removed with Minecraft 1.7
  */
-public abstract class NBTHolder
-{
+public abstract class NBTHolder {
     protected String name;
 
     public abstract NBTBase getNBT();

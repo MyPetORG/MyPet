@@ -36,17 +36,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class MobArena implements Listener
-{
+public class MobArena implements Listener {
     public static boolean DISABLE_PETS_IN_ARENA = true;
 
     private static MobArenaHandler arenaHandler;
     private static boolean active = false;
 
-    public static void findPlugin()
-    {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena"))
-        {
+    public static void findPlugin() {
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena")) {
             Bukkit.getPluginManager().registerEvents(new MobArena(), MyPetPlugin.getPlugin());
             arenaHandler = new MobArenaHandler();
             active = true;
@@ -54,16 +51,11 @@ public class MobArena implements Listener
         DebugLogger.info("MobArena support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInMobArena(MyPetPlayer owner)
-    {
-        if (active && arenaHandler != null)
-        {
-            try
-            {
+    public static boolean isInMobArena(MyPetPlayer owner) {
+        if (active && arenaHandler != null) {
+            try {
                 return arenaHandler.isPlayerInArena(owner.getPlayer());
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 active = false;
             }
         }
@@ -71,13 +63,10 @@ public class MobArena implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArena(ArenaPlayerJoinEvent event)
-    {
-        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onJoinPvPArena(ArenaPlayerJoinEvent event) {
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
-            {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }
@@ -85,28 +74,20 @@ public class MobArena implements Listener
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onMyPetDamageInArena(EntityDamageByEntityEvent event)
-    {
-        if (!active)
-        {
+    public void onMyPetDamageInArena(EntityDamageByEntityEvent event) {
+        if (!active) {
             return;
         }
         MyPetEntity damager;
 
-        if (event.getDamager() instanceof MyPetEntity)
-        {
+        if (event.getDamager() instanceof MyPetEntity) {
             damager = (CraftMyPet) event.getDamager();
-        }
-        else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof MyPetEntity)
-        {
+        } else if (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof MyPetEntity) {
             damager = (CraftMyPet) ((Projectile) event.getDamager()).getShooter();
-        }
-        else
-        {
+        } else {
             return;
         }
-        if (isInMobArena(damager.getOwner()))
-        {
+        if (isInMobArena(damager.getOwner())) {
             event.setCancelled(false);
         }
     }

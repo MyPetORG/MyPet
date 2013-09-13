@@ -35,53 +35,43 @@ import java.util.Map;
         parameterNames = {"friend", "aggro", "farm", "raid", "duel"},
         parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},
         parameterDefaultValues = {"true", "true", "true", "true", "true"})
-public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
 
-    public static enum BehaviorState
-    {
+    public static enum BehaviorState {
         Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);
 
         boolean active;
 
-        BehaviorState(boolean active)
-        {
+        BehaviorState(boolean active) {
             this.active = active;
         }
 
-        public void setActive(boolean active)
-        {
-            if (this != Normal)
-            {
+        public void setActive(boolean active) {
+            if (this != Normal) {
                 this.active = active;
             }
         }
 
-        public boolean isActive()
-        {
+        public boolean isActive() {
             return this.active;
         }
     }
 
-    public BehaviorInfo(boolean addedByInheritance)
-    {
+    public BehaviorInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Behavior(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         BehaviorInfo newSkill = new BehaviorInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

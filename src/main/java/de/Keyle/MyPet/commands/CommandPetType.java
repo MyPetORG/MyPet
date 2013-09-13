@@ -17,47 +17,38 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandPetType implements CommandExecutor, TabCompleter
-{
+public class CommandPetType implements CommandExecutor, TabCompleter {
     private static List<String> petTypeList = new ArrayList<String>();
 
-    static
-    {
-        for (MyPetType petType : MyPetType.values())
-        {
+    static {
+        for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.getTypeName());
         }
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args)
-    {
-        if (args.length < 1)
-        {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (args.length < 1) {
             return false;
         }
 
         MyPetType myPetType = MyPetType.getMyPetTypeByName(args[0]);
 
         String lang = "en";
-        if (commandSender instanceof Player)
-        {
+        if (commandSender instanceof Player) {
             lang = BukkitUtil.getPlayerLanguage((Player) commandSender);
         }
 
-        if (myPetType != null)
-        {
+        if (myPetType != null) {
             String leashFlagString = "";
-            for (LeashFlag leashFlag : MyPet.getLeashFlags(myPetType.getMyPetClass()))
-            {
+            for (LeashFlag leashFlag : MyPet.getLeashFlags(myPetType.getMyPetClass())) {
                 leashFlagString += leashFlag.name() + ", ";
             }
             leashFlagString = leashFlagString.substring(0, leashFlagString.lastIndexOf(","));
             commandSender.sendMessage(Locales.getString("Name.LeashFlag", lang) + ": " + leashFlagString);
 
             String foodString = "";
-            for (ConfigItem material : MyPet.getFood(myPetType.getMyPetClass()))
-            {
+            for (ConfigItem material : MyPet.getFood(myPetType.getMyPetClass())) {
                 foodString += WordUtils.capitalizeFully(BukkitUtil.getMaterialName(material.getItem().getTypeId()).replace("_", " ")) + ", ";
             }
             foodString = foodString.substring(0, foodString.lastIndexOf(","));
@@ -72,8 +63,7 @@ public class CommandPetType implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return petTypeList;
     }
 }

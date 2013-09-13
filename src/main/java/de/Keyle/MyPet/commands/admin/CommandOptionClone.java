@@ -39,26 +39,21 @@ import org.spout.nbt.CompoundTag;
 
 import java.util.List;
 
-public class CommandOptionClone implements CommandOptionTabCompleter
-{
+public class CommandOptionClone implements CommandOptionTabCompleter {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
-        if (args.length < 2)
-        {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length < 2) {
             return false;
         }
 
         String lang = BukkitUtil.getCommandSenderLanguage(sender);
         Player oldOwner = Bukkit.getPlayer(args[0]);
-        if (oldOwner == null || !oldOwner.isOnline())
-        {
+        if (oldOwner == null || !oldOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
             return true;
         }
         Player newOwner = Bukkit.getPlayer(args[1]);
-        if (newOwner == null || !newOwner.isOnline())
-        {
+        if (newOwner == null || !newOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
             return true;
         }
@@ -66,13 +61,11 @@ public class CommandOptionClone implements CommandOptionTabCompleter
         MyPetPlayer oldPetOwner = MyPetPlayer.getMyPetPlayer(oldOwner);
         MyPetPlayer newPetOwner = MyPetPlayer.getMyPetPlayer(newOwner);
 
-        if (!oldPetOwner.hasMyPet())
-        {
+        if (!oldPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
             return true;
         }
-        if (newPetOwner.hasMyPet())
-        {
+        if (newPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
             return true;
         }
@@ -89,14 +82,11 @@ public class CommandOptionClone implements CommandOptionTabCompleter
         newPet.setSkillTree(oldPet.getSkillTree());
         newPet.setWorldGroup(oldPet.getWorldGroup());
         CompoundTag skillCompund = newPet.getSkills();
-        for (ISkillInstance skill : oldPet.getSkills().getSkills())
-        {
-            if (skill instanceof ISkillStorage)
-            {
+        for (ISkillInstance skill : oldPet.getSkills().getSkills()) {
+            if (skill instanceof ISkillStorage) {
                 ISkillStorage storageSkill = (ISkillStorage) skill;
                 CompoundTag s = storageSkill.save();
-                if (s != null)
-                {
+                if (s != null) {
                     skillCompund.getValue().put(skill.getName(), s);
                 }
             }
@@ -111,14 +101,11 @@ public class CommandOptionClone implements CommandOptionTabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
-    {
-        if (strings.length == 2)
-        {
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        if (strings.length == 2) {
             return null;
         }
-        if (strings.length == 3)
-        {
+        if (strings.length == 3) {
             return null;
         }
         return CommandAdmin.emptyList;

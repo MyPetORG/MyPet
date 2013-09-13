@@ -30,62 +30,47 @@ import net.minecraft.server.v1_6_R2.ItemStack;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.9F, height = 1.3F)
-public class EntityMyCow extends EntityMyPet
-{
+public class EntityMyCow extends EntityMyPet {
     public static boolean CAN_GIVE_MILK = true;
     public static ConfigItem GROW_UP_ITEM;
 
-    public EntityMyCow(World world, MyPet myPet)
-    {
+    public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.cow.hurt";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.cow.hurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.cow.say";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-        {
-            if (itemStack.id == Item.BUCKET.id)
-            {
-                if (CAN_GIVE_MILK && !this.world.isStatic)
-                {
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.id == Item.BUCKET.id) {
+                if (CAN_GIVE_MILK && !this.world.isStatic) {
                     ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
 
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
                     return true;
                 }
-            }
-            else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
-            {
-                if (isBaby())
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
+            } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
+                if (isBaby()) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                     }
@@ -97,39 +82,30 @@ public class EntityMyCow extends EntityMyPet
         return false;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyCow) myPet).isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
+    public void setBaby(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(12, new Integer(0));
         }
         ((MyCow) myPet).isBaby = flag;
     }
 
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.cow.step", 0.15F, 1.0F);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setBaby(((MyCow) myPet).isBaby());

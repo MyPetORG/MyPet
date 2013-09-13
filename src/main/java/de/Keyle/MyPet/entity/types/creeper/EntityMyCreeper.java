@@ -27,60 +27,47 @@ import net.minecraft.server.v1_6_R2.World;
 
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyCreeper extends EntityMyPet
-{
-    public EntityMyCreeper(World world, MyPet myPet)
-    {
+public class EntityMyCreeper extends EntityMyPet {
+    public EntityMyCreeper(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.creeper.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.creeper.say";
     }
 
     @Override
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return null;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) -1)); // fuse
         this.datawatcher.a(17, new Byte((byte) 0));  // powered
     }
 
-    public boolean isPowered()
-    {
+    public boolean isPowered() {
         return ((MyCreeper) myPet).isPowered;
     }
 
-    public void setPowered(boolean powered)
-    {
-        if (!powered)
-        {
+    public void setPowered(boolean powered) {
+        if (!powered) {
             this.datawatcher.watch(17, (byte) 0);
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(17, (byte) 1);
         }
         ((MyCreeper) myPet).isPowered = powered;
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setPowered(((MyCreeper) myPet).isPowered());

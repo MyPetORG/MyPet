@@ -43,8 +43,7 @@ import org.spout.nbt.*;
 
 import java.util.*;
 
-public class MyPetPlayer implements IScheduler, NBTStorage
-{
+public class MyPetPlayer implements IScheduler, NBTStorage {
     public final static Set<String> onlinePlayerList = new HashSet<String>();
     private static List<MyPetPlayer> playerList = new ArrayList<MyPetPlayer>();
 
@@ -62,8 +61,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     private BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
 
-    public enum DonationRank
-    {
+    public enum DonationRank {
         None(""),
         Creator(ChatColor.GOLD + "☣ " + ChatColor.UNDERLINE + "Creator of MyPet" + ChatColor.RESET + ChatColor.GOLD + " ☣" + ChatColor.RESET),
         Donator(ChatColor.GOLD + "❤ " + ChatColor.UNDERLINE + "Donator" + ChatColor.RESET + ChatColor.GOLD + " ❤" + ChatColor.RESET),
@@ -73,44 +71,32 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
         String displayText;
 
-        DonationRank(String displayText)
-        {
+        DonationRank(String displayText) {
             this.displayText = displayText;
         }
 
-        public String getDisplayText()
-        {
+        public String getDisplayText() {
             return displayText;
         }
     }
 
-    private MyPetPlayer(String playerName)
-    {
+    private MyPetPlayer(String playerName) {
         this.playerName = playerName;
         checkForDonation();
     }
 
-    public String getName()
-    {
+    public String getName() {
         return playerName;
     }
 
-    public boolean hasCustomData()
-    {
-        if (autoRespawn || autoRespawnMin != 1)
-        {
+    public boolean hasCustomData() {
+        if (autoRespawn || autoRespawnMin != 1) {
             return true;
-        }
-        else if (captureHelperMode)
-        {
+        } else if (captureHelperMode) {
             return true;
-        }
-        else if (extendedInfo.getValue().size() > 0)
-        {
+        } else if (extendedInfo.getValue().size() > 0) {
             return true;
-        }
-        else if (petWorldUUID.size() > 0)
-        {
+        } else if (petWorldUUID.size() > 0) {
             return true;
         }
         return false;
@@ -118,156 +104,120 @@ public class MyPetPlayer implements IScheduler, NBTStorage
 
     // Custom Data -----------------------------------------------------------------
 
-    public void setAutoRespawnEnabled(boolean flag)
-    {
+    public void setAutoRespawnEnabled(boolean flag) {
         autoRespawn = flag;
     }
 
-    public boolean hasAutoRespawnEnabled()
-    {
+    public boolean hasAutoRespawnEnabled() {
         return autoRespawn;
     }
 
-    public void setAutoRespawnMin(int value)
-    {
+    public void setAutoRespawnMin(int value) {
         autoRespawnMin = value;
     }
 
-    public int getAutoRespawnMin()
-    {
+    public int getAutoRespawnMin() {
         return autoRespawnMin;
     }
 
-    public boolean isCaptureHelperActive()
-    {
+    public boolean isCaptureHelperActive() {
         return captureHelperMode;
     }
 
-    public void setCaptureHelperActive(boolean captureHelperMode)
-    {
+    public void setCaptureHelperActive(boolean captureHelperMode) {
         this.captureHelperMode = captureHelperMode;
     }
 
-    public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID)
-    {
-        if (worldGroup == null || worldGroup.equals(""))
-        {
+    public void setMyPetForWorldGroup(String worldGroup, UUID myPetUUID) {
+        if (worldGroup == null || worldGroup.equals("")) {
             return;
         }
-        if (myPetUUID == null)
-        {
+        if (myPetUUID == null) {
             petWorldUUID.remove(worldGroup);
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 petWorldUUID.put(worldGroup, myPetUUID);
-            }
-            catch (IllegalArgumentException e)
-            {
+            } catch (IllegalArgumentException e) {
                 DebugLogger.warning("There are two pets registered for one worldgroup or vice versa!");
             }
         }
     }
 
-    public UUID getMyPetForWorldGroup(String worldGroup)
-    {
+    public UUID getMyPetForWorldGroup(String worldGroup) {
         return petWorldUUID.get(worldGroup);
     }
 
-    public String getWorldGroupForMyPet(UUID petUUID)
-    {
+    public String getWorldGroupForMyPet(UUID petUUID) {
         return petUUIDWorld.get(petUUID);
     }
 
-    public boolean hasMyPetInWorldGroup(String worldGroup)
-    {
+    public boolean hasMyPetInWorldGroup(String worldGroup) {
         return petWorldUUID.containsKey(worldGroup);
     }
 
-    public boolean hasInactiveMyPetInWorldGroup(String worldGroup)
-    {
-        for (InactiveMyPet inactiveMyPet : getInactiveMyPets())
-        {
-            if (inactiveMyPet.getWorldGroup().equals(worldGroup))
-            {
+    public boolean hasInactiveMyPetInWorldGroup(String worldGroup) {
+        for (InactiveMyPet inactiveMyPet : getInactiveMyPets()) {
+            if (inactiveMyPet.getWorldGroup().equals(worldGroup)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void setExtendedInfo(CompoundTag compound)
-    {
-        if (extendedInfo.getValue().size() == 0)
-        {
+    public void setExtendedInfo(CompoundTag compound) {
+        if (extendedInfo.getValue().size() == 0) {
             extendedInfo = compound;
         }
     }
 
-    public void addExtendedInfo(String key, Tag<?> tag)
-    {
+    public void addExtendedInfo(String key, Tag<?> tag) {
         extendedInfo.getValue().put(key, tag);
     }
 
-    public Tag<?> getExtendedInfo(String key)
-    {
-        if (extendedInfo.getValue().containsKey(key))
-        {
+    public Tag<?> getExtendedInfo(String key) {
+        if (extendedInfo.getValue().containsKey(key)) {
             return extendedInfo.getValue().get(key);
         }
         return null;
     }
 
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         return extendedInfo;
     }
 
     // -----------------------------------------------------------------------------
 
-    public boolean isOnline()
-    {
+    public boolean isOnline() {
         return onlinePlayerList.contains(playerName);
     }
 
-    public boolean isInExternalGames()
-    {
+    public boolean isInExternalGames() {
         if (MobArena.isInMobArena(this) ||
                 Minigames.isInMinigame(this) ||
                 BattleArena.isInBattleArena(this) ||
                 PvPArena.isInPvPArena(this) ||
                 MyHungerGames.isInHungerGames(this) ||
-                SurvivalGames.isInSurvivalGames(this))
-        {
+                SurvivalGames.isInSurvivalGames(this)) {
             return true;
         }
         return false;
     }
 
-    public boolean isDonator()
-    {
+    public boolean isDonator() {
         return donator;
     }
 
-    public DonationRank getDonationRank()
-    {
+    public DonationRank getDonationRank() {
         return rank;
     }
 
-    public void checkForDonation()
-    {
-        if (donator || !Configuration.DONATOR_EFFECT)
-        {
+    public void checkForDonation() {
+        if (donator || !Configuration.DONATOR_EFFECT) {
             return;
         }
-        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
-                try
-                {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                try {
                     // Check whether this player has donated or is a helper for the MyPet project
                     // returns
                     //   0 for nothing
@@ -278,35 +228,24 @@ public class MyPetPlayer implements IScheduler, NBTStorage
                     //   5 for creator
                     // no data will be saved on the server
                     String donation = Util.readUrlContent("http://donation.keyle.de/donated.php?userid=" + playerName);
-                    if (donation.equals("1"))
-                    {
+                    if (donation.equals("1")) {
                         donator = true;
                         rank = DonationRank.Donator;
                         DebugLogger.info(playerName + " is a donator! Thanks " + playerName + " =)");
-                    }
-                    else if (donation.equals("2"))
-                    {
+                    } else if (donation.equals("2")) {
                         donator = true;
                         rank = DonationRank.Developer;
-                    }
-                    else if (donation.equals("3"))
-                    {
+                    } else if (donation.equals("3")) {
                         donator = true;
                         rank = DonationRank.Translator;
-                    }
-                    else if (donation.equals("4"))
-                    {
+                    } else if (donation.equals("4")) {
                         donator = true;
                         rank = DonationRank.Helper;
-                    }
-                    else if (donation.equals("5"))
-                    {
+                    } else if (donation.equals("5")) {
                         donator = true;
                         rank = DonationRank.Creator;
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     DebugLogger.info("Can not connect to donation server.");
                     Configuration.DONATOR_EFFECT = false;
                 }
@@ -314,73 +253,57 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         }, 60L);
     }
 
-    public String getLanguage()
-    {
-        if (isOnline())
-        {
+    public String getLanguage() {
+        if (isOnline()) {
             lastLanguage = BukkitUtil.getPlayerLanguage(getPlayer());
         }
         return lastLanguage;
     }
 
-    public boolean isMyPetAdmin()
-    {
+    public boolean isMyPetAdmin() {
         return isOnline() && Permissions.has(getPlayer(), "MyPet.admin", false);
     }
 
-    public boolean hasMyPet()
-    {
+    public boolean hasMyPet() {
         return MyPetList.hasMyPet(playerName);
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return MyPetList.getMyPet(playerName);
     }
 
-    public boolean hasInactiveMyPets()
-    {
+    public boolean hasInactiveMyPets() {
         return MyPetList.hasInactiveMyPets(this);
     }
 
-    public InactiveMyPet getInactiveMyPet(UUID petUUID)
-    {
-        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this))
-        {
-            if (inactiveMyPet.getUUID().equals(petUUID))
-            {
+    public InactiveMyPet getInactiveMyPet(UUID petUUID) {
+        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this)) {
+            if (inactiveMyPet.getUUID().equals(petUUID)) {
                 return inactiveMyPet;
             }
         }
         return null;
     }
 
-    public List<InactiveMyPet> getInactiveMyPets()
-    {
+    public List<InactiveMyPet> getInactiveMyPets() {
         return MyPetList.getInactiveMyPets(this);
     }
 
-    public Player getPlayer()
-    {
+    public Player getPlayer() {
         return Bukkit.getServer().getPlayerExact(playerName);
     }
 
-    public EntityPlayer getEntityPlayer()
-    {
+    public EntityPlayer getEntityPlayer() {
         Player p = getPlayer();
-        if (p != null)
-        {
+        if (p != null) {
             return ((CraftPlayer) p).getHandle();
         }
         return null;
     }
 
-    public static MyPetPlayer getMyPetPlayer(String name)
-    {
-        for (MyPetPlayer myPetPlayer : playerList)
-        {
-            if (myPetPlayer.getName().equals(name))
-            {
+    public static MyPetPlayer getMyPetPlayer(String name) {
+        for (MyPetPlayer myPetPlayer : playerList) {
+            if (myPetPlayer.getName().equals(name)) {
                 return myPetPlayer;
             }
         }
@@ -389,49 +312,39 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         return myPetPlayer;
     }
 
-    public static MyPetPlayer getMyPetPlayer(Player player)
-    {
+    public static MyPetPlayer getMyPetPlayer(Player player) {
         return MyPetPlayer.getMyPetPlayer(player.getName());
     }
 
-    public static boolean isMyPetPlayer(String name)
-    {
-        for (MyPetPlayer myPetPlayer : playerList)
-        {
-            if (myPetPlayer.getName().equals(name))
-            {
+    public static boolean isMyPetPlayer(String name) {
+        for (MyPetPlayer myPetPlayer : playerList) {
+            if (myPetPlayer.getName().equals(name)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isMyPetPlayer(Player player)
-    {
-        for (MyPetPlayer myPetPlayer : playerList)
-        {
-            if (myPetPlayer.equals(player))
-            {
+    public static boolean isMyPetPlayer(Player player) {
+        for (MyPetPlayer myPetPlayer : playerList) {
+            if (myPetPlayer.equals(player)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static MyPetPlayer[] getMyPetPlayers()
-    {
+    public static MyPetPlayer[] getMyPetPlayers() {
         MyPetPlayer[] playerArray = new MyPetPlayer[playerList.size()];
         int playerCounter = 0;
-        for (MyPetPlayer player : playerList)
-        {
+        for (MyPetPlayer player : playerList) {
             playerArray[playerCounter++] = player;
         }
         return playerArray;
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         CompoundTag playerNBT = new CompoundTag(getName(), new CompoundMap());
 
         playerNBT.getValue().put("Name", new StringTag("Name", getName()));
@@ -442,8 +355,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage
         playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", isCaptureHelperActive()));
 
         CompoundTag multiWorldCompound = new CompoundTag("MultiWorld", new CompoundMap());
-        for (String worldGroupName : petWorldUUID.keySet())
-        {
+        for (String worldGroupName : petWorldUUID.keySet()) {
             multiWorldCompound.getValue().put(worldGroupName, new StringTag(worldGroupName, petWorldUUID.get(worldGroupName).toString()));
         }
         playerNBT.getValue().put("MultiWorld", multiWorldCompound);
@@ -452,71 +364,52 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     }
 
     @Override
-    public void load(CompoundTag myplayerNBT)
-    {
-        if (myplayerNBT.getValue().containsKey("AutoRespawn"))
-        {
+    public void load(CompoundTag myplayerNBT) {
+        if (myplayerNBT.getValue().containsKey("AutoRespawn")) {
             setAutoRespawnEnabled(((ByteTag) myplayerNBT.getValue().get("AutoRespawn")).getBooleanValue());
         }
-        if (myplayerNBT.getValue().containsKey("AutoRespawnMin"))
-        {
+        if (myplayerNBT.getValue().containsKey("AutoRespawnMin")) {
             setAutoRespawnMin(((IntTag) myplayerNBT.getValue().get("AutoRespawnMin")).getValue());
         }
-        if (myplayerNBT.getValue().containsKey("CaptureMode"))
-        {
-            if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING)
-            {
-                if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated"))
-                {
+        if (myplayerNBT.getValue().containsKey("CaptureMode")) {
+            if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING) {
+                if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated")) {
                     setCaptureHelperActive(true);
                 }
-            }
-            else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE)
-            {
+            } else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE) {
                 setCaptureHelperActive(((ByteTag) myplayerNBT.getValue().get("CaptureMode")).getBooleanValue());
             }
         }
-        if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID"))
-        {
+        if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID")) {
             String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
-            if (!lastActive.equalsIgnoreCase(""))
-            {
+            if (!lastActive.equalsIgnoreCase("")) {
                 UUID lastActiveUUID = UUID.fromString(lastActive);
                 World newWorld = Bukkit.getServer().getWorlds().get(0);
                 WorldGroup lastActiveGroup = WorldGroup.getGroupByWorld(newWorld.getName());
                 this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
             }
         }
-        if (myplayerNBT.getValue().containsKey("ExtendedInfo"))
-        {
+        if (myplayerNBT.getValue().containsKey("ExtendedInfo")) {
             setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
         }
-        if (myplayerNBT.getValue().containsKey("MultiWorld"))
-        {
+        if (myplayerNBT.getValue().containsKey("MultiWorld")) {
             CompoundMap map = ((CompoundTag) myplayerNBT.getValue().get("MultiWorld")).getValue();
-            for (String worldGroupName : map.keySet())
-            {
+            for (String worldGroupName : map.keySet()) {
                 String petUUID = ((StringTag) map.get(worldGroupName)).getValue();
                 setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
             }
         }
     }
 
-    public void schedule()
-    {
-        if (!isOnline())
-        {
+    public void schedule() {
+        if (!isOnline()) {
             return;
         }
-        if (hasMyPet())
-        {
+        if (hasMyPet()) {
             MyPet myPet = getMyPet();
-            if (myPet.getStatus() == PetState.Here)
-            {
-                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75)
-                {
-                    if (!myPet.getCraftPet().canMove())
-                    {
+            if (myPet.getStatus() == PetState.Here) {
+                if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 75) {
+                    if (!myPet.getCraftPet().canMove()) {
                         myPet.removePet(true);
                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getLanguage()), myPet.getPetName()));
                     }
@@ -526,40 +419,27 @@ public class MyPetPlayer implements IScheduler, NBTStorage
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (obj == null)
-        {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
-        }
-        else if (obj instanceof Player)
-        {
+        } else if (obj instanceof Player) {
             Player player = (Player) obj;
             return playerName.equals(player.getName());
-        }
-        else if (obj instanceof OfflinePlayer)
-        {
+        } else if (obj instanceof OfflinePlayer) {
             return ((OfflinePlayer) obj).getName().equals(playerName);
-        }
-        else if (obj instanceof EntityHuman)
-        {
+        } else if (obj instanceof EntityHuman) {
             EntityHuman entityHuman = (EntityHuman) obj;
             return playerName.equals(entityHuman.getName());
-        }
-        else if (obj instanceof AnimalTamer)
-        {
+        } else if (obj instanceof AnimalTamer) {
             return ((AnimalTamer) obj).getName().equals(playerName);
-        }
-        else if (obj instanceof MyPetPlayer)
-        {
+        } else if (obj instanceof MyPetPlayer) {
             return this == obj;
         }
         return false;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyPetPlayer{name=" + playerName + "}";
     }
 }

@@ -32,55 +32,45 @@ import org.spout.nbt.CompoundTag;
 import static org.bukkit.Material.WHEAT;
 
 @MyPetInfo(food = {WHEAT})
-public class MyMooshroom extends MyPet implements IMyPetBaby
-{
+public class MyMooshroom extends MyPet implements IMyPetBaby {
     protected boolean isBaby = false;
 
-    public MyMooshroom(MyPetPlayer petOwner)
-    {
+    public MyMooshroom(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Baby"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Mooshroom;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBaby(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyMooshroom) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyMooshroom{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", baby=" + isBaby() + "}";
     }
 }

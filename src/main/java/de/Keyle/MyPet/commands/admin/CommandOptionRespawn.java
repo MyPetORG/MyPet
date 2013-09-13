@@ -36,60 +36,44 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandOptionRespawn implements CommandOptionTabCompleter
-{
+public class CommandOptionRespawn implements CommandOptionTabCompleter {
     private static List<String> showList = new ArrayList<String>();
 
-    static
-    {
+    static {
         showList.add("show");
         showList.add("<number>");
     }
 
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
-        if (args.length < 1)
-        {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length < 1) {
             return false;
         }
 
         String lang = BukkitUtil.getCommandSenderLanguage(sender);
         Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-        if (petOwner == null || !petOwner.isOnline())
-        {
+        if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
             return true;
-        }
-        else if (!MyPetList.hasMyPet(petOwner))
-        {
+        } else if (!MyPetList.hasMyPet(petOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }
         MyPet myPet = MyPetList.getMyPet(petOwner);
-        if (args.length >= 2 && args[1].equalsIgnoreCase("show"))
-        {
+        if (args.length >= 2 && args[1].equalsIgnoreCase("show")) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] respawn time: " + myPet.getRespawnTime() + "sec.");
-        }
-        else if (myPet.getStatus() == PetState.Dead)
-        {
-            if (args.length >= 2 && Util.isInt(args[1]))
-            {
+        } else if (myPet.getStatus() == PetState.Dead) {
+            if (args.length >= 2 && Util.isInt(args[1])) {
                 int respawnTime = Integer.parseInt(args[1]);
-                if (respawnTime >= 0)
-                {
+                if (respawnTime >= 0) {
                     myPet.setRespawnTime(respawnTime);
                 }
-            }
-            else
-            {
+            } else {
                 myPet.setRespawnTime(0);
             }
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set respawn time to: " + myPet.getRespawnTime() + "sec.");
-        }
-        else
-        {
+        } else {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] pet is not dead!");
         }
 
@@ -97,14 +81,11 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
-    {
-        if (strings.length == 2)
-        {
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        if (strings.length == 2) {
             return null;
         }
-        if (strings.length == 3)
-        {
+        if (strings.length == 3) {
             return showList;
         }
         return CommandAdmin.emptyList;

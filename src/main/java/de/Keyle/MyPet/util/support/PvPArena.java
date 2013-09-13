@@ -31,32 +31,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class PvPArena implements Listener
-{
+public class PvPArena implements Listener {
     public static boolean DISABLE_PETS_IN_ARENA = true;
 
     private static boolean active = false;
 
-    public static void findPlugin()
-    {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena"))
-        {
+    public static void findPlugin() {
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
             Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
             active = true;
         }
         DebugLogger.info("PvPArena support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInPvPArena(MyPetPlayer owner)
-    {
-        if (active)
-        {
-            try
-            {
+    public static boolean isInPvPArena(MyPetPlayer owner) {
+        if (active) {
+            try {
                 return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 active = false;
             }
         }
@@ -64,13 +56,10 @@ public class PvPArena implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArena(PAJoinEvent event)
-    {
-        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onJoinPvPArena(PAJoinEvent event) {
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
-            {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }

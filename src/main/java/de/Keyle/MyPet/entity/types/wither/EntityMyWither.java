@@ -26,32 +26,26 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.9F, height = 4.0F)
-public class EntityMyWither extends EntityMyPet
-{
-    public EntityMyWither(World world, MyPet myPet)
-    {
+public class EntityMyWither extends EntityMyPet {
+    public EntityMyWither(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.wither.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.wither.hurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.wither.idle";
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(17, new Integer(0));  // target entityID
         this.datawatcher.a(18, new Integer(0));  // N/A

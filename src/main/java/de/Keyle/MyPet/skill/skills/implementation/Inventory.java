@@ -39,135 +39,107 @@ import org.spout.nbt.CompoundMap;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 
-public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive
-{
+public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive {
     public CustomInventory inv = new CustomInventory("Pet's Inventory", 0);
     public static boolean OPEN_IN_CREATIVEMODE = true;
     public static boolean DROP_WHEN_OWNER_DIES = true;
     private MyPet myPet;
 
-    public Inventory(boolean addedByInheritance)
-    {
+    public Inventory(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
         inv.setName(myPet.getPetName());
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return null;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof InventoryInfo)
-        {
-            if (upgrade.getProperties().getValue().containsKey("add"))
-            {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof InventoryInfo) {
+            if (upgrade.getProperties().getValue().containsKey("add")) {
                 rows += ((IntTag) upgrade.getProperties().getValue().get("add")).getValue();
-                if (rows > 6)
-                {
+                if (rows > 6) {
                     rows = 6;
                 }
                 inv.setSize(rows * 9);
-                if (!quiet)
-                {
+                if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), inv.getSize()));
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("drop"))
-            {
+            if (upgrade.getProperties().getValue().containsKey("drop")) {
                 dropOnDeath = ((ByteTag) upgrade.getProperties().getValue().get("drop")).getBooleanValue();
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return rows + " " + Locales.getString("Name.Rows", myPet.getOwner());
     }
 
-    public void reset()
-    {
+    public void reset() {
         rows = 0;
         inv.setSize(0);
     }
 
-    public boolean activate()
-    {
-        if (rows > 0)
-        {
-            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false))
-            {
+    public boolean activate() {
+        if (rows > 0) {
+            if (myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
                 myPet.sendMessageToOwner(Locales.getString("Message.Skill.Inventory.Creative", myPet.getOwner()));
                 return false;
             }
-            if (myPet.getOwner().isInExternalGames())
-            {
+            if (myPet.getOwner().isInExternalGames()) {
                 myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
-            if (!myPet.getLocation().getBlock().isLiquid())
-            {
+            if (!myPet.getLocation().getBlock().isLiquid()) {
                 inv.setName(myPet.getPetName());
                 openInventory(myPet.getOwner().getPlayer());
                 return true;
-            }
-            else
-            {
+            } else {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.Swimming", myPet.getOwner()), myPet.getPetName()));
                 return false;
             }
-        }
-        else
-        {
+        } else {
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.NotAvailable", myPet.getOwner()), myPet.getPetName()));
             return false;
         }
     }
 
-    public void openInventory(Player p)
-    {
+    public void openInventory(Player p) {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
         Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect("mob.horse.leather", p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 1.0F, 1.0F);
         eh.playerConnection.sendPacket(packet);
         eh.openContainer(inv);
     }
 
-    public void closeInventory()
-    {
+    public void closeInventory() {
         inv.close();
     }
 
-    public void load(CompoundTag compound)
-    {
+    public void load(CompoundTag compound) {
         inv.load(compound);
     }
 
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return rows > 0;
     }
 
-    public boolean dropOnDeath()
-    {
+    public boolean dropOnDeath() {
         return dropOnDeath;
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Inventory newSkill = new Inventory(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

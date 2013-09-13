@@ -27,149 +27,118 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SkillTreeMobType
-{
+public class SkillTreeMobType {
     private Map<String, SkillTree> skillTrees = new HashMap<String, SkillTree>();
     private List<String> skillTreeList = new ArrayList<String>();
     private String mobTypeName;
 
     private static Map<String, SkillTreeMobType> mobTypes = new HashMap<String, SkillTreeMobType>();
 
-    private SkillTreeMobType(String mobTypeName)
-    {
+    private SkillTreeMobType(String mobTypeName) {
         this.mobTypeName = mobTypeName.toLowerCase();
         mobTypes.put(this.mobTypeName, this);
     }
 
-    public String getMobTypeName()
-    {
+    public String getMobTypeName() {
         return mobTypeName;
     }
 
-    public void addSkillTree(SkillTree skillTree)
-    {
+    public void addSkillTree(SkillTree skillTree) {
         addSkillTree(skillTree, getNextPlace());
     }
 
-    public void addSkillTree(SkillTree skillTree, int place)
-    {
-        if (!skillTrees.containsKey(skillTree.getName()))
-        {
+    public void addSkillTree(SkillTree skillTree, int place) {
+        if (!skillTrees.containsKey(skillTree.getName())) {
             skillTrees.put(skillTree.getName(), skillTree);
-            if (skillTreeList.size() - 1 < place)
-            {
-                for (int x = skillTreeList.size() ; x <= place ; x++)
-                {
+            if (skillTreeList.size() - 1 < place) {
+                for (int x = skillTreeList.size(); x <= place; x++) {
                     skillTreeList.add(x, null);
                 }
             }
-            if (skillTreeList.get(place) != null)
-            {
+            if (skillTreeList.get(place) != null) {
                 place = getNextPlace();
             }
             skillTreeList.set(place, skillTree.getName());
         }
     }
 
-    public void removeSkillTree(String skillTreeName)
-    {
-        if (skillTrees.containsKey(skillTreeName))
-        {
+    public void removeSkillTree(String skillTreeName) {
+        if (skillTrees.containsKey(skillTreeName)) {
             skillTrees.remove(skillTreeName);
             skillTreeList.remove(skillTreeName);
         }
     }
 
-    public void moveSkillTreeUp(SkillTree skillTree)
-    {
+    public void moveSkillTreeUp(SkillTree skillTree) {
         moveSkillTreeUp(skillTree.getName());
     }
 
-    public void moveSkillTreeUp(String skillTreeName)
-    {
+    public void moveSkillTreeUp(String skillTreeName) {
         int index = skillTreeList.indexOf(skillTreeName);
-        if (index != -1 && index > 0 && index < skillTreeList.size())
-        {
+        if (index != -1 && index > 0 && index < skillTreeList.size()) {
             String skillTree = skillTreeList.get(index - 1);
             skillTreeList.set(index - 1, skillTreeName);
             skillTreeList.set(index, skillTree);
         }
     }
 
-    public void moveSkillTreeDown(SkillTree skillTree)
-    {
+    public void moveSkillTreeDown(SkillTree skillTree) {
         moveSkillTreeDown(skillTree.getName());
     }
 
-    public void moveSkillTreeDown(String skillTreeName)
-    {
+    public void moveSkillTreeDown(String skillTreeName) {
         int index = skillTreeList.indexOf(skillTreeName);
-        if (index != -1 && index >= 0 && index < skillTreeList.size())
-        {
+        if (index != -1 && index >= 0 && index < skillTreeList.size()) {
             String skillTree = skillTreeList.get(index + 1);
             skillTreeList.set(index + 1, skillTreeName);
             skillTreeList.set(index, skillTree);
         }
     }
 
-    public int getSkillTreePlace(String skillTreeName)
-    {
-        if (skillTrees.containsKey(skillTreeName))
-        {
+    public int getSkillTreePlace(String skillTreeName) {
+        if (skillTrees.containsKey(skillTreeName)) {
             return skillTreeList.indexOf(skillTreeName);
         }
         return -1;
     }
 
-    public int getSkillTreePlace(SkillTree skillTree)
-    {
+    public int getSkillTreePlace(SkillTree skillTree) {
         return getSkillTreePlace(skillTree.getName());
     }
 
-    public SkillTree getSkillTree(String skillTreeName)
-    {
-        if (skillTrees.containsKey(skillTreeName))
-        {
+    public SkillTree getSkillTree(String skillTreeName) {
+        if (skillTrees.containsKey(skillTreeName)) {
             return skillTrees.get(skillTreeName);
         }
         return null;
     }
 
-    public boolean hasSkillTree(String skillTreeName)
-    {
+    public boolean hasSkillTree(String skillTreeName) {
         return skillTrees.containsKey(skillTreeName);
     }
 
-    public List<String> getSkillTreeNames()
-    {
+    public List<String> getSkillTreeNames() {
         List<String> skilltreeNames = new ArrayList<String>();
-        for (String name : skillTreeList)
-        {
-            if (name != null)
-            {
+        for (String name : skillTreeList) {
+            if (name != null) {
                 skilltreeNames.add(name);
             }
         }
         return skilltreeNames;
     }
 
-    public List<SkillTree> getSkillTrees()
-    {
+    public List<SkillTree> getSkillTrees() {
         cleanupPlaces();
         List<SkillTree> skilltreeNames = new ArrayList<SkillTree>();
-        for (String name : skillTreeList)
-        {
+        for (String name : skillTreeList) {
             skilltreeNames.add(getSkillTree(name));
         }
         return skilltreeNames;
     }
 
-    public short getNextPlace()
-    {
-        for (int i = 0 ; i < skillTreeList.size() ; i++)
-        {
-            if (skillTreeList.get(i) == null)
-            {
+    public short getNextPlace() {
+        for (int i = 0; i < skillTreeList.size(); i++) {
+            if (skillTreeList.get(i) == null) {
                 return (short) i;
             }
         }
@@ -178,80 +147,61 @@ public class SkillTreeMobType
         return place;
     }
 
-    public void cleanupPlaces()
-    {
-        while (skillTreeList.indexOf(null) != -1)
-        {
+    public void cleanupPlaces() {
+        while (skillTreeList.indexOf(null) != -1) {
             skillTreeList.remove(null);
         }
     }
 
-    public static SkillTreeMobType getMobTypeByName(String mobTypeName)
-    {
-        if (!mobTypes.containsKey(mobTypeName.toLowerCase()))
-        {
+    public static SkillTreeMobType getMobTypeByName(String mobTypeName) {
+        if (!mobTypes.containsKey(mobTypeName.toLowerCase())) {
             new SkillTreeMobType(mobTypeName);
         }
         return mobTypes.get(mobTypeName.toLowerCase());
     }
 
-    public static SkillTreeMobType getMobTypeByPetType(MyPetType myPetType)
-    {
-        if (!mobTypes.containsKey(myPetType.getTypeName().toLowerCase()))
-        {
+    public static SkillTreeMobType getMobTypeByPetType(MyPetType myPetType) {
+        if (!mobTypes.containsKey(myPetType.getTypeName().toLowerCase())) {
             new SkillTreeMobType(myPetType.getTypeName().toLowerCase());
         }
         return mobTypes.get(myPetType.getTypeName().toLowerCase());
     }
 
-    public static boolean hasMobType(String mobTypeName)
-    {
+    public static boolean hasMobType(String mobTypeName) {
         return mobTypes.containsKey(mobTypeName.toLowerCase());
     }
 
-    public static List<String> getSkillTreeNames(MyPetType myPetType)
-    {
+    public static List<String> getSkillTreeNames(MyPetType myPetType) {
         return getSkillTreeNames(myPetType.getTypeName().toLowerCase());
     }
 
-    public static List<String> getSkillTreeNames(String myPetTypeName)
-    {
+    public static List<String> getSkillTreeNames(String myPetTypeName) {
         List<String> skillTreeNames;
-        if (mobTypes.containsKey(myPetTypeName.toLowerCase()))
-        {
+        if (mobTypes.containsKey(myPetTypeName.toLowerCase())) {
             skillTreeNames = getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTreeNames();
-        }
-        else
-        {
+        } else {
             skillTreeNames = new ArrayList<String>();
         }
         return skillTreeNames;
     }
 
-    public static List<SkillTree> getSkillTrees(MyPetType myPetType)
-    {
+    public static List<SkillTree> getSkillTrees(MyPetType myPetType) {
         return getSkillTrees(myPetType.getTypeName().toLowerCase());
     }
 
-    public static List<SkillTree> getSkillTrees(String myPetTypeName)
-    {
-        if (mobTypes.containsKey(myPetTypeName.toLowerCase()))
-        {
+    public static List<SkillTree> getSkillTrees(String myPetTypeName) {
+        if (mobTypes.containsKey(myPetTypeName.toLowerCase())) {
             return getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTrees();
-        }
-        else
-        {
+        } else {
             return new ArrayList<SkillTree>();
         }
     }
 
-    public static void clearMobTypes()
-    {
+    public static void clearMobTypes() {
         mobTypes.clear();
     }
 
-    public static boolean containsSkillTree(String myPetTypeName, String name)
-    {
+    public static boolean containsSkillTree(String myPetTypeName, String name) {
         return mobTypes.containsKey(myPetTypeName.toLowerCase()) && getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTreeNames().indexOf(name) != -1;
     }
 }

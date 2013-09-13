@@ -35,32 +35,24 @@ import org.bukkit.entity.Player;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandName implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandName implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
-                if (args.length < 1)
-                {
+            if (MyPetList.hasMyPet(petOwner)) {
+                if (args.length < 1) {
                     return false;
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (!Permissions.has(petOwner, "MyPet.user.command.name"))
-                {
+                if (!Permissions.has(petOwner, "MyPet.user.command.name")) {
                     myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", petOwner));
                     return true;
                 }
 
                 String name = "";
-                for (String arg : args)
-                {
-                    if (!name.equals(""))
-                    {
+                for (String arg : args) {
+                    if (!name.equals("")) {
                         name += " ";
                     }
                     name += arg;
@@ -69,16 +61,13 @@ public class CommandName implements CommandExecutor
 
                 Pattern regex = Pattern.compile("§[abcdefklmnor0-9]");
                 Matcher regexMatcher = regex.matcher(name);
-                if (regexMatcher.find())
-                {
+                if (regexMatcher.find()) {
                     name += ChatColor.RESET;
                 }
 
                 myPet.setPetName(name);
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;

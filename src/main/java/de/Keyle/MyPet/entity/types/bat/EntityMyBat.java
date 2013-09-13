@@ -27,10 +27,8 @@ import net.minecraft.server.v1_6_R2.World;
 
 
 @EntitySize(width = 0.5F, height = 0.9F)
-public class EntityMyBat extends EntityMyPet
-{
-    public EntityMyBat(World world, MyPet myPet)
-    {
+public class EntityMyBat extends EntityMyPet {
+    public EntityMyBat(World world, MyPet myPet) {
         super(world, myPet);
         this.height = 1F;
     }
@@ -39,8 +37,7 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet dies
      */
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.bat.death";
     }
 
@@ -48,34 +45,28 @@ public class EntityMyBat extends EntityMyPet
      * Returns the sound that is played when the MyPet get hurt
      */
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.bat.hurt";
     }
 
     @Override
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.bat.idle";
     }
 
-    public float getSoundSpeed()
-    {
+    public float getSoundSpeed() {
         return super.getSoundSpeed() * 0.95F;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0)); // hanging
     }
 
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (!this.onGround && this.motY < 0.0D)
-        {
+        if (!this.onGround && this.motY < 0.0D) {
             this.motY *= 0.6D;
         }
     }

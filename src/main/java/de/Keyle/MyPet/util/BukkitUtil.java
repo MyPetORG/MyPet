@@ -34,8 +34,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class BukkitUtil
-{
+public class BukkitUtil {
 
     static Field Packet63WorldParticles_a = Util.getField(Packet63WorldParticles.class, "a");
     static Field Packet63WorldParticles_b = Util.getField(Packet63WorldParticles.class, "b");
@@ -57,8 +56,7 @@ public class BukkitUtil
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
-    public static void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius)
-    {
+    public static void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(effectName, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
@@ -75,56 +73,43 @@ public class BukkitUtil
         Util.setFieldValue(Packet63WorldParticles_h, packet, speed);
         Util.setFieldValue(Packet63WorldParticles_i, packet, count);
 
-        for (Player player : location.getWorld().getPlayers())
-        {
-            if ((int) player.getLocation().distance(location) <= radius)
-            {
+        for (Player player : location.getWorld().getPlayers()) {
+            if ((int) player.getLocation().distance(location) <= radius) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
         }
     }
 
-    public static Material checkMaterial(int itemid, Material defaultMaterial)
-    {
-        if (Material.getMaterial(itemid) == null)
-        {
+    public static Material checkMaterial(int itemid, Material defaultMaterial) {
+        if (Material.getMaterial(itemid) == null) {
             return defaultMaterial;
-        }
-        else
-        {
+        } else {
             return Material.getMaterial(itemid);
         }
     }
 
-    public static boolean isValidMaterial(int itemid)
-    {
+    public static boolean isValidMaterial(int itemid) {
         return Material.getMaterial(itemid) != null;
     }
 
-    public static String getMaterialName(int itemId)
-    {
-        if (isValidMaterial(itemId))
-        {
+    public static String getMaterialName(int itemId) {
+        if (isValidMaterial(itemId)) {
             return Material.getMaterial(itemId).name();
         }
         return String.valueOf(itemId);
     }
 
-    public static void sendMessage(Player player, String Message)
-    {
-        if (player != null && player.isOnline())
-        {
+    public static void sendMessage(Player player, String Message) {
+        if (player != null && player.isOnline()) {
             player.sendMessage(Message);
         }
     }
 
-    public static Boolean canSpawn(Location loc, Entity entity)
-    {
+    public static Boolean canSpawn(Location loc, Entity entity) {
         return canSpawn(loc, entity.width, entity.height, entity.length);
     }
 
-    public static Boolean canSpawn(Location loc, float width, float height, float length)
-    {
+    public static Boolean canSpawn(Location loc, float width, float height, float length) {
         net.minecraft.server.v1_6_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
@@ -132,8 +117,7 @@ public class BukkitUtil
         return getBlockBBsInBB(loc.getWorld(), bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 
-    public static List getBlockBBsInBB(World world, AxisAlignedBB axisalignedbb)
-    {
+    public static List getBlockBBsInBB(World world, AxisAlignedBB axisalignedbb) {
         UnsafeList unsafeList = new UnsafeList();
         int minX = MathHelper.floor(axisalignedbb.a);
         int maxX = MathHelper.floor(axisalignedbb.d + 1.0D);
@@ -142,18 +126,13 @@ public class BukkitUtil
         int minZ = MathHelper.floor(axisalignedbb.c);
         int maxZ = MathHelper.floor(axisalignedbb.f + 1.0D);
 
-        for (int x = minX ; x < maxX ; x++)
-        {
-            for (int z = minZ ; z < maxZ ; z++)
-            {
-                if (world.getChunkAt(x, z).isLoaded())
-                {
-                    for (int y = minY - 1 ; y < maxY ; y++)
-                    {
+        for (int x = minX; x < maxX; x++) {
+            for (int z = minZ; z < maxZ; z++) {
+                if (world.getChunkAt(x, z).isLoaded()) {
+                    for (int y = minY - 1; y < maxY; y++) {
                         Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
 
-                        if (block != null)
-                        {
+                        if (block != null) {
                             block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
                         }
                     }
@@ -163,31 +142,24 @@ public class BukkitUtil
         return unsafeList;
     }
 
-    public static String getPlayerLanguage(Player player)
-    {
-        if (!(player instanceof CraftPlayer))
-        {
+    public static String getPlayerLanguage(Player player) {
+        if (!(player instanceof CraftPlayer)) {
             return "en_US";
         }
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        try
-        {
+        try {
             Field field = entityPlayer.getClass().getDeclaredField("locale");
             field.setAccessible(true);
 
             return (String) field.get(entityPlayer);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return "en_US";
         }
     }
 
-    public static String getCommandSenderLanguage(CommandSender sender)
-    {
+    public static String getCommandSenderLanguage(CommandSender sender) {
         String lang = "en";
-        if (sender instanceof Player)
-        {
+        if (sender instanceof Player) {
             lang = getPlayerLanguage((Player) sender);
         }
         return lang;

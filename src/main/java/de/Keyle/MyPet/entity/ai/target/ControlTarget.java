@@ -32,106 +32,74 @@ import net.minecraft.server.v1_6_R2.EntityPlayer;
 import net.minecraft.server.v1_6_R2.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
-public class ControlTarget extends AIGoal
-{
+public class ControlTarget extends AIGoal {
     private MyPet myPet;
     private EntityMyPet petEntity;
     private EntityLiving target;
     private float range;
     private Control controlPathfinderGoal;
 
-    public ControlTarget(EntityMyPet petEntity, float range)
-    {
+    public ControlTarget(EntityMyPet petEntity, float range) {
         this.petEntity = petEntity;
         this.myPet = petEntity.getMyPet();
         this.range = range;
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (controlPathfinderGoal == null)
-        {
-            if (petEntity.petPathfinderSelector.hasGoal("Control"))
-            {
+    public boolean shouldStart() {
+        if (controlPathfinderGoal == null) {
+            if (petEntity.petPathfinderSelector.hasGoal("Control")) {
                 controlPathfinderGoal = (Control) petEntity.petPathfinderSelector.getGoal("Control");
             }
         }
-        if (controlPathfinderGoal == null)
-        {
+        if (controlPathfinderGoal == null) {
             return false;
         }
-        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0)
-        {
+        if (myPet.getDamage() <= 0 && myPet.getRangedDamage() <= 0) {
             return false;
         }
-        if (controlPathfinderGoal.moveTo != null && petEntity.canMove())
-        {
+        if (controlPathfinderGoal.moveTo != null && petEntity.canMove()) {
             Behavior behaviorSkill = null;
-            if (myPet.getSkills().isSkillActive(Behavior.class))
-            {
+            if (myPet.getSkills().isSkillActive(Behavior.class)) {
                 behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
-                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-                {
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                     return false;
                 }
             }
-            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range)))
-            {
+            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range))) {
                 EntityLiving entityLiving = (EntityLiving) entityObj;
 
-                if (entityLiving != petEntity)
-                {
-                    if (entityLiving instanceof EntityPlayer)
-                    {
+                if (entityLiving != petEntity) {
+                    if (entityLiving instanceof EntityPlayer) {
                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
-                        if (myPet.getOwner().equals(targetPlayer))
-                        {
+                        if (myPet.getOwner().equals(targetPlayer)) {
+                            continue;
+                        } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
                             continue;
                         }
-                        else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer))
-                        {
-                            continue;
-                        }
-                    }
-                    else if (entityLiving instanceof EntityTameableAnimal)
-                    {
+                    } else if (entityLiving instanceof EntityTameableAnimal) {
                         EntityTameableAnimal tameable = (EntityTameableAnimal) entityLiving;
-                        if (tameable.isTamed() && tameable.getOwner() != null)
-                        {
+                        if (tameable.isTamed() && tameable.getOwner() != null) {
                             Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
-                            if (myPet.getOwner().equals(tameableOwner))
-                            {
+                            if (myPet.getOwner().equals(tameableOwner)) {
                                 continue;
-                            }
-                            else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner))
-                            {
+                            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner)) {
                                 continue;
                             }
                         }
-                    }
-                    else if (entityLiving instanceof EntityMyPet)
-                    {
+                    } else if (entityLiving instanceof EntityMyPet) {
                         MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
-                        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer()))
-                        {
+                        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
                             continue;
                         }
                     }
-                    if (behaviorSkill != null)
-                    {
-                        if (behaviorSkill.getBehavior() == BehaviorState.Raid)
-                        {
-                            if (entityLiving instanceof EntityTameableAnimal)
-                            {
+                    if (behaviorSkill != null) {
+                        if (behaviorSkill.getBehavior() == BehaviorState.Raid) {
+                            if (entityLiving instanceof EntityTameableAnimal) {
                                 continue;
-                            }
-                            else if (entityLiving instanceof EntityMyPet)
-                            {
+                            } else if (entityLiving instanceof EntityMyPet) {
                                 continue;
-                            }
-                            else if (entityLiving instanceof EntityPlayer)
-                            {
+                            } else if (entityLiving instanceof EntityPlayer) {
                                 continue;
                             }
                         }
@@ -146,46 +114,32 @@ public class ControlTarget extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
+    public boolean shouldFinish() {
         EntityLiving entityliving = petEntity.getGoalTarget();
 
-        if (!petEntity.canMove())
-        {
+        if (!petEntity.canMove()) {
             return true;
-        }
-        else if (entityliving == null)
-        {
+        } else if (entityliving == null) {
             return true;
-        }
-        else if (!entityliving.isAlive())
-        {
+        } else if (!entityliving.isAlive()) {
             return true;
-        }
-        else if (petEntity.getGoalTarget().world != petEntity.world)
-        {
+        } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getGoalTarget()) > 400)
-        {
+        } else if (petEntity.e(petEntity.getGoalTarget()) > 400) {
             return true;
-        }
-        else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600)
-        {
+        } else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         petEntity.setGoalTarget(this.target);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         petEntity.setGoalTarget(null);
     }
 }

@@ -25,42 +25,35 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 
-public class Float extends AIGoal
-{
+public class Float extends AIGoal {
     private EntityMyPet entityMyPet;
     private EntityPlayer owner;
 
     private int lavaCounter = 10;
     private boolean inLava = false;
 
-    public Float(EntityMyPet entityMyPet)
-    {
+    public Float(EntityMyPet entityMyPet) {
         this.entityMyPet = entityMyPet;
         entityMyPet.getNavigation().e(true);
         this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
     }
 
     @Override
-    public boolean shouldStart()
-    {
+    public boolean shouldStart() {
         return entityMyPet.world.containsLiquid(entityMyPet.boundingBox);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         inLava = false;
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         entityMyPet.motY += 0.05D;
 
-        if (inLava && lavaCounter-- <= 0)
-        {
-            if (entityMyPet.petNavigation.navigateTo(owner))
-            {
+        if (inLava && lavaCounter-- <= 0) {
+            if (entityMyPet.petNavigation.navigateTo(owner)) {
                 lavaCounter = 10;
             }
         }

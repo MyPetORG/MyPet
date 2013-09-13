@@ -31,8 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Beacon implements SkillPropertiesPanel
-{
+public class Beacon implements SkillPropertiesPanel {
     private JTextField rangeInput;
     private JRadioButton addRangeRadioButton;
     private JRadioButton setRangeRadioButton;
@@ -53,169 +52,122 @@ public class Beacon implements SkillPropertiesPanel
     private JRadioButton setDurationRadioButton;
     private CompoundTag compoundTag;
 
-    public Beacon(CompoundTag compoundTag)
-    {
+    public Beacon(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
 
-        speedPrimaryCheckBox.addActionListener(new ActionListener()
-        {
+        speedPrimaryCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (speedPrimaryCheckBox.isSelected())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if (speedPrimaryCheckBox.isSelected()) {
                     speedSecundaryCheckBox.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     speedSecundaryCheckBox.setSelected(false);
                     speedSecundaryCheckBox.setEnabled(false);
                 }
             }
         });
-        resistancePrimaryCheckBox.addActionListener(new ActionListener()
-        {
+        resistancePrimaryCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (resistancePrimaryCheckBox.isSelected())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if (resistancePrimaryCheckBox.isSelected()) {
                     resistanceSecundaryCheckBox.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     resistanceSecundaryCheckBox.setSelected(false);
                     resistanceSecundaryCheckBox.setEnabled(false);
                 }
             }
         });
-        jumpBoostPrimaryCheckBox.addActionListener(new ActionListener()
-        {
+        jumpBoostPrimaryCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (jumpBoostPrimaryCheckBox.isSelected())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if (jumpBoostPrimaryCheckBox.isSelected()) {
                     jumpBoostSecundaryCheckBox.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     jumpBoostSecundaryCheckBox.setSelected(false);
                     jumpBoostSecundaryCheckBox.setEnabled(false);
                 }
             }
         });
-        strengthPrimaryCheckBox.addActionListener(new ActionListener()
-        {
+        strengthPrimaryCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (strengthPrimaryCheckBox.isSelected())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if (strengthPrimaryCheckBox.isSelected()) {
                     strengthSecundaryCheckBox.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     strengthSecundaryCheckBox.setSelected(false);
                     strengthSecundaryCheckBox.setEnabled(false);
                 }
             }
         });
-        hastePrimaryCheckBox.addActionListener(new ActionListener()
-        {
+        hastePrimaryCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if (hastePrimaryCheckBox.isSelected())
-                {
+            public void actionPerformed(ActionEvent e) {
+                if (hastePrimaryCheckBox.isSelected()) {
                     hasteSecundaryCheckBox.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     hasteSecundaryCheckBox.setSelected(false);
                     hasteSecundaryCheckBox.setEnabled(false);
                 }
             }
         });
-        durationInput.addKeyListener(new KeyListener()
-        {
-            public void keyTyped(KeyEvent arg0)
-            {
+        durationInput.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
             }
 
-            public void keyReleased(KeyEvent arg0)
-            {
+            public void keyReleased(KeyEvent arg0) {
                 durationInput.setText(durationInput.getText().replaceAll("[^0-9]*", ""));
             }
 
-            public void keyPressed(KeyEvent arg0)
-            {
+            public void keyPressed(KeyEvent arg0) {
             }
         });
-        durationInput.addKeyListener(new KeyListener()
-        {
-            public void keyTyped(KeyEvent arg0)
-            {
+        durationInput.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
             }
 
-            public void keyReleased(KeyEvent arg0)
-            {
+            public void keyReleased(KeyEvent arg0) {
                 durationInput.setText(durationInput.getText().replaceAll("[^0-9]*", ""));
             }
 
-            public void keyPressed(KeyEvent arg0)
-            {
+            public void keyPressed(KeyEvent arg0) {
             }
         });
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         durationInput.setText(durationInput.getText().replaceAll("[^0-9]*", ""));
-        if (durationInput.getText().length() == 0)
-        {
+        if (durationInput.getText().length() == 0) {
             durationInput.setText("0");
         }
 
         rangeInput.setText(rangeInput.getText().replaceAll("[^0-9\\.]*", ""));
-        if (rangeInput.getText().length() > 0)
-        {
-            if (rangeInput.getText().matches("\\.+"))
-            {
+        if (rangeInput.getText().length() > 0) {
+            if (rangeInput.getText().matches("\\.+")) {
                 rangeInput.setText("0.0");
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
                     Matcher regexMatcher = regex.matcher(rangeInput.getText());
                     regexMatcher.find();
                     rangeInput.setText(regexMatcher.group());
-                }
-                catch (PatternSyntaxException ignored)
-                {
+                } catch (PatternSyntaxException ignored) {
                     rangeInput.setText("0.0");
                 }
             }
-        }
-        else
-        {
+        } else {
             rangeInput.setText("0.0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("1_1", new ByteTag("1_1", speedPrimaryCheckBox.isSelected()));
         compoundTag.getValue().put("1_3", new ByteTag("1_3", hastePrimaryCheckBox.isSelected()));
         compoundTag.getValue().put("1_5", new ByteTag("1_5", strengthPrimaryCheckBox.isSelected()));
@@ -239,78 +191,58 @@ public class Beacon implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (compoundTag.getValue().containsKey("1_1"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (compoundTag.getValue().containsKey("1_1")) {
             speedPrimaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("1_1")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("1_3"))
-        {
+        if (compoundTag.getValue().containsKey("1_3")) {
             hastePrimaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("1_3")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("1_5"))
-        {
+        if (compoundTag.getValue().containsKey("1_5")) {
             strengthPrimaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("1_5")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("1_8"))
-        {
+        if (compoundTag.getValue().containsKey("1_8")) {
             jumpBoostPrimaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("1_8")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("1_11"))
-        {
+        if (compoundTag.getValue().containsKey("1_11")) {
             resistancePrimaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("1_11")).getBooleanValue());
         }
 
-        if (compoundTag.getValue().containsKey("2_1"))
-        {
+        if (compoundTag.getValue().containsKey("2_1")) {
             speedSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_1")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("2_3"))
-        {
+        if (compoundTag.getValue().containsKey("2_3")) {
             hasteSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_3")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("2_5"))
-        {
+        if (compoundTag.getValue().containsKey("2_5")) {
             strengthSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_5")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("2_8"))
-        {
+        if (compoundTag.getValue().containsKey("2_8")) {
             jumpBoostSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_8")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("2_10"))
-        {
+        if (compoundTag.getValue().containsKey("2_10")) {
             regenerationSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_10")).getBooleanValue());
         }
-        if (compoundTag.getValue().containsKey("2_11"))
-        {
+        if (compoundTag.getValue().containsKey("2_11")) {
             resistanceSecundaryCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("2_11")).getBooleanValue());
         }
 
 
-        if (!compoundTag.getValue().containsKey("addset_duration") || ((StringTag) compoundTag.getValue().get("addset_duration")).getValue().equals("add"))
-        {
+        if (!compoundTag.getValue().containsKey("addset_duration") || ((StringTag) compoundTag.getValue().get("addset_duration")).getValue().equals("add")) {
             addDurationRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setDurationRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("duration"))
-        {
+        if (compoundTag.getValue().containsKey("duration")) {
             durationInput.setText("" + ((IntTag) compoundTag.getValue().get("duration")).getValue());
         }
 
-        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add"))
-        {
+        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add")) {
+            setRangeRadioButton.setSelected(true);
+        } else {
             setRangeRadioButton.setSelected(true);
         }
-        else
-        {
-            setRangeRadioButton.setSelected(true);
-        }
-        if (compoundTag.getValue().containsKey("range"))
-        {
+        if (compoundTag.getValue().containsKey("range")) {
             rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
         }
     }

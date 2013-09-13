@@ -27,8 +27,7 @@ import de.Keyle.MyPet.util.IScheduler;
 import de.Keyle.MyPet.util.Timer;
 import org.bukkit.Location;
 
-public class Control extends AIGoal implements IScheduler
-{
+public class Control extends AIGoal implements IScheduler {
     private MyPet myPet;
     private float speedModifier;
     public Location moveTo = null;
@@ -38,8 +37,7 @@ public class Control extends AIGoal implements IScheduler
     private de.Keyle.MyPet.skill.skills.implementation.Control controlSkill;
     private boolean isRunning = false;
 
-    public Control(MyPet myPet, float speedModifier)
-    {
+    public Control(MyPet myPet, float speedModifier) {
         this.myPet = myPet;
         this.speedModifier = speedModifier;
         nav = this.myPet.getCraftPet().getHandle().petNavigation;
@@ -47,76 +45,60 @@ public class Control extends AIGoal implements IScheduler
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (!this.myPet.getCraftPet().canMove())
-        {
+    public boolean shouldStart() {
+        if (!this.myPet.getCraftPet().canMove()) {
             return false;
-        }
-        else if (controlSkill == null || !controlSkill.isActive())
-        {
+        } else if (controlSkill == null || !controlSkill.isActive()) {
             return false;
         }
         return controlSkill.getLocation(false) != null;
     }
 
     @Override
-    public boolean shouldFinish()
-    {
-        if (!this.myPet.getCraftPet().canMove())
-        {
+    public boolean shouldFinish() {
+        if (!this.myPet.getCraftPet().canMove()) {
             return true;
         }
-        if (!controlSkill.isActive())
-        {
+        if (!controlSkill.isActive()) {
             return true;
         }
-        if (moveTo == null)
-        {
+        if (moveTo == null) {
             return true;
         }
-        if (myPet.getLocation().distance(moveTo) < 1)
-        {
+        if (myPet.getLocation().distance(moveTo) < 1) {
             return true;
         }
-        if (timeToMove <= 0)
-        {
+        if (timeToMove <= 0) {
             return true;
         }
-        if (this.stopControl)
-        {
+        if (this.stopControl) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         nav.getParameters().addSpeedModifier("Control", speedModifier);
         moveTo = controlSkill.getLocation();
-        if (moveTo.getWorld() != myPet.getLocation().getWorld())
-        {
+        if (moveTo.getWorld() != myPet.getLocation().getWorld()) {
             stopControl = true;
             moveTo = null;
             return;
         }
         timeToMove = (int) myPet.getLocation().distance(moveTo) / 3;
         timeToMove = timeToMove < 3 ? 3 : timeToMove;
-        if (!isRunning)
-        {
+        if (!isRunning) {
             Timer.addTask(this);
             isRunning = true;
         }
-        if (!nav.navigateTo(moveTo))
-        {
+        if (!nav.navigateTo(moveTo)) {
             moveTo = null;
         }
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         nav.getParameters().removeSpeedModifier("Control");
         nav.stop();
         moveTo = null;
@@ -125,16 +107,13 @@ public class Control extends AIGoal implements IScheduler
         isRunning = false;
     }
 
-    public void stopControl()
-    {
+    public void stopControl() {
         this.stopControl = true;
     }
 
     @Override
-    public void schedule()
-    {
-        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false))
-        {
+    public void schedule() {
+        if (controlSkill.getLocation(false) != null && moveTo != controlSkill.getLocation(false)) {
             start();
         }
         timeToMove--;

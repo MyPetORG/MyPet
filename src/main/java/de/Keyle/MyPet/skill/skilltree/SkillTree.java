@@ -26,8 +26,7 @@ import org.spout.nbt.*;
 
 import java.util.*;
 
-public class SkillTree
-{
+public class SkillTree {
     private String skillTreeName;
     private List<String> description = new ArrayList<String>();
     private CompoundTag iconItem = null;
@@ -36,116 +35,91 @@ public class SkillTree
     private String displayName = null;
     private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<Integer, SkillTreeLevel>();
 
-    public SkillTree(String name)
-    {
+    public SkillTree(String name) {
         this.skillTreeName = name;
     }
 
-    public SkillTree(String name, String inheritance)
-    {
+    public SkillTree(String name, String inheritance) {
         this.skillTreeName = name;
         this.inheritance = inheritance;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return skillTreeName;
     }
 
-    public List<String> getDescription()
-    {
+    public List<String> getDescription() {
         return Collections.unmodifiableList(description);
     }
 
-    public void addDescriptionLine(String line)
-    {
+    public void addDescriptionLine(String line) {
         description.add(line);
     }
 
-    public void addDescription(String[] lines)
-    {
-        for (String line : lines)
-        {
+    public void addDescription(String[] lines) {
+        for (String line : lines) {
             addDescriptionLine(line);
         }
     }
 
-    public void removeDescriptionLine(int index)
-    {
+    public void removeDescriptionLine(int index) {
         description.remove(index);
     }
 
-    public void clearDescription()
-    {
+    public void clearDescription() {
         description.clear();
     }
 
-    public void setIconItem(CompoundTag iconItem)
-    {
+    public void setIconItem(CompoundTag iconItem) {
         iconItem = new CompoundTag("IconItem", new CompoundMap(iconItem.getValue()));
         this.iconItem = iconItem;
         getIconItem();
     }
 
-    public void setIconItem(short id, short damage, boolean enchantetGlow)
-    {
+    public void setIconItem(short id, short damage, boolean enchantetGlow) {
         getIconItem();
 
-        if (id > 0)
-        {
+        if (id > 0) {
             iconItem.getValue().put("id", new ShortTag("id", id));
         }
-        if (damage >= 0)
-        {
+        if (damage >= 0) {
             iconItem.getValue().put("Damage", new ShortTag("Damage", damage));
         }
-        if (!iconItem.getValue().containsKey("tag"))
-        {
+        if (!iconItem.getValue().containsKey("tag")) {
             iconItem.getValue().put("tag", new CompoundTag("tag", new CompoundMap()));
         }
         CompoundTag tagCompound = (CompoundTag) iconItem.getValue().get("tag");
-        if (enchantetGlow)
-        {
+        if (enchantetGlow) {
             tagCompound.getValue().put("ench", new ListTag<CompoundTag>("ench", CompoundTag.class, new ArrayList<CompoundTag>()));
-        }
-        else
-        {
+        } else {
             tagCompound.getValue().remove("ench");
         }
     }
 
-    public CompoundTag getIconItem()
-    {
-        if (iconItem == null)
-        {
+    public CompoundTag getIconItem() {
+        if (iconItem == null) {
             iconItem = new CompoundTag("IconItem", new CompoundMap());
         }
         iconItem.getValue().put("Count", new ByteTag("Count", (byte) 1));
-        if (!iconItem.getValue().containsKey("id"))
-        {
+        if (!iconItem.getValue().containsKey("id")) {
             iconItem.getValue().put("id", new ShortTag("id", (short) 6));
         }
-        if (!iconItem.getValue().containsKey("Damage"))
-        {
+        if (!iconItem.getValue().containsKey("Damage")) {
             iconItem.getValue().put("Damage", new ShortTag("Damage", (short) 0));
         }
         return iconItem;
     }
 
-    public boolean hasLevel(int level)
-    {
+    public boolean hasLevel(int level) {
         return skillsPerLevel.containsKey(level);
     }
 
-    public SkillTreeLevel getLevel(int level)
-    {
+    public SkillTreeLevel getLevel(int level) {
         return skillsPerLevel.get(level);
     }
 
-    public SkillTreeLevel addLevel(int level)
-    {
-        if (!skillsPerLevel.containsKey(level))
-        {
+    public SkillTreeLevel addLevel(int level) {
+        if (!skillsPerLevel.containsKey(level)) {
             SkillTreeLevel newLevel = new SkillTreeLevel(level);
             skillsPerLevel.put(level, newLevel);
             return newLevel;
@@ -153,120 +127,95 @@ public class SkillTree
         return skillsPerLevel.get(level);
     }
 
-    public SkillTreeLevel addLevel(SkillTreeLevel level)
-    {
-        if (!skillsPerLevel.containsKey(level.getLevel()))
-        {
+    public SkillTreeLevel addLevel(SkillTreeLevel level) {
+        if (!skillsPerLevel.containsKey(level.getLevel())) {
             skillsPerLevel.put(level.getLevel(), level);
             return level;
         }
         return skillsPerLevel.get(level.getLevel());
     }
 
-    public void removeLevel(int level)
-    {
-        if (skillsPerLevel.containsKey(level))
-        {
+    public void removeLevel(int level) {
+        if (skillsPerLevel.containsKey(level)) {
             skillsPerLevel.remove(level);
         }
     }
 
-    public void addSkillToLevel(int level, ISkillInfo skill)
-    {
+    public void addSkillToLevel(int level, ISkillInfo skill) {
         addSkillToLevel(level, skill, false);
     }
 
-    public void addSkillToLevel(int level, ISkillInfo skill, boolean top)
-    {
-        if (skill == null)
-        {
+    public void addSkillToLevel(int level, ISkillInfo skill, boolean top) {
+        if (skill == null) {
             MyPetLogger.write("Skills->null:level " + level);
         }
         addLevel(level).addSkill(skill, top);
     }
 
-    public void addSkillToLevel(int level, List<ISkillInfo> skillList)
-    {
+    public void addSkillToLevel(int level, List<ISkillInfo> skillList) {
         SkillTreeLevel myPetSkillTreeLevel = addLevel(level);
-        for (ISkillInfo skill : skillList)
-        {
+        for (ISkillInfo skill : skillList) {
             myPetSkillTreeLevel.addSkill(skill);
         }
     }
 
-    public List<SkillTreeLevel> getLevelList()
-    {
+    public List<SkillTreeLevel> getLevelList() {
         List<SkillTreeLevel> levelList = new ArrayList<SkillTreeLevel>();
-        if (skillsPerLevel.size() > 0)
-        {
-            for (int level : skillsPerLevel.keySet())
-            {
+        if (skillsPerLevel.size() > 0) {
+            for (int level : skillsPerLevel.keySet()) {
                 levelList.add(skillsPerLevel.get(level));
             }
         }
         return levelList;
     }
 
-    public String getDisplayName()
-    {
-        if (displayName == null)
-        {
+    public String getDisplayName() {
+        if (displayName == null) {
             return skillTreeName;
         }
         return displayName;
     }
 
-    public boolean hasDisplayName()
-    {
+    public boolean hasDisplayName() {
         return displayName != null;
     }
 
-    public void setDisplayName(String displayName)
-    {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    public String getPermission()
-    {
-        if (permission == null)
-        {
+    public String getPermission() {
+        if (permission == null) {
             return skillTreeName;
         }
         return permission;
     }
 
-    public boolean hasCustomPermissions()
-    {
+    public boolean hasCustomPermissions() {
         return permission != null;
     }
 
-    public void setPermission(String permission)
-    {
+    public void setPermission(String permission) {
         this.permission = permission;
     }
 
-    public String getInheritance()
-    {
+    public String getInheritance() {
         return inheritance;
     }
 
-    public void setInheritance(String inheritance)
-    {
+    public void setInheritance(String inheritance) {
         this.inheritance = inheritance;
     }
 
-    public boolean hasInheritance()
-    {
+    public boolean hasInheritance() {
         return inheritance != null;
     }
 
-    public SkillTree clone()
-    {
+    public SkillTree clone() {
         return clone(skillTreeName);
     }
 
-    public SkillTree clone(String toName)
-    {
+    public SkillTree clone(String toName) {
         SkillTree newSkillTree = new SkillTree(toName);
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
@@ -274,8 +223,7 @@ public class SkillTree
         newSkillTree.description = new ArrayList<String>(description);
         newSkillTree.iconItem = new CompoundTag("IconItem", new CompoundMap(getIconItem().getValue()));
 
-        for (int level : skillsPerLevel.keySet())
-        {
+        for (int level : skillsPerLevel.keySet()) {
             newSkillTree.addLevel(skillsPerLevel.get(level).clone());
         }
 

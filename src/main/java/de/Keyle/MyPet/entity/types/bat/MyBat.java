@@ -29,27 +29,22 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.SPIDER_EYE;
 
 @MyPetInfo(food = {SPIDER_EYE})
-public class MyBat extends MyPet
-{
-    public MyBat(MyPetPlayer petOwner)
-    {
+public class MyBat extends MyPet {
+    public MyBat(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public double getYSpawnOffset()
-    {
+    public double getYSpawnOffset() {
         return 1;
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Bat;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyBat{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

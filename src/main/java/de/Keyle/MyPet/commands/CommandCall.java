@@ -29,21 +29,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandCall implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandCall implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
                 myPet.removePet(true);
 
-                switch (myPet.createPet())
-                {
+                switch (myPet.createPet()) {
                     case Success:
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Call.Success", petOwner), myPet.getPetName()));
                         break;
@@ -61,9 +56,7 @@ public class CommandCall implements CommandExecutor
                         break;
                 }
                 return true;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;

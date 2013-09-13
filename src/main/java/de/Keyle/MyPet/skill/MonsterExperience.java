@@ -25,13 +25,11 @@ import org.bukkit.entity.EntityType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MonsterExperience
-{
+public class MonsterExperience {
     public static final Map<EntityType, MonsterExperience> mobExp = new HashMap<EntityType, MonsterExperience>();
     private static MonsterExperience unknown = new MonsterExperience(0., EntityType.UNKNOWN);
 
-    static
-    {
+    static {
         mobExp.put(EntityType.SKELETON, new MonsterExperience(5., EntityType.SKELETON));
         mobExp.put(EntityType.ZOMBIE, new MonsterExperience(5., EntityType.ZOMBIE));
         mobExp.put(EntityType.SPIDER, new MonsterExperience(5., EntityType.SPIDER));
@@ -67,91 +65,72 @@ public class MonsterExperience
     private double max;
     private EntityType entityType;
 
-    public MonsterExperience(double min, double max, EntityType entityType)
-    {
-        if (max >= min)
-        {
+    public MonsterExperience(double min, double max, EntityType entityType) {
+        if (max >= min) {
             this.max = max;
             this.min = min;
-        }
-        else if (max <= min)
-        {
+        } else if (max <= min) {
             this.max = min;
             this.min = max;
         }
         this.entityType = entityType;
     }
 
-    public MonsterExperience(double exp, EntityType entityType)
-    {
+    public MonsterExperience(double exp, EntityType entityType) {
         this.max = exp;
         this.min = exp;
         this.entityType = entityType;
     }
 
-    public double getRandomExp()
-    {
+    public double getRandomExp() {
         return max == min ? max : ((int) (doubleRandom(min, max) * 100)) / 100.;
     }
 
-    public double getMin()
-    {
+    public double getMin() {
         return min;
     }
 
-    public double getMax()
-    {
+    public double getMax() {
         return max;
     }
 
-    public EntityType getEntityType()
-    {
+    public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setMin(double min)
-    {
+    public void setMin(double min) {
         this.min = min;
-        if (min > max)
-        {
+        if (min > max) {
             max = min;
         }
     }
 
-    public void setMax(double max)
-    {
+    public void setMax(double max) {
         this.max = max;
-        if (max < min)
-        {
+        if (max < min) {
             min = max;
         }
     }
 
-    public void setExp(double exp)
-    {
+    public void setExp(double exp) {
         max = (min = exp);
     }
 
-    private static double doubleRandom(double low, double high)
-    {
+    private static double doubleRandom(double low, double high) {
         return Math.random() * (high - low) + low;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return entityType.getName() + "{min=" + min + ", max=" + max + "}";
     }
 
-    public static boolean hasMonsterExperience(EntityType type)
-    {
+    public static boolean hasMonsterExperience(EntityType type) {
         return mobExp.containsKey(type);
     }
 
-    public static MonsterExperience getMonsterExperience(EntityType type)
-    {
-        if (mobExp.containsKey(type))
-        {
+    public static MonsterExperience getMonsterExperience(EntityType type) {
+        if (mobExp.containsKey(type)) {
             return mobExp.get(type);
         }
         return unknown;

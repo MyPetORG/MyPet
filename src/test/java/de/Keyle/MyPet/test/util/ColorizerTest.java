@@ -26,17 +26,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ColorizerTest
-{
+public class ColorizerTest {
     @Test
-    public void testColorizer()
-    {
+    public void testColorizer() {
         String originalText = "";
         String originalNameText = "";
         String expectedResultText = "";
 
-        for (ChatColor color : ChatColor.values())
-        {
+        for (ChatColor color : ChatColor.values()) {
             expectedResultText += ChatColor.COLOR_CHAR + String.valueOf(color.getChar());
             originalText += "<" + String.valueOf(color.getChar()) + ">";
             originalNameText += "<" + color.name().replace("_", "") + ">";

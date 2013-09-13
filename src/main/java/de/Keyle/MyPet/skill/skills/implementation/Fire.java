@@ -33,98 +33,76 @@ import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
-public class Fire extends FireInfo implements ISkillInstance, ISkillActive
-{
+public class Fire extends FireInfo implements ISkillInstance, ISkillActive {
     private static Random random = new Random();
     private MyPet myPet;
 
-    public Fire(boolean addedByInheritance)
-    {
+    public Fire(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return chance > 0 && duration > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof FireInfo)
-        {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof FireInfo) {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().getValue().containsKey("chance"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("chance")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add")) {
                     chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
-                }
-                else
-                {
+                } else {
                     chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("duration"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("duration")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add")) {
                     duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
-                }
-                else
-                {
+                } else {
                     duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
                 valuesEdit = true;
             }
             chance = Math.min(chance, 100);
-            if (!quiet && valuesEdit)
-            {
+            if (!quiet && valuesEdit) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Fire.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), chance, duration));
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return chance + "% -> " + duration + "sec";
     }
 
-    public void reset()
-    {
+    public void reset() {
         chance = 0;
         duration = 0;
     }
 
-    public boolean activate()
-    {
+    public boolean activate() {
         return random.nextDouble() <= chance / 100.;
     }
 
-    public int getDuration()
-    {
+    public int getDuration() {
         return duration;
     }
 
-    public void igniteTarget(LivingEntity target)
-    {
+    public void igniteTarget(LivingEntity target) {
         target.setFireTicks(getDuration() * 20);
         target.getWorld().playEffect(target.getLocation(), Effect.POTION_BREAK, 0xD60000);
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Fire newSkill = new Fire(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

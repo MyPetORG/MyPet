@@ -32,19 +32,16 @@ import org.spout.nbt.CompoundTag;
 import static org.bukkit.Material.CARROT_ITEM;
 
 @MyPetInfo(food = {CARROT_ITEM})
-public class MyPig extends MyPet implements IMyPetBaby
-{
+public class MyPig extends MyPet implements IMyPetBaby {
     protected boolean hasSaddle = false;
     protected boolean isBaby = false;
 
-    public MyPig(MyPetPlayer petOwner)
-    {
+    public MyPig(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Saddle", new ByteTag("Saddle", hasSaddle()));
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
@@ -52,55 +49,44 @@ public class MyPig extends MyPet implements IMyPetBaby
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Saddle"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Saddle")) {
             setSaddle(((ByteTag) info.getValue().get("Saddle")).getBooleanValue());
         }
-        if (info.getValue().containsKey("Baby"))
-        {
+        if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Pig;
     }
 
-    public boolean hasSaddle()
-    {
+    public boolean hasSaddle() {
         return hasSaddle;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBaby(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyPig) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
-    public void setSaddle(boolean saddle)
-    {
-        if (status == PetState.Here)
-        {
+    public void setSaddle(boolean saddle) {
+        if (status == PetState.Here) {
             ((EntityMyPig) getCraftPet().getHandle()).setSaddle(saddle);
         }
         this.hasSaddle = saddle;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyPig{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", saddle=" + hasSaddle() + ", baby=" + isBaby() + "}";
     }
 }

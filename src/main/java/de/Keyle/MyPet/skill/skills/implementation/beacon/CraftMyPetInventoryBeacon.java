@@ -24,20 +24,16 @@ import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventory;
 import org.bukkit.inventory.BeaconInventory;
 import org.bukkit.inventory.ItemStack;
 
-public class CraftMyPetInventoryBeacon extends CraftInventory implements BeaconInventory
-{
-    public CraftMyPetInventoryBeacon(MyPetCustomBeaconInventory beaconInv)
-    {
+public class CraftMyPetInventoryBeacon extends CraftInventory implements BeaconInventory {
+    public CraftMyPetInventoryBeacon(MyPetCustomBeaconInventory beaconInv) {
         super(beaconInv);
     }
 
-    public void setItem(ItemStack item)
-    {
+    public void setItem(ItemStack item) {
         setItem(0, item);
     }
 
-    public ItemStack getItem()
-    {
+    public ItemStack getItem() {
         return getItem(0);
     }
 }

@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-public interface ISkillActive
-{
+public interface ISkillActive {
     public boolean activate();
 }

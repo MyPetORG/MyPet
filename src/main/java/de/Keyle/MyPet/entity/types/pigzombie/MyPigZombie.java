@@ -43,42 +43,34 @@ import java.util.Map;
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
-public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
-{
+public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     protected boolean isBaby = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
 
-    public MyPigZombie(MyPetPlayer petOwner)
-    {
+    public MyPigZombie(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public ItemStack[] getEquipment()
-    {
+    public ItemStack[] getEquipment() {
         ItemStack[] equipment = new ItemStack[EquipmentSlot.values().length];
-        for (int i = 0 ; i < EquipmentSlot.values().length ; i++)
-        {
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
             equipment[i] = getEquipment(EquipmentSlot.getSlotById(i));
         }
         return equipment;
     }
 
-    public ItemStack getEquipment(EquipmentSlot slot)
-    {
+    public ItemStack getEquipment(EquipmentSlot slot) {
         return equipment.get(slot);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
 
         List<CompoundTag> itemList = new ArrayList<CompoundTag>();
-        for (EquipmentSlot slot : EquipmentSlot.values())
-        {
-            if (getEquipment(slot) != null)
-            {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (getEquipment(slot) != null) {
                 CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(getEquipment(slot));
                 item.getValue().put("Slot", new IntTag("Slot", slot.getSlotId()));
                 itemList.add(item);
@@ -89,17 +81,13 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Baby"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
-        if (info.getValue().containsKey("Equipment"))
-        {
+        if (info.getValue().containsKey("Equipment")) {
             ListTag equipment = (ListTag) info.getValue().get("Equipment");
-            for (int i = 0 ; i < equipment.getValue().size() ; i++)
-            {
+            for (int i = 0; i < equipment.getValue().size(); i++) {
                 CompoundTag item = (CompoundTag) equipment.getValue().get(i);
 
                 ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(item);
@@ -109,38 +97,31 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.PigZombie;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBaby(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyPigZombie) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
-    public void setEquipment(EquipmentSlot slot, ItemStack item)
-    {
+    public void setEquipment(EquipmentSlot slot, ItemStack item) {
         item = item.cloneItemStack();
         equipment.put(slot, item);
-        if (status == PetState.Here)
-        {
+        if (status == PetState.Here) {
             ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
         }
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyPigZombie{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

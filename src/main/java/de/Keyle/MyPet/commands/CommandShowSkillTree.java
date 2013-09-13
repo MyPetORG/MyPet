@@ -33,66 +33,43 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
-public class CommandShowSkillTree implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof ConsoleCommandSender)
-        {
-            if (args.length == 1)
-            {
-                if (SkillTreeMobType.hasMobType(args[0]))
-                {
+public class CommandShowSkillTree implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof ConsoleCommandSender) {
+            if (args.length == 1) {
+                if (SkillTreeMobType.hasMobType(args[0])) {
                     MyPetLogger.write("----- MyPet Skilltrees for: " + ChatColor.GREEN + args[0]);
-                    for (String skillTreeName : SkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames())
-                    {
+                    for (String skillTreeName : SkillTreeMobType.getMobTypeByName(args[0]).getSkillTreeNames()) {
                         MyPetLogger.write("   " + skillTreeName);
                     }
                     DebugLogger.info("----- MyPet Skilltrees for " + args[0] + " end -----");
-                }
-                else
-                {
+                } else {
                     MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
                 }
-            }
-            else if (args.length == 2)
-            {
-                if (SkillTreeMobType.hasMobType(args[0]))
-                {
-                    if (SkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1]))
-                    {
+            } else if (args.length == 2) {
+                if (SkillTreeMobType.hasMobType(args[0])) {
+                    if (SkillTreeMobType.getMobTypeByName(args[0]).hasSkillTree(args[1])) {
                         SkillTree skillTree = SkillTreeMobType.getMobTypeByName(args[0]).getSkillTree(args[1]);
                         MyPetLogger.write("----- MyPet Skilltree: " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " - Inherits: " + (skillTree.getInheritance() != null ? ChatColor.AQUA + skillTree.getInheritance() + ChatColor.RESET : ChatColor.DARK_GRAY + "none" + ChatColor.RESET) + " -----");
-                        for (SkillTreeLevel lvl : skillTree.getLevelList())
-                        {
+                        for (SkillTreeLevel lvl : skillTree.getLevelList()) {
                             MyPetLogger.write(ChatColor.YELLOW + " " + lvl.getLevel() + ChatColor.RESET + ": (" + (lvl.hasLevelupMessage() ? Colorizer.setColors(lvl.getLevelupMessage()) + ChatColor.RESET : "-") + ")");
-                            for (ISkillInfo skill : lvl.getSkills())
-                            {
-                                if (skill.isAddedByInheritance())
-                                {
+                            for (ISkillInfo skill : lvl.getSkills()) {
+                                if (skill.isAddedByInheritance()) {
                                     MyPetLogger.write("   " + ChatColor.DARK_GRAY + skill.getName());
-                                }
-                                else
-                                {
+                                } else {
                                     MyPetLogger.write("   " + skill.getName());
                                 }
                             }
                         }
                         MyPetLogger.write("----- MyPet Skilltree " + ChatColor.AQUA + skillTree.getName() + ChatColor.RESET + " end -----");
-                    }
-                    else
-                    {
+                    } else {
                         MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " skilltree with the name: " + ChatColor.AQUA + args[1]);
                     }
-                }
-                else
-                {
+                } else {
                     MyPetLogger.write("There is " + ChatColor.RED + "no" + ChatColor.RESET + " mobtype with the name: " + ChatColor.AQUA + args[0]);
                 }
             }
-        }
-        else
-        {
+        } else {
             sender.sendMessage("Can only be used in server console");
         }
         return true;

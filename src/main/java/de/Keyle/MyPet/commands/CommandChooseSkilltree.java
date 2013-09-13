@@ -43,110 +43,77 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
-{
+public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (!(sender instanceof Player))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You can't use this command from server console!");
             return true;
         }
         Player player = (Player) sender;
-        if (MyPetList.hasMyPet(player))
-        {
+        if (MyPetList.hasMyPet(player)) {
             final MyPet myPet = MyPetList.getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();
-            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
-            {
+            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 myPet.autoAssignSkilltree();
                 sender.sendMessage(Locales.getString("Message.Command.ChoseSkilltree.AutomaticSkilltreeAssignment", myPet.getOwner().getLanguage()));
-            }
-            else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
-            {
+            } else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.ChooseSkilltree.OnlyOnce", myPet.getOwner().getLanguage()), myPet.getPetName()));
-            }
-            else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
-            {
+            } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
-                if (args.length >= 1)
-                {
+                if (args.length >= 1) {
                     String skilltreeName = "";
-                    for (String arg : args)
-                    {
+                    for (String arg : args) {
                         skilltreeName += arg + " ";
                     }
                     skilltreeName = skilltreeName.substring(0, skilltreeName.length() - 1);
-                    if (skillTreeMobType.hasSkillTree(skilltreeName))
-                    {
+                    if (skillTreeMobType.hasSkillTree(skilltreeName)) {
                         SkillTree skillTree = skillTreeMobType.getSkillTree(skilltreeName);
-                        if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
-                        {
-                            if (myPet.setSkilltree(skillTree))
-                            {
+                        if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
+                            if (myPet.setSkilltree(skillTree)) {
                                 sender.sendMessage(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", player), skillTree.getName()));
-                                if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN)
-                                {
+                                if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) {
+                                    myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
+                                    myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
+                                } else {
                                     myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
                                     myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
                                 }
-                                else
-                                {
-                                    myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                                    myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
-                                }
-                            }
-                            else
-                            {
+                            } else {
                                 sender.sendMessage(Locales.getString("Message.Skilltree.NotSwitched", player));
                             }
-                        }
-                        else
-                        {
+                        } else {
                             sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
                         }
-                    }
-                    else
-                    {
+                    } else {
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
                     }
-                }
-                else
-                {
+                } else {
                     List<SkillTree> availableSkilltrees = new ArrayList<SkillTree>();
-                    for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
-                    {
-                        if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
-                        {
+                    for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
+                        if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
                             availableSkilltrees.add(skillTree);
                         }
                     }
 
-                    if (availableSkilltrees.size() == 0)
-                    {
+                    if (availableSkilltrees.size() == 0) {
                         sender.sendMessage(Locales.getString("Message.No.CanUse", player));
                         return true;
                     }
 
                     final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
-                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler()
-                    {
+                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler() {
                         @Override
-                        public void onOptionClick(IconMenu.OptionClickEvent event)
-                        {
-                            if (myPet != myPetOwner.getMyPet())
-                            {
+                        public void onOptionClick(IconMenu.OptionClickEvent event) {
+                            if (myPet != myPetOwner.getMyPet()) {
                                 event.setWillClose(true);
                                 event.setWillDestroy(true);
                                 return;
                             }
-                            if (skilltreeSlotMap.containsKey(event.getPosition()))
-                            {
+                            if (skilltreeSlotMap.containsKey(event.getPosition())) {
                                 SkillTree selecedSkilltree = skilltreeSlotMap.get(event.getPosition());
-                                if (selecedSkilltree != null)
-                                {
+                                if (selecedSkilltree != null) {
                                     myPet.setSkilltree(selecedSkilltree);
                                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
                                 }
@@ -156,8 +123,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                         }
                     }, MyPetPlugin.getPlugin());
 
-                    for (int i = 0 ; i < availableSkilltrees.size() ; i++)
-                    {
+                    for (int i = 0; i < availableSkilltrees.size(); i++) {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
                         CompoundTag tag = addedSkilltree.getIconItem();
@@ -165,8 +131,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                         ItemStack shownItem = CraftItemStack.asCraftMirror(is);
 
                         String[] descriptionArray = new String[addedSkilltree.getDescription().size()];
-                        for (int j = 0 ; j < addedSkilltree.getDescription().size() ; j++)
-                        {
+                        for (int j = 0; j < addedSkilltree.getDescription().size(); j++) {
                             descriptionArray[j] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
                         }
 
@@ -176,38 +141,27 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter
                     menu.open(player);
                 }
             }
-        }
-        else
-        {
+        } else {
             sender.sendMessage(Locales.getString("Message.No.HasPet", player));
         }
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
-        if (MyPetList.hasMyPet(player))
-        {
+        if (MyPetList.hasMyPet(player)) {
             MyPet myPet = MyPetList.getMyPet(player);
-            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin())
-            {
+            if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 return emptyList;
-            }
-            else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin())
-            {
+            } else if (myPet.getSkillTree() != null && Configuration.CHOOSE_SKILLTREE_ONLY_ONCE && !myPet.getOwner().isMyPetAdmin()) {
                 return emptyList;
-            }
-            else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
-            {
+            } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
 
                 List<String> skilltreeList = new ArrayList<String>();
-                for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
-                {
-                    if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission()))
-                    {
+                for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
+                    if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
                         skilltreeList.add(skillTree.getName());
                     }
                 }

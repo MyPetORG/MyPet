@@ -35,129 +35,97 @@ import java.util.PropertyResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class Locales
-{
+public class Locales {
     private static Locales latestMyPetLocales = null;
 
     private Map<String, ResourceBundle> locales = new HashMap<String, ResourceBundle>();
     private JarFile jarFile;
 
-    public Locales()
-    {
+    public Locales() {
         File pluginFile = MyPetPlugin.getPlugin().getFile();
-        try
-        {
+        try {
             jarFile = new JarFile(pluginFile);
-        }
-        catch (IOException ignored)
-        {
+        } catch (IOException ignored) {
             jarFile = null;
         }
         loadLocale("en");
         latestMyPetLocales = this;
     }
 
-    public static String getString(String key, Player player)
-    {
-        if (player == null)
-        {
+    public static String getString(String key, Player player) {
+        if (player == null) {
             return key;
         }
 
         return getString(key, BukkitUtil.getPlayerLanguage(player));
     }
 
-    public static String getString(String key, MyPetPlayer player)
-    {
-        if (player == null)
-        {
+    public static String getString(String key, MyPetPlayer player) {
+        if (player == null) {
             return key;
         }
 
         return getString(key, player.getLanguage());
     }
 
-    public static String getString(String key, String localeString)
-    {
+    public static String getString(String key, String localeString) {
         localeString = Util.cutString(localeString, 2);
         LocaleUtils.toLocale(localeString);
 
-        if (latestMyPetLocales == null)
-        {
+        if (latestMyPetLocales == null) {
             return key;
         }
         return latestMyPetLocales.getText(key, localeString);
     }
 
-    public String getText(String key, String localeString)
-    {
+    public String getText(String key, String localeString) {
         localeString = Util.cutString(localeString, 2).toLowerCase();
 
-        if (!locales.containsKey(localeString))
-        {
+        if (!locales.containsKey(localeString)) {
             loadLocale(localeString);
         }
 
         java.util.ResourceBundle locale = locales.get(localeString);
-        if (locale.containsKey(key))
-        {
+        if (locale.containsKey(key)) {
             return Colorizer.setColors(locale.getString(key));
         }
 
         locale = locales.get("en");
-        if (locale.containsKey(key))
-        {
+        if (locale.containsKey(key)) {
             return Colorizer.setColors(locale.getString(key));
         }
 
         return key;
     }
 
-    public void loadLocale(String localeString)
-    {
+    public void loadLocale(String localeString) {
         ResourceBundle newLocale = null;
-        if (jarFile != null)
-        {
-            try
-            {
+        if (jarFile != null) {
+            try {
                 JarEntry jarEntry = jarFile.getJarEntry("locale/MyPet_" + localeString + ".properties");
-                if (jarEntry != null)
-                {
+                if (jarEntry != null) {
                     java.util.ResourceBundle defaultBundle = new PropertyResourceBundle(new InputStreamReader(jarFile.getInputStream(jarEntry), "UTF-8"));
                     newLocale = new ResourceBundle(defaultBundle);
-                }
-                else
-                {
+                } else {
                     throw new IOException();
                 }
-            }
-            catch (UnsupportedEncodingException e)
-            {
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-            }
-            catch (IOException ignored)
-            {
+            } catch (IOException ignored) {
             }
         }
-        if (newLocale == null)
-        {
+        if (newLocale == null) {
             newLocale = new ResourceBundle();
         }
 
         File localeFile = new File(MyPetPlugin.getPlugin().getDataFolder() + File.separator + "locale" + File.separator + "MyPet_" + localeString + ".properties");
-        if (localeFile.exists())
-        {
-            try
-            {
+        if (localeFile.exists()) {
+            try {
                 java.util.ResourceBundle optionalBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(localeFile), "UTF-8"));
                 newLocale.addExtensionBundle(optionalBundle);
-            }
-            catch (UnsupportedEncodingException e)
-            {
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

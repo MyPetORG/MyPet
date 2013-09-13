@@ -27,34 +27,28 @@ import net.minecraft.server.v1_6_R2.Navigation;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
-public class VanillaNavigation extends AbstractNavigation
-{
+public class VanillaNavigation extends AbstractNavigation {
     Navigation nav;
 
-    public VanillaNavigation(EntityMyPet entityMyPet)
-    {
+    public VanillaNavigation(EntityMyPet entityMyPet) {
         super(entityMyPet);
         nav = entityMyPet.getNavigation();
     }
 
-    public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters)
-    {
+    public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
         super(entityMyPet, parameters);
         nav = entityMyPet.getNavigation();
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() {
         nav.h();
     }
 
     @Override
-    public boolean navigateTo(double x, double y, double z)
-    {
+    public boolean navigateTo(double x, double y, double z) {
         applyNavigationParameters();
-        if (this.nav.a(x, y, z, 1.D))
-        {
+        if (this.nav.a(x, y, z, 1.D)) {
             applyNavigationParameters();
             return true;
         }
@@ -62,16 +56,13 @@ public class VanillaNavigation extends AbstractNavigation
     }
 
     @Override
-    public boolean navigateTo(LivingEntity entity)
-    {
+    public boolean navigateTo(LivingEntity entity) {
         return navigateTo(((CraftLivingEntity) entity).getHandle());
     }
 
     @Override
-    public boolean navigateTo(EntityLiving entity)
-    {
-        if (this.nav.a(entity, 1.D))
-        {
+    public boolean navigateTo(EntityLiving entity) {
+        if (this.nav.a(entity, 1.D)) {
             applyNavigationParameters();
             return true;
         }
@@ -79,13 +70,11 @@ public class VanillaNavigation extends AbstractNavigation
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         nav.f();
     }
 
-    public void applyNavigationParameters()
-    {
+    public void applyNavigationParameters() {
         this.nav.a(parameters.avoidWater());
         this.entityMyPet.getAttributeInstance(GenericAttributes.d).setValue(parameters.speed() + parameters.speedModifier());
     }

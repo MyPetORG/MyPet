@@ -33,107 +33,76 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigurationNBT
-{
+public class ConfigurationNBT {
     private File NBTFile;
     private CompoundTag nbtTagCompound;
 
-    public ConfigurationNBT(File file)
-    {
+    public ConfigurationNBT(File file) {
         NBTFile = file;
     }
 
-    public CompoundTag getNBTCompound()
-    {
-        if (nbtTagCompound == null)
-        {
+    public CompoundTag getNBTCompound() {
+        if (nbtTagCompound == null) {
             clearConfig();
         }
         return nbtTagCompound;
     }
 
-    public boolean save()
-    {
-        try
-        {
+    public boolean save() {
+        try {
             OutputStream os = new FileOutputStream(NBTFile);
             NBTOutputStream nbtOutputStream = new NBTOutputStream(os);
             nbtOutputStream.writeTag(nbtTagCompound);
             nbtOutputStream.close();
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    private List<Tag<?>> readRawNBT(File f, boolean compressed)
-    {
+    private List<Tag<?>> readRawNBT(File f, boolean compressed) {
         List<Tag<?>> tags = new ArrayList<Tag<?>>();
-        try
-        {
+        try {
             InputStream is = new FileInputStream(f);
             NBTInputStream ns = new NBTInputStream(is, compressed);
-            try
-            {
+            try {
                 boolean eof = false;
-                while (!eof)
-                {
-                    try
-                    {
+                while (!eof) {
+                    try {
                         tags.add(ns.readTag());
-                    }
-                    catch (EOFException e)
-                    {
+                    } catch (EOFException e) {
                         eof = true;
                     }
                 }
-            }
-            finally
-            {
-                try
-                {
+            } finally {
+                try {
                     ns.close();
-                }
-                catch (IOException ignored)
-                {
+                } catch (IOException ignored) {
                 }
             }
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             return null;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             return null;
         }
         return tags;
     }
 
-    public boolean load()
-    {
-        if (!NBTFile.exists())
-        {
+    public boolean load() {
+        if (!NBTFile.exists()) {
             return false;
         }
         List<Tag<?>> tags = readRawNBT(NBTFile, true);
-        if (tags != null)
-        {
+        if (tags != null) {
             DebugLogger.info("loaded compressed NBT file (" + NBTFile.getName() + ")");
-        }
-        else
-        {
+        } else {
             tags = readRawNBT(NBTFile, false);
-            if (tags != null)
-            {
+            if (tags != null) {
                 DebugLogger.info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
             }
         }
-        if (tags != null && tags.size() > 0)
-        {
+        if (tags != null && tags.size() > 0) {
             nbtTagCompound = (CompoundTag) tags.get(0);
             return true;
         }
@@ -142,8 +111,7 @@ public class ConfigurationNBT
         return false;
     }
 
-    public void clearConfig()
-    {
+    public void clearConfig() {
         nbtTagCompound = new CompoundTag("root", new CompoundMap());
     }
 }

@@ -26,37 +26,29 @@ import de.Keyle.MyPet.skill.skills.info.SprintInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 
-public class Sprint extends SprintInfo implements ISkillInstance
-{
+public class Sprint extends SprintInfo implements ISkillInstance {
     private boolean active = false;
     private MyPet myPet;
 
-    public Sprint(boolean addedByInheritance)
-    {
+    public Sprint(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof SprintInfo)
-        {
-            if (!quiet && !active)
-            {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof SprintInfo) {
+            if (!quiet && !active) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Sprint.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
 
             }
@@ -64,19 +56,16 @@ public class Sprint extends SprintInfo implements ISkillInstance
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return "";
     }
 
-    public void reset()
-    {
+    public void reset() {
         active = false;
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Sprint newSkill = new Sprint(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

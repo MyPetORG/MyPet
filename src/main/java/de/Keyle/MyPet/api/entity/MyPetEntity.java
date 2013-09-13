@@ -6,8 +6,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.entity.Creature;
 
-public interface MyPetEntity extends Creature
-{
+public interface MyPetEntity extends Creature {
     public MyPet getMyPet();
 
     public EntityMyPet getHandle();

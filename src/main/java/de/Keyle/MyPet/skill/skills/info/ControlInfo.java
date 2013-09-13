@@ -25,20 +25,16 @@ import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Control")
-public class ControlInfo extends SkillTreeSkill implements ISkillInfo
-{
-    public ControlInfo(boolean addedByInheritance)
-    {
+public class ControlInfo extends SkillTreeSkill implements ISkillInfo {
+    public ControlInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
+    public SkillPropertiesPanel getGuiPanel() {
         return null;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         ControlInfo newSkill = new ControlInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

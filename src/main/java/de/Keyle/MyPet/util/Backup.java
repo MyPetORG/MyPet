@@ -28,8 +28,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
-public class Backup
-{
+public class Backup {
     public static int SAVE_INTERVAL = 1440;
     public static String DATE_FORMAT = "yyyy_MM_dd_HH.mm";
     public static boolean MAKE_BACKUPS = true;
@@ -38,104 +37,79 @@ public class Backup
     File backupFolder;
     long lastBackup;
 
-    public Backup(File backupFile, File backupFolder)
-    {
+    public Backup(File backupFile, File backupFolder) {
         this.backupFile = backupFile;
         this.backupFolder = backupFolder;
 
-        try
-        {
+        try {
             String lastBackup = Util.readFileAsString(backupFolder.getAbsolutePath() + File.separator + "lastbackup");
-            if (Util.isLong(lastBackup))
-            {
+            if (Util.isLong(lastBackup)) {
                 this.lastBackup = Long.parseLong(lastBackup);
                 long difference = System.currentTimeMillis() - this.lastBackup;
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(difference);
-                if (minutes >= SAVE_INTERVAL)
-                {
+                if (minutes >= SAVE_INTERVAL) {
                     createBackup();
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             DebugLogger.info("Creating first My.Pets backup.");
             createBackup();
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
                 createBackup();
             }
         }, 20L * 60L * (SAVE_INTERVAL - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - this.lastBackup)), 20L * 60L * SAVE_INTERVAL);
     }
 
-    public String createBackup()
-    {
+    public String createBackup() {
         lastBackup = System.currentTimeMillis();
-        try
-        {
+        try {
             PrintWriter out = new PrintWriter(backupFolder.getAbsolutePath() + File.separator + "lastbackup");
             out.print(lastBackup);
             out.close();
             return backupFile();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return "[No Backup Created!]";
     }
 
-    public String backupFile()
-    {
+    public String backupFile() {
         SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
         File destFile = new File(backupFolder, df.format(lastBackup) + "_My.Pets");
         DebugLogger.info("Creating database (My.Pets) backup -> " + df.format(lastBackup) + "_My.Pets");
-        try
-        {
+        try {
             copyFile(backupFile, destFile);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return df.format(lastBackup) + "_My.Pets";
     }
 
-    public static void copyFile(File source, File dest) throws IOException
-    {
-        if (source == null || !source.exists() || dest == null)
-        {
+    public static void copyFile(File source, File dest) throws IOException {
+        if (source == null || !source.exists() || dest == null) {
             return;
         }
-        if (!dest.exists())
-        {
+        if (!dest.exists()) {
             dest.createNewFile();
         }
         InputStream in = null;
         OutputStream out = null;
-        try
-        {
+        try {
             in = new FileInputStream(source);
             out = new FileOutputStream(dest);
 
             byte[] buf = new byte[1024];
             int len;
-            while ((len = in.read(buf)) > 0)
-            {
+            while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-        }
-        finally
-        {
-            if (in != null)
-            {
+        } finally {
+            if (in != null) {
                 in.close();
             }
-            if (out != null)
-            {
+            if (out != null) {
                 out.close();
             }
         }

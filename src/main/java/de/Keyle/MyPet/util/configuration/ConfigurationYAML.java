@@ -25,52 +25,40 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class ConfigurationYAML
-{
+public class ConfigurationYAML {
     public File yamlFile;
     private FileConfiguration config;
 
-    public ConfigurationYAML(String path)
-    {
+    public ConfigurationYAML(String path) {
         this(new File(path));
     }
 
-    public ConfigurationYAML(File file)
-    {
+    public ConfigurationYAML(File file) {
         yamlFile = file;
         config = new org.bukkit.configuration.file.YamlConfiguration();
-        try
-        {
+        try {
             config.load(yamlFile);
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
         }
         file.setWritable(true);
         file.setReadable(true);
     }
 
-    public FileConfiguration getConfig()
-    {
+    public FileConfiguration getConfig() {
         return config;
     }
 
-    public boolean saveConfig()
-    {
-        try
-        {
+    public boolean saveConfig() {
+        try {
             config.save(yamlFile);
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public void clearConfig()
-    {
+    public void clearConfig() {
         config = new org.bukkit.configuration.file.YamlConfiguration();
     }
 }

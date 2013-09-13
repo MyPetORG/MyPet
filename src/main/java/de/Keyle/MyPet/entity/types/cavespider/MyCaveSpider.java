@@ -29,22 +29,18 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
-public class MyCaveSpider extends MyPet
-{
-    public MyCaveSpider(MyPetPlayer petOwner)
-    {
+public class MyCaveSpider extends MyPet {
+    public MyCaveSpider(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.CaveSpider;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyCaveSpider{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

@@ -28,37 +28,27 @@ import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
 
-public class EatGrass extends AIGoal
-{
+public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
     private World world;
     private double chanceToEat;
     int eatTicks = 0;
 
-    public EatGrass(EntityMySheep entityMySheep, double chanceToEat)
-    {
+    public EatGrass(EntityMySheep entityMySheep, double chanceToEat) {
         this.entityMySheep = entityMySheep;
         this.chanceToEat = chanceToEat;
         this.world = entityMySheep.world;
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (!EntityMySheep.CAN_REGROW_WOOL)
-        {
+    public boolean shouldStart() {
+        if (!EntityMySheep.CAN_REGROW_WOOL) {
             return false;
-        }
-        else if (!this.entityMySheep.isSheared())
-        {
+        } else if (!this.entityMySheep.isSheared()) {
             return false;
-        }
-        else if (entityMySheep.aC().nextDouble() > chanceToEat / 100.)
-        {
+        } else if (entityMySheep.aC().nextDouble() > chanceToEat / 100.) {
             return false;
-        }
-        else if (this.entityMySheep.getGoalTarget() != null && this.entityMySheep.getGoalTarget().isAlive())
-        {
+        } else if (this.entityMySheep.getGoalTarget() != null && this.entityMySheep.getGoalTarget().isAlive()) {
             return false;
         }
         int blockLocX = MathHelper.floor(this.entityMySheep.locX);
@@ -69,48 +59,38 @@ public class EatGrass extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
+    public boolean shouldFinish() {
         return this.eatTicks <= 0;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         this.eatTicks = 40;
         this.world.broadcastEntityEffect(this.entityMySheep, (byte) 10);
         this.entityMySheep.petNavigation.stop();
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         this.eatTicks = 0;
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.eatTicks--;
-        if (this.eatTicks == 4)
-        {
+        if (this.eatTicks == 4) {
             int blockLocX = MathHelper.floor(this.entityMySheep.locX);
             int blockLocY = MathHelper.floor(this.entityMySheep.locY);
             int blockLocZ = MathHelper.floor(this.entityMySheep.locZ);
 
-            if (this.world.getTypeId(blockLocX, blockLocY, blockLocZ) == Block.LONG_GRASS.id)
-            {
-                if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY, blockLocZ), Material.AIR).isCancelled())
-                {
+            if (this.world.getTypeId(blockLocX, blockLocY, blockLocZ) == Block.LONG_GRASS.id) {
+                if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY, blockLocZ), Material.AIR).isCancelled()) {
                     this.world.triggerEffect(2001, blockLocX, blockLocY, blockLocZ, Block.LONG_GRASS.id + 4096);
                     this.world.setAir(blockLocX, blockLocY, blockLocZ);
                     this.entityMySheep.setSheared(false);
                 }
-            }
-            else if (this.world.getTypeId(blockLocX, blockLocY - 1, blockLocZ) == Block.GRASS.id)
-            {
-                if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY - 1, blockLocZ), Material.DIRT).isCancelled())
-                {
+            } else if (this.world.getTypeId(blockLocX, blockLocY - 1, blockLocZ) == Block.GRASS.id) {
+                if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY - 1, blockLocZ), Material.DIRT).isCancelled()) {
                     this.world.triggerEffect(2001, blockLocX, blockLocY - 1, blockLocZ, Block.GRASS.id);
                     this.world.setTypeIdAndData(blockLocX, blockLocY - 1, blockLocZ, Block.DIRT.id, 0, 2);
                     this.entityMySheep.setSheared(false);

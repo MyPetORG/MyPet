@@ -32,29 +32,24 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"chance", "addset_chance", "reflection", "addset_reflection"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
         parameterDefaultValues = {"5", "add", "15", "add"})
-public class ThornsInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class ThornsInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected int chance = 0;
     protected int reflectedDamagePercent = 0;
 
-    public ThornsInfo(boolean addedByInheritance)
-    {
+    public ThornsInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Thorns(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         ThornsInfo newSkill = new ThornsInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

@@ -23,8 +23,7 @@ package de.Keyle.MyPet.skill.skills.implementation;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 
-public interface ISkillInstance extends ISkillInfo
-{
+public interface ISkillInstance extends ISkillInfo {
     public void setMyPet(MyPet myPet);
 
     public MyPet getMyPet();

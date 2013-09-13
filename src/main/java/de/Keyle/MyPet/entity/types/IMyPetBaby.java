@@ -20,8 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
-public interface IMyPetBaby
-{
+public interface IMyPetBaby {
     public boolean isBaby();
 
     public void setBaby(boolean flag);

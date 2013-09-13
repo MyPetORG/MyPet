@@ -22,8 +22,7 @@ package de.Keyle.MyPet.util;
 
 import java.util.*;
 
-public class WorldGroup
-{
+public class WorldGroup {
     private static Map<String, WorldGroup> allGroups = new HashMap<String, WorldGroup>();
     private static Map<String, WorldGroup> groupWorlds = new HashMap<String, WorldGroup>();
 
@@ -31,28 +30,22 @@ public class WorldGroup
     private List<String> worlds = new ArrayList<String>();
 
 
-    public WorldGroup(String groupName)
-    {
+    public WorldGroup(String groupName) {
         this.name = groupName.toLowerCase();
     }
 
-    public void registerGroup()
-    {
-        if (allGroups.containsKey(this.getName()))
-        {
+    public void registerGroup() {
+        if (allGroups.containsKey(this.getName())) {
             return;
         }
         allGroups.put(this.getName(), this);
     }
 
-    public boolean addWorld(String world)
-    {
-        if (groupWorlds.containsKey(world))
-        {
+    public boolean addWorld(String world) {
+        if (groupWorlds.containsKey(world)) {
             return false;
         }
-        if (!this.worlds.contains(world))
-        {
+        if (!this.worlds.contains(world)) {
             this.worlds.add(world);
             groupWorlds.put(world, this);
             return true;
@@ -60,13 +53,11 @@ public class WorldGroup
         return false;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
-    public List<String> getWorlds()
-    {
+    public List<String> getWorlds() {
         return this.worlds;
     }
 
@@ -76,14 +67,12 @@ public class WorldGroup
      * @param worldName The name of the checked world
      * @return boolean
      */
-    public boolean containsWorld(String worldName)
-    {
+    public boolean containsWorld(String worldName) {
         return this.worlds.contains(worldName);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
     }
 
@@ -92,8 +81,7 @@ public class WorldGroup
      *
      * @return WorldGroup[]
      */
-    public static Collection<WorldGroup> getGroups()
-    {
+    public static Collection<WorldGroup> getGroups() {
         return Collections.unmodifiableCollection(allGroups.values());
     }
 
@@ -103,8 +91,7 @@ public class WorldGroup
      * @param name World
      * @return WorldGroup
      */
-    public static WorldGroup getGroupByWorld(String name)
-    {
+    public static WorldGroup getGroupByWorld(String name) {
         return groupWorlds.get(name);
     }
 
@@ -114,16 +101,14 @@ public class WorldGroup
      * @param name World
      * @return WorldGroup
      */
-    public static WorldGroup getGroupByName(String name)
-    {
+    public static WorldGroup getGroupByName(String name) {
         return allGroups.get(name);
     }
 
     /**
      * Removes all worlds from the groups and then deletes the groups
      */
-    public static void clearGroups()
-    {
+    public static void clearGroups() {
         allGroups.clear();
         groupWorlds.clear();
     }

@@ -26,33 +26,27 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.3F, height = 0.7F)
-public class EntityMySilverfish extends EntityMyPet
-{
-    public EntityMySilverfish(World world, MyPet myPet)
-    {
+public class EntityMySilverfish extends EntityMyPet {
+    public EntityMySilverfish(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.silverfish.kill";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.silverfish.hit";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.silverfish.say";
     }
 
     @Override
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.silverfish.step", 1.0F, 1.0F);
     }
 }

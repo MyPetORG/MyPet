@@ -27,46 +27,35 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class MyPetVersion
-{
+public class MyPetVersion {
     private static boolean updated = false;
 
     private static String myPetVersion = "0.0.0";
     private static String myPetBuild = "0";
     private static String minecraftVersion = "0.0.0";
 
-    private static void getManifestVersion()
-    {
-        try
-        {
+    private static void getManifestVersion() {
+        try {
             String path = MyPetVersion.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
 
-            if (attr.getValue("Project-Version") != null)
-            {
+            if (attr.getValue("Project-Version") != null) {
                 myPetVersion = attr.getValue("Project-Version");
             }
-            if (attr.getValue("Project-Build") != null)
-            {
+            if (attr.getValue("Project-Build") != null) {
                 myPetBuild = attr.getValue("Project-Build");
             }
-            if (attr.getValue("Project-Minecraft-Version") != null)
-            {
+            if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
-    private static Manifest getClassLoaderForExtraModule(String filepath) throws IOException
-    {
+    private static Manifest getClassLoaderForExtraModule(String filepath) throws IOException {
         File jar = new File(filepath);
         JarFile jf = new JarFile(jar);
         Manifest mf = jf.getManifest();
@@ -75,38 +64,31 @@ public class MyPetVersion
 
     }
 
-    public static String getMyPetVersion()
-    {
-        if (!updated)
-        {
+    public static String getMyPetVersion() {
+        if (!updated) {
             getManifestVersion();
             updated = true;
         }
         return myPetVersion;
     }
 
-    public static String getMyPetBuild()
-    {
-        if (!updated)
-        {
+    public static String getMyPetBuild() {
+        if (!updated) {
             getManifestVersion();
             updated = true;
         }
         return myPetBuild;
     }
 
-    public static String getMinecraftVersion()
-    {
-        if (!updated)
-        {
+    public static String getMinecraftVersion() {
+        if (!updated) {
             getManifestVersion();
             updated = true;
         }
         return minecraftVersion;
     }
 
-    public static void reset()
-    {
+    public static void reset() {
         updated = false;
     }
 }

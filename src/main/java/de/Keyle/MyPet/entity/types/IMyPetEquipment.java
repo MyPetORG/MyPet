@@ -23,8 +23,7 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.entity.EquipmentSlot;
 import net.minecraft.server.v1_6_R2.ItemStack;
 
-public interface IMyPetEquipment
-{
+public interface IMyPetEquipment {
     public ItemStack[] getEquipment();
 
     public ItemStack getEquipment(EquipmentSlot slot);

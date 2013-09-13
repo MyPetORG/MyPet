@@ -29,99 +29,70 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import net.minecraft.server.v1_6_R2.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyPigZombie extends EntityMyPet
-{
-    public EntityMyPigZombie(World world, MyPet myPet)
-    {
+public class EntityMyPigZombie extends EntityMyPet {
+    public EntityMyPigZombie(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    public boolean checkForEquipment(ItemStack itemstack)
-    {
+    public boolean checkForEquipment(ItemStack itemstack) {
         int slot = b(itemstack);
-        if (slot == 0)
-        {
-            if (itemstack.getItem() instanceof ItemSword)
-            {
+        if (slot == 0) {
+            if (itemstack.getItem() instanceof ItemSword) {
                 return true;
-            }
-            else if (itemstack.getItem() instanceof ItemAxe)
-            {
+            } else if (itemstack.getItem() instanceof ItemAxe) {
                 return true;
-            }
-            else if (itemstack.getItem() instanceof ItemSpade)
-            {
+            } else if (itemstack.getItem() instanceof ItemSpade) {
                 return true;
-            }
-            else if (itemstack.getItem() instanceof ItemHoe)
-            {
+            } else if (itemstack.getItem() instanceof ItemHoe) {
                 return true;
-            }
-            else if (itemstack.getItem() instanceof ItemPickaxe)
-            {
+            } else if (itemstack.getItem() instanceof ItemPickaxe) {
                 return true;
-            }
-            else if (itemstack.getItem() instanceof ItemBow)
-            {
+            } else if (itemstack.getItem() instanceof ItemBow) {
                 return true;
             }
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.zombiepig.zpigdeath";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.zombiepig.zpighurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.zombiepig.zpig";
     }
 
-    public ItemStack getPetEquipment(int slot)
-    {
+    public ItemStack getPetEquipment(int slot) {
         return ((MyPigZombie) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
     }
 
-    public ItemStack[] getPetEquipment()
-    {
+    public ItemStack[] getPetEquipment() {
         return ((MyPigZombie) myPet).getEquipment();
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-        {
-            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
-            {
-                if (!canEquip())
-                {
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking()) {
+                if (!canEquip()) {
                     return false;
                 }
-                for (EquipmentSlot slot : EquipmentSlot.values())
-                {
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
                     ItemStack itemInSlot = ((MyPigZombie) myPet).getEquipment(slot);
-                    if (itemInSlot != null)
-                    {
+                    if (itemInSlot != null) {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -130,17 +101,13 @@ public class EntityMyPigZombie extends EntityMyPet
                     }
                 }
                 return true;
-            }
-            else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking())
-            {
-                if (!canEquip())
-                {
+            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking()) {
+                if (!canEquip()) {
                     return false;
                 }
                 EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
                 ItemStack itemInSlot = ((MyPigZombie) myPet).getEquipment(slot);
-                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild)
-                {
+                if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -149,12 +116,10 @@ public class EntityMyPigZombie extends EntityMyPet
                 ItemStack itemStackClone = itemStack.cloneItemStack();
                 itemStackClone.count = 1;
                 setPetEquipment(b(itemStack), itemStackClone);
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
+                if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
-                if (itemStack.count <= 0)
-                {
+                if (itemStack.count <= 0) {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 return true;
@@ -163,8 +128,7 @@ public class EntityMyPigZombie extends EntityMyPet
         return false;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().a(12, new Byte((byte) 0)); // is baby
     }
@@ -173,42 +137,32 @@ public class EntityMyPigZombie extends EntityMyPet
      * Returns the speed of played sounds
      * The faster the higher the sound will be
      */
-    public float getSoundSpeed()
-    {
+    public float getSoundSpeed() {
         return super.getSoundSpeed() + 0.4F;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyPigZombie) myPet).isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
+    public void setBaby(boolean flag) {
         getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
         ((MyPigZombie) myPet).isBaby = flag;
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
             final MyPigZombie myPigZombie = (MyPigZombie) myPet;
             final EntityMyPigZombie entityMyPigZombie = this;
 
             this.setBaby(myPigZombie.isBaby());
 
-            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-            {
-                public void run()
-                {
-                    if (myPigZombie.getStatus() == PetState.Here)
-                    {
-                        for (EquipmentSlot slot : EquipmentSlot.values())
-                        {
-                            if (myPigZombie.getEquipment(slot) != null)
-                            {
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    if (myPigZombie.getStatus() == PetState.Here) {
+                        for (EquipmentSlot slot : EquipmentSlot.values()) {
+                            if (myPigZombie.getEquipment(slot) != null) {
                                 entityMyPigZombie.setPetEquipment(slot.getSlotId(), myPigZombie.getEquipment(slot));
                             }
                         }
@@ -218,8 +172,7 @@ public class EntityMyPigZombie extends EntityMyPet
         }
     }
 
-    public void setPetEquipment(int slot, ItemStack itemStack)
-    {
+    public void setPetEquipment(int slot, ItemStack itemStack) {
         ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
         ((MyPigZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }

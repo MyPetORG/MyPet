@@ -31,26 +31,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class SkillTreeLoader
-{
+public abstract class SkillTreeLoader {
     protected static List<SkillTree> alreadyLoadedInheritance = new ArrayList<SkillTree>();
 
-    public static void addDefault(SkillTreeMobType skillTreeMobType)
-    {
-        if (!SkillTreeMobType.hasMobType("default"))
-        {
+    public static void addDefault(SkillTreeMobType skillTreeMobType) {
+        if (!SkillTreeMobType.hasMobType("default")) {
             return;
         }
         SkillTreeMobType defaultSkillTreeMobType = SkillTreeMobType.getMobTypeByName("default");
-        for (String skillTreeName : defaultSkillTreeMobType.getSkillTreeNames())
-        {
-            if (!skillTreeMobType.hasSkillTree(skillTreeName) && defaultSkillTreeMobType.hasSkillTree(skillTreeName))
-            {
+        for (String skillTreeName : defaultSkillTreeMobType.getSkillTreeNames()) {
+            if (!skillTreeMobType.hasSkillTree(skillTreeName) && defaultSkillTreeMobType.hasSkillTree(skillTreeName)) {
                 SkillTree newSkillTree = defaultSkillTreeMobType.getSkillTree(skillTreeName).clone();
-                for (SkillTreeLevel level : newSkillTree.getLevelList())
-                {
-                    for (ISkillInfo skill : level.getSkills())
-                    {
+                for (SkillTreeLevel level : newSkillTree.getLevelList()) {
+                    for (ISkillInfo skill : level.getSkills()) {
                         skill.setIsInherited(true);
                     }
                 }
@@ -59,50 +52,36 @@ public abstract class SkillTreeLoader
         }
     }
 
-    public static void manageInheritance(SkillTreeMobType skillTreeMobType)
-    {
+    public static void manageInheritance(SkillTreeMobType skillTreeMobType) {
         Map<SkillTree, SkillTree> skillTreeClones = new HashMap<SkillTree, SkillTree>();
-        for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
-        {
+        for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
             skillTreeClones.put(skillTree, skillTree.clone());
         }
-        for (SkillTree skillTree : skillTreeMobType.getSkillTrees())
-        {
+        for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
             alreadyLoadedInheritance.clear();
-            if (skillTree.hasInheritance())
-            {
+            if (skillTree.hasInheritance()) {
                 alreadyLoadedInheritance.add(skillTree);
                 manageInheritance(skillTreeMobType, skillTree, skillTree, skillTreeClones, 0);
             }
         }
     }
 
-    protected static void manageInheritance(SkillTreeMobType skillTreeMobType, SkillTree startSkillTree, SkillTree skillTree, Map<SkillTree, SkillTree> clones, int depth)
-    {
-        if (skillTree.hasInheritance() && depth < 20)
-        {
-            if (skillTreeMobType.hasSkillTree(skillTree.getInheritance()))
-            {
+    protected static void manageInheritance(SkillTreeMobType skillTreeMobType, SkillTree startSkillTree, SkillTree skillTree, Map<SkillTree, SkillTree> clones, int depth) {
+        if (skillTree.hasInheritance() && depth < 20) {
+            if (skillTreeMobType.hasSkillTree(skillTree.getInheritance())) {
                 SkillTree skillTreeInherit = skillTreeMobType.getSkillTree(skillTree.getInheritance());
-                if (!alreadyLoadedInheritance.contains(skillTreeInherit))
-                {
-                    if (skillTreeInherit.hasInheritance() && Configuration.INHERIT_ALREADY_INHERITED_SKILLS)
-                    {
+                if (!alreadyLoadedInheritance.contains(skillTreeInherit)) {
+                    if (skillTreeInherit.hasInheritance() && Configuration.INHERIT_ALREADY_INHERITED_SKILLS) {
                         alreadyLoadedInheritance.add(skillTreeInherit);
                         manageInheritance(skillTreeMobType, startSkillTree, skillTreeInherit, clones, depth + 1);
-                    }
-                    else
-                    {
+                    } else {
                         alreadyLoadedInheritance.add(skillTreeInherit);
                     }
                     SkillTree skillTreeClone = clones.get(skillTreeInherit);
-                    for (SkillTreeLevel level : skillTreeClone.getLevelList())
-                    {
-                        for (ISkillInfo skill : level.getSkills())
-                        {
+                    for (SkillTreeLevel level : skillTreeClone.getLevelList()) {
+                        for (ISkillInfo skill : level.getSkills()) {
                             ISkillInfo skillClone = skill.cloneSkill();
-                            if (skillClone != null)
-                            {
+                            if (skillClone != null) {
                                 skillClone.setIsInherited(true);
                                 startSkillTree.addSkillToLevel(level.getLevel(), skillClone, true);
                             }

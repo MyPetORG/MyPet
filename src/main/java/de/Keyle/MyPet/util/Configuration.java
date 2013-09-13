@@ -49,8 +49,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 
-public class Configuration
-{
+public class Configuration {
     public static FileConfiguration config;
 
     public static String PET_INFO_OVERHEAD_PREFIX = "" + ChatColor.AQUA;
@@ -90,8 +89,7 @@ public class Configuration
     public static boolean DONATOR_EFFECT = true;
     public static boolean RELEASE_PETS_ON_DEATH = false;
 
-    public static void setDefault()
-    {
+    public static void setDefault() {
         config.addDefault("MyPet.Leash.Item", LEASH_ITEM);
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
@@ -209,11 +207,9 @@ public class Configuration
         config.addDefault("MyPet.Info.OverHead.Prefix", "<aqua>");
         config.addDefault("MyPet.Info.OverHead.Suffix", "");
 
-        for (MyPetType petType : MyPetType.values())
-        {
+        for (MyPetType petType : MyPetType.values()) {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
-            if (pi == null)
-            {
+            if (pi == null) {
                 continue;
             }
 
@@ -225,8 +221,7 @@ public class Configuration
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
         }
 
-        for (EntityType entityType : MonsterExperience.mobExp.keySet())
-        {
+        for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
             config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Min", MonsterExperience.getMonsterExperience(entityType).getMin());
             config.addDefault("MyPet.Exp.Active." + entityType.getName() + ".Max", MonsterExperience.getMonsterExperience(entityType).getMax());
         }
@@ -235,8 +230,7 @@ public class Configuration
         MyPetPlugin.getPlugin().saveConfig();
     }
 
-    public static void loadConfiguration()
-    {
+    public static void loadConfiguration() {
         LEASH_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Leash.Item", "" + Material.LEASH.getId()));
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
@@ -350,8 +344,7 @@ public class Configuration
         EntityMyZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
 
         MyPet.resetOptions();
-        for (MyPetType petType : MyPetType.values())
-        {
+        for (MyPetType petType : MyPetType.values()) {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
 
             MyPet.setStartHP(petType.getMyPetClass(), config.getDouble("MyPet.Pets." + petType.getTypeName() + ".HP", pi.hp()));
@@ -362,20 +355,15 @@ public class Configuration
             MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0));
         }
 
-        if (config.getStringList("MyPet.exp.active") != null)
-        {
+        if (config.getStringList("MyPet.exp.active") != null) {
             double min;
             double max;
-            for (EntityType entityType : MonsterExperience.mobExp.keySet())
-            {
+            for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
                 max = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Max", 0.);
                 min = config.getDouble("MyPet.Exp.Active." + entityType.getName() + ".Min", 0.);
-                if (min == max)
-                {
+                if (min == max) {
                     MonsterExperience.getMonsterExperience(entityType).setExp(max);
-                }
-                else
-                {
+                } else {
                     MonsterExperience.getMonsterExperience(entityType).setMin(min);
                     MonsterExperience.getMonsterExperience(entityType).setMax(max);
                 }
@@ -383,13 +371,10 @@ public class Configuration
         }
     }
 
-    private static String linkFood(Material[] foodTypes)
-    {
+    private static String linkFood(Material[] foodTypes) {
         String linkedFood = "";
-        for (Material foodType : foodTypes)
-        {
-            if (!linkedFood.equalsIgnoreCase(""))
-            {
+        for (Material foodType : foodTypes) {
+            if (!linkedFood.equalsIgnoreCase("")) {
                 linkedFood += ";";
             }
             linkedFood += foodType.getId();
@@ -397,43 +382,32 @@ public class Configuration
         return linkedFood;
     }
 
-    private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString)
-    {
+    private static void seperateFood(Class<? extends MyPet> myPetClass, String foodString) {
         foodString = foodString.trim();
-        while (true)
-        {
-            if (foodString.endsWith("\\;"))
-            {
+        while (true) {
+            if (foodString.endsWith("\\;")) {
                 foodString = foodString.substring(0, foodString.length() - 2);
                 continue;
             }
-            if (foodString.endsWith(";"))
-            {
+            if (foodString.endsWith(";")) {
                 foodString = foodString.substring(0, foodString.length() - 1);
                 continue;
             }
             break;
         }
-        if (foodString.contains(";"))
-        {
-            for (String foodIDString : foodString.split("(?<!\\\\);"))
-            {
+        if (foodString.contains(";")) {
+            for (String foodIDString : foodString.split("(?<!\\\\);")) {
                 MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodIDString.replace("\\;", ";")));
             }
-        }
-        else
-        {
+        } else {
             MyPet.setFood(myPetClass, ConfigItem.createConfigItem(foodString));
         }
     }
 
-    private static String linkLeashFlags(LeashFlag[] leashFlags)
-    {
+    private static String linkLeashFlags(LeashFlag[] leashFlags) {
         String linkedLeashFlags = "";
-        for (LeashFlag leashFlag : leashFlags)
-        {
-            if (!linkedLeashFlags.equalsIgnoreCase(""))
-            {
+        for (LeashFlag leashFlag : leashFlags) {
+            if (!linkedLeashFlags.equalsIgnoreCase("")) {
                 linkedLeashFlags += ",";
             }
             linkedLeashFlags += leashFlag.name();
@@ -441,31 +415,20 @@ public class Configuration
         return linkedLeashFlags;
     }
 
-    private static void seperateLeashFlags(Class<? extends MyPet> myPetClass, String leashFlagString)
-    {
+    private static void seperateLeashFlags(Class<? extends MyPet> myPetClass, String leashFlagString) {
         leashFlagString = leashFlagString.replaceAll("\\s", "");
-        if (leashFlagString.contains(","))
-        {
-            for (String leashFlagSplit : leashFlagString.split(","))
-            {
-                if (LeashFlag.getLeashFlagByName(leashFlagSplit) != null)
-                {
+        if (leashFlagString.contains(",")) {
+            for (String leashFlagSplit : leashFlagString.split(",")) {
+                if (LeashFlag.getLeashFlagByName(leashFlagSplit) != null) {
                     MyPet.setLeashFlags(myPetClass, LeashFlag.getLeashFlagByName(leashFlagSplit));
-                }
-                else
-                {
+                } else {
                     MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
                 }
             }
-        }
-        else
-        {
-            if (LeashFlag.getLeashFlagByName(leashFlagString) != null)
-            {
+        } else {
+            if (LeashFlag.getLeashFlagByName(leashFlagString) != null) {
                 MyPet.setLeashFlags(myPetClass, LeashFlag.getLeashFlagByName(leashFlagString));
-            }
-            else
-            {
+            } else {
                 MyPetLogger.write(ChatColor.RED + leashFlagString + " is not a valid LeashFlag!");
             }
         }

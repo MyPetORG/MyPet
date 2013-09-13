@@ -35,26 +35,20 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class CommandOptionRemove implements CommandOptionTabCompleter
-{
+public class CommandOptionRemove implements CommandOptionTabCompleter {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = BukkitUtil.getCommandSenderLanguage(sender);
 
-        if (args.length >= 1)
-        {
+        if (args.length >= 1) {
             Player player = Bukkit.getPlayer(args[0]);
-            if (player == null || !player.isOnline())
-            {
+            if (player == null || !player.isOnline()) {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
-            if (MyPetPlayer.isMyPetPlayer(player))
-            {
+            if (MyPetPlayer.isMyPetPlayer(player)) {
                 MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(player);
-                if (petOwner.hasMyPet())
-                {
+                if (petOwner.hasMyPet()) {
                     MyPet myPet = petOwner.getMyPet();
 
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
@@ -69,10 +63,8 @@ public class CommandOptionRemove implements CommandOptionTabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, String[] strings)
-    {
-        if (strings.length == 2)
-        {
+    public List<String> onTabComplete(CommandSender commandSender, String[] strings) {
+        if (strings.length == 2) {
             return null;
         }
         return CommandAdmin.emptyList;

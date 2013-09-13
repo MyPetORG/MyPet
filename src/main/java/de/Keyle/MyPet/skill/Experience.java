@@ -38,8 +38,7 @@ import java.util.Map;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class Experience
-{
+public class Experience {
     public static int LOSS_PERCENT = 0;
     public static double LOSS_FIXED = 0;
     public static boolean DROP_LOST_EXP = true;
@@ -53,107 +52,85 @@ public class Experience
     private double exp = 0;
     de.Keyle.MyPet.skill.experience.Experience expMode;
 
-    public Experience(MyPet pet)
-    {
+    public Experience(MyPet pet) {
         this.myPet = pet;
 
 
-        if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript"))
-        {
+        if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
             expMode = new JavaScript(myPet);
-        }
-        else
-        {
+        } else {
             expMode = new Default(myPet);
         }
-        if (!expMode.isUsable())
-        {
+        if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             CALCULATION_MODE = "Default";
         }
 
-        for (int i = 1 ; i <= getLevel() ; i++)
-        {
+        for (int i = 1; i <= getLevel(); i++) {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
     }
 
-    public void reset()
-    {
+    public void reset() {
         exp = 0;
 
-        for (int i = 1 ; i <= getLevel() ; i++)
-        {
+        for (int i = 1; i <= getLevel(); i++) {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i, true));
         }
     }
 
-    public void setExp(double Exp)
-    {
+    public void setExp(double Exp) {
         Exp = Exp < 0 ? 0 : Exp;
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), Exp);
-        if (Configuration.ENABLE_EVENTS)
-        {
+        if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
         }
-        if (expEvent.isCancelled())
-        {
+        if (expEvent.isCancelled()) {
             return;
         }
         int tmplvl = getLevel();
         this.exp = expEvent.getExp();
 
-        for (int i = tmplvl ; i < getLevel() ; i++)
-        {
+        for (int i = tmplvl; i < getLevel(); i++) {
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1, true));
         }
     }
 
-    public double getExp()
-    {
+    public double getExp() {
         return this.exp;
     }
 
-    public double addExp(double exp)
-    {
+    public double addExp(double exp) {
         MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
-        if (Configuration.ENABLE_EVENTS)
-        {
+        if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(event);
         }
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return 0;
         }
         int tmpLvl = getLevel();
         this.exp = event.getExp();
 
-        for (int i = tmpLvl ; i < getLevel() ; i++)
-        {
+        for (int i = tmpLvl; i < getLevel(); i++) {
             boolean quiet = i != getLevel() - 1;
             getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1, quiet));
         }
         return event.getNewExp() - event.getOldExp();
     }
 
-    public double addExp(EntityType type)
-    {
-        if (MonsterExperience.hasMonsterExperience(type))
-        {
+    public double addExp(EntityType type) {
+        if (MonsterExperience.hasMonsterExperience(type)) {
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, MonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp);
-            if (Configuration.ENABLE_EVENTS)
-            {
+            if (Configuration.ENABLE_EVENTS) {
                 getServer().getPluginManager().callEvent(expEvent);
             }
-            if (expEvent.isCancelled())
-            {
+            if (expEvent.isCancelled()) {
                 return 0;
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
 
-            for (int i = tmpLvl ; i < getLevel() ; i++)
-            {
+            for (int i = tmpLvl; i < getLevel(); i++) {
                 boolean quiet = i != getLevel() - 1;
                 getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1, quiet));
             }
@@ -162,25 +139,20 @@ public class Experience
         return 0;
     }
 
-    public double addExp(EntityType type, int percent)
-    {
-        if (MonsterExperience.hasMonsterExperience(type))
-        {
+    public double addExp(EntityType type, int percent) {
+        if (MonsterExperience.hasMonsterExperience(type)) {
             double exp = MonsterExperience.getMonsterExperience(type).getRandomExp() / 100. * percent;
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
-            if (Configuration.ENABLE_EVENTS)
-            {
+            if (Configuration.ENABLE_EVENTS) {
                 getServer().getPluginManager().callEvent(expEvent);
             }
-            if (expEvent.isCancelled())
-            {
+            if (expEvent.isCancelled()) {
                 return 0;
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
 
-            for (int i = tmpLvl ; i < getLevel() ; i++)
-            {
+            for (int i = tmpLvl; i < getLevel(); i++) {
                 boolean quiet = i != getLevel() - 1;
                 getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, i + 1, quiet));
             }
@@ -189,66 +161,53 @@ public class Experience
         return 0;
     }
 
-    public void removeCurrentExp(double exp)
-    {
-        if (exp > getCurrentExp())
-        {
+    public void removeCurrentExp(double exp) {
+        if (exp > getCurrentExp()) {
             exp = getCurrentExp();
         }
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        if (Configuration.ENABLE_EVENTS)
-        {
+        if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
         }
-        if (expEvent.isCancelled())
-        {
+        if (expEvent.isCancelled()) {
             return;
         }
         this.exp = expEvent.getExp();
     }
 
-    public void removeExp(double exp)
-    {
+    public void removeExp(double exp) {
         exp = this.exp - exp < 0 ? this.exp : exp;
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        if (Configuration.ENABLE_EVENTS)
-        {
+        if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
         }
-        if (expEvent.isCancelled())
-        {
+        if (expEvent.isCancelled()) {
             return;
         }
         this.exp = expEvent.getExp();
     }
 
-    public double getCurrentExp()
-    {
+    public double getCurrentExp() {
         double currentExp = expMode.getCurrentExp(this.exp);
-        if (!expMode.isUsable())
-        {
+        if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             return expMode.getCurrentExp(this.exp);
         }
         return currentExp;
     }
 
-    public int getLevel()
-    {
+    public int getLevel() {
         int currentExp = expMode.getLevel(this.exp);
-        if (!expMode.isUsable())
-        {
+        if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             return expMode.getLevel(this.exp);
         }
         return currentExp;
     }
 
-    public double getRequiredExp()
-    {
+    public double getRequiredExp() {
         double requiredExp = expMode.getRequiredExp(this.exp);
-        if (!expMode.isUsable())
-        {
+        if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             return expMode.getRequiredExp(this.exp);
         }
@@ -256,31 +215,22 @@ public class Experience
     }
 
     @SuppressWarnings("unchecked")
-    public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage)
-    {
+    public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage) {
         Map<Entity, Double> damageMap;
-        if (victim.hasMetadata("DamageCount"))
-        {
-            for (MetadataValue value : victim.getMetadata("DamageCount"))
-            {
-                if (value.getOwningPlugin().getName().equals("MyPet"))
-                {
+        if (victim.hasMetadata("DamageCount")) {
+            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+                if (value.getOwningPlugin().getName().equals("MyPet")) {
                     damageMap = (Map<Entity, Double>) value.value();
-                    if (damageMap.containsKey(damager))
-                    {
+                    if (damageMap.containsKey(damager)) {
                         double oldDamage = damageMap.get(damager);
                         damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() + oldDamage : damage + oldDamage);
-                    }
-                    else
-                    {
+                    } else {
                         damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
                     }
                     break;
                 }
             }
-        }
-        else
-        {
+        } else {
             damageMap = new HashMap<Entity, Double>();
             damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
             victim.setMetadata("DamageCount", new FixedMetadataValue(MyPetPlugin.getPlugin(), damageMap));
@@ -288,15 +238,11 @@ public class Experience
     }
 
     @SuppressWarnings("unchecked")
-    public static double getDamageToEntity(LivingEntity damager, LivingEntity victim)
-    {
-        for (MetadataValue value : victim.getMetadata("DamageCount"))
-        {
-            if (value.getOwningPlugin().getName().equals("MyPet"))
-            {
+    public static double getDamageToEntity(LivingEntity damager, LivingEntity victim) {
+        for (MetadataValue value : victim.getMetadata("DamageCount")) {
+            if (value.getOwningPlugin().getName().equals("MyPet")) {
                 Map<Entity, Double> damageMap = (Map<Entity, Double>) value.value();
-                if (damageMap.containsKey(damager))
-                {
+                if (damageMap.containsKey(damager)) {
                     return damageMap.get(damager);
                 }
                 return 0;
@@ -306,21 +252,15 @@ public class Experience
     }
 
     @SuppressWarnings("unchecked")
-    public static double getDamageToEntityPercent(LivingEntity damager, LivingEntity victim)
-    {
-        if (victim.hasMetadata("DamageCount"))
-        {
-            for (MetadataValue value : victim.getMetadata("DamageCount"))
-            {
-                if (value.getOwningPlugin().getName().equals("MyPet"))
-                {
+    public static double getDamageToEntityPercent(LivingEntity damager, LivingEntity victim) {
+        if (victim.hasMetadata("DamageCount")) {
+            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+                if (value.getOwningPlugin().getName().equals("MyPet")) {
                     Map<Entity, Double> damageMap = (Map<Entity, Double>) value.value();
                     double allDamage = 0;
                     double damagerDamage = 0;
-                    for (Entity entity : damageMap.keySet())
-                    {
-                        if (entity == damager)
-                        {
+                    for (Entity entity : damageMap.keySet()) {
+                        if (entity == damager) {
                             damagerDamage = damageMap.get(damager);
                         }
                         allDamage += damageMap.get(entity);
@@ -333,29 +273,22 @@ public class Experience
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<Entity, Double> getDamageToEntityPercent(LivingEntity victim)
-    {
+    public static Map<Entity, Double> getDamageToEntityPercent(LivingEntity victim) {
         Map<Entity, Double> damagePercentMap = new HashMap<Entity, Double>();
-        if (victim.hasMetadata("DamageCount"))
-        {
-            for (MetadataValue value : victim.getMetadata("DamageCount"))
-            {
-                if (value.getOwningPlugin().getName().equals("MyPet"))
-                {
+        if (victim.hasMetadata("DamageCount")) {
+            for (MetadataValue value : victim.getMetadata("DamageCount")) {
+                if (value.getOwningPlugin().getName().equals("MyPet")) {
                     Map<Entity, Double> damageMap = (Map<Entity, Double>) value.value();
                     double allDamage = 0;
-                    for (Double damage : damageMap.values())
-                    {
+                    for (Double damage : damageMap.values()) {
                         allDamage += damage;
                     }
 
-                    if (allDamage <= 0)
-                    {
+                    if (allDamage <= 0) {
                         return damagePercentMap;
                     }
 
-                    for (Entity entity : damageMap.keySet())
-                    {
+                    for (Entity entity : damageMap.keySet()) {
                         damagePercentMap.put(entity, damageMap.get(entity) / allDamage);
                     }
 

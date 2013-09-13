@@ -25,29 +25,24 @@ import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLargeFireball;
 
-public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile
-{
+public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile {
     protected float damage = 0;
 
-    public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2)
-    {
+    public MyPetLargeFireball(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
     }
 
     @Override
-    public EntityMyPet getShooter()
-    {
+    public EntityMyPet getShooter() {
         return (EntityMyPet) this.shooter;
     }
 
-    public void setDamage(float damage)
-    {
+    public void setDamage(float damage) {
         this.damage = damage;
     }
 
     @Override
-    public void setDirection(double d0, double d1, double d2)
-    {
+    public void setDirection(double d0, double d1, double d2) {
         d0 += this.random.nextGaussian() * 0.2D;
         d1 += this.random.nextGaussian() * 0.2D;
         d2 += this.random.nextGaussian() * 0.2D;
@@ -58,30 +53,24 @@ public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProj
     }
 
     @Override
-    public CraftEntity getBukkitEntity()
-    {
-        if (this.bukkitEntity == null)
-        {
+    public CraftEntity getBukkitEntity() {
+        if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftLargeFireball(this.world.getServer(), this);
         }
         return this.bukkitEntity;
     }
 
     @Override
-    public void a(NBTTagCompound nbtTagCompound)
-    {
+    public void a(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    public void b(NBTTagCompound nbtTagCompound)
-    {
+    public void b(NBTTagCompound nbtTagCompound) {
     }
 
     @Override
-    protected void a(MovingObjectPosition movingobjectposition)
-    {
-        if (movingobjectposition.entity != null)
-        {
+    protected void a(MovingObjectPosition movingobjectposition) {
+        if (movingobjectposition.entity != null) {
             movingobjectposition.entity.damageEntity(DamageSource.fireball(this, this.shooter), damage);
         }
         die();

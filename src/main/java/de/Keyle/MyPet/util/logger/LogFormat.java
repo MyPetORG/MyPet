@@ -28,24 +28,17 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public class LogFormat extends Formatter
-{
+public class LogFormat extends Formatter {
     @Override
-    public String format(LogRecord record)
-    {
+    public String format(LogRecord record) {
         String text = new SimpleDateFormat("MM-dd-yyyy HH:mm").format(new Date(record.getMillis()));
         Level level = record.getLevel();
 
-        if (level == Level.WARNING)
-        {
+        if (level == Level.WARNING) {
             text += " [WARNING]";
-        }
-        else if (level == Level.SEVERE)
-        {
+        } else if (level == Level.SEVERE) {
             text += " [SEVERE]";
-        }
-        else
-        {
+        } else {
             text += " [INFO]";
         }
 
@@ -53,8 +46,7 @@ public class LogFormat extends Formatter
         text += "\r\n";
 
         Throwable thrown = record.getThrown();
-        if (thrown != null)
-        {
+        if (thrown != null) {
             StringWriter stringWriter = new StringWriter();
             thrown.printStackTrace(new PrintWriter(stringWriter));
             text += stringWriter;

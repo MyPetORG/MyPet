@@ -72,112 +72,84 @@ import java.util.Random;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
-public class EntityListener implements Listener
-{
+public class EntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
-    public void onMyPetEntitySpawn(final CreatureSpawnEvent event)
-    {
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+    public void onMyPetEntitySpawn(final CreatureSpawnEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
             event.setCancelled(false);
         }
-        if (Configuration.USE_LEVEL_SYSTEM && !Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER)
-        {
+        if (Configuration.USE_LEVEL_SYSTEM && !Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
     }
 
     @EventHandler
-    public void onMyPetEntityPortal(EntityPortalEvent event)
-    {
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+    public void onMyPetEntityPortal(EntityPortalEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event)
-    {
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+    public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
             MyPet myPet = craftMyPet.getMyPet();
-            if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player))
-            {
+            if (event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && ((Projectile) event.getDamager()).getShooter() instanceof Player)) {
                 Player damager;
-                if (event.getDamager() instanceof Projectile)
-                {
+                if (event.getDamager() instanceof Projectile) {
                     damager = (Player) ((Projectile) event.getDamager()).getShooter();
-                }
-                else
-                {
+                } else {
                     damager = (Player) event.getDamager();
                 }
-                if (Configuration.LEASH_ITEM.compare(damager.getItemInHand()))
-                {
+                if (Configuration.LEASH_ITEM.compare(damager.getItemInHand())) {
                     boolean infoShown = false;
-                    if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet))
-                    {
+                    if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, myPet) && myPet.getOwner().getPlayer() != damager)
-                    {
+                    if (CommandInfo.canSee(PetInfoDisplay.Owner.adminOnly, damager, myPet) && myPet.getOwner().getPlayer() != damager) {
                         damager.sendMessage("   " + Locales.getString("Name.Owner", damager) + ": " + myPet.getOwner().getName());
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet))
-                    {
+                    if (CommandInfo.canSee(PetInfoDisplay.HP.adminOnly, damager, myPet)) {
                         String msg;
-                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2)
-                        {
+                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
                             msg = "" + ChatColor.GREEN;
-                        }
-                        else if (myPet.getHealth() > myPet.getMaxHealth() / 3)
-                        {
+                        } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
                             msg = "" + ChatColor.YELLOW;
-                        }
-                        else
-                        {
+                        } else {
                             msg = "" + ChatColor.RED;
                         }
                         msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                         damager.sendMessage("   " + Locales.getString("Name.HP", damager) + ": " + msg);
                         infoShown = true;
                     }
-                    if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet))
-                    {
+                    if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
                         double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
                         damager.sendMessage("   " + Locales.getString("Name.Damage", damager) + ": " + String.format("%1.2f", damage));
                         infoShown = true;
                     }
-                    if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet))
-                    {
+                    if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
                         double damage = myPet.getRangedDamage();
                         damager.sendMessage("   " + Locales.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", damage));
                         infoShown = true;
                     }
-                    if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet))
-                    {
+                    if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {
                         damager.sendMessage("   " + Locales.getString("Name.Hunger", damager) + ": " + myPet.getHungerValue());
                         infoShown = true;
                     }
-                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkillTree() != null)
-                    {
+                    if (CommandInfo.canSee(PetInfoDisplay.Skilltree.adminOnly, damager, myPet) && myPet.getSkillTree() != null) {
                         damager.sendMessage("   " + Locales.getString("Name.Skilltree", damager) + ": " + myPet.getSkillTree().getName());
                         infoShown = true;
                     }
-                    if (Configuration.USE_LEVEL_SYSTEM)
-                    {
-                        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet))
-                        {
+                    if (Configuration.USE_LEVEL_SYSTEM) {
+                        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
                             int lvl = myPet.getExperience().getLevel();
                             damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
                             infoShown = true;
                         }
-                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet))
-                        {
+                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet)) {
                             double exp = myPet.getExperience().getCurrentExp();
                             double reqEXP = myPet.getExperience().getRequiredExp();
                             damager.sendMessage("   " + Locales.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
@@ -185,42 +157,31 @@ public class EntityListener implements Listener
                         }
                     }
 
-                    if (myPet.getOwner().isDonator())
-                    {
+                    if (myPet.getOwner().isDonator()) {
                         infoShown = true;
                         damager.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
                     }
-                    if (!infoShown)
-                    {
+                    if (!infoShown) {
                         damager.sendMessage(Locales.getString("Message.No.NothingToSeeHere", myPet.getOwner().getLanguage()));
                     }
 
                     event.setCancelled(true);
-                }
-                else if (myPet.getOwner().equals(damager) && (!Configuration.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer())))
-                {
+                } else if (myPet.getOwner().equals(damager) && (!Configuration.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer()))) {
                     event.setCancelled(true);
-                }
-                else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer()))
-                {
+                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer())) {
                     event.setCancelled(true);
                 }
             }
-            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity)
-            {
+            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
                 LivingEntity damager = (LivingEntity) event.getDamager();
-                if (damager instanceof Player)
-                {
-                    if (!PvPChecker.canHurtAncientRPG(myPet.getOwner().getPlayer(), (Player) damager))
-                    {
+                if (damager instanceof Player) {
+                    if (!PvPChecker.canHurtAncientRPG(myPet.getOwner().getPlayer(), (Player) damager)) {
                         return;
                     }
                 }
-                if (myPet.getSkills().isSkillActive(Thorns.class))
-                {
+                if (myPet.getSkills().isSkillActive(Thorns.class)) {
                     Thorns thornsSkill = myPet.getSkills().getSkill(Thorns.class);
-                    if (thornsSkill.activate())
-                    {
+                    if (thornsSkill.activate()) {
                         isSkillActive = true;
                         thornsSkill.reflectDamage(damager, event.getDamage());
                         isSkillActive = false;
@@ -233,22 +194,17 @@ public class EntityListener implements Listener
     boolean selfThrownEventRunning = false;
 
     @EventHandler
-    public void onEntityDamageByMyPet(final EntityDamageByEntityEvent event)
-    {
-        if (PvPChecker.USE_PlayerDamageEntityEvent)
-        {
+    public void onEntityDamageByMyPet(final EntityDamageByEntityEvent event) {
+        if (PvPChecker.USE_PlayerDamageEntityEvent) {
             Entity damager = event.getDamager();
-            if (damager instanceof Projectile)
-            {
+            if (damager instanceof Projectile) {
                 damager = ((Projectile) damager).getShooter();
             }
-            if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity)
-            {
+            if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 selfThrownEventRunning = true;
-                if (!PvPChecker.canHurtEvent(myPet.getOwner().getPlayer(), (LivingEntity) event.getEntity()))
-                {
+                if (!PvPChecker.canHurtEvent(myPet.getOwner().getPlayer(), (LivingEntity) event.getEntity())) {
                     event.setCancelled(true);
                 }
                 selfThrownEventRunning = false;
@@ -257,125 +213,81 @@ public class EntityListener implements Listener
     }
 
     @EventHandler
-    public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event)
-    {
-        if (!selfThrownEventRunning && !(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player)
-        {
-            if (MyPetType.isLeashableEntityType(event.getEntity().getType()))
-            {
+    public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event) {
+        if (!selfThrownEventRunning && !(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player) {
+            if (MyPetType.isLeashableEntityType(event.getEntity().getType())) {
                 Player damager = (Player) event.getDamager();
 
-                if (!MyPetList.hasMyPet(damager))
-                {
+                if (!MyPetList.hasMyPet(damager)) {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
 
-                    if (!Configuration.LEASH_ITEM.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName()))
-                    {
+                    if (!Configuration.LEASH_ITEM.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getMyPetPlayer(damager).isCaptureHelperActive())
-                    {
+                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
 
                     boolean willBeLeashed = true;
                     List<LeashFlag> leashFlags = MyPet.getLeashFlags(myPetClass);
 
-                    for (LeashFlag flag : leashFlags)
-                    {
-                        if (flag == LeashFlag.Adult)
-                        {
-                            if (leashTarget instanceof Ageable)
-                            {
+                    for (LeashFlag flag : leashFlags) {
+                        if (flag == LeashFlag.Adult) {
+                            if (leashTarget instanceof Ageable) {
                                 willBeLeashed = ((Ageable) leashTarget).isAdult();
-                            }
-                            else if (leashTarget instanceof Zombie)
-                            {
+                            } else if (leashTarget instanceof Zombie) {
                                 willBeLeashed = !((Zombie) leashTarget).isBaby();
                             }
-                        }
-                        else if (flag == LeashFlag.Baby)
-                        {
-                            if (leashTarget instanceof Ageable)
-                            {
+                        } else if (flag == LeashFlag.Baby) {
+                            if (leashTarget instanceof Ageable) {
                                 willBeLeashed = !((Ageable) leashTarget).isAdult();
-                            }
-                            else if (leashTarget instanceof Zombie)
-                            {
+                            } else if (leashTarget instanceof Zombie) {
                                 willBeLeashed = ((Zombie) leashTarget).isBaby();
                             }
-                        }
-                        else if (flag == LeashFlag.LowHp)
-                        {
+                        } else if (flag == LeashFlag.LowHp) {
                             willBeLeashed = leashTarget.getHealth() - event.getDamage() <= 2;
-                        }
-                        else if (flag == LeashFlag.UserCreated)
-                        {
-                            if (leashTarget instanceof IronGolem)
-                            {
+                        } else if (flag == LeashFlag.UserCreated) {
+                            if (leashTarget instanceof IronGolem) {
                                 willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
                             }
-                        }
-                        else if (flag == LeashFlag.Wild)
-                        {
-                            if (leashTarget instanceof IronGolem)
-                            {
+                        } else if (flag == LeashFlag.Wild) {
+                            if (leashTarget instanceof IronGolem) {
                                 willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
-                            }
-                            else if (leashTarget instanceof Tameable)
-                            {
+                            } else if (leashTarget instanceof Tameable) {
                                 willBeLeashed = !((Tameable) leashTarget).isTamed();
-                            }
-                            else if (leashTarget instanceof Horse)
-                            {
+                            } else if (leashTarget instanceof Horse) {
                                 willBeLeashed = !((CraftHorse) leashTarget).getHandle().isTame();
                             }
-                        }
-                        else if (flag == LeashFlag.Tamed)
-                        {
-                            if (leashTarget instanceof Tameable)
-                            {
+                        } else if (flag == LeashFlag.Tamed) {
+                            if (leashTarget instanceof Tameable) {
                                 willBeLeashed = ((Tameable) leashTarget).isTamed();
                             }
-                            if (leashTarget instanceof Horse)
-                            {
+                            if (leashTarget instanceof Horse) {
                                 willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame();
                             }
-                        }
-                        else if (flag == LeashFlag.CanBreed)
-                        {
-                            if (leashTarget instanceof Ageable)
-                            {
+                        } else if (flag == LeashFlag.CanBreed) {
+                            if (leashTarget instanceof Ageable) {
                                 willBeLeashed = ((Ageable) leashTarget).canBreed();
                             }
-                        }
-                        else if (flag == LeashFlag.Angry)
-                        {
-                            if (leashTarget instanceof Wolf)
-                            {
+                        } else if (flag == LeashFlag.Angry) {
+                            if (leashTarget instanceof Wolf) {
                                 willBeLeashed = ((Wolf) leashTarget).isAngry();
                             }
-                        }
-                        else if (flag == LeashFlag.Impossible)
-                        {
+                        } else if (flag == LeashFlag.Impossible) {
                             willBeLeashed = false;
                             break;
-                        }
-                        else if (flag == LeashFlag.None)
-                        {
+                        } else if (flag == LeashFlag.None) {
                             willBeLeashed = true;
                             break;
                         }
-                        if (!willBeLeashed)
-                        {
+                        if (!willBeLeashed) {
                             break;
                         }
                     }
 
-                    if (willBeLeashed)
-                    {
+                    if (willBeLeashed) {
                         event.setCancelled(true);
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
@@ -393,92 +305,67 @@ public class EntityListener implements Listener
                         */
 
                         CompoundTag extendedInfo = new CompoundTag("Info", new CompoundMap());
-                        if (leashTarget instanceof Ocelot)
-                        {
+                        if (leashTarget instanceof Ocelot) {
                             extendedInfo.getValue().put("CatType", new IntTag("CatType", ((Ocelot) leashTarget).getCatType().getId()));
                             extendedInfo.getValue().put("Sitting", new ByteTag("Sitting", ((Ocelot) leashTarget).isSitting()));
-                        }
-                        else if (leashTarget instanceof Wolf)
-                        {
+                        } else if (leashTarget instanceof Wolf) {
                             extendedInfo.getValue().put("Sitting", new ByteTag("Sitting", ((Wolf) leashTarget).isSitting()));
                             extendedInfo.getValue().put("Tamed", new ByteTag("Tamed", ((Wolf) leashTarget).isTamed()));
                             extendedInfo.getValue().put("CollarColor", new ByteTag("CollarColor", ((Wolf) leashTarget).getCollarColor().getDyeData()));
-                        }
-                        else if (leashTarget instanceof Sheep)
-                        {
+                        } else if (leashTarget instanceof Sheep) {
                             extendedInfo.getValue().put("Color", new IntTag("Color", ((Sheep) leashTarget).getColor().getDyeData()));
                             extendedInfo.getValue().put("Sheared", new ByteTag("Sheared", ((Sheep) leashTarget).isSheared()));
-                        }
-                        else if (leashTarget instanceof Villager)
-                        {
+                        } else if (leashTarget instanceof Villager) {
                             extendedInfo.getValue().put("Profession", new IntTag("Profession", ((Villager) leashTarget).getProfession().getId()));
-                        }
-                        else if (leashTarget instanceof Pig)
-                        {
+                        } else if (leashTarget instanceof Pig) {
                             extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((Pig) leashTarget).hasSaddle()));
-                        }
-                        else if (leashTarget instanceof Slime)
-                        {
+                        } else if (leashTarget instanceof Slime) {
                             extendedInfo.getValue().put("Size", new IntTag("Size", ((Slime) leashTarget).getSize()));
-                        }
-                        else if (leashTarget instanceof Creeper)
-                        {
+                        } else if (leashTarget instanceof Creeper) {
                             extendedInfo.getValue().put("Powered", new ByteTag("Powered", ((Creeper) leashTarget).isPowered()));
-                        }
-                        else if (leashTarget instanceof Horse)
-                        {
+                        } else if (leashTarget instanceof Horse) {
                             extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((CraftHorse) leashTarget).getHandle().getType()));
                             extendedInfo.getValue().put("Variant", new IntTag("Variant", ((CraftHorse) leashTarget).getHandle().getVariant()));
                             extendedInfo.getValue().put("Armor", new IntTag("Armor", ((CraftHorse) leashTarget).getHandle().cf()));
                             extendedInfo.getValue().put("Chest", new ByteTag("Chest", ((CraftHorse) leashTarget).getHandle().hasChest()));
                             extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((CraftHorse) leashTarget).getHandle().co()));
                             extendedInfo.getValue().put("Age", new IntTag("Age", ((CraftHorse) leashTarget).getHandle().getAge()));
-                        }
-                        else if (leashTarget instanceof Zombie)
-                        {
+                        } else if (leashTarget instanceof Zombie) {
                             extendedInfo.getValue().put("Baby", new ByteTag("Baby", ((Zombie) leashTarget).isBaby()));
                             extendedInfo.getValue().put("Villager", new ByteTag("Villager", ((Zombie) leashTarget).isVillager()));
 
                             Random random = ((CraftLivingEntity) leashTarget).getHandle().aC();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
@@ -486,56 +373,44 @@ public class EntityListener implements Listener
                                 }
                             }
                             extendedInfo.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, equipmentList));
-                        }
-                        else if (leashTarget instanceof Enderman)
-                        {
+                        } else if (leashTarget instanceof Enderman) {
                             extendedInfo.getValue().put("BlockID", new ShortTag("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId()));
                             extendedInfo.getValue().put("BlockData", new ShortTag("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData()));
-                        }
-                        else if (leashTarget instanceof Skeleton)
-                        {
+                        } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getValue().put("Wither", new ByteTag("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
 
                             Random random = ((CraftLivingEntity) leashTarget).getHandle().aC();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
@@ -543,49 +418,39 @@ public class EntityListener implements Listener
                                 }
                             }
                             extendedInfo.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, equipmentList));
-                        }
-                        else if (leashTarget instanceof PigZombie)
-                        {
+                        } else if (leashTarget instanceof PigZombie) {
                             Random random = ((CraftLivingEntity) leashTarget).getHandle().aC();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
                             }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance())
-                            {
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR)
-                                {
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_6_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
@@ -594,8 +459,7 @@ public class EntityListener implements Listener
                             }
                             extendedInfo.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, equipmentList));
                         }
-                        if (leashTarget instanceof Ageable)
-                        {
+                        if (leashTarget instanceof Ageable) {
                             extendedInfo.getValue().put("Baby", new ByteTag("Baby", !((Ageable) leashTarget).isAdult()));
                         }
                         inactiveMyPet.setInfo(extendedInfo);
@@ -605,32 +469,25 @@ public class EntityListener implements Listener
                         MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                         myPet.createPet();
 
-                        if (Configuration.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null)
-                        {
-                            if (damager.getItemInHand().getAmount() > 1)
-                            {
+                        if (Configuration.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
+                            if (damager.getItemInHand().getAmount() > 1) {
                                 damager.getItemInHand().setAmount(damager.getItemInHand().getAmount() - 1);
-                            }
-                            else
-                            {
+                            } else {
                                 damager.setItemInHand(null);
                             }
                         }
 
-                        if (Configuration.ENABLE_EVENTS)
-                        {
+                        if (Configuration.ENABLE_EVENTS) {
                             getPluginManager().callEvent(new MyPetLeashEvent(myPet));
                         }
                         DebugLogger.info("New Pet leashed:");
                         DebugLogger.info("   " + myPet.toString());
-                        if (Configuration.STORE_PETS_ON_PET_LEASH)
-                        {
+                        if (Configuration.STORE_PETS_ON_PET_LEASH) {
                             DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                         }
                         damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
 
-                        if (myPet.getOwner().isCaptureHelperActive())
-                        {
+                        if (myPet.getOwner().isCaptureHelperActive()) {
                             myPet.getOwner().setCaptureHelperActive(false);
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
                         }
@@ -641,42 +498,29 @@ public class EntityListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetEntityDamage(final EntityDamageEvent event)
-    {
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+    public void onMyPetEntityDamage(final EntityDamageEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
 
-            if (event.getCause() == DamageCause.FALL)
-            {
-                if (craftMyPet.getPetType() == MyPetType.Chicken || craftMyPet.getPetType() == MyPetType.Bat || craftMyPet.getPetType() == MyPetType.IronGolem)
-                {
+            if (event.getCause() == DamageCause.FALL) {
+                if (craftMyPet.getPetType() == MyPetType.Chicken || craftMyPet.getPetType() == MyPetType.Bat || craftMyPet.getPetType() == MyPetType.IronGolem) {
                     event.setCancelled(true);
                 }
-            }
-            else if (event.getCause() == DamageCause.DROWNING)
-            {
-                if (craftMyPet.getPetType() == MyPetType.IronGolem)
-                {
+            } else if (event.getCause() == DamageCause.DROWNING) {
+                if (craftMyPet.getPetType() == MyPetType.IronGolem) {
                     event.setCancelled(true);
                 }
-            }
-            else if (event.getCause() == DamageCause.SUFFOCATION)
-            {
+            } else if (event.getCause() == DamageCause.SUFFOCATION) {
                 final MyPet myPet = craftMyPet.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
                 myPet.removePet(true);
 
-                MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-                {
-                    public void run()
-                    {
-                        if (myPetPlayer.hasMyPet())
-                        {
+                MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                    public void run() {
+                        if (myPetPlayer.hasMyPet()) {
                             MyPet runMyPet = myPetPlayer.getMyPet();
-                            switch (runMyPet.createPet())
-                            {
+                            switch (runMyPet.createPet()) {
                                 case Canceled:
                                     runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                     break;
@@ -687,8 +531,7 @@ public class EntityListener implements Listener
                                     runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                                     break;
                                 case Success:
-                                    if (runMyPet != myPet)
-                                    {
+                                    if (runMyPet != myPet) {
                                         runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                     }
                                     break;
@@ -701,22 +544,16 @@ public class EntityListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDamageByEntityDamageMonitor(final EntityDamageByEntityEvent event)
-    {
-        if (!event.isCancelled() && Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player) && !(event.getEntity() instanceof CraftMyPet))
-        {
+    public void onEntityDamageByEntityDamageMonitor(final EntityDamageByEntityEvent event) {
+        if (!event.isCancelled() && Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION && event.getEntity() instanceof LivingEntity && !(event.getEntity() instanceof Player) && !(event.getEntity() instanceof CraftMyPet)) {
             LivingEntity damager = null;
-            if (event.getDamager() instanceof Projectile)
-            {
+            if (event.getDamager() instanceof Projectile) {
                 Projectile projectile = (Projectile) event.getDamager();
                 damager = projectile.getShooter();
-            }
-            else if (event.getDamager() instanceof LivingEntity)
-            {
+            } else if (event.getDamager() instanceof LivingEntity) {
                 damager = (LivingEntity) event.getDamager();
             }
-            if (damager != null)
-            {
+            if (damager != null) {
                 Experience.addDamageToEntity(damager, (LivingEntity) event.getEntity(), event.getDamage());
             }
         }
@@ -725,118 +562,89 @@ public class EntityListener implements Listener
     boolean isSkillActive = false;
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event)
-    {
+    public void onEntityDamageByEntityResult(final EntityDamageByEntityEvent event) {
         Entity damagedEntity = event.getEntity();
         // --  fix unwanted screaming of Endermen --
-        if (damagedEntity instanceof CraftMyPet && ((CraftMyPet) damagedEntity).getPetType() == MyPetType.Enderman)
-        {
+        if (damagedEntity instanceof CraftMyPet && ((CraftMyPet) damagedEntity).getPetType() == MyPetType.Enderman) {
             ((EntityMyEnderman) ((CraftMyPet) damagedEntity).getHandle()).setScreaming(true);
             ((EntityMyEnderman) ((CraftMyPet) damagedEntity).getHandle()).setScreaming(false);
         }
 
-        if (damagedEntity instanceof LivingEntity)
-        {
+        if (damagedEntity instanceof LivingEntity) {
             Entity damager = event.getDamager();
 
-            if (damager instanceof Projectile)
-            {
+            if (damager instanceof Projectile) {
                 damager = ((Projectile) damager).getShooter();
             }
 
-            if (damager instanceof Player)
-            {
+            if (damager instanceof Player) {
                 Player player = (Player) damager;
-                if (Configuration.LEASH_ITEM.compare(player.getItemInHand()) && damagedEntity instanceof CraftMyPet)
-                {
+                if (Configuration.LEASH_ITEM.compare(player.getItemInHand()) && damagedEntity instanceof CraftMyPet) {
+                    return;
+                } else if (event.getDamage() == 0) {
                     return;
                 }
-                else if (event.getDamage() == 0)
-                {
-                    return;
-                }
-                if (MyPetList.hasMyPet(player))
-                {
+                if (MyPetList.hasMyPet(player)) {
                     MyPet myPet = MyPetList.getMyPet(player);
-                    if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getCraftPet())
-                    {
+                    if (myPet.getStatus() == PetState.Here && damagedEntity != myPet.getCraftPet()) {
                         myPet.getCraftPet().getHandle().goalTarget = ((CraftLivingEntity) damagedEntity).getHandle();
                     }
                 }
-            }
-            else if (damager instanceof CraftMyPet)
-            {
+            } else if (damager instanceof CraftMyPet) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
 
                 // fix influence of other plugins
-                if (event.getDamager() instanceof Projectile)
-                {
+                if (event.getDamager() instanceof Projectile) {
                     event.setDamage(myPet.getRangedDamage());
-                }
-                else
-                {
+                } else {
                     event.setDamage(myPet.getDamage());
                 }
 
-                if (damagedEntity instanceof Player && event.isCancelled())
-                {
+                if (damagedEntity instanceof Player && event.isCancelled()) {
                     return;
                 }
 
-                if (!isSkillActive)
-                {
+                if (!isSkillActive) {
                     //  --  Skills  --
                     boolean skillUsed = false;
-                    if (myPet.getSkills().hasSkill(Poison.class))
-                    {
+                    if (myPet.getSkills().hasSkill(Poison.class)) {
                         Poison poisonSkill = myPet.getSkills().getSkill(Poison.class);
-                        if (poisonSkill.activate())
-                        {
+                        if (poisonSkill.activate()) {
                             poisonSkill.poisonTarget((LivingEntity) damagedEntity);
                             skillUsed = true;
                         }
                     }
-                    if (!skillUsed && myPet.getSkills().hasSkill(Wither.class))
-                    {
+                    if (!skillUsed && myPet.getSkills().hasSkill(Wither.class)) {
                         Wither witherSkill = myPet.getSkills().getSkill(Wither.class);
-                        if (witherSkill.activate())
-                        {
+                        if (witherSkill.activate()) {
                             witherSkill.witherTarget((LivingEntity) damagedEntity);
                             skillUsed = true;
                         }
                     }
-                    if (!skillUsed && myPet.getSkills().hasSkill(Fire.class))
-                    {
+                    if (!skillUsed && myPet.getSkills().hasSkill(Fire.class)) {
                         Fire fireSkill = myPet.getSkills().getSkill(Fire.class);
-                        if (fireSkill.activate())
-                        {
+                        if (fireSkill.activate()) {
                             fireSkill.igniteTarget((LivingEntity) damagedEntity);
                             skillUsed = true;
                         }
                     }
-                    if (!skillUsed && myPet.getSkills().hasSkill(Slow.class))
-                    {
+                    if (!skillUsed && myPet.getSkills().hasSkill(Slow.class)) {
                         Slow slowSkill = myPet.getSkills().getSkill(Slow.class);
-                        if (slowSkill.activate())
-                        {
+                        if (slowSkill.activate()) {
                             slowSkill.slowTarget((LivingEntity) damagedEntity);
                             skillUsed = true;
                         }
                     }
-                    if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class))
-                    {
+                    if (!skillUsed && myPet.getSkills().hasSkill(Knockback.class)) {
                         Knockback knockbackSkill = myPet.getSkills().getSkill(Knockback.class);
-                        if (knockbackSkill.activate())
-                        {
+                        if (knockbackSkill.activate()) {
                             knockbackSkill.knockbackTarget((LivingEntity) damagedEntity);
                             skillUsed = true;
                         }
                     }
-                    if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class))
-                    {
+                    if (!skillUsed && myPet.getSkills().hasSkill(Lightning.class)) {
                         Lightning lightningSkill = myPet.getSkills().getSkill(Lightning.class);
-                        if (lightningSkill.activate())
-                        {
+                        if (lightningSkill.activate()) {
                             isSkillActive = true;
                             lightningSkill.strikeLightning(damagedEntity.getLocation());
                             isSkillActive = false;
@@ -848,32 +656,25 @@ public class EntityListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetEntityDeath(final EntityDeathEvent event)
-    {
+    public void onMyPetEntityDeath(final EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
-        if (deadEntity instanceof CraftMyPet)
-        {
+        if (deadEntity instanceof CraftMyPet) {
             MyPet myPet = ((CraftMyPet) deadEntity).getMyPet();
             if (myPet == null || myPet.getHealth() > 0) // check health for death events where the pet isn't really dead (/killall)
             {
                 return;
             }
 
-            if (Configuration.RELEASE_PETS_ON_DEATH && !myPet.getOwner().isMyPetAdmin())
-            {
-                if (myPet.getSkills().isSkillActive(Inventory.class))
-                {
+            if (Configuration.RELEASE_PETS_ON_DEATH && !myPet.getOwner().isMyPetAdmin()) {
+                if (myPet.getSkills().isSkillActive(Inventory.class)) {
                     CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                     inv.dropContentAt(myPet.getLocation());
                 }
-                if (myPet instanceof IMyPetEquipment)
-                {
+                if (myPet instanceof IMyPetEquipment) {
                     World world = myPet.getCraftPet().getHandle().world;
                     Location petLocation = myPet.getLocation();
-                    for (net.minecraft.server.v1_6_R2.ItemStack is : ((IMyPetEquipment) myPet).getEquipment())
-                    {
-                        if (is != null)
-                        {
+                    for (net.minecraft.server.v1_6_R2.ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
+                        if (is != null) {
                             EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
                             itemEntity.pickupDelay = 10;
                             world.addEntity(itemEntity);
@@ -887,8 +688,7 @@ public class EntityListener implements Listener
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Release.Dead", myPet.getOwner()), myPet.getPetName()));
                 MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                 DebugLogger.info(myPet.getOwner().getName() + " released pet (dead).");
-                if (Configuration.STORE_PETS_ON_PET_RELEASE)
-                {
+                if (Configuration.STORE_PETS_ON_PET_RELEASE) {
                     DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
                 }
                 return;
@@ -897,30 +697,22 @@ public class EntityListener implements Listener
             myPet.setRespawnTime((Configuration.RESPAWN_TIME_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.RESPAWN_TIME_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
             myPet.setStatus(PetState.Dead);
 
-            if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent)
-            {
+            if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
-                if (e.getDamager() instanceof Player)
-                {
+                if (e.getDamager() instanceof Player) {
                     myPet.setRespawnTime((Configuration.RESPAWN_TIME_PLAYER_FIXED + MyPet.getCustomRespawnTimeFixed(myPet.getClass())) + (myPet.getExperience().getLevel() * (Configuration.RESPAWN_TIME_PLAYER_FACTOR + MyPet.getCustomRespawnTimeFactor(myPet.getClass()))));
-                }
-                else if (e.getDamager() instanceof CraftMyPet)
-                {
+                } else if (e.getDamager() instanceof CraftMyPet) {
                     MyPet killerMyPet = ((CraftMyPet) e.getDamager()).getMyPet();
-                    if (myPet.getSkills().isSkillActive(Behavior.class) && killerMyPet.getSkills().isSkillActive(Behavior.class))
-                    {
+                    if (myPet.getSkills().isSkillActive(Behavior.class) && killerMyPet.getSkills().isSkillActive(Behavior.class)) {
                         Behavior killerBehaviorSkill = killerMyPet.getSkills().getSkill(Behavior.class);
                         Behavior deadBehaviorSkill = myPet.getSkills().getSkill(Behavior.class);
-                        if (deadBehaviorSkill.getBehavior() == BehaviorState.Duel && killerBehaviorSkill.getBehavior() == BehaviorState.Duel)
-                        {
+                        if (deadBehaviorSkill.getBehavior() == BehaviorState.Duel && killerBehaviorSkill.getBehavior() == BehaviorState.Duel) {
                             EntityMyPet myPetEntity = ((CraftMyPet) deadEntity).getHandle();
                             EntityMyPet duelKiller = ((CraftMyPet) e.getDamager()).getHandle();
-                            if (myPetEntity.petTargetSelector.hasGoal("DuelTarget"))
-                            {
+                            if (myPetEntity.petTargetSelector.hasGoal("DuelTarget")) {
                                 BehaviorDuelTarget duelTarget = (BehaviorDuelTarget) myPetEntity.petTargetSelector.getGoal("DuelTarget");
-                                if (duelTarget.getDuelOpponent() == duelKiller)
-                                {
+                                if (duelTarget.getDuelOpponent() == duelKiller) {
                                     myPet.setRespawnTime(10);
                                 }
                             }
@@ -930,43 +722,34 @@ public class EntityListener implements Listener
             }
             event.setDroppedExp(0);
 
-            if (Configuration.USE_LEVEL_SYSTEM && (Experience.LOSS_FIXED > 0 || Experience.LOSS_PERCENT > 0))
-            {
+            if (Configuration.USE_LEVEL_SYSTEM && (Experience.LOSS_FIXED > 0 || Experience.LOSS_PERCENT > 0)) {
                 double lostExpirience = Experience.LOSS_FIXED;
                 lostExpirience += myPet.getExperience().getRequiredExp() * Experience.LOSS_PERCENT / 100;
-                if (lostExpirience > myPet.getExperience().getCurrentExp())
-                {
+                if (lostExpirience > myPet.getExperience().getCurrentExp()) {
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
-                if (Experience.DROP_LOST_EXP)
-                {
+                if (Experience.DROP_LOST_EXP) {
                     event.setDroppedExp((int) (lostExpirience + 0.5));
                 }
                 myPet.getExperience().removeCurrentExp(lostExpirience);
             }
-            if (myPet.getSkills().isSkillActive(Inventory.class))
-            {
+            if (myPet.getSkills().isSkillActive(Inventory.class)) {
                 Inventory inventorySkill = myPet.getSkills().getSkill(Inventory.class);
                 inventorySkill.closeInventory();
-                if (inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin())
-                {
+                if (inventorySkill.dropOnDeath() && !myPet.getOwner().isMyPetAdmin()) {
                     inventorySkill.inv.dropContentAt(myPet.getLocation());
                 }
             }
             sendDeathMessage(event);
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner().getPlayer()), myPet.getPetName(), myPet.getRespawnTime()));
 
-            if (Economy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.getRespawnTime() >= myPet.getOwner().getAutoRespawnMin() && Permissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn"))
-            {
+            if (Economy.canUseEconomy() && myPet.getOwner().hasAutoRespawnEnabled() && myPet.getRespawnTime() >= myPet.getOwner().getAutoRespawnMin() && Permissions.has(myPet.getOwner().getPlayer(), "MyPet.user.respawn")) {
                 double costs = myPet.getRespawnTime() * Configuration.RESPAWN_COSTS_FACTOR + Configuration.RESPAWN_COSTS_FIXED;
-                if (Economy.canPay(myPet.getOwner(), costs))
-                {
+                if (Economy.canPay(myPet.getOwner(), costs)) {
                     Economy.pay(myPet.getOwner(), costs);
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.Paid", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                     myPet.setRespawnTime(1);
-                }
-                else
-                {
+                } else {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Respawn.NoMoney", myPet.getOwner().getPlayer()), myPet.getPetName(), costs + " " + Economy.getEconomy().currencyNameSingular()));
                 }
             }
@@ -975,64 +758,45 @@ public class EntityListener implements Listener
 
     @SuppressWarnings("unchecked")
     @EventHandler
-    public void onEntityDeath(final EntityDeathEvent event)
-    {
-        if (Configuration.USE_LEVEL_SYSTEM)
-        {
+    public void onEntityDeath(final EntityDeathEvent event) {
+        if (Configuration.USE_LEVEL_SYSTEM) {
             LivingEntity deadEntity = event.getEntity();
-            if (deadEntity instanceof CraftMyPet)
-            {
+            if (deadEntity instanceof CraftMyPet) {
                 return;
             }
-            if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner"))
-            {
-                for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner"))
-                {
-                    if (value.getOwningPlugin().getName().equals(MyPetPlugin.getPlugin().getName()))
-                    {
-                        if (value.asBoolean())
-                        {
+            if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
+                for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner")) {
+                    if (value.getOwningPlugin().getName().equals(MyPetPlugin.getPlugin().getName())) {
+                        if (value.asBoolean()) {
                             return;
                         }
                         break;
                     }
                 }
             }
-            if (Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION)
-            {
+            if (Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
                 Map<Entity, Double> damagePercentMap = Experience.getDamageToEntityPercent(deadEntity);
-                for (Entity entity : damagePercentMap.keySet())
-                {
-                    if (entity instanceof CraftMyPet)
-                    {
+                for (Entity entity : damagePercentMap.keySet()) {
+                    if (entity instanceof CraftMyPet) {
                         MyPet myPet = ((CraftMyPet) entity).getMyPet();
-                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
-                        {
-                            if (!myPet.autoAssignSkilltree())
-                            {
+                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                            if (!myPet.autoAssignSkilltree()) {
                                 continue;
                             }
                         }
                         double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
                         myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
-                    }
-                    else if (entity instanceof Player)
-                    {
+                    } else if (entity instanceof Player) {
                         Player owner = (Player) entity;
-                        if (MyPetList.hasMyPet(owner))
-                        {
+                        if (MyPetList.hasMyPet(owner)) {
                             MyPet myPet = MyPetList.getMyPet(owner);
-                            if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
-                            {
-                                if (!myPet.autoAssignSkilltree())
-                                {
+                            if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                                if (!myPet.autoAssignSkilltree()) {
                                     continue;
                                 }
                             }
-                            if (myPet.isPassiv())
-                            {
-                                if (myPet.getStatus() == PetState.Here)
-                                {
+                            if (myPet.isPassiv()) {
+                                if (myPet.getStatus() == PetState.Here) {
                                     double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
                                     myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
                                 }
@@ -1040,45 +804,32 @@ public class EntityListener implements Listener
                         }
                     }
                 }
-            }
-            else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent)
-            {
+            } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
                 Entity damager = edbee.getDamager();
-                if (damager instanceof Projectile)
-                {
+                if (damager instanceof Projectile) {
                     damager = ((Projectile) damager).getShooter();
                 }
-                if (damager instanceof CraftMyPet)
-                {
+                if (damager instanceof CraftMyPet) {
                     MyPet myPet = ((CraftMyPet) damager).getMyPet();
-                    if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE)
-                    {
-                        if (!myPet.autoAssignSkilltree())
-                        {
+                    if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
+                        if (!myPet.autoAssignSkilltree()) {
                             return;
                         }
                     }
                     myPet.getExperience().addExp(edbee.getEntity().getType());
-                }
-                else if (damager instanceof Player)
-                {
+                } else if (damager instanceof Player) {
                     Player owner = (Player) damager;
-                    if (MyPetList.hasMyPet(owner))
-                    {
+                    if (MyPetList.hasMyPet(owner)) {
                         MyPet myPet = MyPetList.getMyPet(owner);
-                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null)
-                        {
-                            if (!myPet.autoAssignSkilltree())
-                            {
+                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                            if (!myPet.autoAssignSkilltree()) {
                                 return;
                             }
                         }
-                        if (myPet.isPassiv())
-                        {
-                            if (myPet.getStatus() == PetState.Here)
-                            {
+                        if (myPet.isPassiv()) {
+                            if (myPet.getStatus() == PetState.Here) {
                                 myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
                             }
                         }
@@ -1089,147 +840,93 @@ public class EntityListener implements Listener
     }
 
     @EventHandler
-    public void onEntityTarget(final EntityTargetEvent event)
-    {
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+    public void onEntityTarget(final EntityTargetEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
-            if (myPet.getSkills().isSkillActive(Behavior.class))
-            {
+            if (myPet.getSkills().isSkillActive(Behavior.class)) {
                 Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
-                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly)
-                {
+                if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                     event.setCancelled(true);
-                }
-                else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName()))
-                {
+                } else if (event.getTarget() instanceof Player && ((Player) event.getTarget()).getName().equals(myPet.getOwner().getName())) {
                     event.setCancelled(true);
-                }
-                else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid)
-                {
-                    if (event.getTarget() instanceof Player)
-                    {
+                } else if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Raid) {
+                    if (event.getTarget() instanceof Player) {
                         event.setCancelled(true);
-                    }
-                    else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed())
-                    {
+                    } else if (event.getTarget() instanceof Tameable && ((Tameable) event.getTarget()).isTamed()) {
                         event.setCancelled(true);
-                    }
-                    else if (event.getTarget() instanceof CraftMyPet)
-                    {
+                    } else if (event.getTarget() instanceof CraftMyPet) {
                         event.setCancelled(true);
                     }
                 }
             }
-        }
-        else if (event.getEntity() instanceof Tameable)
-        {
-            if (event.getTarget() instanceof CraftMyPet)
-            {
+        } else if (event.getEntity() instanceof Tameable) {
+            if (event.getTarget() instanceof CraftMyPet) {
                 Tameable tameable = ((Tameable) event.getEntity());
                 MyPet myPet = ((CraftMyPet) event.getTarget()).getMyPet();
-                if (myPet.getOwner().equals(tameable.getOwner()))
-                {
+                if (myPet.getOwner().equals(tameable.getOwner())) {
                     event.setCancelled(true);
                 }
             }
-        }
-        else if (event.getEntity() instanceof IronGolem)
-        {
-            if (event.getTarget() instanceof CraftMyPet)
-            {
-                if (event.getReason() == TargetReason.RANDOM_TARGET)
-                {
+        } else if (event.getEntity() instanceof IronGolem) {
+            if (event.getTarget() instanceof CraftMyPet) {
+                if (event.getReason() == TargetReason.RANDOM_TARGET) {
                     event.setCancelled(true);
                 }
             }
         }
     }
 
-    private void sendDeathMessage(final EntityDeathEvent event)
-    {
+    private void sendDeathMessage(final EntityDeathEvent event) {
 
-        if (event.getEntity() instanceof CraftMyPet)
-        {
+        if (event.getEntity() instanceof CraftMyPet) {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
             String killer;
-            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
-            {
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event.getEntity().getLastDamageCause();
 
-                if (e.getDamager().getType() == EntityType.PLAYER)
-                {
-                    if (e.getDamager() == myPet.getOwner().getPlayer())
-                    {
+                if (e.getDamager().getType() == EntityType.PLAYER) {
+                    if (e.getDamager() == myPet.getOwner().getPlayer()) {
                         killer = Locales.getString("Name.You", myPet.getOwner().getLanguage());
-                    }
-                    else
-                    {
+                    } else {
                         killer = ((Player) e.getDamager()).getName();
                     }
-                }
-                else if (e.getDamager().getType() == EntityType.WOLF)
-                {
+                } else if (e.getDamager().getType() == EntityType.WOLF) {
                     Wolf w = (Wolf) e.getDamager();
                     killer = Locales.getString("Name.Wolf", myPet.getOwner().getLanguage());
-                    if (w.isTamed())
-                    {
+                    if (w.isTamed()) {
                         killer += " (" + w.getOwner().getName() + ')';
                     }
-                }
-                else if (e.getDamager() instanceof CraftMyPet)
-                {
+                } else if (e.getDamager() instanceof CraftMyPet) {
                     CraftMyPet craftMyPet = (CraftMyPet) e.getDamager();
                     killer = craftMyPet.getMyPet().getPetName() + " (" + craftMyPet.getOwner().getName() + ')';
-                }
-                else if (e.getDamager() instanceof Projectile)
-                {
+                } else if (e.getDamager() instanceof Projectile) {
                     Projectile projectile = (Projectile) e.getDamager();
                     killer = Locales.getString("Name." + Util.capitalizeName(projectile.getType().name()), myPet.getOwner().getLanguage()) + " (";
-                    if (projectile.getShooter() instanceof Player)
-                    {
-                        if (projectile.getShooter() == myPet.getOwner().getPlayer())
-                        {
+                    if (projectile.getShooter() instanceof Player) {
+                        if (projectile.getShooter() == myPet.getOwner().getPlayer()) {
                             killer += Locales.getString("Name.You", myPet.getOwner().getLanguage());
-                        }
-                        else
-                        {
+                        } else {
                             killer += ((Player) projectile.getShooter()).getName();
                         }
-                    }
-                    else
-                    {
-                        if (MyPetType.isLeashableEntityType(e.getDamager().getType()))
-                        {
+                    } else {
+                        if (MyPetType.isLeashableEntityType(e.getDamager().getType())) {
                             killer = Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
-                        }
-                        else
-                        {
+                        } else {
                             killer = Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                         }
                     }
                     killer += ")";
-                }
-                else
-                {
-                    if (MyPetType.isLeashableEntityType(e.getDamager().getType()))
-                    {
+                } else {
+                    if (MyPetType.isLeashableEntityType(e.getDamager().getType())) {
                         killer = Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
-                    }
-                    else
-                    {
+                    } else {
                         killer = Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                     }
                 }
-            }
-            else
-            {
-                if (event.getEntity().getLastDamageCause() != null)
-                {
+            } else {
+                if (event.getEntity().getLastDamageCause() != null) {
                     killer = Locales.getString("Name." + Util.capitalizeName(event.getEntity().getLastDamageCause().getCause().name()), myPet.getOwner().getLanguage());
-                }
-                else
-                {
+                } else {
                     killer = Locales.getString("Name.Unknow", myPet.getOwner().getLanguage());
                 }
             }

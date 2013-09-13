@@ -34,8 +34,7 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.net.URISyntaxException;
 
-public class GuiMain
-{
+public class GuiMain {
     public static LevelCreator levelCreator;
     public static SkilltreeCreator skilltreeCreator;
     public static SkillPropertyEditor skillPropertyEditor;
@@ -43,15 +42,11 @@ public class GuiMain
 
     public static String[] petTypes = new String[]{"default", "Bat", "Blaze", "CaveSpider", "Chicken", "Cow", "Creeper", "Enderman", "Ghast", "Giant", "Horse", "IronGolem", "MagmaCube", "Mooshroom", "Ocelot", "Pig", "PigZombie", "Sheep", "Silverfish", "Skeleton", "Slime", "Snowman", "Spider", "Squid", "Witch", "Wither", "Wolf", "Villager", "Zombie"};
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         String path = "";
-        try
-        {
+        try {
             path = GuiMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         path = path.replace("/", File.separator);
@@ -59,12 +54,9 @@ public class GuiMain
         File pluginDirFile = new File(path);
         configPath = pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator;
 
-        try
-        {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
         }
         Image logoImage = new ImageIcon(ClassLoader.getSystemResource("images/logo.png")).getImage();
 
@@ -82,39 +74,30 @@ public class GuiMain
         skilltreeCreatorFrame.pack();
         skilltreeCreatorFrame.setVisible(true);
         skilltreeCreatorFrame.setLocationRelativeTo(null);
-        skilltreeCreatorFrame.addWindowListener(new WindowListener()
-        {
-            public void windowOpened(WindowEvent e)
-            {
+        skilltreeCreatorFrame.addWindowListener(new WindowListener() {
+            public void windowOpened(WindowEvent e) {
             }
 
-            public void windowClosing(WindowEvent e)
-            {
+            public void windowClosing(WindowEvent e) {
                 int result = JOptionPane.showConfirmDialog(skilltreeCreatorFrame, "Are you sure that you want to close the SkilltreeCreator?", "Skilltree-Creator", JOptionPane.OK_CANCEL_OPTION);
-                if (result == 0)
-                {
+                if (result == 0) {
                     System.exit(0);
                 }
             }
 
-            public void windowClosed(WindowEvent e)
-            {
+            public void windowClosed(WindowEvent e) {
             }
 
-            public void windowIconified(WindowEvent e)
-            {
+            public void windowIconified(WindowEvent e) {
             }
 
-            public void windowDeiconified(WindowEvent e)
-            {
+            public void windowDeiconified(WindowEvent e) {
             }
 
-            public void windowActivated(WindowEvent e)
-            {
+            public void windowActivated(WindowEvent e) {
             }
 
-            public void windowDeactivated(WindowEvent e)
-            {
+            public void windowDeactivated(WindowEvent e) {
             }
         });
 
@@ -125,35 +108,27 @@ public class GuiMain
         levelCreatorFrame.setIconImage(logoImage);
         levelCreatorFrame.pack();
         levelCreatorFrame.setLocationRelativeTo(null);
-        levelCreatorFrame.addWindowListener(new WindowListener()
-        {
-            public void windowOpened(WindowEvent e)
-            {
+        levelCreatorFrame.addWindowListener(new WindowListener() {
+            public void windowOpened(WindowEvent e) {
             }
 
-            public void windowClosing(WindowEvent e)
-            {
+            public void windowClosing(WindowEvent e) {
                 skilltreeCreatorFrame.setEnabled(true);
             }
 
-            public void windowClosed(WindowEvent e)
-            {
+            public void windowClosed(WindowEvent e) {
             }
 
-            public void windowIconified(WindowEvent e)
-            {
+            public void windowIconified(WindowEvent e) {
             }
 
-            public void windowDeiconified(WindowEvent e)
-            {
+            public void windowDeiconified(WindowEvent e) {
             }
 
-            public void windowActivated(WindowEvent e)
-            {
+            public void windowActivated(WindowEvent e) {
             }
 
-            public void windowDeactivated(WindowEvent e)
-            {
+            public void windowDeactivated(WindowEvent e) {
             }
         });
 
@@ -164,41 +139,32 @@ public class GuiMain
         skillPropertyEditorFrame.setIconImage(logoImage);
         skillPropertyEditorFrame.pack();
         skillPropertyEditorFrame.setLocationRelativeTo(null);
-        skillPropertyEditorFrame.addWindowListener(new WindowListener()
-        {
-            public void windowOpened(WindowEvent e)
-            {
+        skillPropertyEditorFrame.addWindowListener(new WindowListener() {
+            public void windowOpened(WindowEvent e) {
             }
 
-            public void windowClosing(WindowEvent e)
-            {
+            public void windowClosing(WindowEvent e) {
                 levelCreatorFrame.setEnabled(true);
             }
 
-            public void windowClosed(WindowEvent e)
-            {
+            public void windowClosed(WindowEvent e) {
             }
 
-            public void windowIconified(WindowEvent e)
-            {
+            public void windowIconified(WindowEvent e) {
             }
 
-            public void windowDeiconified(WindowEvent e)
-            {
+            public void windowDeiconified(WindowEvent e) {
             }
 
-            public void windowActivated(WindowEvent e)
-            {
+            public void windowActivated(WindowEvent e) {
             }
 
-            public void windowDeactivated(WindowEvent e)
-            {
+            public void windowDeactivated(WindowEvent e) {
             }
         });
     }
 
-    public static void registerSkillsInfo()
-    {
+    public static void registerSkillsInfo() {
         SkillsInfo.registerSkill(BeaconInfo.class);
         SkillsInfo.registerSkill(BehaviorInfo.class);
         SkillsInfo.registerSkill(ControlInfo.class);

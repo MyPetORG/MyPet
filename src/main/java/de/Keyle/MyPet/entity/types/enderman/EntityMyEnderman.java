@@ -27,56 +27,44 @@ import net.minecraft.server.v1_6_R2.*;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
-public class EntityMyEnderman extends EntityMyPet
-{
-    public EntityMyEnderman(World world, MyPet myPet)
-    {
+public class EntityMyEnderman extends EntityMyPet {
+    public EntityMyEnderman(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    public int getBlockData()
-    {
+    public int getBlockData() {
         return ((MyEnderman) myPet).BlockData;
     }
 
-    public int getBlockID()
-    {
+    public int getBlockID() {
         return ((MyEnderman) myPet).BlockID;
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.endermen.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.endermen.hit";
     }
 
     @Override
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-        {
-            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking())
-            {
-                if (getBlockID() != 0)
-                {
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking()) {
+                if (getBlockID() != 0) {
                     EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -86,16 +74,12 @@ public class EntityMyEnderman extends EntityMyPet
 
                     return true;
                 }
-            }
-            else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking())
-            {
+            } else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking()) {
                 setBlock(itemStack.id, itemStack.getData());
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
+                if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
-                if (itemStack.count <= 0)
-                {
+                if (itemStack.count <= 0) {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
             }
@@ -103,27 +87,23 @@ public class EntityMyEnderman extends EntityMyPet
         return false;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0));  // blockID
         this.datawatcher.a(17, new Byte((byte) 0));  // blockData
         this.datawatcher.a(18, new Byte((byte) 0));  // face(angry)
     }
 
-    public boolean isScreaming()
-    {
+    public boolean isScreaming() {
         return ((MyEnderman) myPet).isScreaming;
     }
 
-    public void setScreaming(boolean screaming)
-    {
+    public void setScreaming(boolean screaming) {
         this.datawatcher.watch(18, (byte) (screaming ? 1 : 0));
         ((MyEnderman) myPet).isScreaming = screaming;
     }
 
-    public void setBlock(int blockID, int blockData)
-    {
+    public void setBlock(int blockID, int blockData) {
         this.datawatcher.watch(16, (byte) (blockID & 0xFF));
         ((MyEnderman) myPet).BlockID = blockID;
 
@@ -131,10 +111,8 @@ public class EntityMyEnderman extends EntityMyPet
         ((MyEnderman) myPet).BlockData = blockData;
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setScreaming(((MyEnderman) myPet).isScreaming());

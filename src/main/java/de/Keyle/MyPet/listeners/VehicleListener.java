@@ -27,21 +27,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
-public class VehicleListener implements Listener
-{
+public class VehicleListener implements Listener {
     @EventHandler
-    public void onVehicleEnter(final VehicleEnterEvent event)
-    {
-        if (event.getEntered() instanceof Player)
-        {
+    public void onVehicleEnter(final VehicleEnterEvent event) {
+        if (event.getEntered() instanceof Player) {
             Player player = (Player) event.getEntered();
-            if (MyPetList.hasMyPet(player))
-            {
+            if (MyPetList.hasMyPet(player)) {
                 MyPetList.getMyPet(player).removePet(true);
             }
         }
-        if (event.getEntered() instanceof MyPetEntity)
-        {
+        if (event.getEntered() instanceof MyPetEntity) {
             event.setCancelled(true);
         }
     }

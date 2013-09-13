@@ -26,8 +26,7 @@ import org.spout.nbt.StringTag;
 
 import javax.swing.*;
 
-public class Thorns implements SkillPropertiesPanel
-{
+public class Thorns implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JTextField chanceInput;
     private JRadioButton addChanceRadioButton;
@@ -38,37 +37,31 @@ public class Thorns implements SkillPropertiesPanel
 
     private CompoundTag compoundTag;
 
-    public Thorns(CompoundTag compoundTag)
-    {
+    public Thorns(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         chanceInput.setText(chanceInput.getText().replaceAll("[^0-9]*", ""));
-        if (chanceInput.getText().length() == 0)
-        {
+        if (chanceInput.getText().length() == 0) {
             chanceInput.setText("0");
         }
 
         reflectionInput.setText(reflectionInput.getText().replaceAll("[^0-9]*", ""));
-        if (reflectionInput.getText().length() == 0)
-        {
+        if (reflectionInput.getText().length() == 0) {
             reflectionInput.setText("0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("addset_chance", new StringTag("addset_chance", addChanceRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("chance", new IntTag("chance", Integer.parseInt(chanceInput.getText())));
 
@@ -79,31 +72,22 @@ public class Thorns implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (!compoundTag.getValue().containsKey("addset_chance") || ((StringTag) compoundTag.getValue().get("addset_chance")).getValue().equals("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (!compoundTag.getValue().containsKey("addset_chance") || ((StringTag) compoundTag.getValue().get("addset_chance")).getValue().equals("add")) {
             addChanceRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setChanceRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("chance"))
-        {
+        if (compoundTag.getValue().containsKey("chance")) {
             chanceInput.setText("" + ((IntTag) compoundTag.getValue().get("chance")).getValue());
         }
 
-        if (!compoundTag.getValue().containsKey("addset_reflection") || ((StringTag) compoundTag.getValue().get("addset_reflection")).getValue().equals("add"))
-        {
+        if (!compoundTag.getValue().containsKey("addset_reflection") || ((StringTag) compoundTag.getValue().get("addset_reflection")).getValue().equals("add")) {
             addReflectionRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setReflectionRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("reflection"))
-        {
+        if (compoundTag.getValue().containsKey("reflection")) {
             reflectionInput.setText("" + ((IntTag) compoundTag.getValue().get("reflection")).getValue());
         }
     }

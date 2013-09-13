@@ -41,20 +41,16 @@ import org.bukkit.command.CommandSender;
 
 import java.io.File;
 
-public class CommandOptionReloadSkilltrees implements CommandOption
-{
+public class CommandOptionReloadSkilltrees implements CommandOption {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
         SkillTreeMobType.clearMobTypes();
         String[] petTypes = new String[MyPetType.values().length + 1];
         petTypes[0] = "default";
-        for (int i = 1 ; i <= MyPetType.values().length ; i++)
-        {
+        for (int i = 1; i <= MyPetType.values().length; i++) {
             petTypes[i] = MyPetType.values()[i - 1].getTypeName();
         }
-        for (MyPet myPet : MyPetList.getAllActiveMyPets())
-        {
+        for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             myPet.getSkills().reset();
         }
 
@@ -63,73 +59,53 @@ public class CommandOptionReloadSkilltrees implements CommandOption
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
-        for (MyPetType mobType : MyPetType.values())
-        {
+        for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);
             SkillTreeLoader.manageInheritance(skillTreeMobType);
         }
 
-        for (MyPet myPet : MyPetList.getAllActiveMyPets())
-        {
+        for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             myPet.getSkills().reset();
 
             SkillTree skillTree = myPet.getSkillTree();
-            if (skillTree != null)
-            {
+            if (skillTree != null) {
                 String skilltreeName = skillTree.getName();
-                if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName()))
-                {
+                if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                     SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByPetType(myPet.getPetType());
 
-                    if (mobType.hasSkillTree(skilltreeName))
-                    {
+                    if (mobType.hasSkillTree(skilltreeName)) {
                         skillTree = mobType.getSkillTree(skilltreeName);
-                    }
-                    else
-                    {
+                    } else {
                         skillTree = null;
                     }
-                }
-                else
-                {
+                } else {
                     skillTree = null;
                 }
             }
             myPet.setSkilltree(skillTree);
-            if (skillTree != null)
-            {
+            if (skillTree != null) {
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
-                for (ISkillInstance skill : myPet.getSkills().getSkills())
-                {
-                    if (skill.isActive())
-                    {
+                for (ISkillInstance skill : myPet.getSkills().getSkills()) {
+                    if (skill.isActive()) {
                         myPet.sendMessageToOwner("  " + ChatColor.GREEN + skill.getName() + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
             }
         }
-        for (InactiveMyPet myPet : MyPetList.getAllInactiveMyPets())
-        {
+        for (InactiveMyPet myPet : MyPetList.getAllInactiveMyPets()) {
             SkillTree skillTree = myPet.getSkillTree();
-            if (skillTree != null)
-            {
+            if (skillTree != null) {
                 String skilltreeName = skillTree.getName();
-                if (SkillTreeMobType.getMobTypeByPetType(myPet.getPetType()) != null)
-                {
+                if (SkillTreeMobType.getMobTypeByPetType(myPet.getPetType()) != null) {
                     SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByPetType(myPet.getPetType());
 
-                    if (mobType.hasSkillTree(skilltreeName))
-                    {
+                    if (mobType.hasSkillTree(skilltreeName)) {
                         skillTree = mobType.getSkillTree(skilltreeName);
-                    }
-                    else
-                    {
+                    } else {
                         skillTree = null;
                     }
-                }
-                else
-                {
+                } else {
                     skillTree = null;
                 }
             }

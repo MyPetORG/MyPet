@@ -29,22 +29,18 @@ import org.bukkit.ChatColor;
 import static org.bukkit.Material.SUGAR;
 
 @MyPetInfo(food = {SUGAR})
-public class MySilverfish extends MyPet
-{
-    public MySilverfish(MyPetPlayer petOwner)
-    {
+public class MySilverfish extends MyPet {
+    public MySilverfish(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Silverfish;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MySilverfish{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

@@ -30,22 +30,18 @@ import static org.bukkit.Material.CARROT;
 import static org.bukkit.Material.SNOW_BALL;
 
 @MyPetInfo(food = {CARROT, SNOW_BALL})
-public class MySnowman extends MyPet
-{
-    public MySnowman(MyPetPlayer petOwner)
-    {
+public class MySnowman extends MyPet {
+    public MySnowman(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Snowman;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MySnowman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

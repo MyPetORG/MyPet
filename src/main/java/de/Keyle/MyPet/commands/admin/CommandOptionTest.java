@@ -24,11 +24,9 @@ import de.Keyle.MyPet.api.commands.CommandOption;
 import de.Keyle.MyPet.util.BukkitUtil;
 import org.bukkit.command.CommandSender;
 
-public class CommandOptionTest implements CommandOption
-{
+public class CommandOptionTest implements CommandOption {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
         String lang = BukkitUtil.getCommandSenderLanguage(sender);
 
         return true;

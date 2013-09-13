@@ -25,75 +25,59 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 
-public class Sit extends AIGoal
-{
+public class Sit extends AIGoal {
     private EntityMyPet entityMyPet;
     private boolean sitting = false;
 
-    public Sit(EntityMyPet entityMyPet)
-    {
+    public Sit(EntityMyPet entityMyPet) {
         this.entityMyPet = entityMyPet;
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf))
+    public boolean shouldStart() {
+        if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf)) {
+            return false;
+        } else if (this.entityMyPet.H()) // -> isInWater()
         {
             return false;
-        }
-        else if (this.entityMyPet.H()) // -> isInWater()
-        {
-            return false;
-        }
-        else if (!this.entityMyPet.onGround)
-        {
+        } else if (!this.entityMyPet.onGround) {
             return false;
         }
         return this.sitting;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         this.entityMyPet.petNavigation.stop();
-        if (this.entityMyPet instanceof EntityMyOcelot)
-        {
+        if (this.entityMyPet instanceof EntityMyOcelot) {
             ((EntityMyOcelot) this.entityMyPet).applySitting(true);
         }
-        if (this.entityMyPet instanceof EntityMyWolf)
-        {
+        if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(true);
         }
         entityMyPet.setGoalTarget(null);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
 
-        if (this.entityMyPet instanceof EntityMyOcelot)
-        {
+        if (this.entityMyPet instanceof EntityMyOcelot) {
             ((EntityMyOcelot) this.entityMyPet).applySitting(false);
         }
-        if (this.entityMyPet instanceof EntityMyWolf)
-        {
+        if (this.entityMyPet instanceof EntityMyWolf) {
             ((EntityMyWolf) this.entityMyPet).applySitting(false);
         }
     }
 
-    public void setSitting(boolean sitting)
-    {
+    public void setSitting(boolean sitting) {
         this.sitting = sitting;
     }
 
-    public boolean isSitting()
-    {
+    public boolean isSitting() {
         return this.sitting;
     }
 
-    public void toogleSitting()
-    {
+    public void toogleSitting() {
         this.sitting = !this.sitting;
     }
 }

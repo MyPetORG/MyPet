@@ -86,8 +86,7 @@ import org.bukkit.entity.EntityType;
 
 import java.lang.reflect.Constructor;
 
-public enum MyPetType
-{
+public enum MyPetType {
     Bat(EntityType.BAT, "Bat", EntityMyBat.class, MyBat.class),
     Blaze(EntityType.BLAZE, "Blaze", EntityMyBlaze.class, MyBlaze.class),
     CaveSpider(EntityType.CAVE_SPIDER, "CaveSpider", EntityMyCaveSpider.class, MyCaveSpider.class),
@@ -122,80 +121,62 @@ public enum MyPetType
     private Class<? extends EntityMyPet> entityClass;
     private Class<? extends MyPet> myPetClass;
 
-    private MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass)
-    {
+    private MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass) {
         this.bukkitType = bukkitType;
         this.name = typeName;
         this.entityClass = entityClass;
         this.myPetClass = myPetClass;
     }
 
-    public Class<? extends EntityMyPet> getEntityClass()
-    {
+    public Class<? extends EntityMyPet> getEntityClass() {
         return entityClass;
     }
 
-    public EntityType getEntityType()
-    {
+    public EntityType getEntityType() {
         return bukkitType;
     }
 
-    public Class<? extends MyPet> getMyPetClass()
-    {
+    public Class<? extends MyPet> getMyPetClass() {
         return myPetClass;
     }
 
-    public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass)
-    {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.entityClass == entityClass)
-            {
+    public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass) {
+        for (MyPetType myPetType : MyPetType.values()) {
+            if (myPetType.entityClass == entityClass) {
                 return myPetType;
             }
         }
         return null;
     }
 
-    public static MyPetType getMyPetTypeByEntityType(EntityType type)
-    {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.bukkitType == type)
-            {
+    public static MyPetType getMyPetTypeByEntityType(EntityType type) {
+        for (MyPetType myPetType : MyPetType.values()) {
+            if (myPetType.bukkitType == type) {
                 return myPetType;
             }
         }
         return null;
     }
 
-    public static MyPetType getMyPetTypeByName(String name)
-    {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.name.equalsIgnoreCase(name))
-            {
+    public static MyPetType getMyPetTypeByName(String name) {
+        for (MyPetType myPetType : MyPetType.values()) {
+            if (myPetType.name.equalsIgnoreCase(name)) {
                 return myPetType;
             }
         }
         return null;
     }
 
-    public EntityMyPet getNewEntityInstance(World world, MyPet myPet)
-    {
+    public EntityMyPet getNewEntityInstance(World world, MyPet myPet) {
         EntityMyPet petEntity = null;
 
-        try
-        {
+        try {
             Constructor<?> ctor = entityClass.getConstructor(World.class, MyPet.class);
             Object obj = ctor.newInstance(world, myPet);
-            if (obj instanceof EntityMyPet)
-            {
+            if (obj instanceof EntityMyPet) {
                 petEntity = (EntityMyPet) obj;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + entityClass.getName() + " is no valid MyPet(Entity)!");
             DebugLogger.warning(entityClass.getName() + " is no valid MyPet(Entity)!");
             e.printStackTrace();
@@ -203,21 +184,16 @@ public enum MyPetType
         return petEntity;
     }
 
-    public MyPet getNewMyPetInstance(MyPetPlayer owner)
-    {
+    public MyPet getNewMyPetInstance(MyPetPlayer owner) {
         MyPet pet = null;
 
-        try
-        {
+        try {
             Constructor<?> ctor = myPetClass.getConstructor(MyPetPlayer.class);
             Object obj = ctor.newInstance(owner);
-            if (obj instanceof MyPet)
-            {
+            if (obj instanceof MyPet) {
                 pet = (MyPet) obj;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             MyPetLogger.write(ChatColor.RED + myPetClass.getName() + " is no valid MyPet!");
             DebugLogger.warning(myPetClass.getName() + " is no valid MyPet!");
@@ -225,17 +201,13 @@ public enum MyPetType
         return pet;
     }
 
-    public String getTypeName()
-    {
+    public String getTypeName() {
         return name;
     }
 
-    public static boolean isLeashableEntityType(EntityType type)
-    {
-        for (MyPetType myPetType : MyPetType.values())
-        {
-            if (myPetType.bukkitType == type)
-            {
+    public static boolean isLeashableEntityType(EntityType type) {
+        for (MyPetType myPetType : MyPetType.values()) {
+            if (myPetType.bukkitType == type) {
                 return true;
             }
         }

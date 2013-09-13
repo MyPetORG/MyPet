@@ -29,14 +29,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class SkillNameTest
-{
+public class SkillNameTest {
     @Test
-    public void testSkillNames()
-    {
+    public void testSkillNames() {
         MyPetPlugin.registerSkills();
-        for (Class<? extends SkillTreeSkill> registeredSkills : Skills.getRegisteredSkills())
-        {
+        for (Class<? extends SkillTreeSkill> registeredSkills : Skills.getRegisteredSkills()) {
             SkillName sn = registeredSkills.getAnnotation(SkillName.class);
             assertNotNull(sn);
             assertNotNull(sn.value());

@@ -31,19 +31,16 @@ import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ConfigurationSnakeYAML
-{
+public class ConfigurationSnakeYAML {
     public File yamlFile;
     private Map<String, Object> config;
     Yaml yaml;
 
-    public ConfigurationSnakeYAML(String path)
-    {
+    public ConfigurationSnakeYAML(String path) {
         this(new File(path));
     }
 
-    public ConfigurationSnakeYAML(File file)
-    {
+    public ConfigurationSnakeYAML(File file) {
         yamlFile = file;
         DumperOptions options = new DumperOptions();
         options.setIndent(2);
@@ -51,55 +48,42 @@ public class ConfigurationSnakeYAML
         yaml = new Yaml(options);
     }
 
-    public Map<String, Object> getConfig()
-    {
-        if (config == null)
-        {
+    public Map<String, Object> getConfig() {
+        if (config == null) {
             clearConfig();
         }
         return config;
     }
 
     @SuppressWarnings("unchecked")
-    public boolean load()
-    {
-        try
-        {
+    public boolean load() {
+        try {
             config = (Map<String, Object>) yaml.load(new FileInputStream(yamlFile));
             return true;
-        }
-        catch (ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             MyPetLogger.write(ChatColor.RED + "Could not parse/load " + yamlFile.getName());
             DebugLogger.warning("Could not parse/load " + yamlFile.getName());
             return false;
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean save()
-    {
-        try
-        {
+    public boolean save() {
+        try {
             FileOutputStream os = new FileOutputStream(yamlFile);
             os.write(yaml.dump(config).getBytes());
             os.close();
 
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public void clearConfig()
-    {
+    public void clearConfig() {
         config = new LinkedHashMap<String, Object>();
     }
 }

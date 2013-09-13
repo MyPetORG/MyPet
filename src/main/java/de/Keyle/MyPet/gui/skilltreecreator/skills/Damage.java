@@ -32,8 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Damage implements SkillPropertiesPanel
-{
+public class Damage implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JTextField damageInput;
     private JRadioButton addDamageRadioButton;
@@ -41,69 +40,52 @@ public class Damage implements SkillPropertiesPanel
 
     private CompoundTag compoundTag;
 
-    public Damage(CompoundTag compoundTag)
-    {
+    public Damage(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
 
 
-        damageInput.addKeyListener(new KeyListener()
-        {
-            public void keyTyped(KeyEvent arg0)
-            {
+        damageInput.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
             }
 
-            public void keyReleased(KeyEvent arg0)
-            {
+            public void keyReleased(KeyEvent arg0) {
                 damageInput.setText(damageInput.getText().replaceAll("[^0-9\\.]*", ""));
             }
 
-            public void keyPressed(KeyEvent arg0)
-            {
+            public void keyPressed(KeyEvent arg0) {
             }
         });
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         damageInput.setText(damageInput.getText().replaceAll("[^0-9\\.]*", ""));
-        if (damageInput.getText().length() > 0)
-        {
-            if (damageInput.getText().matches("\\.+"))
-            {
+        if (damageInput.getText().length() > 0) {
+            if (damageInput.getText().matches("\\.+")) {
                 damageInput.setText("0.0");
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
                     Matcher regexMatcher = regex.matcher(damageInput.getText());
                     regexMatcher.find();
                     damageInput.setText(regexMatcher.group());
-                }
-                catch (PatternSyntaxException ignored)
-                {
+                } catch (PatternSyntaxException ignored) {
                     damageInput.setText("0.0");
                 }
             }
-        }
-        else
-        {
+        } else {
             damageInput.setText("0.0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("addset_damage", new StringTag("addset_damage", addDamageRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", Double.parseDouble(damageInput.getText())));
 
@@ -111,24 +93,18 @@ public class Damage implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (!compoundTag.getValue().containsKey("addset_damage") || ((StringTag) compoundTag.getValue().get("addset_damage")).getValue().equals("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (!compoundTag.getValue().containsKey("addset_damage") || ((StringTag) compoundTag.getValue().get("addset_damage")).getValue().equals("add")) {
             addDamageRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setdamageRadioButton.setSelected(true);
         }
 
-        if (compoundTag.getValue().containsKey("damage"))
-        {
+        if (compoundTag.getValue().containsKey("damage")) {
             compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", ((IntTag) compoundTag.getValue().get("damage")).getValue()));
             compoundTag.getValue().remove("damage");
         }
-        if (compoundTag.getValue().containsKey("damage_double"))
-        {
+        if (compoundTag.getValue().containsKey("damage_double")) {
             damageInput.setText("" + ((DoubleTag) compoundTag.getValue().get("damage_double")).getValue());
         }
     }

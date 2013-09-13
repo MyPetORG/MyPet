@@ -28,21 +28,17 @@ import java.util.ArrayList;
 /**
  * This class will be removed with Minecraft 1.7
  */
-public class NBTTagListHolder extends NBTHolder
-{
+public class NBTTagListHolder extends NBTHolder {
     protected ArrayList<NBTHolder> holderList = new ArrayList<NBTHolder>();
 
-    public NBTTagListHolder(String paramString)
-    {
+    public NBTTagListHolder(String paramString) {
         this.name = paramString;
     }
 
-    public NBTBase getNBT()
-    {
+    public NBTBase getNBT() {
         NBTTagList tagList = new NBTTagList(this.name);
 
-        for (NBTHolder localcs : this.holderList)
-        {
+        for (NBTHolder localcs : this.holderList) {
             tagList.add(localcs.getNBT());
         }
 

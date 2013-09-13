@@ -31,66 +31,50 @@ import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
-public class Damage extends DamageInfo implements ISkillInstance
-{
+public class Damage extends DamageInfo implements ISkillInstance {
     private MyPet myPet;
 
-    public Damage(boolean addedByInheritance)
-    {
+    public Damage(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return damage > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof DamageInfo)
-        {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof DamageInfo) {
             boolean isPassive = damage <= 0;
-            if (upgrade.getProperties().getValue().containsKey("damage"))
-            {
+            if (upgrade.getProperties().getValue().containsKey("damage")) {
                 int damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
                 upgrade.getProperties().getValue().remove("damage");
                 DoubleTag doubleTag = new DoubleTag("damage_double", damage);
                 upgrade.getProperties().getValue().put("damage_double", doubleTag);
             }
-            if (upgrade.getProperties().getValue().containsKey("damage_double"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("damage_double")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add")) {
                     damage += ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
-                }
-                else
-                {
+                } else {
                     damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
                 }
-                if (!quiet)
-                {
+                if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Damage.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), damage));
                 }
             }
-            if (isPassive != (damage <= 0))
-            {
-                if (myPet.getStatus() == PetState.Here)
-                {
+            if (isPassive != (damage <= 0)) {
+                if (myPet.getStatus() == PetState.Here) {
                     getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
                     getMyPet().getCraftPet().getHandle().setPathfinder();
-                    if (damage == 0)
-                    {
+                    if (damage == 0) {
                         getMyPet().getCraftPet().getHandle().setGoalTarget(null);
                     }
                 }
@@ -98,16 +82,13 @@ public class Damage extends DamageInfo implements ISkillInstance
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return " -> " + ChatColor.GOLD + damage + ChatColor.RESET + " " + Locales.getString("Name.Damage", myPet.getOwner());
     }
 
-    public void reset()
-    {
+    public void reset() {
         damage = 0;
-        if (myPet.getStatus() == PetState.Here)
-        {
+        if (myPet.getStatus() == PetState.Here) {
             getMyPet().getCraftPet().getHandle().petPathfinderSelector.clearGoals();
             getMyPet().getCraftPet().getHandle().petTargetSelector.clearGoals();
             getMyPet().getCraftPet().getHandle().setPathfinder();
@@ -115,13 +96,11 @@ public class Damage extends DamageInfo implements ISkillInstance
         }
     }
 
-    public double getDamage()
-    {
+    public double getDamage() {
         return damage;
     }
 
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Damage newSkill = new Damage(isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

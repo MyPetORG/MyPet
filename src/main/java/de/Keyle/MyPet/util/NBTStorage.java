@@ -22,8 +22,7 @@ package de.Keyle.MyPet.util;
 
 import org.spout.nbt.CompoundTag;
 
-public interface NBTStorage
-{
+public interface NBTStorage {
     public CompoundTag save();
 
     public void load(CompoundTag compound);

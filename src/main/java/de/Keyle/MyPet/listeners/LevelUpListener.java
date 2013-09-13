@@ -43,18 +43,14 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.List;
 
-public class LevelUpListener implements Listener
-{
+public class LevelUpListener implements Listener {
     @EventHandler
-    public void onLevelUp(MyPetLevelUpEvent event)
-    {
+    public void onLevelUp(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
-        if (!event.isQuiet())
-        {
+        if (!event.isQuiet()) {
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LvlUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
 
-            if (Experience.FIREWORK_ON_LEVELUP)
-            {
+            if (Experience.FIREWORK_ON_LEVELUP) {
                 Location location = myPet.getLocation();
                 location.setY(location.getY() - 1.5);
                 location.setPitch(-90);
@@ -70,25 +66,20 @@ public class LevelUpListener implements Listener
         }
         int lvl = event.getLevel();
         SkillTree skillTree = myPet.getSkillTree();
-        if (skillTree != null && skillTree.hasLevel(lvl))
-        {
+        if (skillTree != null && skillTree.hasLevel(lvl)) {
             SkillTreeLevel level = skillTree.getLevel(lvl);
-            if (!event.isQuiet())
-            {
-                if (level.hasLevelupMessage())
-                {
+            if (!event.isQuiet()) {
+                if (level.hasLevelupMessage()) {
                     myPet.sendMessageToOwner(Colorizer.setColors(level.getLevelupMessage()));
                 }
             }
 
             List<ISkillInfo> skillList = level.getSkills();
-            for (ISkillInfo skill : skillList)
-            {
+            for (ISkillInfo skill : skillList) {
                 myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
             }
         }
-        if (myPet.getStatus() == PetState.Here)
-        {
+        if (myPet.getStatus() == PetState.Here) {
             myPet.setHealth(myPet.getMaxHealth());
             myPet.setHungerValue(100);
         }

@@ -39,18 +39,15 @@ import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class MyPetList
-{
+public class MyPetList {
     private static final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
     private static final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
     private static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> mInctivePets = ArrayListMultimap.create();
 
     // Active -------------------------------------------------------------------
 
-    private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet)
-    {
-        if (inactiveMyPet.getOwner().isOnline())
-        {
+    private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet) {
+        if (inactiveMyPet.getOwner().isOnline()) {
             MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getOwner());
             activeMyPet.setUUID(inactiveMyPet.getUUID());
             activeMyPet.petName = inactiveMyPet.getPetName();
@@ -60,26 +57,19 @@ public class MyPetList
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
             activeMyPet.lastUsed = inactiveMyPet.lastUsed;
 
-            if (activeMyPet.respawnTime > 0)
-            {
+            if (activeMyPet.respawnTime > 0) {
                 activeMyPet.status = PetState.Dead;
-            }
-            else
-            {
+            } else {
                 activeMyPet.status = PetState.Despawned;
             }
 
             activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
             Collection<ISkillInstance> skills = activeMyPet.getSkills().getSkills();
-            if (skills.size() > 0)
-            {
-                for (ISkillInstance skill : skills)
-                {
-                    if (skill instanceof ISkillStorage)
-                    {
+            if (skills.size() > 0) {
+                for (ISkillInstance skill : skills) {
+                    if (skill instanceof ISkillStorage) {
                         ISkillStorage storageSkill = (ISkillStorage) skill;
-                        if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName()))
-                        {
+                        if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName())) {
                             storageSkill.load((CompoundTag) inactiveMyPet.getSkills().getValue().get(skill.getName()));
                         }
                     }
@@ -92,70 +82,57 @@ public class MyPetList
         return null;
     }
 
-    private static void addMyPet(MyPet myPet)
-    {
+    private static void addMyPet(MyPet myPet) {
         mActivePetsPlayer.put(myPet, myPet.getOwner());
     }
 
-    private static void removeMyPet(MyPet myPet)
-    {
-        if (myPet == null)
-        {
+    private static void removeMyPet(MyPet myPet) {
+        if (myPet == null) {
             return;
         }
         mActivePetsPlayer.remove(myPet);
     }
 
-    public static MyPet getMyPet(Player owner)
-    {
+    public static MyPet getMyPet(Player owner) {
         return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
-    public static MyPet getMyPet(String owner)
-    {
+    public static MyPet getMyPet(String owner) {
         return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
-    public static MyPet[] getAllActiveMyPets()
-    {
+    public static MyPet[] getAllActiveMyPets() {
         MyPet[] allActiveMyPets = new MyPet[mActivePetsPlayer.keySet().size()];
         int i = 0;
-        for (MyPet myPet : mActivePetsPlayer.keySet())
-        {
+        for (MyPet myPet : mActivePetsPlayer.keySet()) {
             allActiveMyPets[i++] = myPet;
         }
         return allActiveMyPets;
     }
 
-    public static boolean hasMyPet(Player player)
-    {
+    public static boolean hasMyPet(Player player) {
         return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(player));
     }
 
-    public static boolean hasMyPet(String name)
-    {
+    public static boolean hasMyPet(String name) {
         return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(name));
     }
 
     // Inactive -----------------------------------------------------------------
 
-    public static Collection<InactiveMyPet> getAllInactiveMyPets()
-    {
+    public static Collection<InactiveMyPet> getAllInactiveMyPets() {
         return mInctivePets.values();
     }
 
-    public static boolean hasInactiveMyPets(Player player)
-    {
+    public static boolean hasInactiveMyPets(Player player) {
         return mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(player));
     }
 
-    public static boolean hasInactiveMyPets(MyPetPlayer myPetPlayer)
-    {
+    public static boolean hasInactiveMyPets(MyPetPlayer myPetPlayer) {
         return mInctivePets.containsKey(myPetPlayer);
     }
 
-    private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet)
-    {
+    private static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet) {
         InactiveMyPet inactiveMyPet = new InactiveMyPet(activeMyPet.getOwner());
         inactiveMyPet.setUUID(activeMyPet.getUUID());
         inactiveMyPet.setPetName(activeMyPet.petName);
@@ -173,48 +150,39 @@ public class MyPetList
         return inactiveMyPet;
     }
 
-    public static List<InactiveMyPet> getInactiveMyPets(MyPetPlayer owner)
-    {
+    public static List<InactiveMyPet> getInactiveMyPets(MyPetPlayer owner) {
         return mInctivePets.get(owner);
     }
 
-    public static List<InactiveMyPet> getInactiveMyPets(Player owner)
-    {
+    public static List<InactiveMyPet> getInactiveMyPets(Player owner) {
         return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
 
-    public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet)
-    {
+    public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet) {
         mInctivePets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
     }
 
-    public static void addInactiveMyPet(InactiveMyPet inactiveMyPet)
-    {
-        if (!mInctivePets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet))
-        {
+    public static void addInactiveMyPet(InactiveMyPet inactiveMyPet) {
+        if (!mInctivePets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet)) {
             mInctivePets.put(inactiveMyPet.getOwner(), inactiveMyPet);
         }
     }
 
     // All ----------------------------------------------------------------------
 
-    public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet)
-    {
-        if (inactiveMyPet.getOwner().hasMyPet())
-        {
+    public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet) {
+        if (inactiveMyPet.getOwner().hasMyPet()) {
             setMyPetInactive(inactiveMyPet.getOwner());
         }
 
         boolean isCancelled = false;
-        if (Configuration.ENABLE_EVENTS)
-        {
+        if (Configuration.ENABLE_EVENTS) {
             MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
             getServer().getPluginManager().callEvent(event);
             isCancelled = event.isCancelled();
         }
 
-        if (!isCancelled)
-        {
+        if (!isCancelled) {
             MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
             addMyPet(activeMyPet);
             removeInactiveMyPet(inactiveMyPet);
@@ -227,22 +195,18 @@ public class MyPetList
         return null;
     }
 
-    public static InactiveMyPet setMyPetInactive(MyPetPlayer owner)
-    {
-        if (mActivePlayerPets.containsKey(owner))
-        {
+    public static InactiveMyPet setMyPetInactive(MyPetPlayer owner) {
+        if (mActivePlayerPets.containsKey(owner)) {
             MyPet activeMyPet = owner.getMyPet();
 
             boolean isCancelled = false;
-            if (Configuration.ENABLE_EVENTS)
-            {
+            if (Configuration.ENABLE_EVENTS) {
                 MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
                 getServer().getPluginManager().callEvent(event);
                 isCancelled = event.isCancelled();
             }
 
-            if (isCancelled)
-            {
+            if (isCancelled) {
                 return null;
             }
             activeMyPet.removePet();
@@ -259,51 +223,40 @@ public class MyPetList
         return null;
     }
 
-    public static IMyPet[] getAllMyPets()
-    {
+    public static IMyPet[] getAllMyPets() {
         IMyPet[] allMyPets = new IMyPet[countMyPets()];
         int i = 0;
-        for (MyPet myPet : mActivePetsPlayer.keySet())
-        {
+        for (MyPet myPet : mActivePetsPlayer.keySet()) {
             allMyPets[i++] = myPet;
         }
-        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets())
-        {
+        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets()) {
             allMyPets[i++] = inactiveMyPet;
         }
         return allMyPets;
     }
 
-    public static void clearList()
-    {
+    public static void clearList() {
         mActivePlayerPets.clear();
         mInctivePets.clear();
     }
 
-    public static int countMyPets()
-    {
+    public static int countMyPets() {
         return countActiveMyPets() + getAllInactiveMyPets().size();
     }
 
-    public static int countActiveMyPets()
-    {
+    public static int countActiveMyPets() {
         return mActivePetsPlayer.size();
     }
 
-    public static int countMyPets(MyPetType myPetType)
-    {
+    public static int countMyPets(MyPetType myPetType) {
         int counter = 0;
-        for (MyPet myPet : mActivePetsPlayer.keySet())
-        {
-            if (myPet.getPetType() == myPetType)
-            {
+        for (MyPet myPet : mActivePetsPlayer.keySet()) {
+            if (myPet.getPetType() == myPetType) {
                 counter++;
             }
         }
-        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets())
-        {
-            if (inactiveMyPet.getPetType() == myPetType)
-            {
+        for (InactiveMyPet inactiveMyPet : getAllInactiveMyPets()) {
+            if (inactiveMyPet.getPetType() == myPetType) {
                 counter++;
             }
         }

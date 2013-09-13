@@ -37,58 +37,41 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandInventory implements CommandExecutor, TabCompleter
-{
+public class CommandInventory implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (args.length == 0)
-            {
-                if (MyPetList.hasMyPet(player))
-                {
+            if (args.length == 0) {
+                if (MyPetList.hasMyPet(player)) {
                     MyPet myPet = MyPetList.getMyPet(player);
-                    if (myPet.getStatus() == PetState.Despawned)
-                    {
+                    if (myPet.getStatus() == PetState.Despawned) {
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", player), myPet.getPetName()));
                         return true;
                     }
-                    if (myPet.getStatus() == PetState.Dead)
-                    {
+                    if (myPet.getStatus() == PetState.Dead) {
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", player), myPet.getPetName(), myPet.getRespawnTime()));
                         return true;
                     }
-                    if (!Permissions.hasExtended(player, "MyPet.user.extended.Inventory") && !Permissions.has(player, "MyPet.admin", false))
-                    {
+                    if (!Permissions.hasExtended(player, "MyPet.user.extended.Inventory") && !Permissions.has(player, "MyPet.admin", false)) {
                         myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", player));
                         return true;
                     }
-                    if (myPet.getSkills().hasSkill(Inventory.class))
-                    {
+                    if (myPet.getSkills().hasSkill(Inventory.class)) {
                         myPet.getSkills().getSkill(Inventory.class).activate();
                     }
-                }
-                else
-                {
+                } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                 }
-            }
-            else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false))
-            {
+            } else if (args.length == 1 && Permissions.has(player, "MyPet.admin", false)) {
                 Player petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-                if (petOwner == null || !petOwner.isOnline())
-                {
+                if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Locales.getString("Message.No.PlayerOnline", player));
-                }
-                else if (MyPetList.hasMyPet(petOwner))
-                {
+                } else if (MyPetList.hasMyPet(petOwner)) {
                     MyPet myPet = MyPetList.getMyPet(petOwner);
-                    if (myPet.getSkills().isSkillActive(Inventory.class))
-                    {
+                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         myPet.getSkills().getSkill(Inventory.class).openInventory(player);
                     }
                 }
@@ -100,10 +83,8 @@ public class CommandInventory implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false))
-        {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false)) {
             return null;
         }
         return emptyList;

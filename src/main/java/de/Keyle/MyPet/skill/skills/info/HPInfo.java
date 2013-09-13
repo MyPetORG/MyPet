@@ -32,28 +32,23 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"hp_double", "addset_hp"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "add"})
-public class HPInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class HPInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double hpIncrease = 0;
 
-    public HPInfo(boolean addedByInheritance)
-    {
+    public HPInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Health(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         HPInfo newSkill = new HPInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

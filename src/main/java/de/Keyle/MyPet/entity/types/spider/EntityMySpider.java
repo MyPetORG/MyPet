@@ -26,39 +26,32 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
-public class EntityMySpider extends EntityMyPet
-{
-    public EntityMySpider(World world, MyPet myPet)
-    {
+public class EntityMySpider extends EntityMyPet {
+    public EntityMySpider(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.spider.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.spider.say";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.spider.say";
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0)); // N/A
     }
 
     @Override
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.spider.step", 0.15F, 1.0F);
     }
 }

@@ -22,25 +22,20 @@ package de.Keyle.MyPet.util.locale;
 
 import java.util.*;
 
-public class ResourceBundle extends java.util.ResourceBundle
-{
+public class ResourceBundle extends java.util.ResourceBundle {
     private List<java.util.ResourceBundle> extensionBundles = new ArrayList<java.util.ResourceBundle>();
     private boolean noParent = false;
 
-    public ResourceBundle(java.util.ResourceBundle parent)
-    {
+    public ResourceBundle(java.util.ResourceBundle parent) {
         this.parent = parent;
     }
 
-    public ResourceBundle()
-    {
+    public ResourceBundle() {
         noParent = true;
     }
 
-    public void addExtensionBundle(java.util.ResourceBundle bundle)
-    {
-        if (bundle == null)
-        {
+    public void addExtensionBundle(java.util.ResourceBundle bundle) {
+        if (bundle == null) {
             return;
         }
 
@@ -48,53 +43,41 @@ public class ResourceBundle extends java.util.ResourceBundle
     }
 
     @SuppressWarnings("unchecked")
-    public Enumeration<String> getKeys()
-    {
+    public Enumeration<String> getKeys() {
         Set keys = new HashSet();
-        if (!noParent)
-        {
+        if (!noParent) {
             keys.addAll(this.parent.keySet());
         }
 
-        for (java.util.ResourceBundle bundle : this.extensionBundles)
-        {
+        for (java.util.ResourceBundle bundle : this.extensionBundles) {
             keys.addAll(bundle.keySet());
         }
 
         return Collections.enumeration(keys);
     }
 
-    protected Object handleGetObject(String key)
-    {
+    protected Object handleGetObject(String key) {
         Object object;
 
-        if ((object = getObjectFromExtensionBundles(key)) != null)
-        {
+        if ((object = getObjectFromExtensionBundles(key)) != null) {
             return object;
         }
 
         return this.parent.getObject(key);
     }
 
-    private Object getObjectFromExtensionBundles(String key)
-    {
-        if (this.extensionBundles.size() == 0)
-        {
+    private Object getObjectFromExtensionBundles(String key) {
+        if (this.extensionBundles.size() == 0) {
             return null;
         }
-        try
-        {
+        try {
             Object object;
-            for (java.util.ResourceBundle bundle : this.extensionBundles)
-            {
-                if ((object = bundle.getObject(key)) != null)
-                {
+            for (java.util.ResourceBundle bundle : this.extensionBundles) {
+                if ((object = bundle.getObject(key)) != null) {
                     return object;
                 }
             }
-        }
-        catch (MissingResourceException ignored)
-        {
+        } catch (MissingResourceException ignored) {
         }
         return null;
     }

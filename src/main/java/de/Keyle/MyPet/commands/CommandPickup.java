@@ -32,39 +32,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandPickup implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandPickup implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner))
-            {
+            if (MyPetList.hasMyPet(owner)) {
                 MyPet myPet = MyPetList.getMyPet(owner);
 
-                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup"))
-                {
+                if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup")) {
                     sender.sendMessage(Locales.getString("Message.No.Allowed", owner));
                     return true;
-                }
-                else if (myPet.getStatus() == PetState.Despawned)
-                {
+                } else if (myPet.getStatus() == PetState.Despawned) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", owner), myPet.getPetName()));
                     return true;
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
+                } else if (myPet.getStatus() == PetState.Dead) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (myPet.getSkills().hasSkill(Pickup.class))
-                {
+                if (myPet.getSkills().hasSkill(Pickup.class)) {
                     myPet.getSkills().getSkill(Pickup.class).activate();
                 }
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", owner));
             }
             return true;

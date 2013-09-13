@@ -31,105 +31,76 @@ import net.minecraft.server.v1_6_R2.World;
 import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
-public class EntityMyOcelot extends EntityMyPet
-{
+public class EntityMyOcelot extends EntityMyPet {
     public static ConfigItem GROW_UP_ITEM;
     private Sit sitPathfinder;
 
-    public EntityMyOcelot(World world, MyPet myPet)
-    {
+    public EntityMyOcelot(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    public void applySitting(boolean flag)
-    {
+    public void applySitting(boolean flag) {
         int i = this.datawatcher.getByte(16);
-        if (flag)
-        {
+        if (flag) {
             this.datawatcher.watch(16, (byte) (i | 0x1));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
         ((MyOcelot) myPet).isSitting = flag;
     }
 
-    public boolean canMove()
-    {
+    public boolean canMove() {
         return !isSitting();
     }
 
-    public Type getCatType()
-    {
+    public Type getCatType() {
         return ((MyOcelot) myPet).catType;
     }
 
-    public void setCatType(int value)
-    {
+    public void setCatType(int value) {
         this.datawatcher.watch(18, (byte) value);
         ((MyOcelot) myPet).catType = Type.getType(value);
     }
 
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.cat.hitt";
     }
 
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.cat.hitt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return this.random.nextInt(4) == 0 ? "mob.cat.purreow" : "mob.cat.meow";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman))
-        {
-            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking())
-            {
-                if (itemStack.id == 351)
-                {
-                    if (itemStack.getData() == 11)
-                    {
+        if (getOwner().equals(entityhuman)) {
+            if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.id == 351) {
+                    if (itemStack.getData() == 11) {
                         ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
                         return true;
-                    }
-                    else if (itemStack.getData() == 0)
-                    {
+                    } else if (itemStack.getData() == 0) {
                         ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
                         return true;
-                    }
-                    else if (itemStack.getData() == 14)
-                    {
+                    } else if (itemStack.getData() == 14) {
                         ((MyOcelot) myPet).setCatType(Type.RED_CAT);
                         return true;
-                    }
-                    else if (itemStack.getData() == 7)
-                    {
+                    } else if (itemStack.getData() == 7) {
                         ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
                         return true;
                     }
-                }
-                else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getOwner().getPlayer().isSneaking())
-                {
-                    if (isBaby())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
+                } else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getOwner().getPlayer().isSneaking()) {
+                    if (isBaby()) {
+                        if (!entityhuman.abilities.canInstantlyBuild) {
+                            if (--itemStack.count <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
@@ -144,8 +115,7 @@ public class EntityMyOcelot extends EntityMyPet
         return false;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
@@ -154,38 +124,29 @@ public class EntityMyOcelot extends EntityMyPet
 
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyOcelot) myPet).isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
+    public void setBaby(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(12, new Integer(0));
         }
         ((MyOcelot) myPet).isBaby = flag;
     }
 
-    public boolean isSitting()
-    {
+    public boolean isSitting() {
         return this.sitPathfinder.isSitting();
     }
 
-    public void setSitting(boolean flag)
-    {
+    public void setSitting(boolean flag) {
         this.sitPathfinder.setSitting(flag);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             this.sitPathfinder = new Sit(this);
 
             super.setMyPet(myPet);
@@ -196,8 +157,7 @@ public class EntityMyOcelot extends EntityMyPet
         }
     }
 
-    public void setPathfinder()
-    {
+    public void setPathfinder() {
         super.setPathfinder();
         petPathfinderSelector.addGoal("Sit", 2, sitPathfinder);
     }

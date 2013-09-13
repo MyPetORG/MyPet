@@ -32,29 +32,24 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},
         parameterDefaultValues = {"5", "3", "add", "add"})
-public class PoisonInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class PoisonInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected int chance = 0;
     protected int duration = 0;
 
-    public PoisonInfo(boolean addedByInheritance)
-    {
+    public PoisonInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Poison(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         PoisonInfo newSkill = new PoisonInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

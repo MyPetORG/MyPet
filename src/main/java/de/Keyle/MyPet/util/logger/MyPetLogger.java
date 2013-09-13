@@ -23,28 +23,22 @@ package de.Keyle.MyPet.util.logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 
-public class MyPetLogger
-{
+public class MyPetLogger {
     private static ConsoleCommandSender consoleCommandSender = null;
 
-    public static void setConsole(ConsoleCommandSender console)
-    {
+    public static void setConsole(ConsoleCommandSender console) {
         consoleCommandSender = console;
     }
 
-    public static void write(String msg)
-    {
-        if (consoleCommandSender != null)
-        {
+    public static void write(String msg) {
+        if (consoleCommandSender != null) {
             consoleCommandSender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + msg);
             DebugLogger.info("(L) " + msg);
         }
     }
 
-    public static void write(String msg, String source)
-    {
-        if (consoleCommandSender != null)
-        {
+    public static void write(String msg, String source) {
+        if (consoleCommandSender != null) {
             consoleCommandSender.sendMessage("[" + ChatColor.AQUA + source + ChatColor.RESET + "] " + msg);
             DebugLogger.info("(L) " + msg, source);
         }

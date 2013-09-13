@@ -25,56 +25,44 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import org.spout.nbt.*;
 
-public abstract class SkillTreeSkill
-{
+public abstract class SkillTreeSkill {
     private boolean addedByInheritance = false;
     private CompoundTag propertiesCompound;
 
-    public SkillTreeSkill(boolean addedByInheritance)
-    {
+    public SkillTreeSkill(boolean addedByInheritance) {
         this.addedByInheritance = addedByInheritance;
     }
 
-    public String getName()
-    {
+    public String getName() {
         SkillName sn = this.getClass().getAnnotation(SkillName.class);
-        if (sn != null)
-        {
+        if (sn != null) {
             return sn.value();
         }
         return null;
     }
 
-    public void setProperties(CompoundTag propertiesCompound)
-    {
+    public void setProperties(CompoundTag propertiesCompound) {
         this.propertiesCompound = propertiesCompound.clone();
     }
 
-    public CompoundTag getProperties()
-    {
-        if (propertiesCompound == null)
-        {
+    public CompoundTag getProperties() {
+        if (propertiesCompound == null) {
             propertiesCompound = new CompoundTag("Properties", new CompoundMap());
             return propertiesCompound;
         }
         return propertiesCompound;
     }
 
-    public void setDefaultProperties()
-    {
+    public void setDefaultProperties() {
         SkillProperties sp = this.getClass().getAnnotation(SkillProperties.class);
-        if (sp != null)
-        {
-            for (int i = 0 ; i < sp.parameterNames().length ; i++)
-            {
+        if (sp != null) {
+            for (int i = 0; i < sp.parameterNames().length; i++) {
 
                 String propertyName = sp.parameterNames()[i];
                 String defaultPropertyValue = sp.parameterDefaultValues()[i];
                 NBTdatatypes propertyType = sp.parameterTypes()[i];
-                if (!getProperties().getValue().containsKey(propertyName))
-                {
-                    switch (propertyType)
-                    {
+                if (!getProperties().getValue().containsKey(propertyName)) {
+                    switch (propertyType) {
                         case Short:
                             ShortTag shortTag = new ShortTag(propertyName, Short.parseShort(defaultPropertyValue));
                             propertiesCompound.getValue().put(propertyName, shortTag);
@@ -113,19 +101,16 @@ public abstract class SkillTreeSkill
         }
     }
 
-    public boolean isAddedByInheritance()
-    {
+    public boolean isAddedByInheritance() {
         return addedByInheritance;
     }
 
-    public void setIsInherited(boolean flag)
-    {
+    public void setIsInherited(boolean flag) {
         addedByInheritance = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SkillTreeSkill{name=" + getName() + "}";
     }
 }

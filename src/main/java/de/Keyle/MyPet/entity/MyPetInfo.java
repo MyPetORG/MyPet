@@ -30,8 +30,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface MyPetInfo
-{
+public @interface MyPetInfo {
     public Material[] food() default {};
 
     public double hp() default 20D;

@@ -32,36 +32,30 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"damage_double", "addset_damage", "projectile", "rateoffire", "addset_rateoffire"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "add", "Arrow", "35", "add"})
-public class RangedInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class RangedInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double damage = 0;
     protected int rateOfFire = 0;
 
-    public enum Projectiles
-    {
+    public enum Projectiles {
         Arrow, Snowball, LargeFireball, SmallFireball, WitherSkull
     }
 
     protected Projectiles selectedProjectile = Projectiles.Arrow;
 
-    public RangedInfo(boolean addedByInheritance)
-    {
+    public RangedInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Ranged(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         RangedInfo newSkill = new RangedInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

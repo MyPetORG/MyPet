@@ -37,8 +37,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.List;
 
-public class SkilltreeCreator
-{
+public class SkilltreeCreator {
     JComboBox mobTypeComboBox;
     JButton addSkilltreeButton;
     JButton deleteSkilltreeButton;
@@ -63,54 +62,38 @@ public class SkilltreeCreator
     SkillTree skilltreeCopyPaste;
     SkillTreeMobType selectedMobtype;
 
-    public SkilltreeCreator()
-    {
-        this.mobTypeComboBox.addItemListener(new ItemListener()
-        {
-            public void itemStateChanged(ItemEvent e)
-            {
-                if (e.getStateChange() == ItemEvent.SELECTED)
-                {
+    public SkilltreeCreator() {
+        this.mobTypeComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
                     selectedMobtype = SkillTreeMobType.getMobTypeByName(mobTypeComboBox.getSelectedItem().toString());
                     skilltreeTreeSetSkilltrees();
                 }
             }
         });
 
-        skilltreeTree.addTreeSelectionListener(new TreeSelectionListener()
-        {
-            public void valueChanged(TreeSelectionEvent e)
-            {
-                if (skilltreeTree.getSelectionPath() != null && skilltreeTree.getSelectionPath().getPathCount() == 2)
-                {
+        skilltreeTree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent e) {
+                if (skilltreeTree.getSelectionPath() != null && skilltreeTree.getSelectionPath().getPathCount() == 2) {
                     SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
-                    if (skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) <= 1)
-                    {
+                    if (skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) <= 1) {
                         skilltreeDownButton.setEnabled(false);
                         skilltreeUpButton.setEnabled(false);
-                    }
-                    else if (selectedMobtype.getSkillTreePlace(skillTree) >= skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) - 1)
-                    {
+                    } else if (selectedMobtype.getSkillTreePlace(skillTree) >= skilltreeTreeModel.getChildCount(skilltreeTreeModel.getRoot()) - 1) {
                         skilltreeDownButton.setEnabled(false);
                         skilltreeUpButton.setEnabled(true);
                         deleteSkilltreeButton.setEnabled(true);
-                        if (skilltreeDownButton.hasFocus())
-                        {
+                        if (skilltreeDownButton.hasFocus()) {
                             skilltreeUpButton.requestFocus();
                         }
-                    }
-                    else if (selectedMobtype.getSkillTreePlace(skillTree) <= 0)
-                    {
+                    } else if (selectedMobtype.getSkillTreePlace(skillTree) <= 0) {
                         skilltreeDownButton.setEnabled(true);
                         skilltreeUpButton.setEnabled(false);
                         deleteSkilltreeButton.setEnabled(true);
-                        if (skilltreeUpButton.hasFocus())
-                        {
+                        if (skilltreeUpButton.hasFocus()) {
                             skilltreeDownButton.requestFocus();
                         }
-                    }
-                    else
-                    {
+                    } else {
                         skilltreeDownButton.setEnabled(true);
                         skilltreeUpButton.setEnabled(true);
 
@@ -118,9 +101,7 @@ public class SkilltreeCreator
                     copyMenuItem.setEnabled(true);
                     deleteSkilltreeButton.setEnabled(true);
                     renameSkilltreeButton.setEnabled(true);
-                }
-                else
-                {
+                } else {
                     copyMenuItem.setEnabled(false);
                     deleteSkilltreeButton.setEnabled(false);
                     renameSkilltreeButton.setEnabled(false);
@@ -129,14 +110,10 @@ public class SkilltreeCreator
                 }
             }
         });
-        skilltreeUpButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                {
-                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                    {
+        skilltreeUpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                         SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                         selectedMobtype.moveSkillTreeUp(skillTree);
                         skilltreeTreeSetSkilltrees();
@@ -145,14 +122,10 @@ public class SkilltreeCreator
                 }
             }
         });
-        skilltreeDownButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                {
-                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                    {
+        skilltreeDownButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                         SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                         selectedMobtype.moveSkillTreeDown(skillTree);
                         skilltreeTreeSetSkilltrees();
@@ -161,63 +134,43 @@ public class SkilltreeCreator
                 }
             }
         });
-        addSkilltreeButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        addSkilltreeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 String response = JOptionPane.showInputDialog(null, "Enter the name of the new skilltree.", "Create new Skilltree", JOptionPane.QUESTION_MESSAGE);
-                if (response != null)
-                {
-                    if (response.matches("(?m)[\\w-]+"))
-                    {
-                        if (!selectedMobtype.hasSkillTree(response))
-                        {
+                if (response != null) {
+                    if (response.matches("(?m)[\\w-]+")) {
+                        if (!selectedMobtype.hasSkillTree(response)) {
                             SkillTree skillTree = new SkillTree(response);
                             selectedMobtype.addSkillTree(skillTree);
                             skilltreeTreeSetSkilltrees();
                             selectSkilltree(skillTree);
-                        }
-                        else
-                        {
+                        } else {
                             JOptionPane.showMessageDialog(null, "There is already a skilltree with this name!", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         JOptionPane.showMessageDialog(null, "This is not a valid skilltree name!\n\na-z\nA-Z\n0-9\n_ -", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
         });
-        renameSkilltreeButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                {
-                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                    {
+        renameSkilltreeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                         SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                         String response = (String) JOptionPane.showInputDialog(null, "Enter the name of the new skilltree.", "Create new Skilltree", JOptionPane.QUESTION_MESSAGE, null, null, skillTree.getName());
-                        if (response != null)
-                        {
-                            if (response.matches("(?m)[\\w-]+"))
-                            {
-                                if (!selectedMobtype.hasSkillTree(response))
-                                {
+                        if (response != null) {
+                            if (response.matches("(?m)[\\w-]+")) {
+                                if (!selectedMobtype.hasSkillTree(response)) {
                                     SkillTree newSkillTree = skillTree.clone(response);
                                     selectedMobtype.removeSkillTree(skillTree.getName());
                                     selectedMobtype.addSkillTree(newSkillTree);
                                     skilltreeTreeSetSkilltrees();
                                     selectSkilltree(newSkillTree);
-                                }
-                                else
-                                {
+                                } else {
                                     JOptionPane.showMessageDialog(null, "There is already a skilltree with this name!", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 JOptionPane.showMessageDialog(null, "This is not a valid skilltree name!\n\na-z\nA-Z\n0-9\n_ -", "Create new Skilltree", JOptionPane.ERROR_MESSAGE);
                             }
                         }
@@ -227,14 +180,10 @@ public class SkilltreeCreator
                 }
             }
         });
-        deleteSkilltreeButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                {
-                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                    {
+        deleteSkilltreeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                         SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                         selectedMobtype.removeSkillTree(skillTree.getName());
                         skilltreeTreeSetSkilltrees();
@@ -242,16 +191,11 @@ public class SkilltreeCreator
                 }
             }
         });
-        skilltreeTree.addMouseListener(new MouseAdapter()
-        {
-            public void mouseClicked(MouseEvent evt)
-            {
-                if (evt.getClickCount() == 2 && skilltreeTree.getSelectionPath() != null)
-                {
-                    if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                    {
-                        if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                        {
+        skilltreeTree.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2 && skilltreeTree.getSelectionPath() != null) {
+                    if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                        if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                             SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                             GuiMain.levelCreator.setSkillTree(skillTree, selectedMobtype);
                             GuiMain.levelCreator.getFrame().setVisible(true);
@@ -261,41 +205,31 @@ public class SkilltreeCreator
                 }
             }
         });
-        asNBTMenuItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        asNBTMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 String savedPetsString = "";
                 List<String> savedPetTypes;
 
                 savedPetTypes = SkillTreeLoaderNBT.getSkilltreeLoader().saveSkillTrees(GuiMain.configPath + "skilltrees", GuiMain.petTypes);
-                for (String petType : savedPetTypes)
-                {
+                for (String petType : savedPetTypes) {
                     savedPetsString += "\n   " + petType.toLowerCase() + ".st";
                 }
 
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        saveButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 
                 saveButtonRightclickMenu.show(saveButton, 0, 0);
             }
         });
-        skilltreeTree.addKeyListener(new KeyAdapter()
-        {
-            public void keyPressed(KeyEvent e)
-            {
-                if (skilltreeTree.getSelectionPath().getPath().length == 2)
-                {
-                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode)
-                    {
+        skilltreeTree.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (skilltreeTree.getSelectionPath().getPath().length == 2) {
+                    if (skilltreeTree.getSelectionPath().getPathComponent(1) instanceof SkillTreeNode) {
                         SkillTree skillTree = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
-                        switch (e.getKeyCode())
-                        {
+                        switch (e.getKeyCode()) {
                             case KeyEvent.VK_ENTER:
                                 GuiMain.levelCreator.setSkillTree(skillTree, selectedMobtype);
                                 GuiMain.levelCreator.getFrame().setVisible(true);
@@ -312,22 +246,16 @@ public class SkilltreeCreator
             }
         });
 
-        copyMenuItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
+        copyMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 skilltreeCopyPaste = ((SkillTreeNode) skilltreeTree.getSelectionPath().getPathComponent(1)).getSkillTree();
                 pasteMenuItem.setEnabled(true);
             }
         });
-        pasteMenuItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                for (int i = 2 ; ; i++)
-                {
-                    if (!selectedMobtype.hasSkillTree(skilltreeCopyPaste.getName() + "_" + i))
-                    {
+        pasteMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 2; ; i++) {
+                    if (!selectedMobtype.hasSkillTree(skilltreeCopyPaste.getName() + "_" + i)) {
                         SkillTree skillTree = skilltreeCopyPaste.clone(skilltreeCopyPaste.getName() + "_" + i);
                         selectedMobtype.addSkillTree(skillTree);
                         skilltreeTreeSetSkilltrees();
@@ -339,32 +267,25 @@ public class SkilltreeCreator
         });
     }
 
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return skilltreeCreatorPanel;
     }
 
-    public JFrame getFrame()
-    {
-        if (skilltreeCreatorFrame == null)
-        {
+    public JFrame getFrame() {
+        if (skilltreeCreatorFrame == null) {
             skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetVersion.getMyPetVersion());
         }
         return skilltreeCreatorFrame;
     }
 
-    public void selectSkilltree(String skilltreeName)
-    {
+    public void selectSkilltree(String skilltreeName) {
         DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
         DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
         path[0] = root;
-        for (int i = 0 ; i < root.getChildCount() ; i++)
-        {
-            if (root.getChildAt(i) instanceof SkillTreeNode)
-            {
+        for (int i = 0; i < root.getChildCount(); i++) {
+            if (root.getChildAt(i) instanceof SkillTreeNode) {
                 SkillTreeNode node = (SkillTreeNode) root.getChildAt(i);
-                if (node.getSkillTree().getName().equals(skilltreeName))
-                {
+                if (node.getSkillTree().getName().equals(skilltreeName)) {
                     path[1] = node;
                     TreePath treePath = new TreePath(path);
                     skilltreeTree.setSelectionPath(treePath);
@@ -374,18 +295,14 @@ public class SkilltreeCreator
         }
     }
 
-    public void selectSkilltree(SkillTree skilltree)
-    {
+    public void selectSkilltree(SkillTree skilltree) {
         DefaultMutableTreeNode root = ((DefaultMutableTreeNode) skilltreeTreeModel.getRoot());
         DefaultMutableTreeNode[] path = new DefaultMutableTreeNode[2];
         path[0] = root;
-        for (int i = 0 ; i < root.getChildCount() ; i++)
-        {
-            if (root.getChildAt(i) instanceof SkillTreeNode)
-            {
+        for (int i = 0; i < root.getChildCount(); i++) {
+            if (root.getChildAt(i) instanceof SkillTreeNode) {
                 SkillTreeNode node = (SkillTreeNode) root.getChildAt(i);
-                if (node.getSkillTree() == skilltree)
-                {
+                if (node.getSkillTree() == skilltree) {
                     path[1] = node;
                     TreePath treePath = new TreePath(path);
                     skilltreeTree.setSelectionPath(treePath);
@@ -395,28 +312,23 @@ public class SkilltreeCreator
         }
     }
 
-    public void skilltreeTreeSetSkilltrees()
-    {
+    public void skilltreeTreeSetSkilltrees() {
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(selectedMobtype.getMobTypeName());
         skilltreeTreeModel.setRoot(rootNode);
-        for (SkillTree skillTree : selectedMobtype.getSkillTrees())
-        {
+        for (SkillTree skillTree : selectedMobtype.getSkillTrees()) {
             SkillTreeNode skillTreeNode = new SkillTreeNode(skillTree);
             rootNode.add(skillTreeNode);
         }
         skilltreeTreeExpandAll();
     }
 
-    public void skilltreeTreeExpandAll()
-    {
-        for (int i = 0 ; i < skilltreeTree.getRowCount() ; i++)
-        {
+    public void skilltreeTreeExpandAll() {
+        for (int i = 0; i < skilltreeTree.getRowCount(); i++) {
             skilltreeTree.expandRow(i);
         }
     }
 
-    private void createUIComponents()
-    {
+    private void createUIComponents() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
         skilltreeTreeModel = new DefaultTreeModel(root);
         skilltreeTree = new JTree(skilltreeTreeModel);
@@ -429,8 +341,7 @@ public class SkilltreeCreator
         skilltreeTreeSetSkilltrees();
     }
 
-    public void createRightclickMenus()
-    {
+    public void createRightclickMenus() {
         skilltreeListRightclickMenu = new JPopupMenu();
 
         copyMenuItem = new JMenuItem("Copy");
@@ -467,45 +378,36 @@ public class SkilltreeCreator
         saveButtonRightclickMenu.add(asAllMenuItem);
     }
 
-    private class SkillTreeNode extends DefaultMutableTreeNode
-    {
+    private class SkillTreeNode extends DefaultMutableTreeNode {
         private SkillTree skillTree;
 
-        public SkillTreeNode(SkillTree skillTree)
-        {
+        public SkillTreeNode(SkillTree skillTree) {
             super(skillTree.getName());
             this.skillTree = skillTree;
         }
 
-        public SkillTree getSkillTree()
-        {
+        public SkillTree getSkillTree() {
             return skillTree;
         }
     }
 
-    class PopupListener extends MouseAdapter
-    {
+    class PopupListener extends MouseAdapter {
         JPopupMenu popup;
 
-        PopupListener(JPopupMenu popupMenu)
-        {
+        PopupListener(JPopupMenu popupMenu) {
             popup = popupMenu;
         }
 
-        public void mousePressed(MouseEvent e)
-        {
+        public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
 
-        public void mouseReleased(MouseEvent e)
-        {
+        public void mouseReleased(MouseEvent e) {
             maybeShowPopup(e);
         }
 
-        private void maybeShowPopup(MouseEvent e)
-        {
-            if (e.isPopupTrigger())
-            {
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
                 popup.show(e.getComponent(), e.getX(), e.getY());
             }
         }

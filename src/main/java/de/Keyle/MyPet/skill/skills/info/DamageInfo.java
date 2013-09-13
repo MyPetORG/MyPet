@@ -32,28 +32,23 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"damage_double", "addset_damage"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
         parameterDefaultValues = {"1.0", "add"})
-public class DamageInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class DamageInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double damage = 0;
 
-    public DamageInfo(boolean addedByInheritance)
-    {
+    public DamageInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Damage(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         DamageInfo newSkill = new DamageInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

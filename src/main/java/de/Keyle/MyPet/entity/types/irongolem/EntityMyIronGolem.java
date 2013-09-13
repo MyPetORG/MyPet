@@ -27,61 +27,49 @@ import net.minecraft.server.v1_6_R2.Entity;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 1.4F, height = 2.9F)
-public class EntityMyIronGolem extends EntityMyPet
-{
+public class EntityMyIronGolem extends EntityMyPet {
     public static boolean CAN_THROW_UP = true;
 
-    public EntityMyIronGolem(World world, MyPet myPet)
-    {
+    public EntityMyIronGolem(World world, MyPet myPet) {
         super(world, myPet);
     }
 
-    public boolean attack(Entity entity)
-    {
+    public boolean attack(Entity entity) {
         boolean flag = false;
-        try
-        {
+        try {
             this.world.broadcastEntityEffect(this, (byte) 4);
             flag = super.attack(entity);
-            if (CAN_THROW_UP && flag)
-            {
+            if (CAN_THROW_UP && flag) {
                 entity.motY += 0.4000000059604645D;
                 this.world.makeSound(this, "mob.irongolem.throw", 1.0F, 1.0F);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return flag;
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.irongolem.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.irongolem.hit";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return null;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(16, new Byte((byte) 0)); // flower???
     }
 
     @Override
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
     }
 }

@@ -26,40 +26,32 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
-public class EntityMyWitch extends EntityMyPet
-{
-    public EntityMyWitch(World world, MyPet myPet)
-    {
+public class EntityMyWitch extends EntityMyPet {
+    public EntityMyWitch(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.witch.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.witch.hurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.witch.idle";
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         getDataWatcher().a(21, new Byte((byte) 0)); // N/A
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
         }
     }

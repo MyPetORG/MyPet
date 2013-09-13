@@ -27,11 +27,9 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class CommandOptionReload implements CommandOption
-{
+public class CommandOptionReload implements CommandOption {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
         MyPetPlugin.getPlugin().reloadConfig();
         Configuration.config = MyPetPlugin.getPlugin().getConfig();
         Configuration.loadConfiguration();

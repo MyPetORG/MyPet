@@ -23,41 +23,34 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 
-public class RandomLookaround extends AIGoal
-{
+public class RandomLookaround extends AIGoal {
     private EntityMyPet petEntity;
     private double directionX;
     private double directionZ;
     private int ticksUntilStopLookingAround = 0;
 
-    public RandomLookaround(EntityMyPet petEntity)
-    {
+    public RandomLookaround(EntityMyPet petEntity) {
         this.petEntity = petEntity;
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive())
-        {
+    public boolean shouldStart() {
+        if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
             return false;
         }
-        if (this.petEntity.passenger != null)
-        {
+        if (this.petEntity.passenger != null) {
             return false;
         }
         return this.petEntity.aC().nextFloat() < 0.02F;
     }
 
     @Override
-    public boolean shouldFinish()
-    {
+    public boolean shouldFinish() {
         return this.ticksUntilStopLookingAround <= 0 || this.petEntity.passenger != null;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         double circumference = 6.283185307179586D * this.petEntity.aC().nextDouble();
         this.directionX = Math.cos(circumference);
         this.directionZ = Math.sin(circumference);
@@ -65,8 +58,7 @@ public class RandomLookaround extends AIGoal
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.ticksUntilStopLookingAround--;
         this.petEntity.getControllerLook().a(this.petEntity.locX + this.directionX, this.petEntity.locY + this.petEntity.getHeadHeight(), this.petEntity.locZ + this.directionZ, 10.0F, this.petEntity.bp());
     }

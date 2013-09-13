@@ -62,8 +62,7 @@ import org.mcsg.survivalgames.GameManager;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
-public class PvPChecker
-{
+public class PvPChecker {
     public static boolean USE_PlayerDamageEntityEvent = false;
     public static boolean USE_Towny = true;
     public static boolean USE_Factions = true;
@@ -109,36 +108,28 @@ public class PvPChecker
     private static ApiManager pluginAncientRPG = null;
     private static GriefPrevention pluginGriefPrevention = null;
 
-    public static boolean canHurt(Player attacker, Player defender)
-    {
-        if (Configuration.DISABLE_PET_VS_PLAYER)
-        {
+    public static boolean canHurt(Player attacker, Player defender) {
+        if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;
         }
-        if (attacker != null && defender != null)
-        {
+        if (attacker != null && defender != null) {
             return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtFactions2(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
         }
         return false;
     }
 
-    public static boolean canHurt(Player defender)
-    {
-        if (Configuration.DISABLE_PET_VS_PLAYER)
-        {
+    public static boolean canHurt(Player defender) {
+        if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;
         }
-        if (defender != null)
-        {
+        if (defender != null) {
             return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && canHurtSurvivalGame(defender) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
         }
         return false;
     }
 
-    public static boolean canHurtEvent(Player attacker, LivingEntity defender)
-    {
-        if (USE_PlayerDamageEntityEvent)
-        {
+    public static boolean canHurtEvent(Player attacker, LivingEntity defender) {
+        if (USE_PlayerDamageEntityEvent) {
             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 0.1D);
             getPluginManager().callEvent(event);
             return !event.isCancelled();
@@ -146,20 +137,15 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtCitizens(Player defender)
-    {
-        if (!searchedCitizens)
-        {
+    public static boolean canHurtCitizens(Player defender) {
+        if (!searchedCitizens) {
             searchedCitizens = true;
             pluginCitizens = Bukkit.getServer().getPluginManager().isPluginEnabled("Citizens");
         }
-        if (USE_Citizens && pluginCitizens)
-        {
-            if (CitizensAPI.getNPCRegistry().isNPC(defender))
-            {
+        if (USE_Citizens && pluginCitizens) {
+            if (CitizensAPI.getNPCRegistry().isNPC(defender)) {
                 NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
-                if (npc == null || npc.data() == null)
-                {
+                if (npc == null || npc.data() == null) {
                     return true;
                 }
                 return !npc.data().get("protected", true);
@@ -168,18 +154,14 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtWorldGuard(Location location)
-    {
-        if (!searchedWorldGuard)
-        {
+    public static boolean canHurtWorldGuard(Location location) {
+        if (!searchedWorldGuard) {
             searchedWorldGuard = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
                 pluginWorldGuard = (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
             }
         }
-        if (USE_WorldGuard && pluginWorldGuard != null)
-        {
+        if (USE_WorldGuard && pluginWorldGuard != null) {
             RegionManager mgr = pluginWorldGuard.getGlobalRegionManager().get(location.getWorld());
             Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
             ApplicableRegionSet set = mgr.getApplicableRegions(pt);
@@ -189,111 +171,86 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtFactions(Player attacker, Player defender)
-    {
-        if (!searchedFactions)
-        {
+    public static boolean canHurtFactions(Player attacker, Player defender) {
+        if (!searchedFactions) {
             searchedFactions = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions")) {
                 Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
                 pluginFactions = plugin.getDescription().getVersion().startsWith("1.");
             }
         }
-        if (USE_Factions && pluginFactions)
-        {
+        if (USE_Factions && pluginFactions) {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
             return P.p.entityListener.canDamagerHurtDamagee(sub, false);
         }
         return true;
     }
 
-    public static boolean canHurtFactions2(Player attacker, Player defender)
-    {
-        if (!searchedFactions2)
-        {
+    public static boolean canHurtFactions2(Player attacker, Player defender) {
+        if (!searchedFactions2) {
             searchedFactions2 = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions")) {
                 Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
                 pluginFactions2 = plugin.getDescription().getVersion().startsWith("2.");
             }
         }
-        if (USE_Factions && pluginFactions2)
-        {
+        if (USE_Factions && pluginFactions2) {
             EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
             return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
         }
         return true;
     }
 
-    public static boolean canHurtTowny(Player attacker, Player defender)
-    {
-        if (!searchedTowny)
-        {
+    public static boolean canHurtTowny(Player attacker, Player defender) {
+        if (!searchedTowny) {
             searchedTowny = true;
             pluginTowny = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny");
         }
-        if (USE_Towny && pluginTowny)
-        {
-            if (CombatUtil.preventDamageCall(attacker, defender))
-            {
+        if (USE_Towny && pluginTowny) {
+            if (CombatUtil.preventDamageCall(attacker, defender)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean canHurtHeroes(Player attacker, Player defender)
-    {
-        if (!searchedHeroes)
-        {
+    public static boolean canHurtHeroes(Player attacker, Player defender) {
+        if (!searchedHeroes) {
             searchedHeroes = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Heroes"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Heroes")) {
                 pluginHeroes = (Heroes) Bukkit.getServer().getPluginManager().getPlugin("Heroes");
             }
         }
-        if (USE_Heroes && pluginHeroes != null)
-        {
+        if (USE_Heroes && pluginHeroes != null) {
             Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
             Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
             int attackerLevel = heroAttacker.getTieredLevel(false);
             int defenderLevel = heroDefender.getTieredLevel(false);
 
-            if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange)
-            {
+            if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange) {
                 return false;
             }
-            if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel))
-            {
+            if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel)) {
                 return false;
             }
             HeroParty party = heroDefender.getParty();
-            if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker))
-            {
+            if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean canHurtRegios(Player defender)
-    {
-        if (!searchedRegios)
-        {
+    public static boolean canHurtRegios(Player defender) {
+        if (!searchedRegios) {
             searchedRegios = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Regios"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Regios")) {
                 pluginRegios = (RegiosAPI) Bukkit.getServer().getPluginManager().getPlugin("Regios");
             }
         }
-        if (USE_Regios && pluginRegios != null)
-        {
-            for (Region region : pluginRegios.getRegions(defender.getLocation()))
-            {
-                if (!region.isPvp())
-                {
+        if (USE_Regios && pluginRegios != null) {
+            for (Region region : pluginRegios.getRegions(defender.getLocation())) {
+                if (!region.isPvp()) {
                     return false;
                 }
             }
@@ -302,91 +259,69 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtResidence(Location location)
-    {
-        if (!searchedResidence)
-        {
+    public static boolean canHurtResidence(Location location) {
+        if (!searchedResidence) {
             searchedResidence = true;
             pluginResidence = Bukkit.getServer().getPluginManager().isPluginEnabled("Residence");
         }
-        if (USE_Residence && pluginResidence)
-        {
+        if (USE_Residence && pluginResidence) {
             FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
             return flagPermissions.has("pvp", true);
         }
         return true;
     }
 
-    public static boolean canHurtMobArena(Player defender)
-    {
-        if (!searchedMobArena)
-        {
+    public static boolean canHurtMobArena(Player defender) {
+        if (!searchedMobArena) {
             searchedMobArena = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena")) {
                 pluginMobArena = new MobArenaHandler();
             }
         }
-        if (USE_MobArena && pluginMobArena != null)
-        {
-            if (pluginMobArena.isPlayerInArena(defender))
-            {
+        if (USE_MobArena && pluginMobArena != null) {
+            if (pluginMobArena.isPlayerInArena(defender)) {
                 return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
             }
         }
         return true;
     }
 
-    public static boolean canHurtSurvivalGame(Player defender)
-    {
-        if (!searchedSurvivalGame)
-        {
+    public static boolean canHurtSurvivalGame(Player defender) {
+        if (!searchedSurvivalGame) {
             searchedSurvivalGame = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames")) {
                 pluginSurvivalGame = true;
             }
         }
-        if (USE_SurvivalGame && pluginSurvivalGame)
-        {
+        if (USE_SurvivalGame && pluginSurvivalGame) {
             int gameid = GameManager.getInstance().getPlayerGameId(defender);
-            if (gameid == -1)
-            {
+            if (gameid == -1) {
                 return true;
             }
-            if (!GameManager.getInstance().isPlayerActive(defender))
-            {
+            if (!GameManager.getInstance().isPlayerActive(defender)) {
                 return true;
             }
             Game game = GameManager.getInstance().getGame(gameid);
-            if (game.getMode() != Game.GameMode.INGAME)
-            {
+            if (game.getMode() != Game.GameMode.INGAME) {
                 return false;
             }
-            if (game.isProtectionOn())
-            {
+            if (game.isProtectionOn()) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean canHurtPvPArena(Player attacker, Player defender)
-    {
-        if (!searchedPvPArena)
-        {
+    public static boolean canHurtPvPArena(Player attacker, Player defender) {
+        if (!searchedPvPArena) {
             searchedPvPArena = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
                 pluginPvPArena = true;
             }
         }
-        if (USE_PvPArena && pluginPvPArena)
-        {
-            if (!PVPArenaAPI.getArenaName(defender).equals(""))
-            {
-                if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender)))
-                {
+        if (USE_PvPArena && pluginPvPArena) {
+            if (!PVPArenaAPI.getArenaName(defender).equals("")) {
+                if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
                     return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
                 }
             }
@@ -394,46 +329,35 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtMcMMO(Player attacker, Player defender)
-    {
-        if (!searchedMcMMO)
-        {
+    public static boolean canHurtMcMMO(Player attacker, Player defender) {
+        if (!searchedMcMMO) {
             searchedMcMMO = true;
             pluginMcMMO = Bukkit.getServer().getPluginManager().isPluginEnabled("mcMMO");
         }
-        if (USE_McMMO && pluginMcMMO)
-        {
+        if (USE_McMMO && pluginMcMMO) {
             return !PartyAPI.inSameParty(attacker, defender);
         }
         return true;
     }
 
-    public static boolean canHurtAncientRPG(Player attacker, Player defender)
-    {
-        if (!searchedAncientRPG)
-        {
+    public static boolean canHurtAncientRPG(Player attacker, Player defender) {
+        if (!searchedAncientRPG) {
             searchedAncientRPG = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("AncientRPG"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("AncientRPG")) {
                 pluginAncientRPG = ApiManager.getApiManager();
             }
         }
-        if (USE_AncientRPG && pluginAncientRPG != null)
-        {
+        if (USE_AncientRPG && pluginAncientRPG != null) {
             AncientRPGParty party = pluginAncientRPG.getPlayerParty(attacker);
-            if (party != null)
-            {
-                if (!party.friendlyFire && party.containsName(defender.getName()))
-                {
+            if (party != null) {
+                if (!party.friendlyFire && party.containsName(defender.getName())) {
                     return false;
                 }
             }
 
             AncientRPGGuild guild = pluginAncientRPG.getPlayerGuild(attacker.getName());
-            if (guild != null)
-            {
-                if (!guild.friendlyFire && guild == pluginAncientRPG.getPlayerGuild(defender.getName()))
-                {
+            if (guild != null) {
+                if (!guild.friendlyFire && guild == pluginAncientRPG.getPlayerGuild(defender.getName())) {
                     return false;
                 }
             }
@@ -441,49 +365,37 @@ public class PvPChecker
         return true;
     }
 
-    public static boolean canHurtGriefPrevention(Player attacker, Player defender)
-    {
-        if (!searchedGriefPrevention)
-        {
+    public static boolean canHurtGriefPrevention(Player attacker, Player defender) {
+        if (!searchedGriefPrevention) {
             searchedGriefPrevention = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("GriefPrevention"))
-            {
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
                 pluginGriefPrevention = GriefPrevention.instance;
             }
         }
-        if (USE_GriefPrevention && pluginGriefPrevention != null)
-        {
+        if (USE_GriefPrevention && pluginGriefPrevention != null) {
             PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
             PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
 
-            if (defenderData.pvpImmune || attackerData.pvpImmune)
-            {
+            if (defenderData.pvpImmune || attackerData.pvpImmune) {
                 return false;
             }
 
-            if (pluginGriefPrevention.getDescription().getVersion().equals("7.8"))
-            {
+            if (pluginGriefPrevention.getDescription().getVersion().equals("7.8")) {
                 WorldConfig worldConfig = pluginGriefPrevention.getWorldCfg(defender.getWorld());
                 DataStore dataStore = pluginGriefPrevention.dataStore;
 
-                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims())
-                {
+                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
                     Claim localClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
-                    if (localClaim != null)
-                    {
-                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims()))
-                        {
+                    if (localClaim != null) {
+                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
                             return false;
                         }
                     }
                 }
-                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims())
-                {
+                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
                     Claim localClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
-                    if (localClaim != null)
-                    {
-                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims()))
-                        {
+                    if (localClaim != null) {
+                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
                             return false;
                         }
                     }
@@ -493,8 +405,7 @@ public class PvPChecker
         return true;
     }
 
-    public static void reset()
-    {
+    public static void reset() {
         searchedCitizens = false;
         searchedHeroes = false;
         searchedTowny = false;

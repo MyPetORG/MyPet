@@ -25,7 +25,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-public @interface SkillName
-{
+public @interface SkillName {
     String value();
 }

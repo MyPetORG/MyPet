@@ -32,29 +32,24 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
         parameterNames = {"chance", "addset_chance", "damage_double", "addset_damage"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Double, NBTdatatypes.String},
         parameterDefaultValues = {"5", "add", "3.0", "add"})
-public class LightningInfo extends SkillTreeSkill implements ISkillInfo
-{
+public class LightningInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected int chance = 0;
     protected double damage = 0;
 
-    public LightningInfo(boolean addedByInheritance)
-    {
+    public LightningInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public SkillPropertiesPanel getGuiPanel()
-    {
-        if (panel == null)
-        {
+    public SkillPropertiesPanel getGuiPanel() {
+        if (panel == null) {
             panel = new Lightning(this.getProperties());
         }
         return panel;
     }
 
-    public ISkillInfo cloneSkill()
-    {
+    public ISkillInfo cloneSkill() {
         LightningInfo newSkill = new LightningInfo(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

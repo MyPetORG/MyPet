@@ -20,8 +20,7 @@
 
 package de.Keyle.MyPet.entity;
 
-public enum EquipmentSlot
-{
+public enum EquipmentSlot {
     Weapon(0),
     Boots(1),
     Leggins(2),
@@ -30,25 +29,20 @@ public enum EquipmentSlot
 
     int slot;
 
-    EquipmentSlot(int slot)
-    {
+    EquipmentSlot(int slot) {
         this.slot = slot;
     }
 
-    public static EquipmentSlot getSlotById(int id)
-    {
-        for (EquipmentSlot slot : EquipmentSlot.values())
-        {
-            if (slot.getSlotId() == id)
-            {
+    public static EquipmentSlot getSlotById(int id) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getSlotId() == id) {
                 return slot;
             }
         }
         return EquipmentSlot.Weapon;
     }
 
-    public int getSlotId()
-    {
+    public int getSlotId() {
         return this.slot;
     }
 }

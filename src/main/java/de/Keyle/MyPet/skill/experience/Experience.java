@@ -22,17 +22,14 @@ package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 
-public abstract class Experience
-{
+public abstract class Experience {
     private MyPet myPet;
 
-    public Experience(MyPet myPet)
-    {
+    public Experience(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 

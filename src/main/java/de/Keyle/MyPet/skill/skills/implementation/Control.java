@@ -30,40 +30,32 @@ import de.Keyle.MyPet.util.locale.Locales;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 
-public class Control extends ControlInfo implements ISkillInstance
-{
+public class Control extends ControlInfo implements ISkillInstance {
     public static ConfigItem CONTROL_ITEM;
     private Location moveTo;
     private Location prevMoveTo;
     private boolean active = false;
     private MyPet myPet;
 
-    public Control(boolean addedByInheritance)
-    {
+    public Control(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof ControlInfo)
-        {
-            if (!quiet && !active)
-            {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof ControlInfo) {
+            if (!quiet && !active) {
                 String controlItemName = WordUtils.capitalizeFully(BukkitUtil.getMaterialName(CONTROL_ITEM.getItem().getTypeId()).replace("_", " "));
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Control.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), controlItemName));
 
@@ -72,58 +64,46 @@ public class Control extends ControlInfo implements ISkillInstance
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return "";
     }
 
-    public Location getLocation()
-    {
+    public Location getLocation() {
         Location tmpMoveTo = moveTo;
         moveTo = null;
         return tmpMoveTo;
     }
 
-    public Location getLocation(boolean delete)
-    {
+    public Location getLocation(boolean delete) {
         Location tmpMoveTo = moveTo;
-        if (delete)
-        {
+        if (delete) {
             moveTo = null;
         }
         return tmpMoveTo;
     }
 
-    public void setMoveTo(Location loc)
-    {
-        if (!active)
-        {
+    public void setMoveTo(Location loc) {
+        if (!active) {
             return;
         }
-        if (prevMoveTo != null)
-        {
-            if (loc.distance(prevMoveTo) > 1)
-            {
+        if (prevMoveTo != null) {
+            if (loc.distance(prevMoveTo) > 1) {
                 moveTo = loc;
                 prevMoveTo = loc;
             }
-        }
-        else
-        {
+        } else {
             moveTo = loc;
         }
     }
 
-    public void reset()
-    {
+    public void reset() {
         active = false;
         moveTo = null;
         prevMoveTo = null;
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Control newSkill = new Control(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

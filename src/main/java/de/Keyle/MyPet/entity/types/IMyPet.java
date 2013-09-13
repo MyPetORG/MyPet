@@ -25,8 +25,7 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 
 import java.util.UUID;
 
-public interface IMyPet
-{
+public interface IMyPet {
     public double getExp();
 
     public double getHealth();

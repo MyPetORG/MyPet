@@ -30,95 +30,71 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SkillsInfo
-{
+public class SkillsInfo {
     private static Map<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = new HashMap<Class<? extends SkillTreeSkill>, String>();
     private static Map<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = new HashMap<String, Class<? extends SkillTreeSkill>>();
 
-    public static void registerSkill(Class<? extends SkillTreeSkill> clazz)
-    {
-        if (!ISkillInfo.class.isAssignableFrom(clazz))
-        {
+    public static void registerSkill(Class<? extends SkillTreeSkill> clazz) {
+        if (!ISkillInfo.class.isAssignableFrom(clazz)) {
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " doesn't implements [ISkillInfo]!");
             return;
         }
-        try
-        {
+        try {
             //MyPetLogger.write("Skill Annotations: " + Arrays.toString(clazz.getAnnotations()));
             SkillName sn = clazz.getAnnotation(SkillName.class);
-            if (sn != null)
-            {
+            if (sn != null) {
                 String skillName = sn.value();
-                if (!registeredNamesSkills.containsKey(skillName) && !registeredSkillsNames.containsKey(clazz))
-                {
+                if (!registeredNamesSkills.containsKey(skillName) && !registeredSkillsNames.containsKey(clazz)) {
                     registeredSkillsNames.put(clazz, skillName);
                     registeredNamesSkills.put(skillName, clazz);
                     //DebugLogger.info("registered skill: " + clazz.getName());
-                }
-                else
-                {
+                } else {
                     MyPetLogger.write(ChatColor.RED + "There is already a skill registered with the the name " + skillName);
                 }
-            }
-            else
-            {
+            } else {
                 MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not annotated with [SkillName]!");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " is not a valid skill!");
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static Set<Class<? extends SkillTreeSkill>> getRegisteredSkillsInfo()
-    {
+    public static Set<Class<? extends SkillTreeSkill>> getRegisteredSkillsInfo() {
         return registeredSkillsNames.keySet();
     }
 
-    public static boolean isValidSkill(Class<? extends SkillTreeSkill> clazz)
-    {
+    public static boolean isValidSkill(Class<? extends SkillTreeSkill> clazz) {
         return ISkillInfo.class.isAssignableFrom(clazz) && clazz.getAnnotation(SkillName.class) != null;
     }
 
-    public static Class<? extends SkillTreeSkill> getSkillInfoClass(String name)
-    {
+    public static Class<? extends SkillTreeSkill> getSkillInfoClass(String name) {
         return registeredNamesSkills.get(name);
     }
 
-    public static ISkillInfo getNewSkillInfoInstance(String name)
-    {
+    public static ISkillInfo getNewSkillInfoInstance(String name) {
         Class<? extends SkillTreeSkill> clazz = getSkillInfoClass(name);
-        if (clazz == null)
-        {
+        if (clazz == null) {
             return null;
         }
         return getNewSkillInstance(clazz);
     }
 
-    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz)
-    {
+    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz) {
         return getNewSkillInstance(clazz, false);
     }
 
-    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is)
-    {
-        if (clazz == null)
-        {
+    public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is) {
+        if (clazz == null) {
             return null;
         }
-        try
-        {
+        try {
             Constructor<?> ctor = clazz.getConstructor(boolean.class);
             Object obj = ctor.newInstance(is);
-            if (obj != null)
-            {
+            if (obj != null) {
                 return (ISkillInfo) obj;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " is no valid Skill)!");
             e.printStackTrace();
         }

@@ -52,49 +52,36 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
-public class PlayerListener implements Listener
-{
+public class PlayerListener implements Listener {
     private final int[] ControllIgnoreBlocks = {6, 27, 28, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 64, 65, 66, 67, 68, 69, 70, 72, 75, 76, 77, 78, 90, 92, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 116, 117, 118, 119};
 
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event)
-    {
-        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasMyPet(event.getPlayer()))
-        {
+    public void onPlayerInteract(final PlayerInteractEvent event) {
+        if ((event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasMyPet(event.getPlayer())) {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove())
-            {
-                if (myPet.getSkills().isSkillActive(Control.class))
-                {
-                    if (myPet.getSkills().isSkillActive(Behavior.class))
-                    {
+            if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove()) {
+                if (myPet.getSkills().isSkillActive(Control.class)) {
+                    if (myPet.getSkills().isSkillActive(Behavior.class)) {
                         Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
-                        if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm)
-                        {
+                        if (behavior.getBehavior() == BehaviorState.Aggressive || behavior.getBehavior() == BehaviorState.Farm) {
                             event.getPlayer().sendMessage(Util.formatText(Locales.getString("Message.Skill.Control.AggroFarm", event.getPlayer()), myPet.getPetName(), behavior.getBehavior().name()));
                             return;
                         }
                     }
-                    if (myPet.getSkills().isSkillActive(Ride.class))
-                    {
-                        if (myPet.getCraftPet().getHandle().hasRider())
-                        {
+                    if (myPet.getSkills().isSkillActive(Ride.class)) {
+                        if (myPet.getCraftPet().getHandle().hasRider()) {
                             event.getPlayer().sendMessage(Util.formatText(Locales.getString("Message.Skill.Control.Ride", event.getPlayer()), myPet.getPetName()));
                             return;
                         }
                     }
-                    if (!Permissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control"))
-                    {
+                    if (!Permissions.hasExtended(event.getPlayer(), "MyPet.user.extended.Control")) {
                         myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                         return;
                     }
                     Block block = event.getPlayer().getTargetBlock(null, 100);
-                    if (block != null && block.getType() != Material.AIR)
-                    {
-                        for (int i : ControllIgnoreBlocks)
-                        {
-                            if (block.getTypeId() == i)
-                            {
+                    if (block != null && block.getType() != Material.AIR) {
+                        for (int i : ControllIgnoreBlocks) {
+                            if (block.getTypeId() == i) {
                                 block = block.getRelative(BlockFace.DOWN);
                                 break;
                             }
@@ -107,34 +94,24 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event)
-    {
-        if (event.getRightClicked() instanceof MyPetEntity)
-        {
+    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof MyPetEntity) {
             CraftMyPet craftMyPet = (CraftMyPet) event.getRightClicked();
             MyPet myPet = craftMyPet.getMyPet();
             ItemStack heldItem = event.getPlayer().getItemInHand();
 
-            if (heldItem != null)
-            {
-                if (heldItem.getType() == Material.NAME_TAG)
-                {
-                    if (craftMyPet.getOwner().equals(event.getPlayer()))
-                    {
+            if (heldItem != null) {
+                if (heldItem.getType() == Material.NAME_TAG) {
+                    if (craftMyPet.getOwner().equals(event.getPlayer())) {
                         ItemMeta meta = heldItem.getItemMeta();
-                        if (meta.hasDisplayName())
-                        {
+                        if (meta.hasDisplayName()) {
                             craftMyPet.getMyPet().setPetName(meta.getDisplayName());
                             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Name.New", myPet.getOwner()), meta.getDisplayName()));
                         }
-                    }
-                    else
-                    {
+                    } else {
                         event.setCancelled(true);
                     }
-                }
-                else if (heldItem.getType() == Material.LEASH)
-                {
+                } else if (heldItem.getType() == Material.LEASH) {
                     craftMyPet.getHandle().applyLeash();
                 }
             }
@@ -142,47 +119,35 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetPlayerJoin(final PlayerJoinEvent event)
-    {
+    public void onMyPetPlayerJoin(final PlayerJoinEvent event) {
         MyPetPlayer.onlinePlayerList.add(event.getPlayer().getName());
-        if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
-            if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName()))
-            {
+            if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                 UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                for (InactiveMyPet inactiveMyPet : joinedPlayer.getInactiveMyPets())
-                {
-                    if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
-                    {
+                for (InactiveMyPet inactiveMyPet : joinedPlayer.getInactiveMyPets()) {
+                    if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
                         MyPetList.setMyPetActive(inactiveMyPet);
                         MyPet activeMyPet = joinedPlayer.getMyPet();
                         activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
                         break;
                     }
                 }
-                if (!joinedPlayer.hasMyPet() && joinedPlayer.getInactiveMyPets().size() > 0)
-                {
+                if (!joinedPlayer.hasMyPet() && joinedPlayer.getInactiveMyPets().size() > 0) {
                     joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
                     joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                 }
             }
-            if (joinedPlayer.hasMyPet())
-            {
+            if (joinedPlayer.hasMyPet()) {
                 final MyPet myPet = joinedPlayer.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
-                if (myPet.wantToRespawn())
-                {
-                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-                    {
-                        public void run()
-                        {
-                            if (myPetPlayer.hasMyPet())
-                            {
+                if (myPet.wantToRespawn()) {
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                        public void run() {
+                            if (myPetPlayer.hasMyPet()) {
                                 MyPet runMyPet = myPetPlayer.getMyPet();
-                                switch (runMyPet.createPet())
-                                {
+                                switch (runMyPet.createPet()) {
                                     case Canceled:
                                         runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
@@ -202,9 +167,7 @@ public class PlayerListener implements Listener
                             }
                         }
                     }, 10L);
-                }
-                else
-                {
+                } else {
                     myPet.setStatus(PetState.Despawned);
                 }
             }
@@ -212,25 +175,17 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event)
-    {
-        if (event.getEntity() instanceof Player)
-        {
+    public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
-            if (MyPetPlayer.isMyPetPlayer(victim))
-            {
+            if (MyPetPlayer.isMyPetPlayer(victim)) {
                 MyPetPlayer myPetPlayerDamagee = MyPetPlayer.getMyPetPlayer(victim);
-                if (myPetPlayerDamagee.hasMyPet())
-                {
-                    if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile)
-                    {
+                if (myPetPlayerDamagee.hasMyPet()) {
+                    if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
                         MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
-                        if (myPetPlayerDamagee.getMyPet() == projectile.getShooter().getMyPet())
-                        {
+                        if (myPetPlayerDamagee.getMyPet() == projectile.getShooter().getMyPet()) {
                             event.setCancelled(true);
-                        }
-                        else if (!PvPChecker.canHurtEvent(projectile.getShooter().getOwner().getPlayer(), victim))
-                        {
+                        } else if (!PvPChecker.canHurtEvent(projectile.getShooter().getOwner().getPlayer(), victim)) {
                             event.setCancelled(true);
                         }
                     }
@@ -240,22 +195,17 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerQuit(final PlayerQuitEvent event)
-    {
+    public void onPlayerQuit(final PlayerQuitEvent event) {
         MyPetPlayer.onlinePlayerList.remove(event.getPlayer().getName());
-        if (MyPetList.hasMyPet(event.getPlayer()))
-        {
+        if (MyPetList.hasMyPet(event.getPlayer())) {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
-            if (myPet.getSkills().isSkillActive(Behavior.class))
-            {
+            if (myPet.getSkills().isSkillActive(Behavior.class)) {
                 Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
-                if (behavior.getBehavior() != BehaviorState.Normal && behavior.getBehavior() != BehaviorState.Friendly)
-                {
+                if (behavior.getBehavior() != BehaviorState.Normal && behavior.getBehavior() != BehaviorState.Friendly) {
                     behavior.setBehavior(BehaviorState.Normal);
                 }
             }
-            if (Configuration.STORE_PETS_ON_PLAYER_QUIT)
-            {
+            if (Configuration.STORE_PETS_ON_PLAYER_QUIT) {
                 MyPetPlugin.getPlugin().savePets(false);
             }
             myPet.removePet(true);
@@ -263,10 +213,8 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetPlayerChangeWorld(final PlayerChangedWorldEvent event)
-    {
-        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
-        {
+    public void onMyPetPlayerChangeWorld(final PlayerChangedWorldEvent event) {
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName())) {
             final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
 
             WorldGroup fromGroup = WorldGroup.getGroupByWorld(event.getFrom().getName());
@@ -274,50 +222,36 @@ public class PlayerListener implements Listener
 
             boolean callAfterSwap = myPetPlayer.hasMyPet() && myPetPlayer.getMyPet().getStatus() == PetState.Here;
 
-            if (fromGroup != toGroup)
-            {
-                if (myPetPlayer.hasMyPet())
-                {
+            if (fromGroup != toGroup) {
+                if (myPetPlayer.hasMyPet()) {
                     MyPetList.setMyPetInactive(myPetPlayer);
                 }
-                if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName()))
-                {
+                if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName())) {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
-                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets())
-                    {
-                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID))
-                        {
+                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
+                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
                             MyPetList.setMyPetActive(inactiveMyPet);
                             MyPet activeMyPet = myPetPlayer.getMyPet();
                             activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
                             break;
                         }
                     }
-                    if (!myPetPlayer.hasMyPet())
-                    {
+                    if (!myPetPlayer.hasMyPet()) {
                         myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
                     }
                 }
 
             }
-            if (!myPetPlayer.hasMyPet())
-            {
+            if (!myPetPlayer.hasMyPet()) {
                 myPetPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
-            }
-            else
-            {
+            } else {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (callAfterSwap)
-                {
-                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-                    {
-                        public void run()
-                        {
-                            if (myPetPlayer.hasMyPet())
-                            {
+                if (callAfterSwap) {
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                        public void run() {
+                            if (myPetPlayer.hasMyPet()) {
                                 MyPet runMyPet = myPetPlayer.getMyPet();
-                                switch (runMyPet.createPet())
-                                {
+                                switch (runMyPet.createPet()) {
                                     case Canceled:
                                         runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
@@ -328,14 +262,12 @@ public class PlayerListener implements Listener
                                         runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                                         break;
                                     case Dead:
-                                        if (runMyPet != myPet)
-                                        {
+                                        if (runMyPet != myPet) {
                                             runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call.Dead", myPet.getOwner().getLanguage()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
                                         }
                                         break;
                                     case Success:
-                                        if (runMyPet != myPet)
-                                        {
+                                        if (runMyPet != myPet) {
                                             runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         }
                                         break;
@@ -349,31 +281,22 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onMyPetPlayerTeleport(final PlayerTeleportEvent event)
-    {
-        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName()))
-        {
+    public void onMyPetPlayerTeleport(final PlayerTeleportEvent event) {
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer().getName())) {
             final MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (myPetPlayer.hasMyPet())
-            {
+            if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here)
-                {
+                if (myPet.getStatus() == PetState.Here) {
 
-                    if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10)
-                    {
+                    if (myPet.getLocation().getWorld() != event.getTo().getWorld() || myPet.getLocation().distance(event.getTo()) > 10) {
                         myPet.removePet(true);
                     }
 
-                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-                    {
-                        public void run()
-                        {
-                            if (myPetPlayer.hasMyPet())
-                            {
+                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                        public void run() {
+                            if (myPetPlayer.hasMyPet()) {
                                 MyPet runMyPet = myPetPlayer.getMyPet();
-                                switch (runMyPet.createPet())
-                                {
+                                switch (runMyPet.createPet()) {
                                     case Canceled:
                                         runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                         break;
@@ -393,18 +316,13 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent event)
-    {
-        if (MyPetPlayer.isMyPetPlayer(event.getEntity()))
-        {
+    public void onPlayerDeath(final PlayerDeathEvent event) {
+        if (MyPetPlayer.isMyPetPlayer(event.getEntity())) {
             MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(event.getEntity());
-            if (myPetPlayer.hasMyPet())
-            {
+            if (myPetPlayer.hasMyPet()) {
                 final MyPet myPet = myPetPlayer.getMyPet();
-                if (myPet.getStatus() == PetState.Here && Inventory.DROP_WHEN_OWNER_DIES)
-                {
-                    if (myPet.getSkills().isSkillActive(Inventory.class))
-                    {
+                if (myPet.getStatus() == PetState.Here && Inventory.DROP_WHEN_OWNER_DIES) {
+                    if (myPet.getSkills().isSkillActive(Inventory.class)) {
                         CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         inv.dropContentAt(myPet.getLocation());
                     }
@@ -415,22 +333,16 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void onPlayerRespawn(final PlayerRespawnEvent event)
-    {
-        if (MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onPlayerRespawn(final PlayerRespawnEvent event) {
+        if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             final MyPetPlayer respawnedMyPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             final MyPet myPet = respawnedMyPetPlayer.getMyPet();
 
-            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-            {
-                public void run()
-                {
-                    if (respawnedMyPetPlayer.hasMyPet())
-                    {
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    if (respawnedMyPetPlayer.hasMyPet()) {
                         MyPet runMyPet = respawnedMyPetPlayer.getMyPet();
-                        switch (runMyPet.createPet())
-                        {
+                        switch (runMyPet.createPet()) {
                             case Canceled:
                                 runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                 break;
@@ -441,14 +353,12 @@ public class PlayerListener implements Listener
                                 runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
                                 break;
                             case Dead:
-                                if (runMyPet != myPet)
-                                {
+                                if (runMyPet != myPet) {
                                     runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Call.Dead", myPet.getOwner().getLanguage()), runMyPet.getPetName(), runMyPet.getRespawnTime()));
                                 }
                                 break;
                             case Success:
-                                if (runMyPet != myPet)
-                                {
+                                if (runMyPet != myPet) {
                                     runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
                                 }
                                 break;

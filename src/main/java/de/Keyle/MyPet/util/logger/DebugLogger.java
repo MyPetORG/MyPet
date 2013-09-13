@@ -29,35 +29,27 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 
-public class DebugLogger
-{
+public class DebugLogger {
     private static final Logger debugLogger = Logger.getLogger("MyPet");
     private static boolean isEnabled = false;
 
-    public static boolean setup()
-    {
-        if (debugLogger.getHandlers().length > 0)
-        {
-            for (Handler h : debugLogger.getHandlers())
-            {
-                if (h.toString().equals("MyPet-Debug-Logger-FileHandler"))
-                {
+    public static boolean setup() {
+        if (debugLogger.getHandlers().length > 0) {
+            for (Handler h : debugLogger.getHandlers()) {
+                if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
                     isEnabled = true;
                     return true;
                 }
             }
         }
-        try
-        {
+        try {
             String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             path = path.replace("/", File.separator);
             path = path.replaceAll(String.format("\\%s[^\\%s]*\\.jar", File.separator, File.separator), "");
             File pluginDirFile = new File(path);
-            FileHandler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log", true)
-            {
+            FileHandler fileHandler = new FileHandler(pluginDirFile.getAbsolutePath() + File.separator + "MyPet" + File.separator + "logs" + File.separator + "MyPet.log", true) {
                 @Override
-                public String toString()
-                {
+                public String toString() {
                     return "MyPet-Debug-Logger-FileHandler";
                 }
             };
@@ -66,66 +58,50 @@ public class DebugLogger
             debugLogger.addHandler(fileHandler);
             isEnabled = true;
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             isEnabled = false;
             e.printStackTrace();
             return false;
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             isEnabled = false;
             e.printStackTrace();
             return false;
         }
     }
 
-    public static void info(String text)
-    {
-        if (isEnabled)
-        {
+    public static void info(String text) {
+        if (isEnabled) {
             debugLogger.info("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
-    public static void warning(String text)
-    {
-        if (isEnabled)
-        {
+    public static void warning(String text) {
+        if (isEnabled) {
             debugLogger.warning("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
-    public static void severe(String text)
-    {
-        if (isEnabled)
-        {
+    public static void severe(String text) {
+        if (isEnabled) {
             debugLogger.severe("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
 
-    public static void info(String text, String source)
-    {
-        if (isEnabled)
-        {
+    public static void info(String text, String source) {
+        if (isEnabled) {
             debugLogger.info("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
-    public static void warning(String text, String source)
-    {
-        if (isEnabled)
-        {
+    public static void warning(String text, String source) {
+        if (isEnabled) {
             debugLogger.warning("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
-    public static void severe(String text, String source)
-    {
-        if (isEnabled)
-        {
+    public static void severe(String text, String source) {
+        if (isEnabled) {
             debugLogger.severe("[" + source + "] " + ChatColor.stripColor(text));
         }
     }

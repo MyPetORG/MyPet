@@ -45,8 +45,7 @@ import org.spout.nbt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive
-{
+public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 60;
 
     private TileEntityBeacon tileEntityBeacon;
@@ -65,8 +64,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     public ItemStack tributeItem;
     private MyPet myPet;
 
-    static
-    {
+    static {
         buffNames.put(1, "Speed");
         buffNames.put(3, "Haste");
         buffNames.put(5, "Strength");
@@ -75,8 +73,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffNames.put(11, "Resistance");
     }
 
-    public Beacon(boolean addedByInheritance)
-    {
+    public Beacon(boolean addedByInheritance) {
         super(addedByInheritance);
         beaconInv = new MyPetCustomBeaconInventory(this);
         primaryActive.put(1, false);
@@ -92,126 +89,92 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         secundaryActive.put(11, false);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return level > 0;
     }
 
-    public int getLevel()
-    {
+    public int getLevel() {
         return level;
     }
 
-    public ItemStack getTributeItem()
-    {
+    public ItemStack getTributeItem() {
         return tributeItem;
     }
 
-    public void setTributeItem(ItemStack itemStack)
-    {
+    public void setTributeItem(ItemStack itemStack) {
         beaconInv.setItem(0, itemStack);
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof BeaconInfo)
-        {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof BeaconInfo) {
             level = 4;
-            for (int primaryBuffId : primaryBuffs)
-            {
-                if (upgrade.getProperties().getValue().containsKey("1_" + primaryBuffId))
-                {
+            for (int primaryBuffId : primaryBuffs) {
+                if (upgrade.getProperties().getValue().containsKey("1_" + primaryBuffId)) {
                     boolean active = ((ByteTag) upgrade.getProperties().getValue().get("1_" + primaryBuffId)).getBooleanValue();
                     primaryActive.put(primaryBuffId, active);
                 }
             }
 
-            for (int secundaryBuffId : secundaryBuffs)
-            {
-                if (upgrade.getProperties().getValue().containsKey("2_" + secundaryBuffId))
-                {
-                    if (secundaryBuffId == 10)
-                    {
+            for (int secundaryBuffId : secundaryBuffs) {
+                if (upgrade.getProperties().getValue().containsKey("2_" + secundaryBuffId)) {
+                    if (secundaryBuffId == 10) {
                         boolean active = ((ByteTag) upgrade.getProperties().getValue().get("2_" + secundaryBuffId)).getBooleanValue();
                         secundaryActive.put(secundaryBuffId, active);
-                    }
-                    else
-                    {
-                        if (primaryActive.get(secundaryBuffId))
-                        {
+                    } else {
+                        if (primaryActive.get(secundaryBuffId)) {
                             boolean active = ((ByteTag) upgrade.getProperties().getValue().get("2_" + secundaryBuffId)).getBooleanValue();
                             secundaryActive.put(secundaryBuffId, active);
-                        }
-                        else
-                        {
+                        } else {
                             secundaryActive.put(secundaryBuffId, false);
                         }
                     }
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("duration"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("duration")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add")) {
                     duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
-                }
-                else
-                {
+                } else {
                     duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("range"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add"))
-                {
+            if (upgrade.getProperties().getValue().containsKey("range")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add")) {
                     range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
-                }
-                else
-                {
+                } else {
                     range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
             }
-            if (!quiet)
-            {
+            if (!quiet) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range), duration));
                 myPet.sendMessageToOwner("  " + getFormattedValue());
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         String availableBuffs = "";
-        for (int primaryBuffId : primaryBuffs)
-        {
-            if (primaryBuffId != 0 && primaryActive.get(primaryBuffId))
-            {
-                if (!availableBuffs.equalsIgnoreCase(""))
-                {
+        for (int primaryBuffId : primaryBuffs) {
+            if (primaryBuffId != 0 && primaryActive.get(primaryBuffId)) {
+                if (!availableBuffs.equalsIgnoreCase("")) {
                     availableBuffs += ", ";
                 }
                 availableBuffs += ChatColor.GOLD + Locales.getString("Name." + buffNames.get(primaryBuffId), myPet.getOwner().getLanguage());
-                if (secundaryActive.get(primaryBuffId))
-                {
+                if (secundaryActive.get(primaryBuffId)) {
                     availableBuffs += " (II)";
                 }
                 availableBuffs += ChatColor.RESET;
             }
         }
-        if (secundaryActive.get(10))
-        {
-            if (!availableBuffs.equalsIgnoreCase(""))
-            {
+        if (secundaryActive.get(10)) {
+            if (!availableBuffs.equalsIgnoreCase("")) {
                 availableBuffs += ", ";
             }
             availableBuffs += ChatColor.GOLD + Locales.getString("Name." + buffNames.get(10), myPet.getOwner().getLanguage()) + ChatColor.RESET;
@@ -219,180 +182,133 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         return availableBuffs;
     }
 
-    public void reset()
-    {
+    public void reset() {
         stop(true);
     }
 
-    public boolean activate()
-    {
-        if (level > 0)
-        {
-            if (myPet.getOwner().isInExternalGames())
-            {
+    public boolean activate() {
+        if (level > 0) {
+            if (myPet.getOwner().isInExternalGames()) {
                 myPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
                 return false;
             }
             openBeacon(myPet.getOwner().getPlayer());
             return true;
-        }
-        else
-        {
+        } else {
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
 
-    public void activate(Player player)
-    {
-        if (level > 0)
-        {
+    public void activate(Player player) {
+        if (level > 0) {
             openBeacon(player);
-        }
-        else
-        {
+        } else {
             player.sendMessage(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
     }
 
-    public boolean activate(boolean primary, int effectId)
-    {
-        if (level > 0)
-        {
-            if (primary)
-            {
-                if (!primaryActive.containsKey(effectId))
-                {
+    public boolean activate(boolean primary, int effectId) {
+        if (level > 0) {
+            if (primary) {
+                if (!primaryActive.containsKey(effectId)) {
                     return false;
-                }
-                else if (primaryActive.get(effectId))
-                {
+                } else if (primaryActive.get(effectId)) {
                     setPrimaryEffectId(effectId);
                     return true;
-                }
-                else
-                {
+                } else {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()), Locales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
                     return false;
                 }
-            }
-            else
-            {
-                if (!secundaryActive.containsKey(effectId))
-                {
+            } else {
+                if (!secundaryActive.containsKey(effectId)) {
                     return false;
-                }
-                else if (secundaryActive.get(effectId))
-                {
+                } else if (secundaryActive.get(effectId)) {
                     setSecondaryEffectId(effectId);
                     return true;
-                }
-                else
-                {
-                    if (effectId != 10)
-                    {
+                } else {
+                    if (effectId != 10) {
                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.ImprovedBuffNotActive", myPet.getOwner().getLanguage()), Locales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
-                    }
-                    else
-                    {
+                    } else {
                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.BuffNotActive", myPet.getOwner().getLanguage()), Locales.getString("Name." + buffNames.get(effectId), myPet.getOwner().getLanguage())));
                     }
                     return false;
                 }
             }
-        }
-        else
-        {
+        } else {
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
         }
         return false;
     }
 
-    public void schedule()
-    {
-        if (myPet.getStatus() == PetState.Here && level > 0 && this.active && this.primaryEffectId > 0)
-        {
+    public void schedule() {
+        if (myPet.getStatus() == PetState.Here && level > 0 && this.active && this.primaryEffectId > 0) {
             byte amplification = 0;
 
-            if (this.primaryEffectId == this.secondaryEffectId)
-            {
+            if (this.primaryEffectId == this.secondaryEffectId) {
                 amplification = 1;
             }
             double range = this.range * myPet.getHungerValue() / 100.;
 
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
-            for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range)))
-            {
+            for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range))) {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
 
-                if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName())))
-                {
+                if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName()))) {
                     continue;
                 }
 
                 entityHuman.addEffect(new MobEffect(this.primaryEffectId, duration * 20, amplification, true));
 
-                if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0)
-                {
+                if (level > 3 && this.primaryEffectId != this.secondaryEffectId && this.secondaryEffectId > 0) {
                     BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                     entityHuman.addEffect(new MobEffect(this.secondaryEffectId, duration * 20, 0, true));
                 }
             }
 
-            if (HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0)
-            {
+            if (HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
                 myPet.setHungerValue(myPet.getHungerValue() - 1);
                 hungerDecreaseTimer = HUNGER_DECREASE_TIME;
             }
         }
     }
 
-    public void load(CompoundTag compound)
-    {
-        if (compound.getValue().containsKey("Primary"))
-        {
+    public void load(CompoundTag compound) {
+        if (compound.getValue().containsKey("Primary")) {
             this.primaryEffectId = ((IntTag) compound.getValue().get("Primary")).getValue();
         }
-        if (compound.getValue().containsKey("Secondary"))
-        {
+        if (compound.getValue().containsKey("Secondary")) {
             this.secondaryEffectId = ((IntTag) compound.getValue().get("Secondary")).getValue();
         }
-        if (compound.getValue().containsKey("Active"))
-        {
+        if (compound.getValue().containsKey("Active")) {
             this.active = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
         }
-        if (compound.getValue().containsKey("Item"))
-        {
+        if (compound.getValue().containsKey("Item")) {
             setTributeItem(ItemStackNBTConverter.CompundToItemStack((CompoundTag) compound.getValue().get("Item")));
         }
     }
 
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
 
         CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
         nbtTagCompound.getValue().put("Primary", new IntTag("Primary", this.primaryEffectId));
         nbtTagCompound.getValue().put("Secondary", new IntTag("Secondary", this.secondaryEffectId));
         nbtTagCompound.getValue().put("Active", new ByteTag("Active", this.active));
-        if (tributeItem != null)
-        {
+        if (tributeItem != null) {
             nbtTagCompound.getValue().put("Item", ItemStackNBTConverter.ItemStackToCompund(tributeItem));
         }
         return nbtTagCompound;
     }
 
-    public void openBeacon(Player p)
-    {
+    public void openBeacon(Player p) {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
 
-        if (tileEntityBeacon == null)
-        {
+        if (tileEntityBeacon == null) {
             tileEntityBeacon = new TileEntityBeacon(this);
         }
         Container container = CraftEventFactory.callInventoryOpenEvent(entityPlayer, new ContainerBeacon(entityPlayer.inventory, beaconInv, tileEntityBeacon, this));
-        if (container == null)
-        {
+        if (container == null) {
             return;
         }
 
@@ -404,65 +320,50 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     }
 
 
-    public int getPrimaryEffectId()
-    {
+    public int getPrimaryEffectId() {
         return primaryEffectId;
     }
 
-    public void setPrimaryEffectId(int effectId)
-    {
-        if (effectId > 0)
-        {
+    public void setPrimaryEffectId(int effectId) {
+        if (effectId > 0) {
             this.primaryEffectId = effectId;
             active = true;
             hungerDecreaseTimer = HUNGER_DECREASE_TIME;
-        }
-        else
-        {
+        } else {
             this.primaryEffectId = 0;
-            if (secondaryEffectId == 0)
-            {
+            if (secondaryEffectId == 0) {
                 active = false;
             }
         }
     }
 
-    public int getSecondaryEffectId()
-    {
+    public int getSecondaryEffectId() {
         return secondaryEffectId;
     }
 
-    public void setSecondaryEffectId(int effectId)
-    {
-        if (effectId > 0)
-        {
+    public void setSecondaryEffectId(int effectId) {
+        if (effectId > 0) {
             this.secondaryEffectId = effectId;
             active = true;
             hungerDecreaseTimer = HUNGER_DECREASE_TIME;
-        }
-        else
-        {
+        } else {
             this.secondaryEffectId = 0;
-            if (primaryEffectId == 0)
-            {
+            if (primaryEffectId == 0) {
                 active = false;
             }
         }
     }
 
-    public void stop(boolean reset)
-    {
+    public void stop(boolean reset) {
         this.active = false;
-        if (reset)
-        {
+        if (reset) {
             primaryEffectId = 0;
             secondaryEffectId = 0;
         }
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Beacon newSkill = new Beacon(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

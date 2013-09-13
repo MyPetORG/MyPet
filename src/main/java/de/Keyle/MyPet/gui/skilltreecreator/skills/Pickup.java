@@ -29,8 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Pickup implements SkillPropertiesPanel
-{
+public class Pickup implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JTextField rangeInput;
     private JRadioButton addRangeRadioButton;
@@ -38,52 +37,39 @@ public class Pickup implements SkillPropertiesPanel
 
     private CompoundTag compoundTag;
 
-    public Pickup(CompoundTag compoundTag)
-    {
+    public Pickup(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         rangeInput.setText(rangeInput.getText().replaceAll("[^0-9\\.]*", ""));
-        if (rangeInput.getText().length() > 0)
-        {
-            if (rangeInput.getText().matches("\\.+"))
-            {
+        if (rangeInput.getText().length() > 0) {
+            if (rangeInput.getText().matches("\\.+")) {
                 rangeInput.setText("0.0");
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
                     Matcher regexMatcher = regex.matcher(rangeInput.getText());
                     regexMatcher.find();
                     rangeInput.setText(regexMatcher.group());
-                }
-                catch (PatternSyntaxException ignored)
-                {
+                } catch (PatternSyntaxException ignored) {
                     rangeInput.setText("0.0");
                 }
             }
-        }
-        else
-        {
+        } else {
             rangeInput.setText("0.0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("addset_range", new StringTag("addset_range", addRangeRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("range", new DoubleTag("range", Double.parseDouble(rangeInput.getText())));
 
@@ -91,18 +77,13 @@ public class Pickup implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add")) {
             addRangeRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setRangeRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("range"))
-        {
+        if (compoundTag.getValue().containsKey("range")) {
             rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
         }
     }

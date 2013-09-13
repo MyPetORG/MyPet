@@ -41,8 +41,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IconMenu implements Listener
-{
+public class IconMenu implements Listener {
     Inventory inventory;
     private int size;
     private OptionClickEventHandler handler;
@@ -50,8 +49,7 @@ public class IconMenu implements Listener
     private String[] optionNames;
     private List<Inventory> inventoryList = new ArrayList<Inventory>();
 
-    public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin)
-    {
+    public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.size = size;
         this.handler = handler;
         this.plugin = plugin;
@@ -60,20 +58,16 @@ public class IconMenu implements Listener
         inventory = Bukkit.createInventory(null, size, name);
     }
 
-    public IconMenu setOption(int position, ItemStack icon, String name, String[] lore)
-    {
+    public IconMenu setOption(int position, ItemStack icon, String name, String[] lore) {
         icon = setItemNameAndLore(icon, name, lore);
         optionNames[position] = name;
         inventory.setItem(position, icon);
         return this;
     }
 
-    public int addOption(ItemStack icon, String name, String[] lore)
-    {
-        for (int i = 0 ; i < size ; i++)
-        {
-            if (inventory.getContents()[i] == null)
-            {
+    public int addOption(ItemStack icon, String name, String[] lore) {
+        for (int i = 0; i < size; i++) {
+            if (inventory.getContents()[i] == null) {
                 icon = setItemNameAndLore(icon, name, lore);
                 optionNames[i] = name;
                 inventory.setItem(i, icon);
@@ -83,17 +77,13 @@ public class IconMenu implements Listener
         return -1;
     }
 
-    public int addOption(ItemStack icon, String name, List<String> loreList)
-    {
+    public int addOption(ItemStack icon, String name, List<String> loreList) {
         String[] lore = new String[loreList.size()];
-        for (int i = 0 ; i < lore.length ; i++)
-        {
+        for (int i = 0; i < lore.length; i++) {
             lore[i] = loreList.get(i);
         }
-        for (int i = 0 ; i < size ; i++)
-        {
-            if (inventory.getContents()[i] == null)
-            {
+        for (int i = 0; i < size; i++) {
+            if (inventory.getContents()[i] == null) {
                 icon = setItemNameAndLore(icon, name, lore);
                 optionNames[i] = name;
                 inventory.setItem(i, icon);
@@ -103,17 +93,13 @@ public class IconMenu implements Listener
         return -1;
     }
 
-    public int addOption(ItemStack icon, String name, List<String> loreList, boolean glowing)
-    {
+    public int addOption(ItemStack icon, String name, List<String> loreList, boolean glowing) {
         String[] lore = new String[loreList.size()];
-        for (int i = 0 ; i < lore.length ; i++)
-        {
+        for (int i = 0; i < lore.length; i++) {
             lore[i] = loreList.get(i);
         }
-        for (int i = 0 ; i < size ; i++)
-        {
-            if (inventory.getContents()[i] == null)
-            {
+        for (int i = 0; i < size; i++) {
+            if (inventory.getContents()[i] == null) {
                 icon = setItemNameAndLore(icon, name, lore);
                 icon = setEnchantingGlow(icon, glowing);
                 optionNames[i] = name;
@@ -124,18 +110,15 @@ public class IconMenu implements Listener
         return -1;
     }
 
-    public void open(Player player)
-    {
+    public void open(Player player) {
         Inventory openInv = player.openInventory(inventory).getTopInventory();
-        if (openInv == null)
-        {
+        if (openInv == null) {
             return;
         }
         inventoryList.add(openInv);
     }
 
-    public void destroy()
-    {
+    public void destroy() {
         HandlerList.unregisterAll(this);
         handler = null;
         plugin = null;
@@ -144,36 +127,28 @@ public class IconMenu implements Listener
     }
 
     @EventHandler
-    void onPluginDisable(PluginDisableEvent event)
-    {
-        if (event.getPlugin().equals(plugin) && inventory != null)
-        {
+    void onPluginDisable(PluginDisableEvent event) {
+        if (event.getPlugin().equals(plugin) && inventory != null) {
             List<HumanEntity> viewers = new ArrayList<HumanEntity>(inventory.getViewers());
-            for (HumanEntity viewer : viewers)
-            {
+            for (HumanEntity viewer : viewers) {
                 viewer.closeInventory();
             }
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    void onInventoryClick(InventoryClickEvent event)
-    {
-        if (inventoryList.contains(event.getInventory()))
-        {
+    void onInventoryClick(InventoryClickEvent event) {
+        if (inventoryList.contains(event.getInventory())) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
-            if (slot >= 0 && slot < size && optionNames[slot] != null)
-            {
+            if (slot >= 0 && slot < size && optionNames[slot] != null) {
                 OptionClickEvent e = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
                 handler.onOptionClick(e);
-                if (e.willClose())
-                {
+                if (e.willClose()) {
                     final Player p = (Player) event.getWhoClicked();
                     p.closeInventory();
                 }
-                if (e.willDestroy())
-                {
+                if (e.willDestroy()) {
                     destroy();
                 }
             }
@@ -181,20 +156,16 @@ public class IconMenu implements Listener
     }
 
     @EventHandler
-    void onInventoryClose(InventoryCloseEvent event)
-    {
+    void onInventoryClose(InventoryCloseEvent event) {
         inventoryList.remove(event.getInventory());
     }
 
-    private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore)
-    {
+    private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
         net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
-        if (is.tag == null)
-        {
+        if (is.tag == null) {
             is.tag = new NBTTagCompound("tag");
         }
-        if (!is.tag.hasKey("display"))
-        {
+        if (!is.tag.hasKey("display")) {
             is.tag.set("display", new NBTTagCompound("display"));
         }
         NBTTagCompound display = is.tag.getCompound("display");
@@ -204,8 +175,7 @@ public class IconMenu implements Listener
         NBTTagList loreTag = new NBTTagList("Lore");
         display.set("Lore", loreTag);
 
-        for (String loreLine : lore)
-        {
+        for (String loreLine : lore) {
             loreTag.add(new NBTTagString(null, loreLine));
         }
 
@@ -216,11 +186,9 @@ public class IconMenu implements Listener
         return item;
     }
 
-    private net.minecraft.server.v1_6_R2.ItemStack removeAttributes(net.minecraft.server.v1_6_R2.ItemStack item)
-    {
+    private net.minecraft.server.v1_6_R2.ItemStack removeAttributes(net.minecraft.server.v1_6_R2.ItemStack item) {
         NBTTagList emptyList = new NBTTagList();
-        if (item.tag == null)
-        {
+        if (item.tag == null) {
             item.tag = new NBTTagCompound("tag");
         }
         item.tag.set("AttributeModifiers", emptyList);
@@ -228,21 +196,16 @@ public class IconMenu implements Listener
         return item;
     }
 
-    private ItemStack setEnchantingGlow(ItemStack item, boolean glowing)
-    {
+    private ItemStack setEnchantingGlow(ItemStack item, boolean glowing) {
         net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
 
         NBTTagList emptyList = new NBTTagList();
-        if (is.tag == null)
-        {
+        if (is.tag == null) {
             is.tag = new NBTTagCompound("tag");
         }
-        if (glowing)
-        {
+        if (glowing) {
             is.tag.set("ench", emptyList);
-        }
-        else
-        {
+        } else {
             is.tag.remove("ench");
         }
 
@@ -251,21 +214,18 @@ public class IconMenu implements Listener
         return item;
     }
 
-    public interface OptionClickEventHandler
-    {
+    public interface OptionClickEventHandler {
         public void onOptionClick(OptionClickEvent event);
     }
 
-    public class OptionClickEvent
-    {
+    public class OptionClickEvent {
         private Player player;
         private int position;
         private String name;
         private boolean close;
         private boolean destroy;
 
-        public OptionClickEvent(Player player, int position, String name)
-        {
+        public OptionClickEvent(Player player, int position, String name) {
             this.player = player;
             this.position = position;
             this.name = name;
@@ -273,38 +233,31 @@ public class IconMenu implements Listener
             this.destroy = false;
         }
 
-        public Player getPlayer()
-        {
+        public Player getPlayer() {
             return player;
         }
 
-        public int getPosition()
-        {
+        public int getPosition() {
             return position;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
 
-        public boolean willClose()
-        {
+        public boolean willClose() {
             return close;
         }
 
-        public boolean willDestroy()
-        {
+        public boolean willDestroy() {
             return destroy;
         }
 
-        public void setWillClose(boolean close)
-        {
+        public void setWillClose(boolean close) {
             this.close = close;
         }
 
-        public void setWillDestroy(boolean destroy)
-        {
+        public void setWillDestroy(boolean destroy) {
             this.destroy = destroy;
         }
     }

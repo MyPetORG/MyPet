@@ -32,17 +32,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class MyHungerGames implements Listener
-{
+public class MyHungerGames implements Listener {
     public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
 
     private static boolean active = false;
     private static GameManager gameManager;
 
-    public static void findPlugin()
-    {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MyHungerGames"))
-        {
+    public static void findPlugin() {
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MyHungerGames")) {
             Bukkit.getPluginManager().registerEvents(new MyHungerGames(), MyPetPlugin.getPlugin());
             gameManager = HungerGames.getInstance().getGameManager();
             active = true;
@@ -50,16 +47,11 @@ public class MyHungerGames implements Listener
         DebugLogger.info("MyHungerGames support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInHungerGames(MyPetPlayer owner)
-    {
-        if (active)
-        {
-            try
-            {
+    public static boolean isInHungerGames(MyPetPlayer owner) {
+        if (active) {
+            try {
                 return gameManager.getSpectating(owner.getPlayer()) != null || HungerGames.getInstance().getGameManager().getRawPlayingSession(owner.getPlayer()) != null;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 active = false;
             }
         }
@@ -67,13 +59,10 @@ public class MyHungerGames implements Listener
     }
 
     @EventHandler
-    public void onJoinPvPArena(PlayerJoinGameEvent event)
-    {
-        if (active && DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onJoinPvPArena(PlayerJoinGameEvent event) {
+        if (active && DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
-            {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }

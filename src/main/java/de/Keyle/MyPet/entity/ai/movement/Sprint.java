@@ -27,16 +27,14 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.EntityLiving;
 
-public class Sprint extends AIGoal
-{
+public class Sprint extends AIGoal {
     private MyPet myPet;
     private final EntityMyPet petEntity;
     private float walkSpeedModifier;
     private AbstractNavigation nav;
     private EntityLiving lastTarget = null;
 
-    public Sprint(EntityMyPet entityMyPet, float walkSpeedModifier)
-    {
+    public Sprint(EntityMyPet entityMyPet, float walkSpeedModifier) {
         this.petEntity = entityMyPet;
         this.walkSpeedModifier = walkSpeedModifier;
         this.nav = entityMyPet.petNavigation;
@@ -44,32 +42,25 @@ public class Sprint extends AIGoal
     }
 
     @Override
-    public boolean shouldStart()
-    {
-        if (!myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Sprint.class))
-        {
+    public boolean shouldStart() {
+        if (!myPet.getSkills().isSkillActive(de.Keyle.MyPet.skill.skills.implementation.Sprint.class)) {
             return false;
         }
-        if (petEntity.getMyPet().getDamage() <= 0)
-        {
+        if (petEntity.getMyPet().getDamage() <= 0) {
             return false;
         }
         EntityLiving targetEntity = this.petEntity.getGoalTarget();
 
-        if (targetEntity == null)
-        {
+        if (targetEntity == null) {
             return false;
         }
-        if (!targetEntity.isAlive())
-        {
+        if (!targetEntity.isAlive()) {
             return false;
         }
-        if (lastTarget == targetEntity)
-        {
+        if (lastTarget == targetEntity) {
             return false;
         }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity) >= 16)
-        {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity) >= 16) {
             return false;
         }
         this.lastTarget = targetEntity;
@@ -77,38 +68,28 @@ public class Sprint extends AIGoal
     }
 
     @Override
-    public boolean shouldFinish()
-    {
-        if (this.petEntity.getOwner() == null)
-        {
+    public boolean shouldFinish() {
+        if (this.petEntity.getOwner() == null) {
             return true;
-        }
-        else if (this.petEntity.e(this.lastTarget) < 4)
-        {
+        } else if (this.petEntity.e(this.lastTarget) < 4) {
             return true;
-        }
-        else if (!this.petEntity.canMove())
-        {
+        } else if (!this.petEntity.canMove()) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void start()
-    {
+    public void start() {
         nav.getParameters().addSpeedModifier("Sprint", walkSpeedModifier);
         petEntity.setSprinting(true);
     }
 
     @Override
-    public void finish()
-    {
+    public void finish() {
         nav.getParameters().removeSpeedModifier("Sprint");
-        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable()
-        {
-            public void run()
-            {
+        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
                 petEntity.setSprinting(false);
             }
         }, 25L);

@@ -30,24 +30,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandStop implements CommandExecutor
-{
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+public class CommandStop implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
-                if (myPet.getStatus() == PetState.Despawned)
-                {
+                if (myPet.getStatus() == PetState.Despawned) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
-                }
-                else if (myPet.getStatus() == PetState.Dead)
-                {
+                } else if (myPet.getStatus() == PetState.Dead) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
@@ -55,9 +48,7 @@ public class CommandStop implements CommandExecutor
                 myPet.getCraftPet().getHandle().setTarget(null);
                 myPet.getCraftPet().getHandle().setGoalTarget(null);
                 myPet.getCraftPet().getHandle().goalTarget = null;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;

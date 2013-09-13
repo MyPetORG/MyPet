@@ -37,48 +37,36 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandSkill implements CommandExecutor, TabCompleter
-{
+public class CommandSkill implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (sender instanceof Player)
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (args.length > 0 && Permissions.has(petOwner, "MyPet.admin", false))
-            {
+            if (args.length > 0 && Permissions.has(petOwner, "MyPet.admin", false)) {
                 petOwner = Bukkit.getServer().getPlayer(args[0]);
 
-                if (petOwner == null || !petOwner.isOnline())
-                {
+                if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
                     return true;
-                }
-                else if (!MyPetList.hasMyPet(petOwner))
-                {
+                } else if (!MyPetList.hasMyPet(petOwner)) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
 
-            if (MyPetList.hasMyPet(petOwner))
-            {
+            if (MyPetList.hasMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
 
-                for (ISkillInstance skill : myPet.getSkills().getSkills())
-                {
-                    if (skill.isActive())
-                    {
+                for (ISkillInstance skill : myPet.getSkills().getSkills()) {
+                    if (skill.isActive()) {
                         sender.sendMessage("  " + ChatColor.GREEN + skill.getName() + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
                 return true;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }
             return true;
@@ -88,10 +76,8 @@ public class CommandSkill implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings)
-    {
-        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false))
-        {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (strings.length == 1 && Permissions.has((Player) commandSender, "MyPet.admin", false)) {
             return null;
         }
         return emptyList;

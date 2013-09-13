@@ -34,67 +34,52 @@ import org.spout.nbt.ListTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomInventory implements IInventory
-{
+public class CustomInventory implements IInventory {
     private String inventroyName;
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private int size = 0;
     private int stackSize = 64;
     private List<HumanEntity> transaction = new ArrayList<HumanEntity>();
 
-    public CustomInventory(String inventroyName, int size)
-    {
+    public CustomInventory(String inventroyName, int size) {
         setName(inventroyName);
         setSize(size);
     }
 
-    public int getSize()
-    {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(int size)
-    {
+    public void setSize(int size) {
         this.size = size;
-        for (int i = items.size() ; i < size ; i++)
-        {
+        for (int i = items.size(); i < size; i++) {
             items.add(i, null);
         }
     }
 
-    public String getName()
-    {
+    public String getName() {
         return inventroyName;
     }
 
-    public void setName(String name)
-    {
-        if (name.length() > 16)
-        {
+    public void setName(String name) {
+        if (name.length() > 16) {
             name = name.substring(0, 16);
         }
         this.inventroyName = name;
     }
 
-    public ItemStack getItem(int i)
-    {
-        if (i <= size)
-        {
+    public ItemStack getItem(int i) {
+        if (i <= size) {
             return items.get(i);
         }
         return null;
     }
 
-    public void setItem(int i, ItemStack itemStack)
-    {
-        if (i < items.size())
-        {
+    public void setItem(int i, ItemStack itemStack) {
+        if (i < items.size()) {
             items.set(i, itemStack);
-        }
-        else
-        {
-            for (int x = items.size() ; x < i ; x++)
-            {
+        } else {
+            for (int x = items.size(); x < i; x++) {
                 items.add(x, null);
             }
             items.add(i, itemStack);
@@ -102,56 +87,42 @@ public class CustomInventory implements IInventory
         update();
     }
 
-    public int addItem(org.bukkit.inventory.ItemStack itemAdd)
-    {
-        if (itemAdd == null)
-        {
+    public int addItem(org.bukkit.inventory.ItemStack itemAdd) {
+        if (itemAdd == null) {
             return 0;
         }
         itemAdd = itemAdd.clone();
 
-        for (int i = 0 ; i < this.getSize() ; i++)
-        {
+        for (int i = 0; i < this.getSize(); i++) {
             CraftItemStack craftItem = CraftItemStack.asCraftMirror(getItem(i));
 
-            if (ItemStackComparator.compareItem(itemAdd, craftItem))
-            {
-                if (craftItem.getAmount() >= craftItem.getMaxStackSize())
-                {
+            if (ItemStackComparator.compareItem(itemAdd, craftItem)) {
+                if (craftItem.getAmount() >= craftItem.getMaxStackSize()) {
                     continue;
                 }
-                while (craftItem.getAmount() < craftItem.getMaxStackSize() && itemAdd.getAmount() > 0)
-                {
+                while (craftItem.getAmount() < craftItem.getMaxStackSize() && itemAdd.getAmount() > 0) {
                     craftItem.setAmount(craftItem.getAmount() + 1);
                     itemAdd.setAmount(itemAdd.getAmount() - 1);
                 }
-                if (itemAdd.getAmount() == 0)
-                {
+                if (itemAdd.getAmount() == 0) {
                     break;
                 }
             }
         }
-        if (itemAdd.getAmount() > 0)
-        {
-            for (int i = 0 ; i < this.getSize() ; i++)
-            {
-                if (getItem(i) == null)
-                {
-                    if (itemAdd.getAmount() <= itemAdd.getMaxStackSize())
-                    {
+        if (itemAdd.getAmount() > 0) {
+            for (int i = 0; i < this.getSize(); i++) {
+                if (getItem(i) == null) {
+                    if (itemAdd.getAmount() <= itemAdd.getMaxStackSize()) {
                         setItem(i, CraftItemStack.asNMSCopy(itemAdd.clone()));
                         itemAdd.setAmount(0);
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         CraftItemStack itemStack = (CraftItemStack) itemAdd.clone();
                         itemStack.setAmount(itemStack.getMaxStackSize());
                         setItem(i, CraftItemStack.asNMSCopy(itemStack));
                         itemAdd.setAmount(itemAdd.getAmount() - itemStack.getMaxStackSize());
                     }
-                    if (itemAdd.getAmount() == 0)
-                    {
+                    if (itemAdd.getAmount() == 0) {
                         break;
                     }
                 }
@@ -160,14 +131,11 @@ public class CustomInventory implements IInventory
         return itemAdd.getAmount();
     }
 
-    public void dropContentAt(Location loc)
-    {
+    public void dropContentAt(Location loc) {
         World world = ((CraftWorld) loc.getWorld()).getHandle();
-        for (int i = 0 ; i < this.getSize() ; i++)
-        {
+        for (int i = 0; i < this.getSize(); i++) {
             ItemStack is = this.splitWithoutUpdate(i);
-            if (is != null)
-            {
+            if (is != null) {
                 is = is.cloneItemStack();
                 EntityItem itemEntity = new EntityItem(world, loc.getX(), loc.getY(), loc.getZ(), is);
                 itemEntity.pickupDelay = 20;
@@ -176,22 +144,16 @@ public class CustomInventory implements IInventory
         }
     }
 
-    public ItemStack splitStack(int i, int j)
-    {
-        if (i <= size && items.get(i) != null)
-        {
+    public ItemStack splitStack(int i, int j) {
+        if (i <= size && items.get(i) != null) {
             ItemStack itemStack;
-            if (items.get(i).count <= j)
-            {
+            if (items.get(i).count <= j) {
                 itemStack = items.get(i);
                 items.set(i, null);
                 return itemStack;
-            }
-            else
-            {
+            } else {
                 itemStack = items.get(i).a(j);
-                if (items.get(i).count == 0)
-                {
+                if (items.get(i).count == 0) {
                     items.set(i, null);
                 }
                 return itemStack;
@@ -200,24 +162,19 @@ public class CustomInventory implements IInventory
         return null;
     }
 
-    public ItemStack[] getContents()
-    {
+    public ItemStack[] getContents() {
         ItemStack[] itemStack = new ItemStack[getSize()];
-        for (int i = 0 ; i < getSize() ; i++)
-        {
+        for (int i = 0; i < getSize(); i++) {
             itemStack[i] = items.get(i);
         }
         return itemStack;
     }
 
-    public CompoundTag save(CompoundTag compound)
-    {
+    public CompoundTag save(CompoundTag compound) {
         List<CompoundTag> itemList = new ArrayList<CompoundTag>();
-        for (int i = 0 ; i < this.items.size() ; i++)
-        {
+        for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
-            if (itemStack != null)
-            {
+            if (itemStack != null) {
                 CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(itemStack);
                 item.getValue().put("Slot", new ByteTag("Slot", (byte) i));
                 itemList.add(item);
@@ -227,12 +184,10 @@ public class CustomInventory implements IInventory
         return compound;
     }
 
-    public void load(CompoundTag nbtTagCompound)
-    {
+    public void load(CompoundTag nbtTagCompound) {
         ListTag items = (ListTag) nbtTagCompound.getValue().get("Items");
 
-        for (int i = 0 ; i < items.getValue().size() ; i++)
-        {
+        for (int i = 0; i < items.getValue().size(); i++) {
             CompoundTag itemCompound = (CompoundTag) items.getValue().get(i);
 
             ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(itemCompound);
@@ -240,78 +195,60 @@ public class CustomInventory implements IInventory
         }
     }
 
-    public boolean a(EntityHuman entityHuman)
-    {
+    public boolean a(EntityHuman entityHuman) {
         return true;
     }
 
-    public void startOpen()
-    {
+    public void startOpen() {
     }
 
-    public void onOpen(CraftHumanEntity who)
-    {
+    public void onOpen(CraftHumanEntity who) {
         this.transaction.add(who);
     }
 
-    public void onClose(CraftHumanEntity who)
-    {
+    public void onClose(CraftHumanEntity who) {
         this.transaction.remove(who);
-        if (items.size() > this.size)
-        {
-            for (int counterOutside = items.size() - 1 ; counterOutside >= this.size ; counterOutside--)
-            {
-                if (items.get(counterOutside) != null)
-                {
-                    for (int counterInside = 0 ; counterInside < size ; counterInside++)
-                    {
-                        if (items.get(counterInside) == null)
-                        {
+        if (items.size() > this.size) {
+            for (int counterOutside = items.size() - 1; counterOutside >= this.size; counterOutside--) {
+                if (items.get(counterOutside) != null) {
+                    for (int counterInside = 0; counterInside < size; counterInside++) {
+                        if (items.get(counterInside) == null) {
                             items.set(counterInside, items.get(counterOutside));
                             items.set(counterOutside, null);
                         }
                     }
                 }
-                if (items.get(counterOutside) == null)
-                {
+                if (items.get(counterOutside) == null) {
                     items.remove(counterOutside);
                 }
             }
         }
     }
 
-    public void close()
-    {
-        for (HumanEntity humanEntity : transaction)
-        {
+    public void close() {
+        for (HumanEntity humanEntity : transaction) {
             humanEntity.closeInventory();
         }
     }
 
-    public List<HumanEntity> getViewers()
-    {
+    public List<HumanEntity> getViewers() {
         return this.transaction;
     }
 
-    public InventoryHolder getOwner()
-    {
+    public InventoryHolder getOwner() {
         return null;
     }
 
-    public int getMaxStackSize()
-    {
+    public int getMaxStackSize() {
         return stackSize;
     }
 
-    public void setMaxStackSize(int i)
-    {
+    public void setMaxStackSize(int i) {
         this.stackSize = i;
     }
 
-    public ItemStack splitWithoutUpdate(int i)
-    {
-        if (items.get(i) != null)
-        {
+    public ItemStack splitWithoutUpdate(int i) {
+        if (items.get(i) != null) {
             ItemStack itemstack = items.get(i);
 
             items.set(i, null);
@@ -320,21 +257,17 @@ public class CustomInventory implements IInventory
         return null;
     }
 
-    public void update()
-    {
+    public void update() {
     }
 
-    public boolean b(int paramInt, ItemStack paramItemStack)
-    {
+    public boolean b(int paramInt, ItemStack paramItemStack) {
         return true;
     }
 
-    public boolean c()
-    {
+    public boolean c() {
         return true;
     }
 
-    public void g()
-    {
+    public void g() {
     }
 }

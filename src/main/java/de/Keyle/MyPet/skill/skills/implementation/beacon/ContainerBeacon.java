@@ -25,8 +25,7 @@ import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 
-public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeacon
-{
+public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeacon {
     private final SlotBeacon slotBeacon;
     private CraftInventoryView bukkitEntity = null;
     private PlayerInventory playerInventory;
@@ -34,8 +33,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
     MyPetCustomBeaconInventory beaconInv;
     Beacon beaconSkill;
 
-    public ContainerBeacon(PlayerInventory playerInventory, MyPetCustomBeaconInventory beaconInv, TileEntityBeacon tileEntityBeacon, Beacon beaconSkill)
-    {
+    public ContainerBeacon(PlayerInventory playerInventory, MyPetCustomBeaconInventory beaconInv, TileEntityBeacon tileEntityBeacon, Beacon beaconSkill) {
         super(playerInventory, tileEntityBeacon);
         this.c.clear();
         this.b.clear();
@@ -45,32 +43,26 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
         this.playerInventory = playerInventory;
         a(this.slotBeacon = new SlotBeacon(beaconInv, 0, 136, 110));
 
-        for (int i = 0 ; i < 3 ; i++)
-        {
-            for (int j = 0 ; j < 9 ; j++)
-            {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
                 a(new Slot(playerInventory, j + i * 9 + 9, 36 + j * 18, 137 + i * 18));
             }
         }
 
-        for (int i = 0 ; i < 9 ; i++)
-        {
+        for (int i = 0; i < 9; i++) {
             a(new Slot(playerInventory, i, 36 + i * 18, 195));
         }
     }
 
-    public void addSlotListener(ICrafting icrafting)
-    {
+    public void addSlotListener(ICrafting icrafting) {
         super.addSlotListener(icrafting);
         icrafting.setContainerData(this, 0, this.beaconSkill.getLevel());
         icrafting.setContainerData(this, 1, this.beaconSkill.getPrimaryEffectId());
         icrafting.setContainerData(this, 2, this.beaconSkill.getSecondaryEffectId());
     }
 
-    public CraftInventoryView getBukkitView()
-    {
-        if (this.bukkitEntity != null)
-        {
+    public CraftInventoryView getBukkitView() {
+        if (this.bukkitEntity != null) {
             return this.bukkitEntity;
         }
 
@@ -83,13 +75,11 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
 
     // Obfuscated Methods -------------------------------------------------------------------------------------------
 
-    public boolean a(EntityHuman entityhuman)
-    {
+    public boolean a(EntityHuman entityhuman) {
         return true;
     }
 
-    public ItemStack b(EntityHuman entityhuman, int slotNumber)
-    {
+    public ItemStack b(EntityHuman entityhuman, int slotNumber) {
         ItemStack slotItemClone = null;
         Slot slot = (Slot) this.c.get(slotNumber); // c -> List<Slot>
 
@@ -98,52 +88,35 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
             ItemStack slotItem = slot.getItem();
 
             slotItemClone = slotItem.cloneItemStack();
-            if (slotNumber == 0)
-            {
-                if (!a(slotItem, 1, 37, true))
-                {
+            if (slotNumber == 0) {
+                if (!a(slotItem, 1, 37, true)) {
                     return null;
                 }
 
                 slot.a(slotItem, slotItemClone);
-            }
-            else if ((!this.slotBeacon.e()) && (this.slotBeacon.isAllowed(slotItem)) && (slotItem.count == 1))
-            {
-                if (!a(slotItem, 0, 1, false))
-                {
+            } else if ((!this.slotBeacon.e()) && (this.slotBeacon.isAllowed(slotItem)) && (slotItem.count == 1)) {
+                if (!a(slotItem, 0, 1, false)) {
                     return null;
                 }
-            }
-            else if ((slotNumber >= 1) && (slotNumber < 28))
-            {
-                if (!a(slotItem, 28, 37, false))
-                {
+            } else if ((slotNumber >= 1) && (slotNumber < 28)) {
+                if (!a(slotItem, 28, 37, false)) {
                     return null;
                 }
-            }
-            else if ((slotNumber >= 28) && (slotNumber < 37))
-            {
-                if (!a(slotItem, 1, 28, false))
-                {
+            } else if ((slotNumber >= 28) && (slotNumber < 37)) {
+                if (!a(slotItem, 1, 28, false)) {
                     return null;
                 }
-            }
-            else if (!a(slotItem, 1, 37, false))
-            {
+            } else if (!a(slotItem, 1, 37, false)) {
                 return null;
             }
 
-            if (slotItem.count == 0)
-            {
+            if (slotItem.count == 0) {
                 slot.set(null);
-            }
-            else
-            {
+            } else {
                 slot.e();
             }
 
-            if (slotItem.count == slotItemClone.count)
-            {
+            if (slotItem.count == slotItemClone.count) {
                 return null;
             }
 
@@ -154,8 +127,7 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R2.ContainerBeaco
     }
 
     @Override
-    public TileEntityBeacon e()
-    {
+    public TileEntityBeacon e() {
         return tileEntityBeacon;
     }
 }

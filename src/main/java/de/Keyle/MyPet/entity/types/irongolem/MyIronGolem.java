@@ -30,22 +30,18 @@ import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.UserCreated;
 import static org.bukkit.Material.IRON_INGOT;
 
 @MyPetInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
-public class MyIronGolem extends MyPet
-{
-    public MyIronGolem(MyPetPlayer petOwner)
-    {
+public class MyIronGolem extends MyPet {
+    public MyIronGolem(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.IronGolem;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyIronGolem{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + "}";
     }
 }

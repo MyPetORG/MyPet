@@ -27,51 +27,41 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import net.minecraft.server.v1_6_R2.World;
 
 @EntitySize(width = 5.5f, height = 5.5F)
-public class EntityMyGiant extends EntityMyPet
-{
-    public EntityMyGiant(World world, MyPet myPet)
-    {
+public class EntityMyGiant extends EntityMyPet {
+    public EntityMyGiant(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.zombie.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.zombie.hurt";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.zombie.say";
     }
 
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.zombie.step", 0.15F, 1.0F);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
 
-        if (myPet != null)
-        {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.height *= 6.0F;
         }
     }
 
-    public void setPathfinder()
-    {
+    public void setPathfinder() {
         super.setPathfinder();
-        if (myPet.getDamage() > 0)
-        {
+        if (myPet.getDamage() > 0) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 8, 20));
         }
     }

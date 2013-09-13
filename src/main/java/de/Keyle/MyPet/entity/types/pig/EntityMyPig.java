@@ -27,61 +27,47 @@ import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import net.minecraft.server.v1_6_R2.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
-public class EntityMyPig extends EntityMyPet
-{
+public class EntityMyPig extends EntityMyPet {
     public static ConfigItem GROW_UP_ITEM;
 
-    public EntityMyPig(World world, MyPet myPet)
-    {
+    public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         return "mob.pig.death";
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         return "mob.pig.say";
     }
 
-    protected String getLivingSound()
-    {
+    protected String getLivingSound() {
         return "mob.pig.say";
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem())
-        {
-            if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
-            {
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
-                if (itemStack.count <= 0)
-                {
+                if (itemStack.count <= 0) {
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                 }
                 ((MyPig) myPet).setSaddle(true);
                 return true;
-            }
-            else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking())
-            {
+            } else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
                 ((MyPig) myPet).setSaddle(false);
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
+                if (!entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -89,15 +75,10 @@ public class EntityMyPig extends EntityMyPet
                 }
                 makeSound("mob.sheep.shear", 1.0F, 1.0F);
                 itemStack.damage(1, entityhuman);
-            }
-            else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking())
-            {
-                if (isBaby())
-                {
-                    if (!entityhuman.abilities.canInstantlyBuild)
-                    {
-                        if (--itemStack.count <= 0)
-                        {
+            } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
+                if (isBaby()) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                     }
@@ -109,45 +90,35 @@ public class EntityMyPig extends EntityMyPet
         return false;
     }
 
-    public boolean hasSaddle()
-    {
+    public boolean hasSaddle() {
         return ((MyPig) myPet).hasSaddle;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // saddle
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyPig) myPet).isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
+    public void setBaby(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(12, new Integer(0));
         }
         ((MyPig) myPet).isBaby = flag;
     }
 
-    public void playStepSound()
-    {
+    public void playStepSound() {
         makeSound("mob.pig.step", 0.15F, 1.0F);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setSaddle(((MyPig) myPet).hasSaddle());
@@ -155,14 +126,10 @@ public class EntityMyPig extends EntityMyPet
         }
     }
 
-    public void setSaddle(boolean flag)
-    {
-        if (flag)
-        {
+    public void setSaddle(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(16, (byte) 1);
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(16, (byte) 0);
         }
         ((MyPig) myPet).hasSaddle = flag;

@@ -26,16 +26,14 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-public @interface SkillProperties
-{
+public @interface SkillProperties {
     String[] parameterNames() default {};
 
     String[] parameterDefaultValues() default {};
 
     NBTdatatypes[] parameterTypes() default {};
 
-    public enum NBTdatatypes
-    {
+    public enum NBTdatatypes {
         Byte, Short, Int, Long, Float, Double, String, Boolean
     }
 }

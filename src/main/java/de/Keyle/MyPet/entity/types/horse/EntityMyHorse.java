@@ -28,16 +28,14 @@ import net.minecraft.server.v1_6_R2.*;
 import org.bukkit.Material;
 
 @EntitySize(width = 1.4F, height = 1.6F)
-public class EntityMyHorse extends EntityMyPet
-{
+public class EntityMyHorse extends EntityMyPet {
     public static ConfigItem GROW_UP_ITEM;
     int soundCounter = 0;
     int rearCounter = -1;
     int ageCounter = -1;
     int ageFailCounter = 1;
 
-    public EntityMyHorse(World world, MyPet myPet)
-    {
+    public EntityMyHorse(World world, MyPet myPet) {
         super(world, myPet);
     }
 
@@ -49,134 +47,103 @@ public class EntityMyHorse extends EntityMyPet
      * 64 rear
      * 128 mouth open
      */
-    private void applyVisual(int value, boolean flag)
-    {
+    private void applyVisual(int value, boolean flag) {
         int i = this.datawatcher.getInt(16);
-        if (flag)
-        {
+        if (flag) {
             this.datawatcher.watch(16, Integer.valueOf(i | value));
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(16, Integer.valueOf(i & (~value)));
         }
     }
 
-    public boolean attack(Entity entity)
-    {
+    public boolean attack(Entity entity) {
         boolean flag = false;
-        try
-        {
+        try {
             flag = super.attack(entity);
-            if (flag)
-            {
+            if (flag) {
                 applyVisual(64, true);
                 rearCounter = 10;
-                if (getHorseType() == 0)
-                {
+                if (getHorseType() == 0) {
                     this.world.makeSound(this, "mob.horse.angry", 1.0F, 1.0F);
-                }
-                else if (getHorseType() == 2 || getHorseType() == 1)
-                {
+                } else if (getHorseType() == 2 || getHorseType() == 1) {
                     this.world.makeSound(this, "mob.horse.donkey.angry", 1.0F, 1.0F);
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return flag;
     }
 
-    public int getAge()
-    {
+    public int getAge() {
         return ((MyHorse) myPet).age;
     }
 
-    public void setAge(int value)
-    {
+    public void setAge(int value) {
         value = Math.min(0, (Math.max(-24000, value)));
         value -= value % 1000;
         ((MyHorse) myPet).age = value;
         this.datawatcher.watch(12, new Integer(value));
     }
 
-    public int getArmor()
-    {
+    public int getArmor() {
         return ((MyHorse) myPet).armor;
     }
 
-    public void setArmor(int value)
-    {
+    public void setArmor(int value) {
         this.datawatcher.watch(22, Integer.valueOf(value));
         ((MyHorse) myPet).armor = value;
     }
 
     @Override
-    protected String getDeathSound()
-    {
+    protected String getDeathSound() {
         int horseType = ((MyHorse) myPet).horseType;
-        if (horseType == 3)
-        {
+        if (horseType == 3) {
             return "mob.horse.zombie.death";
         }
-        if (horseType == 4)
-        {
+        if (horseType == 4) {
             return "mob.horse.skeleton.death";
         }
-        if ((horseType == 1) || (horseType == 2))
-        {
+        if ((horseType == 1) || (horseType == 2)) {
             return "mob.horse.donkey.death";
         }
         return "mob.horse.death";
     }
 
-    public byte getHorseType()
-    {
+    public byte getHorseType() {
         return ((MyHorse) myPet).horseType;
     }
 
-    public void setHorseType(byte horseType)
-    {
+    public void setHorseType(byte horseType) {
         this.datawatcher.watch(19, Byte.valueOf(horseType));
         ((MyHorse) myPet).horseType = horseType;
     }
 
     @Override
-    protected String getHurtSound()
-    {
+    protected String getHurtSound() {
         int horseType = ((MyHorse) myPet).horseType;
-        if (horseType == 3)
-        {
+        if (horseType == 3) {
             return "mob.horse.zombie.hit";
         }
-        if (horseType == 4)
-        {
+        if (horseType == 4) {
             return "mob.horse.skeleton.hit";
         }
-        if ((horseType == 1) || (horseType == 2))
-        {
+        if ((horseType == 1) || (horseType == 2)) {
             return "mob.horse.donkey.hit";
         }
         return "mob.horse.hit";
     }
 
-    protected String getLivingSound()
-    {
-        if (playIdleSound())
-        {
+    protected String getLivingSound() {
+        if (playIdleSound()) {
             int horseType = ((MyHorse) myPet).horseType;
-            if (horseType == 3)
-            {
+            if (horseType == 3) {
                 return "mob.horse.zombie.idle";
             }
-            if (horseType == 4)
-            {
+            if (horseType == 4) {
                 return "mob.horse.skeleton.idle";
             }
-            if ((horseType == 1) || (horseType == 2))
-            {
+            if ((horseType == 1) || (horseType == 2)) {
                 return "mob.horse.donkey.idle";
             }
             return "mob.horse.idle";
@@ -184,88 +151,66 @@ public class EntityMyHorse extends EntityMyPet
         return null;
     }
 
-    public int getVariant()
-    {
+    public int getVariant() {
         return ((MyHorse) myPet).variant;
     }
 
-    public void setVariant(int variant)
-    {
+    public void setVariant(int variant) {
         this.datawatcher.watch(20, Integer.valueOf(variant));
         ((MyHorse) myPet).variant = variant;
     }
 
-    public boolean handlePlayerInteraction(EntityHuman entityhuman)
-    {
-        if (super.handlePlayerInteraction(entityhuman))
-        {
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
             return true;
         }
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if (itemStack != null && canUseItem())
-        {
-            if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip())
-            {
+        if (itemStack != null && canUseItem()) {
+            if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip()) {
                 setSaddle(true);
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    if (--itemStack.count <= 0)
-                    {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
                 return true;
-            }
-            else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip())
-            {
+            } else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip()) {
                 setChest(true);
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    if (--itemStack.count <= 0)
-                    {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
                 return true;
-            }
-            else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip())
-            {
-                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
-                {
+            } else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip()) {
+                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
                 setArmor(itemStack.id - 416);
-                if (!entityhuman.abilities.canInstantlyBuild)
-                {
-                    if (--itemStack.count <= 0)
-                    {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
                 return true;
-            }
-            else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip())
-            {
-                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild)
-                {
+            } else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip()) {
+                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                if (hasChest() && !entityhuman.abilities.canInstantlyBuild)
-                {
+                if (hasChest() && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild)
-                {
+                if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -275,17 +220,11 @@ public class EntityMyHorse extends EntityMyPet
                 setSaddle(false);
                 setArmor(0);
                 return true;
-            }
-            else if (GROW_UP_ITEM.compare(itemStack))
-            {
-                if (isBaby())
-                {
-                    if (getOwner().getPlayer().isSneaking())
-                    {
-                        if (!entityhuman.abilities.canInstantlyBuild)
-                        {
-                            if (--itemStack.count <= 0)
-                            {
+            } else if (GROW_UP_ITEM.compare(itemStack)) {
+                if (isBaby()) {
+                    if (getOwner().getPlayer().isSneaking()) {
+                        if (!entityhuman.abilities.canInstantlyBuild) {
+                            if (--itemStack.count <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
@@ -300,26 +239,22 @@ public class EntityMyHorse extends EntityMyPet
                     itemStack.id == Material.HAY_BLOCK.getId() ||
                     itemStack.id == Material.GOLDEN_CARROT.getId() ||
                     itemStack.id == Material.APPLE.getId() ||
-                    itemStack.id == Material.SUGAR.getId())
-            {
+                    itemStack.id == Material.SUGAR.getId()) {
                 ageCounter = 5;
             }
         }
         return false;
     }
 
-    public boolean hasChest()
-    {
+    public boolean hasChest() {
         return ((MyHorse) myPet).chest;
     }
 
-    public boolean hasSaddle()
-    {
+    public boolean hasSaddle() {
         return ((MyHorse) myPet).saddle;
     }
 
-    protected void initDatawatcher()
-    {
+    protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, Integer.valueOf(0));     // age
         this.datawatcher.a(16, Integer.valueOf(0));     // saddle & chest
@@ -329,35 +264,27 @@ public class EntityMyHorse extends EntityMyPet
         this.datawatcher.a(22, Integer.valueOf(0));     // armor
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return ((MyHorse) myPet).age < 0;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (flag)
-        {
+    public void setBaby(boolean flag) {
+        if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(-24000));
             ((MyHorse) myPet).age = -24000;
-        }
-        else
-        {
+        } else {
             this.datawatcher.watch(12, new Integer(0));
             ((MyHorse) myPet).age = 0;
         }
     }
 
-    public void onLivingUpdate()
-    {
+    public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (rearCounter > -1 && rearCounter-- == 0)
-        {
+        if (rearCounter > -1 && rearCounter-- == 0) {
             applyVisual(64, false);
             rearCounter = -1;
         }
-        if (ageCounter > -1 && ageCounter-- == 0)
-        {
+        if (ageCounter > -1 && ageCounter-- == 0) {
             this.datawatcher.watch(12, new Integer(getAge() + ageFailCounter++));
             ageCounter = -1;
             ageFailCounter %= 1000;
@@ -365,53 +292,38 @@ public class EntityMyHorse extends EntityMyPet
     }
 
     @Override
-    public void playStepSound(int i, int j, int k, int l)
-    {
+    public void playStepSound(int i, int j, int k, int l) {
         StepSound localStepSound = Block.byId[l].stepSound;
-        if (this.world.getTypeId(i, j + 1, k) == Block.SNOW.id)
-        {
+        if (this.world.getTypeId(i, j + 1, k) == Block.SNOW.id) {
             localStepSound = Block.SNOW.stepSound;
         }
-        if (!Block.byId[l].material.isLiquid())
-        {
+        if (!Block.byId[l].material.isLiquid()) {
             int horseType = ((MyHorse) myPet).horseType;
-            if ((this.passenger != null) && (horseType != 1) && (horseType != 2))
-            {
+            if ((this.passenger != null) && (horseType != 1) && (horseType != 2)) {
                 this.soundCounter += 1;
-                if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0))
-                {
+                if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {
                     makeSound("mob.horse.gallop", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
-                    if ((horseType == 0) && (this.random.nextInt(10) == 0))
-                    {
+                    if ((horseType == 0) && (this.random.nextInt(10) == 0)) {
                         makeSound("mob.horse.breathe", localStepSound.getVolume1() * 0.6F, localStepSound.getVolume2());
                     }
-                }
-                else if (this.soundCounter <= 5)
-                {
+                } else if (this.soundCounter <= 5) {
                     makeSound("mob.horse.wood", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
                 }
-            }
-            else if (localStepSound == Block.h)
-            {
+            } else if (localStepSound == Block.h) {
                 makeSound("mob.horse.soft", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
-            }
-            else
-            {
+            } else {
                 makeSound("mob.horse.wood", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
             }
         }
     }
 
-    public void setChest(boolean flag)
-    {
+    public void setChest(boolean flag) {
         applyVisual(8, flag);
         ((MyHorse) myPet).chest = flag;
     }
 
-    public void setMyPet(MyPet myPet)
-    {
-        if (myPet != null)
-        {
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
             super.setMyPet(myPet);
 
             this.setAge(((MyHorse) myPet).getAge());
@@ -423,8 +335,7 @@ public class EntityMyHorse extends EntityMyPet
         }
     }
 
-    public void setSaddle(boolean flag)
-    {
+    public void setSaddle(boolean flag) {
         applyVisual(4, flag);
         ((MyHorse) myPet).saddle = flag;
     }

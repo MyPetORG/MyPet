@@ -41,132 +41,99 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.*;
 
-public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive
-{
+public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     private boolean pickup = false;
     private MyPet myPet;
 
-    public Pickup(boolean addedByInheritance)
-    {
+    public Pickup(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
-    public void setMyPet(MyPet myPet)
-    {
+    public void setMyPet(MyPet myPet) {
         this.myPet = myPet;
     }
 
-    public MyPet getMyPet()
-    {
+    public MyPet getMyPet() {
         return myPet;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return range > 0;
     }
 
-    public void upgrade(ISkillInfo upgrade, boolean quiet)
-    {
-        if (upgrade instanceof PickupInfo)
-        {
-            if (upgrade.getProperties().getValue().containsKey("range"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add"))
-                {
+    public void upgrade(ISkillInfo upgrade, boolean quiet) {
+        if (upgrade instanceof PickupInfo) {
+            if (upgrade.getProperties().getValue().containsKey("range")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add")) {
                     range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
-                }
-                else
-                {
+                } else {
                     range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
-                if (!quiet)
-                {
+                if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range)));
                 }
             }
         }
     }
 
-    public String getFormattedValue()
-    {
+    public String getFormattedValue() {
         return Locales.getString("Name.Range", myPet.getOwner().getLanguage()) + ": " + String.format("%1.2f", range) + " " + Locales.getString("Name.Blocks", myPet.getOwner().getPlayer());
     }
 
-    public void reset()
-    {
+    public void reset() {
         range = 0;
         pickup = false;
     }
 
-    public boolean activate()
-    {
-        if (range > 0)
-        {
-            if (myPet.getSkills().isSkillActive(Inventory.class))
-            {
+    public boolean activate() {
+        if (range > 0) {
+            if (myPet.getSkills().isSkillActive(Inventory.class)) {
                 pickup = !pickup;
                 String mode = pickup ? Locales.getString("Name.Enabled", myPet.getOwner()) : Locales.getString("Name.Disabled", myPet.getOwner());
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), mode));
                 return true;
-            }
-            else
-            {
+            } else {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.NoInventory", myPet.getOwner().getLanguage()), myPet.getPetName()));
                 return false;
             }
-        }
-        else
-        {
+        } else {
             myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.No.Skill", myPet.getOwner().getLanguage()), myPet.getPetName(), this.getName()));
             return false;
         }
     }
 
-    public void schedule()
-    {
-        if (pickup && (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || myPet.getOwner().isInExternalGames()))
-        {
+    public void schedule() {
+        if (pickup && (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || myPet.getOwner().isInExternalGames())) {
             pickup = false;
             myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Locales.getString("Name.Disabled", myPet.getOwner())));
             return;
         }
-        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class))
-        {
-            for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range))
-            {
-                if (entity instanceof Item)
-                {
+        if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class)) {
+            for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range)) {
+                if (entity instanceof Item) {
                     Item itemEntity = (Item) entity;
                     ItemStack itemStack = itemEntity.getItemStack();
 
-                    if (itemStack.getAmount() > 0)
-                    {
+                    if (itemStack.getAmount() > 0) {
                         PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
                         Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
-                        if (playerPickupEvent.isCancelled())
-                        {
+                        if (playerPickupEvent.isCancelled()) {
                             continue;
                         }
 
                         CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
                         int itemAmount = inv.addItem(itemStack);
-                        if (itemAmount == 0)
-                        {
-                            for (Entity p : itemEntity.getNearbyEntities(20, 20, 20))
-                            {
-                                if (p instanceof Player)
-                                {
+                        if (itemAmount == 0) {
+                            for (Entity p : itemEntity.getNearbyEntities(20, 20, 20)) {
+                                if (p instanceof Player) {
                                     ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
                                 }
                             }
                             myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
                             itemStack.setAmount(0);
                             itemEntity.remove();
-                        }
-                        else
-                        {
+                        } else {
                             itemStack.setAmount(itemAmount);
                         }
                     }
@@ -175,13 +142,11 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         }
     }
 
-    public void load(CompoundTag compound)
-    {
+    public void load(CompoundTag compound) {
         pickup = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
     }
 
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
         nbtTagCompound.getValue().put("Active", new ByteTag("Active", pickup));
         return nbtTagCompound;
@@ -189,8 +154,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
     }
 
     @Override
-    public ISkillInstance cloneSkill()
-    {
+    public ISkillInstance cloneSkill() {
         Pickup newSkill = new Pickup(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;

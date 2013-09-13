@@ -33,19 +33,16 @@ import org.spout.nbt.IntTag;
 import static org.bukkit.Material.APPLE;
 
 @MyPetInfo(food = {APPLE})
-public class MyVillager extends MyPet implements IMyPetBaby
-{
+public class MyVillager extends MyPet implements IMyPetBaby {
     protected int profession = 0;
     protected boolean isBaby = false;
 
-    public MyVillager(MyPetPlayer petOwner)
-    {
+    public MyVillager(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
     @Override
-    public CompoundTag getExtendedInfo()
-    {
+    public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Profession", new IntTag("Profession", getProfession()));
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
@@ -53,55 +50,44 @@ public class MyVillager extends MyPet implements IMyPetBaby
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info)
-    {
-        if (info.getValue().containsKey("Profession"))
-        {
+    public void setExtendedInfo(CompoundTag info) {
+        if (info.getValue().containsKey("Profession")) {
             setProfession(((IntTag) info.getValue().get("Profession")).getValue());
         }
-        if (info.getValue().containsKey("Baby"))
-        {
+        if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
         }
     }
 
     @Override
-    public MyPetType getPetType()
-    {
+    public MyPetType getPetType() {
         return MyPetType.Villager;
     }
 
-    public int getProfession()
-    {
+    public int getProfession() {
         return profession;
     }
 
-    public void setProfession(int value)
-    {
-        if (status == PetState.Here)
-        {
+    public void setProfession(int value) {
+        if (status == PetState.Here) {
             ((EntityMyVillager) getCraftPet().getHandle()).setProfession(value);
         }
         this.profession = value;
     }
 
-    public boolean isBaby()
-    {
+    public boolean isBaby() {
         return isBaby;
     }
 
-    public void setBaby(boolean flag)
-    {
-        if (status == PetState.Here)
-        {
+    public void setBaby(boolean flag) {
+        if (status == PetState.Here) {
             ((EntityMyVillager) getCraftPet().getHandle()).setBaby(flag);
         }
         this.isBaby = flag;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MyVillager{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", profession=" + getProfession() + ", baby=" + isBaby() + ", worldgroup=" + worldGroup + "}";
     }
 }

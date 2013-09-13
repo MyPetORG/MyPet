@@ -12,17 +12,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class Minigames implements Listener
-{
+public class Minigames implements Listener {
     public static boolean DISABLE_PETS_IN_MINIGAMES = true;
 
     private static com.pauldavdesign.mineauz.minigames.Minigames plugin;
     private static boolean active = false;
 
-    public static void findPlugin()
-    {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("Minigames"))
-        {
+    public static void findPlugin() {
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("Minigames")) {
             plugin = (com.pauldavdesign.mineauz.minigames.Minigames) Bukkit.getServer().getPluginManager().getPlugin("Minigames");
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetPlugin.getPlugin());
             active = true;
@@ -30,20 +27,14 @@ public class Minigames implements Listener
         DebugLogger.info("Minigames support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInMinigame(MyPetPlayer owner)
-    {
-        if (active)
-        {
-            try
-            {
-                if (plugin != null)
-                {
+    public static boolean isInMinigame(MyPetPlayer owner) {
+        if (active) {
+            try {
+                if (plugin != null) {
                     Player p = owner.getPlayer();
                     return plugin.pdata.playersInMinigame().contains(p);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 active = false;
             }
         }
@@ -51,13 +42,10 @@ public class Minigames implements Listener
     }
 
     @EventHandler
-    public void onJoinMinigame(JoinMinigameEvent event)
-    {
-        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onJoinMinigame(JoinMinigameEvent event) {
+        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
-            {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }
@@ -65,13 +53,10 @@ public class Minigames implements Listener
     }
 
     @EventHandler
-    public void onSpectateMinigame(SpectateMinigameEvent event)
-    {
-        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer()))
-        {
+    public void onSpectateMinigame(SpectateMinigameEvent event) {
+        if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
-            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here)
-            {
+            if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
             }

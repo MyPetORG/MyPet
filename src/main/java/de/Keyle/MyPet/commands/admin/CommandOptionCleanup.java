@@ -33,45 +33,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class CommandOptionCleanup implements CommandOption
-{
+public class CommandOptionCleanup implements CommandOption {
     @Override
-    public boolean onCommandOption(CommandSender sender, String[] args)
-    {
-        if (args.length < 1)
-        {
+    public boolean onCommandOption(CommandSender sender, String[] args) {
+        if (args.length < 1) {
             return false;
         }
 
-        if (Util.isInt(args[0]))
-        {
+        if (Util.isInt(args[0])) {
             int days = Integer.parseInt(args[0]);
             boolean deleteOld = days == -1;
             List<InactiveMyPet> deletionList = new ArrayList<InactiveMyPet>();
-            for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets())
-            {
-                if (inactiveMyPet.getLastUsed() != -1 && !deleteOld)
-                {
-                    if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - inactiveMyPet.getLastUsed()) > days)
-                    {
+            for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
+                if (inactiveMyPet.getLastUsed() != -1 && !deleteOld) {
+                    if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - inactiveMyPet.getLastUsed()) > days) {
                         deletionList.add(inactiveMyPet);
                     }
-                }
-                else if (inactiveMyPet.getLastUsed() == -1 && deleteOld)
-                {
+                } else if (inactiveMyPet.getLastUsed() == -1 && deleteOld) {
                     deletionList.add(inactiveMyPet);
                 }
             }
             int deletedPetCount = deletionList.size();
-            if (deletedPetCount > 0)
-            {
-                if (Backup.MAKE_BACKUPS)
-                {
+            if (deletedPetCount > 0) {
+                if (Backup.MAKE_BACKUPS) {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] created backup -> " + MyPetPlugin.getPlugin().getBackupManager().createBackup());
                 }
 
-                for (InactiveMyPet inactiveMyPet : deletionList)
-                {
+                for (InactiveMyPet inactiveMyPet : deletionList) {
                     MyPetList.removeInactiveMyPet(inactiveMyPet);
                 }
             }

@@ -28,13 +28,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class MyPetInfoTest
-{
+public class MyPetInfoTest {
     @Test
-    public void testMyPetInfo()
-    {
-        for (MyPetType petType : MyPetType.values())
-        {
+    public void testMyPetInfo() {
+        for (MyPetType petType : MyPetType.values()) {
             Class<? extends MyPet> entityClass = petType.getMyPetClass();
             MyPetInfo pi = entityClass.getAnnotation(MyPetInfo.class);
             assertNotNull(pi);

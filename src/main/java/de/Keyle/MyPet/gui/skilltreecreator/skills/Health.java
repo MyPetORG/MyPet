@@ -30,8 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class Health implements SkillPropertiesPanel
-{
+public class Health implements SkillPropertiesPanel {
     private JTextField healthInput;
     private JRadioButton addHealthRadioButton;
     private JRadioButton setHealthRadioButton;
@@ -39,52 +38,39 @@ public class Health implements SkillPropertiesPanel
 
     private CompoundTag compoundTag;
 
-    public Health(CompoundTag compoundTag)
-    {
+    public Health(CompoundTag compoundTag) {
         this.compoundTag = compoundTag;
         load(compoundTag);
     }
 
     @Override
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return mainPanel;
     }
 
     @Override
-    public void verifyInput()
-    {
+    public void verifyInput() {
         healthInput.setText(healthInput.getText().replaceAll("[^0-9\\.]*", ""));
-        if (healthInput.getText().length() > 0)
-        {
-            if (healthInput.getText().matches("\\.+"))
-            {
+        if (healthInput.getText().length() > 0) {
+            if (healthInput.getText().matches("\\.+")) {
                 healthInput.setText("0.0");
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
                     Matcher regexMatcher = regex.matcher(healthInput.getText());
                     regexMatcher.find();
                     healthInput.setText(regexMatcher.group());
-                }
-                catch (PatternSyntaxException ignored)
-                {
+                } catch (PatternSyntaxException ignored) {
                     healthInput.setText("0.0");
                 }
             }
-        }
-        else
-        {
+        } else {
             healthInput.setText("0.0");
         }
     }
 
     @Override
-    public CompoundTag save()
-    {
+    public CompoundTag save() {
         compoundTag.getValue().put("addset_hp", new StringTag("addset_hp", addHealthRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("hp_double", new DoubleTag("hp_double", Double.parseDouble(healthInput.getText())));
 
@@ -92,24 +78,18 @@ public class Health implements SkillPropertiesPanel
     }
 
     @Override
-    public void load(CompoundTag compoundTag)
-    {
-        if (!compoundTag.getValue().containsKey("addset_hp") || ((StringTag) compoundTag.getValue().get("addset_hp")).getValue().equals("add"))
-        {
+    public void load(CompoundTag compoundTag) {
+        if (!compoundTag.getValue().containsKey("addset_hp") || ((StringTag) compoundTag.getValue().get("addset_hp")).getValue().equals("add")) {
             addHealthRadioButton.setSelected(true);
-        }
-        else
-        {
+        } else {
             setHealthRadioButton.setSelected(true);
         }
 
-        if (compoundTag.getValue().containsKey("hp"))
-        {
+        if (compoundTag.getValue().containsKey("hp")) {
             compoundTag.getValue().put("hp_double", new DoubleTag("hp_double", ((IntTag) compoundTag.getValue().get("hp")).getValue()));
             compoundTag.getValue().remove("hp");
         }
-        if (compoundTag.getValue().containsKey("hp_double"))
-        {
+        if (compoundTag.getValue().containsKey("hp_double")) {
             healthInput.setText("" + ((DoubleTag) compoundTag.getValue().get("hp_double")).getValue());
         }
     }

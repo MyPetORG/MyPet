@@ -23,8 +23,7 @@ package de.Keyle.MyPet.skill.skills.info;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import org.spout.nbt.CompoundTag;
 
-public interface ISkillInfo
-{
+public interface ISkillInfo {
     public SkillPropertiesPanel getGuiPanel();
 
     public void setProperties(CompoundTag propertiesCompound);

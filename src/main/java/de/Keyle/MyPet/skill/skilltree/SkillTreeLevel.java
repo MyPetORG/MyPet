@@ -27,85 +27,68 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkillTreeLevel
-{
+public class SkillTreeLevel {
     int level;
     String levelupMessage;
 
     List<ISkillInfo> skillList = new ArrayList<ISkillInfo>();
 
-    public SkillTreeLevel(int level)
-    {
+    public SkillTreeLevel(int level) {
         this.level = level;
     }
 
-    public int getLevel()
-    {
+    public int getLevel() {
         return level;
     }
 
-    public boolean hasLevelupMessage()
-    {
+    public boolean hasLevelupMessage() {
         return levelupMessage != null && !levelupMessage.equalsIgnoreCase("");
     }
 
-    public String getLevelupMessage()
-    {
+    public String getLevelupMessage() {
         return levelupMessage;
     }
 
-    public void setLevelupMessage(String levelupMessage)
-    {
+    public void setLevelupMessage(String levelupMessage) {
         this.levelupMessage = levelupMessage;
     }
 
-    public void addSkill(ISkillInfo skill)
-    {
+    public void addSkill(ISkillInfo skill) {
         addSkill(skill, false);
     }
 
-    public void addSkill(ISkillInfo skill, boolean top)
-    {
-        if (skill == null)
-        {
+    public void addSkill(ISkillInfo skill, boolean top) {
+        if (skill == null) {
             MyPetLogger.write("Skills->null:");
             MyPetLogger.write(Arrays.toString(Thread.currentThread().getStackTrace()));
         }
-        if (top)
-        {
+        if (top) {
             skillList.add(0, skill);
-        }
-        else
-        {
+        } else {
             skillList.add(skill);
         }
     }
 
-    public void removeSkill(int index)
-    {
+    public void removeSkill(int index) {
         skillList.remove(index);
     }
 
-    public List<ISkillInfo> getSkills()
-    {
+    public List<ISkillInfo> getSkills() {
         return skillList;
     }
 
-    public SkillTreeLevel clone()
-    {
+    public SkillTreeLevel clone() {
         SkillTreeLevel newLevel = new SkillTreeLevel(level);
         newLevel.setLevelupMessage(getLevelupMessage());
 
-        for (ISkillInfo skill : skillList)
-        {
+        for (ISkillInfo skill : skillList) {
             newLevel.addSkill(skill.cloneSkill());
         }
 
         return newLevel;
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "MyPetSkilltreeLevel{lvl:" + level + ", skillCount:" + skillList.size() + ", message:" + (hasLevelupMessage() ? getLevelupMessage() : "-") + "}";
     }
 }
