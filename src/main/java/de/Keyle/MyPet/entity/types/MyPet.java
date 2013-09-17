@@ -55,7 +55,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     private static ArrayListMultimap<Class<? extends MyPet>, LeashFlag> leashFlags = ArrayListMultimap.create();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
     private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
-
+    private static Map<Class<? extends MyPet>, ConfigItem> leashItem = new HashMap<Class<? extends MyPet>, ConfigItem>();
     protected final MyPetPlayer petOwner;
     protected CraftMyPet craftMyPet;
     protected String petName = "Pet";
@@ -583,6 +583,14 @@ public abstract class MyPet implements IMyPet, NBTStorage {
 
     public static void setStartHP(Class<? extends MyPet> myPetClass, double hp) {
         startHP.put(myPetClass, hp);
+    }
+
+    public static ConfigItem getLeashItem(Class<? extends MyPet> myPetClass) {
+        return leashItem.get(myPetClass);
+    }
+
+    public static void setLeashItem(Class<? extends MyPet> myPetClass, ConfigItem configItem) {
+        leashItem.put(myPetClass, configItem);
     }
 
     public static void setStartSpeed(Class<? extends MyPet> myPetClass, double speed) {

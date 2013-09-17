@@ -54,7 +54,6 @@ public class Configuration {
 
     public static String PET_INFO_OVERHEAD_PREFIX = "" + ChatColor.AQUA;
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
-    public static ConfigItem LEASH_ITEM = null;
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
@@ -90,7 +89,6 @@ public class Configuration {
     public static boolean RELEASE_PETS_ON_DEATH = false;
 
     public static void setDefault() {
-        config.addDefault("MyPet.Leash.Item", LEASH_ITEM);
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
         config.addDefault("MyPet.OwnerCanAttackPet", false);
@@ -219,6 +217,7 @@ public class Configuration {
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags()));
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0);
             config.addDefault("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0);
+            config.addDefault("MyPet.Pets." + petType.getTypeName() + ".LeashItem", Material.LEASH.getId());
         }
 
         for (EntityType entityType : MonsterExperience.mobExp.keySet()) {
@@ -231,7 +230,6 @@ public class Configuration {
     }
 
     public static void loadConfiguration() {
-        LEASH_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Leash.Item", "" + Material.LEASH.getId()));
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
         Control.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
@@ -353,6 +351,7 @@ public class Configuration {
             seperateLeashFlags(petType.getMyPetClass(), config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashFlags", linkLeashFlags(pi.leashFlags())));
             MyPet.setCustomRespawnTimeFactor(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFactor", 0));
             MyPet.setCustomRespawnTimeFixed(petType.getMyPetClass(), config.getInt("MyPet.Pets." + petType.getTypeName() + ".CustomRespawnTimeFixed", 0));
+            MyPet.setLeashItem(petType.getMyPetClass(), ConfigItem.createConfigItem(config.getString("MyPet.Pets." + petType.getTypeName() + ".LeashItem", "" + Material.LEASH.getId())));
         }
 
         if (config.getStringList("MyPet.exp.active") != null) {

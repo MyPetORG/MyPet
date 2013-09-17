@@ -38,6 +38,7 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_6_R2.EntityItem;
@@ -102,7 +103,7 @@ public class EntityListener implements Listener {
                 } else {
                     damager = (Player) event.getDamager();
                 }
-                if (Configuration.LEASH_ITEM.compare(damager.getItemInHand())) {
+                if (MyPet.getLeashItem(myPet.getPetType().getMyPetClass()).compare(damager.getItemInHand())) {
                     boolean infoShown = false;
                     if (CommandInfo.canSee(PetInfoDisplay.Name.adminOnly, damager, myPet)) {
                         damager.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
@@ -222,8 +223,9 @@ public class EntityListener implements Listener {
                     LivingEntity leashTarget = (LivingEntity) event.getEntity();
 
                     Class<? extends MyPet> myPetClass = MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getMyPetClass();
+                    ConfigItem leashItem = MyPet.getLeashItem(myPetClass);
 
-                    if (!Configuration.LEASH_ITEM.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
+                    if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
                         return;
                     }
                     if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getMyPetPlayer(damager).isCaptureHelperActive()) {
@@ -579,10 +581,12 @@ public class EntityListener implements Listener {
 
             if (damager instanceof Player) {
                 Player player = (Player) damager;
-                if (Configuration.LEASH_ITEM.compare(player.getItemInHand()) && damagedEntity instanceof CraftMyPet) {
+                if (event.getDamage() == 0) {
                     return;
-                } else if (event.getDamage() == 0) {
-                    return;
+                } else if (damagedEntity instanceof CraftMyPet) {
+                    if (MyPet.getLeashItem(((CraftMyPet) damagedEntity).getPetType().getMyPetClass()).compare(player.getItemInHand())) {
+                        return;
+                    }
                 }
                 if (MyPetList.hasMyPet(player)) {
                     MyPet myPet = MyPetList.getMyPet(player);
