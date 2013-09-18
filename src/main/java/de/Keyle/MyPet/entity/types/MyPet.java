@@ -131,11 +131,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public double getRangedDamage() {
-        return (getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).getDamage() : 0);
+        return getSkills().hasSkill(Ranged.class) ? getSkills().getSkill(Ranged.class).getDamage() : 0;
     }
 
     public boolean isPassiv() {
-        return getDamage() == 0;
+        return getDamage() == 0 && getRangedDamage() == 0;
     }
 
     public boolean hasTarget() {
