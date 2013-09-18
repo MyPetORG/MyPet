@@ -61,6 +61,11 @@ public class WorldGroup {
         return this.worlds;
     }
 
+    @Override
+    public String toString() {
+        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
+    }
+
     /**
      * Checks whether a world group contains the world
      *
@@ -71,15 +76,10 @@ public class WorldGroup {
         return this.worlds.contains(worldName);
     }
 
-    @Override
-    public String toString() {
-        return "WorldGroup{name=" + name + ", worlds=" + worlds + "}";
-    }
-
     /**
      * Returns all available world groups
      *
-     * @return WorldGroup[]
+     * @return Collection<WorldGroup>
      */
     public static Collection<WorldGroup> getGroups() {
         return Collections.unmodifiableCollection(allGroups.values());
@@ -96,7 +96,7 @@ public class WorldGroup {
     }
 
     /**
-     * Returns the group the world is in
+     * Returns the group by name
      *
      * @param name World
      * @return WorldGroup

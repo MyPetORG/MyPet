@@ -551,7 +551,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             MyPetLogger.write("No groups found. Everything will be in 'default' group.");
         }
 
-        DebugLogger.info("--- Load WorldGroups ---------------------------");
+        DebugLogger.info("--- Loading WorldGroups ---------------------------");
         if (nodes.size() == 0) {
             List<String> worldNames = new ArrayList<String>();
             WorldGroup defaultGroup = new WorldGroup("default");
@@ -559,7 +559,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             for (org.bukkit.World world : this.getServer().getWorlds()) {
                 MyPetLogger.write("added " + ChatColor.GOLD + world.getName() + ChatColor.RESET + " to 'default' group.");
                 worldNames.add(world.getName());
-                DebugLogger.info("   added " + world.getName() + " to " + defaultGroup.getName());
                 defaultGroup.addWorld(world.getName());
             }
             config.set("Groups.default", worldNames);
@@ -576,23 +575,17 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                         }
                     }
                     if (newGroup.getWorlds().size() > 0) {
-                        DebugLogger.info("   registered '" + newGroup.getName() + "' group");
+                        DebugLogger.info(" registered '" + newGroup.getName() + "' group");
                         newGroup.registerGroup();
                     }
                 }
             }
 
-            WorldGroup defaultGroup = null;
-            for (WorldGroup group : WorldGroup.getGroups()) {
-                if (group.getName().equalsIgnoreCase("default")) {
-                    defaultGroup = group;
-                    break;
-                }
-            }
+            WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
             if (defaultGroup == null) {
                 defaultGroup = new WorldGroup("default");
                 defaultGroup.registerGroup();
-                DebugLogger.info("   registered 'default' group");
+                DebugLogger.info(" registered 'default' group");
             }
 
             boolean saveConfig = false;
