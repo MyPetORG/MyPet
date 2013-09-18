@@ -67,8 +67,8 @@
 
     <repositories>
         <repository>
-            <id>oss-sonartype-snapshot-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>oss-sonartype-repo</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
             <id>mypet-repo</id>
