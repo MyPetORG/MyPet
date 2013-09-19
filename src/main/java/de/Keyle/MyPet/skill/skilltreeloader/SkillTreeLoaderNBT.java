@@ -62,7 +62,6 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
             if (skilltreeConfig.load()) {
                 try {
                     loadSkillTree(skilltreeConfig, skillTreeMobType);
-                    DebugLogger.info("  " + mobType.toLowerCase() + ".st");
                 } catch (Exception e) {
                     MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".st");
                     e.printStackTrace();
