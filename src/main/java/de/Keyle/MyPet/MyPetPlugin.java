@@ -134,15 +134,17 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         Configuration.loadConfiguration();
         DebugLogger.setup();
 
-        String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
-        if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion)) {
-            MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            MyPetLogger.write(ChatColor.RED + "This version of MyPet only works with:");
-            MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
-            MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
-            MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-            this.setEnabled(false);
-            return;
+        if (Configuration.CHECK_MINECRAFT_VERSION) {
+            String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
+            if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion)) {
+                MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
+                MyPetLogger.write(ChatColor.RED + "This version of MyPet only works with:");
+                MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
+                MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
+                MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
+                this.setEnabled(false);
+                return;
+            }
         }
 
         DebugLogger.info("----------- loading MyPet ... -----------");

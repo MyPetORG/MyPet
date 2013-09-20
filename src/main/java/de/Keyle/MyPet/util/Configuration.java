@@ -87,11 +87,13 @@ public class Configuration {
     public static boolean STORE_PETS_ON_PET_RELEASE = true;
     public static boolean DONATOR_EFFECT = true;
     public static boolean RELEASE_PETS_ON_DEATH = false;
+    public static boolean CHECK_MINECRAFT_VERSION = true;
 
     public static void setDefault() {
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
         config.addDefault("MyPet.OwnerCanAttackPet", false);
+        config.addDefault("MyPet.CheckMinecraftVersion", true);
         config.addDefault("MyPet.DisablePetVersusPlayer", false);
         config.addDefault("MyPet.DonatorEffect", true);
         config.addDefault("MyPet.EnableEvents", false);
@@ -232,6 +234,8 @@ public class Configuration {
     public static void loadConfiguration() {
         CONSUME_LEASH_ITEM = config.getBoolean("MyPet.Leash.Consume", false);
         ALWAYS_SHOW_LEASH_FOR_OWNER = config.getBoolean("MyPet.Leash.ShowAlwaysForOwner", false);
+        CHECK_MINECRAFT_VERSION = config.getBoolean("MyPet.CheckMinecraftVersion", true);
+
         Control.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
         Beacon.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
