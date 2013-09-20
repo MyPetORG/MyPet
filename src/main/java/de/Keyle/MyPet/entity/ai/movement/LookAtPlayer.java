@@ -45,7 +45,7 @@ public class LookAtPlayer extends AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (this.petEntity.aD().nextFloat() >= this.lookAtPlayerChance) {
+        if (this.petEntity.getRandom().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
         if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
@@ -74,7 +74,7 @@ public class LookAtPlayer extends AIGoal {
 
     @Override
     public void start() {
-        this.ticksUntilStopLooking = (40 + this.petEntity.aD().nextInt(40));
+        this.ticksUntilStopLooking = (40 + this.petEntity.getRandom().nextInt(40));
     }
 
     @Override

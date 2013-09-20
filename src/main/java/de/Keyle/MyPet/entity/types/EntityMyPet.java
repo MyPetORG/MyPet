@@ -42,6 +42,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 
 public abstract class EntityMyPet extends EntityCreature implements IMonster {
     public AIGoalSelector petPathfinderSelector, petTargetSelector;
@@ -343,12 +344,16 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.setSneaking(!isSneaking());
         }
         if (!this.isInvisible() && Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0) {
-            donatorParticleCounter = 20 + aD().nextInt(10);
+            donatorParticleCounter = 20 + getRandom().nextInt(10);
             BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
         }
     }
 
     protected void initDatawatcher() {
+    }
+
+    public Random getRandom() {
+        return getRandom();
     }
 
     /**

@@ -46,7 +46,7 @@ public class EatGrass extends AIGoal {
             return false;
         } else if (!this.entityMySheep.isSheared()) {
             return false;
-        } else if (entityMySheep.aD().nextDouble() > chanceToEat / 100.) {
+        } else if (entityMySheep.getRandom().nextDouble() > chanceToEat / 100.) {
             return false;
         } else if (this.entityMySheep.getGoalTarget() != null && this.entityMySheep.getGoalTarget().isAlive()) {
             return false;

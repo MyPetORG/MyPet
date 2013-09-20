@@ -95,7 +95,7 @@ public class MeleeAttack extends AIGoal {
     public void tick() {
         this.petEntity.getControllerLook().a(targetEntity, 30.0F, 30.0F);
         if (--this.timeUntilNextNavigationUpdate <= 0) {
-            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.aD().nextInt(7));
+            this.timeUntilNextNavigationUpdate = (4 + this.petEntity.getRandom().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);
         }
         if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0)) {
