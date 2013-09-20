@@ -36,10 +36,14 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permission;
 
 import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class CommandOptionReloadSkilltrees implements CommandOption {
     @Override
@@ -59,10 +63,19 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
+        Set<String> skilltreeNames = new LinkedHashSet<String>();
         for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);
             SkillTreeLoader.manageInheritance(skillTreeMobType);
+            skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
+        }
+        for (String skilltreeName : skilltreeNames) {
+            try {
+                Bukkit.getPluginManager().addPermission(new Permission("MyPet.custom.skilltree." + skilltreeName));
+            } catch (Exception ignored) {
+                DebugLogger.warning("Permission \"" + "MyPet.custom.skilltree." + skilltreeName + "\" is already registered.");
+            }
         }
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {

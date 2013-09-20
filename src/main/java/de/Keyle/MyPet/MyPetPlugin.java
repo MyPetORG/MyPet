@@ -75,6 +75,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_6_R2.CraftServer;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
@@ -222,10 +223,19 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
+        Set<String> skilltreeNames = new LinkedHashSet<String>();
         for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);
             SkillTreeLoader.manageInheritance(skillTreeMobType);
+            skilltreeNames.addAll(skillTreeMobType.getSkillTreeNames());
+        }
+        for (String skilltreeName : skilltreeNames) {
+            try {
+                Bukkit.getPluginManager().addPermission(new Permission("MyPet.custom.skilltree." + skilltreeName));
+            } catch (Exception ignored) {
+                DebugLogger.warning("Permission \"" + "MyPet.custom.skilltree." + skilltreeName + "\" is already registered.");
+            }
         }
 
         registerMyPetEntity(EntityMyCreeper.class, "Creeper", 50);
@@ -260,10 +270,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("Pet type: ----------");
         for (MyPetType myPetType : MyPetType.values()) {
             DebugLogger.info("  " + myPetType.getTypeName() + " { " +
-                                     "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
-                                     "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
-                                     "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
-                                     "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
+                    "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
+                    "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
+                    "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
+                    "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
         }
 
         new Locales();
