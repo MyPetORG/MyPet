@@ -73,7 +73,6 @@ import net.minecraft.server.v1_6_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_6_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -133,19 +132,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         Configuration.setDefault();
         Configuration.loadConfiguration();
         DebugLogger.setup();
-
-        if (Configuration.CHECK_MINECRAFT_VERSION) {
-            String minecraftVersion = ((CraftServer) getServer()).getHandle().getServer().getVersion();
-            if (!MyPetVersion.getMinecraftVersion().equalsIgnoreCase(minecraftVersion)) {
-                MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-                MyPetLogger.write(ChatColor.RED + "This version of MyPet only works with:");
-                MyPetLogger.write(ChatColor.RED + "   Minecraft " + MyPetVersion.getMinecraftVersion());
-                MyPetLogger.write(ChatColor.RED + "MyPet disabled!");
-                MyPetLogger.write(ChatColor.RED + "---------------------------------------------------------");
-                this.setEnabled(false);
-                return;
-            }
-        }
 
         DebugLogger.info("----------- loading MyPet ... -----------");
         DebugLogger.info("MyPet " + MyPetVersion.getMyPetVersion() + " build: " + MyPetVersion.getMyPetBuild());
