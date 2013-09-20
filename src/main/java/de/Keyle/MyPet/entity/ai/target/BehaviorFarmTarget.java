@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
-import net.minecraft.server.v1_6_R2.EntityLiving;
-import net.minecraft.server.v1_6_R2.EntityMonster;
-import net.minecraft.server.v1_6_R2.EntityPlayer;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_6_R3.EntityMonster;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 
 public class BehaviorFarmTarget extends AIGoal {
     private MyPet myPet;

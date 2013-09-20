@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R2.EntityHuman;
-import net.minecraft.server.v1_6_R2.ItemStack;
-import net.minecraft.server.v1_6_R2.MathHelper;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.EntityHuman;
+import net.minecraft.server.v1_6_R3.ItemStack;
+import net.minecraft.server.v1_6_R3.MathHelper;
+import net.minecraft.server.v1_6_R3.World;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -185,14 +185,14 @@ public class EntityMyWolf extends EntityMyPet {
             this.world.broadcastEntityEffect(this, (byte) 8);
         }
 
-        if (F()) // F() -> is in water
+        if (G()) // -> is in water
         {
             this.isWet = true;
             this.shaking = false;
             this.shakeCounter = 0.0F;
         } else if ((this.isWet || this.shaking) && this.shaking) {
             if (this.shakeCounter == 0.0F) {
-                makeSound("mob.wolf.shake", aZ(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.shakeCounter += 0.05F;
@@ -230,9 +230,9 @@ public class EntityMyWolf extends EntityMyPet {
         setCollarColor(color.getWoolData());
     }
 
-    public void setHealth(int i) {
+    public void setHealth(float i) {
         super.setHealth(i);
-        this.bj();
+        this.datawatcher.watch(18, Float.valueOf(i));
     }
 
     public void setMyPet(MyPet myPet) {

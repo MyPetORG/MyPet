@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.util.itemstringinterpreter;
 
-import net.minecraft.server.v1_6_R2.NBTBase;
+import net.minecraft.server.v1_6_R3.NBTBase;
 
 /**
  * This class will be removed with Minecraft 1.7

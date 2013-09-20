@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.util.itemstringinterpreter;
 
-import net.minecraft.server.v1_6_R2.NBTBase;
-import net.minecraft.server.v1_6_R2.NBTTagList;
+import net.minecraft.server.v1_6_R3.NBTBase;
+import net.minecraft.server.v1_6_R3.NBTTagList;
 
 import java.util.ArrayList;
 

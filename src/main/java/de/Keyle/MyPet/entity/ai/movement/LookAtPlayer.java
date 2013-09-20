@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_6_R2.Entity;
+import net.minecraft.server.v1_6_R3.Entity;
 
 public class LookAtPlayer extends AIGoal {
     private EntityMyPet petEntity;
@@ -45,7 +45,7 @@ public class LookAtPlayer extends AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (this.petEntity.aC().nextFloat() >= this.lookAtPlayerChance) {
+        if (this.petEntity.aD().nextFloat() >= this.lookAtPlayerChance) {
             return false;
         }
         if (this.petEntity.getGoalTarget() != null && this.petEntity.getGoalTarget().isAlive()) {
@@ -74,7 +74,7 @@ public class LookAtPlayer extends AIGoal {
 
     @Override
     public void start() {
-        this.ticksUntilStopLooking = (40 + this.petEntity.aC().nextInt(40));
+        this.ticksUntilStopLooking = (40 + this.petEntity.aD().nextInt(40));
     }
 
     @Override

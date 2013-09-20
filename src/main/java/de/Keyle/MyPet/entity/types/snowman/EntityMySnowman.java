@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R2.AxisAlignedBB;
-import net.minecraft.server.v1_6_R2.Block;
-import net.minecraft.server.v1_6_R2.MathHelper;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.AxisAlignedBB;
+import net.minecraft.server.v1_6_R3.Block;
+import net.minecraft.server.v1_6_R3.MathHelper;
+import net.minecraft.server.v1_6_R3.World;
 import org.bukkit.Location;
 
 import java.util.HashMap;

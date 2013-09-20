@@ -37,8 +37,7 @@ public class Sit extends AIGoal {
     public boolean shouldStart() {
         if (!(this.entityMyPet instanceof EntityMyOcelot) && !(this.entityMyPet instanceof EntityMyWolf)) {
             return false;
-        } else if (this.entityMyPet.H()) // -> isInWater()
-        {
+        } else if (this.entityMyPet.H()) { // -> isInWater()
             return false;
         } else if (!this.entityMyPet.onGround) {
             return false;

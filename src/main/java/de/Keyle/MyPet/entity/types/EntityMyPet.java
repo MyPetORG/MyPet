@@ -33,10 +33,10 @@ import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
-import net.minecraft.server.v1_6_R2.*;
+import net.minecraft.server.v1_6_R3.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -343,7 +343,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.setSneaking(!isSneaking());
         }
         if (!this.isInvisible() && Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0) {
-            donatorParticleCounter = 20 + aC().nextInt(10);
+            donatorParticleCounter = 20 + aD().nextInt(10);
             BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
         }
     }
@@ -432,7 +432,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected String aN() {
+    protected String aO() {
         try {
             return getHurtSound();
         } catch (Exception e) {
@@ -445,7 +445,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected String aO() {
+    protected String aP() {
         try {
             return getDeathSound();
         } catch (Exception e) {
@@ -457,19 +457,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * Returns the speed of played sounds
      */
-    protected float ba() {
+    protected float bb() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.ba();
+        return super.bb();
     }
 
     /**
      * Set weather the "new" AI is used
      */
-    public boolean be() {
+    public boolean bf() {
         return true;
     }
 
@@ -478,7 +478,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * -> updateAITasks()
      */
     @Override
-    protected void bh() {
+    protected void bi() {
         try {
             aV += 1; // entityAge
 

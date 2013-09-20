@@ -22,11 +22,11 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
-import net.minecraft.server.v1_6_R2.Block;
-import net.minecraft.server.v1_6_R2.MathHelper;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.Block;
+import net.minecraft.server.v1_6_R3.MathHelper;
+import net.minecraft.server.v1_6_R3.World;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_6_R3.event.CraftEventFactory;
 
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
@@ -46,7 +46,7 @@ public class EatGrass extends AIGoal {
             return false;
         } else if (!this.entityMySheep.isSheared()) {
             return false;
-        } else if (entityMySheep.aC().nextDouble() > chanceToEat / 100.) {
+        } else if (entityMySheep.aD().nextDouble() > chanceToEat / 100.) {
             return false;
         } else if (this.entityMySheep.getGoalTarget() != null && this.entityMySheep.getGoalTarget().isAlive()) {
             return false;

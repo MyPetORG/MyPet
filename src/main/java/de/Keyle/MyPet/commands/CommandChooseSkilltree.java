@@ -33,7 +33,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.CompoundTag;
@@ -127,7 +127,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
                         CompoundTag tag = addedSkilltree.getIconItem();
-                        net.minecraft.server.v1_6_R2.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
+                        net.minecraft.server.v1_6_R3.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
                         ItemStack shownItem = CraftItemStack.asCraftMirror(is);
 
                         String[] descriptionArray = new String[addedSkilltree.getDescription().size()];

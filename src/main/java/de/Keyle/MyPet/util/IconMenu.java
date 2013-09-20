@@ -20,11 +20,11 @@
 
 package de.Keyle.MyPet.util;
 
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
-import net.minecraft.server.v1_6_R2.NBTTagList;
-import net.minecraft.server.v1_6_R2.NBTTagString;
+import net.minecraft.server.v1_6_R3.NBTTagCompound;
+import net.minecraft.server.v1_6_R3.NBTTagList;
+import net.minecraft.server.v1_6_R3.NBTTagString;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -161,7 +161,7 @@ public class IconMenu implements Listener {
     }
 
     private ItemStack setItemNameAndLore(ItemStack item, String name, String[] lore) {
-        net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_6_R3.ItemStack is = CraftItemStack.asNMSCopy(item);
         if (is.tag == null) {
             is.tag = new NBTTagCompound("tag");
         }
@@ -186,7 +186,7 @@ public class IconMenu implements Listener {
         return item;
     }
 
-    private net.minecraft.server.v1_6_R2.ItemStack removeAttributes(net.minecraft.server.v1_6_R2.ItemStack item) {
+    private net.minecraft.server.v1_6_R3.ItemStack removeAttributes(net.minecraft.server.v1_6_R3.ItemStack item) {
         NBTTagList emptyList = new NBTTagList();
         if (item.tag == null) {
             item.tag = new NBTTagCompound("tag");
@@ -197,7 +197,7 @@ public class IconMenu implements Listener {
     }
 
     private ItemStack setEnchantingGlow(ItemStack item, boolean glowing) {
-        net.minecraft.server.v1_6_R2.ItemStack is = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_6_R3.ItemStack is = CraftItemStack.asNMSCopy(item);
 
         NBTTagList emptyList = new NBTTagList();
         if (is.tag == null) {

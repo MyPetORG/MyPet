@@ -41,7 +41,7 @@ public class RandomLookaround extends AIGoal {
         if (this.petEntity.passenger != null) {
             return false;
         }
-        return this.petEntity.aC().nextFloat() < 0.02F;
+        return this.petEntity.aD().nextFloat() < 0.02F;
     }
 
     @Override
@@ -51,10 +51,10 @@ public class RandomLookaround extends AIGoal {
 
     @Override
     public void start() {
-        double circumference = 6.283185307179586D * this.petEntity.aC().nextDouble();
+        double circumference = 6.283185307179586D * this.petEntity.aD().nextDouble();
         this.directionX = Math.cos(circumference);
         this.directionZ = Math.sin(circumference);
-        this.ticksUntilStopLookingAround = (20 + this.petEntity.aC().nextInt(20));
+        this.ticksUntilStopLookingAround = (20 + this.petEntity.aD().nextInt(20));
     }
 
     @Override

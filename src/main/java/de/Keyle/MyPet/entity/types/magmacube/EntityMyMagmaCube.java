@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R2.PathEntity;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.PathEntity;
+import net.minecraft.server.v1_6_R3.World;
 
 @EntitySize(width = 0.6F, height = 0.6F)
 public class EntityMyMagmaCube extends EntityMyPet {
@@ -79,7 +79,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 10);
             lastPathEntity = getNavigation().e();
-            makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), aZ(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            makeSound("mob.magmacube." + (getSize() > 1 ? "big" : "small"), ba(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 

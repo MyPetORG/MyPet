@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.enderman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R2.*;
+import net.minecraft.server.v1_6_R3.*;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
