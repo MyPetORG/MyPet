@@ -353,7 +353,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public Random getRandom() {
-        return getRandom();
+        return aD();
     }
 
     /**
