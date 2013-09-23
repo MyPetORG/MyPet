@@ -24,7 +24,7 @@
 
     <groupId>de.Keyle</groupId>
     <artifactId>MyPet</artifactId>
-    <version>${mypet.version}-SNAPSHOT</version>
+    <version>1.1.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MyPet</name>
@@ -33,7 +33,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <mypet.version>1.1.4</mypet.version>
         <minecraft.version>1.6.4</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
 
@@ -354,6 +353,19 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-scm-plugin</artifactId>
                 <version>1.8.1</version>
                 <executions>
@@ -399,7 +411,7 @@
                             <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
                             <Project-Author>Keyle</Project-Author>
                             <Project-Name>MyPet</Project-Name>
-                            <Project-Version>${mypet.version}</Project-Version>
+                            <Project-Version>${version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>

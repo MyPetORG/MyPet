@@ -1,6 +1,6 @@
 name: ${project.name}
 main: de.Keyle.MyPet.MyPetPlugin
-version: ${mypet.version}
+version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
 author: Keyle
 website: ${project.url}
 softdepend: [Vault, Heroes, AncientRPG, BattleArena, Minigames, MobArena, pvparena, Multiverse-Core]
