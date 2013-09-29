@@ -122,10 +122,6 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         infoShown = true;
                     }
                 }
-                if (myPet.getOwner().isDonator()) {
-                    infoShown = true;
-                    player.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
-                }
                 if (!infoShown) {
                     sender.sendMessage(Locales.getString("Message.CantViewPetInfo", player));
                 }
