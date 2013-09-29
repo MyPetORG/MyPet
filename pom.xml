@@ -411,7 +411,7 @@
                             <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
                             <Project-Author>Keyle</Project-Author>
                             <Project-Name>MyPet</Project-Name>
-                            <Project-Version>${version}</Project-Version>
+                            <Project-Version>${project.version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>
