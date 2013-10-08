@@ -93,6 +93,9 @@ public class ControlTarget extends AIGoal {
                             continue;
                         }
                     }
+                    if (!PvPChecker.canHurtCitizens(entityLiving.getBukkitEntity())) {
+                        continue;
+                    }
                     if (behaviorSkill != null) {
                         if (behaviorSkill.getBehavior() == BehaviorState.Raid) {
                             if (entityLiving instanceof EntityTameableAnimal) {

@@ -51,6 +51,7 @@ import net.slipcor.pvparena.api.PVPArenaAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -137,7 +138,7 @@ public class PvPChecker {
         return true;
     }
 
-    public static boolean canHurtCitizens(Player defender) {
+    public static boolean canHurtCitizens(Entity defender) {
         if (!searchedCitizens) {
             searchedCitizens = true;
             pluginCitizens = Bukkit.getServer().getPluginManager().isPluginEnabled("Citizens");

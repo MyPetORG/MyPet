@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.util.PvPChecker;
 import net.minecraft.server.v1_6_R3.EntityLiving;
 import net.minecraft.server.v1_6_R3.EntityMonster;
 import net.minecraft.server.v1_6_R3.EntityPlayer;
@@ -66,6 +67,9 @@ public class BehaviorFarmTarget extends AIGoal {
         for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
             EntityMonster entityMonster = (EntityMonster) entityObj;
             if (!entityMonster.isAlive() || petEntity.e(entityMonster) > 91) {
+                continue;
+            }
+            if (!PvPChecker.canHurtCitizens(entityMonster.getBukkitEntity())) {
                 continue;
             }
             this.target = entityMonster;

@@ -76,6 +76,9 @@ public class HurtByTarget extends AIGoal {
                 }
             }
         }
+        if (!PvPChecker.canHurtCitizens(target.getBukkitEntity())) {
+            return false;
+        }
         return true;
     }
 

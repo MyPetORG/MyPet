@@ -89,6 +89,9 @@ public class OwnerHurtByTarget extends AIGoal {
                 }
             }
         }
+        if (!PvPChecker.canHurtCitizens(lastDamager.getBukkitEntity())) {
+            return false;
+        }
         if (behaviorSkill != null && behaviorSkill.isActive()) {
             if (behaviorSkill.getBehavior() == Behavior.BehaviorState.Friendly) {
                 return false;
