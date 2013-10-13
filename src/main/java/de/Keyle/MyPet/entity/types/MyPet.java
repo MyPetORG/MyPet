@@ -86,7 +86,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public static enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, NotAllowed
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, NotAllowed
     }
 
     public static enum PetState {
@@ -315,6 +315,10 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     public SpawnFlags createPet() {
         lastUsed = System.currentTimeMillis();
         if (status != PetState.Here && getOwner().isOnline()) {
+            if (getOwner().getPlayer().isDead()) {
+                status = PetState.Despawned;
+                return SpawnFlags.OwnerDead;
+            }
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
                 net.minecraft.server.v1_6_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
