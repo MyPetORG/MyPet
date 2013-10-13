@@ -54,8 +54,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     protected int idleSoundTimer = 0;
     public AbstractNavigation petNavigation;
 
-    int donatorParticleCounter = 0;
-
     private Field jump = null;
 
     public EntityMyPet(World world, MyPet myPet) {
@@ -340,13 +338,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public void onLivingUpdate() {
-        if (getOwner().getPlayer().isSneaking() != isSneaking()) {
-            this.setSneaking(!isSneaking());
-        }
-        if (!this.isInvisible() && Configuration.DONATOR_EFFECT && getOwner().isDonator() && donatorParticleCounter-- <= 0) {
-            donatorParticleCounter = 20 + getRandom().nextInt(10);
-            BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), "happyVillager", 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
-        }
     }
 
     protected void initDatawatcher() {

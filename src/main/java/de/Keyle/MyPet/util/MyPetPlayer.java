@@ -48,8 +48,6 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
     private String playerName;
     private String lastLanguage = "en_US";
 
-    private boolean donator = false;
-
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
     private int autoRespawnMin = 1;
@@ -179,10 +177,6 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
             return true;
         }
         return false;
-    }
-
-    public boolean isDonator() {
-        return donator;
     }
 
     public String getLanguage() {
