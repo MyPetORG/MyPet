@@ -221,6 +221,7 @@ public class PlayerListener implements Listener {
             WorldGroup toGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
 
             boolean callAfterSwap = myPetPlayer.hasMyPet() && myPetPlayer.getMyPet().getStatus() == PetState.Here;
+            myPetPlayer.getMyPet().removePet(callAfterSwap);
 
             if (fromGroup != toGroup) {
                 if (myPetPlayer.hasMyPet()) {
