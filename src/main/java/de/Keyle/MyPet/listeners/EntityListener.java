@@ -41,18 +41,15 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_6_R3.EntityItem;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_6_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEnderman;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_6_R3.entity.*;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -66,6 +63,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.spout.nbt.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +79,19 @@ public class EntityListener implements Listener {
         }
         if (Configuration.USE_LEVEL_SYSTEM && !Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
+        }
+        if (Configuration.ADD_ZOMBIE_TARGET_GOAL && event.getEntity() instanceof CraftZombie && !event.isCancelled()) {
+            EntityZombie ez = ((CraftZombie) event.getEntity()).getHandle();
+            try {
+                Field goalSelector = EntityInsentient.class.getDeclaredField("goalSelector");
+                goalSelector.setAccessible(true);
+                PathfinderGoalSelector pgs = (PathfinderGoalSelector) goalSelector.get(ez);
+                pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
