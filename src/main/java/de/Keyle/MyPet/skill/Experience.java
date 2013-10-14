@@ -192,16 +192,24 @@ public class Experience {
             expMode = new Default(myPet);
             return expMode.getCurrentExp(this.exp);
         }
+        int skilltreeMaxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+        if (skilltreeMaxLevel != 0 && getLevel() >= skilltreeMaxLevel) {
+            return 0;
+        }
         return currentExp;
     }
 
     public int getLevel() {
-        int currentExp = expMode.getLevel(this.exp);
+        int currentLevel = expMode.getLevel(this.exp);
         if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             return expMode.getLevel(this.exp);
         }
-        return currentExp;
+        int skilltreeMaxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+        if (skilltreeMaxLevel != 0 && currentLevel > skilltreeMaxLevel) {
+            return skilltreeMaxLevel;
+        }
+        return currentLevel;
     }
 
     public double getRequiredExp() {
@@ -209,6 +217,10 @@ public class Experience {
         if (!expMode.isUsable()) {
             expMode = new Default(myPet);
             return expMode.getRequiredExp(this.exp);
+        }
+        int skilltreeMaxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+        if (skilltreeMaxLevel != 0 && getLevel() >= skilltreeMaxLevel) {
+            return 0;
         }
         return requiredExp;
     }

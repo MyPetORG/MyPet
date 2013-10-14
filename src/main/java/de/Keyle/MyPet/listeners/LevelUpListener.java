@@ -47,8 +47,15 @@ public class LevelUpListener implements Listener {
     @EventHandler
     public void onLevelUp(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
+        int lvl = event.getLevel();
+
         if (!event.isQuiet()) {
-            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LvlUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+            int maxlevel = myPet.getSkillTree().getMaxLevel();
+            if (maxlevel != 0 && lvl >= maxlevel) {
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner().getLanguage()), myPet.getPetName(), maxlevel));
+            } else {
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LevelSystem.LevelUp", event.getOwner().getLanguage()), myPet.getPetName(), event.getLevel()));
+            }
 
             if (Experience.FIREWORK_ON_LEVELUP) {
                 Location location = myPet.getLocation();
@@ -64,7 +71,6 @@ public class LevelUpListener implements Listener {
                 fw.setFireworkMeta(fwm);
             }
         }
-        int lvl = event.getLevel();
         SkillTree skillTree = myPet.getSkillTree();
         if (skillTree != null && skillTree.hasLevel(lvl)) {
             SkillTreeLevel level = skillTree.getLevel(lvl);
@@ -79,6 +85,11 @@ public class LevelUpListener implements Listener {
                 myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
             }
         }
+
+        if (!event.isQuiet()) {
+
+        }
+
         if (myPet.getStatus() == PetState.Here) {
             myPet.setHealth(myPet.getMaxHealth());
             myPet.setHungerValue(100);

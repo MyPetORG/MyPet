@@ -115,7 +115,8 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                         player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
                         infoShown = true;
                     }
-                    if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet)) {
+                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+                    if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
                         player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));

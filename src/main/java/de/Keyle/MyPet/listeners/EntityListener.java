@@ -150,7 +150,8 @@ public class EntityListener implements Listener {
                             damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
                             infoShown = true;
                         }
-                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet)) {
+                        int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                             double exp = myPet.getExperience().getCurrentExp();
                             double reqEXP = myPet.getExperience().getRequiredExp();
                             damager.sendMessage("   " + Locales.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
@@ -784,8 +785,10 @@ public class EntityListener implements Listener {
                                 continue;
                             }
                         }
-                        double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
-                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                        if (myPet.getSkillTree() == null || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                            double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
+                            myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                        }
                     } else if (entity instanceof Player) {
                         Player owner = (Player) entity;
                         if (MyPetList.hasMyPet(owner)) {
@@ -797,8 +800,10 @@ public class EntityListener implements Listener {
                             }
                             if (myPet.isPassiv()) {
                                 if (myPet.getStatus() == PetState.Here) {
-                                    double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
-                                    myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                                    if (myPet.getSkillTree() == null || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                                        double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
+                                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                                    }
                                 }
                             }
                         }
@@ -830,7 +835,9 @@ public class EntityListener implements Listener {
                         }
                         if (myPet.isPassiv()) {
                             if (myPet.getStatus() == PetState.Here) {
-                                myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
+                                if (myPet.getSkillTree() == null || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                                    myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
+                                }
                             }
                         }
                     }

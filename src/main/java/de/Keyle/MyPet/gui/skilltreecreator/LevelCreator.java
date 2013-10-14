@@ -72,6 +72,8 @@ public class LevelCreator {
     JTextField levelUpMessageInput;
     JButton editDescriptionButton;
     JButton editIconButton;
+    JTextField maxLevelTextField;
+    JCheckBox maxLevelCheckBox;
     JFrame levelCreatorFrame;
 
     DefaultTreeModel skillTreeTreeModel;
@@ -238,6 +240,18 @@ public class LevelCreator {
                 }
             }
         });
+        maxLevelCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (maxLevelCheckBox.isSelected()) {
+                    maxLevelTextField.setEnabled(true);
+                    skillTree.setMaxLevel(0);
+                } else {
+                    maxLevelTextField.setEnabled(false);
+                    skillTree.setMaxLevel(0);
+                    maxLevelTextField.setText("" + 0);
+                }
+            }
+        });
         permissionCheckbox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (permissionCheckbox.isSelected()) {
@@ -331,6 +345,24 @@ public class LevelCreator {
                         skillTree.setPermission(null);
                     }
                     permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+                }
+            }
+
+            public void keyPressed(KeyEvent arg0) {
+            }
+        });
+        maxLevelTextField.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
+            }
+
+            public void keyReleased(KeyEvent arg0) {
+                maxLevelTextField.setText(maxLevelTextField.getText().replaceAll("[^0-9]*", ""));
+                if (maxLevelCheckBox.isSelected() && !skillTree.getPermission().equals(maxLevelTextField.getText())) {
+                    if (!maxLevelTextField.getText().equalsIgnoreCase("") && maxLevelTextField.getText().matches("[0-9]*")) {
+                        skillTree.setMaxLevel(Integer.parseInt(maxLevelTextField.getText()));
+                    } else {
+                        skillTree.setMaxLevel(0);
+                    }
                 }
             }
 
@@ -526,6 +558,12 @@ public class LevelCreator {
         }
         permissionTextField.setText(skillTree.getPermission());
         permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
+
+        if (skillTree.getMaxLevel() != 0) {
+            maxLevelCheckBox.setSelected(true);
+            maxLevelTextField.setEnabled(true);
+            maxLevelTextField.setText("" + skillTree.getMaxLevel());
+        }
 
         this.inheritanceComboBoxModel.removeAllElements();
 

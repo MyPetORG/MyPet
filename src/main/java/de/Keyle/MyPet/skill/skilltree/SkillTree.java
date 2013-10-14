@@ -33,6 +33,7 @@ public class SkillTree {
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
+    private int maxLevel = 0;
     private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<Integer, SkillTreeLevel>();
 
     public SkillTree(String name) {
@@ -108,6 +109,14 @@ public class SkillTree {
             iconItem.getValue().put("Damage", new ShortTag("Damage", (short) 0));
         }
         return iconItem;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
 
     public boolean hasLevel(int level) {
@@ -219,6 +228,7 @@ public class SkillTree {
         SkillTree newSkillTree = new SkillTree(toName);
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
+        newSkillTree.setMaxLevel(maxLevel);
         newSkillTree.setPermission(permission);
         newSkillTree.description = new ArrayList<String>(description);
         newSkillTree.iconItem = new CompoundTag("IconItem", new CompoundMap(getIconItem().getValue()));
