@@ -563,6 +563,9 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         if (skillTree == null || this.skillTree == skillTree) {
             return false;
         }
+        if (skillTree.getRequiredLevel() > 1 && getExperience().getLevel() < skillTree.getRequiredLevel()) {
+            return false;
+        }
         skills.reset();
         this.skillTree = skillTree;
         for (int i = 1; i <= experience.getLevel(); i++) {

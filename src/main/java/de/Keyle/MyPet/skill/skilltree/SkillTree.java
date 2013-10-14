@@ -34,6 +34,7 @@ public class SkillTree {
     private String permission = null;
     private String displayName = null;
     private int maxLevel = 0;
+    private int requiredLevel = 0;
     private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<Integer, SkillTreeLevel>();
 
     public SkillTree(String name) {
@@ -116,7 +117,15 @@ public class SkillTree {
     }
 
     public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel;
+        this.maxLevel = maxLevel < 0 ? 0 : maxLevel;
+    }
+
+    public int getRequiredLevel() {
+        return requiredLevel;
+    }
+
+    public void setRequiredLevel(int requiredLevel) {
+        this.requiredLevel = requiredLevel < 1 ? 1 : requiredLevel;
     }
 
     public boolean hasLevel(int level) {
@@ -228,6 +237,7 @@ public class SkillTree {
         SkillTree newSkillTree = new SkillTree(toName);
         newSkillTree.setInheritance(inheritance);
         newSkillTree.setDisplayName(displayName);
+        newSkillTree.setRequiredLevel(requiredLevel);
         newSkillTree.setMaxLevel(maxLevel);
         newSkillTree.setPermission(permission);
         newSkillTree.description = new ArrayList<String>(description);

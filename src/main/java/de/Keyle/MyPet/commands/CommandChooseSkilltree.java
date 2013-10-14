@@ -71,7 +71,10 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     if (skillTreeMobType.hasSkillTree(skilltreeName)) {
                         SkillTree skillTree = skillTreeMobType.getSkillTree(skilltreeName);
                         if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
-                            if (myPet.setSkilltree(skillTree)) {
+                            int requiredLevel = skillTree.getRequiredLevel();
+                            if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
+                                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
+                            } else if (myPet.setSkilltree(skillTree)) {
                                 sender.sendMessage(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", player), skillTree.getName()));
                                 if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) {
                                     myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
@@ -114,8 +117,14 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             if (skilltreeSlotMap.containsKey(event.getPosition())) {
                                 SkillTree selecedSkilltree = skilltreeSlotMap.get(event.getPosition());
                                 if (selecedSkilltree != null) {
-                                    myPet.setSkilltree(selecedSkilltree);
-                                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                    int requiredLevel = selecedSkilltree.getRequiredLevel();
+                                    if (requiredLevel > 1 && myPet.getExperience().getLevel() < requiredLevel) {
+                                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
+                                    } else if (myPet.setSkilltree(selecedSkilltree)) {
+                                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                    } else {
+                                        myPet.sendMessageToOwner(Locales.getString("Message.Skilltree.NotSwitched", myPetOwner));
+                                    }
                                 }
                             }
                             event.setWillClose(true);
@@ -130,12 +139,30 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         net.minecraft.server.v1_6_R3.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
                         ItemStack shownItem = CraftItemStack.asCraftMirror(is);
 
-                        String[] descriptionArray = new String[addedSkilltree.getDescription().size()];
-                        for (int j = 0; j < addedSkilltree.getDescription().size(); j++) {
+
+                        boolean selectable = false;
+                        int requiredLevel = addedSkilltree.getRequiredLevel();
+                        if (requiredLevel > 1) {
+                            selectable = myPet.getExperience().getLevel() >= addedSkilltree.getRequiredLevel();
+                        }
+
+                        int requireOffset = requiredLevel > 1 ? 1 : 0;
+                        String[] descriptionArray = new String[addedSkilltree.getDescription().size() + requireOffset];
+                        if (requireOffset == 1) {
+                            descriptionArray[0] = ChatColor.RESET + "▶▶▶  ";
+                            if (selectable) {
+                                descriptionArray[0] += ChatColor.GREEN;
+                            } else {
+                                descriptionArray[0] += ChatColor.DARK_RED;
+                            }
+                            descriptionArray[0] += Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Item", myPetOwner), requiredLevel) + ChatColor.RESET + "  ◀◀◀";
+                        }
+
+                        for (int j = requireOffset; j < addedSkilltree.getDescription().size() + requireOffset; j++) {
                             descriptionArray[j] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
                         }
 
-                        menu.setOption(i, shownItem, ChatColor.RESET + ">--->  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  <---<", descriptionArray);
+                        menu.setOption(i, shownItem, ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰", descriptionArray);
                         skilltreeSlotMap.put(i, addedSkilltree);
                     }
                     menu.open(player);

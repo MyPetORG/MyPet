@@ -74,6 +74,8 @@ public class LevelCreator {
     JButton editIconButton;
     JTextField maxLevelTextField;
     JCheckBox maxLevelCheckBox;
+    JTextField requiredLevelTextField;
+    JCheckBox requiredLevelCheckBox;
     JFrame levelCreatorFrame;
 
     DefaultTreeModel skillTreeTreeModel;
@@ -252,6 +254,18 @@ public class LevelCreator {
                 }
             }
         });
+        requiredLevelCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (requiredLevelCheckBox.isSelected()) {
+                    requiredLevelTextField.setEnabled(true);
+                    skillTree.setRequiredLevel(0);
+                } else {
+                    requiredLevelTextField.setEnabled(false);
+                    skillTree.setRequiredLevel(0);
+                    requiredLevelTextField.setText("" + 0);
+                }
+            }
+        });
         permissionCheckbox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (permissionCheckbox.isSelected()) {
@@ -357,11 +371,29 @@ public class LevelCreator {
 
             public void keyReleased(KeyEvent arg0) {
                 maxLevelTextField.setText(maxLevelTextField.getText().replaceAll("[^0-9]*", ""));
-                if (maxLevelCheckBox.isSelected() && !skillTree.getPermission().equals(maxLevelTextField.getText())) {
+                if (maxLevelCheckBox.isSelected()) {
                     if (!maxLevelTextField.getText().equalsIgnoreCase("") && maxLevelTextField.getText().matches("[0-9]*")) {
                         skillTree.setMaxLevel(Integer.parseInt(maxLevelTextField.getText()));
                     } else {
                         skillTree.setMaxLevel(0);
+                    }
+                }
+            }
+
+            public void keyPressed(KeyEvent arg0) {
+            }
+        });
+        requiredLevelTextField.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent arg0) {
+            }
+
+            public void keyReleased(KeyEvent arg0) {
+                requiredLevelTextField.setText(requiredLevelTextField.getText().replaceAll("[^0-9]*", ""));
+                if (requiredLevelCheckBox.isSelected()) {
+                    if (!requiredLevelTextField.getText().equalsIgnoreCase("") && requiredLevelTextField.getText().matches("[0-9]*")) {
+                        skillTree.setRequiredLevel(Integer.parseInt(requiredLevelTextField.getText()));
+                    } else {
+                        skillTree.setRequiredLevel(0);
                     }
                 }
             }
@@ -563,6 +595,11 @@ public class LevelCreator {
             maxLevelCheckBox.setSelected(true);
             maxLevelTextField.setEnabled(true);
             maxLevelTextField.setText("" + skillTree.getMaxLevel());
+        }
+        if (skillTree.getRequiredLevel() != 0) {
+            requiredLevelCheckBox.setSelected(true);
+            requiredLevelTextField.setEnabled(true);
+            requiredLevelTextField.setText("" + skillTree.getRequiredLevel());
         }
 
         this.inheritanceComboBoxModel.removeAllElements();

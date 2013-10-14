@@ -93,6 +93,9 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
             if (skilltreeCompound.getValue().containsKey("MaxLevel")) {
                 skillTree.setMaxLevel(((IntTag) skilltreeCompound.getValue().get("MaxLevel")).getValue());
             }
+            if (skilltreeCompound.getValue().containsKey("RequiredLevel")) {
+                skillTree.setRequiredLevel(((IntTag) skilltreeCompound.getValue().get("RequiredLevel")).getValue());
+            }
             if (skilltreeCompound.getValue().containsKey("IconItem")) {
                 skillTree.setIconItem(((CompoundTag) skilltreeCompound.getValue().get("IconItem")));
             }
@@ -179,6 +182,9 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                 }
                 if (skillTree.getMaxLevel() > 0) {
                     skilltreeCompound.getValue().put("MaxLevel", new IntTag("MaxLevel", skillTree.getMaxLevel()));
+                }
+                if (skillTree.getRequiredLevel() > 1) {
+                    skilltreeCompound.getValue().put("RequiredLevel", new IntTag("RequiredLevel", skillTree.getRequiredLevel()));
                 }
                 if (skillTree.getDescription().size() > 0) {
                     List<StringTag> descriptionTagList = new ArrayList<StringTag>();
