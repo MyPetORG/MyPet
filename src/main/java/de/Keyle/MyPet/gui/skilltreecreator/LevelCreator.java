@@ -591,15 +591,23 @@ public class LevelCreator {
         permissionTextField.setText(skillTree.getPermission());
         permissionDisplayTextField.setText("MyPet.custom.skilltree." + skillTree.getPermission());
 
-        if (skillTree.getMaxLevel() != 0) {
+        if (skillTree.getMaxLevel() > 0) {
             maxLevelCheckBox.setSelected(true);
             maxLevelTextField.setEnabled(true);
             maxLevelTextField.setText("" + skillTree.getMaxLevel());
+        } else {
+            maxLevelCheckBox.setSelected(false);
+            maxLevelTextField.setEnabled(false);
+            maxLevelTextField.setText("");
         }
-        if (skillTree.getRequiredLevel() != 0) {
+        if (skillTree.getRequiredLevel() > 1) {
             requiredLevelCheckBox.setSelected(true);
             requiredLevelTextField.setEnabled(true);
             requiredLevelTextField.setText("" + skillTree.getRequiredLevel());
+        } else {
+            requiredLevelCheckBox.setSelected(false);
+            requiredLevelTextField.setEnabled(false);
+            requiredLevelTextField.setText("");
         }
 
         this.inheritanceComboBoxModel.removeAllElements();
