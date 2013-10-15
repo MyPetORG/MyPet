@@ -158,8 +158,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             descriptionArray[0] += Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Item", myPetOwner), requiredLevel) + ChatColor.RESET + "  ◀◀◀";
                         }
 
-                        for (int j = requireOffset; j < addedSkilltree.getDescription().size() + requireOffset; j++) {
-                            descriptionArray[j] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
+                        for (int j = 0; j < addedSkilltree.getDescription().size(); j++) {
+                            descriptionArray[j + requireOffset] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
                         }
 
                         menu.setOption(i, shownItem, ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰", descriptionArray);
