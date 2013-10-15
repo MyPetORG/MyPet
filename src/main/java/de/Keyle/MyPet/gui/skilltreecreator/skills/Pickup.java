@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
+import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.DoubleTag;
 import org.spout.nbt.StringTag;
@@ -34,6 +35,7 @@ public class Pickup implements SkillPropertiesPanel {
     private JTextField rangeInput;
     private JRadioButton addRangeRadioButton;
     private JRadioButton setRangeRadioButton;
+    private JCheckBox expPickupCheckBox;
 
     private CompoundTag compoundTag;
 
@@ -72,6 +74,7 @@ public class Pickup implements SkillPropertiesPanel {
     public CompoundTag save() {
         compoundTag.getValue().put("addset_range", new StringTag("addset_range", addRangeRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("range", new DoubleTag("range", Double.parseDouble(rangeInput.getText())));
+        compoundTag.getValue().put("exp_pickup", new ByteTag("exp_pickup", expPickupCheckBox.isSelected()));
 
         return compoundTag;
     }
@@ -85,6 +88,9 @@ public class Pickup implements SkillPropertiesPanel {
         }
         if (compoundTag.getValue().containsKey("range")) {
             rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
+        }
+        if (compoundTag.getValue().containsKey("exp_pickup")) {
+            expPickupCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("exp_pickup")).getBooleanValue());
         }
     }
 }

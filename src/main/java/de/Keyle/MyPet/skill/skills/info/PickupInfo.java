@@ -29,13 +29,14 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Pickup")
 @SkillProperties(
-        parameterNames = {"range", "addset_range"},
-        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},
-        parameterDefaultValues = {"1.0", "add"})
+        parameterNames = {"range", "addset_range", "exp_pickup"},
+        parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.Boolean},
+        parameterDefaultValues = {"1.0", "add", "false"})
 public class PickupInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double range = 0;
+    protected boolean expPickup = false;
 
     public PickupInfo(boolean addedByInheritance) {
         super(addedByInheritance);

@@ -35,6 +35,7 @@ import net.minecraft.server.v1_6_R3.Packet22Collect;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -72,6 +73,9 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                 if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range)));
                 }
+            }
+            if (upgrade.getProperties().getValue().containsKey("exp_pickup")) {
+                expPickup = ((ByteTag) upgrade.getProperties().getValue().get("exp_pickup")).getBooleanValue();
             }
         }
     }
@@ -137,6 +141,17 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                             itemStack.setAmount(itemAmount);
                         }
                     }
+                }
+                if (expPickup && entity instanceof ExperienceOrb) {
+                    ExperienceOrb expEntity = (ExperienceOrb) entity;
+                    myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
+                    for (Entity p : expEntity.getNearbyEntities(20, 20, 20)) {
+                        if (p instanceof Player) {
+                            ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                        }
+                    }
+                    expEntity.setExperience(0);
+                    expEntity.remove();
                 }
             }
         }
