@@ -122,6 +122,13 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
                                     } else if (myPet.setSkilltree(selecedSkilltree)) {
                                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
+                                        if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) {
+                                            myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
+                                            myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
+                                        } else {
+                                            myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
+                                            myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
+                                        }
                                     } else {
                                         myPet.sendMessageToOwner(Locales.getString("Message.Skilltree.NotSwitched", myPetOwner));
                                     }
