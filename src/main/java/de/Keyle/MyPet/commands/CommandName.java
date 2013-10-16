@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -64,9 +65,16 @@ public class CommandName implements CommandExecutor {
                 if (regexMatcher.find()) {
                     name += ChatColor.RESET;
                 }
+                name = Util.cutString(name, 64);
 
-                myPet.setPetName(name);
-                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
+                String nameWihtoutColors = ChatColor.stripColor(name);
+
+                if (nameWihtoutColors.length() <= Configuration.MAX_PET_NAME_LENGTH) {
+                    myPet.setPetName(name);
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
+                } else {
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.MAX_PET_NAME_LENGTH));
+                }
             } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
             }

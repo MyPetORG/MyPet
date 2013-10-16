@@ -64,6 +64,7 @@ public class Configuration {
     public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
     public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
     public static int LEVELUP_FIREWORK_COLOR = 0x00FF00;
+    public static int MAX_PET_NAME_LENGTH = 64;
     public static double MYPET_FOLLOW_START_DISTANCE = 7.0F;
     public static double SKILLTREE_SWITCH_PENALTY_FIXED = 0.0;
     public static double RESPAWN_COSTS_FACTOR = 1.0;
@@ -100,6 +101,7 @@ public class Configuration {
         config.addDefault("MyPet.FollowStartDistance", 7.0D);
         config.addDefault("MyPet.ReleasePetsOnDeath", false);
         config.addDefault("MyPet.ZombieVsMyPet", false);
+        config.addDefault("MyPet.MaxPetNameLength", 64);
 
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
@@ -269,6 +271,7 @@ public class Configuration {
         DISABLE_PET_VS_PLAYER = config.getBoolean("MyPet.DisablePetVersusPlayer", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
+        MAX_PET_NAME_LENGTH = config.getInt("MyPet.MaxPetNameLength", 64);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         DONATOR_EFFECT = config.getBoolean("MyPet.DonatorEffect", true);
