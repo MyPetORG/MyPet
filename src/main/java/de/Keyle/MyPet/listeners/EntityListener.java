@@ -36,6 +36,7 @@ import de.Keyle.MyPet.skill.skills.implementation.*;
 import de.Keyle.MyPet.skill.skills.implementation.Wither;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
@@ -195,6 +196,16 @@ public class EntityListener implements Listener {
                         thornsSkill.reflectDamage(damager, event.getDamage());
                         isSkillActive = false;
                     }
+                }
+            }
+            if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
+                MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+
+                if (myPet == projectile.getShooter().getMyPet()) {
+                    event.setCancelled(true);
+                }
+                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer())) {
+                    event.setCancelled(true);
                 }
             }
         }

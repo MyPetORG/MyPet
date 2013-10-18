@@ -178,17 +178,18 @@ public class PlayerListener implements Listener {
     public void onPlayerDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
-            if (MyPetPlayer.isMyPetPlayer(victim)) {
-                MyPetPlayer myPetPlayerDamagee = MyPetPlayer.getMyPetPlayer(victim);
-                if (myPetPlayerDamagee.hasMyPet()) {
-                    if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
-                        MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+            if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
+                MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
+                if (MyPetPlayer.isMyPetPlayer(victim)) {
+                    MyPetPlayer myPetPlayerDamagee = MyPetPlayer.getMyPetPlayer(victim);
+                    if (myPetPlayerDamagee.hasMyPet()) {
                         if (myPetPlayerDamagee.getMyPet() == projectile.getShooter().getMyPet()) {
-                            event.setCancelled(true);
-                        } else if (!PvPChecker.canHurtEvent(projectile.getShooter().getOwner().getPlayer(), victim)) {
                             event.setCancelled(true);
                         }
                     }
+                }
+                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), victim)) {
+                    event.setCancelled(true);
                 }
             }
         }
