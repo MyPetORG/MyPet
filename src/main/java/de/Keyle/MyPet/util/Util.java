@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.text.MessageFormat;
 
 public class Util {
     public static Field getField(Class<?> clazz, String field) {
@@ -112,10 +113,7 @@ public class Util {
     }
 
     public static String formatText(String text, Object... values) {
-        for (int i = 0; i < values.length; i++) {
-            text = text.replaceAll("\\{" + i + "}", values[i].toString());
-        }
-        return text;
+        return MessageFormat.format(text, values);
     }
 
     public static String capitalizeName(String name) {
