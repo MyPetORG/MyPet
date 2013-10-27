@@ -80,14 +80,16 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     String msg;
                     if (myPet.getStatus() == PetState.Dead) {
                         msg = ChatColor.RED + Locales.getString("Name.Dead", player);
-                    } else if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
-                        msg = "" + ChatColor.GREEN;
-                    } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
-                        msg = "" + ChatColor.YELLOW;
                     } else {
-                        msg = "" + ChatColor.RED;
+                        if (myPet.getHealth() > myPet.getMaxHealth() / 3 * 2) {
+                            msg = "" + ChatColor.GREEN;
+                        } else if (myPet.getHealth() > myPet.getMaxHealth() / 3) {
+                            msg = "" + ChatColor.YELLOW;
+                        } else {
+                            msg = "" + ChatColor.RED;
+                        }
+                        msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     }
-                    msg += String.format("%1.2f", myPet.getHealth()) + ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
                     player.sendMessage("   " + Locales.getString("Name.HP", player) + ": " + msg);
                     infoShown = true;
                 }
