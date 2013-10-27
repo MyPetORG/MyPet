@@ -50,7 +50,7 @@ public class LevelUpListener implements Listener {
         int lvl = event.getLevel();
 
         if (!event.isQuiet()) {
-            int maxlevel = myPet.getSkillTree().getMaxLevel();
+            int maxlevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
             if (maxlevel != 0 && lvl >= maxlevel) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.LevelSystem.ReachedMaxLevel", event.getOwner().getLanguage()), myPet.getPetName(), maxlevel));
             } else {
