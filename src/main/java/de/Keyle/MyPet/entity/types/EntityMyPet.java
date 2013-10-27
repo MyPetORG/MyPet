@@ -53,6 +53,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
     public AbstractNavigation petNavigation;
+    Ride rideSkill = null;
 
     private Field jump = null;
 
@@ -104,6 +105,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.getAttributeInstance(GenericAttributes.a).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.setCustomName("");
+
+            rideSkill = myPet.getSkills().getSkill(Ride.class);
         }
     }
 
@@ -546,7 +549,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         // sideways is slower too
         motionSideways *= 0.85F;
 
-        i(0.22222F); // set ride speed
+        float speed = 0.22222F;
+        if (rideSkill != null) {
+            speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
+        }
+        i(speed); // set ride speed
         super.e(motionSideways, motionForward); // apply motion
 
         // jump when the player jumps

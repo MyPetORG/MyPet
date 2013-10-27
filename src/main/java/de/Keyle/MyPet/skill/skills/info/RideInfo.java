@@ -20,20 +20,31 @@
 
 package de.Keyle.MyPet.skill.skills.info;
 
+import de.Keyle.MyPet.gui.skilltreecreator.skills.Ride;
 import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.skills.SkillName;
+import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Ride")
+@SkillProperties(
+        parameterNames = {"speed_percent", "addset_speed"},
+        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add"})
 public class RideInfo extends SkillTreeSkill implements ISkillInfo {
-    //protected float speed = 0F;
+    private SkillPropertiesPanel panel = null;
+
+    protected int speedPercent = 0;
 
     public RideInfo(boolean addedByInheritance) {
         super(addedByInheritance);
     }
 
     public SkillPropertiesPanel getGuiPanel() {
-        return null;
+        if (panel == null) {
+            panel = new Ride(this.getProperties());
+        }
+        return panel;
     }
 
     public ISkillInfo cloneSkill() {

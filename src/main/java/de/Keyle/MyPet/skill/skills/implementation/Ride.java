@@ -26,6 +26,9 @@ import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
+import org.bukkit.ChatColor;
+import org.spout.nbt.IntTag;
+import org.spout.nbt.StringTag;
 
 public class Ride extends RideInfo implements ISkillInstance {
     public static ConfigItem RIDE_ITEM;
@@ -51,42 +54,33 @@ public class Ride extends RideInfo implements ISkillInstance {
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof RideInfo) {
             if (!active && !quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName()));
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
+            }
+            if (upgrade.getProperties().getValue().containsKey("speed_percent")) {
+                if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add")) {
+                    speedPercent += ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
+                } else {
+                    speedPercent = ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
+                }
+                if (active && !quiet) {
+                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), speedPercent));
+                }
             }
             active = true;
-            /*
-            if (upgrade.getProperties().getValue().containsKey("speed"))
-            {
-                if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add"))
-                {
-                    speed += ((FloatTag) upgrade.getProperties().getValue().get("speed")).getValue();
-                }
-                else
-                {
-                    speed = ((FloatTag) upgrade.getProperties().getValue().get("speed")).getValue();
-                }
-                if (!quiet)
-                {
-                    myPet.sendMessageToOwner(Colorizer.setColors(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage())).replace("%petname%", myPet.getPetName()).replace("%speed%",String.format("%1.3f", upgrade.getProperties().getDouble("add"))));
-                }
-            }
-            */
         }
     }
 
     public String getFormattedValue() {
-        //return Locales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + String.format("%1.3f", speed);
-        return "";
+        return Locales.getString("Name.Speed", myPet.getOwner().getLanguage()) + " +" + ChatColor.GOLD + speedPercent + "%" + ChatColor.RESET;
     }
 
     public void reset() {
-        //speed = 0F;
         active = false;
+        speedPercent = 0;
     }
 
-    public float getSpeed() {
-        //return speed;
-        return 0F;
+    public int getSpeedPercent() {
+        return speedPercent;
     }
 
     @Override
