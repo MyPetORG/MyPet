@@ -39,5 +39,7 @@ public abstract class Experience {
 
     public abstract double getCurrentExp(double exp);
 
+    public abstract double getExpByLevel(int level);
+
     public abstract boolean isUsable();
 }

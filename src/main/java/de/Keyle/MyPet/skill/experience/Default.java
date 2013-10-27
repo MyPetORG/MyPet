@@ -84,6 +84,21 @@ public class Default extends Experience {
         return lastCurrentExp;
     }
 
+    @Override
+    public double getExpByLevel(int level) {
+        if (level <= 1) {
+            return 0;
+        }
+        double tmpExp = 0;
+        int tmpLvl = 1;
+
+        while (tmpLvl < level) {
+            tmpExp += 7 + Math.floor((tmpLvl - 1) * 3.5);
+            tmpLvl++;
+        }
+        return tmpExp;
+    }
+
     public boolean isUsable() {
         return true;
     }

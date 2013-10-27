@@ -74,6 +74,7 @@ public class JavaScript extends Experience {
         getLevel(0);
         getRequiredExp(0);
         getCurrentExp(0);
+        getExpByLevel(2);
     }
 
     public boolean isUsable() {
@@ -142,9 +143,28 @@ public class JavaScript extends Experience {
                 DebugLogger.warning("getCurrentExp(exp) Method is missing!");
                 isUsable = false;
             }
-
         }
         return lastCurrentExp;
+    }
+
+    @Override
+    public double getExpByLevel(int level) {
+        if (level <= 1) {
+            return 0;
+        }
+        if (scriptEngine instanceof Invocable) {
+            try {
+                Object result = ((Invocable) scriptEngine).invokeFunction("getExpByLevel", level);
+                return (Double) result;
+            } catch (ScriptException e) {
+                MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
+                isUsable = false;
+            } catch (NoSuchMethodException e) {
+                MyPetLogger.write(ChatColor.RED + "getExpByLevel(level) Method is missing!");
+                isUsable = false;
+            }
+        }
+        return 0;
     }
 
     public static boolean setScriptPath(String path) {
@@ -166,8 +186,8 @@ public class JavaScript extends Experience {
         scriptEngine = manager.getEngineByName("js");
 
         scriptEngine.eval("MyPet = new Object();" +
-                                  "MyPet.getType = function() { return \"" + getMyPet().getPetType().getTypeName() + "\"; };" +
-                                  "MyPet.getOwnerName = function() { return \"" + getMyPet().getOwner().getName() + "\"; };");
+                "MyPet.getType = function() { return \"" + getMyPet().getPetType().getTypeName() + "\"; };" +
+                "MyPet.getOwnerName = function() { return \"" + getMyPet().getOwner().getName() + "\"; };");
 
         scriptEngine.eval(expScript);
 

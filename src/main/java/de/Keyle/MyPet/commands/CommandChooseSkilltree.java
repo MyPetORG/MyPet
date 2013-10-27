@@ -76,12 +76,15 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Message", player), myPet.getPetName(), requiredLevel));
                             } else if (myPet.setSkilltree(skillTree)) {
                                 sender.sendMessage(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", player), skillTree.getName()));
-                                if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) {
-                                    myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                                    myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
-                                } else {
-                                    myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                                    myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
+                                if ((myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
+                                    double switchPenalty = Configuration.SKILLTREE_SWITCH_PENALTY_FIXED;
+                                    switchPenalty += myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.;
+
+                                    if (requiredLevel > 1) {
+                                        double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
+                                        switchPenalty = myPet.getExp() - switchPenalty < minExp ? myPet.getExp() - minExp : switchPenalty;
+                                    }
+                                    myPet.getExperience().removeExp(switchPenalty);
                                 }
                             } else {
                                 sender.sendMessage(Locales.getString("Message.Skilltree.NotSwitched", player));
@@ -122,12 +125,15 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.RequiresLevel.Message", myPetOwner), myPet.getPetName(), requiredLevel));
                                     } else if (myPet.setSkilltree(selecedSkilltree)) {
                                         myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skilltree.SwitchedTo", myPetOwner), selecedSkilltree.getName()));
-                                        if (myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) {
-                                            myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                                            myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
-                                        } else {
-                                            myPet.getExperience().removeExp(Configuration.SKILLTREE_SWITCH_PENALTY_FIXED);
-                                            myPet.getExperience().removeExp(myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.);
+                                        if ((myPet.getOwner().isMyPetAdmin() && Configuration.SKILLTREE_SWITCH_PENALTY_ADMIN) || !myPet.getOwner().isMyPetAdmin()) {
+                                            double switchPenalty = Configuration.SKILLTREE_SWITCH_PENALTY_FIXED;
+                                            switchPenalty += myPet.getExperience().getExp() * Configuration.SKILLTREE_SWITCH_PENALTY_PERCENT / 100.;
+
+                                            if (requiredLevel > 1) {
+                                                double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
+                                                switchPenalty = myPet.getExp() - switchPenalty < minExp ? myPet.getExp() - minExp : switchPenalty;
+                                            }
+                                            myPet.getExperience().removeExp(switchPenalty);
                                         }
                                     } else {
                                         myPet.sendMessageToOwner(Locales.getString("Message.Skilltree.NotSwitched", myPetOwner));

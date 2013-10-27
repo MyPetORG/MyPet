@@ -225,6 +225,10 @@ public class Experience {
         return requiredExp;
     }
 
+    public double getExpByLevel(int level) {
+        return expMode.getExpByLevel(level);
+    }
+
     @SuppressWarnings("unchecked")
     public static void addDamageToEntity(LivingEntity damager, LivingEntity victim, double damage) {
         Map<Entity, Double> damageMap;

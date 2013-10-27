@@ -751,6 +751,13 @@ public class EntityListener implements Listener {
                 if (lostExpirience > myPet.getExperience().getCurrentExp()) {
                     lostExpirience = myPet.getExperience().getCurrentExp();
                 }
+                if (myPet.getSkillTree() != null) {
+                    int requiredLevel = myPet.getSkillTree().getRequiredLevel();
+                    if (requiredLevel > 1) {
+                        double minExp = myPet.getExperience().getExpByLevel(requiredLevel);
+                        lostExpirience = myPet.getExp() - lostExpirience < minExp ? myPet.getExp() - minExp : lostExpirience;
+                    }
+                }
                 if (Experience.DROP_LOST_EXP) {
                     event.setDroppedExp((int) (lostExpirience + 0.5));
                 }
