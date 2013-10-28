@@ -42,7 +42,8 @@ commands:
     aliases: [pskill]
     description: Shows the Skill-levels of your MyPet
     usage: '/<command> <Playername>'
-  petadmin:
+  mypetadmin:
+    aliases: [petadmin]
     description: MyPet-Admin-Command -> http://mypet.keyle.de/doku.php?id=en:commands
     permission: MyPet.admin
   petskilltree:

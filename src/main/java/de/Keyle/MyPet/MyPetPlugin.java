@@ -163,7 +163,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         getCommand("petpickup").setExecutor(new CommandPickup());
         getCommand("petbehavior").setExecutor(new CommandBehavior());
         getCommand("petinfo").setExecutor(new CommandInfo());
-        getCommand("petadmin").setExecutor(new CommandAdmin());
+        getCommand("mypetadmin").setExecutor(new CommandAdmin());
         getCommand("petskill").setExecutor(new CommandSkill());
         getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
