@@ -512,6 +512,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             if (hasRider) {
                 hasRider = false;
                 applyLeash();
+                setSize();
             }
             super.e(motionSideways, motionForward);
             this.Y = 0.5F; // climb height -> halfslab
@@ -528,6 +529,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
         if (!hasRider) {
             hasRider = true;
+            setSize(1F);
         }
 
         this.Y = 1.0F; // climb height -> 1 block
