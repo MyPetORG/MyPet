@@ -63,44 +63,31 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         MyPet myPet = MyPetList.getMyPet(petOwner);
         String value = args[1];
 
+        double Exp = myPet.getExp();
+
         if (args.length == 2 || (args.length >= 3 && args[2].equalsIgnoreCase("set"))) {
             if (Util.isDouble(value)) {
-                double Exp = Double.parseDouble(value);
-                Exp = Exp < 0 ? 0 : Exp;
-                if (myPet.getExperience().getExp() > Exp) {
-                    myPet.getSkills().reset();
-                    myPet.getExperience().reset();
-                    myPet.getExperience().addExp(Exp);
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
-                } else {
-                    myPet.getExperience().addExp(Exp - myPet.getExperience().getExp());
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + "exp");
-                }
+                Exp = Double.parseDouble(value);
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("add")) {
             if (Util.isDouble(value)) {
-                double Exp = Double.parseDouble(value);
-                Exp = Exp < 0 ? 0 : Exp;
-                myPet.getExperience().addExp(Exp);
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] added " + Exp + "exp.");
+                Exp += Double.parseDouble(value);
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("remove")) {
             if (Util.isDouble(value)) {
-                double Exp = Double.parseDouble(value);
-                Exp = Exp < 0 ? 0 : Exp;
-                Exp = Exp <= myPet.getExperience().getExp() ? Exp : myPet.getExperience().getExp();
-                if (Exp <= myPet.getExperience().getCurrentExp()) {
-                    myPet.getExperience().removeExp(Exp);
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + value + "exp.");
-                } else {
-                    Exp = myPet.getExperience().getExp() - Exp;
-                    myPet.getSkills().reset();
-                    myPet.getExperience().reset();
-                    myPet.getExperience().addExp(Exp);
-                    sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + Exp + "exp. Pet is now level " + myPet.getExperience().getLevel() + ".");
-                }
+                Exp -= Double.parseDouble(value);
             }
         }
+
+        Exp = Exp < 0 ? 0 : Exp;
+
+        if (myPet.getExp() > Exp) {
+            myPet.getSkills().reset();
+            myPet.getExperience().reset();
+        }
+        myPet.getExperience().setExp(Exp);
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".");
+
         return true;
     }
 
