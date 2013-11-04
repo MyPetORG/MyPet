@@ -82,6 +82,9 @@ public class JavaScript extends Experience {
     }
 
     public int getLevel(double exp) {
+        if (exp == 0) {
+            return 1;
+        }
         if (lastExpL == exp) {
             return lastLevel;
         }

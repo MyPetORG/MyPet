@@ -61,32 +61,62 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
             return true;
         }
         MyPet myPet = MyPetList.getMyPet(petOwner);
-        String value = args[1];
 
-        double Exp = myPet.getExp();
+        String value = args[1];
+        boolean level = false;
+        double exp = myPet.getExp();
+
+        if (value.endsWith("l") || value.endsWith("L")) {
+            level = true;
+            value = value.substring(0, value.length() - 1);
+        }
 
         if (args.length == 2 || (args.length >= 3 && args[2].equalsIgnoreCase("set"))) {
-            if (Util.isDouble(value)) {
-                Exp = Double.parseDouble(value);
+            if (level) {
+                if (Util.isInt(value)) {
+                    exp = myPet.getExperience().getExpByLevel(Integer.parseInt(value));
+                }
+            } else {
+                if (Util.isDouble(value)) {
+                    exp = Double.parseDouble(value);
+                }
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("add")) {
-            if (Util.isDouble(value)) {
-                Exp += Double.parseDouble(value);
+            if (level) {
+                if (Util.isInt(value)) {
+                    int oldLevel = myPet.getExperience().getLevel();
+                    exp = myPet.getExperience().getExpByLevel(oldLevel + Integer.parseInt(value));
+                }
+            } else {
+                if (Util.isDouble(value)) {
+                    exp += Double.parseDouble(value);
+                }
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("remove")) {
-            if (Util.isDouble(value)) {
-                Exp -= Double.parseDouble(value);
+            if (level) {
+                if (Util.isInt(value)) {
+                    int oldLevel = myPet.getExperience().getLevel();
+                    if (oldLevel - Integer.parseInt(value) <= 1) {
+                        exp = 0;
+                    } else {
+                        exp = myPet.getExperience().getExpByLevel(oldLevel - Integer.parseInt(value));
+                    }
+                }
+            } else {
+                if (Util.isDouble(value)) {
+                    exp -= Double.parseDouble(value);
+                }
             }
         }
 
-        Exp = Exp < 0 ? 0 : Exp;
+        exp = exp < 0 ? 0 : exp;
 
-        if (myPet.getExp() > Exp) {
+        if (myPet.getExp() > exp) {
             myPet.getSkills().reset();
             myPet.getExperience().reset();
         }
-        myPet.getExperience().setExp(Exp);
-        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + Exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".");
+        myPet.getExperience().setExp(exp);
+        sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] set exp to " + exp + ". Pet is now level " + myPet.getExperience().getLevel() + ".");
 
         return true;
     }

@@ -35,14 +35,14 @@ public class Default extends Experience {
     }
 
     public int getLevel(double exp) {
+        if (exp == 0) {
+            return 1;
+        }
+
         if (lastExpL == exp) {
             return lastLevel;
         }
         lastExpL = exp;
-
-        if (exp == 0) {
-            return 1;
-        }
 
         // Minecraft:   E = 7 + roundDown( n * 3.5)
 
