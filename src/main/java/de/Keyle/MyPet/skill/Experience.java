@@ -83,9 +83,9 @@ public class Experience {
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), Exp);
         if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
-        }
-        if (expEvent.isCancelled()) {
-            return;
+            if (expEvent.isCancelled()) {
+                return;
+            }
         }
         int tmplvl = getLevel();
         this.exp = expEvent.getExp();
@@ -103,9 +103,9 @@ public class Experience {
         MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
         if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(event);
-        }
-        if (event.isCancelled()) {
-            return 0;
+            if (event.isCancelled()) {
+                return 0;
+            }
         }
         int tmpLvl = getLevel();
         this.exp = event.getExp();
@@ -122,9 +122,9 @@ public class Experience {
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, MonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp);
             if (Configuration.ENABLE_EVENTS) {
                 getServer().getPluginManager().callEvent(expEvent);
-            }
-            if (expEvent.isCancelled()) {
-                return 0;
+                if (expEvent.isCancelled()) {
+                    return 0;
+                }
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
@@ -144,9 +144,9 @@ public class Experience {
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
             if (Configuration.ENABLE_EVENTS) {
                 getServer().getPluginManager().callEvent(expEvent);
-            }
-            if (expEvent.isCancelled()) {
-                return 0;
+                if (expEvent.isCancelled()) {
+                    return 0;
+                }
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
@@ -167,9 +167,9 @@ public class Experience {
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
         if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
-        }
-        if (expEvent.isCancelled()) {
-            return;
+            if (expEvent.isCancelled()) {
+                return;
+            }
         }
         this.exp = expEvent.getExp();
     }
@@ -179,9 +179,9 @@ public class Experience {
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
         if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
-        }
-        if (expEvent.isCancelled()) {
-            return;
+            if (expEvent.isCancelled()) {
+                return;
+            }
         }
         this.exp = expEvent.getExp();
     }
