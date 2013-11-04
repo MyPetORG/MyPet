@@ -28,13 +28,14 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Ride")
 @SkillProperties(
-        parameterNames = {"speed_percent", "addset_speed"},
-        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String},
-        parameterDefaultValues = {"5", "add"})
+        parameterNames = {"speed_percent", "addset_speed", "jump_height", "addset_jump_height"},
+        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String},
+        parameterDefaultValues = {"5", "add", "1.25", "set"})
 public class RideInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected int speedPercent = 0;
+    protected double jumpHeigth = 0D;
 
     public RideInfo(boolean addedByInheritance) {
         super(addedByInheritance);

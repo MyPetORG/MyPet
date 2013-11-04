@@ -21,16 +21,23 @@
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
 import org.spout.nbt.CompoundTag;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
 import javax.swing.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class Ride implements SkillPropertiesPanel {
     private JPanel mainPanel;
     private JTextField speedInput;
     private JRadioButton addSpeedRadioButton;
     private JRadioButton setSpeedRadioButton;
+    private JTextField jumpHeightInput;
+    private JRadioButton addJumpHeightRadioButton;
+    private JRadioButton setJumpHeightRadioButton;
 
     private CompoundTag compoundTag;
 
@@ -50,12 +57,33 @@ public class Ride implements SkillPropertiesPanel {
         if (speedInput.getText().length() == 0) {
             speedInput.setText("0");
         }
+
+        jumpHeightInput.setText(jumpHeightInput.getText().replaceAll("[^0-9\\.]*", ""));
+        if (jumpHeightInput.getText().length() > 0) {
+            if (jumpHeightInput.getText().matches("\\.+")) {
+                jumpHeightInput.setText("0.0");
+            } else {
+                try {
+                    Pattern regex = Pattern.compile("[0-9]+(\\.[0-9]+)?");
+                    Matcher regexMatcher = regex.matcher(jumpHeightInput.getText());
+                    regexMatcher.find();
+                    jumpHeightInput.setText(regexMatcher.group());
+                } catch (PatternSyntaxException ignored) {
+                    jumpHeightInput.setText("0.0");
+                }
+            }
+        } else {
+            jumpHeightInput.setText("0.0");
+        }
     }
 
     @Override
     public CompoundTag save() {
         compoundTag.getValue().put("addset_speed", new StringTag("addset_speed", addSpeedRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("speed_percent", new IntTag("speed_percent", Integer.parseInt(speedInput.getText())));
+
+        compoundTag.getValue().put("addset_jump_height", new StringTag("addset_jump_height", addJumpHeightRadioButton.isSelected() ? "add" : "set"));
+        compoundTag.getValue().put("jump_height", new DoubleTag("jump_height", Double.parseDouble(jumpHeightInput.getText())));
 
         return compoundTag;
     }
@@ -69,6 +97,15 @@ public class Ride implements SkillPropertiesPanel {
         }
         if (compoundTag.getValue().containsKey("speed_percent")) {
             speedInput.setText("" + ((IntTag) compoundTag.getValue().get("speed_percent")).getValue());
+        }
+
+        if (compoundTag.getValue().containsKey("addset_jump_height") && ((StringTag) compoundTag.getValue().get("addset_jump_height")).getValue().equals("add")) {
+            addJumpHeightRadioButton.setSelected(true);
+        } else {
+            setJumpHeightRadioButton.setSelected(true);
+        }
+        if (compoundTag.getValue().containsKey("jump_height")) {
+            jumpHeightInput.setText("" + ((DoubleTag) compoundTag.getValue().get("jump_height")).getValue());
         }
     }
 }

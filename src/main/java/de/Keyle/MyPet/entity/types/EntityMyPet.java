@@ -552,8 +552,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         motionSideways *= 0.85F;
 
         float speed = 0.22222F;
+        double jumpHeight = 0.3D;
         if (rideSkill != null) {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
+            jumpHeight = rideSkill.getJumpHeight() * 0.18D;
         }
         i(speed); // set ride speed
         super.e(motionSideways, motionForward); // apply motion
@@ -562,7 +564,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         if (jump != null && onGround) {
             try {
                 if (jump.getBoolean(this.passenger)) {
-                    this.motY = 0.525D;
+                    this.motY = Math.sqrt(jumpHeight);
                 }
             } catch (IllegalAccessException ignored) {
             }

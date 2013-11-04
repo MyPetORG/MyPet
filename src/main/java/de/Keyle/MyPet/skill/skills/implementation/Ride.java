@@ -27,6 +27,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
+import org.spout.nbt.DoubleTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.StringTag;
 
@@ -53,18 +54,24 @@ public class Ride extends RideInfo implements ISkillInstance {
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof RideInfo) {
-            if (!active && !quiet) {
-                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
-            }
             if (upgrade.getProperties().getValue().containsKey("speed_percent")) {
                 if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add")) {
                     speedPercent += ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
                 } else {
                     speedPercent = ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
                 }
-                if (active && !quiet) {
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), speedPercent));
+            }
+            if (upgrade.getProperties().getValue().containsKey("jump_height")) {
+                if (upgrade.getProperties().getValue().containsKey("addset_jump_height") && ((StringTag) upgrade.getProperties().getValue().get("addset_jump_height")).getValue().equals("add")) {
+                    jumpHeigth += ((DoubleTag) upgrade.getProperties().getValue().get("jump_height")).getValue();
+                } else {
+                    jumpHeigth = ((DoubleTag) upgrade.getProperties().getValue().get("jump_height")).getValue();
                 }
+            }
+            if (!active && !quiet) {
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Receive", myPet.getOwner().getLanguage()), myPet.getPetName()));
+            } else if (active && !quiet) {
+                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Ride.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), speedPercent));
             }
             active = true;
         }
@@ -81,6 +88,10 @@ public class Ride extends RideInfo implements ISkillInstance {
 
     public int getSpeedPercent() {
         return speedPercent;
+    }
+
+    public double getJumpHeight() {
+        return jumpHeigth;
     }
 
     @Override
