@@ -165,7 +165,6 @@ public class GuiMain {
     }
 
     public static void registerSkillsInfo() {
-        SkillsInfo.registerSkill(BeaconLegacyInfo.class);
         SkillsInfo.registerSkill(BehaviorInfo.class);
         SkillsInfo.registerSkill(ControlInfo.class);
         SkillsInfo.registerSkill(DamageInfo.class);

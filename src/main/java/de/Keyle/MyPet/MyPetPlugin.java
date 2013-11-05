@@ -167,7 +167,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         getCommand("petskill").setExecutor(new CommandSkill());
         getCommand("petskilltree").setExecutor(new CommandShowSkillTree());
         getCommand("petchooseskilltree").setExecutor(new CommandChooseSkilltree());
-        getCommand("petbeacon").setExecutor(new CommandBeacon());
         getCommand("petrespawn").setExecutor(new CommandRespawn());
         getCommand("pettype").setExecutor(new CommandPetType());
         getCommand("petcapturehelper").setExecutor(new CommandCaptureHelper());
@@ -372,7 +371,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         Skills.registerSkill(Ride.class);
         Skills.registerSkill(Thorns.class);
         Skills.registerSkill(Fire.class);
-        Skills.registerSkill(BeaconLegacy.class);
         Skills.registerSkill(Wither.class);
         Skills.registerSkill(Lightning.class);
         Skills.registerSkill(Slow.class);
@@ -393,7 +391,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillsInfo.registerSkill(RideInfo.class);
         SkillsInfo.registerSkill(ThornsInfo.class);
         SkillsInfo.registerSkill(FireInfo.class);
-        SkillsInfo.registerSkill(BeaconLegacyInfo.class);
         SkillsInfo.registerSkill(WitherInfo.class);
         SkillsInfo.registerSkill(LightningInfo.class);
         SkillsInfo.registerSkill(SlowInfo.class);

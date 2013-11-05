@@ -40,7 +40,10 @@ import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
-import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior;
+import de.Keyle.MyPet.skill.skills.implementation.Control;
+import de.Keyle.MyPet.skill.skills.implementation.Inventory;
+import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.*;
@@ -239,7 +242,6 @@ public class Configuration {
 
         Control.CONTROL_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Control.Item", "" + Material.LEASH.getId()));
         Ride.RIDE_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Skill.Ride.Item", "" + Material.LEASH.getId()));
-        BeaconLegacy.HUNGER_DECREASE_TIME = config.getInt("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
         Inventory.OPEN_IN_CREATIVEMODE = config.getBoolean("MyPet.Skill.Inventory.Creative", true);
         Inventory.DROP_WHEN_OWNER_DIES = config.getBoolean("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
         Behavior.BehaviorState.Aggressive.setActive(config.getBoolean("MyPet.Skill.Behavior.Aggro", true));

@@ -54,10 +54,6 @@ commands:
     aliases: [pcst, petcst]
     description: Chooses a skilltree.
     usage: '/<command> <SkillTreeName>'
-  petbeacon:
-    aliases: [pbeacon]
-    description: Beacon!
-    usage: '/<command> [stop]'
   petrespawn:
     aliases: [pr, petr]
     description: Pays respawn fee or enable auto respawn fee paying.
