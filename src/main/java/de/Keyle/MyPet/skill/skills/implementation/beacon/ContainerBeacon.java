@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.beacon;
 
-import de.Keyle.MyPet.skill.skills.implementation.Beacon;
+import de.Keyle.MyPet.skill.skills.implementation.BeaconLegacy;
 import net.minecraft.server.v1_6_R3.*;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
@@ -31,9 +31,9 @@ public class ContainerBeacon extends net.minecraft.server.v1_6_R3.ContainerBeaco
     private PlayerInventory playerInventory;
     private TileEntityBeacon tileEntityBeacon;
     MyPetCustomBeaconInventory beaconInv;
-    Beacon beaconSkill;
+    BeaconLegacy beaconSkill;
 
-    public ContainerBeacon(PlayerInventory playerInventory, MyPetCustomBeaconInventory beaconInv, TileEntityBeacon tileEntityBeacon, Beacon beaconSkill) {
+    public ContainerBeacon(PlayerInventory playerInventory, MyPetCustomBeaconInventory beaconInv, TileEntityBeacon tileEntityBeacon, BeaconLegacy beaconSkill) {
         super(playerInventory, tileEntityBeacon);
         this.c.clear();
         this.b.clear();

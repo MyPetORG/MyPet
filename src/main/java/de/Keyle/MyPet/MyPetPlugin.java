@@ -372,7 +372,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         Skills.registerSkill(Ride.class);
         Skills.registerSkill(Thorns.class);
         Skills.registerSkill(Fire.class);
-        Skills.registerSkill(Beacon.class);
+        Skills.registerSkill(BeaconLegacy.class);
         Skills.registerSkill(Wither.class);
         Skills.registerSkill(Lightning.class);
         Skills.registerSkill(Slow.class);
@@ -393,7 +393,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillsInfo.registerSkill(RideInfo.class);
         SkillsInfo.registerSkill(ThornsInfo.class);
         SkillsInfo.registerSkill(FireInfo.class);
-        SkillsInfo.registerSkill(BeaconInfo.class);
+        SkillsInfo.registerSkill(BeaconLegacyInfo.class);
         SkillsInfo.registerSkill(WitherInfo.class);
         SkillsInfo.registerSkill(LightningInfo.class);
         SkillsInfo.registerSkill(SlowInfo.class);

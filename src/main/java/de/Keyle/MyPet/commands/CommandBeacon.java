@@ -23,7 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.skills.implementation.Beacon;
+import de.Keyle.MyPet.skill.skills.implementation.BeaconLegacy;
 import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -56,8 +56,8 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                 }
 
                 MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getSkills().isSkillActive(Beacon.class)) {
-                    myPet.getSkills().getSkill(Beacon.class).activate(player);
+                if (myPet.getSkills().isSkillActive(BeaconLegacy.class)) {
+                    myPet.getSkills().getSkill(BeaconLegacy.class).activate(player);
                 }
                 return true;
             }
@@ -76,7 +76,7 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("stop")) {
-                    myPet.getSkills().getSkill(Beacon.class).stop(true);
+                    myPet.getSkills().getSkill(BeaconLegacy.class).stop(true);
                     sender.sendMessage(Locales.getString("Message.Skill.Beacon.Stop", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
@@ -84,8 +84,8 @@ public class CommandBeacon implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Locales.getString("Message.Skill.Beacon.Creative", player).replace("%petname%", myPet.getPetName()));
                     return true;
                 }
-                if (myPet.getSkills().hasSkill(Beacon.class)) {
-                    myPet.getSkills().getSkill(Beacon.class).activate();
+                if (myPet.getSkills().hasSkill(BeaconLegacy.class)) {
+                    myPet.getSkills().getSkill(BeaconLegacy.class).activate();
                 }
             } else {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", player));

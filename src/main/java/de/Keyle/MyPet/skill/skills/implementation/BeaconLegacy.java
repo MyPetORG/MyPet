@@ -28,7 +28,7 @@ import de.Keyle.MyPet.skill.skills.implementation.beacon.ContainerBeacon;
 import de.Keyle.MyPet.skill.skills.implementation.beacon.MyPetCustomBeaconInventory;
 import de.Keyle.MyPet.skill.skills.implementation.beacon.TileEntityBeacon;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
-import de.Keyle.MyPet.skill.skills.info.BeaconInfo;
+import de.Keyle.MyPet.skill.skills.info.BeaconLegacyInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.IScheduler;
@@ -45,7 +45,8 @@ import org.spout.nbt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
+@Deprecated
+public class BeaconLegacy extends BeaconLegacyInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 60;
 
     private TileEntityBeacon tileEntityBeacon;
@@ -73,7 +74,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffNames.put(11, "Resistance");
     }
 
-    public Beacon(boolean addedByInheritance) {
+    public BeaconLegacy(boolean addedByInheritance) {
         super(addedByInheritance);
         beaconInv = new MyPetCustomBeaconInventory(this);
         primaryActive.put(1, false);
@@ -114,7 +115,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     }
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
-        if (upgrade instanceof BeaconInfo) {
+        if (upgrade instanceof BeaconLegacyInfo) {
             level = 4;
             for (int primaryBuffId : primaryBuffs) {
                 if (upgrade.getProperties().getValue().containsKey("1_" + primaryBuffId)) {
@@ -364,7 +365,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
     @Override
     public ISkillInstance cloneSkill() {
-        Beacon newSkill = new Beacon(this.isAddedByInheritance());
+        BeaconLegacy newSkill = new BeaconLegacy(this.isAddedByInheritance());
         newSkill.setProperties(getProperties());
         return newSkill;
     }

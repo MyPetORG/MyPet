@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPetList;
-import de.Keyle.MyPet.skill.skills.implementation.Beacon;
+import de.Keyle.MyPet.skill.skills.implementation.BeaconLegacy;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.Pickup;
@@ -65,7 +65,7 @@ public class CommandHelp implements CommandExecutor {
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive(Inventory.class)) {
                     player.sendMessage(ChatColor.GOLD + "/petinventory" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Inventory", player));
                 }
-                if (MyPetList.getMyPet(player).getSkills().isSkillActive(Beacon.class)) {
+                if (MyPetList.getMyPet(player).getSkills().isSkillActive(BeaconLegacy.class)) {
                     player.sendMessage(ChatColor.GOLD + "/petbeacon" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Beacon", player));
                 }
                 if (MyPetList.getMyPet(player).getSkills().isSkillActive(Pickup.class)) {
