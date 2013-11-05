@@ -283,40 +283,43 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         try {
             Metrics metrics = new Metrics(this);
+            boolean metricsActive = false;
+            if (!metrics.isOptOut()) {
 
-            Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
-            Graph graphCount = metrics.createGraph("Counted MyPets per type");
-            Graph graphTotalCount = metrics.createGraph("Total MyPets");
+                Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
+                Graph graphCount = metrics.createGraph("Counted MyPets per type");
+                Graph graphTotalCount = metrics.createGraph("Total MyPets");
 
-            for (final MyPetType petType : MyPetType.values()) {
-                Plotter plotter = new Metrics.Plotter(petType.getTypeName()) {
-                    final MyPetType type = petType;
+                for (final MyPetType petType : MyPetType.values()) {
+                    Plotter plotter = new Metrics.Plotter(petType.getTypeName()) {
+                        final MyPetType type = petType;
 
+                        @Override
+                        public int getValue() {
+                            return MyPetList.countMyPets(type);
+                        }
+                    };
+                    graphPercent.addPlotter(plotter);
+                    graphCount.addPlotter(plotter);
+                }
+
+                Plotter plotter = new Metrics.Plotter("Total MyPets") {
                     @Override
                     public int getValue() {
-                        return MyPetList.countMyPets(type);
+                        return MyPetList.countMyPets();
                     }
                 };
-                graphPercent.addPlotter(plotter);
-                graphCount.addPlotter(plotter);
+                graphTotalCount.addPlotter(plotter);
+                plotter = new Metrics.Plotter("Active MyPets") {
+                    @Override
+                    public int getValue() {
+                        return MyPetList.countActiveMyPets();
+                    }
+                };
+                graphTotalCount.addPlotter(plotter);
+
+                metricsActive = metrics.start();
             }
-
-            Plotter plotter = new Metrics.Plotter("Total MyPets") {
-                @Override
-                public int getValue() {
-                    return MyPetList.countMyPets();
-                }
-            };
-            graphTotalCount.addPlotter(plotter);
-            plotter = new Metrics.Plotter("Active MyPets") {
-                @Override
-                public int getValue() {
-                    return MyPetList.countActiveMyPets();
-                }
-            };
-            graphTotalCount.addPlotter(plotter);
-
-            boolean metricsActive = metrics.start();
             DebugLogger.info("Metrics " + (metricsActive ? "" : "not ") + "activated");
         } catch (IOException e) {
             MyPetLogger.write(e.getMessage());
