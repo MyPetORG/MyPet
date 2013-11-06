@@ -166,4 +166,52 @@ public class Util {
         }
         return contents.toString();
     }
+
+    public static String decimal2roman(int src) {
+        char digits[] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+        String thousands = "", result = "";
+        int rang, digit, i;
+
+        for (i = src / 1000; i > 0; i--) {
+            thousands += "M";
+        }
+        src %= 1000;
+
+        rang = 0;
+        while (src > 0) {
+            digit = src % 10;
+            src /= 10;
+            switch (digit) {
+                case 1:
+                    result = "" + digits[rang] + result;
+                    break;
+                case 2:
+                    result = "" + digits[rang] + digits[rang] + result;
+                    break;
+                case 3:
+                    result = "" + digits[rang] + digits[rang] + digits[rang] + result;
+                    break;
+                case 4:
+                    result = "" + digits[rang] + digits[rang + 1] + result;
+                    break;
+                case 5:
+                    result = "" + digits[rang + 1] + result;
+                    break;
+                case 6:
+                    result = "" + digits[rang + 1] + digits[rang] + result;
+                    break;
+                case 7:
+                    result = "" + digits[rang + 1] + digits[rang] + digits[rang] + result;
+                    break;
+                case 8:
+                    result = "" + digits[rang + 1] + digits[rang] + digits[rang] + digits[rang] + result;
+                    break;
+                case 9:
+                    result = "" + digits[rang] + digits[rang + 2] + result;
+                    break;
+            }
+            rang += 2;
+        }
+        return thousands + result;
+    }
 }
