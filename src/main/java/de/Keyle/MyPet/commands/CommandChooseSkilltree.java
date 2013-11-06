@@ -27,15 +27,15 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.iconmenu.IconMenu;
+import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.CompoundTag;
 
 import java.util.ArrayList;
@@ -150,8 +150,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
 
                         CompoundTag tag = addedSkilltree.getIconItem();
                         net.minecraft.server.v1_6_R3.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
-                        ItemStack shownItem = CraftItemStack.asCraftMirror(is);
-
+                        IconMenuItem option = IconMenuItem.fromNmsItemStack(is);
+                        option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰");
 
                         boolean selectable = false;
                         int requiredLevel = addedSkilltree.getRequiredLevel();
@@ -174,8 +174,8 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         for (int j = 0; j < addedSkilltree.getDescription().size(); j++) {
                             descriptionArray[j + requireOffset] = ChatColor.RESET + Colorizer.setColors(String.valueOf(addedSkilltree.getDescription().get(j)));
                         }
-
-                        menu.setOption(i, shownItem, ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰", descriptionArray);
+                        option.setLore(descriptionArray);
+                        menu.setOption(i, option);
                         skilltreeSlotMap.put(i, addedSkilltree);
                     }
                     menu.open(player);
