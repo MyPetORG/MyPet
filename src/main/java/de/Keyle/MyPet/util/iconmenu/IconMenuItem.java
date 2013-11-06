@@ -48,7 +48,6 @@ public class IconMenuItem {
     }
 
     public IconMenuItem setData(int data) {
-        Validate.isTrue(data >= 0 && data <= 16, "Data must be between 0 and 15");
         if (this.data != data) {
             this.data = data;
             hasChanged = true;
