@@ -52,6 +52,7 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
+import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -128,6 +129,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         MyPetLogger.setConsole(getServer().getConsoleSender());
         PvPChecker.reset();
         Economy.reset();
+        JavaScript.reset();
         Configuration.config = this.getConfig();
         Configuration.setDefault();
         Configuration.loadConfiguration();
