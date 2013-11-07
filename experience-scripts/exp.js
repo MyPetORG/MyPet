@@ -1,17 +1,17 @@
 /*
-	#####################################
-	###                               ###
-	### MyPet Exp-System Level Script ###
-	###         by Keyle              ###
-	###       MC 1.3.1 script         ###
-	#####################################
-	
-		Usable Methods for the "mypet" Object:
-		    mypet.getType()
-			mypet.getOwnerName()
-			mypet.getSkilltree()
-			mypet.getUUID()
-			mypet.getWorldGroup()
+    #####################################
+    ###                               ###
+    ### MyPet Exp-System Level Script ###
+    ###         by Keyle              ###
+    ###       MC 1.3.1 script         ###
+    #####################################
+
+        Usable Methods for the "mypet" Object:
+            mypet.getType()
+            mypet.getOwnerName()
+            mypet.getSkilltree()
+            mypet.getUUID()
+            mypet.getWorldGroup()
 
 */
 
