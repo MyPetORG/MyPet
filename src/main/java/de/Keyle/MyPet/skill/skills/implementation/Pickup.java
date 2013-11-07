@@ -114,44 +114,47 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class)) {
             for (Entity entity : myPet.getCraftPet().getNearbyEntities(range, range, range)) {
-                if (entity instanceof Item) {
-                    Item itemEntity = (Item) entity;
-                    ItemStack itemStack = itemEntity.getItemStack();
+                if (!entity.isDead()) {
+                    if (entity instanceof Item) {
+                        Item itemEntity = (Item) entity;
+                        ItemStack itemStack = itemEntity.getItemStack();
 
-                    if (itemStack.getAmount() > 0) {
-                        PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
-                        Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
+                        if (itemStack.getAmount() > 0) {
+                            PlayerPickupItemEvent playerPickupEvent = new PlayerPickupItemEvent(myPet.getOwner().getPlayer(), itemEntity, itemStack.getAmount());
+                            Bukkit.getServer().getPluginManager().callEvent(playerPickupEvent);
 
-                        if (playerPickupEvent.isCancelled()) {
-                            continue;
-                        }
-
-                        CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
-                        int itemAmount = inv.addItem(itemStack);
-                        if (itemAmount == 0) {
-                            for (Entity p : itemEntity.getNearbyEntities(20, 20, 20)) {
-                                if (p instanceof Player) {
-                                    ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
-                                }
+                            if (playerPickupEvent.isCancelled()) {
+                                continue;
                             }
-                            myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
-                            itemStack.setAmount(0);
-                            itemEntity.remove();
-                        } else {
-                            itemStack.setAmount(itemAmount);
+
+                            CustomInventory inv = myPet.getSkills().getSkill(Inventory.class).inv;
+                            int itemAmount = inv.addItem(itemStack);
+                            if (itemAmount == 0) {
+                                for (Entity p : itemEntity.getNearbyEntities(20, 20, 20)) {
+                                    if (p instanceof Player) {
+                                        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                    }
+                                }
+                                myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
+                                itemStack.setAmount(0);
+                                itemEntity.remove();
+                            } else {
+                                itemStack.setAmount(itemAmount);
+                                itemEntity.setItemStack(itemStack);
+                            }
                         }
                     }
-                }
-                if (expPickup && entity instanceof ExperienceOrb) {
-                    ExperienceOrb expEntity = (ExperienceOrb) entity;
-                    myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
-                    for (Entity p : expEntity.getNearbyEntities(20, 20, 20)) {
-                        if (p instanceof Player) {
-                            ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                    if (expPickup && entity instanceof ExperienceOrb) {
+                        ExperienceOrb expEntity = (ExperienceOrb) entity;
+                        myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
+                        for (Entity p : expEntity.getNearbyEntities(20, 20, 20)) {
+                            if (p instanceof Player) {
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                            }
                         }
+                        expEntity.setExperience(0);
+                        expEntity.remove();
                     }
-                    expEntity.setExperience(0);
-                    expEntity.remove();
                 }
             }
         }
