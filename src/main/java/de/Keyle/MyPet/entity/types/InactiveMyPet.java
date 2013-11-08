@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.NBTStorage;
 import org.spout.nbt.*;
 
 import java.util.Collection;

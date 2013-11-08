@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.ai.target;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.PvPChecker;
+import de.Keyle.MyPet.util.support.PvPChecker;
 import net.minecraft.server.v1_6_R3.EntityLiving;
 import net.minecraft.server.v1_6_R3.EntityPlayer;
 import net.minecraft.server.v1_6_R3.EntityTameableAnimal;

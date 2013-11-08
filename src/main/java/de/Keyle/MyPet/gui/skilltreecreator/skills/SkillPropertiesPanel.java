@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import de.Keyle.MyPet.util.NBTStorage;
+import de.Keyle.MyPet.api.util.NBTStorage;
 
 import javax.swing.*;
 

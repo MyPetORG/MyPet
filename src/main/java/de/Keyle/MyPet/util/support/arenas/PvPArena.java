@@ -18,37 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.support.arenas;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
+import net.slipcor.pvparena.api.PVPArenaAPI;
+import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class BattleArena implements Listener {
+public class PvPArena implements Listener {
     public static boolean DISABLE_PETS_IN_ARENA = true;
 
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("BattleArena")) {
-            Bukkit.getPluginManager().registerEvents(new BattleArena(), MyPetPlugin.getPlugin());
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
+            Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
             active = true;
         }
-        DebugLogger.info("BattleArena support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("PvPArena support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInBattleArena(MyPetPlayer owner) {
+    public static boolean isInPvPArena(MyPetPlayer owner) {
         if (active) {
             try {
-                Player p = owner.getPlayer();
-                return mc.alk.arena.BattleArena.inArena(p) && mc.alk.arena.BattleArena.inCompetition(p);
+                return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
             } catch (Exception e) {
                 active = false;
             }
@@ -57,9 +56,9 @@ public class BattleArena implements Listener {
     }
 
     @EventHandler
-    public void onJoinBattleArena(ArenaPlayerEnterEvent event) {
-        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer().getName())) {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer().getName());
+    public void onJoinPvPArena(PAJoinEvent event) {
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));

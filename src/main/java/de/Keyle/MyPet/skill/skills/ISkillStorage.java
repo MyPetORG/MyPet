@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills;
 
-import de.Keyle.MyPet.util.NBTStorage;
+import de.Keyle.MyPet.api.util.NBTStorage;
 
 public interface ISkillStorage extends NBTStorage {
 }

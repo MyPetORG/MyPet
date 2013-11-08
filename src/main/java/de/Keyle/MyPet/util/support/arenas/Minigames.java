@@ -1,4 +1,4 @@
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.support.arenas;
 
 import com.pauldavdesign.mineauz.minigames.events.JoinMinigameEvent;
 import com.pauldavdesign.mineauz.minigames.events.SpectateMinigameEvent;

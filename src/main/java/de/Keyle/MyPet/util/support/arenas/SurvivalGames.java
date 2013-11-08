@@ -18,36 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.support.arenas;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.slipcor.pvparena.api.PVPArenaAPI;
-import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.mcsg.survivalgames.GameManager;
+import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
-public class PvPArena implements Listener {
-    public static boolean DISABLE_PETS_IN_ARENA = true;
+public class SurvivalGames implements Listener {
+    public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
 
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
-            Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames")) {
+            Bukkit.getPluginManager().registerEvents(new SurvivalGames(), MyPetPlugin.getPlugin());
             active = true;
         }
-        DebugLogger.info("PvPArena support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("SurvivalGames support " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInPvPArena(MyPetPlayer owner) {
+    public static boolean isInSurvivalGames(MyPetPlayer owner) {
         if (active) {
             try {
-                return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
+                return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
             } catch (Exception e) {
                 active = false;
             }
@@ -56,8 +56,8 @@ public class PvPArena implements Listener {
     }
 
     @EventHandler
-    public void onJoinPvPArena(PAJoinEvent event) {
-        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+    public void onJoinPvPArena(PlayerJoinArenaEvent event) {
+        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

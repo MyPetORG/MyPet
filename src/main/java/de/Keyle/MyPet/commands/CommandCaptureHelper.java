@@ -1,9 +1,9 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.Permissions;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.support.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

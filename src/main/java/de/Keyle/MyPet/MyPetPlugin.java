@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet;
 
+import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -69,7 +70,9 @@ import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import de.Keyle.MyPet.util.support.*;
+import de.Keyle.MyPet.util.support.Economy;
+import de.Keyle.MyPet.util.support.PvPChecker;
+import de.Keyle.MyPet.util.support.arenas.*;
 import net.minecraft.server.v1_6_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

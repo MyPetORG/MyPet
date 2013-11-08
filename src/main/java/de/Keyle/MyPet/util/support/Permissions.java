@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util;
+package de.Keyle.MyPet.util.support;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
