@@ -82,6 +82,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public void reset() {
         rows = 0;
+        inv.close();
         inv.setSize(0);
     }
 

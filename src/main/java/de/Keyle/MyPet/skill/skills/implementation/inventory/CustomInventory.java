@@ -20,12 +20,16 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import net.minecraft.server.v1_6_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
@@ -34,7 +38,7 @@ import org.spout.nbt.ListTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomInventory implements IInventory {
+public class CustomInventory implements IInventory, Listener {
     private String inventroyName;
     private List<ItemStack> items = new ArrayList<ItemStack>();
     private int size = 0;
@@ -44,6 +48,7 @@ public class CustomInventory implements IInventory {
     public CustomInventory(String inventroyName, int size) {
         setName(inventroyName);
         setSize(size);
+        MyPetPlugin.getPlugin().getServer().getPluginManager().registerEvents(this, MyPetPlugin.getPlugin());
     }
 
     public int getSize() {
@@ -222,6 +227,13 @@ public class CustomInventory implements IInventory {
                     items.remove(counterOutside);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    void onPluginDisable(PluginDisableEvent event) {
+        if (event.getPlugin().equals(MyPetPlugin.getPlugin())) {
+            close();
         }
     }
 
