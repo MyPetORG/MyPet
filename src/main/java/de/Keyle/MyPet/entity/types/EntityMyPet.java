@@ -264,6 +264,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     @Override
+    public boolean isPersistent() {
+        return false;
+    }
+
+    @Override
     public CraftEntity getBukkitEntity() {
         if (this.bukkitEntity == null) {
             this.bukkitEntity = new CraftMyPet(this.world.getServer(), this);
@@ -510,6 +515,11 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return ((CraftPlayer) getOwner().getPlayer()).getHandle();
         }
         return null;
+    }
+
+    @Override
+    public boolean d(NBTTagCompound nbttagcompound) {
+        return false;
     }
 
     public void e(float motionSideways, float motionForward) {
