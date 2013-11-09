@@ -41,7 +41,7 @@ public class MeleeAttack extends AIGoal {
         this.petEntity = petEntity;
         this.myPet = petEntity.getMyPet();
         this.walkSpeedModifier = walkSpeedModifier;
-        this.range = range * range;
+        this.range = range;
         this.ticksUntilNextHit = ticksUntilNextHit;
     }
 
@@ -98,7 +98,7 @@ public class MeleeAttack extends AIGoal {
             this.timeUntilNextNavigationUpdate = (4 + this.petEntity.getRandom().nextInt(7));
             this.petEntity.petNavigation.navigateTo(targetEntity);
         }
-        if ((this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ) <= this.range) && (this.ticksUntilNextHitLeft-- <= 0)) {
+        if (Math.sqrt(this.petEntity.e(targetEntity.locX, targetEntity.boundingBox.b, targetEntity.locZ)) - (targetEntity.length * (2. / 3.)) <= this.range && this.ticksUntilNextHitLeft-- <= 0) {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
             if (this.petEntity instanceof IMyPetEquipment) {
                 if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {

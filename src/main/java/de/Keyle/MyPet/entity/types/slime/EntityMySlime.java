@@ -64,7 +64,7 @@ public class EntityMySlime extends EntityMyPet {
             this.a(es.height() * value, es.width() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getSize() * 0.6), 20));
         }
         ((MySlime) myPet).size = value;
     }
