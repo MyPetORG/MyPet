@@ -184,19 +184,21 @@ public class EntityMyHorse extends EntityMyPet {
                 }
                 return true;
             } else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip()) {
-                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                }
-                setArmor(itemStack.id - 416);
-                if (!entityhuman.abilities.canInstantlyBuild) {
-                    if (--itemStack.count <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                if (getHorseType() == 0) {
+                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
+                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     }
+                    setArmor(itemStack.id - 416);
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (--itemStack.count <= 0) {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    return true;
                 }
-                return true;
             } else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
