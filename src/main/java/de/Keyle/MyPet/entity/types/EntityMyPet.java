@@ -351,6 +351,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public void onLivingUpdate() {
+        if (getOwner().getPlayer().isSneaking() != isSneaking()) {
+            this.setSneaking(!isSneaking());
+        }
     }
 
     protected void initDatawatcher() {
