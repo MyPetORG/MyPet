@@ -188,7 +188,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         if (buffPositionItems.containsKey(event.getPosition())) {
                             int newSelectedBuff = buffPositionItems.get(event.getPosition());
                             if (newSelectedBuff != selectedBuff) {
-                                menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(false);
+                                if (selectedBuff != 0 && menu.getOption(buffItemPositions.get(selectedBuff)) != null) {
+                                    menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(false);
+                                }
                                 selectedBuff = newSelectedBuff;
                                 menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
                                 menu.update();
