@@ -23,7 +23,10 @@ package de.Keyle.MyPet.util.iconmenu;
 import net.minecraft.server.v1_6_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class IconMenuItem {
@@ -37,6 +40,7 @@ public class IconMenuItem {
 
     protected ItemStack oldItemStack;
     protected boolean hasChanged = true;
+    private Method applyToItemMethhod = null;
 
     public IconMenuItem setMaterial(Material material) {
         Validate.notNull(material, "Material cannot be null");
@@ -70,6 +74,61 @@ public class IconMenuItem {
         Validate.isTrue(!name.equals(""), "Name can not be empty");
         this.displayTags.put(name, tag);
         hasChanged = true;
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public IconMenuItem setMeta(ItemMeta meta, boolean useTitle, boolean useLore) {
+        Validate.notNull(meta, "Name cannot be null");
+
+        if (useTitle && meta.hasDisplayName()) {
+            this.title = meta.getDisplayName();
+            hasChanged = true;
+        }
+        if (useLore && meta.hasLore()) {
+            this.lore.clear();
+            this.lore.addAll(meta.getLore());
+            hasChanged = true;
+        }
+
+        if (applyToItemMethhod == null) {
+            try {
+                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_6_R3.inventory.CraftMetaItem");
+                applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
+                applyToItemMethhod.setAccessible(true);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return this;
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                return this;
+            }
+        }
+        try {
+            NBTTagCompound compound = new NBTTagCompound();
+            applyToItemMethhod.invoke(meta, compound);
+
+            if (compound.hasKey("display")) {
+                compound = compound.getCompound("display");
+
+                if (compound.hasKey("Name")) {
+                    compound.remove("Name");
+                }
+                if (compound.hasKey("Lore")) {
+                    compound.remove("Lore");
+                }
+
+                for (NBTBase value : (Collection<NBTBase>) compound.c()) {
+                    this.displayTags.put(value.getName(), value);
+                }
+
+                hasChanged = true;
+            }
+        } catch (IllegalAccessException ignored) {
+            ignored.printStackTrace();
+        } catch (InvocationTargetException ignored) {
+            ignored.printStackTrace();
+        }
         return this;
     }
 
@@ -233,7 +292,6 @@ public class IconMenuItem {
                 }
             }
         }
-
         return icon;
     }
 }
