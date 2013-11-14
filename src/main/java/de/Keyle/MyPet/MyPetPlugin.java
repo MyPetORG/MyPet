@@ -141,6 +141,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("----------- loading MyPet ... -----------");
         DebugLogger.info("MyPet " + MyPetVersion.getMyPetVersion() + " build: " + MyPetVersion.getMyPetBuild());
         DebugLogger.info("Bukkit " + getServer().getVersion());
+        DebugLogger.info("Java: " + System.getProperty("java.version") + " (VM: " + System.getProperty("java.vm.version") + ") by " + System.getProperty("java.vendor"));
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
         PlayerListener playerListener = new PlayerListener();
