@@ -80,7 +80,6 @@ public class Configuration {
     public static boolean PREVENT_LEVELLING_WITHOUT_SKILLTREE = true;
     public static boolean OWNER_CAN_ATTACK_PET = false;
     public static boolean DISABLE_PET_VS_PLAYER = false;
-    public static boolean USE_LEVEL_SYSTEM = true;
     public static boolean USE_HUNGER_SYSTEM = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean ENABLE_EVENTS = false;
@@ -125,7 +124,6 @@ public class Configuration {
         config.addDefault("MyPet.Permissions.Enabled", true);
         config.addDefault("MyPet.Permissions.UseExtendedPermissions", false);
 
-        config.addDefault("MyPet.LevelSystem.Active", true);
         config.addDefault("MyPet.LevelSystem.CalculationMode", "Default");
         config.addDefault("MyPet.LevelSystem.Firework.Enabled", true);
         config.addDefault("MyPet.LevelSystem.Firework.Color", "#00FF00");
@@ -269,7 +267,6 @@ public class Configuration {
         AUTOMATIC_SKILLTREE_ASSIGNMENT = config.getBoolean("MyPet.Skilltree.AutomaticAssignment", false);
         CHOOSE_SKILLTREE_ONLY_ONCE = config.getBoolean("MyPet.Skilltree.ChooseOnce", true);
         PREVENT_LEVELLING_WITHOUT_SKILLTREE = config.getBoolean("MyPet.Skilltree.PreventLevellingWithout", true);
-        USE_LEVEL_SYSTEM = config.getBoolean("MyPet.LevelSystem.Active", true);
         OWNER_CAN_ATTACK_PET = config.getBoolean("MyPet.OwnerCanAttackPet", false);
         DISABLE_PET_VS_PLAYER = config.getBoolean("MyPet.DisablePetVersusPlayer", false);
         USE_HUNGER_SYSTEM = config.getBoolean("MyPet.HungerSystem.Active", true);

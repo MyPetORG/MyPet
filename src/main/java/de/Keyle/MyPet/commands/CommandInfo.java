@@ -111,19 +111,17 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Locales.getString("Name.Skilltree", player) + ": " + myPet.getSkillTree().getName());
                     infoShown = true;
                 }
-                if (Configuration.USE_LEVEL_SYSTEM) {
-                    if (canSee(PetInfoDisplay.Level.adminOnly, player, myPet)) {
-                        int lvl = myPet.getExperience().getLevel();
-                        player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
-                        infoShown = true;
-                    }
-                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
-                    if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && (maxLevel == 0 || myPet.getExperience().getLevel() < maxLevel)) {
-                        double exp = myPet.getExperience().getCurrentExp();
-                        double reqEXP = myPet.getExperience().getRequiredExp();
-                        player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
-                        infoShown = true;
-                    }
+                if (canSee(PetInfoDisplay.Level.adminOnly, player, myPet)) {
+                    int lvl = myPet.getExperience().getLevel();
+                    player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
+                    infoShown = true;
+                }
+                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+                if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && (maxLevel == 0 || myPet.getExperience().getLevel() < maxLevel)) {
+                    double exp = myPet.getExperience().getCurrentExp();
+                    double reqEXP = myPet.getExperience().getRequiredExp();
+                    player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
+                    infoShown = true;
                 }
                 if (!infoShown) {
                     sender.sendMessage(Locales.getString("Message.CantViewPetInfo", player));

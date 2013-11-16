@@ -81,7 +81,7 @@ public class EntityListener implements Listener {
         if (event.getEntity() instanceof CraftMyPet) {
             event.setCancelled(false);
         }
-        if (Configuration.USE_LEVEL_SYSTEM && !Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
+        if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getSpawnReason() == SpawnReason.SPAWNER) {
             event.getEntity().setMetadata("MonsterSpawner", new FixedMetadataValue(MyPetPlugin.getPlugin(), true));
         }
         if (Configuration.ADD_ZOMBIE_TARGET_GOAL && event.getEntity() instanceof CraftZombie && !event.isCancelled()) {
@@ -159,19 +159,17 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Locales.getString("Name.Skilltree", damager) + ": " + myPet.getSkillTree().getName());
                         infoShown = true;
                     }
-                    if (Configuration.USE_LEVEL_SYSTEM) {
-                        if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
-                            int lvl = myPet.getExperience().getLevel();
-                            damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
-                            infoShown = true;
-                        }
-                        int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
-                        if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && (maxLevel == 0 || myPet.getExperience().getLevel() < maxLevel)) {
-                            double exp = myPet.getExperience().getCurrentExp();
-                            double reqEXP = myPet.getExperience().getRequiredExp();
-                            damager.sendMessage("   " + Locales.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
-                            infoShown = true;
-                        }
+                    if (CommandInfo.canSee(PetInfoDisplay.Level.adminOnly, damager, myPet)) {
+                        int lvl = myPet.getExperience().getLevel();
+                        damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
+                        infoShown = true;
+                    }
+                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
+                    if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && (maxLevel == 0 || myPet.getExperience().getLevel() < maxLevel)) {
+                        double exp = myPet.getExperience().getCurrentExp();
+                        double reqEXP = myPet.getExperience().getRequiredExp();
+                        damager.sendMessage("   " + Locales.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
+                        infoShown = true;
                     }
 
                     if (!infoShown) {
@@ -748,7 +746,7 @@ public class EntityListener implements Listener {
             }
             event.setDroppedExp(0);
 
-            if (Configuration.USE_LEVEL_SYSTEM && (Experience.LOSS_FIXED > 0 || Experience.LOSS_PERCENT > 0)) {
+            if (Experience.LOSS_FIXED > 0 || Experience.LOSS_PERCENT > 0) {
                 double lostExpirience = Experience.LOSS_FIXED;
                 lostExpirience += myPet.getExperience().getRequiredExp() * Experience.LOSS_PERCENT / 100;
                 if (lostExpirience > myPet.getExperience().getCurrentExp()) {
@@ -792,84 +790,82 @@ public class EntityListener implements Listener {
     @SuppressWarnings("unchecked")
     @EventHandler
     public void onEntityDeath(final EntityDeathEvent event) {
-        if (Configuration.USE_LEVEL_SYSTEM) {
-            LivingEntity deadEntity = event.getEntity();
-            if (deadEntity instanceof CraftMyPet) {
-                return;
-            }
-            if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
-                for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner")) {
-                    if (value.getOwningPlugin().getName().equals(MyPetPlugin.getPlugin().getName())) {
-                        if (value.asBoolean()) {
-                            return;
-                        }
-                        break;
+        LivingEntity deadEntity = event.getEntity();
+        if (deadEntity instanceof CraftMyPet) {
+            return;
+        }
+        if (!Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS && event.getEntity().hasMetadata("MonsterSpawner")) {
+            for (MetadataValue value : event.getEntity().getMetadata("MonsterSpawner")) {
+                if (value.getOwningPlugin().getName().equals(MyPetPlugin.getPlugin().getName())) {
+                    if (value.asBoolean()) {
+                        return;
                     }
+                    break;
                 }
             }
-            if (Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
-                Map<Entity, Double> damagePercentMap = Experience.getDamageToEntityPercent(deadEntity);
-                for (Entity entity : damagePercentMap.keySet()) {
-                    if (entity instanceof CraftMyPet) {
-                        MyPet myPet = ((CraftMyPet) entity).getMyPet();
+        }
+        if (Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION) {
+            Map<Entity, Double> damagePercentMap = Experience.getDamageToEntityPercent(deadEntity);
+            for (Entity entity : damagePercentMap.keySet()) {
+                if (entity instanceof CraftMyPet) {
+                    MyPet myPet = ((CraftMyPet) entity).getMyPet();
+                    if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
+                        if (!myPet.autoAssignSkilltree()) {
+                            continue;
+                        }
+                    }
+                    if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                        double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
+                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                    }
+                } else if (entity instanceof Player) {
+                    Player owner = (Player) entity;
+                    if (MyPetList.hasMyPet(owner)) {
+                        MyPet myPet = MyPetList.getMyPet(owner);
                         if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                             if (!myPet.autoAssignSkilltree()) {
                                 continue;
                             }
                         }
-                        if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                            double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
-                            myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
-                        }
-                    } else if (entity instanceof Player) {
-                        Player owner = (Player) entity;
-                        if (MyPetList.hasMyPet(owner)) {
-                            MyPet myPet = MyPetList.getMyPet(owner);
-                            if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
-                                if (!myPet.autoAssignSkilltree()) {
-                                    continue;
-                                }
-                            }
-                            if (myPet.isPassiv()) {
-                                if (myPet.getStatus() == PetState.Here) {
-                                    if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                        double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
-                                        myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
-                                    }
+                        if (myPet.isPassiv()) {
+                            if (myPet.getStatus() == PetState.Here) {
+                                if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                                    double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
+                                    myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
                                 }
                             }
                         }
                     }
                 }
-            } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
+            }
+        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
-                Entity damager = edbee.getDamager();
-                if (damager instanceof Projectile) {
-                    damager = ((Projectile) damager).getShooter();
+            Entity damager = edbee.getDamager();
+            if (damager instanceof Projectile) {
+                damager = ((Projectile) damager).getShooter();
+            }
+            if (damager instanceof CraftMyPet) {
+                MyPet myPet = ((CraftMyPet) damager).getMyPet();
+                if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
+                    if (!myPet.autoAssignSkilltree()) {
+                        return;
+                    }
                 }
-                if (damager instanceof CraftMyPet) {
-                    MyPet myPet = ((CraftMyPet) damager).getMyPet();
-                    if (myPet.getSkillTree() == null && Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE) {
+                myPet.getExperience().addExp(edbee.getEntity().getType());
+            } else if (damager instanceof Player) {
+                Player owner = (Player) damager;
+                if (MyPetList.hasMyPet(owner)) {
+                    MyPet myPet = MyPetList.getMyPet(owner);
+                    if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
                         if (!myPet.autoAssignSkilltree()) {
                             return;
                         }
                     }
-                    myPet.getExperience().addExp(edbee.getEntity().getType());
-                } else if (damager instanceof Player) {
-                    Player owner = (Player) damager;
-                    if (MyPetList.hasMyPet(owner)) {
-                        MyPet myPet = MyPetList.getMyPet(owner);
-                        if (Configuration.PREVENT_LEVELLING_WITHOUT_SKILLTREE && myPet.getSkillTree() == null) {
-                            if (!myPet.autoAssignSkilltree()) {
-                                return;
-                            }
-                        }
-                        if (myPet.isPassiv()) {
-                            if (myPet.getStatus() == PetState.Here) {
-                                if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                    myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
-                                }
+                    if (myPet.isPassiv()) {
+                        if (myPet.getStatus() == PetState.Here) {
+                            if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
+                                myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
                             }
                         }
                     }
