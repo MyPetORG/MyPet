@@ -124,7 +124,7 @@
               <font style="1"/>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
-              <text value="Ride Speed"/>
+              <text value="Jump Height"/>
             </properties>
           </component>
           <component id="8d1f8" class="javax.swing.JLabel">
