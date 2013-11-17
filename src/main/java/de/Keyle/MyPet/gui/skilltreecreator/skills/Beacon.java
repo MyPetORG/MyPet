@@ -264,60 +264,92 @@ public class Beacon implements SkillPropertiesPanel {
             if (speedBostEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_speed_boost_level", new IntTag("buff_speed_boost_level", ((Number) jumpBoostSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_speed_boost_enable");
+            compoundTag.getValue().remove("buff_speed_boost_level");
         }
         if (hasteChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_haste_enable", new ByteTag("buff_haste_enable", hasteEnableCheckBox.isSelected()));
             if (hasteEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_haste_level", new IntTag("buff_haste_level", ((Number) hasteSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_haste_enable");
+            compoundTag.getValue().remove("buff_haste_level");
         }
         if (strengthChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_strength_enable", new ByteTag("buff_strength_enable", strengthEnableCheckBox.isSelected()));
             if (strengthEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_strength_level", new IntTag("buff_strength_level", ((Number) strengthSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_strength_enable");
+            compoundTag.getValue().remove("buff_strength_level");
         }
         if (jumpBoostChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_jump_boost_enable", new ByteTag("buff_jump_boost_enable", jumpBoostEnableCheckBox.isSelected()));
             if (jumpBoostEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_jump_boost_level", new IntTag("buff_jump_boost_level", ((Number) jumpBoostSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_jump_boost_enable");
+            compoundTag.getValue().remove("buff_jump_boost_level");
         }
         if (regenerationChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_regeneration_enable", new ByteTag("buff_regeneration_enable", regenerationEnableCheckBox.isSelected()));
             if (regenerationEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_regeneration_level", new IntTag("buff_regeneration_level", ((Number) regenerationSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_regeneration_enable");
+            compoundTag.getValue().remove("buff_regeneration_level");
         }
         if (resistanceChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_resistance_enable", new ByteTag("buff_resistance_enable", resistanceEnableCheckBox.isSelected()));
             if (resistanceEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_resistance_level", new IntTag("buff_resistance_level", ((Number) resistanceSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_resistance_enable");
+            compoundTag.getValue().remove("buff_resistance_level");
         }
         if (fireResistanceChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_fire_resistance_enable", new ByteTag("buff_fire_resistance_enable", fireResistanceEnableCheckBox.isSelected()));
+        } else {
+            compoundTag.getValue().remove("buff_fire_resistance_enable");
         }
         if (waterBreathingChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_water_breathing_enable", new ByteTag("buff_water_breathing_enable", waterBreathingEnableCheckBox.isSelected()));
+        } else {
+            compoundTag.getValue().remove("buff_water_breathing_enable");
         }
         if (invisibilityChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_invisibility_enable", new ByteTag("buff_invisibility_enable", invisibilityEnableCheckBox.isSelected()));
+        } else {
+            compoundTag.getValue().remove("buff_invisibility_enable");
         }
         if (nightVisionChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_night_vision_enable", new ByteTag("buff_night_vision_enable", nightVisionEnableCheckBox.isSelected()));
+        } else {
+            compoundTag.getValue().remove("buff_night_vision_enable");
         }
         if (healthBoostChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_health_boost_enable", new ByteTag("buff_health_boost_enable", healthBoostEnableCheckBox.isSelected()));
             if (healthBoostEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_health_boost_level", new IntTag("buff_health_boost_level", ((Number) healthBoostSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_health_boost_enable");
+            compoundTag.getValue().remove("buff_health_boost_level");
         }
         if (absorptionChangeCheckBox.isSelected()) {
             compoundTag.getValue().put("buff_absorption_enable", new ByteTag("buff_absorption_enable", absorptionEnableCheckBox.isSelected()));
             if (absorptionEnableCheckBox.isSelected()) {
                 compoundTag.getValue().put("buff_absorption_level", new IntTag("buff_absorption_level", ((Number) absorptionSpinner.getValue()).intValue()));
             }
+        } else {
+            compoundTag.getValue().remove("buff_absorption_enable");
+            compoundTag.getValue().remove("buff_absorption_level");
         }
 
         compoundTag.getValue().put("addset_duration", new StringTag("addset_duration", addDurationRadioButton.isSelected() ? "add" : "set"));
