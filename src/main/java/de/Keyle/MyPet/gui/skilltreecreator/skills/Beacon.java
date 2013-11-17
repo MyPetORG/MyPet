@@ -71,6 +71,9 @@ public class Beacon implements SkillPropertiesPanel {
     private JCheckBox fireResistanceChangeCheckBox;
     private JCheckBox resistanceChangeCheckBox;
     private JCheckBox regenerationChangeCheckBox;
+    private JSpinner selectionCountSpinner;
+    private JRadioButton setSelectionCount;
+    private JRadioButton addSelectionCount;
     private CompoundTag compoundTag;
 
     public Beacon(CompoundTag compoundTag) {
@@ -323,6 +326,9 @@ public class Beacon implements SkillPropertiesPanel {
         compoundTag.getValue().put("addset_range", new StringTag("addset_range", addRangeRadioButton.isSelected() ? "add" : "set"));
         compoundTag.getValue().put("range", new DoubleTag("range", Double.parseDouble(rangeInput.getText())));
 
+        compoundTag.getValue().put("addset_selection_count", new StringTag("addset_selection_count", addSelectionCount.isSelected() ? "add" : "set"));
+        compoundTag.getValue().put("selection_count", new IntTag("selection_count", ((Number) selectionCountSpinner.getValue()).intValue()));
+
         return compoundTag;
     }
 
@@ -436,12 +442,21 @@ public class Beacon implements SkillPropertiesPanel {
         }
 
         if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add")) {
-            setRangeRadioButton.setSelected(true);
+            addRangeRadioButton.setSelected(true);
         } else {
             setRangeRadioButton.setSelected(true);
         }
         if (compoundTag.getValue().containsKey("range")) {
             rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
+        }
+
+        if (compoundTag.getValue().containsKey("addset_selection_count") && ((StringTag) compoundTag.getValue().get("addset_selection_count")).getValue().equals("add")) {
+            addSelectionCount.setSelected(false);
+        } else {
+            setSelectionCount.setSelected(true);
+        }
+        if (compoundTag.getValue().containsKey("selection_count")) {
+            selectionCountSpinner.setValue(((IntTag) compoundTag.getValue().get("selection_count")).getValue());
         }
     }
 
@@ -470,5 +485,8 @@ public class Beacon implements SkillPropertiesPanel {
         sm = new SpinnerNumberModel(1, 1, 5, 1);
         absorptionSpinner = new JSpinner(sm);
         ((JSpinner.DefaultEditor) absorptionSpinner.getEditor()).getTextField().setEditable(false);
+        sm = new SpinnerNumberModel(1, 1, 12, 1);
+        selectionCountSpinner = new JSpinner(sm);
+        ((JSpinner.DefaultEditor) selectionCountSpinner.getEditor()).getTextField().setEditable(false);
     }
 }

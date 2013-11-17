@@ -27,12 +27,16 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Beacon")
-@SkillProperties
+@SkillProperties(
+        parameterNames = {"selection_count", "addset_selection_count"},
+        parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String},
+        parameterDefaultValues = {"1", "set"})
 public class BeaconInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
     protected double range = 0;
     protected int duration = 0;
+    protected int selectableBuffs = 0;
 
     public BeaconInfo(boolean addedByInheritance) {
         super(addedByInheritance);

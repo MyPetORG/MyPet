@@ -36,12 +36,15 @@ import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import net.minecraft.server.v1_6_R3.EntityHuman;
 import net.minecraft.server.v1_6_R3.MobEffect;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.spout.nbt.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.bukkit.ChatColor.*;
@@ -88,11 +91,11 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     private MyPet myPet;
 
     private boolean active = false;
-    private int selectedBuff = 0;
     private int hungerDecreaseTimer;
     private BeaconReciever reciever = BeaconReciever.Owner;
     private Map<Integer, Integer> buffLevel = new HashMap<Integer, Integer>();
     private int beaconTimer = 0;
+    private List<Integer> selectedBuffs = new ArrayList<Integer>();
 
     public Beacon(boolean addedByInheritance) {
         super(addedByInheritance);
@@ -110,6 +113,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     }
 
     public boolean isActive() {
+        if (selectableBuffs == 0) {
+            return false;
+        }
         for (int amp : buffLevel.values()) {
             if (amp > 0) {
                 return duration > 0 && range > 0;
@@ -124,7 +130,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         final Beacon beacon = this;
 
         IconMenu menu = new IconMenu(Locales.getString(Util.cutString("Beacon - " + myPet.getPetName(), 32), owner), 27, new IconMenu.OptionClickEventHandler() {
-            int selectedBuff = beacon.selectedBuff;
+            List<Integer> selectedBuffs = beacon.selectedBuffs;
             boolean active = beacon.active;
             private BeaconReciever reciever = beacon.reciever;
 
@@ -152,7 +158,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         break;
                     case 3:
                         beacon.active = active;
-                        beacon.selectedBuff = selectedBuff;
+                        beacon.selectedBuffs = selectedBuffs;
                         beacon.reciever = reciever;
                         event.setWillClose(true);
                         event.setWillDestroy(true);
@@ -186,14 +192,36 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         break;
                     default:
                         if (buffPositionItems.containsKey(event.getPosition())) {
-                            int newSelectedBuff = buffPositionItems.get(event.getPosition());
-                            if (newSelectedBuff != selectedBuff) {
-                                if (selectedBuff != 0 && menu.getOption(buffItemPositions.get(selectedBuff)) != null) {
+                            int selectedBuff = buffPositionItems.get(event.getPosition());
+
+                            if (selectableBuffs > 1) {
+                                if (selectedBuffs.indexOf(selectedBuff) != -1) {
+                                    selectedBuffs.remove(selectedBuffs.indexOf(selectedBuff));
                                     menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(false);
+                                    menu.update();
+                                } else if (selectableBuffs > selectedBuffs.size()) {
+                                    selectedBuffs.add(selectedBuff);
+                                    menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
+                                    menu.update();
+                                } else {
+                                    break;
                                 }
-                                selectedBuff = newSelectedBuff;
-                                menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
-                                menu.update();
+
+                                if (selectableBuffs > selectedBuffs.size()) {
+                                    menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+                                } else {
+                                    menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
+                                }
+                            } else {
+                                if (!selectedBuffs.contains(selectedBuff)) {
+                                    if (selectedBuffs.size() != 0 && menu.getOption(buffItemPositions.get(selectedBuff)) != null) {
+                                        menu.getOption(buffItemPositions.get(selectedBuffs.get(0))).setGlowing(false);
+                                        selectedBuffs.clear();
+                                    }
+                                    selectedBuffs.add(selectedBuff);
+                                    menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
+                                    menu.update();
+                                }
                             }
                         }
                 }
@@ -251,11 +279,19 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             menu.setOption(26, new IconMenuItem().setMaterial(SPONGE).setAmount(buffLevel.get(22)).setTitle(GOLD + Locales.getString("Name." + buffNames.get(22), myPet.getOwner().getLanguage()) + GRAY + " " + Util.decimal2roman(buffLevel.get(22))));
         }
 
-        if (selectedBuff != 0) {
-            if (buffLevel.get(selectedBuff) > 0) {
-                menu.getOption(buffItemPositions.get(selectedBuff)).setGlowing(true);
+        for (int buff : selectedBuffs) {
+            if (buffLevel.get(buff) > 0) {
+                menu.getOption(buffItemPositions.get(buff)).setGlowing(true);
             } else {
-                selectedBuff = 0;
+                selectedBuffs.remove(buff);
+            }
+        }
+
+        if (selectableBuffs > 1) {
+            if (selectableBuffs > selectedBuffs.size()) {
+                menu.setOption(13, new IconMenuItem().setMaterial(POTION).setTitle(BLUE + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), selectableBuffs - selectedBuffs.size())).setAmount(selectableBuffs - selectedBuffs.size()));
+            } else {
+                menu.setOption(13, new IconMenuItem().setMaterial(GLASS_BOTTLE).setTitle(GRAY + Util.formatText(Locales.getString("Message.Skill.Beacon.RemainingBuffs", myPet.getOwner().getLanguage()), 0)));
             }
         }
 
@@ -368,6 +404,14 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                     range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
                 }
             }
+            if (upgrade.getProperties().getValue().containsKey("selection_count")) {
+                if (upgrade.getProperties().getValue().containsKey("addset_selection_count") && ((StringTag) upgrade.getProperties().getValue().get("addset_selection_count")).getValue().equals("add")) {
+                    selectableBuffs += ((IntTag) upgrade.getProperties().getValue().get("selection_count")).getValue();
+                } else {
+                    selectableBuffs = ((IntTag) upgrade.getProperties().getValue().get("selection_count")).getValue();
+                }
+                selectableBuffs = selectableBuffs > 12 ? 12 : selectableBuffs;
+            }
 
             if (!quiet) {
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Beacon.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range), duration));
@@ -394,7 +438,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     public void reset() {
         range = 0;
         duration = 0;
-        selectedBuff = 0;
+        selectedBuffs.clear();
         active = false;
 
         buffLevel.put(1, 0);
@@ -412,18 +456,32 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     }
 
     public void schedule() {
-        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuff != 0 && --beaconTimer <= 0) {
+        if (myPet.getStatus() == MyPet.PetState.Here && isActive() && active && selectedBuffs.size() != 0 && --beaconTimer <= 0) {
             beaconTimer = 2;
 
-            int amplification = buffLevel.get(selectedBuff) - 1;
             double range = this.range * myPet.getHungerValue() / 100.;
 
-            if (amplification == -1 || range < 0.7) {
+            if (range < 0.7) {
                 active = false;
-                selectedBuff = 0;
+                selectedBuffs.clear();
+            }
+
+            if (selectedBuffs.size() > selectableBuffs) {
+                int usableBuff = 0;
+                for (int buff : selectedBuffs) {
+                    if (buffLevel.get(buff) > 0) {
+                        usableBuff = buff;
+                    }
+                }
+                selectedBuffs.clear();
+                if (usableBuff != 0) {
+                    selectedBuffs.add(usableBuff);
+                }
             }
 
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+
+            List<Integer> effectList = new ArrayList<Integer>();
 
             targetLoop:
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range))) {
@@ -432,10 +490,18 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName()))) {
                     continue;
                 }
-                if (entityHuman.hasEffect(this.selectedBuff)) {
-                    MobEffect effect = (MobEffect) entityHuman.effects.get(this.selectedBuff);
-                    if (effect.getAmplifier() > amplification || effect.getDuration() > duration * 20) {
-                        continue;
+                effectList.clear();
+                effectList.addAll(selectedBuffs);
+                for (int buff : selectedBuffs) {
+                    if (entityHuman.hasEffect(buff)) {
+                        MobEffect effect = (MobEffect) entityHuman.effects.get(buff);
+                        int amplification = buffLevel.get(buff) - 1;
+                        if (amplification == -1 || effect.getAmplifier() > amplification || effect.getDuration() > duration * 20) {
+                            effectList.remove(effectList.indexOf(buff));
+                        }
+                    }
+                    if (effectList.size() == 0) {
+                        continue targetLoop;
                     }
                 }
                 switch (reciever) {
@@ -443,17 +509,23 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         if (!myPet.getOwner().equals(entityHuman)) {
                             continue targetLoop;
                         } else {
-                            entityHuman.addEffect(new MobEffect(this.selectedBuff, duration * 20, amplification, true));
+                            int amplification;
+                            for (int buff : effectList) {
+                                amplification = buffLevel.get(buff) - 1;
+                                entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                            }
                             BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
-                        entityHuman.addEffect(new MobEffect(this.selectedBuff, duration * 20, amplification, true));
+                        int amplification;
+                        for (int buff : effectList) {
+                            amplification = buffLevel.get(buff) - 1;
+                            entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                        }
                         BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
-
                 }
-
             }
 
             if (HUNGER_DECREASE_TIME > 0 && hungerDecreaseTimer-- < 0) {
@@ -461,14 +533,6 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 hungerDecreaseTimer = HUNGER_DECREASE_TIME;
             }
         }
-    }
-
-    public int getEffectId() {
-        return selectedBuff;
-    }
-
-    public int getEffectAmplification() {
-        return buffLevel.get(selectedBuff) - 1;
     }
 
     public int getDuration() {
@@ -485,7 +549,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     @Override
     public CompoundTag save() {
         CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
-        nbtTagCompound.getValue().put("Buff", new IntTag("Buff", selectedBuff));
+        nbtTagCompound.getValue().put("Buffs", new IntArrayTag("Buffs", ArrayUtils.toPrimitive(selectedBuffs.toArray(new Integer[selectedBuffs.size()]))));
         nbtTagCompound.getValue().put("Active", new ByteTag("Active", this.active));
         nbtTagCompound.getValue().put("Reciever", new StringTag("Reciever", this.reciever.name()));
         return nbtTagCompound;
@@ -494,7 +558,18 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     @Override
     public void load(CompoundTag compound) {
         if (compound.getValue().containsKey("Buff")) {
-            this.selectedBuff = ((IntTag) compound.getValue().get("Buff")).getValue();
+            int oldSelectedBuff = ((IntTag) compound.getValue().get("Buff")).getValue();
+            if (oldSelectedBuff != 0) {
+                this.selectedBuffs.add(oldSelectedBuff);
+            }
+        }
+        if (compound.getValue().containsKey("Buffs")) {
+            int[] selectedBuffs = ((IntArrayTag) compound.getValue().get("Buffs")).getValue();
+            if (selectedBuffs.length != 0) {
+                for (int selectedBuff : selectedBuffs) {
+                    this.selectedBuffs.add(selectedBuff);
+                }
+            }
         }
         if (compound.getValue().containsKey("Active")) {
             this.active = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
