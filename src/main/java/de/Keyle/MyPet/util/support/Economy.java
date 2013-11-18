@@ -81,17 +81,14 @@ public class Economy {
     }
 
     public static void setupEconomy() {
-        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("Vault")) {
-            searchedVaultEconomy = true;
-            DebugLogger.info("Vault not found. Economy support not enabled.");
-            return;
-        }
-        RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-            searchedVaultEconomy = true;
-            DebugLogger.info("Economy support enabled.");
-            return;
+        if (PluginSupportManager.isPluginUsable("Vault")) {
+            RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            if (economyProvider != null) {
+                economy = economyProvider.getProvider();
+                searchedVaultEconomy = true;
+                DebugLogger.info("Economy support enabled.");
+                return;
+            }
         }
         DebugLogger.info("No Economy plugin found. Economy support not enabled.");
         searchedVaultEconomy = true;

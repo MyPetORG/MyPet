@@ -30,7 +30,6 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
-import com.massivecraft.factions.P;
 import com.massivecraft.factions.listeners.FactionsListenerMain;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldedit.Vector;
@@ -46,10 +45,10 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import net.jzx7.regios.RegiosPlugin;
 import net.jzx7.regiosapi.RegiosAPI;
 import net.jzx7.regiosapi.regions.Region;
 import net.slipcor.pvparena.api.PVPArenaAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -58,7 +57,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.plugin.Plugin;
 import org.mcsg.survivalgames.Game;
 import org.mcsg.survivalgames.GameManager;
 
@@ -80,42 +78,14 @@ public class PvPChecker {
     public static boolean USE_PvPArena = true;
     public static boolean USE_SurvivalGame = true;
 
-    private static boolean searchedCitizens = false;
-    private static boolean searchedWorldGuard = false;
-    private static boolean searchedFactions = false;
-    private static boolean searchedFactions2 = false;
-    private static boolean searchedTowny = false;
-    private static boolean searchedHeroes = false;
-    private static boolean searchedRegios = false;
-    private static boolean searchedResidence = false;
-    private static boolean searchedMobArena = false;
-    private static boolean searchedMcMMO = false;
-    private static boolean searchedAncientRPG = false;
-    private static boolean searchedGriefPrevention = false;
-    private static boolean searchedPvPArena = false;
-    private static boolean searchedSurvivalGame = false;
-
-    private static boolean pluginCitizens = false;
-    private static boolean pluginFactions = false;
-    private static boolean pluginFactions2 = false;
-    private static boolean pluginTowny = false;
-    private static boolean pluginMcMMO = false;
-    private static boolean pluginResidence = false;
-    private static boolean pluginPvPArena = false;
-    private static boolean pluginSurvivalGame = false;
-    private static WorldGuardPlugin pluginWorldGuard = null;
-    private static Heroes pluginHeroes = null;
-    private static RegiosAPI pluginRegios = null;
     private static MobArenaHandler pluginMobArena = null;
-    private static ApiManager pluginAncientRPG = null;
-    private static GriefPrevention pluginGriefPrevention = null;
 
     public static boolean canHurt(Player attacker, Player defender) {
         if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;
         }
         if (attacker != null && defender != null) {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtFactions2(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -140,11 +110,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurtCitizens(Entity defender) {
-        if (!searchedCitizens) {
-            searchedCitizens = true;
-            pluginCitizens = Bukkit.getServer().getPluginManager().isPluginEnabled("Citizens");
-        }
-        if (USE_Citizens && pluginCitizens) {
+        if (USE_Citizens && PluginSupportManager.isPluginUsable("Citizens")) {
             if (CitizensAPI.getNPCRegistry().isNPC(defender)) {
                 NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
                 if (npc == null || npc.data() == null) {
@@ -157,14 +123,9 @@ public class PvPChecker {
     }
 
     public static boolean canHurtWorldGuard(Location location) {
-        if (!searchedWorldGuard) {
-            searchedWorldGuard = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) {
-                pluginWorldGuard = (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-            }
-        }
-        if (USE_WorldGuard && pluginWorldGuard != null) {
-            RegionManager mgr = pluginWorldGuard.getGlobalRegionManager().get(location.getWorld());
+        if (USE_WorldGuard && PluginSupportManager.isPluginUsable("WorldGuard")) {
+            WorldGuardPlugin wgp = PluginSupportManager.getPluginInstance(WorldGuardPlugin.class);
+            RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
             Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
             ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
@@ -174,41 +135,15 @@ public class PvPChecker {
     }
 
     public static boolean canHurtFactions(Player attacker, Player defender) {
-        if (!searchedFactions) {
-            searchedFactions = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions")) {
-                Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
-                pluginFactions = plugin.getDescription().getVersion().startsWith("1.");
-            }
-        }
-        if (USE_Factions && pluginFactions) {
-            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
-            return P.p.entityListener.canDamagerHurtDamagee(sub, false);
-        }
-        return true;
-    }
-
-    public static boolean canHurtFactions2(Player attacker, Player defender) {
-        if (!searchedFactions2) {
-            searchedFactions2 = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Factions")) {
-                Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Factions");
-                pluginFactions2 = plugin.getDescription().getVersion().startsWith("2.");
-            }
-        }
-        if (USE_Factions && pluginFactions2) {
-            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0);
+        if (USE_Factions && PluginSupportManager.isPluginUsable("Factions")) {
+            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
             return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
         }
         return true;
     }
 
     public static boolean canHurtTowny(Player attacker, Player defender) {
-        if (!searchedTowny) {
-            searchedTowny = true;
-            pluginTowny = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny");
-        }
-        if (USE_Towny && pluginTowny) {
+        if (USE_Towny && PluginSupportManager.isPluginUsable("Towny")) {
             if (CombatUtil.preventDamageCall(attacker, defender)) {
                 return false;
             }
@@ -217,13 +152,8 @@ public class PvPChecker {
     }
 
     public static boolean canHurtHeroes(Player attacker, Player defender) {
-        if (!searchedHeroes) {
-            searchedHeroes = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Heroes")) {
-                pluginHeroes = (Heroes) Bukkit.getServer().getPluginManager().getPlugin("Heroes");
-            }
-        }
-        if (USE_Heroes && pluginHeroes != null) {
+        if (USE_Heroes && PluginSupportManager.isPluginUsable("Heroes")) {
+            Heroes pluginHeroes = PluginSupportManager.getPluginInstance(Heroes.class);
             Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
             Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
             int attackerLevel = heroAttacker.getTieredLevel(false);
@@ -244,13 +174,8 @@ public class PvPChecker {
     }
 
     public static boolean canHurtRegios(Player defender) {
-        if (!searchedRegios) {
-            searchedRegios = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("Regios")) {
-                pluginRegios = (RegiosAPI) Bukkit.getServer().getPluginManager().getPlugin("Regios");
-            }
-        }
-        if (USE_Regios && pluginRegios != null) {
+        if (USE_Regios && PluginSupportManager.isPluginUsable("Regios")) {
+            RegiosAPI pluginRegios = PluginSupportManager.getPluginInstance(RegiosPlugin.class);
             for (Region region : pluginRegios.getRegions(defender.getLocation())) {
                 if (!region.isPvp()) {
                     return false;
@@ -262,11 +187,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurtResidence(Location location) {
-        if (!searchedResidence) {
-            searchedResidence = true;
-            pluginResidence = Bukkit.getServer().getPluginManager().isPluginEnabled("Residence");
-        }
-        if (USE_Residence && pluginResidence) {
+        if (USE_Residence && PluginSupportManager.isPluginUsable("Residence")) {
             FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
             return flagPermissions.has("pvp", true);
         }
@@ -274,13 +195,10 @@ public class PvPChecker {
     }
 
     public static boolean canHurtMobArena(Player defender) {
-        if (!searchedMobArena) {
-            searchedMobArena = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena")) {
+        if (USE_MobArena && PluginSupportManager.isPluginUsable("MobArena")) {
+            if (pluginMobArena == null) {
                 pluginMobArena = new MobArenaHandler();
             }
-        }
-        if (USE_MobArena && pluginMobArena != null) {
             if (pluginMobArena.isPlayerInArena(defender)) {
                 return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
             }
@@ -289,13 +207,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurtSurvivalGame(Player defender) {
-        if (!searchedSurvivalGame) {
-            searchedSurvivalGame = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames")) {
-                pluginSurvivalGame = true;
-            }
-        }
-        if (USE_SurvivalGame && pluginSurvivalGame) {
+        if (USE_SurvivalGame && PluginSupportManager.isPluginUsable("SurvivalGames")) {
             int gameid = GameManager.getInstance().getPlayerGameId(defender);
             if (gameid == -1) {
                 return true;
@@ -315,13 +227,7 @@ public class PvPChecker {
     }
 
     public static boolean canHurtPvPArena(Player attacker, Player defender) {
-        if (!searchedPvPArena) {
-            searchedPvPArena = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
-                pluginPvPArena = true;
-            }
-        }
-        if (USE_PvPArena && pluginPvPArena) {
+        if (USE_PvPArena && PluginSupportManager.isPluginUsable("pvparena")) {
             if (!PVPArenaAPI.getArenaName(defender).equals("")) {
                 if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
                     return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
@@ -332,34 +238,24 @@ public class PvPChecker {
     }
 
     public static boolean canHurtMcMMO(Player attacker, Player defender) {
-        if (!searchedMcMMO) {
-            searchedMcMMO = true;
-            pluginMcMMO = Bukkit.getServer().getPluginManager().isPluginEnabled("mcMMO");
-        }
-        if (USE_McMMO && pluginMcMMO) {
+        if (USE_McMMO && PluginSupportManager.isPluginUsable("mcMMO")) {
             return !PartyAPI.inSameParty(attacker, defender);
         }
         return true;
     }
 
     public static boolean canHurtAncientRPG(Player attacker, Player defender) {
-        if (!searchedAncientRPG) {
-            searchedAncientRPG = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("AncientRPG")) {
-                pluginAncientRPG = ApiManager.getApiManager();
-            }
-        }
-        if (USE_AncientRPG && pluginAncientRPG != null) {
-            AncientRPGParty party = pluginAncientRPG.getPlayerParty(attacker);
+        if (USE_AncientRPG && PluginSupportManager.isPluginUsable("SurvivalGames")) {
+            AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker);
             if (party != null) {
                 if (!party.friendlyFire && party.containsName(defender.getName())) {
                     return false;
                 }
             }
 
-            AncientRPGGuild guild = pluginAncientRPG.getPlayerGuild(attacker.getName());
+            AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getName());
             if (guild != null) {
-                if (!guild.friendlyFire && guild == pluginAncientRPG.getPlayerGuild(defender.getName())) {
+                if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getName())) {
                     return false;
                 }
             }
@@ -368,13 +264,9 @@ public class PvPChecker {
     }
 
     public static boolean canHurtGriefPrevention(Player attacker, Player defender) {
-        if (!searchedGriefPrevention) {
-            searchedGriefPrevention = true;
-            if (Bukkit.getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
-                pluginGriefPrevention = GriefPrevention.instance;
-            }
-        }
-        if (USE_GriefPrevention && pluginGriefPrevention != null) {
+        if (USE_GriefPrevention && PluginSupportManager.isPluginUsable("GriefPrevention")) {
+            GriefPrevention pluginGriefPrevention = GriefPrevention.instance;
+
             PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
             PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
 
@@ -408,32 +300,8 @@ public class PvPChecker {
     }
 
     public static void reset() {
-        searchedCitizens = false;
-        searchedHeroes = false;
-        searchedTowny = false;
-        searchedFactions = false;
-        searchedFactions2 = false;
-        searchedWorldGuard = false;
-        searchedRegios = false;
-        searchedResidence = false;
-        searchedMobArena = false;
-        searchedMcMMO = false;
-        searchedAncientRPG = false;
-        searchedGriefPrevention = false;
-        searchedSurvivalGame = false;
-
-        pluginFactions = false;
-        pluginFactions2 = false;
-        pluginCitizens = false;
-        pluginTowny = false;
-        pluginMcMMO = false;
-        pluginResidence = false;
-        pluginSurvivalGame = false;
-        pluginWorldGuard = null;
-        pluginHeroes = null;
-        pluginRegios = null;
         pluginMobArena = null;
-        pluginAncientRPG = null;
-        pluginGriefPrevention = null;
+
+        PluginSupportManager.reset();
     }
 }

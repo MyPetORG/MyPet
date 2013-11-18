@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import me.kitskub.hungergames.HungerGames;
 import me.kitskub.hungergames.api.GameManager;
 import me.kitskub.hungergames.api.event.PlayerJoinGameEvent;
@@ -39,7 +40,7 @@ public class MyHungerGames implements Listener {
     private static GameManager gameManager;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MyHungerGames")) {
+        if (PluginSupportManager.isPluginUsable("MyHungerGames")) {
             Bukkit.getPluginManager().registerEvents(new MyHungerGames(), MyPetPlugin.getPlugin());
             gameManager = HungerGames.getInstance().getGameManager();
             active = true;

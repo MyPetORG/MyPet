@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,7 +38,7 @@ public class SurvivalGames implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("SurvivalGames")) {
+        if (PluginSupportManager.isPluginUsable("SurvivalGames")) {
             Bukkit.getPluginManager().registerEvents(new SurvivalGames(), MyPetPlugin.getPlugin());
             active = true;
         }

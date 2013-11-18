@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -43,7 +44,7 @@ public class MobArena implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("MobArena")) {
+        if (PluginSupportManager.isPluginUsable("MobArena")) {
             Bukkit.getPluginManager().registerEvents(new MobArena(), MyPetPlugin.getPlugin());
             arenaHandler = new MobArenaHandler();
             active = true;

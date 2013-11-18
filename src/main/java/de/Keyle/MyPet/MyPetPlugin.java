@@ -71,6 +71,7 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Economy;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.Keyle.MyPet.util.support.arenas.*;
 import net.minecraft.server.v1_6_R3.EntityTypes;
@@ -158,6 +159,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
+
+        PluginSupportManager pluginSupportListener = new PluginSupportManager();
+        getServer().getPluginManager().registerEvents(pluginSupportListener, this);
 
         getCommand("petname").setExecutor(new CommandName());
         getCommand("petcall").setExecutor(new CommandCall());

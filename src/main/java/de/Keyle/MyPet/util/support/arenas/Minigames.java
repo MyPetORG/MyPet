@@ -7,6 +7,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,8 +20,8 @@ public class Minigames implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("Minigames")) {
-            plugin = (com.pauldavdesign.mineauz.minigames.Minigames) Bukkit.getServer().getPluginManager().getPlugin("Minigames");
+        if (PluginSupportManager.isPluginUsable("Minigames")) {
+            plugin = PluginSupportManager.getPluginInstance(com.pauldavdesign.mineauz.minigames.Minigames.class);
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetPlugin.getPlugin());
             active = true;
         }

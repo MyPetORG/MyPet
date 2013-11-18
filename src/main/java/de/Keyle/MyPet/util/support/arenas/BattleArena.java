@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import mc.alk.arena.events.players.ArenaPlayerEnterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -37,7 +38,7 @@ public class BattleArena implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("BattleArena")) {
+        if (PluginSupportManager.isPluginUsable("BattleArena")) {
             Bukkit.getPluginManager().registerEvents(new BattleArena(), MyPetPlugin.getPlugin());
             active = true;
         }

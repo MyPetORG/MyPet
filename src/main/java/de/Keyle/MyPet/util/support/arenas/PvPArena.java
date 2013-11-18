@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
@@ -37,7 +38,7 @@ public class PvPArena implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("pvparena")) {
+        if (PluginSupportManager.isPluginUsable("pvparena")) {
             Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
             active = true;
         }
