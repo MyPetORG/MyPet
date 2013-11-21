@@ -70,8 +70,13 @@ public class CommandName implements CommandExecutor {
                 String nameWihtoutColors = ChatColor.stripColor(name);
 
                 if (nameWihtoutColors.length() <= Configuration.MAX_PET_NAME_LENGTH) {
-                    myPet.setPetName(name);
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
+                    if (Permissions.has(petOwner, "MyPet.user.command.name.color")) {
+                        myPet.setPetName(name);
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), name));
+                    } else {
+                        myPet.setPetName(nameWihtoutColors);
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.New", petOwner), nameWihtoutColors));
+                    }
                 } else {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Name.ToLong", petOwner), name, Configuration.MAX_PET_NAME_LENGTH));
                 }

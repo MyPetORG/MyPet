@@ -117,6 +117,7 @@ permissions:
       MyPet.user.command.release: true
       MyPet.user.command.capturehelper: true
       MyPet.user.command.name: true
+      MyPet.user.command.name.color: true
   MyPet.user.command.release:
     default: true
     description: Allows usage of /petrelease
@@ -129,3 +130,6 @@ permissions:
   MyPet.user.command.name:
     default: true
     description: Allows usage of /petname
+  MyPet.user.command.name.color:
+    default: true
+    description: Allows to use colors in petnames
