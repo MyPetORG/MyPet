@@ -61,7 +61,6 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
 
     private MyPetPlayer(String playerName) {
         this.playerName = playerName;
-        //checkForDonation(); // This feature has to be disabled in order to upload it to BukkitDev.
     }
 
     public String getName() {
@@ -270,6 +269,14 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
             playerArray[playerCounter++] = player;
         }
         return playerArray;
+    }
+
+    public static boolean checkRemovePlayer(MyPetPlayer myPetPlayer) {
+        if (!myPetPlayer.isOnline() && !myPetPlayer.hasCustomData() && myPetPlayer.getMyPet() == null && myPetPlayer.getInactiveMyPets().size() == 0) {
+            playerList.remove(myPetPlayer);
+            return true;
+        }
+        return false;
     }
 
     @Override

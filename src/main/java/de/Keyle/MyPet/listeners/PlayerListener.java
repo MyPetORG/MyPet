@@ -215,7 +215,23 @@ public class PlayerListener implements Listener {
                 MyPetPlugin.getPlugin().savePets(false);
             }
             myPet.removePet(true);
+
+            final MyPetPlayer owner = myPet.getOwner();
+            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    if (!owner.isOnline() && owner.getMyPet() != null) {
+                        MyPetList.setMyPetInactive(owner);
+                    }
+                }
+            }, 600L);
         }
+        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+                    MyPetPlayer.checkRemovePlayer(MyPetPlayer.getMyPetPlayer(event.getPlayer()));
+                }
+            }
+        }, 600L);
     }
 
     @EventHandler
