@@ -136,11 +136,11 @@
 
     <distributionManagement>
         <repository>
-            <id>MyPet</id>
+            <id>Keyle-Release-Repo</id>
             <url>http://nexus.keyle.de/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>MyPet-snapshot</id>
+            <id>Keyle-Snapshot-Repo</id>
             <url>http://nexus.keyle.de/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
