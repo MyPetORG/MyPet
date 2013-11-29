@@ -579,10 +579,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 if (worlds.size() > 0) {
                     WorldGroup newGroup = new WorldGroup(node);
                     for (String world : worlds) {
-                        if (getServer().getWorld(world) != null) {
-                            DebugLogger.info("   added '" + world + "' to '" + newGroup.getName() + "'");
-                            newGroup.addWorld(world);
-                        }
+                        DebugLogger.info("   added '" + world + "' to '" + newGroup.getName() + "'");
+                        newGroup.addWorld(world);
                     }
                     if (newGroup.getWorlds().size() > 0) {
                         DebugLogger.info(" registered '" + newGroup.getName() + "' group");
