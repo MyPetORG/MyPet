@@ -248,8 +248,10 @@ public class PlayerListener implements Listener {
                 myPetPlayer.getMyPet().removePet(callAfterSwap);
             }
 
+            boolean hadMyPetInFromWorld = false;
             if (fromGroup != toGroup) {
                 if (myPetPlayer.hasMyPet()) {
+                    hadMyPetInFromWorld = true;
                     MyPetList.setMyPetInactive(myPetPlayer);
                 }
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName())) {
@@ -268,7 +270,7 @@ public class PlayerListener implements Listener {
                 }
 
             }
-            if (!myPetPlayer.hasMyPet()) {
+            if (hadMyPetInFromWorld && !myPetPlayer.hasMyPet()) {
                 myPetPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", myPetPlayer));
             } else {
                 final MyPet myPet = myPetPlayer.getMyPet();
