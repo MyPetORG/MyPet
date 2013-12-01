@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_7_R1.EntityLiving;
 
 public class MeleeAttack extends AIGoal {
     MyPet myPet;

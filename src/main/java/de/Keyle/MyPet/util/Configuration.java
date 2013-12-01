@@ -41,7 +41,6 @@ import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;

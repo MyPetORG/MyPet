@@ -29,10 +29,10 @@ import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
-import net.minecraft.server.v1_6_R3.EntityPlayer;
-import net.minecraft.server.v1_6_R3.Packet62NamedSoundEffect;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R1.PacketPlayOutNamedSoundEffect;
 import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundMap;
@@ -112,7 +112,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public void openInventory(Player p) {
         EntityPlayer eh = ((CraftPlayer) p).getHandle();
-        Packet62NamedSoundEffect packet = new Packet62NamedSoundEffect("mob.horse.leather", p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 1.0F, 1.0F);
+        PacketPlayOutNamedSoundEffect packet = new PacketPlayOutNamedSoundEffect("mob.horse.leather", p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), 1.0F, 1.0F);
         eh.playerConnection.sendPacket(packet);
         eh.openContainer(inv);
     }

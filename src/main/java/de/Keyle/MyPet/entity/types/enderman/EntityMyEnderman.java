@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.enderman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
@@ -63,9 +63,9 @@ public class EntityMyEnderman extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking()) {
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking()) {
                 if (getBlockID() != 0) {
-                    EntityItem entityitem = this.a(new ItemStack(getBlockID(), 1, getBlockData()), 1.0F);
+                    EntityItem entityitem = this.a(new ItemStack(Item.d(getBlockID()), 1, getBlockData()), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -74,8 +74,8 @@ public class EntityMyEnderman extends EntityMyPet {
 
                     return true;
                 }
-            } else if (getBlockID() <= 0 && itemStack.id > 0 && itemStack.id < 256 && getOwner().getPlayer().isSneaking()) {
-                setBlock(itemStack.id, itemStack.getData());
+            } else if (getBlockID() <= 0 && Item.b(itemStack.getItem()) > 0 && Item.b(itemStack.getItem()) < 256 && getOwner().getPlayer().isSneaking()) {
+                setBlock(Item.b(itemStack.getItem()), itemStack.getData());
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }

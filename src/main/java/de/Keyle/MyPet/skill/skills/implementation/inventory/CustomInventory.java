@@ -21,11 +21,11 @@
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -62,7 +62,7 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
-    public String getName() {
+    public String getInventoryName() {
         return inventroyName;
     }
 
@@ -276,10 +276,10 @@ public class CustomInventory implements IInventory, Listener {
         return true;
     }
 
-    public boolean c() {
+    public boolean k_() {
         return true;
     }
 
-    public void g() {
+    public void l_() {
     }
 }

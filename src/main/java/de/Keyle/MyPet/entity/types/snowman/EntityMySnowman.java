@@ -23,11 +23,9 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.AxisAlignedBB;
-import net.minecraft.server.v1_6_R3.Block;
-import net.minecraft.server.v1_6_R3.MathHelper;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +40,7 @@ public class EntityMySnowman extends EntityMyPet {
         super(world, myPet);
     }
 
-    private void addAirBlocksInBB(org.bukkit.World world, AxisAlignedBB axisalignedbb) {
+    private void addAirBlocksInBB(org.bukkit.World bukkitWorld, AxisAlignedBB axisalignedbb) {
         int minX = MathHelper.floor(axisalignedbb.a - 0.1);
         int maxX = MathHelper.floor(axisalignedbb.d + 1.1D);
         int minY = MathHelper.floor(axisalignedbb.b - 0.1);
@@ -50,14 +48,16 @@ public class EntityMySnowman extends EntityMyPet {
         int minZ = MathHelper.floor(axisalignedbb.c - 0.1);
         int maxZ = MathHelper.floor(axisalignedbb.f + 1.1D);
 
+        WorldServer world = ((CraftWorld) bukkitWorld).getHandle();
+
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
-                if (world.getChunkAt(x, z).isLoaded()) {
+                if (bukkitWorld.getChunkAt(x, z).isLoaded()) {
                     for (int y = minY - 1; y < maxY; y++) {
-                        Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
+                        Block block = world.getType(x, y, z);
 
-                        if (block == null) {
-                            snowMap.put(new Location(world, x, y, z), 10);
+                        if (block == Blocks.AIR) {
+                            snowMap.put(new Location(bukkitWorld, x, y, z), 10);
                         }
                     }
                 }

@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.BukkitUtil;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.95F, height = 0.95F)
 public class EntityMySquid extends EntityMyPet {

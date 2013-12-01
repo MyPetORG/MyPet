@@ -20,15 +20,15 @@
 
 package de.Keyle.MyPet.util;
 
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R3.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.util.UnsafeList;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -36,15 +36,15 @@ import java.util.List;
 
 public class BukkitUtil {
 
-    static Field Packet63WorldParticles_a = Util.getField(Packet63WorldParticles.class, "a");
-    static Field Packet63WorldParticles_b = Util.getField(Packet63WorldParticles.class, "b");
-    static Field Packet63WorldParticles_c = Util.getField(Packet63WorldParticles.class, "c");
-    static Field Packet63WorldParticles_d = Util.getField(Packet63WorldParticles.class, "d");
-    static Field Packet63WorldParticles_e = Util.getField(Packet63WorldParticles.class, "e");
-    static Field Packet63WorldParticles_f = Util.getField(Packet63WorldParticles.class, "f");
-    static Field Packet63WorldParticles_g = Util.getField(Packet63WorldParticles.class, "g");
-    static Field Packet63WorldParticles_h = Util.getField(Packet63WorldParticles.class, "h");
-    static Field Packet63WorldParticles_i = Util.getField(Packet63WorldParticles.class, "i");
+    static Field Packet63WorldParticles_a = Util.getField(PacketPlayOutWorldParticles.class, "a");
+    static Field Packet63WorldParticles_b = Util.getField(PacketPlayOutWorldParticles.class, "b");
+    static Field Packet63WorldParticles_c = Util.getField(PacketPlayOutWorldParticles.class, "c");
+    static Field Packet63WorldParticles_d = Util.getField(PacketPlayOutWorldParticles.class, "d");
+    static Field Packet63WorldParticles_e = Util.getField(PacketPlayOutWorldParticles.class, "e");
+    static Field Packet63WorldParticles_f = Util.getField(PacketPlayOutWorldParticles.class, "f");
+    static Field Packet63WorldParticles_g = Util.getField(PacketPlayOutWorldParticles.class, "g");
+    static Field Packet63WorldParticles_h = Util.getField(PacketPlayOutWorldParticles.class, "h");
+    static Field Packet63WorldParticles_i = Util.getField(PacketPlayOutWorldParticles.class, "i");
 
     /**
      * @param location   the {@link Location} around which players must be to see the effect
@@ -61,7 +61,7 @@ public class BukkitUtil {
         Validate.notNull(effectName, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        Packet63WorldParticles packet = new Packet63WorldParticles();
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
 
         Util.setFieldValue(Packet63WorldParticles_a, packet, effectName);
         Util.setFieldValue(Packet63WorldParticles_b, packet, (float) location.getX());
@@ -110,7 +110,7 @@ public class BukkitUtil {
     }
 
     public static Boolean canSpawn(Location loc, float width, float height, float length) {
-        net.minecraft.server.v1_6_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_7_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 
@@ -130,7 +130,7 @@ public class BukkitUtil {
             for (int z = minZ; z < maxZ; z++) {
                 if (world.getChunkAt(x, z).isLoaded()) {
                     for (int y = minY - 1; y < maxY; y++) {
-                        Block block = Block.byId[world.getBlockAt(x, y, z).getTypeId()];
+                        Block block = Block.e(world.getBlockAt(x, y, z).getTypeId());
 
                         if (block != null) {
                             block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);

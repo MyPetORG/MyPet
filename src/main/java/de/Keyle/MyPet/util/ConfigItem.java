@@ -18,15 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.itemstringinterpreter;
+package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackComparator;
-import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_6_R3.NBTBase;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.Item;
+import net.minecraft.server.v1_7_R1.MojangsonParser;
+import net.minecraft.server.v1_7_R1.NBTBase;
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ConfigItem {
@@ -81,9 +82,9 @@ public class ConfigItem {
         return true;
     }
 
-    public boolean compare(net.minecraft.server.v1_6_R3.ItemStack compareItem) {
+    public boolean compare(net.minecraft.server.v1_7_R1.ItemStack compareItem) {
         if (item == null || item.getTypeId() == 0) {
-            if (compareItem == null || compareItem.id == 0) {
+            if (compareItem == null || Item.b(compareItem.getItem()) == 0) {
                 return true;
             } else {
                 return false;
@@ -92,7 +93,7 @@ public class ConfigItem {
         if (compareItem == null) {
             return false;
         }
-        if (item.getTypeId() != compareItem.id) {
+        if (item.getTypeId() != Item.b(compareItem.getItem())) {
             return false;
         }
         switch (durabilityMode) {
@@ -136,7 +137,7 @@ public class ConfigItem {
             String tagString = data.substring(data.indexOf("{"));
             data = data.substring(0, data.indexOf("{"));
             try {
-                nbtBase = ItemStringInterpreter.convertString(tagString);
+                nbtBase = MojangsonParser.a(tagString);
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                 MyPetLogger.write(data + tagString);
@@ -173,7 +174,7 @@ public class ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_6_R3.ItemStack is = new net.minecraft.server.v1_6_R3.ItemStack(itemId, 1, itemDamage);
+            net.minecraft.server.v1_7_R1.ItemStack is = new net.minecraft.server.v1_7_R1.ItemStack(Item.d(itemId), 1, itemDamage);
             if (nbtBase != null && nbtBase instanceof NBTTagCompound) {
                 is.setTag((NBTTagCompound) nbtBase);
             }

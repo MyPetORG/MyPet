@@ -31,9 +31,9 @@ import de.Keyle.MyPet.skill.skills.info.PickupInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
-import net.minecraft.server.v1_6_R3.Packet22Collect;
+import net.minecraft.server.v1_7_R1.PacketPlayOutCollect;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
@@ -132,7 +132,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                             if (itemAmount == 0) {
                                 for (Entity p : itemEntity.getNearbyEntities(20, 20, 20)) {
                                     if (p instanceof Player) {
-                                        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutCollect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
                                     }
                                 }
                                 myPet.getCraftPet().getHandle().makeSound("random.pop", 0.2F, 1.0F);
@@ -149,7 +149,7 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
                         myPet.getOwner().getPlayer().giveExp(expEntity.getExperience());
                         for (Entity p : expEntity.getNearbyEntities(20, 20, 20)) {
                             if (p instanceof Player) {
-                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new Packet22Collect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
+                                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutCollect(entity.getEntityId(), myPet.getCraftPet().getEntityId()));
                             }
                         }
                         expEntity.setExperience(0);

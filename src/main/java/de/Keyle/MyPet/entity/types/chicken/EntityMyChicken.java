@@ -23,11 +23,11 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.World;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.EntityHuman;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.Items;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
@@ -105,7 +105,7 @@ public class EntityMyChicken extends EntityMyPet {
 
         if (CAN_LAY_EGGS && !world.isStatic && canUseItem() && --nextEggTimer <= 0) {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
-            b(Item.EGG.id, 1);
+            a(Items.EGG, 1);
             nextEggTimer = (random.nextInt(6000) + 6000);
         }
     }

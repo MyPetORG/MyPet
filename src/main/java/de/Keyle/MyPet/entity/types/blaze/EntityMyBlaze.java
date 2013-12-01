@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.blaze;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.EntityHuman;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.Items;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.7F)
 public class EntityMyBlaze extends EntityMyPet {
@@ -56,19 +56,19 @@ public class EntityMyBlaze extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (isOnFire() && itemStack.id == 373 && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking()) {
+            if (isOnFire() && itemStack.getItem() == Items.GLASS_BOTTLE && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking()) {
                 setOnFire(false);
                 makeSound("random.fizz", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Item.GLASS_BOTTLE));
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.GLASS_BOTTLE));
                     } else {
-                        if (!entityhuman.inventory.pickup(new ItemStack(Item.GLASS_BOTTLE))) {
-                            entityhuman.drop(new ItemStack(Item.GLASS_BOTTLE));
+                        if (!entityhuman.inventory.pickup(new ItemStack(Items.GLASS_BOTTLE))) {
+                            entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
                         }
                     }
                 }
-            } else if (!isOnFire() && itemStack.id == Item.FLINT_AND_STEEL.id && getOwner().getPlayer().isSneaking()) {
+            } else if (!isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
                 setOnFire(true);
                 makeSound("fire.ignite", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {

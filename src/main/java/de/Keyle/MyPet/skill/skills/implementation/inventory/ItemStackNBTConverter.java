@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 import org.spout.nbt.*;
 
 import java.lang.reflect.Field;
@@ -36,12 +36,12 @@ public class ItemStackNBTConverter {
     public static CompoundTag ItemStackToCompund(ItemStack itemStack, String tagName) {
         CompoundTag compound = new CompoundTag(tagName, new CompoundMap());
 
-        compound.getValue().put("id", new ShortTag("id", (short) itemStack.id));
+        compound.getValue().put("id", new ShortTag("id", (short) Item.b(itemStack.getItem())));
         compound.getValue().put("Count", new ByteTag("Count", (byte) itemStack.count));
         compound.getValue().put("Damage", new ShortTag("Damage", (short) itemStack.getData()));
 
         if (itemStack.tag != null) {
-            compound.getValue().put("tag", VanillaCompoundToCompound(itemStack.tag.setName("tag")));
+            compound.getValue().put("tag", VanillaCompoundToCompound(itemStack.tag));
         }
         return compound;
     }
@@ -51,7 +51,7 @@ public class ItemStackNBTConverter {
         int count = ((ByteTag) compound.getValue().get("Count")).getValue();
         int damage = ((ShortTag) compound.getValue().get("Damage")).getValue();
 
-        ItemStack itemstack = new ItemStack(id, count, damage);
+        ItemStack itemstack = new ItemStack(Item.d(id), count, damage);
         if (compound.getValue().containsKey("tag")) {
             CompoundTag compoundToConvert = (CompoundTag) compound.getValue().get("tag");
             itemstack.tag = (NBTTagCompound) CompoundToVanillaCompound(compoundToConvert);
@@ -63,46 +63,46 @@ public class ItemStackNBTConverter {
     public static NBTBase CompoundToVanillaCompound(Tag<?> tag) {
         switch (tag.getType()) {
             case TAG_INT:
-                return new NBTTagInt(tag.getName(), ((IntTag) tag).getValue());
+                return new NBTTagInt(((IntTag) tag).getValue());
             case TAG_SHORT:
-                return new NBTTagShort(tag.getName(), ((ShortTag) tag).getValue());
+                return new NBTTagShort(((ShortTag) tag).getValue());
             case TAG_STRING:
-                return new NBTTagString(tag.getName(), ((StringTag) tag).getValue());
+                return new NBTTagString(((StringTag) tag).getValue());
             case TAG_BYTE:
-                return new NBTTagByte(tag.getName(), ((ByteTag) tag).getValue());
+                return new NBTTagByte(((ByteTag) tag).getValue());
             case TAG_BYTE_ARRAY:
-                return new NBTTagByteArray(tag.getName(), ((ByteArrayTag) tag).getValue());
+                return new NBTTagByteArray(((ByteArrayTag) tag).getValue());
             case TAG_DOUBLE:
-                return new NBTTagDouble(tag.getName(), ((DoubleTag) tag).getValue());
+                return new NBTTagDouble(((DoubleTag) tag).getValue());
             case TAG_FLOAT:
-                return new NBTTagFloat(tag.getName(), ((FloatTag) tag).getValue());
+                return new NBTTagFloat(((FloatTag) tag).getValue());
             case TAG_INT_ARRAY:
-                return new NBTTagIntArray(tag.getName(), ((IntArrayTag) tag).getValue());
+                return new NBTTagIntArray(((IntArrayTag) tag).getValue());
             case TAG_LONG:
-                return new NBTTagLong(tag.getName(), ((LongTag) tag).getValue());
+                return new NBTTagLong(((LongTag) tag).getValue());
             case TAG_SHORT_ARRAY:
                 short[] shortArray = ((ShortArrayTag) tag).getValue();
                 int[] intArray = new int[shortArray.length];
                 for (int i = 0; i < shortArray.length; i++) {
                     intArray[i] = shortArray[i];
                 }
-                return new NBTTagIntArray(tag.getName(), intArray);
+                return new NBTTagIntArray(intArray);
             case TAG_LIST:
                 ListTag<Tag<?>> listTag = (ListTag<Tag<?>>) tag;
-                NBTTagList tagList = new NBTTagList(listTag.getName());
+                NBTTagList tagList = new NBTTagList();
                 for (Tag tagInList : listTag.getValue()) {
                     tagList.add(CompoundToVanillaCompound(tagInList));
                 }
                 return tagList;
             case TAG_COMPOUND:
                 CompoundTag compoundTag = (CompoundTag) tag;
-                NBTTagCompound tagCompound = new NBTTagCompound(tag.getName());
+                NBTTagCompound tagCompound = new NBTTagCompound();
                 for (String name : compoundTag.getValue().keySet()) {
                     tagCompound.set(name, CompoundToVanillaCompound(compoundTag.getValue().get(name)));
                 }
                 return tagCompound;
             case TAG_END:
-                return new NBTTagEnd();
+                return null;
         }
         return null;
     }
@@ -113,21 +113,21 @@ public class ItemStackNBTConverter {
             case 0:
                 return new EndTag();
             case 1:
-                return new ByteTag(vanillaTag.getName(), ((NBTTagByte) vanillaTag).data);
+                return new ByteTag("", ((NBTTagByte) vanillaTag).f());
             case 2:
-                return new ShortTag(vanillaTag.getName(), ((NBTTagShort) vanillaTag).data);
+                return new ShortTag("", ((NBTTagShort) vanillaTag).e());
             case 3:
-                return new IntTag(vanillaTag.getName(), ((NBTTagInt) vanillaTag).data);
+                return new IntTag("", ((NBTTagInt) vanillaTag).d());
             case 4:
-                return new LongTag(vanillaTag.getName(), ((NBTTagLong) vanillaTag).data);
+                return new LongTag("", ((NBTTagLong) vanillaTag).c());
             case 5:
-                return new FloatTag(vanillaTag.getName(), ((NBTTagFloat) vanillaTag).data);
+                return new FloatTag("", ((NBTTagFloat) vanillaTag).h());
             case 6:
-                return new DoubleTag(vanillaTag.getName(), ((NBTTagDouble) vanillaTag).data);
+                return new DoubleTag("", ((NBTTagDouble) vanillaTag).g());
             case 7:
-                return new ByteArrayTag(vanillaTag.getName(), ((NBTTagByteArray) vanillaTag).data);
+                return new ByteArrayTag("", ((NBTTagByteArray) vanillaTag).c());
             case 8:
-                return new StringTag(vanillaTag.getName(), ((NBTTagString) vanillaTag).data);
+                return new StringTag("", ((NBTTagString) vanillaTag).a_());
             case 9:
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
@@ -140,9 +140,9 @@ public class ItemStackNBTConverter {
                 } else {
                     type = CompoundTag.class;
                 }
-                return new ListTag(vanillaTag.getName(), type, compoundList);
+                return new ListTag("", type, compoundList);
             case 10:
-                CompoundTag compound = new CompoundTag(vanillaTag.getName(), new CompoundMap());
+                CompoundTag compound = new CompoundTag("", new CompoundMap());
                 Map<String, NBTBase> compoundMap;
                 try {
                     Field f = NBTTagCompound.class.getDeclaredField("map");
@@ -158,7 +158,7 @@ public class ItemStackNBTConverter {
                 }
                 return compound;
             case 11:
-                return new IntArrayTag(vanillaTag.getName(), ((NBTTagIntArray) vanillaTag).data);
+                return new IntArrayTag("", ((NBTTagIntArray) vanillaTag).c());
         }
         return null;
     }

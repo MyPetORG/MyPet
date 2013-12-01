@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_6_R3.*;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLargeFireball;
+import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLargeFireball;
 
 public class MyPetLargeFireball extends EntityLargeFireball implements MyPetProjectile {
     protected float damage = 0;

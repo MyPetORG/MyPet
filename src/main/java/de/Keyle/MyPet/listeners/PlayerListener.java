@@ -44,7 +44,7 @@ import de.Keyle.MyPet.util.support.PvPChecker;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

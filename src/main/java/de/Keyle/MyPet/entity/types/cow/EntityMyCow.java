@@ -23,11 +23,11 @@ package de.Keyle.MyPet.entity.types.cow;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.World;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.EntityHuman;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.Items;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
@@ -60,9 +60,9 @@ public class EntityMyCow extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.id == Item.BUCKET.id) {
+            if (itemStack.getItem() == Items.BUCKET) {
                 if (CAN_GIVE_MILK && !this.world.isStatic) {
-                    ItemStack milkBucket = new ItemStack(Item.BUCKET.id, 1, 0);
+                    ItemStack milkBucket = new ItemStack(Items.BUCKET, 1, 0);
 
                     entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
                     return true;

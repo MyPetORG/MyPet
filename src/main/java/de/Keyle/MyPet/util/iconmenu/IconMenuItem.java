@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -93,7 +93,7 @@ public class IconMenuItem {
 
         if (applyToItemMethhod == null) {
             try {
-                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_6_R3.inventory.CraftMetaItem");
+                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_7_R1.inventory.CraftMetaItem");
                 applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
                 applyToItemMethhod.setAccessible(true);
             } catch (ClassNotFoundException e) {
@@ -118,8 +118,8 @@ public class IconMenuItem {
                     compound.remove("Lore");
                 }
 
-                for (NBTBase value : (Collection<NBTBase>) compound.c()) {
-                    this.displayTags.put(value.getName(), value);
+                for (String key : (Set<String>) compound.c()) {
+                    this.displayTags.put(key, compound.get(key).clone());
                 }
 
                 hasChanged = true;
@@ -203,11 +203,11 @@ public class IconMenuItem {
         }
 
 
-        ItemStack is = new ItemStack(material.getId(), amount, data);
+        ItemStack is = new ItemStack(Item.d(material.getId()), amount, data);
 
         NBTTagList emptyList = new NBTTagList();
         if (is.tag == null) {
-            is.tag = new NBTTagCompound("tag");
+            is.tag = new NBTTagCompound();
         }
 
         // remove item attributes like attack damage
@@ -225,7 +225,7 @@ public class IconMenuItem {
         if (is.tag.hasKey("display")) {
             display = is.tag.getCompound("display");
         } else {
-            display = new NBTTagCompound("display");
+            display = new NBTTagCompound();
             is.tag.set("display", display);
         }
 
@@ -235,10 +235,10 @@ public class IconMenuItem {
         }
 
         // set Lore
-        NBTTagList loreTag = new NBTTagList("Lore");
+        NBTTagList loreTag = new NBTTagList();
         display.set("Lore", loreTag);
         for (String loreLine : lore) {
-            loreTag.add(new NBTTagString(null, loreLine));
+            loreTag.add(new NBTTagString(loreLine));
         }
 
         // add other display properties
@@ -252,10 +252,11 @@ public class IconMenuItem {
         return is;
     }
 
+    @SuppressWarnings("unchecked")
     public static IconMenuItem fromNmsItemStack(ItemStack is) {
         IconMenuItem icon = new IconMenuItem();
 
-        icon.setMaterial(Material.getMaterial(is.id));
+        icon.setMaterial(Material.getMaterial(Item.b(is.getItem())));
         icon.setData(is.getData());
         icon.setAmount(is.count);
 
@@ -273,22 +274,19 @@ public class IconMenuItem {
                 }
 
                 if (display.hasKey("Lore")) {
-                    NBTTagList lore = display.getList("Lore");
+                    NBTTagList lore = display.getList("Lore", 0);
 
                     for (int i = 0; i < lore.size(); i++) {
-                        NBTTagString loreLine = (NBTTagString) lore.get(i);
-                        icon.addLoreLine(loreLine.data);
+                        icon.addLoreLine(lore.f(i));
                     }
                 }
 
-                for (Object o : display.c()) {
-                    NBTBase nbtTag = (NBTBase) o;
+                for (String key : (Set<String>) display.c()) {
 
-                    if (nbtTag.getName().equals("Name") || nbtTag.getName().equals("Lore")) {
-                        continue;
-                    }
+                    display.remove("Name");
+                    display.remove("Lore");
 
-                    icon.setDisplayTag(nbtTag.getName(), nbtTag);
+                    icon.setDisplayTag(key, display.get(key).clone());
                 }
             }
         }

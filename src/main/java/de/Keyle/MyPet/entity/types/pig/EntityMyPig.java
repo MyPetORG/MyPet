@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.*;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.*;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
@@ -56,7 +56,7 @@ public class EntityMyPig extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.id == 329 && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
+            if (itemStack.getItem() == Items.SADDLE && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
@@ -65,10 +65,10 @@ public class EntityMyPig extends EntityMyPet {
                 }
                 ((MyPig) myPet).setSaddle(true);
                 return true;
-            } else if (itemStack.id == Item.SHEARS.id && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
+            } else if (itemStack.getItem() == Items.SHEARS && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
                 ((MyPig) myPet).setSaddle(false);
                 if (!entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Item.SADDLE.id, 1, 1), 1.0F);
+                    EntityItem entityitem = this.a(new ItemStack(Items.SADDLE, 1, 1), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);

@@ -26,7 +26,7 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet {
@@ -84,7 +84,7 @@ public class EntityMySkeleton extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking()) {
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking()) {
                 if (!canEquip()) {
                     return false;
                 }
@@ -167,7 +167,7 @@ public class EntityMySkeleton extends EntityMyPet {
     }
 
     public void setPetEquipment(int slot, ItemStack itemStack) {
-        ((WorldServer) this.world).getTracker().a(this, new Packet5EntityEquipment(this.id, slot, itemStack));
+        ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), slot, itemStack));
         ((MySkeleton) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }
 }

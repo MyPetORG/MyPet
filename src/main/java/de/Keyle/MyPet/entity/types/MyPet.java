@@ -36,14 +36,13 @@ import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.arenas.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.spout.nbt.*;
@@ -325,7 +324,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             }
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
-                net.minecraft.server.v1_6_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+                net.minecraft.server.v1_7_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 if (getYSpawnOffset() > 0) {

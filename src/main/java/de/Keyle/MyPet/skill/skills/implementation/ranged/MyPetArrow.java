@@ -21,12 +21,12 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_6_R3.EntityArrow;
-import net.minecraft.server.v1_6_R3.EntityLiving;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
-import net.minecraft.server.v1_6_R3.World;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import net.minecraft.server.v1_7_R1.EntityArrow;
+import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.World;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 
 public class MyPetArrow extends EntityArrow implements MyPetProjectile {
     public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i) {
@@ -54,9 +54,9 @@ public class MyPetArrow extends EntityArrow implements MyPetProjectile {
     public void b(NBTTagCompound nbtTagCompound) {
     }
 
-    public void l_() {
+    public void h() {
         try {
-            super.l_();
+            super.h();
             if (this.isInGround()) {
                 die();
             }

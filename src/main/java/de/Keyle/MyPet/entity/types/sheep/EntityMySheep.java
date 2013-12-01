@@ -24,8 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.*;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.9F, height = 1.3F)
@@ -69,7 +69,7 @@ public class EntityMySheep extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.id == 351 && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData() && !isSheared()) {
+            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData() && !isSheared()) {
                 if (itemStack.getData() <= 15) {
                     setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                     if (!entityhuman.abilities.canInstantlyBuild) {
@@ -79,13 +79,13 @@ public class EntityMySheep extends EntityMyPet {
                     }
                     return true;
                 }
-            } else if (itemStack.id == Item.SHEARS.id && CAN_BE_SHEARED && !((MySheep) myPet).isSheared()) {
+            } else if (itemStack.getItem() == Items.SHEARS && CAN_BE_SHEARED && !((MySheep) myPet).isSheared()) {
                 if (!this.world.isStatic) {
                     ((MySheep) myPet).setSheared(true);
                     int i = 1 + this.random.nextInt(3);
 
                     for (int j = 0; j < i; ++j) {
-                        EntityItem entityitem = this.a(new ItemStack(Block.WOOL.id, 1, ((MySheep) myPet).getColor().getDyeData()), 1.0F);
+                        EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, ((MySheep) myPet).getColor().getDyeData()), 1.0F);
 
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);

@@ -30,18 +30,14 @@ import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
-import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.MyPetPlayer;
-import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -94,7 +90,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
     public void applyLeash() {
         if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
-            ((EntityPlayer) this.bI()).playerConnection.sendPacket(new Packet39AttachEntity(1, this, this.bI()));
+            ((EntityPlayer) this.bI()).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, this.bI()));
         }
     }
 
@@ -360,7 +356,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public Random getRandom() {
-        return aD();
+        return this.random;
     }
 
     /**
@@ -395,7 +391,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     public void playStepSound() {
     }
 
-    public void playStepSound(int i, int j, int k, int l) {
+    public void playStepSound(int i, int j, int k, Block block) {
         playStepSound();
     }
 
@@ -404,8 +400,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * -> initDatawatcher()
      */
-    protected void a() {
-        super.a();
+    protected void c() {
+        super.c();
         try {
             initDatawatcher();
         } catch (Exception e) {
@@ -432,9 +428,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * -> playStepSound()
      */
-    protected void a(int i, int j, int k, int l) {
+    protected void a(int i, int j, int k, Block block) {
         try {
-            playStepSound(i, j, k, l);
+            playStepSound(i, j, k, block);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -444,7 +440,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected String aO() {
+    protected String aT() {
         try {
             return getHurtSound();
         } catch (Exception e) {
@@ -457,7 +453,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected String aP() {
+    protected String aU() {
         try {
             return getDeathSound();
         } catch (Exception e) {
@@ -469,19 +465,19 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * Returns the speed of played sounds
      */
-    protected float bb() {
+    protected float bg() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return super.bb();
+        return super.bg();
     }
 
     /**
      * Set weather the "new" AI is used
      */
-    public boolean bf() {
+    public boolean bk() {
         return true;
     }
 
@@ -490,7 +486,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * -> updateAITasks()
      */
     @Override
-    protected void bi() {
+    protected void bn() {
         try {
             aV += 1; // entityAge
 
@@ -502,7 +498,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 petNavigation.tick(); // navigation
             }
 
-            bj(); // "mob tick"
+            bp(); // "mob tick"
 
             // controls
             getControllerMove().c(); // move
@@ -533,14 +529,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 setSize();
             }
             super.e(motionSideways, motionForward);
-            this.Y = 0.5F; // climb height -> halfslab
+            this.X = 0.5F; // climb height -> halfslab
             return;
         } else {
             // just the owner can ride the pet
             EntityPlayer passenger = (EntityPlayer) this.passenger;
             if (!getOwner().equals(passenger)) {
                 super.e(motionSideways, motionForward);
-                this.Y = 0.5F; // climb height -> halfslab
+                this.X = 0.5F; // climb height -> halfslab
                 return;
             }
         }
@@ -550,7 +546,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             setSize(1F);
         }
 
-        this.Y = 1.0F; // climb height -> 1 block
+        this.X = 1.0F; // climb height -> 1 block
 
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
@@ -589,8 +585,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         }
     }
 
-    public void l_() {
-        super.l_();
+    public void h() {
+        super.h();
         try {
             onLivingUpdate();
         } catch (Exception e) {
@@ -603,7 +599,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the default sound of the MyPet
      * -> getLivingSound()
      */
-    protected String r() {
+    protected String t() {
         try {
             return playIdleSound() ? getLivingSound() : null;
         } catch (Exception e) {

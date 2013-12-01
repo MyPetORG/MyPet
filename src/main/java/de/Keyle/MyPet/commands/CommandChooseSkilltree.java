@@ -152,7 +152,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
                         CompoundTag tag = addedSkilltree.getIconItem();
-                        net.minecraft.server.v1_6_R3.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
+                        net.minecraft.server.v1_7_R1.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
                         IconMenuItem option = IconMenuItem.fromNmsItemStack(is);
                         option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰");
 

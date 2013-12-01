@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 5.5f, height = 5.5F)
 public class EntityMyGiant extends EntityMyPet {

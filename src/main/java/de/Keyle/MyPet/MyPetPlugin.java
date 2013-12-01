@@ -74,7 +74,7 @@ import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.Keyle.MyPet.util.support.arenas.*;
-import net.minecraft.server.v1_6_R3.EntityTypes;
+import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -418,15 +418,15 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
     @SuppressWarnings("unchecked")
     public static boolean registerMyPetEntity(Class<? extends EntityMyPet> myPetEntityClass, String entityTypeName, int entityTypeId) {
         try {
-            Field EntityTypes_c = EntityTypes.class.getDeclaredField("c");
-            Field EntityTypes_e = EntityTypes.class.getDeclaredField("e");
-            EntityTypes_c.setAccessible(true);
-            EntityTypes_e.setAccessible(true);
+            Field EntityTypes_d = EntityTypes.class.getDeclaredField("d");
+            Field EntityTypes_f = EntityTypes.class.getDeclaredField("f");
+            EntityTypes_d.setAccessible(true);
+            EntityTypes_f.setAccessible(true);
 
-            Map<Class, String> c = (Map) EntityTypes_c.get(EntityTypes_c);
-            Map<Class, Integer> e = (Map) EntityTypes_e.get(EntityTypes_e);
+            Map<Class, String> d = (Map) EntityTypes_d.get(EntityTypes_d);
+            Map<Class, Integer> f = (Map) EntityTypes_f.get(EntityTypes_f);
 
-            Iterator cIterator = c.keySet().iterator();
+            Iterator cIterator = d.keySet().iterator();
             while (cIterator.hasNext()) {
                 Class clazz = (Class) cIterator.next();
                 if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName())) {
@@ -434,7 +434,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 }
             }
 
-            Iterator eIterator = e.keySet().iterator();
+            Iterator eIterator = f.keySet().iterator();
             while (eIterator.hasNext()) {
                 Class clazz = (Class) eIterator.next();
                 if (clazz.getCanonicalName().equals(myPetEntityClass.getCanonicalName())) {
@@ -442,8 +442,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 }
             }
 
-            c.put(myPetEntityClass, entityTypeName);
-            e.put(myPetEntityClass, entityTypeId);
+            d.put(myPetEntityClass, entityTypeName);
+            f.put(myPetEntityClass, entityTypeId);
 
             return true;
         } catch (Exception e) {

@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.spider;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 1.4F, height = 0.9F)
 public class EntityMySpider extends EntityMyPet {

@@ -23,9 +23,8 @@ package de.Keyle.MyPet.entity.types.horse;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.*;
-import org.bukkit.Material;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.*;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
@@ -167,7 +166,7 @@ public class EntityMyHorse extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.id == 329 && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip()) {
+            if (itemStack.getItem() == Items.SADDLE && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip()) {
                 setSaddle(true);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
@@ -175,7 +174,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.id == 54 && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip()) {
+            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip()) {
                 setChest(true);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
@@ -183,15 +182,15 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.id >= 417 && itemStack.id <= 419 && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (getHorseArmorId(itemStack) > 0 && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getHorseType() == 0) {
                     if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
-                        EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                        EntityItem entityitem = this.a(new ItemStack(Item.d(416 + getArmor()), 1, 0), 1F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     }
-                    setArmor(itemStack.id - 416);
+                    setArmor(getHorseArmorId(itemStack));
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -199,21 +198,21 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                     return true;
                 }
-            } else if (itemStack.id == Item.SHEARS.id && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
                 if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(416 + getArmor(), 1, 0), 1F);
+                    EntityItem entityitem = this.a(new ItemStack(Item.d(416 + getArmor()), 1, 0), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
                 if (hasChest() && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Block.CHEST), 1F);
+                    EntityItem entityitem = this.a(new ItemStack(Blocks.CHEST), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
                 if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Item.SADDLE), 1F);
+                    EntityItem entityitem = this.a(new ItemStack(Items.SADDLE), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
@@ -235,17 +234,26 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
             }
-            if (itemStack.id == Material.BREAD.getId() ||
-                    itemStack.id == Material.WHEAT.getId() ||
-                    itemStack.id == Material.GOLDEN_APPLE.getId() ||
-                    itemStack.id == Material.HAY_BLOCK.getId() ||
-                    itemStack.id == Material.GOLDEN_CARROT.getId() ||
-                    itemStack.id == Material.APPLE.getId() ||
-                    itemStack.id == Material.SUGAR.getId()) {
+            if (itemStack.getItem() == Items.BREAD ||
+                    itemStack.getItem() == Items.WHEAT ||
+                    itemStack.getItem() == Items.GOLDEN_APPLE ||
+                    itemStack.getItem() == Item.getItemOf(Blocks.HAY_BLOCK) ||
+                    itemStack.getItem() == Items.CARROT_GOLDEN ||
+                    itemStack.getItem() == Items.APPLE ||
+                    itemStack.getItem() == Items.SUGAR) {
                 ageCounter = 5;
             }
         }
         return false;
+    }
+
+    private int getHorseArmorId(ItemStack itemstack) {
+        if (itemstack == null) {
+            return 0;
+        }
+        Item item = itemstack.getItem();
+
+        return item == Items.HORSE_ARMOR_DIAMOND ? 3 : item == Items.HORSE_ARMOR_GOLD ? 2 : item == Items.HORSE_ARMOR_IRON ? 1 : 0;
     }
 
     public boolean hasChest() {
@@ -294,12 +302,12 @@ public class EntityMyHorse extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound(int i, int j, int k, int l) {
-        StepSound localStepSound = Block.byId[l].stepSound;
-        if (this.world.getTypeId(i, j + 1, k) == Block.SNOW.id) {
-            localStepSound = Block.SNOW.stepSound;
+    public void playStepSound(int i, int j, int k, Block block) {
+        StepSound localStepSound = block.stepSound;
+        if (this.world.getType(i, j + 1, k) == Blocks.SNOW) {
+            localStepSound = Blocks.SNOW.stepSound;
         }
-        if (!Block.byId[l].material.isLiquid()) {
+        if (!block.getMaterial().isLiquid()) {
             int horseType = ((MyHorse) myPet).horseType;
             if ((this.passenger != null) && (horseType != 1) && (horseType != 2)) {
                 this.soundCounter += 1;
@@ -311,10 +319,10 @@ public class EntityMyHorse extends EntityMyPet {
                 } else if (this.soundCounter <= 5) {
                     makeSound("mob.horse.wood", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
                 }
-            } else if (localStepSound == Block.h) {
-                makeSound("mob.horse.soft", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
-            } else {
+            } else if (localStepSound == Block.f) {
                 makeSound("mob.horse.wood", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
+            } else {
+                makeSound("mob.horse.soft", localStepSound.getVolume1() * 0.15F, localStepSound.getVolume2());
             }
         }
     }

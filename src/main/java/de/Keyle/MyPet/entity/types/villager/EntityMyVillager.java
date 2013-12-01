@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.World;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.EntityHuman;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {

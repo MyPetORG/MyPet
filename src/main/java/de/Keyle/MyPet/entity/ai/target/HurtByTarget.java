@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_6_R3.EntityLiving;
-import net.minecraft.server.v1_6_R3.EntityPlayer;
-import net.minecraft.server.v1_6_R3.EntityTameableAnimal;
+import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R1.EntityTameableAnimal;
 import org.bukkit.entity.Player;
 
 public class HurtByTarget extends AIGoal {

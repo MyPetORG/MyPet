@@ -39,19 +39,19 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_6_R3.*;
+import net.minecraft.server.v1_7_R1.*;
+import net.minecraft.server.v1_7_R1.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R3.entity.*;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.entity.*;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -346,22 +346,24 @@ public class EntityListener implements Listener {
                         } else if (leashTarget instanceof Creeper) {
                             extendedInfo.getValue().put("Powered", new ByteTag("Powered", ((Creeper) leashTarget).isPowered()));
                         } else if (leashTarget instanceof Horse) {
+                            Horse horse = (Horse) leashTarget;
+
                             extendedInfo.getValue().put("Type", new ByteTag("Type", (byte) ((CraftHorse) leashTarget).getHandle().getType()));
                             extendedInfo.getValue().put("Variant", new IntTag("Variant", ((CraftHorse) leashTarget).getHandle().getVariant()));
-                            extendedInfo.getValue().put("Armor", new IntTag("Armor", ((CraftHorse) leashTarget).getHandle().cf()));
-                            extendedInfo.getValue().put("Chest", new ByteTag("Chest", ((CraftHorse) leashTarget).getHandle().hasChest()));
-                            extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((CraftHorse) leashTarget).getHandle().co()));
+                            extendedInfo.getValue().put("Armor", new IntTag("Armor", ((CraftHorse) leashTarget).getHandle().cj()));
+                            extendedInfo.getValue().put("Chest", new ByteTag("Chest", horse.isCarryingChest()));
+                            extendedInfo.getValue().put("Saddle", new ByteTag("Saddle", ((CraftHorse) leashTarget).getHandle().cs()));
                             extendedInfo.getValue().put("Age", new IntTag("Age", ((CraftHorse) leashTarget).getHandle().getAge()));
                         } else if (leashTarget instanceof Zombie) {
                             extendedInfo.getValue().put("Baby", new ByteTag("Baby", ((Zombie) leashTarget).isBaby()));
                             extendedInfo.getValue().put("Villager", new ByteTag("Villager", ((Zombie) leashTarget).isVillager()));
 
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aD();
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
@@ -370,7 +372,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
@@ -379,7 +381,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
@@ -388,7 +390,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
@@ -396,17 +398,17 @@ public class EntityListener implements Listener {
                             }
                             extendedInfo.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, equipmentList));
                         } else if (leashTarget instanceof Enderman) {
-                            extendedInfo.getValue().put("BlockID", new ShortTag("BlockID", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedId()));
+                            extendedInfo.getValue().put("BlockID", new ShortTag("BlockID", (short) Item.b(Item.getItemOf(((CraftEnderman) leashTarget).getHandle().getCarried()))));
                             extendedInfo.getValue().put("BlockData", new ShortTag("BlockData", (short) ((CraftEnderman) leashTarget).getHandle().getCarriedData()));
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getValue().put("Wither", new ByteTag("Wither", ((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
 
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aD();
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
@@ -415,7 +417,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
@@ -424,7 +426,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
@@ -433,7 +435,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
@@ -441,12 +443,12 @@ public class EntityListener implements Listener {
                             }
                             extendedInfo.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, equipmentList));
                         } else if (leashTarget instanceof PigZombie) {
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aD();
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
                             List<CompoundTag> equipmentList = new ArrayList<CompoundTag>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
@@ -455,7 +457,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
@@ -464,7 +466,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
@@ -473,7 +475,7 @@ public class EntityListener implements Listener {
                             if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_6_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
                                     CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
                                     item.getValue().put("Slot", new IntTag("Slot", EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
@@ -697,7 +699,7 @@ public class EntityListener implements Listener {
                 if (myPet instanceof IMyPetEquipment) {
                     World world = myPet.getCraftPet().getHandle().world;
                     Location petLocation = myPet.getLocation();
-                    for (net.minecraft.server.v1_6_R3.ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
+                    for (net.minecraft.server.v1_7_R1.ItemStack is : ((IMyPetEquipment) myPet).getEquipment()) {
                         if (is != null) {
                             EntityItem itemEntity = new EntityItem(world, petLocation.getX(), petLocation.getY(), petLocation.getZ(), is);
                             itemEntity.pickupDelay = 10;

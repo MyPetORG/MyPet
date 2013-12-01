@@ -51,10 +51,10 @@ import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Permissions;
-import net.minecraft.server.v1_6_R3.EntityItem;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.EntityItem;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.Items;
+import net.minecraft.server.v1_7_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -62,9 +62,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftHorse;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPigZombie;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPigZombie;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
 import org.bukkit.entity.Skeleton.SkeletonType;
@@ -195,12 +195,12 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         } else if (myPet instanceof MySkeleton) {
                             if (((MySkeleton) myPet).isWither()) {
                                 ((Skeleton) normalEntity).setSkeletonType(SkeletonType.WITHER);
-                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.STONE_SWORD));
+                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Items.STONE_SWORD));
                             } else {
-                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.BOW));
+                                ((CraftSkeleton) normalEntity).getHandle().setEquipment(0, new ItemStack(Items.BOW));
                             }
                         } else if (myPet instanceof MyPigZombie) {
-                            ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Item.GOLD_SWORD));
+                            ((CraftPigZombie) normalEntity).getHandle().setEquipment(0, new ItemStack(Items.GOLD_SWORD));
                             ((PigZombie) normalEntity).setBaby(((MyPigZombie) myPet).isBaby());
                         } else if (myPet instanceof MyHorse) {
                             ((Horse) normalEntity).setAge(((MyHorse) myPet).getAge());

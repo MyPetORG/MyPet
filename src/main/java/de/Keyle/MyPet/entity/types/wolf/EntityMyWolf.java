@@ -24,11 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
-import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.MathHelper;
-import net.minecraft.server.v1_6_R3.World;
+import de.Keyle.MyPet.util.ConfigItem;
+import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -88,7 +85,7 @@ public class EntityMyWolf extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem()) {
-                if (itemStack.id == 351 && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack.getData() <= 15) {
                         setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                         if (!entityhuman.abilities.canInstantlyBuild) {
@@ -178,21 +175,21 @@ public class EntityMyWolf extends EntityMyPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bM()) && (this.onGround)) // bM -> has pathentity
+        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bQ()) && (this.onGround)) // bM -> has pathentity
         {
             this.shaking = true;
             this.shakeCounter = 0.0F;
             this.world.broadcastEntityEffect(this, (byte) 8);
         }
 
-        if (G()) // -> is in water
+        if (L()) // -> is in water
         {
             this.isWet = true;
             this.shaking = false;
             this.shakeCounter = 0.0F;
         } else if ((this.isWet || this.shaking) && this.shaking) {
             if (this.shakeCounter == 0.0F) {
-                makeSound("mob.wolf.shake", ba(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", bf(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.shakeCounter += 0.05F;

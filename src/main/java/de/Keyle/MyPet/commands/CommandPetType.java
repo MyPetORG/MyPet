@@ -5,7 +5,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.itemstringinterpreter.ConfigItem;
+import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.Command;
