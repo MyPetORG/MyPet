@@ -499,14 +499,22 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         List<CompoundTag> petList = new ArrayList<CompoundTag>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-            CompoundTag petNBT = myPet.save();
-            petList.add(petNBT);
-            petCount++;
+            try {
+                CompoundTag petNBT = myPet.save();
+                petList.add(petNBT);
+                petCount++;
+            } catch (Exception e) {
+                DebugLogger.printThrowable(e);
+            }
         }
         for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
-            CompoundTag petNBT = inactiveMyPet.save();
-            petList.add(petNBT);
-            petCount++;
+            try {
+                CompoundTag petNBT = inactiveMyPet.save();
+                petList.add(petNBT);
+                petCount++;
+            } catch (Exception e) {
+                DebugLogger.printThrowable(e);
+            }
         }
         nbtConfiguration.getNBTCompound().getValue().put("Version", new StringTag("Version", MyPetVersion.getMyPetVersion()));
         nbtConfiguration.getNBTCompound().getValue().put("Build", new StringTag("Build", MyPetVersion.getMyPetBuild()));
@@ -522,7 +530,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         List<CompoundTag> playerList = new ArrayList<CompoundTag>();
         for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers()) {
             if (myPetPlayer.hasCustomData()) {
-                playerList.add(myPetPlayer.save());
+                try {
+                    playerList.add(myPetPlayer.save());
+                } catch (Exception e) {
+                    DebugLogger.printThrowable(e);
+                }
             }
         }
         return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
