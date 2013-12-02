@@ -71,6 +71,7 @@ public class Backup {
             return backupFile();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return "[No Backup Created!]";
     }
@@ -83,6 +84,7 @@ public class Backup {
             copyFile(backupFile, destFile);
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return df.format(lastBackup) + "_My.Pets";
     }

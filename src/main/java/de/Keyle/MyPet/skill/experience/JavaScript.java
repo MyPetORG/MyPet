@@ -87,11 +87,13 @@ public class JavaScript extends Experience {
                     MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
                 } catch (Exception ignored) {
                 }
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             }
@@ -113,11 +115,13 @@ public class JavaScript extends Experience {
                     MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
                 } catch (Exception ignored) {
                 }
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             }
@@ -145,6 +149,7 @@ public class JavaScript extends Experience {
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             }
@@ -166,11 +171,13 @@ public class JavaScript extends Experience {
                     MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
                 } catch (Exception ignored) {
                 }
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
             }
@@ -208,6 +215,7 @@ public class JavaScript extends Experience {
                     }
                 } catch (ScriptException e) {
                     e.printStackTrace();
+                    DebugLogger.printThrowable(e);
                     isUsable = false;
                 }
             } else {

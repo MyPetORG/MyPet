@@ -68,6 +68,7 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                 } catch (Exception e) {
                     MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".json");
                     e.printStackTrace();
+                    DebugLogger.printThrowable(e);
                 }
             }
             skillTreeMobType.cleanupPlaces();
@@ -183,10 +184,11 @@ public class SkillTreeLoaderJSON extends SkillTreeLoader {
                     }
                 }
                 skillTreeMobType.addSkillTree(skillTree, place);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
                 DebugLogger.info("Problem in" + skillTreeMobType.getMobTypeName());
-                DebugLogger.info(Arrays.toString(ignored.getStackTrace()));
-                ignored.printStackTrace();
+                DebugLogger.info(Arrays.toString(e.getStackTrace()));
+                e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 MyPetLogger.write(ChatColor.RED + "Error in " + skillTreeMobType.getMobTypeName().toLowerCase() + ".json -> Skilltree not loaded.");
             }
         }

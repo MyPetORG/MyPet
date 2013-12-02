@@ -105,4 +105,25 @@ public class DebugLogger {
             debugLogger.severe("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
+
+    public static void printThrowable(Throwable cause) {
+        if (isEnabled) {
+            debugLogger.severe("=====================================================================================================================================");
+            debugLogger.severe(cause.toString());
+
+            StackTraceElement[] trace = cause.getStackTrace();
+            for (StackTraceElement aTrace : trace) {
+                debugLogger.severe("\tat " + aTrace);
+            }
+            while ((cause = cause.getCause()) != null) {
+                debugLogger.severe("Caused by" + cause.toString());
+
+                trace = cause.getStackTrace();
+                for (StackTraceElement aTrace : trace) {
+                    debugLogger.severe("\tat " + aTrace);
+                }
+            }
+            debugLogger.severe("=====================================================================================================================================");
+        }
+    }
 }

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.entity.Player;
 
@@ -110,6 +111,7 @@ public class Locales {
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             } catch (IOException ignored) {
             }
         }
@@ -124,8 +126,10 @@ public class Locales {
                 newLocale.addExtensionBundle(optionalBundle);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             } catch (IOException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             }
         }
         locales.put(localeString, newLocale);

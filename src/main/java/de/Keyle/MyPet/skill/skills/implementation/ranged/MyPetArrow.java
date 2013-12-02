@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.EntityArrow;
 import net.minecraft.server.v1_7_R1.EntityLiving;
 import net.minecraft.server.v1_7_R1.NBTTagCompound;
@@ -62,6 +63,7 @@ public class MyPetArrow extends EntityArrow implements MyPetProjectile {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 }

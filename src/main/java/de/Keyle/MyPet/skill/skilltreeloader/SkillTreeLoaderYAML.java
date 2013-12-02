@@ -67,6 +67,7 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader {
                 } catch (Exception e) {
                     MyPetLogger.write(ChatColor.RED + "  Error while loading skilltrees from: " + mobType.toLowerCase() + ".yml");
                     e.printStackTrace();
+                    DebugLogger.printThrowable(e);
                 }
             }
         }

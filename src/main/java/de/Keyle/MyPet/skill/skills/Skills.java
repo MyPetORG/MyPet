@@ -25,6 +25,7 @@ import com.google.common.collect.HashBiMap;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
@@ -103,6 +104,7 @@ public class Skills {
         } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " is no valid Skill)!");
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return null;
     }
@@ -134,6 +136,7 @@ public class Skills {
             }
         } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + skillClass.getName() + " is not a valid skill!");
+            DebugLogger.printThrowable(e);
             registeredSkillsNames.remove(skillClass);
         }
     }

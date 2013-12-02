@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 
@@ -162,6 +163,7 @@ public class Util {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             }
         }
         return contents.toString();

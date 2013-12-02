@@ -57,6 +57,7 @@ public class ConfigurationNBT {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         }
     }

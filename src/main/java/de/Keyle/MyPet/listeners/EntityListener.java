@@ -93,8 +93,10 @@ public class EntityListener implements Listener {
                 pgs.a(3, new PathfinderGoalMeleeAttack(ez, EntityMyPet.class, 1.0D, true));
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
             }
         }
     }

@@ -20,6 +20,8 @@
 
 package de.Keyle.MyPet.util;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -50,8 +52,10 @@ public class MyPetVersion {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 

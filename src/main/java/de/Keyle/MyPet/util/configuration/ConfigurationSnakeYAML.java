@@ -66,6 +66,7 @@ public class ConfigurationSnakeYAML {
             return false;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         }
     }
@@ -79,6 +80,7 @@ public class ConfigurationSnakeYAML {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         }
     }

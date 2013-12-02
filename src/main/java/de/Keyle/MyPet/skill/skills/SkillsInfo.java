@@ -22,6 +22,7 @@ package de.Keyle.MyPet.skill.skills;
 
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
@@ -97,6 +98,7 @@ public class SkillsInfo {
         } catch (Exception e) {
             MyPetLogger.write(ChatColor.RED + clazz.getName() + " is no valid Skill)!");
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return null;
     }

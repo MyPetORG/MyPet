@@ -32,6 +32,7 @@ import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import net.minecraft.server.v1_7_R1.*;
@@ -406,6 +407,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             initDatawatcher();
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 
@@ -421,6 +423,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return handlePlayerInteraction(entityhuman);
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return false;
     }
@@ -433,6 +436,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             playStepSound(i, j, k, block);
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 
@@ -445,6 +449,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return getHurtSound();
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return null;
     }
@@ -458,6 +463,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return getDeathSound();
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return null;
     }
@@ -470,6 +476,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return super.bg();
     }
@@ -506,6 +513,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             getControllerJump().b(); // jump
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 
@@ -591,6 +599,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             onLivingUpdate();
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
     }
 
@@ -604,6 +613,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             return playIdleSound() ? getLivingSound() : null;
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return null;
     }

@@ -62,6 +62,7 @@ public class ConfigurationJSON {
             return false;
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         } finally {
             if (reader != null) {
@@ -83,6 +84,7 @@ public class ConfigurationJSON {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         }
     }

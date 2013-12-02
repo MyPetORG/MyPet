@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.types.irongolem;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.Entity;
 import net.minecraft.server.v1_7_R1.World;
 
@@ -45,6 +46,7 @@ public class EntityMyIronGolem extends EntityMyPet {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return flag;
     }

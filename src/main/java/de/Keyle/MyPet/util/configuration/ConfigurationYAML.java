@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.configuration;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class ConfigurationYAML {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            DebugLogger.printThrowable(e);
             return false;
         }
     }

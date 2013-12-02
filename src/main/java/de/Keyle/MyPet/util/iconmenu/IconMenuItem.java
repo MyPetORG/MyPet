@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
@@ -98,9 +99,11 @@ public class IconMenuItem {
                 applyToItemMethhod.setAccessible(true);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 return this;
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
+                DebugLogger.printThrowable(e);
                 return this;
             }
         }
@@ -124,10 +127,12 @@ public class IconMenuItem {
 
                 hasChanged = true;
             }
-        } catch (IllegalAccessException ignored) {
-            ignored.printStackTrace();
-        } catch (InvocationTargetException ignored) {
-            ignored.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            DebugLogger.printThrowable(e);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            DebugLogger.printThrowable(e);
         }
         return this;
     }
