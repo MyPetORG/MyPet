@@ -23,10 +23,9 @@ package de.Keyle.MyPet.skill.skills.implementation.inventory;
 import net.minecraft.server.v1_7_R1.*;
 import org.spout.nbt.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class ItemStackNBTConverter {
     public static CompoundTag ItemStackToCompund(ItemStack itemStack) {
@@ -143,18 +142,10 @@ public class ItemStackNBTConverter {
                 return new ListTag("", type, compoundList);
             case 10:
                 CompoundTag compound = new CompoundTag("", new CompoundMap());
-                Map<String, NBTBase> compoundMap;
-                try {
-                    Field f = NBTTagCompound.class.getDeclaredField("map");
-                    f.setAccessible(true);
-                    compoundMap = (Map<String, NBTBase>) f.get(vanillaTag);
-                } catch (NoSuchFieldException e) {
-                    return compound;
-                } catch (IllegalAccessException e) {
-                    return compound;
-                }
-                for (String tagName : compoundMap.keySet()) {
-                    compound.getValue().put(tagName, VanillaCompoundToCompound(compoundMap.get(tagName)));
+                NBTTagCompound tagCompound = ((NBTTagCompound) vanillaTag);
+                Set<String> keys = tagCompound.c();
+                for (String tagName : keys) {
+                    compound.getValue().put(tagName, VanillaCompoundToCompound(tagCompound.get(tagName)));
                 }
                 return compound;
             case 11:
