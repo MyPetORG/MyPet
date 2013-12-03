@@ -216,4 +216,8 @@ public class Util {
         }
         return thousands + result;
     }
+
+    public static boolean isBetween(int intMin, int intMax, int intValue) {
+        return intValue > intMin && intValue < intMax;
+    }
 }

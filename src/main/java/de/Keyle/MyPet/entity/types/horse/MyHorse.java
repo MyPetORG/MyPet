@@ -24,11 +24,16 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
+import org.spout.nbt.TagType;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.*;
@@ -38,9 +43,9 @@ public class MyHorse extends MyPet implements IMyPetBaby {
     public int age = 0;
     protected byte horseType = 0;
     protected int variant = 0;
-    protected int armor = 0;
-    protected boolean chest = false;
-    protected boolean saddle = false;
+    public ItemStack armor = null;
+    public ItemStack chest = null;
+    public ItemStack saddle = null;
 
     public MyHorse(MyPetPlayer petOwner) {
         super(petOwner);
@@ -59,16 +64,69 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         this.age = value;
     }
 
-    public int getArmor() {
+    public ItemStack getArmor() {
         return armor;
     }
 
-    public void setArmor(int value) {
-        value = Math.min(Math.max(0, value), 3);
-        if (status == PetState.Here) {
-            ((EntityMyHorse) getCraftPet().getHandle()).setArmor(value);
+    public boolean hasArmor() {
+        return armor != null;
+    }
+
+    public void setArmor(ItemStack item) {
+        if (item != null && item.getType() != Material.IRON_BARDING && item.getType() != Material.GOLD_BARDING && item.getType() != Material.DIAMOND_BARDING) {
+            return;
         }
-        this.armor = value;
+
+        this.armor = item;
+        if (this.armor != null) {
+            this.armor.setAmount(1);
+        }
+
+        if (status == PetState.Here) {
+            ((EntityMyHorse) getCraftPet().getHandle()).setArmor(hasArmor() ? getArmor().getTypeId() - 416 : 0);
+        }
+    }
+
+    public ItemStack getChest() {
+        return chest;
+    }
+
+    public boolean hasChest() {
+        return chest != null;
+    }
+
+    public void setChest(ItemStack item) {
+        if (item != null && item.getType() != Material.CHEST && item.getType() != Material.TRAPPED_CHEST) {
+            return;
+        }
+        if (status == PetState.Here) {
+            ((EntityMyHorse) getCraftPet().getHandle()).setChest(item != null);
+        }
+        this.chest = item;
+        if (this.chest != null) {
+            this.chest.setAmount(1);
+        }
+    }
+
+    public ItemStack getSaddle() {
+        return saddle;
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
+    }
+
+    public void setSaddle(ItemStack item) {
+        if (item != null && item.getType() != Material.SADDLE) {
+            return;
+        }
+        if (status == PetState.Here) {
+            ((EntityMyHorse) getCraftPet().getHandle()).setSaddle(item != null);
+        }
+        this.saddle = item;
+        if (this.saddle != null) {
+            this.saddle.setAmount(1);
+        }
     }
 
     @Override
@@ -76,10 +134,16 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("Type", new ByteTag("Type", getHorseType()));
         info.getValue().put("Variant", new IntTag("Variant", getVariant()));
-        info.getValue().put("Armor", new IntTag("Armor", getArmor()));
+        if (hasArmor()) {
+            info.getValue().put("Armor", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getArmor()), "Armor"));
+        }
         info.getValue().put("Age", new IntTag("Age", getAge()));
-        info.getValue().put("Chest", new ByteTag("Chest", hasChest()));
-        info.getValue().put("Saddle", new ByteTag("Saddle", hasSaddle()));
+        if (hasChest()) {
+            info.getValue().put("Chest", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getChest()), "Chest"));
+        }
+        if (hasSaddle()) {
+            info.getValue().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle()), "Saddle"));
+        }
         return info;
     }
 
@@ -92,16 +156,46 @@ public class MyHorse extends MyPet implements IMyPetBaby {
             setVariant(((IntTag) info.getValue().get("Variant")).getValue());
         }
         if (info.getValue().containsKey("Armor")) {
-            setArmor(((IntTag) info.getValue().get("Armor")).getValue());
+            if (info.getValue().get("Armor").getType() == TagType.TAG_INT) {
+                int armorType = ((IntTag) info.getValue().get("Armor")).getValue();
+                if (armorType != 0) {
+                    ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
+                    setArmor(item);
+                }
+            } else {
+                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Armor"));
+                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+                setArmor(item);
+            }
         }
         if (info.getValue().containsKey("Age")) {
             setAge(((IntTag) info.getValue().get("Age")).getValue());
         }
         if (info.getValue().containsKey("Chest")) {
-            setChest(((ByteTag) info.getValue().get("Chest")).getBooleanValue());
+            if (info.getValue().get("Chest").getType() == TagType.TAG_BYTE) {
+                boolean chest = ((ByteTag) info.getValue().get("Chest")).getBooleanValue();
+                if (chest) {
+                    ItemStack item = new ItemStack(Material.CHEST);
+                    setChest(item);
+                }
+            } else {
+                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Chest"));
+                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+                setChest(item);
+            }
         }
         if (info.getValue().containsKey("Saddle")) {
-            setSaddle(((ByteTag) info.getValue().get("Saddle")).getBooleanValue());
+            if (info.getValue().get("Saddle").getType() == TagType.TAG_BYTE) {
+                boolean saddle = ((ByteTag) info.getValue().get("Saddle")).getBooleanValue();
+                if (saddle) {
+                    ItemStack item = new ItemStack(Material.SADDLE);
+                    setSaddle(item);
+                }
+            } else {
+                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Saddle"));
+                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+                setSaddle(item);
+            }
         }
     }
 
@@ -151,14 +245,6 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         }
     }
 
-    public boolean hasChest() {
-        return chest;
-    }
-
-    public boolean hasSaddle() {
-        return saddle;
-    }
-
     @Override
     public boolean isBaby() {
         return age < 0;
@@ -173,20 +259,6 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         } else {
             this.age = 0;
         }
-    }
-
-    public void setChest(boolean flag) {
-        if (status == PetState.Here) {
-            ((EntityMyHorse) getCraftPet().getHandle()).setChest(flag);
-        }
-        this.chest = flag;
-    }
-
-    public void setSaddle(boolean flag) {
-        if (status == PetState.Here) {
-            ((EntityMyHorse) getCraftPet().getHandle()).setSaddle(flag);
-        }
-        this.saddle = flag;
     }
 
     @Override

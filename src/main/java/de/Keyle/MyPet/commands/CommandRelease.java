@@ -57,7 +57,6 @@ import net.minecraft.server.v1_7_R1.Items;
 import net.minecraft.server.v1_7_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -139,7 +138,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         } else if (myPet instanceof MyCreeper) {
                             ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
                         } else if (myPet instanceof MyEnderman) {
-                            MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlockID(), (byte) ((MyEnderman) myPet).getBlockData());
+                            MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlock().getType(), ((MyEnderman) myPet).getBlock().getData().getData());
                             ((Enderman) normalEntity).setCarriedMaterial(materialData);
                         } else if (myPet instanceof MyIronGolem) {
                             ((IronGolem) normalEntity).setPlayerCreated(true);
@@ -209,13 +208,10 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             ((Horse) normalEntity).setCarryingChest(((MyHorse) myPet).hasChest());
 
                             if (((MyHorse) myPet).hasSaddle()) {
-                                ((Horse) normalEntity).getInventory().setSaddle(new org.bukkit.inventory.ItemStack(Material.SADDLE));
-                                ((Horse) normalEntity).setOwner(myPet.getOwner().getPlayer());
-                            } else {
-                                ((Horse) normalEntity).setTamed(false);
+                                ((Horse) normalEntity).getInventory().setSaddle(((MyHorse) myPet).getSaddle().clone());
                             }
-                            if (((MyHorse) myPet).getArmor() > 0) {
-                                ((Horse) normalEntity).getInventory().setArmor(new org.bukkit.inventory.ItemStack(416 + ((MyHorse) myPet).getArmor()));
+                            if (((MyHorse) myPet).hasArmor()) {
+                                ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
                             }
                         }
                     }

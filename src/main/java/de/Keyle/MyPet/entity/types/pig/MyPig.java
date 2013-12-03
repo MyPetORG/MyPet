@@ -24,17 +24,22 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.ByteTag;
 import org.spout.nbt.CompoundTag;
+import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.CARROT_ITEM;
 
 @MyPetInfo(food = {CARROT_ITEM})
 public class MyPig extends MyPet implements IMyPetBaby {
-    protected boolean hasSaddle = false;
     protected boolean isBaby = false;
+    public ItemStack saddle = null;
 
     public MyPig(MyPetPlayer petOwner) {
         super(petOwner);
@@ -43,7 +48,9 @@ public class MyPig extends MyPet implements IMyPetBaby {
     @Override
     public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Saddle", new ByteTag("Saddle", hasSaddle()));
+        if (hasSaddle()) {
+            info.getValue().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle()), "Saddle"));
+        }
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
@@ -51,7 +58,17 @@ public class MyPig extends MyPet implements IMyPetBaby {
     @Override
     public void setExtendedInfo(CompoundTag info) {
         if (info.getValue().containsKey("Saddle")) {
-            setSaddle(((ByteTag) info.getValue().get("Saddle")).getBooleanValue());
+            if (info.getValue().get("Saddle").getType() == TagType.TAG_BYTE) {
+                boolean saddle = ((ByteTag) info.getValue().get("Saddle")).getBooleanValue();
+                if (saddle) {
+                    ItemStack item = new ItemStack(Material.SADDLE);
+                    setSaddle(item);
+                }
+            } else {
+                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Saddle"));
+                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+                setSaddle(item);
+            }
         }
         if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
@@ -61,10 +78,6 @@ public class MyPig extends MyPet implements IMyPetBaby {
     @Override
     public MyPetType getPetType() {
         return MyPetType.Pig;
-    }
-
-    public boolean hasSaddle() {
-        return hasSaddle;
     }
 
     public boolean isBaby() {
@@ -78,11 +91,27 @@ public class MyPig extends MyPet implements IMyPetBaby {
         this.isBaby = flag;
     }
 
-    public void setSaddle(boolean saddle) {
-        if (status == PetState.Here) {
-            ((EntityMyPig) getCraftPet().getHandle()).setSaddle(saddle);
+    public ItemStack getSaddle() {
+        return saddle;
+    }
+
+    public boolean hasSaddle() {
+        return saddle != null;
+    }
+
+    public void setSaddle(ItemStack item) {
+        if (item != null && item.getType() != Material.SADDLE) {
+            return;
         }
-        this.hasSaddle = saddle;
+
+        this.saddle = item;
+        if (this.saddle != null) {
+            this.saddle.setAmount(1);
+        }
+
+        if (status == PetState.Here) {
+            ((EntityMyPig) getCraftPet().getHandle()).setSaddle(this.saddle != null);
+        }
     }
 
     @Override

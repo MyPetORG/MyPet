@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
@@ -56,25 +57,27 @@ public class EntityMyPig extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SADDLE && !((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
-                    --itemStack.count;
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
                 }
-                if (itemStack.count <= 0) {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                }
-                ((MyPig) myPet).setSaddle(true);
                 return true;
-            } else if (itemStack.getItem() == Items.SHEARS && ((MyPig) myPet).hasSaddle() && getOwner().getPlayer().isSneaking()) {
-                ((MyPig) myPet).setSaddle(false);
-                if (!entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Items.SADDLE, 1, 1), 1.0F);
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                }
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasSaddle() && getOwner().getPlayer().isSneaking()) {
+                EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getSaddle()), 1.0F);
+                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+
                 makeSound("mob.sheep.shear", 1.0F, 1.0F);
-                itemStack.damage(1, entityhuman);
+                getMyPet().setSaddle(null);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.damage(1, entityhuman);
+                }
+
+                return true;
             } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
                 if (isBaby()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
@@ -88,10 +91,6 @@ public class EntityMyPig extends EntityMyPet {
             }
         }
         return false;
-    }
-
-    public boolean hasSaddle() {
-        return ((MyPig) myPet).hasSaddle;
     }
 
     protected void initDatawatcher() {
@@ -121,9 +120,13 @@ public class EntityMyPig extends EntityMyPet {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setSaddle(((MyPig) myPet).hasSaddle());
+            this.setSaddle(getMyPet().hasSaddle());
             this.setBaby(((MyPig) myPet).isBaby());
         }
+    }
+
+    public MyPig getMyPet() {
+        return (MyPig) myPet;
     }
 
     public void setSaddle(boolean flag) {
@@ -132,6 +135,5 @@ public class EntityMyPig extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) 0);
         }
-        ((MyPig) myPet).hasSaddle = flag;
     }
 }

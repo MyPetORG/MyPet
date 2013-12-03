@@ -23,7 +23,9 @@ package de.Keyle.MyPet.entity.types.enderman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.Util;
 import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 
 
 @EntitySize(width = 0.6F, height = 2.9F)
@@ -33,11 +35,11 @@ public class EntityMyEnderman extends EntityMyPet {
     }
 
     public int getBlockData() {
-        return ((MyEnderman) myPet).BlockData;
+        return getMyPet().block != null ? getMyPet().block.getData().getData() : 0;
     }
 
     public int getBlockID() {
-        return ((MyEnderman) myPet).BlockID;
+        return getMyPet().block != null ? getMyPet().block.getTypeId() : 0;
     }
 
     @Override
@@ -63,24 +65,25 @@ public class EntityMyEnderman extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking()) {
-                if (getBlockID() != 0) {
-                    EntityItem entityitem = this.a(new ItemStack(Item.d(getBlockID()), 1, getBlockData()), 1.0F);
-                    entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+            if (itemStack.getItem() == Items.SHEARS && getMyPet().hasBlock() && getOwner().getPlayer().isSneaking()) {
+                EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getBlock()), 1.0F);
+                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
 
-                    setBlock(0, 0);
-
-                    return true;
-                }
-            } else if (getBlockID() <= 0 && Item.b(itemStack.getItem()) > 0 && Item.b(itemStack.getItem()) < 256 && getOwner().getPlayer().isSneaking()) {
-                setBlock(Item.b(itemStack.getItem()), itemStack.getData());
+                makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                getMyPet().setBlock(null);
                 if (!entityhuman.abilities.canInstantlyBuild) {
-                    --itemStack.count;
+                    itemStack.damage(1, entityhuman);
                 }
-                if (itemStack.count <= 0) {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+
+                return true;
+            } else if (getMyPet().getBlock() == null && Util.isBetween(0, 256, Item.b(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
                 }
             }
         }
@@ -105,10 +108,8 @@ public class EntityMyEnderman extends EntityMyPet {
 
     public void setBlock(int blockID, int blockData) {
         this.datawatcher.watch(16, (byte) (blockID & 0xFF));
-        ((MyEnderman) myPet).BlockID = blockID;
 
         this.datawatcher.watch(17, (byte) (blockData & 0xFF));
-        ((MyEnderman) myPet).BlockData = blockData;
     }
 
     public void setMyPet(MyPet myPet) {
@@ -116,7 +117,11 @@ public class EntityMyEnderman extends EntityMyPet {
             super.setMyPet(myPet);
 
             this.setScreaming(((MyEnderman) myPet).isScreaming());
-            this.setBlock(((MyEnderman) myPet).getBlockID(), ((MyEnderman) myPet).getBlockData());
+            this.setBlock(getBlockID(), getBlockData());
         }
+    }
+
+    public MyEnderman getMyPet() {
+        return (MyEnderman) myPet;
     }
 }

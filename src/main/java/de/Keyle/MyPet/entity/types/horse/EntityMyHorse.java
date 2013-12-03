@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
@@ -87,13 +88,8 @@ public class EntityMyHorse extends EntityMyPet {
         this.datawatcher.watch(12, new Integer(value));
     }
 
-    public int getArmor() {
-        return ((MyHorse) myPet).armor;
-    }
-
     public void setArmor(int value) {
         this.datawatcher.watch(22, Integer.valueOf(value));
-        ((MyHorse) myPet).armor = value;
     }
 
     @Override
@@ -168,60 +164,58 @@ public class EntityMyHorse extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SADDLE && getOwner().getPlayer().isSneaking() && !hasSaddle() && getAge() >= 0 && canEquip()) {
-                setSaddle(true);
+            if (itemStack.getItem() == Items.SADDLE && !getMyPet().hasSaddle() && getAge() >= 0 && getOwner().getPlayer().isSneaking() && canEquip()) {
+                getMyPet().setSaddle(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !hasChest() && getAge() >= 0 && canEquip()) {
-                setChest(true);
+            } else if (itemStack.getItem() == Item.getItemOf(Blocks.CHEST) && getOwner().getPlayer().isSneaking() && !getMyPet().hasChest() && getAge() >= 0 && canEquip()) {
+                getMyPet().setChest(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
                 return true;
-            } else if (getHorseArmorId(itemStack) > 0 && getOwner().getPlayer().isSneaking() && canEquip()) {
-                if (getHorseType() == 0) {
-                    if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
-                        EntityItem entityitem = this.a(new ItemStack(Item.d(416 + getArmor()), 1, 0), 1F);
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+            } else if (getHorseArmorId(itemStack) > 0 && !getMyPet().hasArmor() && getHorseType() == 0 && getAge() >= 0 && getOwner().getPlayer().isSneaking() && canEquip()) {
+                getMyPet().setArmor(CraftItemStack.asBukkitCopy(itemStack));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    setArmor(getHorseArmorId(itemStack));
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
-                    }
-                    return true;
                 }
+                return true;
             } else if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
-                if (getArmor() > 0 && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Item.d(416 + getArmor()), 1, 0), 1F);
+                if (getMyPet().hasArmor()) {
+                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getArmor()), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                if (hasChest() && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Blocks.CHEST), 1F);
+                if (getMyPet().hasChest()) {
+                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getChest()), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                if (hasSaddle() && !entityhuman.abilities.canInstantlyBuild) {
-                    EntityItem entityitem = this.a(new ItemStack(Items.SADDLE), 1F);
+                if (getMyPet().hasSaddle()) {
+                    EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getSaddle()), 1F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                setChest(false);
-                setSaddle(false);
-                setArmor(0);
+
+                makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                getMyPet().setChest(null);
+                getMyPet().setSaddle(null);
+                getMyPet().setArmor(null);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.damage(1, entityhuman);
+                }
+
                 return true;
             } else if (GROW_UP_ITEM.compare(itemStack)) {
                 if (isBaby()) {
@@ -256,14 +250,6 @@ public class EntityMyHorse extends EntityMyPet {
         Item item = itemstack.getItem();
 
         return item == Items.HORSE_ARMOR_DIAMOND ? 3 : item == Items.HORSE_ARMOR_GOLD ? 2 : item == Items.HORSE_ARMOR_IRON ? 1 : 0;
-    }
-
-    public boolean hasChest() {
-        return ((MyHorse) myPet).chest;
-    }
-
-    public boolean hasSaddle() {
-        return ((MyHorse) myPet).saddle;
     }
 
     protected void initDatawatcher() {
@@ -331,24 +317,26 @@ public class EntityMyHorse extends EntityMyPet {
 
     public void setChest(boolean flag) {
         applyVisual(8, flag);
-        ((MyHorse) myPet).chest = flag;
+    }
+
+    public void setSaddle(boolean flag) {
+        applyVisual(4, flag);
     }
 
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setAge(((MyHorse) myPet).getAge());
-            this.setHorseType(((MyHorse) myPet).getHorseType());
-            this.setVariant(((MyHorse) myPet).getVariant());
-            this.setSaddle(((MyHorse) myPet).hasSaddle());
-            this.setChest(((MyHorse) myPet).hasChest());
-            this.setArmor(((MyHorse) myPet).getArmor());
+            this.setAge(getMyPet().getAge());
+            this.setHorseType(getMyPet().getHorseType());
+            this.setVariant(getMyPet().getVariant());
+            this.setSaddle(getMyPet().hasSaddle());
+            this.setChest(getMyPet().hasChest());
+            this.setArmor(getMyPet().hasArmor() ? getMyPet().getArmor().getTypeId() - 416 : 0);
         }
     }
 
-    public void setSaddle(boolean flag) {
-        applyVisual(4, flag);
-        ((MyHorse) myPet).saddle = flag;
+    public MyHorse getMyPet() {
+        return (MyHorse) myPet;
     }
 }

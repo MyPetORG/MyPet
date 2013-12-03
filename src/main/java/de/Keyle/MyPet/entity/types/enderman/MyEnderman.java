@@ -24,8 +24,11 @@ package de.Keyle.MyPet.entity.types.enderman;
 import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.spout.nbt.CompoundTag;
 import org.spout.nbt.IntTag;
 import org.spout.nbt.ShortTag;
@@ -37,49 +40,50 @@ import static org.bukkit.Material.SOUL_SAND;
 public class MyEnderman extends MyPet {
 
     public boolean isScreaming = false;
-    int BlockID = 0;
-    int BlockData = 0;
+    public ItemStack block = null;
 
     public MyEnderman(MyPetPlayer petOwner) {
         super(petOwner);
     }
 
-    public int getBlockData() {
-        return BlockData;
-    }
-
-    public int getBlockID() {
-        return BlockID;
+    public ItemStack getBlock() {
+        return block;
     }
 
     @Override
     public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("BlockID", new IntTag("BlockID", getBlockID()));
-        info.getValue().put("BlockData", new IntTag("BlockData", getBlockData()));
+        if (block != null) {
+            info.getValue().put("Block", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(block), "Block"));
+        }
         //info.getValue().put("Screaming", new ByteTag("Screaming", isScreaming()));
         return info;
     }
 
     @Override
     public void setExtendedInfo(CompoundTag info) {
-        int id = 0;
-        int data = 0;
         if (info.getValue().containsKey("BlockID")) {
+            int id;
+            int data = 0;
             if (info.getValue().get("BlockID").getType() == TagType.TAG_SHORT) {
                 id = ((ShortTag) info.getValue().get("BlockID")).getValue();
             } else {
                 id = ((IntTag) info.getValue().get("BlockID")).getValue();
             }
-        }
-        if (info.getValue().containsKey("BlockData")) {
-            if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT) {
-                data = ((ShortTag) info.getValue().get("BlockData")).getValue();
-            } else {
-                data = ((IntTag) info.getValue().get("BlockData")).getValue();
+            if (info.getValue().containsKey("BlockData")) {
+                if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT) {
+                    data = ((ShortTag) info.getValue().get("BlockData")).getValue();
+                } else {
+                    data = ((IntTag) info.getValue().get("BlockData")).getValue();
+                }
             }
+            setBlock(new ItemStack(id, 1, (short) data));
+        } else if (info.getValue().containsKey("Block")) {
+            CompoundTag itemStackCompund = (CompoundTag) info.getValue().get("Block");
+            ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemStackCompund));
+            setBlock(block);
         }
-        setBlock(id, data);
+
         //setScreaming((()info.getValue().get("Screaming")).getBooleanValue());
     }
 
@@ -99,16 +103,28 @@ public class MyEnderman extends MyPet {
         this.isScreaming = flag;
     }
 
-    public void setBlock(int id, int data) {
-        if (status == PetState.Here) {
-            ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(id, data);
+    public boolean hasBlock() {
+        return block != null;
+    }
+
+    public void setBlock(ItemStack block) {
+        if (block != null) {
+            this.block = block.clone();
+            this.block.setAmount(1);
+
+            if (status == PetState.Here) {
+                ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(this.block.getTypeId(), this.block.getData().getData());
+            }
+        } else {
+            if (status == PetState.Here) {
+                ((EntityMyEnderman) getCraftPet().getHandle()).setBlock(0, 0);
+            }
+            this.block = null;
         }
-        this.BlockID = id;
-        this.BlockData = data;
     }
 
     @Override
     public String toString() {
-        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",BlockID=" + getBlockID() + ",BlockData=" + getBlockData() + "}";
+        return "MyEnderman{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ",Block=" + block + "}";
     }
 }
