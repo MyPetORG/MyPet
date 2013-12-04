@@ -48,30 +48,39 @@ public class Party {
 
     public static boolean isInSamePartyHeroes(Player player1, Player player2) throws NoClassDefFoundError {
         if (PluginSupportManager.isPluginUsable("Heroes")) {
-            Heroes heroes = PluginSupportManager.getPluginInstance(Heroes.class);
-            Hero heroAttacker = heroes.getCharacterManager().getHero(player1);
-            Hero heroDefender = heroes.getCharacterManager().getHero(player2);
-            HeroParty party = heroDefender.getParty();
-            if (party == null || !party.isPartyMember(heroAttacker)) {
-                return false;
+            try {
+                Heroes heroes = PluginSupportManager.getPluginInstance(Heroes.class);
+                Hero heroAttacker = heroes.getCharacterManager().getHero(player1);
+                Hero heroDefender = heroes.getCharacterManager().getHero(player2);
+                HeroParty party = heroDefender.getParty();
+                if (party == null || !party.isPartyMember(heroAttacker)) {
+                    return false;
+                }
+                return true;
+            } catch (Exception ignored) {
             }
-            return true;
         }
         return false;
     }
 
     public static boolean isInSamePartyMcMMO(Player player1, Player player2) {
         if (PluginSupportManager.isPluginUsable("mcMMO")) {
-            return PartyAPI.inSameParty(player1, player2);
+            try {
+                return PartyAPI.inSameParty(player1, player2);
+            } catch (Exception ignored) {
+            }
         }
         return false;
     }
 
     public static boolean isInSamePartyAncientRPG(Player player1, Player player2) {
         if (PluginSupportManager.isPluginUsable("AncientRPG")) {
-            ApiManager api = ApiManager.getApiManager();
-            AncientRPGParty party = api.getPlayerParty(player1);
-            return party != null && party.containsName(player2.getName());
+            try {
+                ApiManager api = ApiManager.getApiManager();
+                AncientRPGParty party = api.getPlayerParty(player1);
+                return party != null && party.containsName(player2.getName());
+            } catch (Exception ignored) {
+            }
         }
         return false;
     }

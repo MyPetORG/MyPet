@@ -111,12 +111,17 @@ public class PvPChecker {
 
     public static boolean canHurtCitizens(Entity defender) {
         if (USE_Citizens && PluginSupportManager.isPluginUsable("Citizens")) {
-            if (CitizensAPI.getNPCRegistry().isNPC(defender)) {
-                NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
-                if (npc == null || npc.data() == null) {
-                    return true;
+            try {
+                if (CitizensAPI.getNPCRegistry().isNPC(defender)) {
+                    NPC npc = CitizensAPI.getNPCRegistry().getNPC(defender);
+                    if (npc == null || npc.data() == null) {
+                        return true;
+                    }
+                    return !npc.data().get("protected", true);
                 }
-                return !npc.data().get("protected", true);
+            } catch (NoClassDefFoundError e) {
+                USE_Citizens = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -124,28 +129,43 @@ public class PvPChecker {
 
     public static boolean canHurtWorldGuard(Location location) {
         if (USE_WorldGuard && PluginSupportManager.isPluginUsable("WorldGuard")) {
-            WorldGuardPlugin wgp = PluginSupportManager.getPluginInstance(WorldGuardPlugin.class);
-            RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
-            Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
-            ApplicableRegionSet set = mgr.getApplicableRegions(pt);
+            try {
+                WorldGuardPlugin wgp = PluginSupportManager.getPluginInstance(WorldGuardPlugin.class);
+                RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
+                Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
+                ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
-            return set.allows(DefaultFlag.PVP);
+                return set.allows(DefaultFlag.PVP);
+            } catch (NoClassDefFoundError e) {
+                USE_WorldGuard = false;
+            } catch (Exception ignored) {
+            }
         }
         return true;
     }
 
     public static boolean canHurtFactions(Player attacker, Player defender) {
         if (USE_Factions && PluginSupportManager.isPluginUsable("Factions")) {
-            EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
-            return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
+            try {
+                EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
+                return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
+            } catch (NoClassDefFoundError e) {
+                USE_Factions = false;
+            } catch (Exception ignored) {
+            }
         }
         return true;
     }
 
     public static boolean canHurtTowny(Player attacker, Player defender) {
         if (USE_Towny && PluginSupportManager.isPluginUsable("Towny")) {
-            if (CombatUtil.preventDamageCall(attacker, defender)) {
-                return false;
+            try {
+                if (CombatUtil.preventDamageCall(attacker, defender)) {
+                    return false;
+                }
+            } catch (NoClassDefFoundError e) {
+                USE_Towny = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -153,21 +173,26 @@ public class PvPChecker {
 
     public static boolean canHurtHeroes(Player attacker, Player defender) {
         if (USE_Heroes && PluginSupportManager.isPluginUsable("Heroes")) {
-            Heroes pluginHeroes = PluginSupportManager.getPluginInstance(Heroes.class);
-            Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
-            Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
-            int attackerLevel = heroAttacker.getTieredLevel(false);
-            int defenderLevel = heroDefender.getTieredLevel(false);
+            try {
+                Heroes pluginHeroes = PluginSupportManager.getPluginInstance(Heroes.class);
+                Hero heroAttacker = pluginHeroes.getCharacterManager().getHero(attacker);
+                Hero heroDefender = pluginHeroes.getCharacterManager().getHero(defender);
+                int attackerLevel = heroAttacker.getTieredLevel(false);
+                int defenderLevel = heroDefender.getTieredLevel(false);
 
-            if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange) {
-                return false;
-            }
-            if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel)) {
-                return false;
-            }
-            HeroParty party = heroDefender.getParty();
-            if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
-                return false;
+                if (Math.abs(attackerLevel - defenderLevel) > Heroes.properties.pvpLevelRange) {
+                    return false;
+                }
+                if ((defenderLevel < Heroes.properties.minPvpLevel) || (attackerLevel < Heroes.properties.minPvpLevel)) {
+                    return false;
+                }
+                HeroParty party = heroDefender.getParty();
+                if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
+                    return false;
+                }
+            } catch (NoClassDefFoundError e) {
+                USE_Heroes = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -175,32 +200,47 @@ public class PvPChecker {
 
     public static boolean canHurtRegios(Player defender) {
         if (USE_Regios && PluginSupportManager.isPluginUsable("Regios")) {
-            RegiosAPI pluginRegios = PluginSupportManager.getPluginInstance(RegiosPlugin.class);
-            for (Region region : pluginRegios.getRegions(defender.getLocation())) {
-                if (!region.isPvp()) {
-                    return false;
+            try {
+                RegiosAPI pluginRegios = PluginSupportManager.getPluginInstance(RegiosPlugin.class);
+                for (Region region : pluginRegios.getRegions(defender.getLocation())) {
+                    if (!region.isPvp()) {
+                        return false;
+                    }
                 }
+                return pluginRegios.getRegion(defender).isPvp();
+            } catch (NoClassDefFoundError e) {
+                USE_Regios = false;
+            } catch (Exception ignored) {
             }
-            return pluginRegios.getRegion(defender).isPvp();
         }
         return true;
     }
 
     public static boolean canHurtResidence(Location location) {
         if (USE_Residence && PluginSupportManager.isPluginUsable("Residence")) {
-            FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
-            return flagPermissions.has("pvp", true);
+            try {
+                FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
+                return flagPermissions.has("pvp", true);
+            } catch (NoClassDefFoundError e) {
+                USE_Residence = false;
+            } catch (Exception ignored) {
+            }
         }
         return true;
     }
 
     public static boolean canHurtMobArena(Player defender) {
         if (USE_MobArena && PluginSupportManager.isPluginUsable("MobArena")) {
-            if (pluginMobArena == null) {
-                pluginMobArena = new MobArenaHandler();
-            }
-            if (pluginMobArena.isPlayerInArena(defender)) {
-                return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
+            try {
+                if (pluginMobArena == null) {
+                    pluginMobArena = new MobArenaHandler();
+                }
+                if (pluginMobArena.isPlayerInArena(defender)) {
+                    return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
+                }
+            } catch (NoClassDefFoundError e) {
+                USE_MobArena = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -208,19 +248,24 @@ public class PvPChecker {
 
     public static boolean canHurtSurvivalGame(Player defender) {
         if (USE_SurvivalGame && PluginSupportManager.isPluginUsable("SurvivalGames")) {
-            int gameid = GameManager.getInstance().getPlayerGameId(defender);
-            if (gameid == -1) {
-                return true;
-            }
-            if (!GameManager.getInstance().isPlayerActive(defender)) {
-                return true;
-            }
-            Game game = GameManager.getInstance().getGame(gameid);
-            if (game.getMode() != Game.GameMode.INGAME) {
-                return false;
-            }
-            if (game.isProtectionOn()) {
-                return false;
+            try {
+                int gameid = GameManager.getInstance().getPlayerGameId(defender);
+                if (gameid == -1) {
+                    return true;
+                }
+                if (!GameManager.getInstance().isPlayerActive(defender)) {
+                    return true;
+                }
+                Game game = GameManager.getInstance().getGame(gameid);
+                if (game.getMode() != Game.GameMode.INGAME) {
+                    return false;
+                }
+                if (game.isProtectionOn()) {
+                    return false;
+                }
+            } catch (NoClassDefFoundError e) {
+                USE_SurvivalGame = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -228,10 +273,15 @@ public class PvPChecker {
 
     public static boolean canHurtPvPArena(Player attacker, Player defender) {
         if (USE_PvPArena && PluginSupportManager.isPluginUsable("pvparena")) {
-            if (!PVPArenaAPI.getArenaName(defender).equals("")) {
-                if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
-                    return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
+            try {
+                if (!PVPArenaAPI.getArenaName(defender).equals("")) {
+                    if (PVPArenaAPI.getArenaName(attacker).equals(PVPArenaAPI.getArenaName(defender))) {
+                        return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
+                    }
                 }
+            } catch (NoClassDefFoundError e) {
+                USE_PvPArena = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -239,25 +289,35 @@ public class PvPChecker {
 
     public static boolean canHurtMcMMO(Player attacker, Player defender) {
         if (USE_McMMO && PluginSupportManager.isPluginUsable("mcMMO")) {
-            return !PartyAPI.inSameParty(attacker, defender);
+            try {
+                return !PartyAPI.inSameParty(attacker, defender);
+            } catch (NoClassDefFoundError e) {
+                USE_McMMO = false;
+            } catch (Exception ignored) {
+            }
         }
         return true;
     }
 
     public static boolean canHurtAncientRPG(Player attacker, Player defender) {
         if (USE_AncientRPG && PluginSupportManager.isPluginUsable("SurvivalGames")) {
-            AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker);
-            if (party != null) {
-                if (!party.friendlyFire && party.containsName(defender.getName())) {
-                    return false;
+            try {
+                AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker);
+                if (party != null) {
+                    if (!party.friendlyFire && party.containsName(defender.getName())) {
+                        return false;
+                    }
                 }
-            }
 
-            AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getName());
-            if (guild != null) {
-                if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getName())) {
-                    return false;
+                AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getName());
+                if (guild != null) {
+                    if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getName())) {
+                        return false;
+                    }
                 }
+            } catch (NoClassDefFoundError e) {
+                USE_AncientRPG = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
@@ -265,35 +325,40 @@ public class PvPChecker {
 
     public static boolean canHurtGriefPrevention(Player attacker, Player defender) {
         if (USE_GriefPrevention && PluginSupportManager.isPluginUsable("GriefPrevention")) {
-            GriefPrevention pluginGriefPrevention = GriefPrevention.instance;
+            try {
+                GriefPrevention pluginGriefPrevention = GriefPrevention.instance;
 
-            PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
-            PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
+                PlayerData defenderData = pluginGriefPrevention.dataStore.getPlayerData(defender.getName());
+                PlayerData attackerData = pluginGriefPrevention.dataStore.getPlayerData(attacker.getName());
 
-            if (defenderData.pvpImmune || attackerData.pvpImmune) {
-                return false;
-            }
+                if (defenderData.pvpImmune || attackerData.pvpImmune) {
+                    return false;
+                }
 
-            if (pluginGriefPrevention.getDescription().getVersion().equals("7.8")) {
-                WorldConfig worldConfig = pluginGriefPrevention.getWorldCfg(defender.getWorld());
-                DataStore dataStore = pluginGriefPrevention.dataStore;
+                if (pluginGriefPrevention.getDescription().getVersion().equals("7.8")) {
+                    WorldConfig worldConfig = pluginGriefPrevention.getWorldCfg(defender.getWorld());
+                    DataStore dataStore = pluginGriefPrevention.dataStore;
 
-                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
-                    Claim localClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
-                    if (localClaim != null) {
-                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
-                            return false;
+                    if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
+                        Claim localClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
+                        if (localClaim != null) {
+                            if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
+                                return false;
+                            }
+                        }
+                    }
+                    if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
+                        Claim localClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
+                        if (localClaim != null) {
+                            if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
+                                return false;
+                            }
                         }
                     }
                 }
-                if (worldConfig.getPvPNoCombatinPlayerClaims() || worldConfig.getNoPvPCombatinAdminClaims()) {
-                    Claim localClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
-                    if (localClaim != null) {
-                        if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
-                            return false;
-                        }
-                    }
-                }
+            } catch (NoClassDefFoundError e) {
+                USE_GriefPrevention = false;
+            } catch (Exception ignored) {
             }
         }
         return true;
