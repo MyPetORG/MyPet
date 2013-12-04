@@ -58,16 +58,14 @@ public class EntityMyMooshroom extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.setBaby(false);
-                    return true;
                 }
+                getMyPet().setBaby(false);
+                return true;
             }
         }
         return false;
@@ -78,17 +76,12 @@ public class EntityMyMooshroom extends EntityMyPet {
         this.datawatcher.a(12, new Integer(0)); // age
     }
 
-    public boolean isBaby() {
-        return ((MyMooshroom) myPet).isBaby;
-    }
-
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, new Integer(Integer.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyMooshroom) myPet).isBaby = flag;
     }
 
     public void playStepSound() {
@@ -99,7 +92,11 @@ public class EntityMyMooshroom extends EntityMyPet {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setBaby(((MyMooshroom) myPet).isBaby());
+            this.setBaby(getMyPet().isBaby());
         }
+    }
+
+    public MyMooshroom getMyPet() {
+        return (MyMooshroom) myPet;
     }
 }

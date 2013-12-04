@@ -56,7 +56,7 @@ public class EntityMyBlaze extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (isOnFire() && itemStack.getItem() == Items.GLASS_BOTTLE && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking()) {
+            if (getMyPet().isOnFire() && itemStack.getItem() == Items.GLASS_BOTTLE && itemStack.getData() == 0 && getOwner().getPlayer().isSneaking()) {
                 setOnFire(false);
                 makeSound("random.fizz", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
@@ -68,7 +68,7 @@ public class EntityMyBlaze extends EntityMyPet {
                         }
                     }
                 }
-            } else if (!isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
+            } else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
                 setOnFire(true);
                 makeSound("fire.ignite", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
@@ -84,19 +84,18 @@ public class EntityMyBlaze extends EntityMyPet {
         getDataWatcher().a(16, new Byte((byte) 0)); // burning
     }
 
-    public boolean isOnFire() {
-        return ((MyBlaze) myPet).isOnFire;
-    }
-
     public void setOnFire(boolean flag) {
         this.datawatcher.watch(16, (byte) (flag ? 1 : 0));
-        ((MyBlaze) myPet).isOnFire = flag;
     }
 
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
-            setOnFire(((MyBlaze) myPet).isOnFire());
+            setOnFire(getMyPet().isOnFire());
         }
+    }
+
+    public MyBlaze getMyPet() {
+        return (MyBlaze) myPet;
     }
 }

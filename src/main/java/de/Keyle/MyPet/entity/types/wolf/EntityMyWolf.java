@@ -47,20 +47,14 @@ public class EntityMyWolf extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
-        ((MyWolf) myPet).isSitting = sitting;
     }
 
     public boolean canMove() {
-        return !isSitting();
-    }
-
-    public DyeColor getCollarColor() {
-        return ((MyWolf) myPet).collarColor;
+        return !sitPathfinder.isSitting();
     }
 
     public void setCollarColor(byte color) {
         this.datawatcher.watch(20, color);
-        ((MyWolf) myPet).collarColor = DyeColor.getByWoolData(color);
     }
 
     @Override
@@ -85,9 +79,9 @@ public class EntityMyWolf extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem()) {
-                if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != ((MyWolf) myPet).getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != getMyPet().getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack.getData() <= 15) {
-                        setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                        getMyPet().setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             if (--itemStack.count <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -96,13 +90,13 @@ public class EntityMyWolf extends EntityMyPet {
                         return true;
                     }
                 } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                    if (isBaby()) {
+                    if (getMyPet().isBaby()) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             if (--itemStack.count <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
-                        this.setBaby(false);
+                        getMyPet().setBaby(false);
                         return true;
                     }
                 }
@@ -123,10 +117,6 @@ public class EntityMyWolf extends EntityMyPet {
         this.datawatcher.a(20, new Byte((byte) 14));    // collar color
     }
 
-    public boolean isAngry() {
-        return ((MyWolf) myPet).isAngry;
-    }
-
     public void setAngry(boolean flag) {
         byte b0 = this.datawatcher.getByte(16);
         if (flag) {
@@ -134,11 +124,6 @@ public class EntityMyWolf extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (b0 & 0xFFFFFFFD));
         }
-        ((MyWolf) myPet).isAngry = flag;
-    }
-
-    public boolean isBaby() {
-        return ((MyWolf) myPet).isBaby;
     }
 
     public void setBaby(boolean flag) {
@@ -147,19 +132,6 @@ public class EntityMyWolf extends EntityMyPet {
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyWolf) myPet).isBaby = flag;
-    }
-
-    public boolean isSitting() {
-        return ((MyWolf) myPet).isSitting;
-    }
-
-    public void setSitting(boolean sitting) {
-        this.sitPathfinder.setSitting(sitting);
-    }
-
-    public boolean isTamed() {
-        return ((MyWolf) myPet).isTamed;
     }
 
     public void setTamed(boolean flag) {
@@ -169,13 +141,12 @@ public class EntityMyWolf extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFB));
         }
-        ((MyWolf) myPet).isTamed = flag;
     }
 
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if ((!this.world.isStatic) && (this.isWet) && (!this.shaking) && (!bQ()) && (this.onGround)) // bM -> has pathentity
+        if (this.isWet && !this.shaking && !bQ() && this.onGround) // bQ() -> has pathentity
         {
             this.shaking = true;
             this.shakeCounter = 0.0F;
@@ -223,10 +194,6 @@ public class EntityMyWolf extends EntityMyPet {
         makeSound("mob.wolf.step", 0.15F, 1.0F);
     }
 
-    public void setCollarColor(DyeColor color) {
-        setCollarColor(color.getWoolData());
-    }
-
     public void setHealth(float i) {
         super.setHealth(i);
         this.datawatcher.watch(18, Float.valueOf(i));
@@ -238,11 +205,14 @@ public class EntityMyWolf extends EntityMyPet {
 
             super.setMyPet(myPet);
 
-            this.setBaby(((MyWolf) myPet).isBaby());
-            this.setSitting(((MyWolf) myPet).isSitting());
-            this.setTamed(((MyWolf) myPet).isTamed());
-            this.setCollarColor(((MyWolf) myPet).getCollarColor());
+            this.setBaby(getMyPet().isBaby());
+            this.setTamed(getMyPet().isTamed());
+            this.setCollarColor(getMyPet().getCollarColor().getWoolData());
         }
+    }
+
+    public MyWolf getMyPet() {
+        return (MyWolf) myPet;
     }
 
     public void setPathfinder() {

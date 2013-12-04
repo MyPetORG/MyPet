@@ -49,10 +49,4 @@ public class EntityMyWitch extends EntityMyPet {
         super.initDatawatcher();
         getDataWatcher().a(21, new Byte((byte) 0)); // N/A
     }
-
-    public void setMyPet(MyPet myPet) {
-        if (myPet != null) {
-            super.setMyPet(myPet);
-        }
-    }
 }

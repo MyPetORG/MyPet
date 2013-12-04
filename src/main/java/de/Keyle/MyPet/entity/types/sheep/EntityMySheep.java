@@ -69,9 +69,9 @@ public class EntityMySheep extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != ((MySheep) myPet).getColor().getDyeData() && !isSheared()) {
+            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
                 if (itemStack.getData() <= 15) {
-                    setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                    getMyPet().setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -79,30 +79,30 @@ public class EntityMySheep extends EntityMyPet {
                     }
                     return true;
                 }
-            } else if (itemStack.getItem() == Items.SHEARS && CAN_BE_SHEARED && !((MySheep) myPet).isSheared()) {
-                if (!this.world.isStatic) {
-                    ((MySheep) myPet).setSheared(true);
-                    int i = 1 + this.random.nextInt(3);
+            } else if (itemStack.getItem() == Items.SHEARS && CAN_BE_SHEARED && !getMyPet().isSheared()) {
+                getMyPet().setSheared(true);
+                int woolDropCount = 1 + this.random.nextInt(3);
 
-                    for (int j = 0; j < i; ++j) {
-                        EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, ((MySheep) myPet).getColor().getDyeData()), 1.0F);
+                for (int j = 0; j < woolDropCount; ++j) {
+                    EntityItem entityitem = this.a(new ItemStack(Blocks.WOOL, 1, getMyPet().getColor().getDyeData()), 1.0F);
 
-                        entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
-                        entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                    }
-                    makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                    entityitem.motY += (double) this.random.nextFloat() * 0.05F;
+                    entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                    entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                itemStack.damage(1, entityhuman);
+                makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.damage(1, entityhuman);
+                }
                 return true;
             } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
+                if (getMyPet().isBaby()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                     }
-                    this.setBaby(false);
+                    getMyPet().setBaby(false);
                     return true;
                 }
             }
@@ -116,21 +116,12 @@ public class EntityMySheep extends EntityMyPet {
         this.datawatcher.a(16, new Byte((byte) 0)); // color/sheared
     }
 
-    public boolean isBaby() {
-        return this.datawatcher.getInt(12) < 0;
-    }
-
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MySheep) myPet).isBaby = flag;
-    }
-
-    public boolean isSheared() {
-        return ((MySheep) myPet).isSheared;
     }
 
     public void setSheared(boolean flag) {
@@ -141,25 +132,24 @@ public class EntityMySheep extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (b0 & -17));
         }
-        ((MySheep) myPet).isSheared = flag;
     }
 
     public void playStepSound() {
         makeSound("mob.sheep.step", 0.15F, 1.0F);
     }
 
-    public void setColor(DyeColor color) {
-        setColor(color.getWoolData());
-    }
-
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setColor(((MySheep) myPet).getColor());
-            this.setSheared(((MySheep) myPet).isSheared());
-            this.setBaby(((MySheep) myPet).isBaby());
+            this.setColor(getMyPet().getColor().getWoolData());
+            this.setSheared(getMyPet().isSheared());
+            this.setBaby(getMyPet().isBaby());
         }
+    }
+
+    public MySheep getMyPet() {
+        return (MySheep) myPet;
     }
 
     public void setPathfinder() {

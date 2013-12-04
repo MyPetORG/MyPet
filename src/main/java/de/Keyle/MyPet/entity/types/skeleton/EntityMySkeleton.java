@@ -68,14 +68,6 @@ public class EntityMySkeleton extends EntityMyPet {
         return "mob.skeleton.say";
     }
 
-    public ItemStack getPetEquipment(int slot) {
-        return ((MySkeleton) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
-    }
-
-    public ItemStack[] getPetEquipment() {
-        return ((MySkeleton) myPet).getEquipment();
-    }
-
     public boolean handlePlayerInteraction(EntityHuman entityhuman) {
         if (super.handlePlayerInteraction(entityhuman)) {
             return true;
@@ -84,25 +76,26 @@ public class EntityMySkeleton extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking()) {
-                if (!canEquip()) {
-                    return false;
-                }
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    ItemStack itemInSlot = ((MySkeleton) myPet).getEquipment(slot);
+                    ItemStack itemInSlot = getMyPet().getEquipment(slot);
                     if (itemInSlot != null) {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        setPetEquipment(slot.getSlotId(), null);
+                        getMyPet().setEquipment(slot, null);
+                        hadEquipment = true;
+                    }
+                }
+                if (hadEquipment) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        itemStack.damage(1, entityhuman);
                     }
                 }
                 return true;
-            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (!canEquip()) {
-                    return false;
-                }
+            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
                 ItemStack itemInSlot = ((MySkeleton) myPet).getEquipment(slot);
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
@@ -113,7 +106,7 @@ public class EntityMySkeleton extends EntityMyPet {
                 }
                 ItemStack itemStackClone = itemStack.cloneItemStack();
                 itemStackClone.count = 1;
-                setPetEquipment(b(itemStack), itemStackClone);
+                getMyPet().setEquipment(slot, itemStackClone);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     --itemStack.count;
                 }
@@ -131,13 +124,8 @@ public class EntityMySkeleton extends EntityMyPet {
         this.datawatcher.a(13, new Byte((byte) 0)); // skeleton type
     }
 
-    public boolean isWither() {
-        return ((MySkeleton) myPet).isWither;
-    }
-
     public void setWither(boolean flag) {
         this.datawatcher.watch(13, (byte) (flag ? 1 : 0));
-        ((MySkeleton) myPet).isWither = flag;
     }
 
     public void playStepSound() {
@@ -168,6 +156,9 @@ public class EntityMySkeleton extends EntityMyPet {
 
     public void setPetEquipment(int slot, ItemStack itemStack) {
         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), slot, itemStack));
-        ((MySkeleton) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
+    }
+
+    public MySkeleton getMyPet() {
+        return (MySkeleton) myPet;
     }
 }

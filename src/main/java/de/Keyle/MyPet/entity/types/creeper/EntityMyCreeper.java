@@ -53,24 +53,23 @@ public class EntityMyCreeper extends EntityMyPet {
         this.datawatcher.a(17, new Byte((byte) 0));  // powered
     }
 
-    public boolean isPowered() {
-        return ((MyCreeper) myPet).isPowered;
-    }
-
     public void setPowered(boolean powered) {
         if (!powered) {
             this.datawatcher.watch(17, (byte) 0);
         } else {
             this.datawatcher.watch(17, (byte) 1);
         }
-        ((MyCreeper) myPet).isPowered = powered;
     }
 
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setPowered(((MyCreeper) myPet).isPowered());
+            this.setPowered(getMyPet().isPowered());
         }
+    }
+
+    public MyCreeper getMyPet() {
+        return (MyCreeper) myPet;
     }
 }

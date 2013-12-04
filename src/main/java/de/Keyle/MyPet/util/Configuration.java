@@ -33,6 +33,7 @@ import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
+import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.snowman.EntityMySnowman;
 import de.Keyle.MyPet.entity.types.villager.EntityMyVillager;
@@ -195,6 +196,7 @@ public class Configuration {
         config.addDefault("MyPet.Pets.Villager.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
 
         config.addDefault("MyPet.Info.AdminOnly.PetName", false);
         config.addDefault("MyPet.Info.AdminOnly.PetOwner", false);
@@ -346,6 +348,7 @@ public class Configuration {
         EntityMyVillager.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Villager.GrowUpItem", "" + Material.POTION.getId()));
         EntityMyWolf.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Wolf.GrowUpItem", "" + Material.POTION.getId()));
         EntityMyZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Zombie.GrowUpItem", "" + Material.POTION.getId()));
+        EntityMyPigZombie.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.PigZombie.GrowUpItem", "" + Material.POTION.getId()));
 
         MyPet.resetOptions();
         for (MyPetType petType : MyPetType.values()) {

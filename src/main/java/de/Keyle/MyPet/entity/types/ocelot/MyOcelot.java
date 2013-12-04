@@ -36,7 +36,6 @@ import static org.bukkit.Material.RAW_FISH;
 
 @MyPetInfo(food = {RAW_FISH}, leashFlags = {Tamed})
 public class MyOcelot extends MyPet implements IMyPetBaby {
-    protected boolean isSitting = false;
     protected boolean isBaby = false;
     protected Type catType = Type.WILD_OCELOT;
 
@@ -59,7 +58,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby {
     public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
         info.getValue().put("CatType", new IntTag("CatType", getCatType().getId()));
-        info.getValue().put("Sitting", new ByteTag("Sitting", isSitting()));
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         return info;
     }
@@ -68,9 +66,6 @@ public class MyOcelot extends MyPet implements IMyPetBaby {
     public void setExtendedInfo(CompoundTag info) {
         if (info.getValue().containsKey("CatType")) {
             setCatType(Type.getType(((IntTag) info.getValue().get("CatType")).getValue()));
-        }
-        if (info.getValue().containsKey("Sitting")) {
-            setSitting(((ByteTag) info.getValue().get("Sitting")).getBooleanValue());
         }
         if (info.getValue().containsKey("Baby")) {
             setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
@@ -93,19 +88,8 @@ public class MyOcelot extends MyPet implements IMyPetBaby {
         this.isBaby = flag;
     }
 
-    public boolean isSitting() {
-        return isSitting;
-    }
-
-    public void setSitting(boolean flag) {
-        if (status == PetState.Here) {
-            ((EntityMyOcelot) getCraftPet().getHandle()).setSitting(flag);
-        }
-        this.isSitting = flag;
-    }
-
     @Override
     public String toString() {
-        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", sitting=" + isSitting() + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
+        return "MyOcelot{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", cattype=" + getCatType().name() + ", baby=" + isBaby() + "}";
     }
 }

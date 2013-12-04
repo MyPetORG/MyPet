@@ -59,7 +59,6 @@ public class Sit extends AIGoal {
 
     @Override
     public void finish() {
-
         if (this.entityMyPet instanceof EntityMyOcelot) {
             ((EntityMyOcelot) this.entityMyPet).applySitting(false);
         }

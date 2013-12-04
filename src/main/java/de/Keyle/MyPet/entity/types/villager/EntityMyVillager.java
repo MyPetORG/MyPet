@@ -48,13 +48,8 @@ public class EntityMyVillager extends EntityMyPet {
         return "mob.villager.default";
     }
 
-    public int getProfession() {
-        return ((MyVillager) myPet).profession;
-    }
-
     public void setProfession(int value) {
         this.datawatcher.watch(16, value);
-        ((MyVillager) myPet).profession = value;
     }
 
     public boolean handlePlayerInteraction(EntityHuman entityhuman) {
@@ -65,16 +60,14 @@ public class EntityMyVillager extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.setBaby(false);
-                    return true;
                 }
+                getMyPet().setBaby(false);
+                return true;
             }
         }
         return false;
@@ -86,25 +79,24 @@ public class EntityMyVillager extends EntityMyPet {
         this.datawatcher.a(16, new Integer(0)); // profession
     }
 
-    public boolean isBaby() {
-        return ((MyVillager) myPet).isBaby;
-    }
-
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyVillager) myPet).isBaby = flag;
     }
 
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setProfession(((MyVillager) myPet).getProfession());
-            this.setBaby(((MyVillager) myPet).isBaby());
+            this.setProfession(getMyPet().getProfession());
+            this.setBaby(getMyPet().isBaby());
         }
+    }
+
+    public MyVillager getMyPet() {
+        return (MyVillager) myPet;
     }
 }

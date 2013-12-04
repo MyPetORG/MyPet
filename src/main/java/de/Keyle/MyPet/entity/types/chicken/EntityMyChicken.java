@@ -63,16 +63,14 @@ public class EntityMyChicken extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null) {
-            if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.setBaby(false);
-                    return true;
                 }
+                getMyPet().setBaby(false);
+                return true;
             }
         }
         return false;
@@ -81,10 +79,6 @@ public class EntityMyChicken extends EntityMyPet {
     protected void initDatawatcher() {
         super.initDatawatcher();
         this.datawatcher.a(12, new Integer(0)); // age
-    }
-
-    public boolean isBaby() {
-        return ((MyChicken) myPet).isBaby;
     }
 
     public void setBaby(boolean flag) {
@@ -103,7 +97,7 @@ public class EntityMyChicken extends EntityMyPet {
             this.motY *= 0.6D;
         }
 
-        if (CAN_LAY_EGGS && !world.isStatic && canUseItem() && --nextEggTimer <= 0) {
+        if (CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
             a(Items.EGG, 1);
             nextEggTimer = (random.nextInt(6000) + 6000);
@@ -118,7 +112,11 @@ public class EntityMyChicken extends EntityMyPet {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setBaby(((MyChicken) myPet).isBaby());
+            this.setBaby(getMyPet().isBaby());
         }
+    }
+
+    public MyChicken getMyPet() {
+        return (MyChicken) myPet;
     }
 }

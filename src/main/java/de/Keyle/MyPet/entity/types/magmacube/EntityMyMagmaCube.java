@@ -38,7 +38,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "mob.magmacube." + (getSize() > 1 ? "big" : "small");
+        return "mob.magmacube." + (getMyPet().getSize() > 1 ? "big" : "small");
     }
 
     @Override
@@ -50,10 +50,6 @@ public class EntityMyMagmaCube extends EntityMyPet {
         return null;
     }
 
-    public int getSize() {
-        return ((MyMagmaCube) myPet).size;
-    }
-
     public void setSize(int value) {
         value = Math.max(1, value);
         this.datawatcher.watch(16, new Byte((byte) value));
@@ -62,9 +58,8 @@ public class EntityMyMagmaCube extends EntityMyPet {
             this.a(es.height() * value, es.width() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getMyPet().getSize(), 20));
         }
-        ((MyMagmaCube) myPet).size = value;
     }
 
     protected void initDatawatcher() {
@@ -91,8 +86,12 @@ public class EntityMyMagmaCube extends EntityMyPet {
         }
     }
 
+    public MyMagmaCube getMyPet() {
+        return (MyMagmaCube) myPet;
+    }
+
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getMyPet().getSize(), 20));
     }
 }

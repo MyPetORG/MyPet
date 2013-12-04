@@ -47,20 +47,14 @@ public class EntityMyOcelot extends EntityMyPet {
         } else {
             this.datawatcher.watch(16, (byte) (i & 0xFFFFFFFE));
         }
-        ((MyOcelot) myPet).isSitting = flag;
     }
 
     public boolean canMove() {
-        return !isSitting();
-    }
-
-    public Type getCatType() {
-        return ((MyOcelot) myPet).catType;
+        return !sitPathfinder.isSitting();
     }
 
     public void setCatType(int value) {
         this.datawatcher.watch(18, (byte) value);
-        ((MyOcelot) myPet).catType = Type.getType(value);
     }
 
     protected String getDeathSound() {
@@ -85,29 +79,36 @@ public class EntityMyOcelot extends EntityMyPet {
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
                 if (Item.b(itemStack.getItem()) == 351) {
-                    if (itemStack.getData() == 11) {
-                        ((MyOcelot) myPet).setCatType(Type.WILD_OCELOT);
-                        return true;
-                    } else if (itemStack.getData() == 0) {
-                        ((MyOcelot) myPet).setCatType(Type.BLACK_CAT);
-                        return true;
-                    } else if (itemStack.getData() == 14) {
-                        ((MyOcelot) myPet).setCatType(Type.RED_CAT);
-                        return true;
-                    } else if (itemStack.getData() == 7) {
-                        ((MyOcelot) myPet).setCatType(Type.SIAMESE_CAT);
-                        return true;
+                    boolean colorChanged = false;
+                    if (itemStack.getData() == 11 && getMyPet().getCatType() != Type.WILD_OCELOT) {
+                        getMyPet().setCatType(Type.WILD_OCELOT);
+                        colorChanged = true;
+                    } else if (itemStack.getData() == 0 && getMyPet().getCatType() != Type.BLACK_CAT) {
+                        getMyPet().setCatType(Type.BLACK_CAT);
+                        colorChanged = true;
+                    } else if (itemStack.getData() == 14 && getMyPet().getCatType() != Type.RED_CAT) {
+                        getMyPet().setCatType(Type.RED_CAT);
+                        colorChanged = true;
+                    } else if (itemStack.getData() == 7 && getMyPet().getCatType() != Type.SIAMESE_CAT) {
+                        getMyPet().setCatType(Type.SIAMESE_CAT);
+                        colorChanged = true;
                     }
-                } else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getOwner().getPlayer().isSneaking()) {
-                    if (isBaby()) {
+                    if (colorChanged) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             if (--itemStack.count <= 0) {
                                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                             }
                         }
-                        this.setBaby(false);
                         return true;
                     }
+                } else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        if (--itemStack.count <= 0) {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                    }
+                    getMyPet().setBaby(false);
+                    return true;
                 }
             }
             this.sitPathfinder.toogleSitting();
@@ -125,25 +126,12 @@ public class EntityMyOcelot extends EntityMyPet {
 
     }
 
-    public boolean isBaby() {
-        return ((MyOcelot) myPet).isBaby;
-    }
-
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyOcelot) myPet).isBaby = flag;
-    }
-
-    public boolean isSitting() {
-        return this.sitPathfinder.isSitting();
-    }
-
-    public void setSitting(boolean flag) {
-        this.sitPathfinder.setSitting(flag);
     }
 
     public void setMyPet(MyPet myPet) {
@@ -152,10 +140,13 @@ public class EntityMyOcelot extends EntityMyPet {
 
             super.setMyPet(myPet);
 
-            this.setSitting(((MyOcelot) myPet).isSitting());
-            this.setBaby(((MyOcelot) myPet).isBaby());
-            this.setCatType(((MyOcelot) myPet).getCatType().getId());
+            this.setBaby(getMyPet().isBaby());
+            this.setCatType(getMyPet().getCatType().getId());
         }
+    }
+
+    public MyOcelot getMyPet() {
+        return (MyOcelot) myPet;
     }
 
     public void setPathfinder() {

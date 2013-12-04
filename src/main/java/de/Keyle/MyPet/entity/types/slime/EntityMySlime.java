@@ -39,7 +39,7 @@ public class EntityMySlime extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        return "mob.slime." + (getSize() > 1 ? "big" : "small");
+        return "mob.slime." + (getMyPet().getSize() > 1 ? "big" : "small");
 
     }
 
@@ -52,10 +52,6 @@ public class EntityMySlime extends EntityMyPet {
         return null;
     }
 
-    public int getSize() {
-        return ((MySlime) myPet).size;
-    }
-
     public void setSize(int value) {
         value = Math.max(1, value);
         this.datawatcher.watch(16, new Byte((byte) value));
@@ -64,9 +60,8 @@ public class EntityMySlime extends EntityMyPet {
             this.a(es.height() * value, es.width() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getSize() * 0.6), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.6), 20));
         }
-        ((MySlime) myPet).size = value;
     }
 
     protected void initDatawatcher() {
@@ -89,12 +84,16 @@ public class EntityMySlime extends EntityMyPet {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            setSize(((MySlime) myPet).getSize());
+            setSize(getMyPet().getSize());
         }
+    }
+
+    public MySlime getMyPet() {
+        return (MySlime) myPet;
     }
 
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getSize(), 20));
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getMyPet().getSize(), 20));
     }
 }

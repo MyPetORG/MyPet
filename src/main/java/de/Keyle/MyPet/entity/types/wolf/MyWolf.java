@@ -36,7 +36,6 @@ import static org.bukkit.Material.RAW_CHICKEN;
 
 @MyPetInfo(food = {RAW_BEEF, RAW_CHICKEN}, leashFlags = {Tamed})
 public class MyWolf extends MyPet implements IMyPetBaby {
-    protected boolean isSitting = false;
     protected boolean isBaby = false;
     protected boolean isTamed = false;
     protected boolean isAngry = false;
@@ -60,7 +59,6 @@ public class MyWolf extends MyPet implements IMyPetBaby {
     @Override
     public CompoundTag getExtendedInfo() {
         CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Sitting", new ByteTag("Sitting", isSitting()));
         info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
         info.getValue().put("Tamed", new ByteTag("Tamed", isTamed()));
         info.getValue().put("Angry", new ByteTag("Angry", isAngry()));
@@ -70,9 +68,6 @@ public class MyWolf extends MyPet implements IMyPetBaby {
 
     @Override
     public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Sitting")) {
-            setSitting(((ByteTag) info.getValue().get("Sitting")).getBooleanValue());
-        }
         if (info.getValue().containsKey("CollarColor")) {
             setCollarColor(DyeColor.getByDyeData(((ByteTag) info.getValue().get("CollarColor")).getValue()));
         }
@@ -114,17 +109,6 @@ public class MyWolf extends MyPet implements IMyPetBaby {
         this.isBaby = flag;
     }
 
-    public boolean isSitting() {
-        return isSitting;
-    }
-
-    public void setSitting(boolean flag) {
-        if (status == PetState.Here) {
-            ((EntityMyWolf) getCraftPet().getHandle()).setSitting(flag);
-        }
-        this.isSitting = flag;
-    }
-
     public boolean isTamed() {
         return isTamed;
     }
@@ -138,6 +122,6 @@ public class MyWolf extends MyPet implements IMyPetBaby {
 
     @Override
     public String toString() {
-        return "MyWolf{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", sitting=" + isSitting() + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
+        return "MyWolf{owner=" + getOwner().getName() + ", name=" + ChatColor.stripColor(petName) + ", exp=" + experience.getExp() + "/" + experience.getRequiredExp() + ", lv=" + experience.getLevel() + ", status=" + status.name() + ", skilltree=" + (skillTree != null ? skillTree.getName() : "-") + ", worldgroup=" + worldGroup + ", collarcolor=" + getCollarColor() + ", baby=" + isBaby() + "}";
     }
 }

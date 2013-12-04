@@ -81,14 +81,6 @@ public class EntityMyZombie extends EntityMyPet {
         return "mob.zombie.say";
     }
 
-    public ItemStack getPetEquipment(int slot) {
-        return ((MyZombie) myPet).getEquipment(EquipmentSlot.getSlotById(slot));
-    }
-
-    public ItemStack[] getPetEquipment() {
-        return ((MyZombie) myPet).getEquipment();
-    }
-
     /**
      * Is called when player rightclicks this MyPet
      * return:
@@ -103,27 +95,28 @@ public class EntityMyZombie extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null) {
-            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking()) {
-                if (!canEquip()) {
-                    return false;
-                }
+            if (itemStack.getItem() == Items.SHEARS && getOwner().getPlayer().isSneaking() && canEquip()) {
+                boolean hadEquipment = false;
                 for (EquipmentSlot slot : EquipmentSlot.values()) {
-                    ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
+                    ItemStack itemInSlot = getMyPet().getEquipment(slot);
                     if (itemInSlot != null) {
                         EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                         entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
                         entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                         entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
-                        setPetEquipment(slot.getSlotId(), null);
+                        getMyPet().setEquipment(slot, null);
+                        hadEquipment = true;
+                    }
+                }
+                if (hadEquipment) {
+                    if (!entityhuman.abilities.canInstantlyBuild) {
+                        itemStack.damage(1, entityhuman);
                     }
                 }
                 return true;
-            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (!canEquip()) {
-                    return false;
-                }
+            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
-                ItemStack itemInSlot = ((MyZombie) myPet).getEquipment(slot);
+                ItemStack itemInSlot = getMyPet().getEquipment(slot);
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
                     entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
@@ -132,22 +125,21 @@ public class EntityMyZombie extends EntityMyPet {
                 }
                 ItemStack itemStackClone = itemStack.cloneItemStack();
                 itemStackClone.count = 1;
-                setPetEquipment(b(itemStack), itemStackClone);
+                getMyPet().setEquipment(slot, itemStackClone);
                 if (!entityhuman.abilities.canInstantlyBuild) {
-                    --itemStack.count;
-                }
-                if (itemStack.count <= 0) {
-                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
                 }
                 return true;
             } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
+                if (getMyPet().isBaby()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                         }
                     }
-                    this.setBaby(false);
+                    getMyPet().setBaby(false);
                     return true;
                 }
             }
@@ -162,22 +154,12 @@ public class EntityMyZombie extends EntityMyPet {
         getDataWatcher().a(14, Byte.valueOf((byte) 0)); // N/A
     }
 
-    public boolean isBaby() {
-        return ((MyZombie) myPet).isBaby;
-    }
-
     public void setBaby(boolean flag) {
         getDataWatcher().watch(12, (byte) (flag ? 1 : 0));
-        ((MyZombie) myPet).isBaby = flag;
-    }
-
-    public boolean isVillager() {
-        return ((MyZombie) myPet).isVillager;
     }
 
     public void setVillager(boolean flag) {
         getDataWatcher().watch(13, (byte) (flag ? 1 : 0));
-        ((MyZombie) myPet).isVillager = flag;
     }
 
     public void playStepSound() {
@@ -207,8 +189,11 @@ public class EntityMyZombie extends EntityMyPet {
         }
     }
 
+    public MyZombie getMyPet() {
+        return (MyZombie) myPet;
+    }
+
     public void setPetEquipment(int slot, ItemStack itemStack) {
         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), slot, itemStack));
-        ((MyZombie) myPet).equipment.put(EquipmentSlot.getSlotById(slot), itemStack);
     }
 }
