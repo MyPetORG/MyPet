@@ -74,6 +74,9 @@
         <repository>
             <id>mypet-repo</id>
             <url>http://repo.keyle.de/</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
         <repository>
             <id>bukkit-repo</id>
@@ -131,6 +134,10 @@
         <pluginRepository>
             <id>bukkit-plugins</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>keyle-plugins</id>
+            <url>http://repo.keyle.de</url>
         </pluginRepository>
     </pluginRepositories>
 
