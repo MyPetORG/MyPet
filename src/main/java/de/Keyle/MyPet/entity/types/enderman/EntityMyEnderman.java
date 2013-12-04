@@ -85,6 +85,7 @@ public class EntityMyEnderman extends EntityMyPet {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
                 }
+                return true;
             }
         }
         return false;

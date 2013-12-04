@@ -132,16 +132,14 @@ public class EntityMyZombie extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (getMyPet().isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    getMyPet().setBaby(false);
-                    return true;
                 }
+                getMyPet().setBaby(false);
+                return true;
             }
         }
         return false;

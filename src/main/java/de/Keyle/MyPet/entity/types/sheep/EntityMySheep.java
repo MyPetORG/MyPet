@@ -69,16 +69,14 @@ public class EntityMySheep extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
-                if (itemStack.getData() <= 15) {
-                    getMyPet().setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() <= 15 && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
+                getMyPet().setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    return true;
                 }
+                return true;
             } else if (itemStack.getItem() == Items.SHEARS && CAN_BE_SHEARED && !getMyPet().isSheared()) {
                 getMyPet().setSheared(true);
                 int woolDropCount = 1 + this.random.nextInt(3);
@@ -95,16 +93,14 @@ public class EntityMySheep extends EntityMyPet {
                     itemStack.damage(1, entityhuman);
                 }
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (getMyPet().isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    getMyPet().setBaby(false);
-                    return true;
                 }
+                getMyPet().setBaby(false);
+                return true;
             }
         }
         return false;

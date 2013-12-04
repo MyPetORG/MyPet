@@ -68,12 +68,14 @@ public class EntityMyBlaze extends EntityMyPet {
                         }
                     }
                 }
+                return true;
             } else if (!getMyPet().isOnFire() && itemStack.getItem() == Items.FLINT_AND_STEEL && getOwner().getPlayer().isSneaking()) {
                 setOnFire(true);
                 makeSound("fire.ignite", 1.0F, 1.0F);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     itemStack.damage(1, entityhuman);
                 }
+                return true;
             }
         }
         return false;
