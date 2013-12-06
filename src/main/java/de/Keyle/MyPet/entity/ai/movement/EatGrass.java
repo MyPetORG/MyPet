@@ -45,7 +45,7 @@ public class EatGrass extends AIGoal {
     public boolean shouldStart() {
         if (!EntityMySheep.CAN_REGROW_WOOL) {
             return false;
-        } else if (!this.entityMySheep.isSheared()) {
+        } else if (!this.entityMySheep.getMyPet().isSheared()) {
             return false;
         } else if (entityMySheep.getRandom().nextDouble() > chanceToEat / 100.) {
             return false;

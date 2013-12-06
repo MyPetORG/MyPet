@@ -31,8 +31,8 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.configuration.ConfigurationSnakeYAML;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
-import org.spout.nbt.*;
 
 import java.io.File;
 import java.util.List;
@@ -154,53 +154,53 @@ public class SkillTreeLoaderYAML extends SkillTreeLoader {
                                 if (skill != null) {
                                     SkillProperties sp = skill.getClass().getAnnotation(SkillProperties.class);
                                     if (sp != null) {
-                                        CompoundTag propertiesCompound = skill.getProperties();
+                                        TagCompound propertiesCompound = skill.getProperties();
                                         for (int i = 0; i < sp.parameterNames().length; i++) {
                                             String propertyName = sp.parameterNames()[i];
                                             NBTdatatypes propertyType = sp.parameterTypes()[i];
-                                            if (!propertiesCompound.getValue().containsKey(propertyName) && propertyMap.containsKey(propertyName)) {
+                                            if (!propertiesCompound.getCompoundData().containsKey(propertyName) && propertyMap.containsKey(propertyName)) {
                                                 String value = String.valueOf(propertyMap.get(propertyName));
                                                 //System.out.println("      " + propertyName + " : " + value);
                                                 switch (propertyType) {
                                                     case Short:
                                                         if (Util.isShort(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new ShortTag(propertyName, Short.parseShort(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagShort(Short.parseShort(value)));
                                                         }
                                                         break;
                                                     case Int:
                                                         if (Util.isInt(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new IntTag(propertyName, Integer.parseInt(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagInt(Integer.parseInt(value)));
                                                         }
                                                         break;
                                                     case Long:
                                                         if (Util.isLong(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new LongTag(propertyName, Long.parseLong(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagLong(Long.parseLong(value)));
                                                         }
                                                         break;
                                                     case Float:
                                                         if (Util.isFloat(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new FloatTag(propertyName, Float.parseFloat(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagFloat(Float.parseFloat(value)));
                                                         }
                                                         break;
                                                     case Double:
                                                         if (Util.isDouble(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new DoubleTag(propertyName, Double.parseDouble(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagDouble(Double.parseDouble(value)));
                                                         }
                                                         break;
                                                     case Byte:
                                                         if (Util.isByte(value)) {
-                                                            propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, Byte.parseByte(value)));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagByte(Byte.parseByte(value)));
                                                         }
                                                         break;
                                                     case Boolean:
                                                         if (value.equalsIgnoreCase("off") || value.equalsIgnoreCase("false")) {
-                                                            propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, false));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagByte(false));
                                                         } else if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("true")) {
-                                                            propertiesCompound.getValue().put(propertyName, new ByteTag(propertyName, true));
+                                                            propertiesCompound.getCompoundData().put(propertyName, new TagByte(true));
                                                         }
                                                         break;
                                                     case String:
-                                                        propertiesCompound.getValue().put(propertyName, new StringTag(propertyName, value));
+                                                        propertiesCompound.getCompoundData().put(propertyName, new TagString(value));
                                                         break;
                                                 }
                                             }

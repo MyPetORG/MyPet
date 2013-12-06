@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
 
 import static org.bukkit.Material.APPLE;
 
@@ -42,20 +42,20 @@ public class MyVillager extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Profession", new IntTag("Profession", getProfession()));
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Profession", new TagInt(getProfession()));
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Profession")) {
-            setProfession(((IntTag) info.getValue().get("Profession")).getValue());
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Profession")) {
+            setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(((TagByte) info.getAs("Baby", TagByte.class)).getBooleanData());
         }
     }
 

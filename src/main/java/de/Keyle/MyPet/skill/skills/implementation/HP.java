@@ -26,9 +26,9 @@ import de.Keyle.MyPet.skill.skills.info.HPInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 
 public class HP extends HPInfo implements ISkillInstance {
     private MyPet myPet;
@@ -51,17 +51,17 @@ public class HP extends HPInfo implements ISkillInstance {
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof HPInfo) {
-            if (upgrade.getProperties().getValue().containsKey("hp")) {
-                int hp = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
-                upgrade.getProperties().getValue().remove("hp");
-                DoubleTag doubleTag = new DoubleTag("hp_double", hp);
-                upgrade.getProperties().getValue().put("hp_double", doubleTag);
+            if (upgrade.getProperties().getCompoundData().containsKey("hp")) {
+                int hp = upgrade.getProperties().getAs("hp", TagInt.class).getIntData();
+                upgrade.getProperties().getCompoundData().remove("hp");
+                TagDouble TagDouble = new TagDouble(hp);
+                upgrade.getProperties().getCompoundData().put("hp_double", TagDouble);
             }
-            if (upgrade.getProperties().getValue().containsKey("hp_double")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add")) {
-                    hpIncrease += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("hp_double")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_hp") || ((TagString) upgrade.getProperties().getAs("addset_hp", TagString.class)).getStringData().equals("add")) {
+                    hpIncrease += upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
                 } else {
-                    hpIncrease = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
+                    hpIncrease = upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
                 }
 
                 if (getMyPet().getStatus() == PetState.Here) {

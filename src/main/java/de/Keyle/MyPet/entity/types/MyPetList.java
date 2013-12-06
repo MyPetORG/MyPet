@@ -31,8 +31,8 @@ import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
-import org.spout.nbt.CompoundTag;
 
 import java.util.Collection;
 import java.util.List;
@@ -69,8 +69,8 @@ public class MyPetList {
                 for (ISkillInstance skill : skills) {
                     if (skill instanceof ISkillStorage) {
                         ISkillStorage storageSkill = (ISkillStorage) skill;
-                        if (inactiveMyPet.getSkills().getValue().containsKey(skill.getName())) {
-                            storageSkill.load((CompoundTag) inactiveMyPet.getSkills().getValue().get(skill.getName()));
+                        if (inactiveMyPet.getSkills().getCompoundData().containsKey(skill.getName())) {
+                            storageSkill.load(inactiveMyPet.getSkills().getAs(skill.getName(), TagCompound.class));
                         }
                     }
                 }

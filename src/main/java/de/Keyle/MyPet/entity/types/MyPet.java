@@ -40,12 +40,12 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.arenas.*;
+import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.spout.nbt.*;
 
 import java.util.*;
 
@@ -153,11 +153,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         return experience;
     }
 
-    public CompoundTag getExtendedInfo() {
-        return new CompoundTag("Info", new CompoundMap());
+    public TagCompound getExtendedInfo() {
+        return new TagCompound();
     }
 
-    public void setExtendedInfo(CompoundTag info) {
+    public void setExtendedInfo(TagCompound info) {
     }
 
     public double getMaxHealth() {
@@ -461,41 +461,41 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     @Override
-    public void load(CompoundTag myPetNBT) {
+    public void load(TagCompound myPetNBT) {
     }
 
     @Override
-    public CompoundTag save() {
-        CompoundTag petNBT = new CompoundTag(null, new CompoundMap());
+    public TagCompound save() {
+        TagCompound petNBT = new TagCompound();
 
-        petNBT.getValue().put("UUID", new StringTag("UUID", getUUID().toString()));
-        petNBT.getValue().put("Type", new StringTag("Type", this.getPetType().getTypeName()));
-        petNBT.getValue().put("Owner", new StringTag("Owner", this.petOwner.getName()));
-        petNBT.getValue().put("Health", new DoubleTag("Health", this.health));
-        petNBT.getValue().put("Respawntime", new IntTag("Respawntime", this.respawnTime));
-        petNBT.getValue().put("Hunger", new IntTag("Hunger", this.hunger));
-        petNBT.getValue().put("Name", new StringTag("Name", this.petName));
-        petNBT.getValue().put("WorldGroup", new StringTag("WorldGroup", this.worldGroup));
-        petNBT.getValue().put("Exp", new DoubleTag("Exp", this.getExp()));
-        petNBT.getValue().put("LastUsed", new LongTag("LastUsed", this.lastUsed));
-        petNBT.getValue().put("Info", getExtendedInfo());
+        petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
+        petNBT.getCompoundData().put("Type", new TagString(this.getPetType().getTypeName()));
+        petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
+        petNBT.getCompoundData().put("Health", new TagDouble(this.health));
+        petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
+        petNBT.getCompoundData().put("Hunger", new TagInt(this.hunger));
+        petNBT.getCompoundData().put("Name", new TagString(this.petName));
+        petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
+        petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));
+        petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
+        petNBT.getCompoundData().put("Info", getExtendedInfo());
         if (this.skillTree != null) {
-            petNBT.getValue().put("Skilltree", new StringTag("Skilltree", skillTree.getName()));
+            petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }
-        CompoundTag skillsNBT = new CompoundTag("Skills", new CompoundMap());
+        TagCompound skillsNBT = new TagCompound();
         Collection<ISkillInstance> skillList = this.getSkills().getSkills();
         if (skillList.size() > 0) {
             for (ISkillInstance skill : skillList) {
                 if (skill instanceof ISkillStorage) {
                     ISkillStorage storageSkill = (ISkillStorage) skill;
-                    CompoundTag s = storageSkill.save();
+                    TagCompound s = storageSkill.save();
                     if (s != null) {
-                        skillsNBT.getValue().put(skill.getName(), s);
+                        skillsNBT.getCompoundData().put(skill.getName(), s);
                     }
                 }
             }
         }
-        petNBT.getValue().put("Skills", skillsNBT);
+        petNBT.getCompoundData().put("Skills", skillsNBT);
 
         return petNBT;
     }

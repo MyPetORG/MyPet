@@ -32,6 +32,7 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.arenas.*;
+import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import org.bukkit.Bukkit;
@@ -40,7 +41,6 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
-import org.spout.nbt.*;
 
 import java.util.*;
 
@@ -57,7 +57,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
 
     private BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     private BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
-    private CompoundTag extendedInfo = new CompoundTag("ExtendedInfo", new CompoundMap());
+    private TagCompound extendedInfo = new TagCompound();
 
     private MyPetPlayer(String playerName) {
         this.playerName = playerName;
@@ -72,7 +72,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
             return true;
         } else if (captureHelperMode) {
             return true;
-        } else if (extendedInfo.getValue().size() > 0) {
+        } else if (extendedInfo.getCompoundData().size() > 0) {
             return true;
         } else if (petWorldUUID.size() > 0) {
             return true;
@@ -142,24 +142,24 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         return false;
     }
 
-    public void setExtendedInfo(CompoundTag compound) {
-        if (extendedInfo.getValue().size() == 0) {
+    public void setExtendedInfo(TagCompound compound) {
+        if (extendedInfo.getCompoundData().size() == 0) {
             extendedInfo = compound;
         }
     }
 
-    public void addExtendedInfo(String key, Tag<?> tag) {
-        extendedInfo.getValue().put(key, tag);
+    public void addExtendedInfo(String key, TagBase tag) {
+        extendedInfo.getCompoundData().put(key, tag);
     }
 
-    public Tag<?> getExtendedInfo(String key) {
-        if (extendedInfo.getValue().containsKey(key)) {
-            return extendedInfo.getValue().get(key);
+    public TagBase getExtendedInfo(String key) {
+        if (extendedInfo.getCompoundData().containsKey(key)) {
+            return extendedInfo.getCompoundData().get(key);
         }
         return null;
     }
 
-    public CompoundTag getExtendedInfo() {
+    public TagCompound getExtendedInfo() {
         return extendedInfo;
     }
 
@@ -280,44 +280,42 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
     }
 
     @Override
-    public CompoundTag save() {
-        CompoundTag playerNBT = new CompoundTag(getName(), new CompoundMap());
+    public TagCompound save() {
+        TagCompound playerNBT = new TagCompound();
 
-        playerNBT.getValue().put("Name", new StringTag("Name", getName()));
-        playerNBT.getValue().put("AutoRespawn", new ByteTag("AutoRespawn", hasAutoRespawnEnabled()));
-        playerNBT.getValue().put("AutoRespawnMin", new IntTag("AutoRespawnMin", getAutoRespawnMin()));
-        playerNBT.getValue().put("AutoRespawnMin2", new IntTag("AutoRespawnMin2", getAutoRespawnMin()));
-        playerNBT.getValue().put("ExtendedInfo", getExtendedInfo());
-        playerNBT.getValue().put("CaptureMode", new ByteTag("CaptureMode", isCaptureHelperActive()));
+        playerNBT.getCompoundData().put("Name", new TagString(getName()));
+        playerNBT.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
+        playerNBT.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
+        playerNBT.getCompoundData().put("AutoRespawnMin2", new TagInt(getAutoRespawnMin()));
+        playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
+        playerNBT.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
 
-        CompoundTag multiWorldCompound = new CompoundTag("MultiWorld", new CompoundMap());
+        TagCompound multiWorldCompound = new TagCompound();
         for (String worldGroupName : petWorldUUID.keySet()) {
-            multiWorldCompound.getValue().put(worldGroupName, new StringTag(worldGroupName, petWorldUUID.get(worldGroupName).toString()));
+            multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(petWorldUUID.get(worldGroupName).toString()));
         }
-        playerNBT.getValue().put("MultiWorld", multiWorldCompound);
+        playerNBT.getCompoundData().put("MultiWorld", multiWorldCompound);
 
         return playerNBT;
     }
 
     @Override
-    public void load(CompoundTag myplayerNBT) {
-        if (myplayerNBT.getValue().containsKey("AutoRespawn")) {
-            setAutoRespawnEnabled(((ByteTag) myplayerNBT.getValue().get("AutoRespawn")).getBooleanValue());
+    public void load(TagCompound myplayerNBT) {
+        if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
+            setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
         }
-        if (myplayerNBT.getValue().containsKey("AutoRespawnMin")) {
-            setAutoRespawnMin(((IntTag) myplayerNBT.getValue().get("AutoRespawnMin")).getValue());
+        if (myplayerNBT.getCompoundData().containsKey("AutoRespawnMin")) {
+            setAutoRespawnMin(myplayerNBT.getAs("AutoRespawnMin", TagInt.class).getIntData());
         }
-        if (myplayerNBT.getValue().containsKey("CaptureMode")) {
-            if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_STRING) {
-                if (!((StringTag) myplayerNBT.getValue().get("CaptureMode")).getValue().equals("Deactivated")) {
-                    setCaptureHelperActive(true);
-                }
-            } else if (myplayerNBT.getValue().get("CaptureMode").getType() == TagType.TAG_BYTE) {
-                setCaptureHelperActive(((ByteTag) myplayerNBT.getValue().get("CaptureMode")).getBooleanValue());
+        if (myplayerNBT.containsKeyAs("CaptureMode", TagString.class)) {
+            if (!myplayerNBT.getAs("CaptureMode", TagString.class).getStringData().equals("Deactivated")) {
+                setCaptureHelperActive(true);
             }
+        } else if (myplayerNBT.containsKeyAs("CaptureMode", TagByte.class)) {
+            setCaptureHelperActive(myplayerNBT.getAs("CaptureMode", TagByte.class).getBooleanData());
         }
-        if (myplayerNBT.getValue().containsKey("LastActiveMyPetUUID")) {
-            String lastActive = ((StringTag) myplayerNBT.getValue().get("LastActiveMyPetUUID")).getValue();
+        if (myplayerNBT.getCompoundData().containsKey("LastActiveMyPetUUID")) {
+            String lastActive = myplayerNBT.getAs("LastActiveMyPetUUID", TagString.class).getStringData();
             if (!lastActive.equalsIgnoreCase("")) {
                 UUID lastActiveUUID = UUID.fromString(lastActive);
                 World newWorld = Bukkit.getServer().getWorlds().get(0);
@@ -325,13 +323,13 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
                 this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
             }
         }
-        if (myplayerNBT.getValue().containsKey("ExtendedInfo")) {
-            setExtendedInfo((CompoundTag) myplayerNBT.getValue().get("ExtendedInfo"));
+        if (myplayerNBT.getCompoundData().containsKey("ExtendedInfo")) {
+            setExtendedInfo(myplayerNBT.getAs("ExtendedInfo", TagCompound.class));
         }
-        if (myplayerNBT.getValue().containsKey("MultiWorld")) {
-            CompoundMap map = ((CompoundTag) myplayerNBT.getValue().get("MultiWorld")).getValue();
-            for (String worldGroupName : map.keySet()) {
-                String petUUID = ((StringTag) map.get(worldGroupName)).getValue();
+        if (myplayerNBT.getCompoundData().containsKey("MultiWorld")) {
+            TagCompound worldGroups = myplayerNBT.getAs("MultiWorld", TagCompound.class);
+            for (String worldGroupName : worldGroups.getCompoundData().keySet()) {
+                String petUUID = worldGroups.getAs(worldGroupName, TagString.class).getStringData();
                 setMyPetForWorldGroup(worldGroupName, UUID.fromString(petUUID));
             }
         }

@@ -58,7 +58,7 @@
         <heroes.build>b1713</heroes.build>
 
         <metrics.version>R7</metrics.version>
-        <simplenbt.version>1.0.5</simplenbt.version>
+        <knbt.version>0.0.1-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
 
         <junit.version>4.8.2</junit.version>
@@ -312,9 +312,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.spout</groupId>
-            <artifactId>simplenbt</artifactId>
-            <version>${simplenbt.version}</version>
+            <groupId>de.keyle</groupId>
+            <artifactId>knbt</artifactId>
+            <version>${knbt.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -468,7 +468,7 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
                                 <includes>
-                                    <include>org.spout:simplenbt:jar:*</include>
+                                    <include>de.keyle:knbt:jar:*</include>
                                     <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                 </includes>
@@ -479,8 +479,8 @@
                                     <shadedPattern>de.Keyle.MyPet.util</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.spout.nbt</pattern>
-                                    <shadedPattern>de.Keyle.MyPet.util.configuration.nbt</shadedPattern>
+                                    <pattern>de.keyle.knbt</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.nbt</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.intellij.uiDesigner.core</pattern>
@@ -488,14 +488,6 @@
                                 </relocation>
                             </relocations>
                             <filters>
-                                <filter>
-                                    <artifact>org.spout:simplenbt</artifact>
-                                    <excludes>
-                                        <exclude>org/spout/nbt/gui/*.class</exclude>
-                                        <exclude>org/spout/nbt/util/*.class</exclude>
-                                        <exclude>LICENSE.txt</exclude>
-                                    </excludes>
-                                </filter>
                                 <filter>
                                     <artifact>com.intellij:forms_rt</artifact>
                                     <includes>

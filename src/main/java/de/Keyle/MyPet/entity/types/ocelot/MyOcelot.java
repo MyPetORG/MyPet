@@ -25,11 +25,11 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Ocelot.Type;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_FISH;
@@ -55,20 +55,20 @@ public class MyOcelot extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("CatType", new IntTag("CatType", getCatType().getId()));
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("CatType", new TagInt(getCatType().getId()));
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("CatType")) {
-            setCatType(Type.getType(((IntTag) info.getValue().get("CatType")).getValue()));
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("CatType")) {
+            setCatType(Type.getType(info.getAs("CatType", TagInt.class).getIntData()));
         }
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
 

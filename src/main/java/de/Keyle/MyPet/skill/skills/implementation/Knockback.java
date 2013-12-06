@@ -26,11 +26,11 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.KnockbackInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.MathHelper;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -56,11 +56,11 @@ public class Knockback extends KnockbackInfo implements ISkillInstance, ISkillAc
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof KnockbackInfo) {
-            if (upgrade.getProperties().getValue().containsKey("chance")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add")) {
-                    chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("chance")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_chance") || upgrade.getProperties().getAs("addset_chance", TagString.class).getStringData().equals("add")) {
+                    chance += upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 } else {
-                    chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+                    chance = upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 }
                 chance = Math.min(chance, 100);
                 if (!quiet) {

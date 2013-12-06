@@ -26,13 +26,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagShort;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.ShortTag;
-import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.SOUL_SAND;
 
@@ -51,35 +50,34 @@ public class MyEnderman extends MyPet {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
         if (block != null) {
-            info.getValue().put("Block", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(block), "Block"));
+            info.getCompoundData().put("Block", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(block)));
         }
-        //info.getValue().put("Screaming", new ByteTag("Screaming", isScreaming()));
+        //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("BlockID")) {
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("BlockID")) {
             int id;
             int data = 0;
-            if (info.getValue().get("BlockID").getType() == TagType.TAG_SHORT) {
-                id = ((ShortTag) info.getValue().get("BlockID")).getValue();
+
+            if (info.containsKeyAs("BlockID", TagShort.class)) {
+                id = info.getAs("BlockID", TagShort.class).getShortData();
             } else {
-                id = ((IntTag) info.getValue().get("BlockID")).getValue();
+                id = info.getAs("BlockID", TagInt.class).getIntData();
             }
-            if (info.getValue().containsKey("BlockData")) {
-                if (info.getValue().get("BlockData").getType() == TagType.TAG_SHORT) {
-                    data = ((ShortTag) info.getValue().get("BlockData")).getValue();
-                } else {
-                    data = ((IntTag) info.getValue().get("BlockData")).getValue();
-                }
+            if (info.containsKeyAs("BlockData", TagShort.class)) {
+                data = info.getAs("BlockData", TagShort.class).getShortData();
+            } else if (info.containsKeyAs("BlockData", TagInt.class)) {
+                data = info.getAs("BlockData", TagInt.class).getIntData();
             }
             setBlock(new ItemStack(id, 1, (short) data));
-        } else if (info.getValue().containsKey("Block")) {
-            CompoundTag itemStackCompund = (CompoundTag) info.getValue().get("Block");
+        } else if (info.getCompoundData().containsKey("Block")) {
+            TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
             ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemStackCompund));
             setBlock(block);
         }

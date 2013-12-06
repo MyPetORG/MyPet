@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -39,11 +39,11 @@ public class HealthRegeneration implements SkillPropertiesPanel {
     private JRadioButton decreaseTimeRadioButton;
     private JRadioButton setTimeRadioButton;
 
-    private CompoundTag compoundTag;
+    private TagCompound tagCompound;
 
-    public HealthRegeneration(CompoundTag compoundTag) {
-        this.compoundTag = compoundTag;
-        load(compoundTag);
+    public HealthRegeneration(TagCompound tagCompound) {
+        this.tagCompound = tagCompound;
+        load(tagCompound);
     }
 
     @Override
@@ -78,38 +78,38 @@ public class HealthRegeneration implements SkillPropertiesPanel {
     }
 
     @Override
-    public CompoundTag save() {
-        compoundTag.getValue().put("addset_time", new StringTag("addset_time", decreaseTimeRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("time", new IntTag("time", Integer.parseInt(timeInput.getText())));
+    public TagCompound save() {
+        tagCompound.getCompoundData().put("addset_time", new TagString(decreaseTimeRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("time", new TagInt(Integer.parseInt(timeInput.getText())));
 
-        compoundTag.getValue().put("addset_hp", new StringTag("addset_hp", addHealthRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("hp_double", new DoubleTag("hp_double", Double.parseDouble(healthInput.getText())));
+        tagCompound.getCompoundData().put("addset_hp", new TagString(addHealthRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("hp_double", new TagDouble(Double.parseDouble(healthInput.getText())));
 
-        return compoundTag;
+        return tagCompound;
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        if (!compoundTag.getValue().containsKey("addset_hp") || ((StringTag) compoundTag.getValue().get("addset_hp")).getValue().equals("add")) {
+    public void load(TagCompound TagCompound) {
+        if (!TagCompound.getCompoundData().containsKey("addset_hp") || TagCompound.getAs("addset_hp", TagString.class).getStringData().equals("add")) {
             addHealthRadioButton.setSelected(true);
         } else {
             setHealthRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("hp")) {
-            compoundTag.getValue().put("hp_double", new DoubleTag("hp_double", ((IntTag) compoundTag.getValue().get("hp")).getValue()));
-            compoundTag.getValue().remove("hp");
+        if (TagCompound.getCompoundData().containsKey("hp")) {
+            TagCompound.getCompoundData().put("hp_double", new TagDouble(TagCompound.getAs("hp", TagDouble.class).getDoubleData()));
+            TagCompound.getCompoundData().remove("hp");
         }
-        if (compoundTag.getValue().containsKey("hp_double")) {
-            healthInput.setText("" + ((DoubleTag) compoundTag.getValue().get("hp_double")).getValue());
+        if (TagCompound.getCompoundData().containsKey("hp_double")) {
+            healthInput.setText("" + TagCompound.getAs("hp_double", TagDouble.class).getDoubleData());
         }
 
-        if (!compoundTag.getValue().containsKey("addset_time") || ((StringTag) compoundTag.getValue().get("addset_time")).getValue().equals("add")) {
+        if (!TagCompound.getCompoundData().containsKey("addset_time") || TagCompound.getAs("addset_time", TagString.class).getStringData().equals("add")) {
             decreaseTimeRadioButton.setSelected(true);
         } else {
             setTimeRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("time")) {
-            timeInput.setText("" + ((IntTag) compoundTag.getValue().get("time")).getValue());
+        if (TagCompound.getCompoundData().containsKey("time")) {
+            timeInput.setText("" + TagCompound.getAs("time", TagInt.class).getIntData());
         }
     }
 }

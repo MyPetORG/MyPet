@@ -31,10 +31,9 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Util;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.ShortTag;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagShort;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -473,12 +472,11 @@ public class LevelCreator {
                 short id, damage;
                 boolean glowing = false;
 
-                CompoundMap values = skillTree.getIconItem().getValue();
-                id = ((ShortTag) values.get("id")).getValue();
-                damage = ((ShortTag) values.get("Damage")).getValue();
-                if (values.containsKey("tag")) {
-                    CompoundMap tag = ((CompoundTag) values.get("tag")).getValue();
-                    glowing = tag.containsKey("ench");
+                id = skillTree.getIconItem().getAs("id", TagShort.class).getShortData();
+                damage = skillTree.getIconItem().getAs("Damage", TagShort.class).getShortData();
+                if (skillTree.getIconItem().getCompoundData().containsKey("tag")) {
+                    TagCompound tag = skillTree.getIconItem().getAs("tag", TagCompound.class);
+                    glowing = tag.getCompoundData().containsKey("ench");
                 }
 
                 JPanel iconPanel = new JPanel();
@@ -514,12 +512,13 @@ public class LevelCreator {
 
                 if (id >= 298 && id <= 301) {
                     int color = 0;
-                    if (values.containsKey("tag")) {
-                        CompoundMap tag = ((CompoundTag) values.get("tag")).getValue();
-                        if (tag.containsKey("display")) {
-                            CompoundMap display = ((CompoundTag) tag.get("display")).getValue();
-                            if (display.containsKey("color")) {
-                                color = ((IntTag) display.get("color")).getValue();
+                    if (skillTree.getIconItem().getCompoundData().containsKey("tag")) {
+                        TagCompound tag = skillTree.getIconItem().getAs("tag", TagCompound.class);
+                        //CompoundMap tag = ((TagCompound) values.get("tag")).getValue();
+                        if (tag.getCompoundData().containsKey("display")) {
+                            TagCompound display = tag.getAs("tag", TagCompound.class);
+                            if (display.getCompoundData().containsKey("color")) {
+                                color = display.getAs("color", TagInt.class).getIntData();
                             }
                         }
                     }
@@ -538,20 +537,20 @@ public class LevelCreator {
                     }
                     color = Math.max(0, color);
 
-                    CompoundTag tag, display;
-                    if (!values.containsKey("tag")) {
-                        tag = new CompoundTag("tag", new CompoundMap());
-                        values.put("tag", tag);
+                    TagCompound tag, display;
+                    if (!skillTree.getIconItem().getCompoundData().containsKey("tag")) {
+                        tag = new TagCompound();
+                        skillTree.getIconItem().getCompoundData().put("tag", tag);
                     } else {
-                        tag = (CompoundTag) values.get("tag");
+                        tag = skillTree.getIconItem().getAs("tag", TagCompound.class);
                     }
-                    if (!values.containsKey("display")) {
-                        display = new CompoundTag("display", new CompoundMap());
-                        tag.getValue().put("display", display);
+                    if (!skillTree.getIconItem().getCompoundData().containsKey("display")) {
+                        display = new TagCompound();
+                        tag.getCompoundData().put("display", display);
                     } else {
-                        display = (CompoundTag) tag.getValue().get("display");
+                        display = tag.get("display");
                     }
-                    display.getValue().put("color", new IntTag("color", color));
+                    display.getCompoundData().put("color", new TagInt(color));
                 }
             }
         });

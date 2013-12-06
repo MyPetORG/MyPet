@@ -31,6 +31,10 @@ import de.Keyle.MyPet.skill.skills.info.PickupInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.PacketPlayOutCollect;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
@@ -40,7 +44,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spout.nbt.*;
 
 public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     private boolean pickup = false;
@@ -64,18 +67,18 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof PickupInfo) {
-            if (upgrade.getProperties().getValue().containsKey("range")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add")) {
-                    range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("range")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_range") || upgrade.getProperties().getAs("addset_range", TagString.class).getStringData().equals("add")) {
+                    range += upgrade.getProperties().getAs("range", TagDouble.class).getDoubleData();
                 } else {
-                    range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
+                    range = upgrade.getProperties().getAs("range", TagDouble.class).getDoubleData();
                 }
                 if (!quiet) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Pickup.Upgrade", myPet.getOwner().getLanguage()), myPet.getPetName(), String.format("%1.2f", range)));
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("exp_pickup")) {
-                expPickup = ((ByteTag) upgrade.getProperties().getValue().get("exp_pickup")).getBooleanValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("exp_pickup")) {
+                expPickup = upgrade.getProperties().getAs("exp_pickup", TagByte.class).getBooleanData();
             }
         }
     }
@@ -160,13 +163,13 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         }
     }
 
-    public void load(CompoundTag compound) {
-        pickup = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
+    public void load(TagCompound compound) {
+        pickup = compound.getAs("Active", TagByte.class).getBooleanData();
     }
 
-    public CompoundTag save() {
-        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
-        nbtTagCompound.getValue().put("Active", new ByteTag("Active", pickup));
+    public TagCompound save() {
+        TagCompound nbtTagCompound = new TagCompound();
+        nbtTagCompound.getCompoundData().put("Active", new TagByte(pickup));
         return nbtTagCompound;
 
     }

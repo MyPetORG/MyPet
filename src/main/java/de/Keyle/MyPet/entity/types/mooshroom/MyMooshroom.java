@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
 
 import static org.bukkit.Material.WHEAT;
 
@@ -40,16 +40,16 @@ public class MyMooshroom extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(((TagByte) info.getAs("Baby", TagByte.class)).getBooleanData());
         }
     }
 

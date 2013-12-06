@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.StringTag;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagString;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -37,11 +37,11 @@ public class Pickup implements SkillPropertiesPanel {
     private JRadioButton setRangeRadioButton;
     private JCheckBox expPickupCheckBox;
 
-    private CompoundTag compoundTag;
+    private TagCompound tagCompound;
 
-    public Pickup(CompoundTag compoundTag) {
-        this.compoundTag = compoundTag;
-        load(compoundTag);
+    public Pickup(TagCompound tagCompound) {
+        this.tagCompound = tagCompound;
+        load(tagCompound);
     }
 
     @Override
@@ -71,26 +71,26 @@ public class Pickup implements SkillPropertiesPanel {
     }
 
     @Override
-    public CompoundTag save() {
-        compoundTag.getValue().put("addset_range", new StringTag("addset_range", addRangeRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("range", new DoubleTag("range", Double.parseDouble(rangeInput.getText())));
-        compoundTag.getValue().put("exp_pickup", new ByteTag("exp_pickup", expPickupCheckBox.isSelected()));
+    public TagCompound save() {
+        tagCompound.getCompoundData().put("addset_range", new TagString(addRangeRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("range", new TagDouble(Double.parseDouble(rangeInput.getText())));
+        tagCompound.getCompoundData().put("exp_pickup", new TagByte(expPickupCheckBox.isSelected()));
 
-        return compoundTag;
+        return tagCompound;
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add")) {
+    public void load(TagCompound TagCompound) {
+        if (!TagCompound.getCompoundData().containsKey("addset_range") || TagCompound.getAs("addset_range", TagString.class).getStringData().equals("add")) {
             addRangeRadioButton.setSelected(true);
         } else {
             setRangeRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("range")) {
-            rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
+        if (TagCompound.getCompoundData().containsKey("range")) {
+            rangeInput.setText("" + TagCompound.getAs("range", TagDouble.class).getDoubleData());
         }
-        if (compoundTag.getValue().containsKey("exp_pickup")) {
-            expPickupCheckBox.setSelected(((ByteTag) compoundTag.getValue().get("exp_pickup")).getBooleanValue());
+        if (TagCompound.getCompoundData().containsKey("exp_pickup")) {
+            expPickupCheckBox.setSelected(TagCompound.getAs("exp_pickup", TagByte.class).getBooleanData());
         }
     }
 }

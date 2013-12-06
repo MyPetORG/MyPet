@@ -29,13 +29,13 @@ import de.Keyle.MyPet.skill.skills.info.HPregenerationInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.EntityLiving;
 import net.minecraft.server.v1_7_R1.PotionBrewer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 public class HPregeneration extends HPregenerationInfo implements ISkillInstance, IScheduler {
     private int timeCounter = 0;
@@ -60,25 +60,25 @@ public class HPregeneration extends HPregenerationInfo implements ISkillInstance
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof HPregenerationInfo) {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().getValue().containsKey("hp")) {
-                int hp = ((IntTag) upgrade.getProperties().getValue().get("hp")).getValue();
-                upgrade.getProperties().getValue().remove("hp");
-                DoubleTag doubleTag = new DoubleTag("hp_double", hp);
-                upgrade.getProperties().getValue().put("hp_double", doubleTag);
+            if (upgrade.getProperties().getCompoundData().containsKey("hp")) {
+                int hp = upgrade.getProperties().getAs("hp", TagInt.class).getIntData();
+                upgrade.getProperties().getCompoundData().remove("hp");
+                TagDouble TagDouble = new TagDouble(hp);
+                upgrade.getProperties().getCompoundData().put("hp_double", TagDouble);
             }
-            if (upgrade.getProperties().getValue().containsKey("hp_double")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_hp") || ((StringTag) upgrade.getProperties().getValue().get("addset_hp")).getValue().equals("add")) {
-                    increaseHpBy += ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("hp_double")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_hp") || upgrade.getProperties().getAs("addset_hp", TagString.class).getStringData().equals("add")) {
+                    increaseHpBy += upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
                 } else {
-                    increaseHpBy = ((DoubleTag) upgrade.getProperties().getValue().get("hp_double")).getValue();
+                    increaseHpBy = upgrade.getProperties().getAs("hp_double", TagDouble.class).getDoubleData();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("time")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_time") || ((StringTag) upgrade.getProperties().getValue().get("addset_time")).getValue().equals("add")) {
-                    regenTime -= ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("time")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_time") || upgrade.getProperties().getAs("addset_time", TagString.class).getStringData().equals("add")) {
+                    regenTime -= upgrade.getProperties().getAs("time", TagInt.class).getIntData();
                 } else {
-                    regenTime = ((IntTag) upgrade.getProperties().getValue().get("time")).getValue();
+                    regenTime = upgrade.getProperties().getAs("time", TagInt.class).getIntData();
                 }
                 if (regenTime < 1) {
                     regenTime = 1;

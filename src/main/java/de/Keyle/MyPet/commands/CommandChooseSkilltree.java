@@ -33,13 +33,13 @@ import de.Keyle.MyPet.util.iconmenu.IconMenu;
 import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.spout.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +151,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     for (int i = 0; i < availableSkilltrees.size(); i++) {
                         SkillTree addedSkilltree = availableSkilltrees.get(i);
 
-                        CompoundTag tag = addedSkilltree.getIconItem();
+                        TagCompound tag = addedSkilltree.getIconItem();
                         net.minecraft.server.v1_7_R1.ItemStack is = ItemStackNBTConverter.CompundToItemStack(tag);
                         IconMenuItem option = IconMenuItem.fromNmsItemStack(is);
                         option.setTitle(ChatColor.RESET + "❱❱❱  " + ChatColor.DARK_GREEN + addedSkilltree.getDisplayName() + ChatColor.RESET + "  ❰❰❰");

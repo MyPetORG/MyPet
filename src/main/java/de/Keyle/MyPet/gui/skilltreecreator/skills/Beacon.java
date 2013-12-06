@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import org.spout.nbt.*;
+import de.keyle.knbt.*;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -74,9 +74,9 @@ public class Beacon implements SkillPropertiesPanel {
     private JSpinner selectionCountSpinner;
     private JRadioButton setSelectionCount;
     private JRadioButton addSelectionCount;
-    private CompoundTag compoundTag;
+    private TagCompound tagCompound;
 
-    public Beacon(CompoundTag compoundTag) {
+    public Beacon(TagCompound tagCompound) {
         rangeInput.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
             }
@@ -221,8 +221,8 @@ public class Beacon implements SkillPropertiesPanel {
         });
 
 
-        this.compoundTag = compoundTag;
-        load(compoundTag);
+        this.tagCompound = tagCompound;
+        load(tagCompound);
     }
 
     @Override
@@ -257,238 +257,238 @@ public class Beacon implements SkillPropertiesPanel {
     }
 
     @Override
-    public CompoundTag save() {
+    public TagCompound save() {
 
         if (speedBoostChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_speed_boost_enable", new ByteTag("buff_speed_boost_enable", speedBostEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_speed_boost_enable", new TagByte(speedBostEnableCheckBox.isSelected()));
             if (speedBostEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_speed_boost_level", new IntTag("buff_speed_boost_level", ((Number) jumpBoostSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_speed_boost_level", new TagInt(((Number) jumpBoostSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_speed_boost_enable");
-            compoundTag.getValue().remove("buff_speed_boost_level");
+            tagCompound.getCompoundData().remove("buff_speed_boost_enable");
+            tagCompound.getCompoundData().remove("buff_speed_boost_level");
         }
         if (hasteChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_haste_enable", new ByteTag("buff_haste_enable", hasteEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_haste_enable", new TagByte(hasteEnableCheckBox.isSelected()));
             if (hasteEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_haste_level", new IntTag("buff_haste_level", ((Number) hasteSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_haste_level", new TagInt(((Number) hasteSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_haste_enable");
-            compoundTag.getValue().remove("buff_haste_level");
+            tagCompound.getCompoundData().remove("buff_haste_enable");
+            tagCompound.getCompoundData().remove("buff_haste_level");
         }
         if (strengthChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_strength_enable", new ByteTag("buff_strength_enable", strengthEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_strength_enable", new TagByte(strengthEnableCheckBox.isSelected()));
             if (strengthEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_strength_level", new IntTag("buff_strength_level", ((Number) strengthSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_strength_level", new TagInt(((Number) strengthSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_strength_enable");
-            compoundTag.getValue().remove("buff_strength_level");
+            tagCompound.getCompoundData().remove("buff_strength_enable");
+            tagCompound.getCompoundData().remove("buff_strength_level");
         }
         if (jumpBoostChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_jump_boost_enable", new ByteTag("buff_jump_boost_enable", jumpBoostEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_jump_boost_enable", new TagByte(jumpBoostEnableCheckBox.isSelected()));
             if (jumpBoostEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_jump_boost_level", new IntTag("buff_jump_boost_level", ((Number) jumpBoostSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_jump_boost_level", new TagInt(((Number) jumpBoostSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_jump_boost_enable");
-            compoundTag.getValue().remove("buff_jump_boost_level");
+            tagCompound.getCompoundData().remove("buff_jump_boost_enable");
+            tagCompound.getCompoundData().remove("buff_jump_boost_level");
         }
         if (regenerationChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_regeneration_enable", new ByteTag("buff_regeneration_enable", regenerationEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_regeneration_enable", new TagByte(regenerationEnableCheckBox.isSelected()));
             if (regenerationEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_regeneration_level", new IntTag("buff_regeneration_level", ((Number) regenerationSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_regeneration_level", new TagInt(((Number) regenerationSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_regeneration_enable");
-            compoundTag.getValue().remove("buff_regeneration_level");
+            tagCompound.getCompoundData().remove("buff_regeneration_enable");
+            tagCompound.getCompoundData().remove("buff_regeneration_level");
         }
         if (resistanceChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_resistance_enable", new ByteTag("buff_resistance_enable", resistanceEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_resistance_enable", new TagByte(resistanceEnableCheckBox.isSelected()));
             if (resistanceEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_resistance_level", new IntTag("buff_resistance_level", ((Number) resistanceSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_resistance_level", new TagInt(((Number) resistanceSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_resistance_enable");
-            compoundTag.getValue().remove("buff_resistance_level");
+            tagCompound.getCompoundData().remove("buff_resistance_enable");
+            tagCompound.getCompoundData().remove("buff_resistance_level");
         }
         if (fireResistanceChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_fire_resistance_enable", new ByteTag("buff_fire_resistance_enable", fireResistanceEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_fire_resistance_enable", new TagByte(fireResistanceEnableCheckBox.isSelected()));
         } else {
-            compoundTag.getValue().remove("buff_fire_resistance_enable");
+            tagCompound.getCompoundData().remove("buff_fire_resistance_enable");
         }
         if (waterBreathingChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_water_breathing_enable", new ByteTag("buff_water_breathing_enable", waterBreathingEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_water_breathing_enable", new TagByte(waterBreathingEnableCheckBox.isSelected()));
         } else {
-            compoundTag.getValue().remove("buff_water_breathing_enable");
+            tagCompound.getCompoundData().remove("buff_water_breathing_enable");
         }
         if (invisibilityChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_invisibility_enable", new ByteTag("buff_invisibility_enable", invisibilityEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_invisibility_enable", new TagByte(invisibilityEnableCheckBox.isSelected()));
         } else {
-            compoundTag.getValue().remove("buff_invisibility_enable");
+            tagCompound.getCompoundData().remove("buff_invisibility_enable");
         }
         if (nightVisionChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_night_vision_enable", new ByteTag("buff_night_vision_enable", nightVisionEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_night_vision_enable", new TagByte(nightVisionEnableCheckBox.isSelected()));
         } else {
-            compoundTag.getValue().remove("buff_night_vision_enable");
+            tagCompound.getCompoundData().remove("buff_night_vision_enable");
         }
         if (healthBoostChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_health_boost_enable", new ByteTag("buff_health_boost_enable", healthBoostEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_health_boost_enable", new TagByte(healthBoostEnableCheckBox.isSelected()));
             if (healthBoostEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_health_boost_level", new IntTag("buff_health_boost_level", ((Number) healthBoostSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_health_boost_level", new TagInt(((Number) healthBoostSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_health_boost_enable");
-            compoundTag.getValue().remove("buff_health_boost_level");
+            tagCompound.getCompoundData().remove("buff_health_boost_enable");
+            tagCompound.getCompoundData().remove("buff_health_boost_level");
         }
         if (absorptionChangeCheckBox.isSelected()) {
-            compoundTag.getValue().put("buff_absorption_enable", new ByteTag("buff_absorption_enable", absorptionEnableCheckBox.isSelected()));
+            tagCompound.getCompoundData().put("buff_absorption_enable", new TagByte(absorptionEnableCheckBox.isSelected()));
             if (absorptionEnableCheckBox.isSelected()) {
-                compoundTag.getValue().put("buff_absorption_level", new IntTag("buff_absorption_level", ((Number) absorptionSpinner.getValue()).intValue()));
+                tagCompound.getCompoundData().put("buff_absorption_level", new TagInt(((Number) absorptionSpinner.getValue()).intValue()));
             }
         } else {
-            compoundTag.getValue().remove("buff_absorption_enable");
-            compoundTag.getValue().remove("buff_absorption_level");
+            tagCompound.getCompoundData().remove("buff_absorption_enable");
+            tagCompound.getCompoundData().remove("buff_absorption_level");
         }
 
-        compoundTag.getValue().put("addset_duration", new StringTag("addset_duration", addDurationRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("duration", new IntTag("duration", Integer.parseInt(durationInput.getText())));
+        tagCompound.getCompoundData().put("addset_duration", new TagString(addDurationRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("duration", new TagInt(Integer.parseInt(durationInput.getText())));
 
-        compoundTag.getValue().put("addset_range", new StringTag("addset_range", addRangeRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("range", new DoubleTag("range", Double.parseDouble(rangeInput.getText())));
+        tagCompound.getCompoundData().put("addset_range", new TagString(addRangeRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("range", new TagDouble(Double.parseDouble(rangeInput.getText())));
 
-        compoundTag.getValue().put("addset_selection_count", new StringTag("addset_selection_count", addSelectionCount.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("selection_count", new IntTag("selection_count", ((Number) selectionCountSpinner.getValue()).intValue()));
+        tagCompound.getCompoundData().put("addset_selection_count", new TagString(addSelectionCount.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("selection_count", new TagInt(((Number) selectionCountSpinner.getValue()).intValue()));
 
-        return compoundTag;
+        return tagCompound;
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
+    public void load(TagCompound tagCompound) {
 
-        if (compoundTag.getValue().containsKey("buff_speed_boost_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_speed_boost_enable")) {
             speedBoostChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_speed_boost_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_speed_boost_enable", TagByte.class).getBooleanData()) {
                 speedBostEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_speed_boost_level")) {
-                    speedBoostSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_speed_boost_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_speed_boost_level")) {
+                    speedBoostSpinner.setValue(tagCompound.getAs("buff_speed_boost_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_haste_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_haste_enable")) {
             hasteChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_haste_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_haste_enable", TagByte.class).getBooleanData()) {
                 hasteEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_haste_level")) {
-                    hasteSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_haste_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_haste_level")) {
+                    hasteSpinner.setValue(tagCompound.getAs("buff_haste_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_strength_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_strength_enable")) {
             strengthChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_strength_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_strength_enable", TagByte.class).getBooleanData()) {
                 strengthEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_strength_level")) {
-                    strengthSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_strength_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_strength_level")) {
+                    strengthSpinner.setValue(tagCompound.getAs("buff_strength_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_jump_boost_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_jump_boost_enable")) {
             jumpBoostChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_jump_boost_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_jump_boost_enable", TagByte.class).getBooleanData()) {
                 jumpBoostEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_jump_boost_level")) {
-                    jumpBoostSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_jump_boost_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_jump_boost_level")) {
+                    jumpBoostSpinner.setValue(tagCompound.getAs("buff_jump_boost_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_regeneration_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_regeneration_enable")) {
             regenerationChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_regeneration_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_regeneration_enable", TagByte.class).getBooleanData()) {
                 regenerationEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_regeneration_level")) {
-                    regenerationSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_regeneration_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_regeneration_level")) {
+                    regenerationSpinner.setValue(tagCompound.getAs("buff_regeneration_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_resistance_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_resistance_enable")) {
             resistanceChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_resistance_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_resistance_enable", TagByte.class).getBooleanData()) {
                 resistanceEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_resistance_level")) {
-                    resistanceSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_resistance_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_resistance_level")) {
+                    resistanceSpinner.setValue(tagCompound.getAs("buff_resistance_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_fire_resistance_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_fire_resistance_enable")) {
             fireResistanceChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_fire_resistance_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_fire_resistance_enable", TagByte.class).getBooleanData()) {
                 fireResistanceEnableCheckBox.setSelected(true);
             }
         }
-        if (compoundTag.getValue().containsKey("buff_water_breathing_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_water_breathing_enable")) {
             waterBreathingChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_water_breathing_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_water_breathing_enable", TagByte.class).getBooleanData()) {
                 waterBreathingEnableCheckBox.setSelected(true);
             }
         }
-        if (compoundTag.getValue().containsKey("buff_invisibility_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_invisibility_enable")) {
             invisibilityChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_invisibility_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_invisibility_enable", TagByte.class).getBooleanData()) {
                 invisibilityEnableCheckBox.setSelected(true);
             }
         }
-        if (compoundTag.getValue().containsKey("buff_night_vision_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_night_vision_enable")) {
             nightVisionChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_night_vision_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_night_vision_enable", TagByte.class).getBooleanData()) {
                 nightVisionEnableCheckBox.setSelected(true);
             }
         }
-        if (compoundTag.getValue().containsKey("buff_health_boost_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_health_boost_enable")) {
             healthBoostChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_health_boost_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_health_boost_enable", TagByte.class).getBooleanData()) {
                 healthBoostEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_health_boost_level")) {
-                    healthBoostSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_health_boost_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_health_boost_level")) {
+                    healthBoostSpinner.setValue(tagCompound.getAs("buff_health_boost_level", TagInt.class).getIntData());
                 }
             }
         }
-        if (compoundTag.getValue().containsKey("buff_absorption_enable")) {
+        if (tagCompound.getCompoundData().containsKey("buff_absorption_enable")) {
             absorptionChangeCheckBox.setSelected(true);
-            if (((ByteTag) compoundTag.getValue().get("buff_absorption_enable")).getBooleanValue()) {
+            if (tagCompound.getAs("buff_absorption_enable", TagByte.class).getBooleanData()) {
                 absorptionEnableCheckBox.setSelected(true);
-                if (compoundTag.getValue().containsKey("buff_absorption_level")) {
-                    absorptionSpinner.setValue(((IntTag) compoundTag.getValue().get("buff_absorption_level")).getValue());
+                if (tagCompound.getCompoundData().containsKey("buff_absorption_level")) {
+                    absorptionSpinner.setValue(tagCompound.getAs("buff_absorption_level", TagInt.class).getIntData());
                 }
             }
         }
 
-        if (!compoundTag.getValue().containsKey("addset_duration") || ((StringTag) compoundTag.getValue().get("addset_duration")).getValue().equals("add")) {
+        if (!tagCompound.getCompoundData().containsKey("addset_duration") || tagCompound.getAs("addset_duration", TagString.class).getStringData().equals("add")) {
             addDurationRadioButton.setSelected(true);
         } else {
             setDurationRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("duration")) {
-            durationInput.setText("" + ((IntTag) compoundTag.getValue().get("duration")).getValue());
+        if (tagCompound.getCompoundData().containsKey("duration")) {
+            durationInput.setText("" + tagCompound.getAs("duration", TagInt.class).getIntData());
         }
 
-        if (!compoundTag.getValue().containsKey("addset_range") || ((StringTag) compoundTag.getValue().get("addset_range")).getValue().equals("add")) {
+        if (!tagCompound.getCompoundData().containsKey("addset_range") || tagCompound.getAs("addset_range", TagString.class).getStringData().equals("add")) {
             addRangeRadioButton.setSelected(true);
         } else {
             setRangeRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("range")) {
-            rangeInput.setText("" + ((DoubleTag) compoundTag.getValue().get("range")).getValue());
+        if (tagCompound.getCompoundData().containsKey("range")) {
+            rangeInput.setText("" + tagCompound.getAs("range", TagDouble.class).getDoubleData());
         }
 
-        if (compoundTag.getValue().containsKey("addset_selection_count") && ((StringTag) compoundTag.getValue().get("addset_selection_count")).getValue().equals("add")) {
+        if (tagCompound.getCompoundData().containsKey("addset_selection_count") && tagCompound.getAs("addset_selection_count", TagString.class).getStringData().equals("add")) {
             addSelectionCount.setSelected(false);
         } else {
             setSelectionCount.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("selection_count")) {
-            selectionCountSpinner.setValue(((IntTag) compoundTag.getValue().get("selection_count")).getValue());
+        if (tagCompound.getCompoundData().containsKey("selection_count")) {
+            selectionCountSpinner.setValue(tagCompound.getAs("selection_count", TagInt.class).getIntData());
         }
     }
 

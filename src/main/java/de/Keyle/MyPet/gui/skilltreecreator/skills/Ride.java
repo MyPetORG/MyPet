@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 
 import javax.swing.*;
 import java.util.regex.Matcher;
@@ -39,11 +39,11 @@ public class Ride implements SkillPropertiesPanel {
     private JRadioButton addJumpHeightRadioButton;
     private JRadioButton setJumpHeightRadioButton;
 
-    private CompoundTag compoundTag;
+    private TagCompound tagCompound;
 
-    public Ride(CompoundTag compoundTag) {
-        this.compoundTag = compoundTag;
-        load(compoundTag);
+    public Ride(TagCompound tagCompound) {
+        this.tagCompound = tagCompound;
+        load(tagCompound);
     }
 
     @Override
@@ -78,34 +78,34 @@ public class Ride implements SkillPropertiesPanel {
     }
 
     @Override
-    public CompoundTag save() {
-        compoundTag.getValue().put("addset_speed", new StringTag("addset_speed", addSpeedRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("speed_percent", new IntTag("speed_percent", Integer.parseInt(speedInput.getText())));
+    public TagCompound save() {
+        tagCompound.getCompoundData().put("addset_speed", new TagString(addSpeedRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("speed_percent", new TagInt(Integer.parseInt(speedInput.getText())));
 
-        compoundTag.getValue().put("addset_jump_height", new StringTag("addset_jump_height", addJumpHeightRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("jump_height", new DoubleTag("jump_height", Double.parseDouble(jumpHeightInput.getText())));
+        tagCompound.getCompoundData().put("addset_jump_height", new TagString(addJumpHeightRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("jump_height", new TagDouble(Double.parseDouble(jumpHeightInput.getText())));
 
-        return compoundTag;
+        return tagCompound;
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        if (!compoundTag.getValue().containsKey("addset_speed") || ((StringTag) compoundTag.getValue().get("addset_speed")).getValue().equals("add")) {
+    public void load(TagCompound TagCompound) {
+        if (!TagCompound.getCompoundData().containsKey("addset_speed") || TagCompound.getAs("addset_speed", TagString.class).getStringData().equals("add")) {
             addSpeedRadioButton.setSelected(true);
         } else {
             setSpeedRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("speed_percent")) {
-            speedInput.setText("" + ((IntTag) compoundTag.getValue().get("speed_percent")).getValue());
+        if (TagCompound.getCompoundData().containsKey("speed_percent")) {
+            speedInput.setText("" + TagCompound.getAs("speed_percent", TagInt.class).getIntData());
         }
 
-        if (compoundTag.getValue().containsKey("addset_jump_height") && ((StringTag) compoundTag.getValue().get("addset_jump_height")).getValue().equals("add")) {
+        if (TagCompound.getCompoundData().containsKey("addset_jump_height") && TagCompound.getAs("addset_jump_height", TagString.class).getStringData().equals("add")) {
             addJumpHeightRadioButton.setSelected(true);
         } else {
             setJumpHeightRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("jump_height")) {
-            jumpHeightInput.setText("" + ((DoubleTag) compoundTag.getValue().get("jump_height")).getValue());
+        if (TagCompound.getCompoundData().containsKey("jump_height")) {
+            jumpHeightInput.setText("" + TagCompound.getAs("jump_height", TagDouble.class).getDoubleData());
         }
     }
 }

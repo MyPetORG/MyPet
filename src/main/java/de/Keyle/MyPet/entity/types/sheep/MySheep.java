@@ -25,12 +25,11 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.WHEAT;
 
@@ -56,30 +55,26 @@ public class MySheep extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Color", new ByteTag("Color", getColor().getDyeData()));
-        info.getValue().put("Sheared", new ByteTag("Sheared", isSheared()));
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Color", new TagByte(getColor().getDyeData()));
+        info.getCompoundData().put("Sheared", new TagByte(isSheared()));
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Color")) {
-            byte data;
-            if (info.getValue().get("Color").getType() == TagType.TAG_INT) {
-                data = ((IntTag) info.getValue().get("Color")).getValue().byteValue();
-            } else {
-                data = ((ByteTag) info.getValue().get("Color")).getValue();
-            }
-            setColor(DyeColor.getByDyeData(data));
+    public void setExtendedInfo(TagCompound info) {
+        if (info.containsKeyAs("Color", TagInt.class)) {
+            setColor(DyeColor.getByDyeData((byte) info.getAs("Color", TagInt.class).getIntData()));
+        } else if (info.containsKeyAs("Color", TagInt.class)) {
+            setColor(DyeColor.getByDyeData(info.getAs("Color", TagByte.class).getByteData()));
         }
-        if (info.getValue().containsKey("Sheared")) {
-            setSheared(((ByteTag) info.getValue().get("Sheared")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Sheared")) {
+            setSheared(info.getAs("Sheared", TagByte.class).getBooleanData());
         }
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
 

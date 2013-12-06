@@ -29,15 +29,14 @@ import de.Keyle.MyPet.skill.skills.info.InventoryInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.PacketPlayOutNamedSoundEffect;
 import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
 
 public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive {
     public CustomInventory inv = new CustomInventory("Pet's Inventory", 0);
@@ -60,8 +59,8 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof InventoryInfo) {
-            if (upgrade.getProperties().getValue().containsKey("add")) {
-                rows += ((IntTag) upgrade.getProperties().getValue().get("add")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("add")) {
+                rows += upgrade.getProperties().getAs("add", TagInt.class).getIntData();
                 if (rows > 6) {
                     rows = 6;
                 }
@@ -70,8 +69,8 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Skill.Inventory.Upgrade", myPet.getOwner()), myPet.getPetName(), inv.getSize()));
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("drop")) {
-                dropOnDeath = ((ByteTag) upgrade.getProperties().getValue().get("drop")).getBooleanValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("drop")) {
+                dropOnDeath = upgrade.getProperties().getAs("drop", TagByte.class).getBooleanData();
             }
         }
     }
@@ -121,12 +120,12 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
         inv.close();
     }
 
-    public void load(CompoundTag compound) {
+    public void load(TagCompound compound) {
         inv.load(compound);
     }
 
-    public CompoundTag save() {
-        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
+    public TagCompound save() {
+        TagCompound nbtTagCompound = new TagCompound();
         inv.save(nbtTagCompound);
         return nbtTagCompound;
     }

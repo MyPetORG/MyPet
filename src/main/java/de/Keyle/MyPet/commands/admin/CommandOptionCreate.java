@@ -31,13 +31,13 @@ import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,86 +157,86 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 inactiveMyPet.setPetType(myPetType);
                 inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
 
-                CompoundTag compoundTag = inactiveMyPet.getInfo();
+                TagCompound TagCompound = inactiveMyPet.getInfo();
                 if (args.length > 2 + forceOffset) {
                     for (int i = 2 + forceOffset; i < args.length; i++) {
                         if (args[i].equalsIgnoreCase("baby")) {
-                            compoundTag.getValue().put("Baby", new ByteTag("Baby", true));
+                            TagCompound.getCompoundData().put("Baby", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("fire")) {
-                            compoundTag.getValue().put("Fire", new ByteTag("Fire", true));
+                            TagCompound.getCompoundData().put("Fire", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("powered")) {
-                            compoundTag.getValue().put("Powered", new ByteTag("Powered", true));
+                            TagCompound.getCompoundData().put("Powered", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("saddle")) {
-                            compoundTag.getValue().put("Saddle", new ByteTag("Saddle", true));
+                            TagCompound.getCompoundData().put("Saddle", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("sheared")) {
-                            compoundTag.getValue().put("Sheared", new ByteTag("Sheared", true));
+                            TagCompound.getCompoundData().put("Sheared", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("wither")) {
-                            compoundTag.getValue().put("Wither", new ByteTag("Wither", true));
+                            TagCompound.getCompoundData().put("Wither", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("tamed")) {
-                            compoundTag.getValue().put("Tamed", new ByteTag("Tamed", true));
+                            TagCompound.getCompoundData().put("Tamed", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("angry")) {
-                            compoundTag.getValue().put("Angry", new ByteTag("Angry", true));
+                            TagCompound.getCompoundData().put("Angry", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("villager")) {
-                            compoundTag.getValue().put("Villager", new ByteTag("Villager", true));
+                            TagCompound.getCompoundData().put("Villager", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("chest")) {
-                            compoundTag.getValue().put("Chest", new ByteTag("Chest", true));
+                            TagCompound.getCompoundData().put("Chest", new TagByte(true));
                         } else if (args[i].startsWith("size:")) {
                             String size = args[i].replace("size:", "");
                             if (Util.isInt(size)) {
-                                compoundTag.getValue().put("Size", new IntTag("Size", Integer.parseInt(size)));
+                                TagCompound.getCompoundData().put("Size", new TagInt(Integer.parseInt(size)));
                             }
                         } else if (args[i].startsWith("horse:")) {
                             String horseTypeString = args[i].replace("horse:", "");
                             if (Util.isByte(horseTypeString)) {
                                 int horseType = Integer.parseInt(horseTypeString);
                                 horseType = Math.min(Math.max(0, horseType), 4);
-                                compoundTag.getValue().put("Type", new ByteTag("Type", (byte) horseType));
+                                TagCompound.getCompoundData().put("Type", new TagByte((byte) horseType));
                             }
                         } else if (args[i].startsWith("variant:")) {
                             String variantString = args[i].replace("variant:", "");
                             if (Util.isInt(variantString)) {
                                 int variant = Integer.parseInt(variantString);
                                 variant = Math.min(Math.max(0, variant), 1030);
-                                compoundTag.getValue().put("Variant", new IntTag("Variant", variant));
+                                TagCompound.getCompoundData().put("Variant", new TagInt(variant));
                             }
                         } else if (args[i].startsWith("cat:")) {
                             String catTypeString = args[i].replace("cat:", "");
                             if (Util.isInt(catTypeString)) {
                                 int catType = Integer.parseInt(catTypeString);
                                 catType = Math.min(Math.max(0, catType), 3);
-                                compoundTag.getValue().put("CatType", new IntTag("CatType", catType));
+                                TagCompound.getCompoundData().put("CatType", new TagInt(catType));
                             }
                         } else if (args[i].startsWith("profession:")) {
                             String professionString = args[i].replace("profession:", "");
                             if (Util.isInt(professionString)) {
                                 int profession = Integer.parseInt(professionString);
                                 profession = Math.min(Math.max(0, profession), 5);
-                                compoundTag.getValue().put("Profession", new IntTag("Profession", profession));
+                                TagCompound.getCompoundData().put("Profession", new TagInt(profession));
                             }
                         } else if (args[i].startsWith("color:")) {
                             String colorString = args[i].replace("color:", "");
                             if (Util.isByte(colorString)) {
                                 byte color = Byte.parseByte(colorString);
                                 color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                compoundTag.getValue().put("Color", new ByteTag("Color", color));
+                                TagCompound.getCompoundData().put("Color", new TagByte(color));
                             }
                         } else if (args[i].startsWith("collar:")) {
                             String colorString = args[i].replace("collar:", "");
                             if (Util.isByte(colorString)) {
                                 byte color = Byte.parseByte(colorString);
                                 color = color > 15 ? 15 : color < 0 ? 0 : color;
-                                compoundTag.getValue().put("CollarColor", new ByteTag("CollarColor", color));
+                                TagCompound.getCompoundData().put("CollarColor", new TagByte(color));
                             }
                         } else if (args[i].startsWith("block:")) {
                             String blocks = args[i].replace("block:", "");
                             String[] blockInfo = blocks.split(":");
                             if (blockInfo.length >= 1 && Util.isInt(blockInfo[0]) && BukkitUtil.isValidMaterial(Integer.parseInt(blockInfo[0]))) {
-                                compoundTag.getValue().put("BlockID", new IntTag("BlockID", Integer.parseInt(blockInfo[0])));
+                                TagCompound.getCompoundData().put("BlockID", new TagInt(Integer.parseInt(blockInfo[0])));
                             }
                             if (blockInfo.length >= 2 && Util.isInt(blockInfo[1])) {
                                 int blockData = Integer.parseInt(blockInfo[1]);
                                 blockData = Math.min(Math.max(0, blockData), 15);
-                                compoundTag.getValue().put("BlockData", new IntTag("BlockData", blockData));
+                                TagCompound.getCompoundData().put("BlockData", new TagInt(blockData));
                             }
                         } else {
                             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] \"" + ChatColor.RED + args[i] + "\" is not a valid option!");

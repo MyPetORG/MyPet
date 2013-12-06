@@ -28,12 +28,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagList;
 import net.minecraft.server.v1_7_R1.ItemStack;
 import org.bukkit.ChatColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.ListTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,34 +64,34 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
 
-        List<CompoundTag> itemList = new ArrayList<CompoundTag>();
+        List<TagCompound> itemList = new ArrayList<TagCompound>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
-                CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(getEquipment(slot));
-                item.getValue().put("Slot", new IntTag("Slot", slot.getSlotId()));
+                TagCompound item = ItemStackNBTConverter.ItemStackToCompund(getEquipment(slot));
+                item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
                 itemList.add(item);
             }
         }
-        info.getValue().put("Equipment", new ListTag<CompoundTag>("Equipment", CompoundTag.class, itemList));
+        info.getCompoundData().put("Equipment", new TagList(itemList));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getValue().containsKey("Equipment")) {
-            ListTag equipment = (ListTag) info.getValue().get("Equipment");
-            for (int i = 0; i < equipment.getValue().size(); i++) {
-                CompoundTag item = (CompoundTag) equipment.getValue().get(i);
+        if (info.getCompoundData().containsKey("Equipment")) {
+            TagList equipment = info.getAs("Equipment", TagList.class);
+            for (int i = 0; i < equipment.getReadOnlyList().size(); i++) {
+                TagCompound item = equipment.getTagAs(i, TagCompound.class);
 
                 ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(item);
-                setEquipment(EquipmentSlot.getSlotById(((IntTag) item.getValue().get("Slot")).getValue()), itemStack);
+                setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
             }
         }
     }

@@ -31,11 +31,10 @@ import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -79,15 +78,15 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
             active = true;
             boolean valuesEdit = false;
             String activeModes = "";
-            if (upgrade.getProperties().getValue().containsKey("friend")) {
-                behaviorActive.put(BehaviorState.Friendly, ((ByteTag) upgrade.getProperties().getValue().get("friend")).getBooleanValue());
+            if (upgrade.getProperties().getCompoundData().containsKey("friend")) {
+                behaviorActive.put(BehaviorState.Friendly, ((TagByte) upgrade.getProperties().getAs("friend", TagByte.class)).getBooleanData());
                 if (behaviorActive.get(BehaviorState.Friendly) && BehaviorState.Friendly.isActive()) {
                     activeModes = ChatColor.GOLD + "Friendly" + ChatColor.RESET;
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("aggro")) {
-                behaviorActive.put(BehaviorState.Aggressive, ((ByteTag) upgrade.getProperties().getValue().get("aggro")).getBooleanValue());
+            if (upgrade.getProperties().getCompoundData().containsKey("aggro")) {
+                behaviorActive.put(BehaviorState.Aggressive, ((TagByte) upgrade.getProperties().getAs("aggro", TagByte.class)).getBooleanData());
                 if (behaviorActive.get(BehaviorState.Aggressive) && BehaviorState.Aggressive.isActive()) {
                     if (!activeModes.equalsIgnoreCase("")) {
                         activeModes += ", ";
@@ -96,8 +95,8 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("farm")) {
-                behaviorActive.put(BehaviorState.Farm, ((ByteTag) upgrade.getProperties().getValue().get("farm")).getBooleanValue());
+            if (upgrade.getProperties().getCompoundData().containsKey("farm")) {
+                behaviorActive.put(BehaviorState.Farm, ((TagByte) upgrade.getProperties().getAs("farm", TagByte.class)).getBooleanData());
                 if (behaviorActive.get(BehaviorState.Farm) && BehaviorState.Farm.isActive()) {
                     if (!activeModes.equalsIgnoreCase("")) {
                         activeModes += ", ";
@@ -106,8 +105,8 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("raid")) {
-                behaviorActive.put(BehaviorState.Raid, ((ByteTag) upgrade.getProperties().getValue().get("raid")).getBooleanValue());
+            if (upgrade.getProperties().getCompoundData().containsKey("raid")) {
+                behaviorActive.put(BehaviorState.Raid, ((TagByte) upgrade.getProperties().getAs("raid", TagByte.class)).getBooleanData());
                 if (behaviorActive.get(BehaviorState.Raid) && BehaviorState.Raid.isActive()) {
                     if (!activeModes.equalsIgnoreCase("")) {
                         activeModes += ", ";
@@ -116,8 +115,8 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("duel")) {
-                behaviorActive.put(BehaviorState.Duel, ((ByteTag) upgrade.getProperties().getValue().get("duel")).getBooleanValue());
+            if (upgrade.getProperties().getCompoundData().containsKey("duel")) {
+                behaviorActive.put(BehaviorState.Duel, ((TagByte) upgrade.getProperties().getAs("duel", TagByte.class)).getBooleanData());
                 if (behaviorActive.get(BehaviorState.Duel) && BehaviorState.Duel.isActive()) {
                     if (!activeModes.equalsIgnoreCase("")) {
                         activeModes += ", ";
@@ -229,15 +228,15 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
         }
     }
 
-    public void load(CompoundTag compound) {
-        if (compound.getValue().containsKey("Mode")) {
-            behavior = BehaviorState.valueOf(((StringTag) compound.getValue().get("Mode")).getValue());
+    public void load(TagCompound compound) {
+        if (compound.getCompoundData().containsKey("Mode")) {
+            behavior = BehaviorState.valueOf(compound.getAs("Mode", TagString.class).getStringData());
         }
     }
 
-    public CompoundTag save() {
-        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
-        nbtTagCompound.getValue().put("Mode", new StringTag("Mode", behavior.name()));
+    public TagCompound save() {
+        TagCompound nbtTagCompound = new TagCompound();
+        nbtTagCompound.getCompoundData().put("Mode", new TagString(behavior.name()));
         return nbtTagCompound;
     }
 

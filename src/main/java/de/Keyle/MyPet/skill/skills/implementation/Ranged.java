@@ -26,10 +26,10 @@ import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 public class Ranged extends RangedInfo implements ISkillInstance {
     private MyPet myPet;
@@ -57,32 +57,32 @@ public class Ranged extends RangedInfo implements ISkillInstance {
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof RangedInfo) {
             boolean isPassive = damage <= 0;
-            if (upgrade.getProperties().getValue().containsKey("damage")) {
-                int damage = ((IntTag) upgrade.getProperties().getValue().get("damage")).getValue();
-                upgrade.getProperties().getValue().remove("damage");
-                DoubleTag doubleTag = new DoubleTag("damage_double", damage);
-                upgrade.getProperties().getValue().put("damage_double", doubleTag);
+            if (upgrade.getProperties().getCompoundData().containsKey("damage")) {
+                int damage = upgrade.getProperties().getAs("damage", TagInt.class).getIntData();
+                upgrade.getProperties().getCompoundData().remove("damage");
+                TagDouble TagDouble = new TagDouble(damage);
+                upgrade.getProperties().getCompoundData().put("damage_double", TagDouble);
             }
-            if (upgrade.getProperties().getValue().containsKey("damage_double")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_damage") || ((StringTag) upgrade.getProperties().getValue().get("addset_damage")).getValue().equals("add")) {
-                    damage += ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("damage_double")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_damage") || upgrade.getProperties().getAs("addset_damage", TagString.class).getStringData().equals("add")) {
+                    damage += upgrade.getProperties().getAs("damage_double", TagDouble.class).getDoubleData();
                 } else {
-                    damage = ((DoubleTag) upgrade.getProperties().getValue().get("damage_double")).getValue();
+                    damage = upgrade.getProperties().getAs("damage_double", TagDouble.class).getDoubleData();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("projectile")) {
-                String projectileName = ((StringTag) upgrade.getProperties().getValue().get("projectile")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("projectile")) {
+                String projectileName = upgrade.getProperties().getAs("projectile", TagString.class).getStringData();
                 for (Projectiles projectile : Projectiles.values()) {
                     if (projectile.name().equalsIgnoreCase(projectileName)) {
                         selectedProjectile = projectile;
                     }
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("rateoffire")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_rateoffire") || ((StringTag) upgrade.getProperties().getValue().get("addset_rateoffire")).getValue().equals("add")) {
-                    rateOfFire += ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("rateoffire")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_rateoffire") || upgrade.getProperties().getAs("addset_rateoffire", TagString.class).getStringData().equals("add")) {
+                    rateOfFire += upgrade.getProperties().getAs("rateoffire", TagInt.class).getIntData();
                 } else {
-                    rateOfFire = ((IntTag) upgrade.getProperties().getValue().get("rateoffire")).getValue();
+                    rateOfFire = upgrade.getProperties().getAs("rateoffire", TagInt.class).getIntData();
                 }
             }
             if (!quiet) {

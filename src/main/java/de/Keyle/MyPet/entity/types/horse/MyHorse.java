@@ -26,14 +26,13 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.TagType;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.*;
@@ -130,72 +129,66 @@ public class MyHorse extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Type", new ByteTag("Type", getHorseType()));
-        info.getValue().put("Variant", new IntTag("Variant", getVariant()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Type", new TagByte(getHorseType()));
+        info.getCompoundData().put("Variant", new TagInt(getVariant()));
         if (hasArmor()) {
-            info.getValue().put("Armor", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getArmor()), "Armor"));
+            info.getCompoundData().put("Armor", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getArmor())));
         }
-        info.getValue().put("Age", new IntTag("Age", getAge()));
+        info.getCompoundData().put("Age", new TagInt(getAge()));
         if (hasChest()) {
-            info.getValue().put("Chest", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getChest()), "Chest"));
+            info.getCompoundData().put("Chest", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getChest())));
         }
         if (hasSaddle()) {
-            info.getValue().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle()), "Saddle"));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
         }
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Type")) {
-            setHorseType(((ByteTag) info.getValue().get("Type")).getValue());
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Type")) {
+            setHorseType(info.getAs("Type", TagByte.class).getByteData());
         }
-        if (info.getValue().containsKey("Variant")) {
-            setVariant(((IntTag) info.getValue().get("Variant")).getValue());
+        if (info.getCompoundData().containsKey("Variant")) {
+            setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
-        if (info.getValue().containsKey("Armor")) {
-            if (info.getValue().get("Armor").getType() == TagType.TAG_INT) {
-                int armorType = ((IntTag) info.getValue().get("Armor")).getValue();
-                if (armorType != 0) {
-                    ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
-                    setArmor(item);
-                }
-            } else {
-                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Armor"));
-                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+        if (info.containsKeyAs("Armor", TagInt.class)) {
+            int armorType = info.getAs("Armor", TagInt.class).getIntData();
+            if (armorType != 0) {
+                ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
                 setArmor(item);
             }
+        } else {
+            TagCompound itemTag = info.get("Armor");
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            setArmor(item);
         }
-        if (info.getValue().containsKey("Age")) {
-            setAge(((IntTag) info.getValue().get("Age")).getValue());
+        if (info.getCompoundData().containsKey("Age")) {
+            setAge(info.getAs("Age", TagInt.class).getIntData());
         }
-        if (info.getValue().containsKey("Chest")) {
-            if (info.getValue().get("Chest").getType() == TagType.TAG_BYTE) {
-                boolean chest = ((ByteTag) info.getValue().get("Chest")).getBooleanValue();
-                if (chest) {
-                    ItemStack item = new ItemStack(Material.CHEST);
-                    setChest(item);
-                }
-            } else {
-                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Chest"));
-                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+        if (info.containsKeyAs("Chest", TagByte.class)) {
+            boolean chest = info.getAs("Chest", TagByte.class).getBooleanData();
+            if (chest) {
+                ItemStack item = new ItemStack(Material.CHEST);
                 setChest(item);
             }
+        } else {
+            TagCompound itemTag = info.get("Chest");
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            setChest(item);
         }
-        if (info.getValue().containsKey("Saddle")) {
-            if (info.getValue().get("Saddle").getType() == TagType.TAG_BYTE) {
-                boolean saddle = ((ByteTag) info.getValue().get("Saddle")).getBooleanValue();
-                if (saddle) {
-                    ItemStack item = new ItemStack(Material.SADDLE);
-                    setSaddle(item);
-                }
-            } else {
-                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Saddle"));
-                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+        if (info.containsKeyAs("Saddle", TagByte.class)) {
+            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
+            if (saddle) {
+                ItemStack item = new ItemStack(Material.SADDLE);
                 setSaddle(item);
             }
+        } else {
+            TagCompound itemTag = info.get("Saddle");
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            setSaddle(item);
         }
     }
 

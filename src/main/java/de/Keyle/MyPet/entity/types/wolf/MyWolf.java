@@ -25,10 +25,10 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.Tamed;
 import static org.bukkit.Material.RAW_BEEF;
@@ -57,28 +57,28 @@ public class MyWolf extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
-        info.getValue().put("Tamed", new ByteTag("Tamed", isTamed()));
-        info.getValue().put("Angry", new ByteTag("Angry", isAngry()));
-        info.getValue().put("CollarColor", new ByteTag("CollarColor", getCollarColor().getDyeData()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
+        info.getCompoundData().put("Tamed", new TagByte(isTamed()));
+        info.getCompoundData().put("Angry", new TagByte(isAngry()));
+        info.getCompoundData().put("CollarColor", new TagByte(getCollarColor().getDyeData()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("CollarColor")) {
-            setCollarColor(DyeColor.getByDyeData(((ByteTag) info.getValue().get("CollarColor")).getValue()));
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("CollarColor")) {
+            setCollarColor(DyeColor.getByDyeData(info.getAs("CollarColor", TagByte.class).getByteData()));
         }
-        if (info.getValue().containsKey("Tamed")) {
-            setTamed(((ByteTag) info.getValue().get("Tamed")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Tamed")) {
+            setTamed(info.getAs("Tamed", TagByte.class).getBooleanData());
         }
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
-        if (info.getValue().containsKey("Angry")) {
-            setAngry(((ByteTag) info.getValue().get("Angry")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Angry")) {
+            setAngry(info.getAs("Angry", TagByte.class).getBooleanData());
         }
     }
 

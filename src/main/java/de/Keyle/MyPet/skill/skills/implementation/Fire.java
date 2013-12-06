@@ -26,10 +26,10 @@ import de.Keyle.MyPet.skill.skills.info.FireInfo;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import org.bukkit.Effect;
 import org.bukkit.entity.LivingEntity;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -56,19 +56,19 @@ public class Fire extends FireInfo implements ISkillInstance, ISkillActive {
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof FireInfo) {
             boolean valuesEdit = false;
-            if (upgrade.getProperties().getValue().containsKey("chance")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add")) {
-                    chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("chance")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_chance") || upgrade.getProperties().getAs("addset_chance", TagString.class).getStringData().equals("add")) {
+                    chance += upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 } else {
-                    chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+                    chance = upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 }
                 valuesEdit = true;
             }
-            if (upgrade.getProperties().getValue().containsKey("duration")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add")) {
-                    duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("duration")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_duration") || upgrade.getProperties().getAs("addset_duration", TagString.class).getStringData().equals("add")) {
+                    duration += upgrade.getProperties().getAs("duration", TagInt.class).getIntData();
                 } else {
-                    duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
+                    duration = upgrade.getProperties().getAs("duration", TagInt.class).getIntData();
                 }
                 valuesEdit = true;
             }

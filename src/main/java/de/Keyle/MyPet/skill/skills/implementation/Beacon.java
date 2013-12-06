@@ -34,13 +34,13 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.iconmenu.IconMenu;
 import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.MobEffect;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.spout.nbt.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -303,112 +303,112 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof BeaconInfo) {
 
-            CompoundTag compoundTag = upgrade.getProperties();
+            TagCompound TagCompound = upgrade.getProperties();
 
-            if (compoundTag.getValue().containsKey("buff_speed_boost_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_speed_boost_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_speed_boost_level")) {
-                        buffLevel.put(1, ((IntTag) compoundTag.getValue().get("buff_speed_boost_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_speed_boost_enable")) {
+                if (TagCompound.getAs("buff_speed_boost_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_speed_boost_level")) {
+                        buffLevel.put(1, TagCompound.getAs("buff_speed_boost_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(1, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_haste_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_haste_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_haste_level")) {
-                        buffLevel.put(3, ((IntTag) compoundTag.getValue().get("buff_haste_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_haste_enable")) {
+                if (TagCompound.getAs("buff_haste_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_haste_level")) {
+                        buffLevel.put(3, TagCompound.getAs("buff_haste_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(3, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_strength_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_strength_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_strength_level")) {
-                        buffLevel.put(5, ((IntTag) compoundTag.getValue().get("buff_strength_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_strength_enable")) {
+                if (TagCompound.getAs("buff_strength_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_strength_level")) {
+                        buffLevel.put(5, TagCompound.getAs("buff_strength_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(5, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_jump_boost_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_jump_boost_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_jump_boost_level")) {
-                        buffLevel.put(8, ((IntTag) compoundTag.getValue().get("buff_jump_boost_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_jump_boost_enable")) {
+                if (TagCompound.getAs("buff_jump_boost_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_jump_boost_level")) {
+                        buffLevel.put(8, TagCompound.getAs("buff_jump_boost_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(8, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_regeneration_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_regeneration_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_regeneration_level")) {
-                        buffLevel.put(10, ((IntTag) compoundTag.getValue().get("buff_regeneration_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_regeneration_enable")) {
+                if (TagCompound.getAs("buff_regeneration_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_regeneration_level")) {
+                        buffLevel.put(10, TagCompound.getAs("buff_regeneration_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(10, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_resistance_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_resistance_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_resistance_level")) {
-                        buffLevel.put(11, ((IntTag) compoundTag.getValue().get("buff_resistance_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_resistance_enable")) {
+                if (TagCompound.getAs("buff_resistance_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_resistance_level")) {
+                        buffLevel.put(11, TagCompound.getAs("buff_resistance_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(11, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_fire_resistance_enable")) {
-                buffLevel.put(12, ((ByteTag) compoundTag.getValue().get("buff_fire_resistance_enable")).getValue().intValue());
+            if (TagCompound.getCompoundData().containsKey("buff_fire_resistance_enable")) {
+                buffLevel.put(12, (int) TagCompound.getAs("buff_fire_resistance_enable", TagByte.class).getByteData());
             }
-            if (compoundTag.getValue().containsKey("buff_water_breathing_enable")) {
-                buffLevel.put(13, ((ByteTag) compoundTag.getValue().get("buff_water_breathing_enable")).getValue().intValue());
+            if (TagCompound.getCompoundData().containsKey("buff_water_breathing_enable")) {
+                buffLevel.put(13, (int) TagCompound.getAs("buff_water_breathing_enable", TagByte.class).getByteData());
             }
-            if (compoundTag.getValue().containsKey("buff_invisibility_enable")) {
-                buffLevel.put(14, ((ByteTag) compoundTag.getValue().get("buff_invisibility_enable")).getValue().intValue());
+            if (TagCompound.getCompoundData().containsKey("buff_invisibility_enable")) {
+                buffLevel.put(14, (int) TagCompound.getAs("buff_invisibility_enable", TagByte.class).getByteData());
             }
-            if (compoundTag.getValue().containsKey("buff_night_vision_enable")) {
-                buffLevel.put(16, ((ByteTag) compoundTag.getValue().get("buff_night_vision_enable")).getValue().intValue());
+            if (TagCompound.getCompoundData().containsKey("buff_night_vision_enable")) {
+                buffLevel.put(16, (int) TagCompound.getAs("buff_night_vision_enable", TagByte.class).getByteData());
             }
-            if (compoundTag.getValue().containsKey("buff_health_boost_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_health_boost_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_health_boost_level")) {
-                        buffLevel.put(21, ((IntTag) compoundTag.getValue().get("buff_health_boost_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_health_boost_enable")) {
+                if (TagCompound.getAs("buff_health_boost_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_health_boost_level")) {
+                        buffLevel.put(21, TagCompound.getAs("buff_health_boost_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(21, 0);
                 }
             }
-            if (compoundTag.getValue().containsKey("buff_absorption_enable")) {
-                if (((ByteTag) compoundTag.getValue().get("buff_absorption_enable")).getBooleanValue()) {
-                    if (compoundTag.getValue().containsKey("buff_absorption_level")) {
-                        buffLevel.put(22, ((IntTag) compoundTag.getValue().get("buff_absorption_level")).getValue());
+            if (TagCompound.getCompoundData().containsKey("buff_absorption_enable")) {
+                if (TagCompound.getAs("buff_absorption_enable", TagByte.class).getBooleanData()) {
+                    if (TagCompound.getCompoundData().containsKey("buff_absorption_level")) {
+                        buffLevel.put(22, TagCompound.getAs("buff_absorption_level", TagInt.class).getIntData());
                     }
                 } else {
                     buffLevel.put(22, 0);
                 }
             }
 
-            if (upgrade.getProperties().getValue().containsKey("duration")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_duration") || ((StringTag) upgrade.getProperties().getValue().get("addset_duration")).getValue().equals("add")) {
-                    duration += ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("duration")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_duration") || upgrade.getProperties().getAs("addset_duration", TagString.class).getStringData().equals("add")) {
+                    duration += upgrade.getProperties().getAs("duration", TagInt.class).getIntData();
                 } else {
-                    duration = ((IntTag) upgrade.getProperties().getValue().get("duration")).getValue();
+                    duration = upgrade.getProperties().getAs("duration", TagInt.class).getIntData();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("range")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_range") || ((StringTag) upgrade.getProperties().getValue().get("addset_range")).getValue().equals("add")) {
-                    range += ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("range")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_range") || upgrade.getProperties().getAs("addset_range", TagString.class).getStringData().equals("add")) {
+                    range += upgrade.getProperties().getAs("range", TagDouble.class).getDoubleData();
                 } else {
-                    range = ((DoubleTag) upgrade.getProperties().getValue().get("range")).getValue();
+                    range = upgrade.getProperties().getAs("range", TagDouble.class).getDoubleData();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("selection_count")) {
-                if (upgrade.getProperties().getValue().containsKey("addset_selection_count") && ((StringTag) upgrade.getProperties().getValue().get("addset_selection_count")).getValue().equals("add")) {
-                    selectableBuffs += ((IntTag) upgrade.getProperties().getValue().get("selection_count")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("selection_count")) {
+                if (upgrade.getProperties().getCompoundData().containsKey("addset_selection_count") && upgrade.getProperties().getAs("addset_selection_count", TagString.class).getStringData().equals("add")) {
+                    selectableBuffs += upgrade.getProperties().getAs("selection_count", TagInt.class).getIntData();
                 } else {
-                    selectableBuffs = ((IntTag) upgrade.getProperties().getValue().get("selection_count")).getValue();
+                    selectableBuffs = upgrade.getProperties().getAs("selection_count", TagInt.class).getIntData();
                 }
                 selectableBuffs = selectableBuffs > 12 ? 12 : selectableBuffs;
             }
@@ -547,35 +547,35 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     }
 
     @Override
-    public CompoundTag save() {
-        CompoundTag nbtTagCompound = new CompoundTag(getName(), new CompoundMap());
-        nbtTagCompound.getValue().put("Buffs", new IntArrayTag("Buffs", ArrayUtils.toPrimitive(selectedBuffs.toArray(new Integer[selectedBuffs.size()]))));
-        nbtTagCompound.getValue().put("Active", new ByteTag("Active", this.active));
-        nbtTagCompound.getValue().put("Reciever", new StringTag("Reciever", this.reciever.name()));
+    public TagCompound save() {
+        TagCompound nbtTagCompound = new TagCompound();
+        nbtTagCompound.getCompoundData().put("Buffs", new TagIntArray(ArrayUtils.toPrimitive(selectedBuffs.toArray(new Integer[selectedBuffs.size()]))));
+        nbtTagCompound.getCompoundData().put("Active", new TagByte(this.active));
+        nbtTagCompound.getCompoundData().put("Reciever", new TagString(this.reciever.name()));
         return nbtTagCompound;
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        if (compound.getValue().containsKey("Buff")) {
-            int oldSelectedBuff = ((IntTag) compound.getValue().get("Buff")).getValue();
+    public void load(TagCompound compound) {
+        if (compound.getCompoundData().containsKey("Buff")) {
+            int oldSelectedBuff = compound.getAs("Buff", TagInt.class).getIntData();
             if (oldSelectedBuff != 0) {
                 this.selectedBuffs.add(oldSelectedBuff);
             }
         }
-        if (compound.getValue().containsKey("Buffs")) {
-            int[] selectedBuffs = ((IntArrayTag) compound.getValue().get("Buffs")).getValue();
+        if (compound.getCompoundData().containsKey("Buffs")) {
+            int[] selectedBuffs = compound.getAs("Buffs", TagIntArray.class).getIntArrayData();
             if (selectedBuffs.length != 0) {
                 for (int selectedBuff : selectedBuffs) {
                     this.selectedBuffs.add(selectedBuff);
                 }
             }
         }
-        if (compound.getValue().containsKey("Active")) {
-            this.active = ((ByteTag) compound.getValue().get("Active")).getBooleanValue();
+        if (compound.getCompoundData().containsKey("Active")) {
+            this.active = compound.getAs("Active", TagByte.class).getBooleanData();
         }
-        if (compound.getValue().containsKey("Reciever")) {
-            this.reciever = BeaconReciever.valueOf(((StringTag) compound.getValue().get("Reciever")).getValue());
+        if (compound.getCompoundData().containsKey("Reciever")) {
+            this.reciever = BeaconReciever.valueOf(compound.getAs("Reciever", TagString.class).getStringData());
         }
     }
 }

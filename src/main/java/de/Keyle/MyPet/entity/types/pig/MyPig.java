@@ -26,13 +26,12 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.TagType;
 
 import static org.bukkit.Material.CARROT_ITEM;
 
@@ -46,32 +45,30 @@ public class MyPig extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
         if (hasSaddle()) {
-            info.getValue().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle()), "Saddle"));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
         }
-        info.getValue().put("Baby", new ByteTag("Baby", isBaby()));
+        info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Saddle")) {
-            if (info.getValue().get("Saddle").getType() == TagType.TAG_BYTE) {
-                boolean saddle = ((ByteTag) info.getValue().get("Saddle")).getBooleanValue();
-                if (saddle) {
-                    ItemStack item = new ItemStack(Material.SADDLE);
-                    setSaddle(item);
-                }
-            } else {
-                CompoundTag itemTag = ((CompoundTag) info.getValue().get("Saddle"));
-                ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+    public void setExtendedInfo(TagCompound info) {
+        if (info.containsKeyAs("Saddle", TagByte.class)) {
+            boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
+            if (saddle) {
+                ItemStack item = new ItemStack(Material.SADDLE);
                 setSaddle(item);
             }
+        } else {
+            TagCompound itemTag = info.get("Saddle");
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            setSaddle(item);
         }
-        if (info.getValue().containsKey("Baby")) {
-            setBaby(((ByteTag) info.getValue().get("Baby")).getBooleanValue());
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
 

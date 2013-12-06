@@ -26,10 +26,10 @@ import de.Keyle.MyPet.skill.skills.info.RideInfo;
 import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import org.bukkit.ChatColor;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 public class Ride extends RideInfo implements ISkillInstance {
     public static ConfigItem RIDE_ITEM;
@@ -54,18 +54,18 @@ public class Ride extends RideInfo implements ISkillInstance {
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof RideInfo) {
-            if (upgrade.getProperties().getValue().containsKey("speed_percent")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_speed") || ((StringTag) upgrade.getProperties().getValue().get("addset_speed")).getValue().equals("add")) {
-                    speedPercent += ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("speed_percent")) {
+                if (!upgrade.getProperties().containsKeyAs("addset_speed", TagString.class) || upgrade.getProperties().getAs("addset_speed", TagString.class).getStringData().equals("add")) {
+                    speedPercent += upgrade.getProperties().getAs("speed_percent", TagInt.class).getIntData();
                 } else {
-                    speedPercent = ((IntTag) upgrade.getProperties().getValue().get("speed_percent")).getValue();
+                    speedPercent = upgrade.getProperties().getAs("speed_percent", TagInt.class).getIntData();
                 }
             }
-            if (upgrade.getProperties().getValue().containsKey("jump_height")) {
-                if (upgrade.getProperties().getValue().containsKey("addset_jump_height") && ((StringTag) upgrade.getProperties().getValue().get("addset_jump_height")).getValue().equals("add")) {
-                    jumpHeigth += ((DoubleTag) upgrade.getProperties().getValue().get("jump_height")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("jump_height")) {
+                if (upgrade.getProperties().containsKeyAs("addset_jump_height", TagString.class) && upgrade.getProperties().getAs("addset_jump_height", TagString.class).getStringData().equals("add")) {
+                    jumpHeigth += upgrade.getProperties().getAs("jump_height", TagDouble.class).getDoubleData();
                 } else {
-                    jumpHeigth = ((DoubleTag) upgrade.getProperties().getValue().get("jump_height")).getValue();
+                    jumpHeigth = upgrade.getProperties().getAs("jump_height", TagDouble.class).getDoubleData();
                 }
             }
             if (!active && !quiet) {

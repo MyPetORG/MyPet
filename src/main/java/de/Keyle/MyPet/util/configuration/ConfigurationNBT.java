@@ -22,26 +22,21 @@ package de.Keyle.MyPet.util.configuration;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import org.bukkit.ChatColor;
-import org.spout.nbt.CompoundMap;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.Tag;
-import org.spout.nbt.stream.NBTInputStream;
-import org.spout.nbt.stream.NBTOutputStream;
+import de.keyle.knbt.TagBase;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagStream;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConfigurationNBT {
     private File NBTFile;
-    private CompoundTag nbtTagCompound;
+    private TagCompound nbtTagCompound;
 
     public ConfigurationNBT(File file) {
         NBTFile = file;
     }
 
-    public CompoundTag getNBTCompound() {
+    public TagCompound getNBTCompound() {
         if (nbtTagCompound == null) {
             clearConfig();
         }
@@ -51,9 +46,8 @@ public class ConfigurationNBT {
     public boolean save() {
         try {
             OutputStream os = new FileOutputStream(NBTFile);
-            NBTOutputStream nbtOutputStream = new NBTOutputStream(os);
-            nbtOutputStream.writeTag(nbtTagCompound);
-            nbtOutputStream.close();
+            TagStream.writeTag(nbtTagCompound, os, true);
+            os.close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,57 +56,36 @@ public class ConfigurationNBT {
         }
     }
 
-    private List<Tag<?>> readRawNBT(File f, boolean compressed) {
-        List<Tag<?>> tags = new ArrayList<Tag<?>>();
-        try {
-            InputStream is = new FileInputStream(f);
-            NBTInputStream ns = new NBTInputStream(is, compressed);
-            try {
-                boolean eof = false;
-                while (!eof) {
-                    try {
-                        tags.add(ns.readTag());
-                    } catch (EOFException e) {
-                        eof = true;
-                    }
-                }
-            } finally {
-                try {
-                    ns.close();
-                } catch (IOException ignored) {
-                }
-            }
-        } catch (FileNotFoundException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
-        return tags;
-    }
-
     public boolean load() {
         if (!NBTFile.exists()) {
             return false;
         }
-        List<Tag<?>> tags = readRawNBT(NBTFile, true);
-        if (tags != null) {
-            DebugLogger.info("loaded compressed NBT file (" + NBTFile.getName() + ")");
-        } else {
-            tags = readRawNBT(NBTFile, false);
-            if (tags != null) {
-                DebugLogger.info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
+        try {
+            InputStream is = new FileInputStream(NBTFile);
+            TagBase tag = TagStream.readTag(is, true);
+            if (tag != null) {
+                DebugLogger.info("loaded compressed NBT file (" + NBTFile.getName() + ")");
+                nbtTagCompound = (TagCompound) tag;
+                return true;
             }
+            tag = TagStream.readTag(is, false);
+            if (tag != null) {
+                DebugLogger.info("loaded uncompressed NBT file (" + NBTFile.getName() + ")");
+                nbtTagCompound = (TagCompound) tag;
+                return true;
+            } else {
+                MyPetLogger.write("Could not parse/load " + NBTFile.getName());
+                return false;
+            }
+
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
         }
-        if (tags != null && tags.size() > 0) {
-            nbtTagCompound = (CompoundTag) tags.get(0);
-            return true;
-        }
-        MyPetLogger.write(ChatColor.RED + "Could not parse/load " + NBTFile.getName());
-        DebugLogger.warning("Could not parse/load " + NBTFile.getName());
-        return false;
     }
 
     public void clearConfig() {
-        nbtTagCompound = new CompoundTag("root", new CompoundMap());
+        nbtTagCompound = new TagCompound();
     }
 }

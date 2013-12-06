@@ -74,6 +74,10 @@ import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.Keyle.MyPet.util.support.arenas.*;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagList;
+import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -84,10 +88,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 import org.mcstats.Metrics.Graph;
 import org.mcstats.Metrics.Plotter;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.ListTag;
-import org.spout.nbt.StringTag;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -464,21 +464,21 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         if (!nbtConfiguration.load()) {
             return 0;
         }
-        ListTag petList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Pets");
-        if (nbtConfiguration.getNBTCompound().getValue().containsKey("CleanShutdown")) {
-            DebugLogger.info("Clean shutdown: " + ((ByteTag) nbtConfiguration.getNBTCompound().getValue().get("CleanShutdown")).getBooleanValue());
+        TagList petList = nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class);
+        if (nbtConfiguration.getNBTCompound().getCompoundData().containsKey("CleanShutdown")) {
+            DebugLogger.info("Clean shutdown: " + ((TagByte) nbtConfiguration.getNBTCompound().getAs("CleanShutdown", TagByte.class)).getBooleanData());
         }
 
         DebugLogger.info("Loading players -------------------------");
-        if (nbtConfiguration.getNBTCompound().getValue().containsKey("Players")) {
+        if (nbtConfiguration.getNBTCompound().getCompoundData().containsKey("Players")) {
             DebugLogger.info(loadPlayers(nbtConfiguration) + " PetPlayer(s) loaded");
         }
         DebugLogger.info("-----------------------------------------");
 
         DebugLogger.info("loading Pets: -----------------------------");
-        for (int i = 0; i < petList.getValue().size(); i++) {
-            CompoundTag myPetNBT = (CompoundTag) petList.getValue().get(i);
-            String petOwner = ((StringTag) myPetNBT.getValue().get("Owner")).getValue();
+        for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
+            TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
+            String petOwner = myPetNBT.getAs("Owner", TagString.class).getStringData();
             InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
             inactiveMyPet.load(myPetNBT);
 
@@ -496,11 +496,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         autoSaveTimer = Configuration.AUTOSAVE_TIME;
         int petCount = 0;
         ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
-        List<CompoundTag> petList = new ArrayList<CompoundTag>();
+        List<TagCompound> petList = new ArrayList<TagCompound>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             try {
-                CompoundTag petNBT = myPet.save();
+                TagCompound petNBT = myPet.save();
                 petList.add(petNBT);
                 petCount++;
             } catch (Exception e) {
@@ -509,25 +509,25 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
         for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
             try {
-                CompoundTag petNBT = inactiveMyPet.save();
+                TagCompound petNBT = inactiveMyPet.save();
                 petList.add(petNBT);
                 petCount++;
             } catch (Exception e) {
                 DebugLogger.printThrowable(e);
             }
         }
-        nbtConfiguration.getNBTCompound().getValue().put("Version", new StringTag("Version", MyPetVersion.getMyPetVersion()));
-        nbtConfiguration.getNBTCompound().getValue().put("Build", new StringTag("Build", MyPetVersion.getMyPetBuild()));
-        nbtConfiguration.getNBTCompound().getValue().put("CleanShutdown", new ByteTag("CleanShutdown", shutdown));
-        nbtConfiguration.getNBTCompound().getValue().put("Pets", new ListTag<CompoundTag>("Pets", CompoundTag.class, petList));
-        nbtConfiguration.getNBTCompound().getValue().put("Players", savePlayers());
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getMyPetVersion()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagString(MyPetVersion.getMyPetBuild()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
         nbtConfiguration.save();
 
         return petCount;
     }
 
-    private ListTag savePlayers() {
-        List<CompoundTag> playerList = new ArrayList<CompoundTag>();
+    private TagList savePlayers() {
+        List<TagCompound> playerList = new ArrayList<TagCompound>();
         for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers()) {
             if (myPetPlayer.hasCustomData()) {
                 try {
@@ -537,16 +537,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 }
             }
         }
-        return new ListTag<CompoundTag>("Players", CompoundTag.class, playerList);
+        return new TagList(playerList);
     }
 
     private int loadPlayers(ConfigurationNBT nbtConfiguration) {
         int playerCount = 0;
-        ListTag playerList = (ListTag) nbtConfiguration.getNBTCompound().getValue().get("Players");
+        TagList playerList = nbtConfiguration.getNBTCompound().getAs("Players", TagList.class);
 
-        for (int i = 0; i < playerList.getValue().size(); i++) {
-            CompoundTag myplayerNBT = (CompoundTag) playerList.getValue().get(i);
-            MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(((StringTag) myplayerNBT.getValue().get("Name")).getValue());
+        for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
+            TagCompound myplayerNBT = playerList.getTagAs(i, TagCompound.class);
+            MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getAs("Name", TagString.class).getStringData());
             petPlayer.load(myplayerNBT);
 
             playerCount++;

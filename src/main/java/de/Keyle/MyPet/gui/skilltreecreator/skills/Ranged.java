@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.gui.skilltreecreator.skills;
 
 import de.Keyle.MyPet.util.Util;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.DoubleTag;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagDouble;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -44,11 +44,11 @@ public class Ranged implements SkillPropertiesPanel {
     private JRadioButton addRateOfFireRadioButton;
     private JTextField rateOfFireInput;
 
-    private CompoundTag compoundTag;
+    private TagCompound tagCompound;
 
-    public Ranged(CompoundTag compoundTag) {
-        this.compoundTag = compoundTag;
-        load(compoundTag);
+    public Ranged(TagCompound tagCompound) {
+        this.tagCompound = tagCompound;
+        load(tagCompound);
 
         rateOfFireInput.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent arg0) {
@@ -100,34 +100,34 @@ public class Ranged implements SkillPropertiesPanel {
     }
 
     @Override
-    public CompoundTag save() {
-        compoundTag.getValue().put("projectile", new StringTag("projectile", ((String) projectileComboBox.getSelectedItem()).replace(" ", "")));
+    public TagCompound save() {
+        tagCompound.getCompoundData().put("projectile", new TagString(((String) projectileComboBox.getSelectedItem()).replace(" ", "")));
 
-        compoundTag.getValue().put("addset_damage", new StringTag("addset_damage", addDamageRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", Double.parseDouble(damageInput.getText())));
+        tagCompound.getCompoundData().put("addset_damage", new TagString(addDamageRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("damage_double", new TagDouble(Double.parseDouble(damageInput.getText())));
 
-        compoundTag.getValue().put("addset_rateoffire", new StringTag("addset_rateoffire", addRateOfFireRadioButton.isSelected() ? "add" : "set"));
-        compoundTag.getValue().put("rateoffire", new IntTag("rateoffire", Integer.parseInt(rateOfFireInput.getText())));
-        return compoundTag;
+        tagCompound.getCompoundData().put("addset_rateoffire", new TagString(addRateOfFireRadioButton.isSelected() ? "add" : "set"));
+        tagCompound.getCompoundData().put("rateoffire", new TagInt(Integer.parseInt(rateOfFireInput.getText())));
+        return tagCompound;
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        if (!compoundTag.getValue().containsKey("addset_damage") || ((StringTag) compoundTag.getValue().get("addset_damage")).getValue().equals("add")) {
+    public void load(TagCompound TagCompound) {
+        if (!TagCompound.getCompoundData().containsKey("addset_damage") || TagCompound.getAs("addset_damage", TagString.class).getStringData().equals("add")) {
             addDamageRadioButton.setSelected(true);
         } else {
             setDamageRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("damage")) {
-            compoundTag.getValue().put("damage_double", new DoubleTag("damage_double", ((IntTag) compoundTag.getValue().get("damage")).getValue()));
-            compoundTag.getValue().remove("damage");
+        if (TagCompound.getCompoundData().containsKey("damage")) {
+            TagCompound.getCompoundData().put("damage_double", new TagDouble(TagCompound.getAs("damage", TagInt.class).getIntData()));
+            TagCompound.getCompoundData().remove("damage");
         }
-        if (compoundTag.getValue().containsKey("damage_double")) {
-            damageInput.setText("" + ((DoubleTag) compoundTag.getValue().get("damage_double")).getValue());
+        if (TagCompound.getCompoundData().containsKey("damage_double")) {
+            damageInput.setText("" + TagCompound.getAs("damage_double", TagDouble.class).getDoubleData());
         }
 
-        if (compoundTag.getValue().containsKey("projectile")) {
-            String projectileName = ((StringTag) compoundTag.getValue().get("projectile")).getValue();
+        if (TagCompound.getCompoundData().containsKey("projectile")) {
+            String projectileName = TagCompound.getAs("projectile", TagString.class).getStringData();
 
             for (int i = 0; i < projectileComboBox.getItemCount(); i++) {
                 if (((String) projectileComboBox.getItemAt(i)).replace(" ", "").equalsIgnoreCase(projectileName)) {
@@ -137,13 +137,13 @@ public class Ranged implements SkillPropertiesPanel {
             }
         }
 
-        if (!compoundTag.getValue().containsKey("addset_rateoffire") || ((StringTag) compoundTag.getValue().get("addset_rateoffire")).getValue().equals("add")) {
+        if (!TagCompound.getCompoundData().containsKey("addset_rateoffire") || TagCompound.getAs("addset_rateoffire", TagString.class).getStringData().equals("add")) {
             addRateOfFireRadioButton.setSelected(true);
         } else {
             setRateOfFireRadioButton.setSelected(true);
         }
-        if (compoundTag.getValue().containsKey("rateoffire")) {
-            rateOfFireInput.setText("" + ((IntTag) compoundTag.getValue().get("rateoffire")).getValue());
+        if (TagCompound.getCompoundData().containsKey("rateoffire")) {
+            rateOfFireInput.setText("" + TagCompound.getAs("rateoffire", TagInt.class).getIntData());
         }
     }
 }

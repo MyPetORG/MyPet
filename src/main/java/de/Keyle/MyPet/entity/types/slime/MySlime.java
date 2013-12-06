@@ -25,9 +25,9 @@ import de.Keyle.MyPet.entity.types.IMyPetSlimeSize;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.MyPetPlayer;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.IntTag;
 
 import static org.bukkit.Material.SUGAR;
 
@@ -40,16 +40,16 @@ public class MySlime extends MyPet implements IMyPetSlimeSize {
     }
 
     @Override
-    public CompoundTag getExtendedInfo() {
-        CompoundTag info = super.getExtendedInfo();
-        info.getValue().put("Size", new IntTag("Size", getSize()));
+    public TagCompound getExtendedInfo() {
+        TagCompound info = super.getExtendedInfo();
+        info.getCompoundData().put("Size", new TagInt(getSize()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(CompoundTag info) {
-        if (info.getValue().containsKey("Size")) {
-            setSize(((IntTag) info.getValue().get("Size")).getValue());
+    public void setExtendedInfo(TagCompound info) {
+        if (info.getCompoundData().containsKey("Size")) {
+            setSize(info.getAs("Size", TagInt.class).getIntData());
         }
     }
 

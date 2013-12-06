@@ -31,11 +31,11 @@ import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.spout.nbt.CompoundTag;
 
 import java.util.List;
 
@@ -81,13 +81,13 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         newPet.setPetType(oldPet.getPetType());
         newPet.setSkillTree(oldPet.getSkillTree());
         newPet.setWorldGroup(oldPet.getWorldGroup());
-        CompoundTag skillCompund = newPet.getSkills();
+        TagCompound skillCompund = newPet.getSkills();
         for (ISkillInstance skill : oldPet.getSkills().getSkills()) {
             if (skill instanceof ISkillStorage) {
                 ISkillStorage storageSkill = (ISkillStorage) skill;
-                CompoundTag s = storageSkill.save();
+                TagCompound s = storageSkill.save();
                 if (s != null) {
-                    skillCompund.getValue().put(skill.getName(), s);
+                    skillCompund.getCompoundData().put(skill.getName(), s);
                 }
             }
         }

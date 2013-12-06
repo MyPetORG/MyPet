@@ -27,9 +27,9 @@ import de.Keyle.MyPet.skill.skills.info.ThornsInfo;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagString;
 import org.bukkit.entity.LivingEntity;
-import org.spout.nbt.IntTag;
-import org.spout.nbt.StringTag;
 
 import java.util.Random;
 
@@ -55,16 +55,16 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive {
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
         if (upgrade instanceof ThornsInfo) {
-            if (upgrade.getProperties().getValue().containsKey("chance")) {
-                if (!upgrade.getProperties().getValue().containsKey("addset_chance") || ((StringTag) upgrade.getProperties().getValue().get("addset_chance")).getValue().equals("add")) {
-                    chance += ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+            if (upgrade.getProperties().getCompoundData().containsKey("chance")) {
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_chance") || upgrade.getProperties().getAs("addset_chance", TagString.class).getStringData().equals("add")) {
+                    chance += upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 } else {
-                    chance = ((IntTag) upgrade.getProperties().getValue().get("chance")).getValue();
+                    chance = upgrade.getProperties().getAs("chance", TagInt.class).getIntData();
                 }
-                if (!upgrade.getProperties().getValue().containsKey("addset_reflection") || ((StringTag) upgrade.getProperties().getValue().get("addset_reflection")).getValue().equals("add")) {
-                    reflectedDamagePercent += ((IntTag) upgrade.getProperties().getValue().get("reflection")).getValue();
+                if (!upgrade.getProperties().getCompoundData().containsKey("addset_reflection") || upgrade.getProperties().getAs("addset_reflection", TagString.class).getStringData().equals("add")) {
+                    reflectedDamagePercent += upgrade.getProperties().getAs("reflection", TagInt.class).getIntData();
                 } else {
-                    reflectedDamagePercent = ((IntTag) upgrade.getProperties().getValue().get("reflection")).getValue();
+                    reflectedDamagePercent = upgrade.getProperties().getAs("reflection", TagInt.class).getIntData();
                 }
                 reflectedDamagePercent = Math.min(reflectedDamagePercent, 100);
                 chance = Math.min(chance, 100);

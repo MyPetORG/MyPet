@@ -21,10 +21,6 @@ MyPet is licensed under the [GNU Lesser General Public License Version 3][Licens
 All Icons in [Ressources/Images] are owned by the Oxygen Team (http://www.oxygen-icons.org).<br />
 These Icons are under the terms of the [GNU Lesser General Public License Version][License].
 
-SimpleNBT is licensed under the GNU Lesser General Public License Version 3,<br />
-but with a provision that files are released under the MIT license 180 days after they are published.<br />
-Please see the [LICENSE][SimpleNBTLicense] file in the SimpleNBT repository for details.
-
 ## Builds
 Download the latest builds from our [Jenkins-Server][Builds].
 
@@ -32,7 +28,6 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [Logo]: http://dl.keyle.de/images/logo.png
 [Banner]: http://dl.keyle.de/images/banner.png
 [License]: http://www.gnu.org/licenses/lgpl.html
-[SimpleNBTLicense]: https://raw.github.com/SpoutDev/SimpleNBT/master/LICENSE.txt
 [Ressources/Images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet

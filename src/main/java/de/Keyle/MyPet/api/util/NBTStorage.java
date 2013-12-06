@@ -20,10 +20,10 @@
 
 package de.Keyle.MyPet.api.util;
 
-import org.spout.nbt.CompoundTag;
+import de.keyle.knbt.TagCompound;
 
 public interface NBTStorage {
-    public CompoundTag save();
+    public TagCompound save();
 
-    public void load(CompoundTag compound);
+    public void load(TagCompound compound);
 }

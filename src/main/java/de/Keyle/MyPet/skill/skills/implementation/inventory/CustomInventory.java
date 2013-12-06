@@ -21,6 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.Keyle.MyPet.MyPetPlugin;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagList;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
@@ -31,9 +34,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.spout.nbt.ByteTag;
-import org.spout.nbt.CompoundTag;
-import org.spout.nbt.ListTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,28 +175,28 @@ public class CustomInventory implements IInventory, Listener {
         return itemStack;
     }
 
-    public CompoundTag save(CompoundTag compound) {
-        List<CompoundTag> itemList = new ArrayList<CompoundTag>();
+    public TagCompound save(TagCompound compound) {
+        List<TagCompound> itemList = new ArrayList<TagCompound>();
         for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
             if (itemStack != null) {
-                CompoundTag item = ItemStackNBTConverter.ItemStackToCompund(itemStack);
-                item.getValue().put("Slot", new ByteTag("Slot", (byte) i));
+                TagCompound item = ItemStackNBTConverter.ItemStackToCompund(itemStack);
+                item.getCompoundData().put("Slot", new TagByte((byte) i));
                 itemList.add(item);
             }
         }
-        compound.getValue().put("Items", new ListTag<CompoundTag>("Items", CompoundTag.class, itemList));
+        compound.getCompoundData().put("Items", new TagList(itemList));
         return compound;
     }
 
-    public void load(CompoundTag nbtTagCompound) {
-        ListTag items = (ListTag) nbtTagCompound.getValue().get("Items");
+    public void load(TagCompound nbtTagCompound) {
+        TagList items = nbtTagCompound.getAs("Items", TagList.class);
 
-        for (int i = 0; i < items.getValue().size(); i++) {
-            CompoundTag itemCompound = (CompoundTag) items.getValue().get(i);
+        for (int i = 0; i < items.size(); i++) {
+            TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
 
             ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(itemCompound);
-            setItem(((ByteTag) itemCompound.getValue().get("Slot")).getValue(), itemStack);
+            setItem(itemCompound.getAs("Slot", TagByte.class).getByteData(), itemStack);
         }
     }
 
