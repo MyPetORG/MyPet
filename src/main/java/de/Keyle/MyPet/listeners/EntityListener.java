@@ -359,134 +359,55 @@ public class EntityListener implements Listener {
                         } else if (leashTarget instanceof Zombie) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(((Zombie) leashTarget).isBaby()));
                             extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
-
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
-                            List<TagCompound> equipmentList = new ArrayList<TagCompound>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            extendedInfo.getCompoundData().put("Equipment", new TagList(equipmentList));
                         } else if (leashTarget instanceof Enderman) {
                             extendedInfo.getCompoundData().put("BlockID", new TagShort((short) Item.b(Item.getItemOf(((CraftEnderman) leashTarget).getHandle().getCarried()))));
                             extendedInfo.getCompoundData().put("BlockData", new TagShort((short) ((CraftEnderman) leashTarget).getHandle().getCarriedData()));
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getCompoundData().put("Wither", new TagByte(((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
-
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
-                            List<TagCompound> equipmentList = new ArrayList<TagCompound>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            extendedInfo.getCompoundData().put("Equipment", new TagList(equipmentList));
-                        } else if (leashTarget instanceof PigZombie) {
-                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
-                            List<TagCompound> equipmentList = new ArrayList<TagCompound>();
-                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
-                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
-                                if (itemStack != null && itemStack.getType() != Material.AIR) {
-                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
-                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
-                                    equipmentList.add(item);
-                                }
-                            }
-                            extendedInfo.getCompoundData().put("Equipment", new TagList(equipmentList));
                         }
                         if (leashTarget instanceof Ageable) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(!((Ageable) leashTarget).isAdult()));
+                        }
+                        if (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton) {
+                            Random random = ((CraftLivingEntity) leashTarget).getHandle().aI();
+                            List<TagCompound> equipmentList = new ArrayList<TagCompound>();
+                            if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
+                                ItemStack itemStack = leashTarget.getEquipment().getChestplate();
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
+                                    equipmentList.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getHelmetDropChance()) {
+                                ItemStack itemStack = leashTarget.getEquipment().getHelmet();
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
+                                    equipmentList.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getLeggingsDropChance()) {
+                                ItemStack itemStack = leashTarget.getEquipment().getLeggings();
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
+                                    equipmentList.add(item);
+                                }
+                            }
+                            if (random.nextFloat() <= leashTarget.getEquipment().getBootsDropChance()) {
+                                ItemStack itemStack = leashTarget.getEquipment().getBoots();
+                                if (itemStack != null && itemStack.getType() != Material.AIR) {
+                                    net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
+                                    equipmentList.add(item);
+                                }
+                            }
+                            extendedInfo.getCompoundData().put("Equipment", new TagList(equipmentList));
                         }
                         inactiveMyPet.setInfo(extendedInfo);
 
