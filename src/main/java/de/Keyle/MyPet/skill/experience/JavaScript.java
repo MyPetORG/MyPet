@@ -58,7 +58,6 @@ public class JavaScript extends Experience {
             isUsable = false;
             return;
         }
-        isUsable = true;
 
         getLevel(0);
         getRequiredExp(0);

@@ -78,9 +78,9 @@ public class Experience {
         }
     }
 
-    public void setExp(double Exp) {
-        Exp = Exp < 0 ? 0 : Exp;
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), Exp);
+    public void setExp(double exp) {
+        exp = exp < 0 ? 0 : exp;
+        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), exp);
         if (Configuration.ENABLE_EVENTS) {
             getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled()) {
