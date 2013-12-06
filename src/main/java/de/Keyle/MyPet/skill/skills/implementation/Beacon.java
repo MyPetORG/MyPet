@@ -148,10 +148,10 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         return;
                     case 4:
                         if (active) {
-                            menu.getOption(4).setMaterial(REDSTONE_TORCH_OFF).setTitle("Buffs: " + RED + "off").setLore(RESET + "Click to turn them " + GREEN + "on");
+                            menu.getOption(4).setMaterial(REDSTONE_BLOCK).setTitle("Buffs: " + RED + "off").setLore(RESET + "Click to turn them " + GREEN + "on");
                             active = false;
                         } else {
-                            menu.getOption(4).setMaterial(REDSTONE_TORCH_ON).setTitle("Buffs: " + GREEN + "on").setLore(RESET + "Click to turn them " + RED + "off");
+                            menu.getOption(4).setMaterial(EMERALD_BLOCK).setTitle("Buffs: " + GREEN + "on").setLore(RESET + "Click to turn them " + RED + "off");
                             active = true;
                         }
                         menu.update();
@@ -229,13 +229,13 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         }, MyPetPlugin.getPlugin());
 
         if (beacon.active) {
-            menu.setOption(4, new IconMenuItem().setMaterial(REDSTONE_TORCH_ON).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), GREEN + Locales.getString("Name.On", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOff", myPet.getOwner().getLanguage())));
+            menu.setOption(4, new IconMenuItem().setMaterial(EMERALD_BLOCK).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), GREEN + Locales.getString("Name.On", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOff", myPet.getOwner().getLanguage())));
         } else {
-            menu.setOption(4, new IconMenuItem().setMaterial(REDSTONE_TORCH_OFF).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), RED + Locales.getString("Name.Off", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOn", myPet.getOwner().getLanguage())));
+            menu.setOption(4, new IconMenuItem().setMaterial(REDSTONE_BLOCK).setTitle(Util.formatText(Locales.getString("Message.Skill.Beacon.Effect", myPet.getOwner().getLanguage()), RED + Locales.getString("Name.Off", myPet.getOwner().getLanguage()))).addLoreLine(RESET + Locales.getString("Message.Skill.Beacon.ClickOn", myPet.getOwner().getLanguage())));
         }
 
-        menu.setOption(3, new IconMenuItem().setMaterial(CARPET).setData(5).setTitle(GREEN + Locales.getString("Name.Done", myPet.getOwner().getLanguage())));
-        menu.setOption(5, new IconMenuItem().setMaterial(CARPET).setData(14).setTitle(RED + Locales.getString("Name.Cancel", myPet.getOwner().getLanguage())));
+        menu.setOption(3, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(5).setTitle(GREEN + Locales.getString("Name.Done", myPet.getOwner().getLanguage())));
+        menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Locales.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
         menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Locales.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
         // Will be implemented later
