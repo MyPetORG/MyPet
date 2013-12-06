@@ -466,7 +466,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
         TagList petList = nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class);
         if (nbtConfiguration.getNBTCompound().getCompoundData().containsKey("CleanShutdown")) {
-            DebugLogger.info("Clean shutdown: " + ((TagByte) nbtConfiguration.getNBTCompound().getAs("CleanShutdown", TagByte.class)).getBooleanData());
+            DebugLogger.info("Clean shutdown: " + nbtConfiguration.getNBTCompound().getAs("CleanShutdown", TagByte.class).getBooleanData());
         }
 
         DebugLogger.info("Loading players -------------------------");

@@ -52,7 +52,6 @@ public class MyPetList {
             activeMyPet.setUUID(inactiveMyPet.getUUID());
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.setRespawnTime(inactiveMyPet.getRespawnTime());
-            activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
             activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
             activeMyPet.lastUsed = inactiveMyPet.lastUsed;
@@ -64,6 +63,7 @@ public class MyPetList {
             }
 
             activeMyPet.getExperience().setExp(inactiveMyPet.getExp());
+            activeMyPet.setSkilltree(inactiveMyPet.getSkillTree());
             Collection<ISkillInstance> skills = activeMyPet.getSkills().getSkills();
             if (skills.size() > 0) {
                 for (ISkillInstance skill : skills) {
