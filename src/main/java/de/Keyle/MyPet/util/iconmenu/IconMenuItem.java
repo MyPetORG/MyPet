@@ -24,6 +24,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R1.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -207,8 +208,16 @@ public class IconMenuItem {
             return oldItemStack;
         }
 
-
-        ItemStack is = new ItemStack(Item.d(material.getId()), amount, data);
+        ItemStack is;
+        try {
+            if (material.isBlock()) {
+                is = new ItemStack(CraftMagicNumbers.getBlock(material), amount, data);
+            } else {
+                is = new ItemStack(CraftMagicNumbers.getItem(material), amount, data);
+            }
+        } catch (NullPointerException e) {
+            is = new ItemStack(Items.NAME_TAG);
+        }
 
         NBTTagList emptyList = new NBTTagList();
         if (is.tag == null) {
