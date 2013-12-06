@@ -24,13 +24,11 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyWolf extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
     protected boolean shaking;
     protected boolean isWet;
     protected float shakeCounter;
@@ -89,7 +87,7 @@ public class EntityMyWolf extends EntityMyPet {
                         }
                         return true;
                     }
-                } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
+                } else if (MyWolf.GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
                     if (getMyPet().isBaby()) {
                         if (!entityhuman.abilities.canInstantlyBuild) {
                             if (--itemStack.count <= 0) {

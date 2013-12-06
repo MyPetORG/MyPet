@@ -26,13 +26,10 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
-
     public EntityMyPigZombie(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -118,7 +115,7 @@ public class EntityMyPigZombie extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (MyPigZombie.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -44,6 +45,8 @@ import static org.bukkit.Material.ROTTEN_FLESH;
 
 @MyPetInfo(food = {ROTTEN_FLESH})
 public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
+    public static ConfigItem GROW_UP_ITEM;
+
     protected boolean isBaby = false;
     protected boolean isVillager = false;
     protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();

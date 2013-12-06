@@ -31,6 +31,8 @@ import static org.bukkit.Material.IRON_INGOT;
 
 @MyPetInfo(food = {IRON_INGOT}, leashFlags = {UserCreated})
 public class MyIronGolem extends MyPet {
+    public static boolean CAN_THROW_UP = true;
+
     public MyIronGolem(MyPetPlayer petOwner) {
         super(petOwner);
     }

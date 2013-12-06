@@ -23,14 +23,11 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
-
     public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -78,7 +75,7 @@ public class EntityMyPig extends EntityMyPet {
                 }
 
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
+            } else if (MyPig.GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
                 if (isBaby()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
+import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import net.minecraft.server.v1_7_R1.Block;
 import net.minecraft.server.v1_7_R1.Blocks;
 import net.minecraft.server.v1_7_R1.MathHelper;
@@ -43,7 +44,7 @@ public class EatGrass extends AIGoal {
 
     @Override
     public boolean shouldStart() {
-        if (!EntityMySheep.CAN_REGROW_WOOL) {
+        if (!MySheep.CAN_REGROW_WOOL) {
             return false;
         } else if (!this.entityMySheep.getMyPet().isSheared()) {
             return false;

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverter;
+import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -37,6 +38,8 @@ import static org.bukkit.Material.CARROT_ITEM;
 
 @MyPetInfo(food = {CARROT_ITEM})
 public class MyPig extends MyPet implements IMyPetBaby {
+    public static ConfigItem GROW_UP_ITEM;
+
     protected boolean isBaby = false;
     public ItemStack saddle = null;
 

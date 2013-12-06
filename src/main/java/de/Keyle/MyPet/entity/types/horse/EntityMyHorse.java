@@ -23,14 +23,12 @@ package de.Keyle.MyPet.entity.types.horse;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
     int soundCounter = 0;
     int rearCounter = -1;
     int ageCounter = -1;
@@ -206,7 +204,7 @@ public class EntityMyHorse extends EntityMyPet {
                 }
 
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (MyHorse.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

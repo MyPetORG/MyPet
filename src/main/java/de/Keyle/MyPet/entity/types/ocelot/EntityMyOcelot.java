@@ -24,7 +24,6 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.Item;
 import net.minecraft.server.v1_7_R1.ItemStack;
@@ -33,7 +32,6 @@ import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
     private Sit sitPathfinder;
 
     public EntityMyOcelot(World world, MyPet myPet) {
@@ -101,7 +99,7 @@ public class EntityMyOcelot extends EntityMyPet {
                         }
                         return true;
                     }
-                } else if (GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                } else if (MyOcelot.GROW_UP_ITEM.compare(itemStack) && canUseItem() && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
                         if (--itemStack.count <= 0) {
                             entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

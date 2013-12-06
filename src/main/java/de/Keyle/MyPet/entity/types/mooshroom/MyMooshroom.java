@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -33,6 +34,8 @@ import static org.bukkit.Material.WHEAT;
 
 @MyPetInfo(food = {WHEAT})
 public class MyMooshroom extends MyPet implements IMyPetBaby {
+    public static ConfigItem GROW_UP_ITEM;
+
     protected boolean isBaby = false;
 
     public MyMooshroom(MyPetPlayer petOwner) {
@@ -49,7 +52,7 @@ public class MyMooshroom extends MyPet implements IMyPetBaby {
     @Override
     public void setExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Baby")) {
-            setBaby(((TagByte) info.getAs("Baby", TagByte.class)).getBooleanData());
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
 

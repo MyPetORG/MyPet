@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.ItemStack;
 import net.minecraft.server.v1_7_R1.Items;
@@ -31,9 +30,6 @@ import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.3F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
-    public static boolean CAN_LAY_EGGS = true;
-    public static ConfigItem GROW_UP_ITEM;
-
     private int nextEggTimer;
 
     public EntityMyChicken(World world, MyPet myPet) {
@@ -63,7 +59,7 @@ public class EntityMyChicken extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null) {
-            if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            if (MyChicken.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
@@ -97,7 +93,7 @@ public class EntityMyChicken extends EntityMyPet {
             this.motY *= 0.6D;
         }
 
-        if (CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
+        if (MyChicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
             a(Items.EGG, 1);
             nextEggTimer = (random.nextInt(6000) + 6000);

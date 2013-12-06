@@ -33,7 +33,6 @@ import java.util.Map;
 
 @EntitySize(width = 0.4F, height = 1.8F)
 public class EntityMySnowman extends EntityMyPet {
-    public static boolean FIX_SNOW_TRACK = true;
     Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
 
     public EntityMySnowman(World world, MyPet myPet) {
@@ -82,7 +81,7 @@ public class EntityMySnowman extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (FIX_SNOW_TRACK) {
+        if (MySnowman.FIX_SNOW_TRACK) {
             if (this.motX != 0D || this.motZ != 0D) {
                 addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
             }

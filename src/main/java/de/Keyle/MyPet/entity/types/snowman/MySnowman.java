@@ -31,6 +31,8 @@ import static org.bukkit.Material.SNOW_BALL;
 
 @MyPetInfo(food = {CARROT, SNOW_BALL})
 public class MySnowman extends MyPet {
+    public static boolean FIX_SNOW_TRACK = true;
+
     public MySnowman(MyPetPlayer petOwner) {
         super(petOwner);
     }

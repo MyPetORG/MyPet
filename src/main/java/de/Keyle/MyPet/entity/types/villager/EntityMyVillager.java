@@ -23,15 +23,12 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.ItemStack;
 import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
-    public static ConfigItem GROW_UP_ITEM;
-
     public EntityMyVillager(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -60,7 +57,7 @@ public class EntityMyVillager extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            if (MyVillager.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

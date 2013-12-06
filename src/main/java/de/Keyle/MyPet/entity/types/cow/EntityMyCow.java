@@ -23,7 +23,6 @@ package de.Keyle.MyPet.entity.types.cow;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.ItemStack;
 import net.minecraft.server.v1_7_R1.Items;
@@ -31,9 +30,6 @@ import net.minecraft.server.v1_7_R1.World;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
-    public static boolean CAN_GIVE_MILK = true;
-    public static ConfigItem GROW_UP_ITEM;
-
     public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -60,12 +56,12 @@ public class EntityMyCow extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.BUCKET && CAN_GIVE_MILK) {
+            if (itemStack.getItem() == Items.BUCKET && MyCow.CAN_GIVE_MILK) {
                 ItemStack milkBucket = new ItemStack(Items.BUCKET, 1, 0);
 
                 entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, milkBucket);
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (MyCow.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

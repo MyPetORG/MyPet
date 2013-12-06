@@ -24,16 +24,11 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.ConfigItem;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.9F, height = 1.3F)
 public class EntityMySheep extends EntityMyPet {
-    public static boolean CAN_BE_SHEARED = true;
-    public static boolean CAN_REGROW_WOOL = true;
-    public static ConfigItem GROW_UP_ITEM;
-
     public EntityMySheep(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -77,7 +72,7 @@ public class EntityMySheep extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (itemStack.getItem() == Items.SHEARS && CAN_BE_SHEARED && !getMyPet().isSheared()) {
+            } else if (itemStack.getItem() == Items.SHEARS && MySheep.CAN_BE_SHEARED && !getMyPet().isSheared()) {
                 getMyPet().setSheared(true);
                 int woolDropCount = 1 + this.random.nextInt(3);
 
@@ -93,7 +88,7 @@ public class EntityMySheep extends EntityMyPet {
                     itemStack.damage(1, entityhuman);
                 }
                 return true;
-            } else if (GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+            } else if (MySheep.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

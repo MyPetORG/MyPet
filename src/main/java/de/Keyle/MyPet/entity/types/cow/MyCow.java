@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.IMyPetBaby;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -33,6 +34,9 @@ import static org.bukkit.Material.WHEAT;
 
 @MyPetInfo(food = {WHEAT})
 public class MyCow extends MyPet implements IMyPetBaby {
+    public static boolean CAN_GIVE_MILK = true;
+    public static ConfigItem GROW_UP_ITEM;
+
     protected boolean isBaby = false;
 
     public MyCow(MyPetPlayer petOwner) {
