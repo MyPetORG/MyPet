@@ -164,4 +164,25 @@ public class BukkitUtil {
         }
         return lang;
     }
+
+    public static boolean isEquipment(ItemStack itemstack) {
+        int slot = EntityInsentient.b(itemstack);
+        if (slot == 0) {
+            if (itemstack.getItem() instanceof ItemSword) {
+                return true;
+            } else if (itemstack.getItem() instanceof ItemAxe) {
+                return true;
+            } else if (itemstack.getItem() instanceof ItemSpade) {
+                return true;
+            } else if (itemstack.getItem() instanceof ItemHoe) {
+                return true;
+            } else if (itemstack.getItem() instanceof ItemPickaxe) {
+                return true;
+            } else if (itemstack.getItem() instanceof ItemBow) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
 }

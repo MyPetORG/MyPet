@@ -75,16 +75,14 @@ public class EntityMyPig extends EntityMyPet {
                 }
 
                 return true;
-            } else if (MyPig.GROW_UP_ITEM.compare(itemStack) && getOwner().getPlayer().isSneaking()) {
-                if (isBaby()) {
-                    if (!entityhuman.abilities.canInstantlyBuild) {
-                        if (--itemStack.count <= 0) {
-                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
-                        }
+            } else if (MyPig.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
                     }
-                    this.setBaby(false);
-                    return true;
                 }
+                this.setBaby(false);
+                return true;
             }
         }
         return false;
@@ -96,17 +94,12 @@ public class EntityMyPig extends EntityMyPet {
         this.datawatcher.a(16, new Byte((byte) 0)); // saddle
     }
 
-    public boolean isBaby() {
-        return ((MyPig) myPet).isBaby;
-    }
-
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyPig) myPet).isBaby = flag;
     }
 
     public void playStepSound() {
@@ -118,7 +111,7 @@ public class EntityMyPig extends EntityMyPet {
             super.setMyPet(myPet);
 
             this.setSaddle(getMyPet().hasSaddle());
-            this.setBaby(((MyPig) myPet).isBaby());
+            this.setBaby(getMyPet().isBaby());
         }
     }
 

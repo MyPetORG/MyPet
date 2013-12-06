@@ -62,9 +62,9 @@ public class EntityMyHorse extends EntityMyPet {
             if (flag) {
                 applyVisual(64, true);
                 rearCounter = 10;
-                if (getHorseType() == 0) {
+                if (getMyPet().getHorseType() == 0) {
                     this.world.makeSound(this, "mob.horse.angry", 1.0F, 1.0F);
-                } else if (getHorseType() == 2 || getHorseType() == 1) {
+                } else if (getMyPet().getHorseType() == 2 || getMyPet().getHorseType() == 1) {
                     this.world.makeSound(this, "mob.horse.donkey.angry", 1.0F, 1.0F);
                 }
             }
@@ -76,8 +76,6 @@ public class EntityMyHorse extends EntityMyPet {
     }
 
     public void setAge(int value) {
-        value = Math.min(0, (Math.max(-24000, value)));
-        value -= value % 1000;
         this.datawatcher.watch(12, new Integer(value));
     }
 
@@ -87,7 +85,7 @@ public class EntityMyHorse extends EntityMyPet {
 
     @Override
     protected String getDeathSound() {
-        int horseType = ((MyHorse) myPet).horseType;
+        int horseType = getMyPet().horseType;
         if (horseType == 3) {
             return "mob.horse.zombie.death";
         }
@@ -98,10 +96,6 @@ public class EntityMyHorse extends EntityMyPet {
             return "mob.horse.donkey.death";
         }
         return "mob.horse.death";
-    }
-
-    public byte getHorseType() {
-        return ((MyHorse) myPet).horseType;
     }
 
     public void setHorseType(byte horseType) {
@@ -167,7 +161,7 @@ public class EntityMyHorse extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (getHorseArmorId(itemStack) > 0 && !getMyPet().hasArmor() && getHorseType() == 0 && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (getHorseArmorId(itemStack) > 0 && !getMyPet().hasArmor() && getMyPet().getHorseType() == 0 && !getMyPet().isBaby() && getOwner().getPlayer().isSneaking() && canEquip()) {
                 getMyPet().setArmor(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
@@ -273,7 +267,7 @@ public class EntityMyHorse extends EntityMyPet {
             localStepSound = Blocks.SNOW.stepSound;
         }
         if (!block.getMaterial().isLiquid()) {
-            int horseType = ((MyHorse) myPet).horseType;
+            int horseType = getMyPet().horseType;
             if ((this.passenger != null) && (horseType != 1) && (horseType != 2)) {
                 this.soundCounter += 1;
                 if ((this.soundCounter > 5) && (this.soundCounter % 3 == 0)) {

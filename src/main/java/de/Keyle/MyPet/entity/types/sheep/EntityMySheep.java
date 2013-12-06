@@ -33,13 +33,8 @@ public class EntityMySheep extends EntityMyPet {
         super(world, myPet);
     }
 
-    public DyeColor getColor() {
-        return ((MySheep) myPet).color;
-    }
-
     public void setColor(byte color) {
         this.datawatcher.watch(16, color);
-        ((MySheep) myPet).color = DyeColor.getByWoolData(color);
     }
 
     @Override

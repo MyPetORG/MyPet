@@ -104,7 +104,6 @@ public class EntityMyEnderman extends EntityMyPet {
 
     public void setScreaming(boolean screaming) {
         this.datawatcher.watch(18, (byte) (screaming ? 1 : 0));
-        ((MyEnderman) myPet).isScreaming = screaming;
     }
 
     public void setBlock(int blockID, int blockData) {

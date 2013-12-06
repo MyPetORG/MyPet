@@ -26,33 +26,13 @@ import de.Keyle.MyPet.entity.EquipmentSlot;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.BukkitUtil;
 import net.minecraft.server.v1_7_R1.*;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyZombie extends EntityMyPet {
     public EntityMyZombie(World world, MyPet myPet) {
         super(world, myPet);
-    }
-
-    public boolean checkForEquipment(ItemStack itemstack) {
-        int slot = b(itemstack);
-        if (slot == 0) {
-            if (itemstack.getItem() instanceof ItemSword) {
-                return true;
-            } else if (itemstack.getItem() instanceof ItemAxe) {
-                return true;
-            } else if (itemstack.getItem() instanceof ItemSpade) {
-                return true;
-            } else if (itemstack.getItem() instanceof ItemHoe) {
-                return true;
-            } else if (itemstack.getItem() instanceof ItemPickaxe) {
-                return true;
-            } else if (itemstack.getItem() instanceof ItemBow) {
-                return true;
-            }
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -111,7 +91,7 @@ public class EntityMyZombie extends EntityMyPet {
                     }
                 }
                 return true;
-            } else if (checkForEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
+            } else if (BukkitUtil.isEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
                 EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
                 ItemStack itemInSlot = getMyPet().getEquipment(slot);
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
@@ -164,7 +144,7 @@ public class EntityMyZombie extends EntityMyPet {
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
-            final MyZombie myZombie = (MyZombie) myPet;
+            final MyZombie myZombie = getMyPet();
             final EntityMyZombie entityMyZombie = this;
 
             this.setBaby(myZombie.isBaby());

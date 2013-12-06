@@ -83,7 +83,6 @@ public class EntityMyChicken extends EntityMyPet {
         } else {
             this.datawatcher.watch(12, new Integer(0));
         }
-        ((MyChicken) myPet).isBaby = flag;
     }
 
     public void onLivingUpdate() {
@@ -96,7 +95,7 @@ public class EntityMyChicken extends EntityMyPet {
         if (MyChicken.CAN_LAY_EGGS && canUseItem() && --nextEggTimer <= 0) {
             world.makeSound(this, "mob.chicken.plop", 1.0F, (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
             a(Items.EGG, 1);
-            nextEggTimer = (random.nextInt(6000) + 6000);
+            nextEggTimer = random.nextInt(6000) + 6000;
         }
     }
 
