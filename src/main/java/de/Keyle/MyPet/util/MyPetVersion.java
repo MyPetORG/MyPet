@@ -32,8 +32,8 @@ import java.util.jar.Manifest;
 public class MyPetVersion {
     private static boolean updated = false;
 
-    private static String myPetVersion = "0.0.0";
-    private static String myPetBuild = "0";
+    private static String version = "0.0.0";
+    private static String build = "0";
     private static String minecraftVersion = "0.0.0";
 
     private static void getManifestVersion() {
@@ -42,10 +42,10 @@ public class MyPetVersion {
             Attributes attr = getClassLoaderForExtraModule(path).getMainAttributes();
 
             if (attr.getValue("Project-Version") != null) {
-                myPetVersion = attr.getValue("Project-Version");
+                version = attr.getValue("Project-Version");
             }
             if (attr.getValue("Project-Build") != null) {
-                myPetBuild = attr.getValue("Project-Build");
+                build = attr.getValue("Project-Build");
             }
             if (attr.getValue("Project-Minecraft-Version") != null) {
                 minecraftVersion = attr.getValue("Project-Minecraft-Version");
@@ -67,20 +67,20 @@ public class MyPetVersion {
         return mf;
     }
 
-    public static String getMyPetVersion() {
+    public static String getVersion() {
         if (!updated) {
             getManifestVersion();
             updated = true;
         }
-        return myPetVersion;
+        return version;
     }
 
-    public static String getMyPetBuild() {
+    public static String getBuild() {
         if (!updated) {
             getManifestVersion();
             updated = true;
         }
-        return myPetBuild;
+        return build;
     }
 
     public static String getMinecraftVersion() {

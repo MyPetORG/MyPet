@@ -562,7 +562,7 @@ public class LevelCreator {
 
     public JFrame getFrame() {
         if (levelCreatorFrame == null) {
-            levelCreatorFrame = new JFrame("LevelCreator - MyPet " + MyPetVersion.getMyPetVersion());
+            levelCreatorFrame = new JFrame("LevelCreator - MyPet " + MyPetVersion.getVersion());
         }
         return levelCreatorFrame;
     }

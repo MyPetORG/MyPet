@@ -271,7 +271,7 @@ public class SkilltreeCreator {
 
     public JFrame getFrame() {
         if (skilltreeCreatorFrame == null) {
-            skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetVersion.getMyPetVersion());
+            skilltreeCreatorFrame = new JFrame("SkilltreeCreator - MyPet " + MyPetVersion.getVersion());
         }
         return skilltreeCreatorFrame;
     }

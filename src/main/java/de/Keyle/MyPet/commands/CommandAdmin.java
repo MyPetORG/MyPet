@@ -56,8 +56,8 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         commandOptions.put("build", new CommandOption() {
             @Override
             public boolean onCommandOption(CommandSender sender, String[] parameter) {
-                DebugLogger.info("MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
-                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getMyPetVersion() + "-b#" + MyPetVersion.getMyPetBuild());
+                DebugLogger.info("MyPet-" + MyPetVersion.getVersion() + "-b#" + MyPetVersion.getBuild());
+                sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet-" + MyPetVersion.getVersion() + "-b#" + MyPetVersion.getBuild());
                 return true;
             }
         });

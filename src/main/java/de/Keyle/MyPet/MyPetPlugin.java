@@ -140,7 +140,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.setup();
 
         DebugLogger.info("----------- loading MyPet ... -----------");
-        DebugLogger.info("MyPet " + MyPetVersion.getMyPetVersion() + " build: " + MyPetVersion.getMyPetBuild());
+        DebugLogger.info("MyPet " + MyPetVersion.getVersion() + " build: " + MyPetVersion.getBuild());
         DebugLogger.info("Bukkit " + getServer().getVersion());
         DebugLogger.info("Java: " + System.getProperty("java.version") + " (VM: " + System.getProperty("java.vm.version") + ") by " + System.getProperty("java.vendor"));
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
@@ -336,7 +336,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             MyPetLogger.write(e.getMessage());
         }
 
-        MyPetLogger.write("version " + MyPetVersion.getMyPetVersion() + "-b" + MyPetVersion.getMyPetBuild() + ChatColor.GREEN + " ENABLED");
+        MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers()) {
             MyPetPlayer.onlinePlayerList.add(player.getName());
@@ -516,8 +516,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 DebugLogger.printThrowable(e);
             }
         }
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getMyPetVersion()));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagString(MyPetVersion.getMyPetBuild()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagString(MyPetVersion.getBuild()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());

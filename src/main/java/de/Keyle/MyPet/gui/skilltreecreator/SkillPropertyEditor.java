@@ -76,7 +76,7 @@ public class SkillPropertyEditor {
 
     public JFrame getFrame() {
         if (skillPropertyEditorFrame == null) {
-            skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetVersion.getMyPetVersion());
+            skillPropertyEditorFrame = new JFrame("Skill Properties - MyPet " + MyPetVersion.getVersion());
         }
         return skillPropertyEditorFrame;
     }
