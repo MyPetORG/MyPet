@@ -44,9 +44,11 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import de.keyle.knbt.*;
+import de.keyle.knbt.TagByte;
+import de.keyle.knbt.TagCompound;
+import de.keyle.knbt.TagInt;
+import de.keyle.knbt.TagList;
 import net.minecraft.server.v1_7_R1.*;
-import net.minecraft.server.v1_7_R1.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -360,8 +362,11 @@ public class EntityListener implements Listener {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(((Zombie) leashTarget).isBaby()));
                             extendedInfo.getCompoundData().put("Villager", new TagByte(((Zombie) leashTarget).isVillager()));
                         } else if (leashTarget instanceof Enderman) {
-                            extendedInfo.getCompoundData().put("BlockID", new TagShort((short) Item.b(Item.getItemOf(((CraftEnderman) leashTarget).getHandle().getCarried()))));
-                            extendedInfo.getCompoundData().put("BlockData", new TagShort((short) ((CraftEnderman) leashTarget).getHandle().getCarriedData()));
+                            CraftEnderman enderman = (CraftEnderman) leashTarget;
+                            if (enderman.getHandle().getCarried() != Blocks.AIR) {
+                                net.minecraft.server.v1_7_R1.ItemStack block = new net.minecraft.server.v1_7_R1.ItemStack(enderman.getHandle().getCarried(), 1, enderman.getHandle().getCarriedData());
+                                extendedInfo.getCompoundData().put("Block", ItemStackNBTConverter.ItemStackToCompund(block));
+                            }
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getCompoundData().put("Wither", new TagByte(((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
                         }

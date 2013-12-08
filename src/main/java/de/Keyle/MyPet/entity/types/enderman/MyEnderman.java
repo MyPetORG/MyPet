@@ -30,6 +30,7 @@ import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -75,7 +76,7 @@ public class MyEnderman extends MyPet {
             } else if (info.containsKeyAs("BlockData", TagInt.class)) {
                 data = info.getAs("BlockData", TagInt.class).getIntData();
             }
-            setBlock(new ItemStack(id, 1, (short) data));
+            setBlock(new ItemStack(Material.getMaterial(id), 1, (short) data));
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
             ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemStackCompund));
