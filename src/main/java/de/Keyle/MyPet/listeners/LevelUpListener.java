@@ -34,7 +34,6 @@ import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
@@ -58,10 +57,7 @@ public class LevelUpListener implements Listener {
             }
 
             if (Experience.FIREWORK_ON_LEVELUP) {
-                Location location = myPet.getLocation();
-                location.setY(location.getY() - 1.5);
-                location.setPitch(-90);
-                Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                Firework fw = (Firework) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.FIREWORK);
                 FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LEVELUP_FIREWORK_COLOR)).withTrail().withFlicker().build();
                 FireworkMeta fwm = fw.getFireworkMeta();
                 fwm.addEffect(fwe);
@@ -69,6 +65,7 @@ public class LevelUpListener implements Listener {
                 fwm.addEffect(fwe);
                 fwm.setPower(0);
                 fw.setFireworkMeta(fwm);
+                fw.detonate();
             }
         }
         SkillTree skillTree = myPet.getSkillTree();
@@ -86,11 +83,7 @@ public class LevelUpListener implements Listener {
             }
         }
 
-        if (!event.isQuiet()) {
-
-        }
-
-        if (myPet.getStatus() == PetState.Here) {
+        if (!event.isQuiet() && myPet.getStatus() == PetState.Here) {
             myPet.setHealth(myPet.getMaxHealth());
             myPet.setHungerValue(100);
         }
