@@ -50,6 +50,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
 
     private String playerName;
     private String lastLanguage = "en_US";
+    private UUID mojangUUID = null;
 
     private boolean captureHelperMode = false;
     private boolean autoRespawn = false;
@@ -181,6 +182,13 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         return false;
     }
 
+    public UUID getMojangUUID() {
+        if (mojangUUID == null && isOnline()) {
+            mojangUUID = getPlayer().getUniqueId();
+        }
+        return mojangUUID;
+    }
+
     public String getLanguage() {
         if (isOnline()) {
             lastLanguage = BukkitUtil.getPlayerLanguage(getPlayer());
@@ -290,6 +298,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
         playerNBT.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
 
+        if (getMojangUUID() != null) {
+            playerNBT.getCompoundData().put("UUID", new TagString(getMojangUUID().toString()));
+        }
         TagCompound multiWorldCompound = new TagCompound();
         for (String worldGroupName : petWorldUUID.keySet()) {
             multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(petWorldUUID.get(worldGroupName).toString()));
@@ -301,6 +312,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
 
     @Override
     public void load(TagCompound myplayerNBT) {
+        if (myplayerNBT.getCompoundData().containsKey("UUID")) {
+            mojangUUID = UUID.fromString(myplayerNBT.getAs("UUID", TagString.class).getStringData());
+        }
         if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
             setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
         }
@@ -338,6 +352,9 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
     public void schedule() {
         if (!isOnline()) {
             return;
+        }
+        if (mojangUUID == null) {
+            mojangUUID = getPlayer().getUniqueId();
         }
         if (hasMyPet()) {
             MyPet myPet = getMyPet();
