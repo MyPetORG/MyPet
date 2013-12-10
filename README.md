@@ -18,8 +18,8 @@ Take them on a lead, train them and make them a very powerful companion!
 Copyright (c) 2011-2013, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 
-All Icons in [Ressources/Images] are owned by the Oxygen Team (http://www.oxygen-icons.org).<br />
-These Icons are under the terms of the [GNU Lesser General Public License Version][License].
+Most icons under [resources/images] are owned by the Oxygen Team (http://www.oxygen-icons.org).<br />
+These icons are under the terms of the [GNU Lesser General Public License Version][License].
 
 ## Builds
 Download the latest builds from our [Jenkins-Server][Builds].
@@ -28,7 +28,7 @@ Download the latest builds from our [Jenkins-Server][Builds].
 [Logo]: http://dl.keyle.de/images/logo.png
 [Banner]: http://dl.keyle.de/images/banner.png
 [License]: http://www.gnu.org/licenses/lgpl.html
-[Ressources/Images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
+[resources/images]: https://github.com/xXKeyleXx/MyPet/tree/master/src/main/resources/images
 [Donate]: http://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TZD8FU8QMW53A&item_name=Donation+for+MyPet
 [MCStats]: http://mcstats.org/plugin/MyPet
 [MCStatsImage]: http://dl.keyle.de/images/metrics.png
