@@ -219,7 +219,6 @@ public class SkilltreeCreator {
         });
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 saveButtonRightclickMenu.show(saveButton, 0, 0);
             }
         });
