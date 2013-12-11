@@ -163,7 +163,7 @@ public class MyHorse extends MyPet implements IMyPetBaby {
                 ItemStack item = new ItemStack(Material.getMaterial(416 + armorType));
                 setArmor(item);
             }
-        } else {
+        } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");
             ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
             setArmor(item);
