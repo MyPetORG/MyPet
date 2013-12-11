@@ -100,9 +100,7 @@ public class EntityMyZombie extends EntityMyPet {
                     entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                     entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
                 }
-                ItemStack itemStackClone = itemStack.cloneItemStack();
-                itemStackClone.count = 1;
-                getMyPet().setEquipment(slot, itemStackClone);
+                getMyPet().setEquipment(slot, itemStack);
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
                         entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);

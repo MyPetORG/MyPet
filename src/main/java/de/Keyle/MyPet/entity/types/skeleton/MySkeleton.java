@@ -112,7 +112,13 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        if (item == null) {
+            equipment.remove(slot);
+            ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), null);
+            return;
+        }
         item = item.cloneItemStack();
+        item.count = 1;
         equipment.put(slot, item);
         if (status == PetState.Here) {
             ((EntityMySkeleton) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);

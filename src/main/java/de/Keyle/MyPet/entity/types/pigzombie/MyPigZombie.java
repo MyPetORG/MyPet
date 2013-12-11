@@ -116,7 +116,13 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     }
 
     public void setEquipment(EquipmentSlot slot, ItemStack item) {
+        if (item == null) {
+            equipment.remove(slot);
+            ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), null);
+            return;
+        }
         item = item.cloneItemStack();
+        item.count = 1;
         equipment.put(slot, item);
         if (status == PetState.Here) {
             ((EntityMyPigZombie) getCraftPet().getHandle()).setPetEquipment(slot.getSlotId(), item);
