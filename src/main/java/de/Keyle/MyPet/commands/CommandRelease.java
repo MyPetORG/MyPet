@@ -64,6 +64,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHorse;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPigZombie;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
