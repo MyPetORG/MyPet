@@ -42,6 +42,7 @@ import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class MyPetPlayer implements IScheduler, NBTStorage {
@@ -153,6 +154,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         extendedInfo.getCompoundData().put(key, tag);
     }
 
+    @Nullable
     public TagBase getExtendedInfo(String key) {
         if (extendedInfo.getCompoundData().containsKey(key)) {
             return extendedInfo.getCompoundData().get(key);
@@ -212,6 +214,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         return MyPetList.hasInactiveMyPets(this);
     }
 
+    @Nullable
     public InactiveMyPet getInactiveMyPet(UUID petUUID) {
         for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this)) {
             if (inactiveMyPet.getUUID().equals(petUUID)) {
@@ -229,6 +232,7 @@ public class MyPetPlayer implements IScheduler, NBTStorage {
         return Bukkit.getServer().getPlayerExact(playerName);
     }
 
+    @Nullable
     public EntityPlayer getEntityPlayer() {
         Player p = getPlayer();
         if (p != null) {

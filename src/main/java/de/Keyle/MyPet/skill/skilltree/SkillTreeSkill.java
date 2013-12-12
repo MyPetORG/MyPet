@@ -25,6 +25,8 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.keyle.knbt.*;
 
+import javax.annotation.Nullable;
+
 public abstract class SkillTreeSkill {
     private boolean addedByInheritance = false;
     private TagCompound propertiesCompound;
@@ -33,6 +35,7 @@ public abstract class SkillTreeSkill {
         this.addedByInheritance = addedByInheritance;
     }
 
+    @Nullable
     public String getName() {
         SkillName sn = this.getClass().getAnnotation(SkillName.class);
         if (sn != null) {

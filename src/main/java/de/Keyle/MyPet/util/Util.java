@@ -24,6 +24,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 
 public class Util {
+    @Nullable
     public static Field getField(Class<?> clazz, String field) {
         try {
             Field f = clazz.getDeclaredField(field);

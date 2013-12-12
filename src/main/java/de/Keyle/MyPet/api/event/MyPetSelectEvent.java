@@ -26,6 +26,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import javax.annotation.Nullable;
+
 public class MyPetSelectEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     boolean isCancelled = false;
@@ -50,6 +52,7 @@ public class MyPetSelectEvent extends Event implements Cancellable {
         return newStatus;
     }
 
+    @Nullable
     public MyPetPlayer getOwner() {
         if (myPet != null) {
             return myPet.getOwner();

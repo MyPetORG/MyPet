@@ -34,6 +34,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class MyPetList {
 
     // Active -------------------------------------------------------------------
 
+    @Nullable
     private static MyPet getMyPetFromInactiveMyPet(InactiveMyPet inactiveMyPet) {
         if (inactiveMyPet.getOwner().isOnline()) {
             MyPet activeMyPet = inactiveMyPet.getPetType().getNewMyPetInstance(inactiveMyPet.getOwner());
@@ -170,6 +172,7 @@ public class MyPetList {
 
     // All ----------------------------------------------------------------------
 
+    @Nullable
     public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet) {
         if (inactiveMyPet.getOwner().hasMyPet()) {
             setMyPetInactive(inactiveMyPet.getOwner());
@@ -195,6 +198,7 @@ public class MyPetList {
         return null;
     }
 
+    @Nullable
     public static InactiveMyPet setMyPetInactive(MyPetPlayer owner) {
         if (mActivePlayerPets.containsKey(owner)) {
             MyPet activeMyPet = owner.getMyPet();

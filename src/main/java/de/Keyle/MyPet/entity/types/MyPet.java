@@ -47,6 +47,7 @@ import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
@@ -75,6 +76,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     protected Experience experience;
     protected long lastUsed = -1;
 
+    @Nullable
     public static enum LeashFlag {
         Baby, Adult, LowHp, Tamed, UserCreated, Wild, CanBreed, Angry, None, Impossible;
 
@@ -113,6 +115,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         return 0;
     }
 
+    @Nullable
     public Location getLocation() {
         if (status == PetState.Here) {
             return craftMyPet.getLocation();

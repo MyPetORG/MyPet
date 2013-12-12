@@ -29,6 +29,7 @@ import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +78,7 @@ public class IconMenuInventory {
             return this.items[position];
         }
 
+        @Nullable
         public ItemStack getItem(int position) {
             if (this.items[position] != null) {
                 return this.items[position].createNmsItemStack();
