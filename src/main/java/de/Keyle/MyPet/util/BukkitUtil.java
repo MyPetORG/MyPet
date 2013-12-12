@@ -35,17 +35,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class BukkitUtil {
-
-    static Field Packet63WorldParticles_a = Util.getField(PacketPlayOutWorldParticles.class, "a");
-    static Field Packet63WorldParticles_b = Util.getField(PacketPlayOutWorldParticles.class, "b");
-    static Field Packet63WorldParticles_c = Util.getField(PacketPlayOutWorldParticles.class, "c");
-    static Field Packet63WorldParticles_d = Util.getField(PacketPlayOutWorldParticles.class, "d");
-    static Field Packet63WorldParticles_e = Util.getField(PacketPlayOutWorldParticles.class, "e");
-    static Field Packet63WorldParticles_f = Util.getField(PacketPlayOutWorldParticles.class, "f");
-    static Field Packet63WorldParticles_g = Util.getField(PacketPlayOutWorldParticles.class, "g");
-    static Field Packet63WorldParticles_h = Util.getField(PacketPlayOutWorldParticles.class, "h");
-    static Field Packet63WorldParticles_i = Util.getField(PacketPlayOutWorldParticles.class, "i");
-
     /**
      * @param location   the {@link Location} around which players must be to see the effect
      * @param effectName list of effects: https://gist.github.com/riking/5759002
@@ -61,17 +50,7 @@ public class BukkitUtil {
         Validate.notNull(effectName, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
-
-        Util.setFieldValue(Packet63WorldParticles_a, packet, effectName);
-        Util.setFieldValue(Packet63WorldParticles_b, packet, (float) location.getX());
-        Util.setFieldValue(Packet63WorldParticles_c, packet, (float) location.getY());
-        Util.setFieldValue(Packet63WorldParticles_d, packet, (float) location.getZ());
-        Util.setFieldValue(Packet63WorldParticles_e, packet, offsetX);
-        Util.setFieldValue(Packet63WorldParticles_f, packet, offsetY);
-        Util.setFieldValue(Packet63WorldParticles_g, packet, offsetZ);
-        Util.setFieldValue(Packet63WorldParticles_h, packet, speed);
-        Util.setFieldValue(Packet63WorldParticles_i, packet, count);
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
 
         for (Player player : location.getWorld().getPlayers()) {
             if ((int) player.getLocation().distance(location) <= radius) {
