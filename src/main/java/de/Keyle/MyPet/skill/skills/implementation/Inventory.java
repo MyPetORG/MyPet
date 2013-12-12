@@ -54,7 +54,7 @@ public class Inventory extends InventoryInfo implements ISkillInstance, ISkillSt
     }
 
     public MyPet getMyPet() {
-        return null;
+        return myPet;
     }
 
     public void upgrade(ISkillInfo upgrade, boolean quiet) {
