@@ -64,7 +64,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHorse;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPigZombie;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftSkeleton;
-import org.bukkit.entity.*;
 import org.bukkit.entity.Ocelot.Type;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Villager.Profession;
@@ -138,8 +137,10 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         } else if (myPet instanceof MyCreeper) {
                             ((Creeper) normalEntity).setPowered(((MyCreeper) myPet).isPowered());
                         } else if (myPet instanceof MyEnderman) {
-                            MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlock().getType(), ((MyEnderman) myPet).getBlock().getData().getData());
-                            ((Enderman) normalEntity).setCarriedMaterial(materialData);
+                            if (((MyEnderman) myPet).hasBlock()) {
+                                MaterialData materialData = new MaterialData(((MyEnderman) myPet).getBlock().getType(), ((MyEnderman) myPet).getBlock().getData().getData());
+                                ((Enderman) normalEntity).setCarriedMaterial(materialData);
+                            }
                         } else if (myPet instanceof MyIronGolem) {
                             ((IronGolem) normalEntity).setPlayerCreated(true);
                         } else if (myPet instanceof MyMooshroom) {
