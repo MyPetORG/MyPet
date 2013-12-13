@@ -43,7 +43,7 @@ public class Party {
 
 
     public static boolean isInSameParty(Player player1, Player player2) {
-        return isInSamePartyHeroes(player1, player2) && isInSamePartyMcMMO(player1, player2) && isInSamePartyAncientRPG(player1, player2);
+        return isInSamePartyHeroes(player1, player2) || isInSamePartyMcMMO(player1, player2) || isInSamePartyAncientRPG(player1, player2);
     }
 
     public static boolean isInSamePartyHeroes(Player player1, Player player2) throws NoClassDefFoundError {
