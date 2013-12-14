@@ -65,7 +65,7 @@ public class MyPig extends MyPet implements IMyPetBaby {
                 ItemStack item = new ItemStack(Material.SADDLE);
                 setSaddle(item);
             }
-        } else {
+        } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
             ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
             setSaddle(item);
