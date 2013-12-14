@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.DyeColor;
 
@@ -34,6 +35,7 @@ public class EntityMySheep extends EntityMyPet {
     }
 
     public void setColor(byte color) {
+        MyPetLogger.write("sc: " + color);
         this.datawatcher.watch(16, color);
     }
 
@@ -60,6 +62,8 @@ public class EntityMySheep extends EntityMyPet {
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
             if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() <= 15 && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
+                MyPetLogger.write("is: " + itemStack.getData());
+                MyPetLogger.write("Dye: " + DyeColor.getByDyeData((byte) itemStack.getData()));
                 getMyPet().setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {

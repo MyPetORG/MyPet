@@ -54,7 +54,7 @@ public class MySheep extends MyPet implements IMyPetBaby {
 
     public void setColor(DyeColor color) {
         if (status == PetState.Here) {
-            ((EntityMySheep) getCraftPet().getHandle()).setColor(color.getDyeData());
+            ((EntityMySheep) getCraftPet().getHandle()).setColor(color.getWoolData());
         }
         this.color = color;
     }
@@ -72,7 +72,7 @@ public class MySheep extends MyPet implements IMyPetBaby {
     public void setExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Color", TagInt.class)) {
             setColor(DyeColor.getByDyeData((byte) info.getAs("Color", TagInt.class).getIntData()));
-        } else if (info.containsKeyAs("Color", TagInt.class)) {
+        } else if (info.containsKeyAs("Color", TagByte.class)) {
             setColor(DyeColor.getByDyeData(info.getAs("Color", TagByte.class).getByteData()));
         }
         if (info.getCompoundData().containsKey("Sheared")) {
