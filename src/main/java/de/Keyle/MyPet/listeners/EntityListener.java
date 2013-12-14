@@ -875,11 +875,11 @@ public class EntityListener implements Listener {
                         }
                     } else {
                         if (MyPetType.isLeashableEntityType(e.getDamager().getType())) {
-                            killer = Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
+                            killer += Locales.getString("Name." + Util.capitalizeName(MyPetType.getMyPetTypeByEntityType(e.getDamager().getType()).getTypeName()), myPet.getOwner().getLanguage());
                         } else if (e.getDamager().getType().getName() != null) {
-                            killer = Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
+                            killer += Locales.getString("Name." + Util.capitalizeName(e.getDamager().getType().getName()), myPet.getOwner().getLanguage());
                         } else {
-                            killer = Locales.getString("Name.Unknow", myPet.getOwner().getLanguage());
+                            killer += Locales.getString("Name.Unknow", myPet.getOwner().getLanguage());
                         }
                     }
                     killer += ")";
