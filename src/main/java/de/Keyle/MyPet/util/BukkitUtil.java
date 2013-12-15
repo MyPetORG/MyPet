@@ -107,7 +107,7 @@ public class BukkitUtil {
 
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
-                if (world.getChunkAt(x, z).isLoaded()) {
+                if (world.isChunkLoaded(x, z)) {
                     for (int y = minY - 1; y < maxY; y++) {
                         Block block = Block.e(world.getBlockAt(x, y, z).getTypeId());
 
