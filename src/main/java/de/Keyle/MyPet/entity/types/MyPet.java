@@ -335,11 +335,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 }
                 loc.setPitch(0);
                 loc.setYaw(0);
-                petEntity.setLocation(loc);
                 if (!BukkitUtil.canSpawn(loc, petEntity)) {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
                 }
+                petEntity.setLocation(loc);
 
                 if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner())) {
                     status = PetState.Despawned;
