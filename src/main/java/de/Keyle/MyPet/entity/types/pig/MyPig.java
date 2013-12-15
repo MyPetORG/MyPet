@@ -51,7 +51,7 @@ public class MyPig extends MyPet implements IMyPetBaby {
     public TagCompound getExtendedInfo() {
         TagCompound info = super.getExtendedInfo();
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
         }
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
@@ -67,7 +67,7 @@ public class MyPig extends MyPet implements IMyPetBaby {
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
             setSaddle(item);
         }
         if (info.getCompoundData().containsKey("Baby")) {

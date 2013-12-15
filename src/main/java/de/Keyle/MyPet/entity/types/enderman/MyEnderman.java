@@ -54,7 +54,7 @@ public class MyEnderman extends MyPet {
     public TagCompound getExtendedInfo() {
         TagCompound info = super.getExtendedInfo();
         if (block != null) {
-            info.getCompoundData().put("Block", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(block)));
+            info.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(block)));
         }
         //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));
         return info;
@@ -79,7 +79,7 @@ public class MyEnderman extends MyPet {
             setBlock(new ItemStack(Material.getMaterial(id), 1, (short) data));
         } else if (info.getCompoundData().containsKey("Block")) {
             TagCompound itemStackCompund = info.getAs("Block", TagCompound.class);
-            ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemStackCompund));
+            ItemStack block = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemStackCompund));
             setBlock(block);
         }
 

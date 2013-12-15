@@ -365,7 +365,7 @@ public class EntityListener implements Listener {
                             CraftEnderman enderman = (CraftEnderman) leashTarget;
                             if (enderman.getHandle().getCarried() != Blocks.AIR) {
                                 net.minecraft.server.v1_7_R1.ItemStack block = new net.minecraft.server.v1_7_R1.ItemStack(enderman.getHandle().getCarried(), 1, enderman.getHandle().getCarriedData());
-                                extendedInfo.getCompoundData().put("Block", ItemStackNBTConverter.ItemStackToCompund(block));
+                                extendedInfo.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(block));
                             }
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getCompoundData().put("Wither", new TagByte(((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
@@ -380,7 +380,7 @@ public class EntityListener implements Listener {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Chestplate.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -389,7 +389,7 @@ public class EntityListener implements Listener {
                                 ItemStack itemStack = leashTarget.getEquipment().getHelmet();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Helmet.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -398,7 +398,7 @@ public class EntityListener implements Listener {
                                 ItemStack itemStack = leashTarget.getEquipment().getLeggings();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Leggins.getSlotId()));
                                     equipmentList.add(item);
                                 }
@@ -407,7 +407,7 @@ public class EntityListener implements Listener {
                                 ItemStack itemStack = leashTarget.getEquipment().getBoots();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {
                                     net.minecraft.server.v1_7_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-                                    TagCompound item = ItemStackNBTConverter.ItemStackToCompund(nmsItemStack);
+                                    TagCompound item = ItemStackNBTConverter.itemStackToCompund(nmsItemStack);
                                     item.getCompoundData().put("Slot", new TagInt(EquipmentSlot.Boots.getSlotId()));
                                     equipmentList.add(item);
                                 }

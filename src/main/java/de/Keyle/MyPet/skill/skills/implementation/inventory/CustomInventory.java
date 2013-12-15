@@ -183,7 +183,7 @@ public class CustomInventory implements IInventory, Listener {
         for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
             if (itemStack != null) {
-                TagCompound item = ItemStackNBTConverter.ItemStackToCompund(itemStack);
+                TagCompound item = ItemStackNBTConverter.itemStackToCompund(itemStack);
                 item.getCompoundData().put("Slot", new TagByte((byte) i));
                 itemList.add(item);
             }
@@ -198,7 +198,7 @@ public class CustomInventory implements IInventory, Listener {
         for (int i = 0; i < items.size(); i++) {
             TagCompound itemCompound = items.getTagAs(i, TagCompound.class);
 
-            ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(itemCompound);
+            ItemStack itemStack = ItemStackNBTConverter.compundToItemStack(itemCompound);
             setItem(itemCompound.getAs("Slot", TagByte.class).getByteData(), itemStack);
         }
     }

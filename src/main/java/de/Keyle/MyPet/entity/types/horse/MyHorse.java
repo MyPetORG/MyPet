@@ -137,14 +137,14 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         info.getCompoundData().put("Type", new TagByte(getHorseType()));
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
         if (hasArmor()) {
-            info.getCompoundData().put("Armor", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getArmor())));
+            info.getCompoundData().put("Armor", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getArmor())));
         }
         info.getCompoundData().put("Age", new TagInt(getAge()));
         if (hasChest()) {
-            info.getCompoundData().put("Chest", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getChest())));
+            info.getCompoundData().put("Chest", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getChest())));
         }
         if (hasSaddle()) {
-            info.getCompoundData().put("Saddle", ItemStackNBTConverter.ItemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
+            info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
         }
         return info;
     }
@@ -165,7 +165,7 @@ public class MyHorse extends MyPet implements IMyPetBaby {
             }
         } else if (info.containsKeyAs("Armor", TagCompound.class)) {
             TagCompound itemTag = info.get("Armor");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
             setArmor(item);
         }
         if (info.getCompoundData().containsKey("Age")) {
@@ -179,7 +179,7 @@ public class MyHorse extends MyPet implements IMyPetBaby {
             }
         } else if (info.containsKeyAs("Chest", TagCompound.class)) {
             TagCompound itemTag = info.get("Chest");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
             setChest(item);
         }
         if (info.containsKeyAs("Saddle", TagByte.class)) {
@@ -190,7 +190,7 @@ public class MyHorse extends MyPet implements IMyPetBaby {
             }
         } else if (info.containsKeyAs("Saddle", TagCompound.class)) {
             TagCompound itemTag = info.get("Saddle");
-            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.CompundToItemStack(itemTag));
+            ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));
             setSaddle(item);
         }
     }

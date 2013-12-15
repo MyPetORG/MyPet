@@ -70,7 +70,7 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
         List<TagCompound> itemList = new ArrayList<TagCompound>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
-                TagCompound item = ItemStackNBTConverter.ItemStackToCompund(getEquipment(slot));
+                TagCompound item = ItemStackNBTConverter.itemStackToCompund(getEquipment(slot));
                 item.getCompoundData().put("Slot", new TagInt(slot.getSlotId()));
                 itemList.add(item);
             }
@@ -89,7 +89,7 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
             for (int i = 0; i < equipment.size(); i++) {
                 TagCompound item = equipment.getTagAs(i, TagCompound.class);
 
-                ItemStack itemStack = ItemStackNBTConverter.CompundToItemStack(item);
+                ItemStack itemStack = ItemStackNBTConverter.compundToItemStack(item);
                 setEquipment(EquipmentSlot.getSlotById(item.getAs("Slot", TagInt.class).getIntData()), itemStack);
             }
         }
