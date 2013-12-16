@@ -26,7 +26,6 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +73,6 @@ public class SkillsInfo {
         return registeredNamesSkills.get(name);
     }
 
-    @Nullable
     public static ISkillInfo getNewSkillInfoInstance(String name) {
         Class<? extends SkillTreeSkill> clazz = getSkillInfoClass(name);
         if (clazz == null) {
@@ -87,7 +85,6 @@ public class SkillsInfo {
         return getNewSkillInstance(clazz, false);
     }
 
-    @Nullable
     public static ISkillInfo getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is) {
         if (clazz == null) {
             return null;

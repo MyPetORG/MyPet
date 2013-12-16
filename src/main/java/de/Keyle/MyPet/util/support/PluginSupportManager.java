@@ -28,7 +28,6 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,6 @@ public class PluginSupportManager implements Listener {
     private static Map<String, Boolean> pluginFound = new HashMap<String, Boolean>();
 
 
-    @Nullable
     public static <T extends Plugin> T getPluginInstance(Class<T> clazz) {
         if (pluginManager == null) {
             pluginManager = Bukkit.getServer().getPluginManager();

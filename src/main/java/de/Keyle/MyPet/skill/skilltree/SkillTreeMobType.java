@@ -22,7 +22,6 @@ package de.Keyle.MyPet.skill.skilltree;
 
 import de.Keyle.MyPet.entity.types.MyPetType;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +106,6 @@ public class SkillTreeMobType {
         return getSkillTreePlace(skillTree.getName());
     }
 
-    @Nullable
     public SkillTree getSkillTree(String skillTreeName) {
         return skillTrees.get(skillTreeName);
     }

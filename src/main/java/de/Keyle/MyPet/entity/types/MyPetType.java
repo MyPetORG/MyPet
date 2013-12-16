@@ -84,7 +84,6 @@ import net.minecraft.server.v1_7_R1.World;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 
 public enum MyPetType {
@@ -141,7 +140,6 @@ public enum MyPetType {
         return myPetClass;
     }
 
-    @Nullable
     public static MyPetType getMyPetTypeByEntityClass(Class<? extends EntityCreature> entityClass) {
         for (MyPetType myPetType : MyPetType.values()) {
             if (myPetType.entityClass == entityClass) {
@@ -151,7 +149,6 @@ public enum MyPetType {
         return null;
     }
 
-    @Nullable
     public static MyPetType getMyPetTypeByEntityType(EntityType type) {
         for (MyPetType myPetType : MyPetType.values()) {
             if (myPetType.bukkitType == type) {
@@ -161,7 +158,6 @@ public enum MyPetType {
         return null;
     }
 
-    @Nullable
     public static MyPetType getMyPetTypeByName(String name) {
         for (MyPetType myPetType : MyPetType.values()) {
             if (myPetType.name.equalsIgnoreCase(name)) {

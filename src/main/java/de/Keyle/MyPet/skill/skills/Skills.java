@@ -29,7 +29,6 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Set;
 
@@ -92,7 +91,6 @@ public class Skills {
         return getNewSkillInstance(clazz, false);
     }
 
-    @Nullable
     public static ISkillInstance getNewSkillInstance(Class<? extends SkillTreeSkill> clazz, boolean is) {
         if (clazz == null) {
             return null;
@@ -146,7 +144,6 @@ public class Skills {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     public <T extends ISkillInstance> T getSkill(Class<T> clazz) {
         SkillName sn = clazz.getAnnotation(SkillName.class);
         if (sn == null) {

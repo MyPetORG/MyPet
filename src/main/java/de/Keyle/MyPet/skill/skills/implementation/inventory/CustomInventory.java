@@ -35,7 +35,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.InventoryHolder;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +73,6 @@ public class CustomInventory implements IInventory, Listener {
         this.inventroyName = name;
     }
 
-    @Nullable
     public ItemStack getItem(int i) {
         if (i <= size) {
             return items.get(i);
@@ -151,7 +149,6 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
-    @Nullable
     public ItemStack splitStack(int i, int j) {
         if (i <= size && items.get(i) != null) {
             ItemStack itemStack;
@@ -262,7 +259,6 @@ public class CustomInventory implements IInventory, Listener {
         this.stackSize = i;
     }
 
-    @Nullable
     public ItemStack splitWithoutUpdate(int i) {
         if (items.get(i) != null) {
             ItemStack itemstack = items.get(i);

@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.util.locale;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class ResourceBundle extends java.util.ResourceBundle {
@@ -65,7 +64,6 @@ public class ResourceBundle extends java.util.ResourceBundle {
         return this.parent.getObject(key);
     }
 
-    @Nullable
     private Object getObjectFromExtensionBundles(String key) {
         if (this.extensionBundles.size() == 0) {
             return null;

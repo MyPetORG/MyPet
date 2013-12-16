@@ -76,7 +76,6 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     protected Experience experience;
     protected long lastUsed = -1;
 
-    @Nullable
     public static enum LeashFlag {
         Baby, Adult, LowHp, Tamed, UserCreated, Wild, CanBreed, Angry, None, Impossible;
 
