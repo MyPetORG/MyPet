@@ -37,6 +37,7 @@ import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.PacketPlayOutCollect;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
@@ -113,6 +114,11 @@ public class Pickup extends PickupInfo implements ISkillInstance, IScheduler, IS
         if (pickup && (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup") || myPet.getOwner().isInExternalGames())) {
             pickup = false;
             myPet.sendMessageToOwner(Util.formatText(Locales.getString(("Message.Skill.Pickup.StartStop"), myPet.getOwner().getPlayer()), myPet.getPetName(), Locales.getString("Name.Disabled", myPet.getOwner())));
+            return;
+        }
+        if (pickup && myPet.getOwner().getPlayer().getGameMode() == GameMode.CREATIVE && !Inventory.OPEN_IN_CREATIVEMODE && !Permissions.has(myPet.getOwner().getPlayer(), "MyPet.admin", false)) {
+            myPet.sendMessageToOwner(Locales.getString("Message.Skill.Pickup.Creative", myPet.getOwner()));
+            pickup = false;
             return;
         }
         if (range > 0 && pickup && myPet.getStatus() == PetState.Here && myPet.getSkills().isSkillActive(Inventory.class)) {
