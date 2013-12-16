@@ -119,7 +119,7 @@ public class PvPChecker {
                     }
                     return !npc.data().get("protected", true);
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Citizens = false;
             } catch (Exception ignored) {
             }
@@ -136,7 +136,7 @@ public class PvPChecker {
                 ApplicableRegionSet set = mgr.getApplicableRegions(pt);
 
                 return set.allows(DefaultFlag.PVP);
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_WorldGuard = false;
             } catch (Exception ignored) {
             }
@@ -149,7 +149,7 @@ public class PvPChecker {
             try {
                 EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
                 return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Factions = false;
             } catch (Exception ignored) {
             }
@@ -163,7 +163,7 @@ public class PvPChecker {
                 if (CombatUtil.preventDamageCall(attacker, defender)) {
                     return false;
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Towny = false;
             } catch (Exception ignored) {
             }
@@ -190,7 +190,7 @@ public class PvPChecker {
                 if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
                     return false;
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Heroes = false;
             } catch (Exception ignored) {
             }
@@ -208,7 +208,7 @@ public class PvPChecker {
                     }
                 }
                 return pluginRegios.getRegion(defender).isPvp();
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Regios = false;
             } catch (Exception ignored) {
             }
@@ -221,7 +221,7 @@ public class PvPChecker {
             try {
                 FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
                 return flagPermissions.has("pvp", true);
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_Residence = false;
             } catch (Exception ignored) {
             }
@@ -238,7 +238,7 @@ public class PvPChecker {
                 if (pluginMobArena.isPlayerInArena(defender)) {
                     return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_MobArena = false;
             } catch (Exception ignored) {
             }
@@ -263,7 +263,7 @@ public class PvPChecker {
                 if (game.isProtectionOn()) {
                     return false;
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_SurvivalGame = false;
             } catch (Exception ignored) {
             }
@@ -279,7 +279,7 @@ public class PvPChecker {
                         return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
                     }
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_PvPArena = false;
             } catch (Exception ignored) {
             }
@@ -291,7 +291,7 @@ public class PvPChecker {
         if (USE_McMMO && PluginSupportManager.isPluginUsable("mcMMO")) {
             try {
                 return !PartyAPI.inSameParty(attacker, defender);
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_McMMO = false;
             } catch (Exception ignored) {
             }
@@ -315,7 +315,7 @@ public class PvPChecker {
                         return false;
                     }
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_AncientRPG = false;
             } catch (Exception ignored) {
             }
@@ -356,7 +356,7 @@ public class PvPChecker {
                         }
                     }
                 }
-            } catch (NoClassDefFoundError e) {
+            } catch (Error e) {
                 USE_GriefPrevention = false;
             } catch (Exception ignored) {
             }
