@@ -160,7 +160,7 @@ public class PvPChecker {
     public static boolean canHurtTowny(Player attacker, Player defender) {
         if (USE_Towny && PluginSupportManager.isPluginUsable("Towny")) {
             try {
-                if (CombatUtil.preventDamageCall(attacker, defender)) {
+                if (CombatUtil.preventFriendlyFire(attacker, defender)) {
                     return false;
                 }
             } catch (Error e) {
