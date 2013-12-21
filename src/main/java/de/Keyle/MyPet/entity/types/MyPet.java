@@ -47,7 +47,6 @@ import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.bukkit.Bukkit.getServer;
@@ -114,7 +113,6 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         return 0;
     }
 
-    @Nullable
     public Location getLocation() {
         if (status == PetState.Here) {
             return craftMyPet.getLocation();

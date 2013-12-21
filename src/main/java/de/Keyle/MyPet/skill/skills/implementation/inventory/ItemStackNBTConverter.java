@@ -23,7 +23,6 @@ package de.Keyle.MyPet.skill.skills.implementation.inventory;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R1.*;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +55,6 @@ public class ItemStackNBTConverter {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
     public static NBTBase compoundToVanillaCompound(TagBase tag) {
         switch (TagType.getTypeById(tag.getTagTypeId())) {
             case Int:
