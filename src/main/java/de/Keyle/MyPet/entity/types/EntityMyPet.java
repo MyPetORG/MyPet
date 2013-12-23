@@ -351,6 +351,29 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         if (getOwner().getPlayer().isSneaking() != isSneaking()) {
             this.setSneaking(!isSneaking());
         }
+        if (hasRider) {
+            if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
+                hasRider = false;
+                applyLeash();
+                setSize();
+                this.X = 0.5F; // climb height -> halfslab
+                Location playerLoc = getOwner().getPlayer().getLocation();
+                Location petLoc = getBukkitEntity().getLocation();
+                petLoc.setYaw(playerLoc.getYaw());
+                petLoc.setPitch(playerLoc.getPitch());
+                getOwner().getPlayer().teleport(petLoc);
+            }
+        } else {
+            if (this.passenger != null && this.passenger instanceof EntityPlayer) {
+                if (getOwner().equals(this.passenger)) {
+                    hasRider = true;
+                    setSize(1F);
+                    this.X = 1.0F; // climb height -> 1 block
+                } else {
+                    this.passenger.setPassengerOf(null); // just the owner can ride a pet
+                }
+            }
+        }
     }
 
     protected void initDatawatcher() {
@@ -530,31 +553,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public void e(float motionSideways, float motionForward) {
-        if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
-            if (hasRider) {
-                hasRider = false;
-                applyLeash();
-                setSize();
-            }
+        if (!hasRider || this.passenger == null) {
             super.e(motionSideways, motionForward);
-            this.X = 0.5F; // climb height -> halfslab
             return;
-        } else {
-            // just the owner can ride the pet
-            EntityPlayer passenger = (EntityPlayer) this.passenger;
-            if (!getOwner().equals(passenger)) {
-                super.e(motionSideways, motionForward);
-                this.X = 0.5F; // climb height -> halfslab
-                return;
-            }
         }
-
-        if (!hasRider) {
-            hasRider = true;
-            setSize(1F);
-        }
-
-        this.X = 1.0F; // climb height -> 1 block
 
         //apply pitch & yaw
         this.lastYaw = (this.yaw = this.passenger.yaw);
