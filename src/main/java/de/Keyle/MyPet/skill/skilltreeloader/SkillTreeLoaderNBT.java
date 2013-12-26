@@ -210,7 +210,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                             skillList.add(skillCompound);
                         }
                     }
-                    levelCompound.getCompoundData().put("Name", new TagList(skillList));
+                    levelCompound.getCompoundData().put("Skills", new TagList(skillList));
                     levelList.add(levelCompound);
                 }
                 skilltreeCompound.getCompoundData().put("Level", new TagList(levelList));
