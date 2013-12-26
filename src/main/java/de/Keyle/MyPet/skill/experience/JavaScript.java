@@ -39,7 +39,9 @@ public class JavaScript extends Experience {
     private static IExperience expInv = null;
     private static boolean isUsable = false;
 
-    private double lastExp = Double.NaN;
+    private double lastExpLevel = Double.NaN;
+    private double lastExpRequiredExp = Double.NaN;
+    private double lastExpCurrentExp = Double.NaN;
     private int lastLevel = 1;
     private double lastCurrentExp = 0.0;
     private double lastRequiredExp = 0.0;
@@ -73,10 +75,10 @@ public class JavaScript extends Experience {
         if (exp == 0) {
             return 1;
         }
-        if (lastExp == exp) {
+        if (lastExpLevel == exp) {
             return lastLevel;
         }
-        lastExp = exp;
+        lastExpLevel = exp;
         if (expInv != null) {
             try {
                 return lastLevel = expInv.getLevel(exp, scriptInfo);
@@ -101,10 +103,10 @@ public class JavaScript extends Experience {
     }
 
     public double getRequiredExp(double exp) {
-        if (lastExp == exp) {
+        if (lastExpRequiredExp == exp) {
             return lastRequiredExp;
         }
-        lastExp = exp;
+        lastExpRequiredExp = exp;
         if (expInv != null) {
             try {
                 return lastRequiredExp = expInv.getRequiredExp(exp, scriptInfo);
@@ -129,10 +131,10 @@ public class JavaScript extends Experience {
     }
 
     public double getCurrentExp(double exp) {
-        if (lastExp == exp) {
+        if (lastExpCurrentExp == exp) {
             return lastCurrentExp;
         }
-        lastExp = exp;
+        lastExpCurrentExp = exp;
 
         if (expInv != null) {
             try {
