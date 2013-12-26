@@ -190,7 +190,7 @@ public class EntityListener implements Listener {
             if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
                 LivingEntity damager = (LivingEntity) event.getDamager();
                 if (damager instanceof Player) {
-                    if (!PvPChecker.canHurtAncientRPG(myPet.getOwner().getPlayer(), (Player) damager)) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager)) {
                         return;
                     }
                 }
