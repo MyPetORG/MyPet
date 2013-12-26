@@ -454,15 +454,7 @@ public class EntityListener implements Listener {
         if (event.getEntity() instanceof CraftMyPet) {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
 
-            if (event.getCause() == DamageCause.FALL) {
-                if (craftMyPet.getPetType() == MyPetType.Chicken || craftMyPet.getPetType() == MyPetType.Bat || craftMyPet.getPetType() == MyPetType.IronGolem) {
-                    event.setCancelled(true);
-                }
-            } else if (event.getCause() == DamageCause.DROWNING) {
-                if (craftMyPet.getPetType() == MyPetType.IronGolem) {
-                    event.setCancelled(true);
-                }
-            } else if (event.getCause() == DamageCause.SUFFOCATION) {
+            if (event.getCause() == DamageCause.SUFFOCATION) {
                 final MyPet myPet = craftMyPet.getMyPet();
                 final MyPetPlayer myPetPlayer = myPet.getOwner();
 
