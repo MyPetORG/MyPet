@@ -114,4 +114,7 @@ public class EntityMyChicken extends EntityMyPet {
     public MyChicken getMyPet() {
         return (MyChicken) myPet;
     }
+
+    protected void b(float f) {
+    }
 }

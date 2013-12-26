@@ -70,4 +70,7 @@ public class EntityMyBat extends EntityMyPet {
             this.motY *= 0.6D;
         }
     }
+
+    protected void b(float f) {
+    }
 }
