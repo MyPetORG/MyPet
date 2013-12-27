@@ -51,7 +51,7 @@ public class EntityMySnowman extends EntityMyPet {
 
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
-                if (bukkitWorld.getChunkAt(x, z).isLoaded()) {
+                if (bukkitWorld.isChunkLoaded(x, z)) {
                     for (int y = minY - 1; y < maxY; y++) {
                         Block block = world.getType(x, y, z);
 
