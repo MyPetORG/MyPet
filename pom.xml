@@ -402,8 +402,8 @@
                         </goals>
                         <configuration>
                             <maps>${basedir}/maps.yml</maps>
-                            <input>${basedir}/target/${project.artifactId}-${project.version}.jar</input>
-                            <original>${basedir}/target/unmapped-${project.artifactId}-${project.version}.jar</original>
+                            <input>${basedir}/target/${project.name}-${project.version}.jar</input>
+                            <original>${basedir}/target/unmapped-${project.name}-${project.version}.jar</original>
                             <missing>FAIL</missing>
                         </configuration>
                     </execution>
