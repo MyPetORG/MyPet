@@ -55,7 +55,7 @@ import org.bukkit.entity.EntityType;
 public class Configuration {
     public static FileConfiguration config;
 
-    public static String PET_INFO_OVERHEAD_PREFIX = "" + ChatColor.AQUA;
+    public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
     public static int RESPAWN_TIME_FACTOR = 5;
@@ -88,57 +88,55 @@ public class Configuration {
     public static boolean STORE_PETS_ON_PLAYER_QUIT = true;
     public static boolean STORE_PETS_ON_PET_LEASH = true;
     public static boolean STORE_PETS_ON_PET_RELEASE = true;
-    public static boolean DONATOR_EFFECT = true;
     public static boolean RELEASE_PETS_ON_DEATH = false;
     public static boolean ADD_ZOMBIE_TARGET_GOAL = true;
 
     public static void setDefault() {
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
-        config.addDefault("MyPet.Leash.ShowAlwaysForOwner", false);
-        config.addDefault("MyPet.OwnerCanAttackPet", false);
-        config.addDefault("MyPet.DisablePetVersusPlayer", false);
-        config.addDefault("MyPet.DonatorEffect", true);
-        config.addDefault("MyPet.EnableEvents", false);
-        config.addDefault("MyPet.RemovePetsAfterRelease", false);
-        config.addDefault("MyPet.FollowStartDistance", 7.0D);
-        config.addDefault("MyPet.ReleasePetsOnDeath", false);
-        config.addDefault("MyPet.ZombieVsMyPet", false);
-        config.addDefault("MyPet.MaxPetNameLength", 64);
+        config.addDefault("MyPet.Leash.ShowAlwaysForOwner", ALWAYS_SHOW_LEASH_FOR_OWNER);
+        config.addDefault("MyPet.OwnerCanAttackPet", OWNER_CAN_ATTACK_PET);
+        config.addDefault("MyPet.DisablePetVersusPlayer", DISABLE_PET_VS_PLAYER);
+        config.addDefault("MyPet.EnableEvents", ENABLE_EVENTS);
+        config.addDefault("MyPet.RemovePetsAfterRelease", REMOVE_PETS_AFTER_RELEASE);
+        config.addDefault("MyPet.FollowStartDistance", MYPET_FOLLOW_START_DISTANCE);
+        config.addDefault("MyPet.ReleasePetsOnDeath", RELEASE_PETS_ON_DEATH);
+        config.addDefault("MyPet.ZombieVsMyPet", ADD_ZOMBIE_TARGET_GOAL);
+        config.addDefault("MyPet.MaxPetNameLength", MAX_PET_NAME_LENGTH);
 
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
         config.addDefault("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
 
-        config.addDefault("MyPet.PetStorage.AutoSaveTime", 60);
-        config.addDefault("MyPet.PetStorage.OnPlayerQuit", true);
-        config.addDefault("MyPet.PetStorage.OnPetLeash", true);
-        config.addDefault("MyPet.PetStorage.OnPetRelease", true);
+        config.addDefault("MyPet.PetStorage.AutoSaveTime", AUTOSAVE_TIME);
+        config.addDefault("MyPet.PetStorage.OnPlayerQuit", STORE_PETS_ON_PLAYER_QUIT);
+        config.addDefault("MyPet.PetStorage.OnPetLeash", STORE_PETS_ON_PET_LEASH);
+        config.addDefault("MyPet.PetStorage.OnPetRelease", STORE_PETS_ON_PET_RELEASE);
 
-        config.addDefault("MyPet.Respawn.Time.Default.Factor", 5);
-        config.addDefault("MyPet.Respawn.Time.Player.Factor", 5);
-        config.addDefault("MyPet.Respawn.Time.Default.Fixed", 0);
-        config.addDefault("MyPet.Respawn.Time.Player.Fixed", 0);
-        config.addDefault("MyPet.Respawn.EconomyCost.Fixed", 0.0);
-        config.addDefault("MyPet.Respawn.EconomyCost.Factor", 1.0);
+        config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
+        config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
+        config.addDefault("MyPet.Respawn.Time.Default.Fixed", RESPAWN_TIME_FIXED);
+        config.addDefault("MyPet.Respawn.Time.Player.Fixed", RESPAWN_TIME_PLAYER_FIXED);
+        config.addDefault("MyPet.Respawn.EconomyCost.Fixed", RESPAWN_COSTS_FIXED);
+        config.addDefault("MyPet.Respawn.EconomyCost.Factor", RESPAWN_COSTS_FACTOR);
 
-        config.addDefault("MyPet.Permissions.Enabled", true);
-        config.addDefault("MyPet.Permissions.UseExtendedPermissions", false);
+        config.addDefault("MyPet.Permissions.Enabled", Permissions.ENABLED);
+        config.addDefault("MyPet.Permissions.UseExtendedPermissions", Permissions.USE_EXTENDET_PERMISSIONS);
 
-        config.addDefault("MyPet.LevelSystem.CalculationMode", "Default");
-        config.addDefault("MyPet.LevelSystem.Firework.Enabled", true);
+        config.addDefault("MyPet.LevelSystem.CalculationMode", Experience.CALCULATION_MODE);
+        config.addDefault("MyPet.LevelSystem.Firework.Enabled", Experience.FIREWORK_ON_LEVELUP);
         config.addDefault("MyPet.LevelSystem.Firework.Color", "#00FF00");
 
-        config.addDefault("MyPet.HungerSystem.Active", true);
-        config.addDefault("MyPet.HungerSystem.Time", 60);
-        config.addDefault("MyPet.HungerSystem.HungerPointsPerFeed", 6);
+        config.addDefault("MyPet.HungerSystem.Active", USE_HUNGER_SYSTEM);
+        config.addDefault("MyPet.HungerSystem.Time", HUNGER_SYSTEM_TIME);
+        config.addDefault("MyPet.HungerSystem.HungerPointsPerFeed", HUNGER_SYSTEM_POINTS_PER_FEED);
 
-        config.addDefault("MyPet.Skilltree.AutomaticAssignment", false);
-        config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", true);
-        config.addDefault("MyPet.Skilltree.ChooseOnce", true);
-        config.addDefault("MyPet.Skilltree.PreventLevellingWithout", true);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", 5);
-        config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", false);
+        config.addDefault("MyPet.Skilltree.AutomaticAssignment", AUTOMATIC_SKILLTREE_ASSIGNMENT);
+        config.addDefault("MyPet.Skilltree.InheritAlreadyInheritedSkills", INHERIT_ALREADY_INHERITED_SKILLS);
+        config.addDefault("MyPet.Skilltree.ChooseOnce", CHOOSE_SKILLTREE_ONLY_ONCE);
+        config.addDefault("MyPet.Skilltree.PreventLevellingWithout", PREVENT_LEVELLING_WITHOUT_SKILLTREE);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyFixed", SKILLTREE_SWITCH_PENALTY_FIXED);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", SKILLTREE_SWITCH_PENALTY_PERCENT);
+        config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", SKILLTREE_SWITCH_PENALTY_ADMIN);
 
         config.addDefault("MyPet.Support.PlayerDamageEntityEvent", false);
         config.addDefault("MyPet.Support.Towny", true);
@@ -162,30 +160,30 @@ public class Configuration {
         config.addDefault("MyPet.Support.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
-        config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", true);
-        config.addDefault("MyPet.Exp.Passive.PercentPerMonster", 25);
-        config.addDefault("MyPet.Exp.Loss.Percent", 0);
-        config.addDefault("MyPet.Exp.Loss.Fixed", 0.0);
-        config.addDefault("MyPet.Exp.Loss.Drop", true);
-        config.addDefault("MyPet.Exp.Gain.MonsterSpawner", true);
+        config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
+        config.addDefault("MyPet.Exp.Passive.PercentPerMonster", PASSIVE_PERCENT_PER_MONSTER);
+        config.addDefault("MyPet.Exp.Loss.Percent", Experience.LOSS_PERCENT);
+        config.addDefault("MyPet.Exp.Loss.Fixed", Experience.LOSS_FIXED);
+        config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
+        config.addDefault("MyPet.Exp.Gain.MonsterSpawner", Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS);
 
         config.addDefault("MyPet.Skill.Control.Item", Control.CONTROL_ITEM);
         config.addDefault("MyPet.Skill.Ride.Item", Ride.RIDE_ITEM);
-        config.addDefault("MyPet.Skill.Inventory.Creative", true);
-        config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", false);
-        config.addDefault("MyPet.Skill.Behavior.Aggro", true);
-        config.addDefault("MyPet.Skill.Behavior.Farm", true);
-        config.addDefault("MyPet.Skill.Behavior.Friendly", true);
-        config.addDefault("MyPet.Skill.Behavior.Raid", true);
-        config.addDefault("MyPet.Skill.Behavior.Duel", true);
-        config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", 100);
+        config.addDefault("MyPet.Skill.Inventory.Creative", Inventory.OPEN_IN_CREATIVEMODE);
+        config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Inventory.DROP_WHEN_OWNER_DIES);
+        config.addDefault("MyPet.Skill.Behavior.Aggro", Behavior.BehaviorState.Aggressive.isActive());
+        config.addDefault("MyPet.Skill.Behavior.Farm", Behavior.BehaviorState.Farm.isActive());
+        config.addDefault("MyPet.Skill.Behavior.Friendly", Behavior.BehaviorState.Friendly.isActive());
+        config.addDefault("MyPet.Skill.Behavior.Raid", Behavior.BehaviorState.Raid.isActive());
+        config.addDefault("MyPet.Skill.Behavior.Duel", Behavior.BehaviorState.Duel.isActive());
+        config.addDefault("MyPet.Skill.Beacon.HungerDecreaseTime", Beacon.HUNGER_DECREASE_TIME);
 
-        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", true);
-        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", true);
-        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", true);
-        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", true);
-        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", true);
-        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", true);
+        config.addDefault("MyPet.Pets.Chicken.CanLayEggs", MyChicken.CAN_LAY_EGGS);
+        config.addDefault("MyPet.Pets.Cow.CanGiveMilk", MyCow.CAN_GIVE_MILK);
+        config.addDefault("MyPet.Pets.Sheep.CanBeSheared", MySheep.CAN_BE_SHEARED);
+        config.addDefault("MyPet.Pets.Sheep.CanRegrowWool", MySheep.CAN_REGROW_WOOL);
+        config.addDefault("MyPet.Pets.IronGolem.CanThrowUp", MyIronGolem.CAN_THROW_UP);
+        config.addDefault("MyPet.Pets.Snowman.FixSnowTrack", MySnowman.FIX_SNOW_TRACK);
         config.addDefault("MyPet.Pets.Chicken.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
@@ -198,18 +196,18 @@ public class Configuration {
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
 
-        config.addDefault("MyPet.Info.AdminOnly.PetName", false);
-        config.addDefault("MyPet.Info.AdminOnly.PetOwner", false);
-        config.addDefault("MyPet.Info.AdminOnly.PetHP", false);
-        config.addDefault("MyPet.Info.AdminOnly.PetDamage", false);
-        config.addDefault("MyPet.Info.AdminOnly.PetHunger", true);
-        config.addDefault("MyPet.Info.AdminOnly.PetLevel", true);
-        config.addDefault("MyPet.Info.AdminOnly.PetEXP", true);
-        config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", true);
+        config.addDefault("MyPet.Info.AdminOnly.PetName", PetInfoDisplay.Name.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetOwner", PetInfoDisplay.Owner.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetHP", PetInfoDisplay.HP.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetDamage", PetInfoDisplay.Damage.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetHunger", PetInfoDisplay.Hunger.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetLevel", PetInfoDisplay.Level.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetEXP", PetInfoDisplay.Exp.adminOnly);
+        config.addDefault("MyPet.Info.AdminOnly.PetSkilltree", PetInfoDisplay.Skilltree.adminOnly);
 
-        config.addDefault("MyPet.Info.OverHead.Name", true);
-        config.addDefault("MyPet.Info.OverHead.Prefix", "<aqua>");
-        config.addDefault("MyPet.Info.OverHead.Suffix", "");
+        config.addDefault("MyPet.Info.OverHead.Name", PET_INFO_OVERHEAD_NAME);
+        config.addDefault("MyPet.Info.OverHead.Prefix", PET_INFO_OVERHEAD_PREFIX);
+        config.addDefault("MyPet.Info.OverHead.Suffix", PET_INFO_OVERHEAD_SUFFIX);
 
         for (MyPetType petType : MyPetType.values()) {
             MyPetInfo pi = petType.getMyPetClass().getAnnotation(MyPetInfo.class);
@@ -258,7 +256,7 @@ public class Configuration {
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         SKILLTREE_SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
-        PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.exp.passive.PercentPerMonster", 25);
+        PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
         RESPAWN_TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Default.Factor", 5);
         RESPAWN_TIME_PLAYER_FACTOR = config.getInt("MyPet.Respawn.Time.Player.Factor", 5);
         RESPAWN_TIME_FIXED = config.getInt("MyPet.Respawn.Time.Default.Fixed", 0);
@@ -275,7 +273,6 @@ public class Configuration {
         MAX_PET_NAME_LENGTH = config.getInt("MyPet.MaxPetNameLength", 64);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
         ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
-        DONATOR_EFFECT = config.getBoolean("MyPet.DonatorEffect", true);
         RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         ADD_ZOMBIE_TARGET_GOAL = config.getBoolean("MyPet.ZombieVsMyPet", false);
