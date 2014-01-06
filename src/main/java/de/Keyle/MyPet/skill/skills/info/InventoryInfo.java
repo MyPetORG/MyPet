@@ -1,7 +1,7 @@
 /*
  * This file is part of MyPet
  *
- * Copyright (C) 2011-2013 Keyle
+ * Copyright (C) 2011-2014 Keyle
  * MyPet is licensed under the GNU Lesser General Public License.
  *
  * MyPet is free software: you can redistribute it and/or modify
@@ -29,8 +29,8 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
 @SkillName("Inventory")
 @SkillProperties(parameterNames = {"add", "drop"},
-                 parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
-                 parameterDefaultValues = {"1", "false"})
+        parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
+        parameterDefaultValues = {"1", "false"})
 public class InventoryInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 

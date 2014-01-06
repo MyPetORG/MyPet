@@ -15,7 +15,7 @@ Take them on a lead, train them and make them a very powerful companion!
 [![BukkitDev][BukkitDevImage]][BukkitDev]
 
 ## The License
-Copyright (c) 2011-2013, Keyle<br />
+Copyright (c) 2011-2014, Keyle<br />
 MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
 
 Most icons under [resources/images] are owned by the Oxygen Team (http://www.oxygen-icons.org).<br />
