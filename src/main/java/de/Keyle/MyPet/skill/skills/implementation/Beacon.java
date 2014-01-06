@@ -51,7 +51,7 @@ import static org.bukkit.ChatColor.*;
 import static org.bukkit.Material.*;
 
 public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
-    public static int HUNGER_DECREASE_TIME = 60;
+    public static int HUNGER_DECREASE_TIME = 100;
     private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
     private static BiMap<Integer, Integer> buffPositionItems = buffItemPositions.inverse();

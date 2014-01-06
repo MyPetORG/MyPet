@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <minecraft.version>1.7.2</minecraft.version>
-        <bukkit.version>R0.1</bukkit.version>
+        <bukkit.version>R0.3-SNAPSHOT</bukkit.version>
 
         <citizensapi.version>2.0.9-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.4.06</mcmmo.version>

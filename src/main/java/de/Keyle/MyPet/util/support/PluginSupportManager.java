@@ -27,6 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,22 +40,20 @@ public class PluginSupportManager implements Listener {
     private static Map<String, Boolean> pluginFound = new HashMap<String, Boolean>();
 
 
-    public static <T extends Plugin> T getPluginInstance(Class<T> clazz) {
+    public static <T extends JavaPlugin> T getPluginInstance(Class<T> clazz) {
         if (pluginManager == null) {
             pluginManager = Bukkit.getServer().getPluginManager();
         }
         if (pluginInstances.containsKey(clazz.getName())) {
             return clazz.cast(pluginInstances.get(clazz.getName()));
         }
-        for (Plugin p : pluginManager.getPlugins()) {
-            if (clazz.isInstance(p)) {
-                T plugin = clazz.cast(p);
-                pluginInstances.put(clazz.getName(), plugin);
-                pluginFound.put(clazz.getName(), true);
-                pluginNames.put(plugin.getName(), clazz.getName());
-                DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
-                return plugin;
-            }
+        T plugin = JavaPlugin.getPlugin(clazz);
+        if (plugin != null) {
+            pluginInstances.put(clazz.getName(), plugin);
+            pluginFound.put(clazz.getName(), true);
+            pluginNames.put(plugin.getName(), clazz.getName());
+            DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
+            return plugin;
         }
         pluginFound.put(clazz.getName(), false);
         return null;
@@ -68,7 +67,7 @@ public class PluginSupportManager implements Listener {
             return pluginFound.get(pluginName);
         }
         if (!pluginNames.containsKey(pluginName)) {
-            Plugin plugin = pluginManager.getPlugin(pluginName);
+            JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
             if (plugin != null) {
                 return getPluginInstance(plugin.getClass()) != null;
             } else {

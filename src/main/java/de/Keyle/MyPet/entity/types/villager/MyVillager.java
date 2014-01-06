@@ -58,7 +58,7 @@ public class MyVillager extends MyPet implements IMyPetBaby {
             setProfession(info.getAs("Profession", TagInt.class).getIntData());
         }
         if (info.getCompoundData().containsKey("Baby")) {
-            setBaby(((TagByte) info.getAs("Baby", TagByte.class)).getBooleanData());
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }
     }
 
