@@ -47,13 +47,26 @@ public class PluginSupportManager implements Listener {
         if (pluginInstances.containsKey(clazz.getName())) {
             return clazz.cast(pluginInstances.get(clazz.getName()));
         }
-        T plugin = JavaPlugin.getPlugin(clazz);
-        if (plugin != null) {
-            pluginInstances.put(clazz.getName(), plugin);
-            pluginFound.put(clazz.getName(), true);
-            pluginNames.put(plugin.getName(), clazz.getName());
-            DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
-            return plugin;
+        try {
+            T plugin = JavaPlugin.getPlugin(clazz);
+            if (plugin != null) {
+                pluginInstances.put(clazz.getName(), plugin);
+                pluginFound.put(clazz.getName(), true);
+                pluginNames.put(plugin.getName(), clazz.getName());
+                DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
+                return plugin;
+            }
+        } catch (NoSuchMethodError e) {
+            for (Plugin p : pluginManager.getPlugins()) {
+                if (clazz.isInstance(p)) {
+                    T plugin = clazz.cast(p);
+                    pluginInstances.put(clazz.getName(), plugin);
+                    pluginFound.put(clazz.getName(), true);
+                    pluginNames.put(plugin.getName(), clazz.getName());
+                    DebugLogger.info("Plugin " + plugin.getName() + " (" + clazz.getName() + ") found!");
+                    return plugin;
+                }
+            }
         }
         pluginFound.put(clazz.getName(), false);
         return null;
