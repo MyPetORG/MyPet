@@ -183,5 +183,6 @@ public class GuiMain {
         SkillsInfo.registerSkill(SprintInfo.class);
         SkillsInfo.registerSkill(ThornsInfo.class);
         SkillsInfo.registerSkill(WitherInfo.class);
+        SkillsInfo.registerSkill(StompInfo.class);
     }
 }

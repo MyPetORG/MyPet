@@ -596,6 +596,14 @@ public class EntityListener implements Listener {
                             isSkillActive = false;
                         }
                     }
+                    if (!skillUsed && myPet.getSkills().hasSkill(Stomp.class)) {
+                        Stomp stompSkill = myPet.getSkills().getSkill(Stomp.class);
+                        if (stompSkill.activate()) {
+                            isSkillActive = true;
+                            stompSkill.stomp(myPet.getLocation());
+                            isSkillActive = false;
+                        }
+                    }
                 }
             }
         }

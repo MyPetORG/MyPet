@@ -389,6 +389,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         Skills.registerSkill(Knockback.class);
         Skills.registerSkill(Ranged.class);
         Skills.registerSkill(Sprint.class);
+        Skills.registerSkill(Stomp.class);
     }
 
     public static void registerSkillsInfo() {
@@ -410,6 +411,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillsInfo.registerSkill(KnockbackInfo.class);
         SkillsInfo.registerSkill(RangedInfo.class);
         SkillsInfo.registerSkill(SprintInfo.class);
+        SkillsInfo.registerSkill(StompInfo.class);
     }
 
     @SuppressWarnings("unchecked")
