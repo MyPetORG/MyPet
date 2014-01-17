@@ -32,9 +32,8 @@ import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
 import net.minecraft.server.v1_7_R1.*;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
+import net.minecraft.server.v1_7_R1.World;
+import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
@@ -103,6 +102,7 @@ public class Stomp extends StompInfo implements ISkillInstance, ISkillActive {
 
     public void stomp(Location location) {
         location.getWorld().playEffect(location, Effect.STEP_SOUND, Material.BEDROCK);
+        location.getWorld().playSound(location, Sound.FALL_BIG, 0.9F, 0.7F);
 
         World w = ((CraftWorld) location.getWorld()).getHandle();
         Vec3D vec3d = w.getVec3DPool().create(location.getX(), location.getY(), location.getZ());
