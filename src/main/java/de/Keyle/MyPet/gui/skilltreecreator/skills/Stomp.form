@@ -142,5 +142,9 @@
       <member id="4f971"/>
       <member id="21ae0"/>
     </group>
+    <group name="addset_damage">
+      <member id="96c94"/>
+      <member id="44909"/>
+    </group>
   </buttonGroups>
 </form>
