@@ -48,11 +48,6 @@ public class SkilltreeCreator {
     JButton saveButton;
     JButton renameSkilltreeButton;
     JFrame skilltreeCreatorFrame;
-    JPopupMenu saveButtonRightclickMenu;
-    JMenuItem asNBTMenuItem;
-    JMenuItem asJSONMenuItem;
-    JMenuItem asYAMLMenuItem;
-    JMenuItem asAllMenuItem;
     JPopupMenu skilltreeListRightclickMenu;
     JMenuItem copyMenuItem;
     JMenuItem pasteMenuItem;
@@ -204,7 +199,7 @@ public class SkilltreeCreator {
                 }
             }
         });
-        asNBTMenuItem.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String savedPetsString = "";
                 List<String> savedPetTypes;
@@ -215,11 +210,6 @@ public class SkilltreeCreator {
                 }
 
                 JOptionPane.showMessageDialog(null, "Saved to:\n" + GuiMain.configPath + "skilltrees" + File.separator + savedPetsString, "Saved following configs", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-        saveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveButtonRightclickMenu.show(saveButton, 0, 0);
             }
         });
         skilltreeTree.addKeyListener(new KeyAdapter() {
@@ -350,29 +340,6 @@ public class SkilltreeCreator {
 
         MouseListener popupListener = new PopupListener(skilltreeListRightclickMenu);
         skilltreeTree.addMouseListener(popupListener);
-
-
-        saveButtonRightclickMenu = new JPopupMenu();
-
-        asNBTMenuItem = new JMenuItem("NBT format (default)");
-        saveButtonRightclickMenu.add(asNBTMenuItem);
-
-        asJSONMenuItem = new JMenuItem("JSON format");
-        asJSONMenuItem.setToolTipText("Only available in full version. See WIKI.");
-        asJSONMenuItem.setEnabled(false);
-        saveButtonRightclickMenu.add(asJSONMenuItem);
-
-        asYAMLMenuItem = new JMenuItem("YAML format");
-        asYAMLMenuItem.setToolTipText("Only available in full version. See WIKI.");
-        asYAMLMenuItem.setEnabled(false);
-        saveButtonRightclickMenu.add(asYAMLMenuItem);
-
-        saveButtonRightclickMenu.addSeparator();
-
-        asAllMenuItem = new JMenuItem("All formats");
-        asAllMenuItem.setToolTipText("Only available in full version. See WIKI.");
-        asAllMenuItem.setEnabled(false);
-        saveButtonRightclickMenu.add(asAllMenuItem);
     }
 
     private class SkillTreeNode extends DefaultMutableTreeNode {
