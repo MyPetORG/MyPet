@@ -112,7 +112,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                     }
 
                     final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
-                    IconMenu menu = new IconMenu(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler() {
+                    IconMenu menu = new IconMenu(Util.cutString(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), 32), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler() {
                         @Override
                         public void onOptionClick(IconMenu.OptionClickEvent event) {
                             if (myPet != myPetOwner.getMyPet()) {
