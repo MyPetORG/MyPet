@@ -129,7 +129,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
         final Beacon beacon = this;
 
-        IconMenu menu = new IconMenu(Locales.getString(Util.cutString("Beacon - " + myPet.getPetName(), 32), owner), 27, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu(Util.cutString("Beacon - " + myPet.getPetName(), 32), 27, new IconMenu.OptionClickEventHandler() {
             List<Integer> selectedBuffs = beacon.selectedBuffs;
             boolean active = beacon.active;
             private BeaconReciever reciever = beacon.reciever;
