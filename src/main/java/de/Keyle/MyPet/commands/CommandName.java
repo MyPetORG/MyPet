@@ -65,9 +65,9 @@ public class CommandName implements CommandExecutor {
                 if (regexMatcher.find()) {
                     name += ChatColor.RESET;
                 }
-                name = Util.cutString(name, 64);
 
-                String nameWihtoutColors = ChatColor.stripColor(name);
+                String nameWihtoutColors = Util.cutString(ChatColor.stripColor(name), 64);
+                name = Util.cutString(name, 64);
 
                 if (nameWihtoutColors.length() <= Configuration.MAX_PET_NAME_LENGTH) {
                     if (Permissions.has(petOwner, "MyPet.user.command.name.color")) {
