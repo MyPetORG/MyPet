@@ -57,7 +57,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     public AbstractNavigation petNavigation;
     Ride rideSkill = null;
 
-    private Field jump = null;
+    private static Field jump = null;
 
     public EntityMyPet(World world, MyPet myPet) {
         super(world);
@@ -78,11 +78,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
             this.setPathfinder();
 
-            try {
-                jump = EntityLiving.class.getDeclaredField("bd");
-                jump.setAccessible(true);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+            if (jump == null) {
+                try {
+                    jump = EntityLiving.class.getDeclaredField("bd");
+                    jump.setAccessible(true);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
