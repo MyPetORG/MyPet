@@ -28,6 +28,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.BukkitUtil;
 import net.minecraft.server.v1_7_R1.*;
+import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.6F, height = 1.9F)
 public class EntityMyPigZombie extends EntityMyPet {
@@ -130,7 +131,7 @@ public class EntityMyPigZombie extends EntityMyPet {
 
             this.setBaby(myPigZombie.isBaby());
 
-            MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+            Bukkit.getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
                 public void run() {
                     if (myPigZombie.getStatus() == PetState.Here) {
                         for (EquipmentSlot slot : EquipmentSlot.values()) {
