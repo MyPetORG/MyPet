@@ -167,8 +167,8 @@ public class Configuration {
         config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
         config.addDefault("MyPet.Exp.Gain.MonsterSpawner", Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS);
 
-        config.addDefault("MyPet.Skill.Control.Item", Control.CONTROL_ITEM);
-        config.addDefault("MyPet.Skill.Ride.Item", Ride.RIDE_ITEM);
+        config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
+        config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Inventory.Creative", Inventory.OPEN_IN_CREATIVEMODE);
         config.addDefault("MyPet.Skill.Inventory.DropWhenOwnerDies", Inventory.DROP_WHEN_OWNER_DIES);
         config.addDefault("MyPet.Skill.Behavior.Aggro", Behavior.BehaviorState.Aggressive.isActive());

@@ -147,7 +147,7 @@ public class ConfigItem {
         String[] splitData = data.split("\\s+");
 
         int itemId = 1;
-        int itemDamage = -1;
+        int itemDamage = 0;
         DurabilityMode mode = DurabilityMode.NotUsed;
 
         if (splitData.length == 0) {
