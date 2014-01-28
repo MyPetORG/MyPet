@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Scanner;
 
 public class Util {
     public static Field getField(Class<?> clazz, String field) {
@@ -141,7 +142,7 @@ public class Util {
     }
 
     public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
