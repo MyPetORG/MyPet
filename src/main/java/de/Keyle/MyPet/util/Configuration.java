@@ -188,6 +188,7 @@ public class Configuration {
         config.addDefault("MyPet.Pets.Cow.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Horse.GrowUpItem", Material.BREAD.getId());
         config.addDefault("MyPet.Pets.Mooshroom.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Mooshroom.CanGiveStew", MyMooshroom.CAN_GIVE_SOUP);
         config.addDefault("MyPet.Pets.Ocelot.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Pig.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Sheep.GrowUpItem", Material.POTION.getId());
@@ -339,6 +340,7 @@ public class Configuration {
         MyCow.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Cow.GrowUpItem", "" + Material.POTION.getId()));
         MyHorse.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Horse.GrowUpItem", "" + Material.BREAD.getId()));
         MyMooshroom.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Mooshroom.GrowUpItem", "" + Material.POTION.getId()));
+        MyMooshroom.CAN_GIVE_SOUP = config.getBoolean("MyPet.Pets.Mooshroom.CanGiveStew", false);
         MyOcelot.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Ocelot.GrowUpItem", "" + Material.POTION.getId()));
         MyPig.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Pig.GrowUpItem", "" + Material.POTION.getId()));
         MySheep.GROW_UP_ITEM = ConfigItem.createConfigItem(config.getString("MyPet.Pets.Sheep.GrowUpItem", "" + Material.POTION.getId()));

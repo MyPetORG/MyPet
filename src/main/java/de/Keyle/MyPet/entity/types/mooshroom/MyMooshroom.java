@@ -35,6 +35,7 @@ import static org.bukkit.Material.WHEAT;
 @MyPetInfo(food = {WHEAT})
 public class MyMooshroom extends MyPet implements IMyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
+    public static boolean CAN_GIVE_SOUP = false;
 
     protected boolean isBaby = false;
 
