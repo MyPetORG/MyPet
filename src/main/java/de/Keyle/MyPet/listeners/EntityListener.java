@@ -223,7 +223,7 @@ public class EntityListener implements Listener {
         if (PvPChecker.USE_PlayerDamageEntityEvent) {
             Entity damager = event.getDamager();
             if (damager instanceof Projectile) {
-                damager = ((Projectile) damager).getShooter();
+                damager = (Entity) ((Projectile) damager).getShooter();
             }
             if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
@@ -493,7 +493,9 @@ public class EntityListener implements Listener {
             LivingEntity damager = null;
             if (event.getDamager() instanceof Projectile) {
                 Projectile projectile = (Projectile) event.getDamager();
-                damager = projectile.getShooter();
+                if(projectile.getShooter() instanceof LivingEntity) {
+                    damager = (LivingEntity) projectile.getShooter();
+                }
             } else if (event.getDamager() instanceof LivingEntity) {
                 damager = (LivingEntity) event.getDamager();
             }
@@ -518,7 +520,7 @@ public class EntityListener implements Listener {
             Entity damager = event.getDamager();
 
             if (damager instanceof Projectile) {
-                damager = ((Projectile) damager).getShooter();
+                damager = (Entity) ((Projectile) damager).getShooter();
             }
 
             if (damager instanceof Player) {
@@ -773,7 +775,7 @@ public class EntityListener implements Listener {
 
             Entity damager = edbee.getDamager();
             if (damager instanceof Projectile) {
-                damager = ((Projectile) damager).getShooter();
+                damager = (Entity) ((Projectile) damager).getShooter();
             }
             if (damager instanceof CraftMyPet) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
