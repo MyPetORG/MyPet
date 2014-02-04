@@ -31,6 +31,7 @@ import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.listeners.FactionsListenerMain;
+import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -84,7 +85,7 @@ public class PvPChecker {
         if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;
         }
-        if (attacker != null && defender != null) {
+        if (attacker != null && defender != null && attacker != defender) {
             return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
         }
         return false;
@@ -160,7 +161,7 @@ public class PvPChecker {
     public static boolean canHurtTowny(Player attacker, Player defender) {
         if (USE_Towny && PluginSupportManager.isPluginUsable("Towny")) {
             try {
-                if (CombatUtil.preventFriendlyFire(attacker, defender)) {
+                if (CombatUtil.preventDamageCall(PluginSupportManager.getPluginInstance(Towny.class), attacker, defender)) {
                     return false;
                 }
             } catch (Error e) {
