@@ -151,6 +151,7 @@ public class Configuration {
         config.addDefault("MyPet.Support.Residence", true);
         config.addDefault("MyPet.Support.AncientRPG", true);
         config.addDefault("MyPet.Support.GriefPrevention", true);
+        config.addDefault("MyPet.Support.PvPManager", true);
         config.addDefault("MyPet.Support.Minigames.DisablePetsInGames", true);
         config.addDefault("MyPet.Support.PvPArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Support.PvPArena.PvP", true);
@@ -321,6 +322,7 @@ public class Configuration {
         PvPChecker.USE_Residence = config.getBoolean("MyPet.Support.Residence", true);
         PvPChecker.USE_AncientRPG = config.getBoolean("MyPet.Support.AncientRPG", true);
         PvPChecker.USE_GriefPrevention = config.getBoolean("MyPet.Support.GriefPrevention", true);
+        PvPChecker.USE_PvPManager = config.getBoolean("MyPet.Support.PvPManager", true);
 
         Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);

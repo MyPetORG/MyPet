@@ -53,6 +53,7 @@
         <residence.version>2.6.6.6</residence.version>
         <towny.version>0.84.0.8</towny.version>
         <griefprevention.version>7.8</griefprevention.version>
+        <pvpmanager.version>1.7.4</pvpmanager.version>
         <heroes.version>1.5.5.1</heroes.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
 
@@ -314,6 +315,13 @@
             <groupId>me.ryanhamshire</groupId>
             <artifactId>GriefPrevention</artifactId>
             <version>${griefprevention.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>me.NoChance.PvPManager</groupId>
+            <artifactId>PvPManager</artifactId>
+            <version>${pvpmanager.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

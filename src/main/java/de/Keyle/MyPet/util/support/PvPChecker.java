@@ -39,6 +39,11 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.util.Configuration;
+import me.NoChance.PvPManager.Config.Variables;
+import me.NoChance.PvPManager.Managers.PlayerHandler;
+import me.NoChance.PvPManager.Managers.WorldTimerManager;
+import me.NoChance.PvPManager.PvPManager;
+import me.NoChance.PvPManager.PvPlayer;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.Configuration.WorldConfig;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -77,6 +82,7 @@ public class PvPChecker {
     public static boolean USE_AncientRPG = true;
     public static boolean USE_GriefPrevention = true;
     public static boolean USE_PvPArena = true;
+    public static boolean USE_PvPManager = true;
     public static boolean USE_SurvivalGame = true;
 
     private static MobArenaHandler pluginMobArena = null;
@@ -86,7 +92,7 @@ public class PvPChecker {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker,defender) && canHurtEvent(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -354,6 +360,39 @@ public class PvPChecker {
                             if ((localClaim.isAdminClaim() && worldConfig.getNoPvPCombatinAdminClaims()) || (!localClaim.isAdminClaim() && worldConfig.getPvPNoCombatinPlayerClaims())) {
                                 return false;
                             }
+                        }
+                    }
+                }
+            } catch (Error e) {
+                USE_GriefPrevention = false;
+            } catch (Exception ignored) {
+            }
+        }
+        return true;
+    }
+
+    public static boolean canHurtPvPManager(Player attacker, Player defender) {
+        if (USE_PvPManager && PluginSupportManager.isPluginUsable("PvPManager")) {
+            try {
+                PvPManager plugin = PluginSupportManager.getPluginInstance(PvPManager.class);
+                PlayerHandler playerHandler = plugin.getPlayerHandler();
+                WorldTimerManager worldTimerManager = plugin.getWtm();
+
+                PvPlayer pvPlayerAttacker = playerHandler.get(attacker);
+                PvPlayer pvPlayerDefender = playerHandler.get(defender);
+
+                if(pvPlayerAttacker.isNewbie() || pvPlayerDefender.isNewbie()) {
+                    return false;
+                }
+                if(!pvPlayerAttacker.hasPvPEnabled()) {
+                    return false;
+                } else if (!pvPlayerAttacker.hasPvPEnabled() && !pvPlayerAttacker.overrideAll()) {
+                    return false;
+                }
+                if (Variables.pvpTimerEnabled) {
+                    if (worldTimerManager.isPvpTimerWorld(pvPlayerAttacker.getWorldName())) {
+                        if (!worldTimerManager.isTimeForPvp(pvPlayerAttacker.getWorldName())) {
+                            return false;
                         }
                     }
                 }
