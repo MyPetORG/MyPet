@@ -54,6 +54,9 @@ public class CommandCall implements CommandExecutor {
                     case Dead:
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                         break;
+                    case Flying:
+                        sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Flying", petOwner)));
+                        break;
                 }
                 return true;
             } else {

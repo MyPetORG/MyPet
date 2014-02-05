@@ -466,13 +466,16 @@ public class EntityListener implements Listener {
                             MyPet runMyPet = myPetPlayer.getMyPet();
                             switch (runMyPet.createPet()) {
                                 case Canceled:
-                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
                                     break;
                                 case NoSpace:
-                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner().getLanguage()), runMyPet.getPetName()));
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
                                     break;
                                 case NotAllowed:
-                                    runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner().getLanguage()).replace("%petname%", myPet.getPetName()));
+                                    runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                    break;
+                                case Flying:
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner())));
                                     break;
                                 case Success:
                                     if (runMyPet != myPet) {

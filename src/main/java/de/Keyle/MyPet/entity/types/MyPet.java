@@ -89,7 +89,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public static enum SpawnFlags {
-        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, NotAllowed
+        Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, NotAllowed
     }
 
     public static enum PetState {
@@ -322,6 +322,9 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 status = PetState.Despawned;
                 return SpawnFlags.OwnerDead;
             }
+            if(getOwner().getPlayer().isFlying()) {
+                return SpawnFlags.Flying;
+            }
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
                 net.minecraft.server.v1_7_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
@@ -401,13 +404,16 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             respawnTime = 0;
             switch (createPet()) {
                 case Success:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Respawn", petOwner), petName));
                     break;
                 case Canceled:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", petOwner), petName));
                     break;
                 case NoSpace:
-                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", petOwner.getLanguage()), petName));
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", petOwner), petName));
+                    break;
+                case Flying:
+                    sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", petOwner), petName));
                     break;
             }
             if (Configuration.USE_HUNGER_SYSTEM) {
