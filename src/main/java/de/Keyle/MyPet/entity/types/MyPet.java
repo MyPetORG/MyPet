@@ -322,7 +322,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 status = PetState.Despawned;
                 return SpawnFlags.OwnerDead;
             }
-            if(getOwner().getPlayer().isFlying()) {
+            if (getOwner().getPlayer().isFlying()) {
                 return SpawnFlags.Flying;
             }
             if (respawnTime <= 0) {

@@ -58,20 +58,20 @@ public class EntityMyMooshroom extends EntityMyPet {
 
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
-        if(itemStack != null) {
-            if(itemStack.getItem().equals(Items.BOWL)) {
-                if(!getOwner().equals(entityhuman) || !canUseItem() || !MyMooshroom.CAN_GIVE_SOUP) {
+        if (itemStack != null) {
+            if (itemStack.getItem().equals(Items.BOWL)) {
+                if (!getOwner().equals(entityhuman) || !canUseItem() || !MyMooshroom.CAN_GIVE_SOUP) {
                     final int itemInHandIndex = entityhuman.inventory.itemInHandIndex;
                     ItemStack is = new ItemStack(Items.MUSHROOM_SOUP);
                     final ItemStack oldIs = entityhuman.inventory.getItem(itemInHandIndex);
-                    entityhuman.inventory.setItem(itemInHandIndex,is);
+                    entityhuman.inventory.setItem(itemInHandIndex, is);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable() {
                         @Override
                         public void run() {
                             MyPetLogger.write("I: " + entityhuman.inventory.getItem(itemInHandIndex).getItem().getName());
-                            entityhuman.inventory.setItem(itemInHandIndex,oldIs);
+                            entityhuman.inventory.setItem(itemInHandIndex, oldIs);
                         }
-                    },2L);
+                    }, 2L);
 
                 } else {
                     if (--itemStack.count <= 0) {

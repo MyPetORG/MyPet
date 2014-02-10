@@ -92,7 +92,7 @@ public class PvPChecker {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker,defender) && canHurtEvent(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -381,10 +381,10 @@ public class PvPChecker {
                 PvPlayer pvPlayerAttacker = playerHandler.get(attacker);
                 PvPlayer pvPlayerDefender = playerHandler.get(defender);
 
-                if(pvPlayerAttacker.isNewbie() || pvPlayerDefender.isNewbie()) {
+                if (pvPlayerAttacker.isNewbie() || pvPlayerDefender.isNewbie()) {
                     return false;
                 }
-                if(!pvPlayerAttacker.hasPvPEnabled()) {
+                if (!pvPlayerAttacker.hasPvPEnabled()) {
                     return false;
                 } else if (!pvPlayerAttacker.hasPvPEnabled() && !pvPlayerAttacker.overrideAll()) {
                     return false;
