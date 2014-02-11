@@ -22,13 +22,12 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,24 +54,36 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            String playerName = sender.getName();
-            if (args.length > 0 && Permissions.has(player, "MyPet.admin", false)) {
-                playerName = args[0];
+            MyPetPlayer petOwner;
+
+            if(args.length == 0) {
+                if (MyPetPlayer.isMyPetPlayer(player)) {
+                    petOwner = MyPetPlayer.getMyPetPlayer(player);
+                } else {
+                    sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                    return true;
+                }
+            } else if(Permissions.has(player, "MyPet.admin", false)) {
+                if(MyPetPlayer.isMyPetPlayer(args[0])) {
+                    petOwner = MyPetPlayer.getMyPetPlayer(args[0]);
+                } else {
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
+                    return true;
+                }
+            } else {
+                sender.sendMessage(Locales.getString("Message.No.HasPet", player));
+                return true;
             }
 
-            Player petOwner = Bukkit.getServer().getPlayer(playerName);
-
-            if (petOwner == null || !petOwner.isOnline()) {
-                sender.sendMessage(Locales.getString("Message.No.PlayerOnline", player));
-            } else if (MyPetList.hasMyPet(playerName)) {
+            if (petOwner.hasMyPet()) {
                 boolean infoShown = false;
-                MyPet myPet = MyPetList.getMyPet(playerName);
+                MyPet myPet = petOwner.getMyPet();
 
                 if (canSee(PetInfoDisplay.Name.adminOnly, player, myPet)) {
                     player.sendMessage(ChatColor.AQUA + myPet.getPetName() + ChatColor.RESET + ":");
                     infoShown = true;
                 }
-                if (!playerName.equalsIgnoreCase(sender.getName()) && canSee(!PetInfoDisplay.Owner.adminOnly, player, myPet)) {
+                if (player != petOwner && canSee(!PetInfoDisplay.Owner.adminOnly, player, myPet)) {
                     player.sendMessage("   " + Locales.getString("Name.Owner", player) + ": " + myPet.getOwner().getName());
                     infoShown = true;
                 }
@@ -129,7 +140,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 return true;
             } else {
                 if (args != null && args.length > 0) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), playerName));
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
                 } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                 }
