@@ -22,9 +22,10 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.support.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,24 +33,51 @@ import org.bukkit.entity.Player;
 
 public class CommandSendAway implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner)) {
-                MyPet myPet = MyPetList.getMyPet(petOwner);
-                if (myPet.getStatus() == PetState.Here) {
-                    myPet.removePet(false);
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
-                } else if (myPet.getStatus() == PetState.Despawned) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
-                } else if (myPet.getStatus() == PetState.Dead) {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+        if (args.length == 0 && !(sender instanceof Player)) {
+            sender.sendMessage("You can't use this command from server console!");
+            return true;
+        }
+
+        String playerName = sender.getName();
+        if (args.length > 0) {
+            if(sender instanceof Player) {
+                if(Permissions.has((Player) sender, "MyPet.admin", false)) {
+                    playerName = args[0];
                 }
             } else {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", petOwner));
+                playerName = args[0];
+            }
+        }
+        if(!MyPetPlayer.isMyPetPlayer(playerName)) {
+            if(args.length == 0) {
+                sender.sendMessage(Locales.getString("Message.No.HasPet", (Player) sender));
+            } else {
+                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", (Player) sender), args[0]));
             }
             return true;
         }
-        sender.sendMessage("You can't use this command from server console!");
+        MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(playerName);
+        if (!petOwner.isOnline()) {
+            sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
+            return true;
+        }
+        if (petOwner.hasMyPet()) {
+            MyPet myPet = petOwner.getMyPet();
+            if (myPet.getStatus() == PetState.Here) {
+                myPet.removePet(false);
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.Success", petOwner), myPet.getPetName()));
+            } else if (myPet.getStatus() == PetState.Despawned) {
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Command.SendAway.AlreadyAway", petOwner), myPet.getPetName()));
+            } else if (myPet.getStatus() == PetState.Dead) {
+                sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
+            }
+        } else {
+            if(args.length == 0) {
+                sender.sendMessage(Locales.getString("Message.No.HasPet", (Player) sender));
+            } else {
+                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", (Player) sender), args[0]));
+            }
+        }
         return true;
     }
 }
