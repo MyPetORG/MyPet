@@ -112,7 +112,7 @@
         </repository>
         <repository>
             <id>battlearena-repo</id>
-            <url>http://battleplugins.com/maven/</url>
+            <url>http://server.battleplugins.com/maven/repository/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
