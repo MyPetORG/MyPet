@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -39,26 +40,28 @@ public class CommandSendAway implements CommandExecutor {
         }
 
         String playerName = sender.getName();
+        String lang = "en_en";
         if (args.length > 0) {
-            if(sender instanceof Player) {
-                if(Permissions.has((Player) sender, "MyPet.admin", false)) {
+            if (sender instanceof Player) {
+                if (Permissions.has((Player) sender, "MyPet.admin", false)) {
                     playerName = args[0];
+                    lang = BukkitUtil.getPlayerLanguage((Player) sender);
                 }
             } else {
                 playerName = args[0];
             }
         }
-        if(!MyPetPlayer.isMyPetPlayer(playerName)) {
-            if(args.length == 0) {
+        if (!MyPetPlayer.isMyPetPlayer(playerName)) {
+            if (args.length == 0) {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", (Player) sender));
             } else {
-                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", (Player) sender), args[0]));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", lang), args[0]));
             }
             return true;
         }
         MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(playerName);
         if (!petOwner.isOnline()) {
-            sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
+            sender.sendMessage(Locales.getString("Message.No.PlayerOnline", lang));
             return true;
         }
         if (petOwner.hasMyPet()) {
@@ -72,10 +75,10 @@ public class CommandSendAway implements CommandExecutor {
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
             }
         } else {
-            if(args.length == 0) {
-                sender.sendMessage(Locales.getString("Message.No.HasPet", (Player) sender));
+            if (args.length == 0) {
+                sender.sendMessage(Locales.getString("Message.No.HasPet", lang));
             } else {
-                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", (Player) sender), args[0]));
+                sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", lang), args[0]));
             }
         }
         return true;

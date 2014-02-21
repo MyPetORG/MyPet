@@ -56,15 +56,15 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
             Player player = (Player) sender;
             MyPetPlayer petOwner;
 
-            if(args.length == 0) {
+            if (args.length == 0) {
                 if (MyPetPlayer.isMyPetPlayer(player)) {
                     petOwner = MyPetPlayer.getMyPetPlayer(player);
                 } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                     return true;
                 }
-            } else if(Permissions.has(player, "MyPet.admin", false)) {
-                if(MyPetPlayer.isMyPetPlayer(args[0])) {
+            } else if (Permissions.has(player, "MyPet.admin", false)) {
+                if (MyPetPlayer.isMyPetPlayer(args[0])) {
                     petOwner = MyPetPlayer.getMyPetPlayer(args[0]);
                 } else {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
