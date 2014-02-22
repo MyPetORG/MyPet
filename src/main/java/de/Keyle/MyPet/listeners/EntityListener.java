@@ -43,11 +43,13 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
+import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
+import net.citizensnpcs.api.CitizensAPI;
 import net.minecraft.server.v1_7_R1.*;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -255,58 +257,76 @@ public class EntityListener implements Listener {
                     if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
+                    if (PluginSupportManager.isPluginUsable("Citizens")) {
+                        try {
+                            if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
+                                return;
+                            }
+                        } catch (Error ignored) {
+                        } catch (Exception ignored) {
+                        }
+                    }
 
                     boolean willBeLeashed = true;
-                    List<LeashFlag> leashFlags = MyPet.getLeashFlags(myPetClass);
 
-                    for (LeashFlag flag : leashFlags) {
-                        if (flag == LeashFlag.Adult) {
-                            if (leashTarget instanceof Ageable) {
-                                willBeLeashed = ((Ageable) leashTarget).isAdult();
-                            } else if (leashTarget instanceof Zombie) {
-                                willBeLeashed = !((Zombie) leashTarget).isBaby();
-                            }
-                        } else if (flag == LeashFlag.Baby) {
-                            if (leashTarget instanceof Ageable) {
-                                willBeLeashed = !((Ageable) leashTarget).isAdult();
-                            } else if (leashTarget instanceof Zombie) {
-                                willBeLeashed = ((Zombie) leashTarget).isBaby();
-                            }
-                        } else if (flag == LeashFlag.LowHp) {
-                            willBeLeashed = leashTarget.getHealth() - event.getDamage() <= 2;
-                        } else if (flag == LeashFlag.UserCreated) {
-                            if (leashTarget instanceof IronGolem) {
-                                willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
-                            }
-                        } else if (flag == LeashFlag.Wild) {
-                            if (leashTarget instanceof IronGolem) {
-                                willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
-                            } else if (leashTarget instanceof Tameable) {
-                                willBeLeashed = !((Tameable) leashTarget).isTamed();
-                            } else if (leashTarget instanceof Horse) {
-                                willBeLeashed = !((CraftHorse) leashTarget).getHandle().isTame();
-                            }
-                        } else if (flag == LeashFlag.Tamed) {
-                            if (leashTarget instanceof Tameable) {
-                                willBeLeashed = ((Tameable) leashTarget).isTamed();
-                            }
-                            if (leashTarget instanceof Horse) {
-                                willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame();
-                            }
-                        } else if (flag == LeashFlag.CanBreed) {
-                            if (leashTarget instanceof Ageable) {
-                                willBeLeashed = ((Ageable) leashTarget).canBreed();
-                            }
-                        } else if (flag == LeashFlag.Angry) {
-                            if (leashTarget instanceof Wolf) {
-                                willBeLeashed = ((Wolf) leashTarget).isAngry();
-                            }
-                        } else if (flag == LeashFlag.Impossible) {
-                            willBeLeashed = false;
-                            break;
-                        } else if (flag == LeashFlag.None) {
-                            willBeLeashed = true;
-                            break;
+                    flagLoop:
+                    for (LeashFlag flag : MyPet.getLeashFlags(myPetClass)) {
+                        switch (flag) {
+                            case Adult:
+                                if (leashTarget instanceof Ageable) {
+                                    willBeLeashed = ((Ageable) leashTarget).isAdult();
+                                } else if (leashTarget instanceof Zombie) {
+                                    willBeLeashed = !((Zombie) leashTarget).isBaby();
+                                }
+                                break;
+                            case Baby:
+                                if (leashTarget instanceof Ageable) {
+                                    willBeLeashed = !((Ageable) leashTarget).isAdult();
+                                } else if (leashTarget instanceof Zombie) {
+                                    willBeLeashed = ((Zombie) leashTarget).isBaby();
+                                }
+                                break;
+                            case LowHp:
+                                willBeLeashed = leashTarget.getHealth() - event.getDamage() <= 2;
+                                break;
+                            case UserCreated:
+                                if (leashTarget instanceof IronGolem) {
+                                    willBeLeashed = ((IronGolem) leashTarget).isPlayerCreated();
+                                }
+                                break;
+                            case Wild:
+                                if (leashTarget instanceof IronGolem) {
+                                    willBeLeashed = !((IronGolem) leashTarget).isPlayerCreated();
+                                } else if (leashTarget instanceof Tameable) {
+                                    willBeLeashed = !((Tameable) leashTarget).isTamed();
+                                } else if (leashTarget instanceof Horse) {
+                                    willBeLeashed = !((CraftHorse) leashTarget).getHandle().isTame();
+                                }
+                                break;
+                            case Tamed:
+                                if (leashTarget instanceof Tameable) {
+                                    willBeLeashed = ((Tameable) leashTarget).isTamed();
+                                }
+                                if (leashTarget instanceof Horse) {
+                                    willBeLeashed = ((CraftHorse) leashTarget).getHandle().isTame();
+                                }
+                                break;
+                            case CanBreed:
+                                if (leashTarget instanceof Ageable) {
+                                    willBeLeashed = ((Ageable) leashTarget).canBreed();
+                                }
+                                break;
+                            case Angry:
+                                if (leashTarget instanceof Wolf) {
+                                    willBeLeashed = ((Wolf) leashTarget).isAngry();
+                                }
+                                break;
+                            case Impossible:
+                                willBeLeashed = false;
+                                break flagLoop;
+                            case None:
+                                willBeLeashed = true;
+                                break flagLoop;
                         }
                         if (!willBeLeashed) {
                             break;
