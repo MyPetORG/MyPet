@@ -485,6 +485,9 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getExtendedInfo());
+        if (this.petOwner.getMojangUUID() != null) {
+            petNBT.getCompoundData().put("Owner-UUID", new TagString(this.petOwner.getMojangUUID().toString()));
+        }
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }
