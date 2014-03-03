@@ -373,7 +373,7 @@ public class PlayerListener implements Listener {
             final MyPetPlayer respawnedMyPetPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             final MyPet myPet = respawnedMyPetPlayer.getMyPet();
 
-            if (myPet.wantToRespawn()) {
+            if (respawnedMyPetPlayer.hasMyPet() && myPet.wantToRespawn()) {
                 MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
                     public void run() {
                         if (respawnedMyPetPlayer.hasMyPet()) {
