@@ -70,6 +70,7 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -543,7 +544,10 @@ public class EntityListener implements Listener {
             Entity damager = event.getDamager();
 
             if (damager instanceof Projectile) {
-                damager = (Entity) ((Projectile) damager).getShooter();
+                ProjectileSource source = ((Projectile) damager).getShooter();
+                if (source instanceof Entity) {
+                    damager = (Entity) source;
+                }
             }
 
             if (damager instanceof Player) {
