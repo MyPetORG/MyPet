@@ -159,8 +159,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     public void setCustomName(String ignored) {
         try {
             if (getCustomNameVisible()) {
-                super.setCustomName(Util.cutString(Configuration.PET_INFO_OVERHEAD_PREFIX + myPet.getPetName() + Configuration.PET_INFO_OVERHEAD_SUFFIX, 64));
-                this.setCustomNameVisible(false);
+                String prefix = Configuration.PET_INFO_OVERHEAD_PREFIX;
+                String suffix = Configuration.PET_INFO_OVERHEAD_SUFFIX;
+                prefix = prefix.replace("<ownername>", getOwner().getName());
+                prefix = prefix.replace("<level>", "" + getMyPet().getExperience().getLevel());
+                suffix = suffix.replace("<ownername>", getOwner().getName());
+                suffix = suffix.replace("<level>", "" + getMyPet().getExperience().getLevel());
+                super.setCustomName(Util.cutString(prefix + myPet.getPetName() + suffix, 64));
+                this.setCustomNameVisible(getCustomNameVisible());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -80,20 +80,23 @@ public class LevelUpListener implements Listener {
             }
         }
 
-        if (!event.isQuiet() && myPet.getStatus() == PetState.Here) {
-            myPet.setHealth(myPet.getMaxHealth());
-            myPet.setHungerValue(100);
+        if (myPet.getStatus() == PetState.Here) {
+            myPet.getCraftPet().getHandle().setCustomName("");
+            if (!event.isQuiet()) {
+                myPet.setHealth(myPet.getMaxHealth());
+                myPet.setHungerValue(100);
 
-            if (Experience.FIREWORK_ON_LEVELUP) {
-                Firework fw = (Firework) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.FIREWORK);
-                FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LEVELUP_FIREWORK_COLOR)).withTrail().withFlicker().build();
-                FireworkMeta fwm = fw.getFireworkMeta();
-                fwm.addEffect(fwe);
-                fwm.addEffect(fwe);
-                fwm.addEffect(fwe);
-                fwm.setPower(0);
-                fw.setFireworkMeta(fwm);
-                fw.detonate();
+                if (Experience.FIREWORK_ON_LEVELUP) {
+                    Firework fw = (Firework) myPet.getLocation().getWorld().spawnEntity(myPet.getLocation(), EntityType.FIREWORK);
+                    FireworkEffect fwe = FireworkEffect.builder().with(Type.STAR).withColor(Color.fromRGB(Configuration.LEVELUP_FIREWORK_COLOR)).withTrail().withFlicker().build();
+                    FireworkMeta fwm = fw.getFireworkMeta();
+                    fwm.addEffect(fwe);
+                    fwm.addEffect(fwe);
+                    fwm.addEffect(fwe);
+                    fwm.setPower(0);
+                    fw.setFireworkMeta(fwm);
+                    fw.detonate();
+                }
             }
         }
     }
