@@ -580,9 +580,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         }
         skills.reset();
         this.skillTree = skillTree;
-        for (int i = 1; i <= experience.getLevel(); i++) {
-            getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, i, true));
-        }
+        getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(this, 1, experience.getLevel(), true));
         return true;
     }
 

@@ -39,6 +39,7 @@ public class SkillTree {
     private int maxLevel = 0;
     private int requiredLevel = 0;
     private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<Integer, SkillTreeLevel>();
+    private int lastLevelWithSkills = 1;
 
     public SkillTree(String name) {
         this.skillTreeName = name;
@@ -115,6 +116,10 @@ public class SkillTree {
         return iconItem;
     }
 
+    public int getLastLevelWithSkills() {
+        return lastLevelWithSkills;
+    }
+
     public int getMaxLevel() {
         return maxLevel;
     }
@@ -140,6 +145,9 @@ public class SkillTree {
     }
 
     public SkillTreeLevel addLevel(int level) {
+        if (level > lastLevelWithSkills) {
+            lastLevelWithSkills = level;
+        }
         if (!skillsPerLevel.containsKey(level)) {
             SkillTreeLevel newLevel = new SkillTreeLevel(level);
             skillsPerLevel.put(level, newLevel);
@@ -149,6 +157,9 @@ public class SkillTree {
     }
 
     public SkillTreeLevel addLevel(SkillTreeLevel level) {
+        if (level.getLevel() > lastLevelWithSkills) {
+            lastLevelWithSkills = level.getLevel();
+        }
         if (!skillsPerLevel.containsKey(level.getLevel())) {
             skillsPerLevel.put(level.getLevel(), level);
             return level;
@@ -159,6 +170,12 @@ public class SkillTree {
     public void removeLevel(int level) {
         if (skillsPerLevel.containsKey(level)) {
             skillsPerLevel.remove(level);
+            lastLevelWithSkills = 1;
+            for (int l : skillsPerLevel.keySet()) {
+                if (l > lastLevelWithSkills) {
+                    lastLevelWithSkills = l;
+                }
+            }
         }
     }
 

@@ -47,6 +47,7 @@ public class LevelUpListener implements Listener {
     public void onLevelUp(MyPetLevelUpEvent event) {
         MyPet myPet = event.getPet();
         int lvl = event.getLevel();
+        int lastLvl = event.getLastLevel();
 
         if (!event.isQuiet()) {
             int maxlevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
@@ -57,17 +58,25 @@ public class LevelUpListener implements Listener {
             }
         }
         SkillTree skillTree = myPet.getSkillTree();
-        if (skillTree != null && skillTree.hasLevel(lvl)) {
-            SkillTreeLevel level = skillTree.getLevel(lvl);
-            if (!event.isQuiet()) {
-                if (level.hasLevelupMessage()) {
-                    myPet.sendMessageToOwner(Colorizer.setColors(level.getLevelupMessage()));
-                }
+        if (skillTree != null) {
+            if (skillTree.getLastLevelWithSkills() < lvl) {
+                lvl = skillTree.getLastLevelWithSkills();
             }
+            for (int i = lastLvl + 1; i <= lvl; i++) {
 
-            List<ISkillInfo> skillList = level.getSkills();
-            for (ISkillInfo skill : skillList) {
-                myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
+                if (skillTree.hasLevel(lvl)) {
+                    SkillTreeLevel level = skillTree.getLevel(lvl);
+                    if (!event.isQuiet()) {
+                        if (level.hasLevelupMessage()) {
+                            myPet.sendMessageToOwner(Colorizer.setColors(level.getLevelupMessage()));
+                        }
+                    }
+
+                    List<ISkillInfo> skillList = level.getSkills();
+                    for (ISkillInfo skill : skillList) {
+                        myPet.getSkills().getSkill(skill.getName()).upgrade(skill, event.isQuiet());
+                    }
+                }
             }
         }
 

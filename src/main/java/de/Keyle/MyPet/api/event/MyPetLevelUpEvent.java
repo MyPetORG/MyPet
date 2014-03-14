@@ -30,17 +30,20 @@ public class MyPetLevelUpEvent extends Event {
 
     private final MyPet myPet;
     private final int level;
+    private final int lastLevel;
     private final boolean beQuiet;
 
-    public MyPetLevelUpEvent(MyPet myPet, int Level) {
+    public MyPetLevelUpEvent(MyPet myPet, int Level, int lastLevel) {
         this.myPet = myPet;
         this.level = Level;
+        this.lastLevel = lastLevel;
         this.beQuiet = false;
     }
 
-    public MyPetLevelUpEvent(MyPet myPet, int level, boolean beQuiet) {
+    public MyPetLevelUpEvent(MyPet myPet, int level, int lastLevel, boolean beQuiet) {
         this.myPet = myPet;
         this.level = level;
+        this.lastLevel = lastLevel;
         this.beQuiet = beQuiet;
     }
 
@@ -58,6 +61,10 @@ public class MyPetLevelUpEvent extends Event {
 
     public int getLevel() {
         return level;
+    }
+
+    public int getLastLevel() {
+        return lastLevel;
     }
 
     public HandlerList getHandlers() {
