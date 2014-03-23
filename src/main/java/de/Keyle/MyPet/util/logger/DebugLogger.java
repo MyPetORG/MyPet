@@ -126,4 +126,14 @@ public class DebugLogger {
             debugLogger.severe("=====================================================================================================================================");
         }
     }
+
+    public static void printStackTrace(StackTraceElement[] stacktrace) {
+        if (isEnabled) {
+            debugLogger.severe("=====================================================================================================================================");
+            for (StackTraceElement aTrace : stacktrace) {
+                debugLogger.severe("\tat " + aTrace);
+            }
+            debugLogger.severe("=====================================================================================================================================");
+        }
+    }
 }
