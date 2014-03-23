@@ -459,9 +459,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                     respawnPet();
                 }
             }
-            if (Configuration.USE_HUNGER_SYSTEM && hunger > 1 && --hungerTime <= 0) {
-                hunger--;
-                hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+            if (status == PetState.Here) {
+                if (Configuration.USE_HUNGER_SYSTEM && hunger > 1 && --hungerTime <= 0) {
+                    hunger--;
+                    hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+                }
             }
         }
     }
