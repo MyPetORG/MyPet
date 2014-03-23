@@ -35,10 +35,10 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_7_R1.*;
+import net.minecraft.server.v1_7_R2.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -364,7 +364,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 hasRider = false;
                 applyLeash();
                 setSize();
-                this.X = 0.5F; // climb height -> halfslab
+                this.W = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
                 petLoc.setYaw(playerLoc.getYaw());
@@ -376,7 +376,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 if (getOwner().equals(this.passenger)) {
                     hasRider = true;
                     setSize(1F);
-                    this.X = 1.0F; // climb height -> 1 block
+                    this.W = 1.0F; // climb height -> 1 block
                 } else {
                     this.passenger.setPassengerOf(null); // just the owner can ride a pet
                 }
@@ -475,7 +475,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected String aT() {
+    protected String aS() {
         try {
             return getHurtSound();
         } catch (Exception e) {
@@ -489,7 +489,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected String aU() {
+    protected String aT() {
         try {
             return getDeathSound();
         } catch (Exception e) {
@@ -502,20 +502,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * Returns the speed of played sounds
      */
-    protected float bg() {
+    protected float bf() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
-        return super.bg();
+        return super.bf();
     }
 
     /**
      * Set whether the "new" AI is used
      */
-    public boolean bk() {
+    public boolean bj() {
         return true;
     }
 
@@ -524,9 +524,9 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * -> updateAITasks()
      */
     @Override
-    protected void bn() {
+    protected void bm() {
         try {
-            aV += 1; // entityAge
+            aU += 1; // entityAge
 
             if (isAlive()) {
                 getEntitySenses().a(); // sensing
@@ -536,7 +536,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 petNavigation.tick(); // navigation
             }
 
-            bp(); // "mob tick"
+            bo(); // "mob tick"
 
             // controls
             getControllerMove().c(); // move
@@ -573,8 +573,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         this.aP = (this.aN = this.yaw);
 
         // get motion from passenger (player)
-        motionSideways = ((EntityLiving) this.passenger).be * 0.5F;
-        motionForward = ((EntityLiving) this.passenger).bf;
+        motionSideways = ((EntityLiving) this.passenger).bd * 0.5F;
+        motionForward = ((EntityLiving) this.passenger).be;
 
         // backwards is slower
         if (motionForward <= 0.0F) {

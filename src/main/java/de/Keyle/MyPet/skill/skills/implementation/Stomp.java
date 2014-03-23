@@ -31,12 +31,12 @@ import de.Keyle.MyPet.util.support.PvPChecker;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_7_R1.*;
-import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R2.*;
+import net.minecraft.server.v1_7_R2.World;
 import org.bukkit.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -105,7 +105,7 @@ public class Stomp extends StompInfo implements ISkillInstance, ISkillActive {
         location.getWorld().playSound(location, Sound.FALL_BIG, 0.9F, 0.7F);
 
         World w = ((CraftWorld) location.getWorld()).getHandle();
-        Vec3D vec3d = w.getVec3DPool().create(location.getX(), location.getY(), location.getZ());
+        Vec3D vec3d = Vec3D.a(location.getX(), location.getY(), location.getZ());
         double posX = location.getX();
         double posY = location.getY();
         double posZ = location.getZ();

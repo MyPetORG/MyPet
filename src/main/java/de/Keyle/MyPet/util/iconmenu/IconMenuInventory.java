@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
-import net.minecraft.server.v1_7_R1.EntityHuman;
-import net.minecraft.server.v1_7_R1.IInventory;
-import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R2.EntityHuman;
+import net.minecraft.server.v1_7_R2.IInventory;
+import net.minecraft.server.v1_7_R2.ItemStack;
 import org.apache.commons.lang.Validate;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 

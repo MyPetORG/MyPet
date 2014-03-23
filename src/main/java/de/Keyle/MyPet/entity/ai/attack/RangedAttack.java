@@ -27,10 +27,10 @@ import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.*;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo.Projectiles;
-import net.minecraft.server.v1_7_R1.EntityArrow;
-import net.minecraft.server.v1_7_R1.EntityLiving;
-import net.minecraft.server.v1_7_R1.MathHelper;
-import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R2.EntityArrow;
+import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R2.MathHelper;
+import net.minecraft.server.v1_7_R2.World;
 
 public class RangedAttack extends AIGoal {
     private MyPet myPet;
@@ -133,7 +133,7 @@ public class RangedAttack extends AIGoal {
         if (projectile == Projectiles.Arrow) {
             EntityArrow arrow = new MyPetArrow(world, entityMyPet, target, 1.6F, 1);
             arrow.b(damage);
-            arrow.a(false);
+            arrow.setCritical(false);
             entityMyPet.makeSound("random.bow", 1.0F, 1.0F / (entityMyPet.getRandom().nextFloat() * 0.4F + 0.8F));
             world.addEntity(arrow);
         } else if (projectile == Projectiles.Snowball) {

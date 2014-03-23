@@ -22,8 +22,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 
 public class Float extends AIGoal {
     private EntityMyPet entityMyPet;

@@ -22,12 +22,12 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackComparator;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_7_R1.Item;
-import net.minecraft.server.v1_7_R1.MojangsonParser;
-import net.minecraft.server.v1_7_R1.NBTBase;
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R2.Item;
+import net.minecraft.server.v1_7_R2.MojangsonParser;
+import net.minecraft.server.v1_7_R2.NBTBase;
+import net.minecraft.server.v1_7_R2.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ConfigItem {
@@ -82,7 +82,7 @@ public class ConfigItem {
         return true;
     }
 
-    public boolean compare(net.minecraft.server.v1_7_R1.ItemStack compareItem) {
+    public boolean compare(net.minecraft.server.v1_7_R2.ItemStack compareItem) {
         if (item == null || item.getTypeId() == 0) {
             if (compareItem == null || Item.b(compareItem.getItem()) == 0) {
                 return true;
@@ -137,7 +137,7 @@ public class ConfigItem {
             String tagString = data.substring(data.indexOf("{"));
             data = data.substring(0, data.indexOf("{"));
             try {
-                nbtBase = MojangsonParser.a(tagString);
+                nbtBase = MojangsonParser.parse(tagString);
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "Error" + ChatColor.RESET + " in config: " + ChatColor.YELLOW + e.getLocalizedMessage() + ChatColor.RESET + " caused by:");
                 MyPetLogger.write(data + tagString);
@@ -174,7 +174,7 @@ public class ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_7_R1.ItemStack is = new net.minecraft.server.v1_7_R1.ItemStack(Item.d(itemId), 1, itemDamage);
+            net.minecraft.server.v1_7_R2.ItemStack is = new net.minecraft.server.v1_7_R2.ItemStack(Item.d(itemId), 1, itemDamage);
             if (nbtBase != null && nbtBase instanceof NBTTagCompound) {
                 is.setTag((NBTTagCompound) nbtBase);
             }

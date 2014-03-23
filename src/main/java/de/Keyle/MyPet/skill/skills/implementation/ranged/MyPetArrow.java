@@ -22,12 +22,12 @@ package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R1.EntityArrow;
-import net.minecraft.server.v1_7_R1.EntityLiving;
-import net.minecraft.server.v1_7_R1.NBTTagCompound;
-import net.minecraft.server.v1_7_R1.World;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
+import net.minecraft.server.v1_7_R2.EntityArrow;
+import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R2.NBTTagCompound;
+import net.minecraft.server.v1_7_R2.World;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
 
 public class MyPetArrow extends EntityArrow implements MyPetProjectile {
     public MyPetArrow(World world, EntityMyPet entityMyPet, EntityLiving target, float v, int i) {

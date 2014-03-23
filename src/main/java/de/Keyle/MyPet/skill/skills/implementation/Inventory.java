@@ -32,10 +32,10 @@ import de.Keyle.MyPet.util.support.Permissions;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
-import net.minecraft.server.v1_7_R1.PacketPlayOutNamedSoundEffect;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
+import net.minecraft.server.v1_7_R2.PacketPlayOutNamedSoundEffect;
 import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class Inventory extends InventoryInfo implements ISkillInstance, ISkillStorage, ISkillActive {

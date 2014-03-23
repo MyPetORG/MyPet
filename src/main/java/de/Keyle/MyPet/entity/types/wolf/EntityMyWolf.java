@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R1.*;
+import net.minecraft.server.v1_7_R2.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -142,7 +142,7 @@ public class EntityMyWolf extends EntityMyPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.isWet && !this.shaking && !bQ() && this.onGround) // bQ() -> has pathentity
+        if (this.isWet && !this.shaking && !bS() && this.onGround) // bS() -> has pathentity
         {
             this.shaking = true;
             this.shakeCounter = 0.0F;
@@ -156,7 +156,7 @@ public class EntityMyWolf extends EntityMyPet {
             this.shakeCounter = 0.0F;
         } else if ((this.isWet || this.shaking) && this.shaking) {
             if (this.shakeCounter == 0.0F) {
-                makeSound("mob.wolf.shake", bf(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", be(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.shakeCounter += 0.05F;
