@@ -64,13 +64,12 @@ public class Experience {
             CALCULATION_MODE = "Default";
         }
 
-        Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, 1, getLevel(), true));
+        reset();
     }
 
     public void reset() {
-        int lastLevel = getLevel();
         exp = 0;
-        Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, lastLevel, getLevel(), true));
+        Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), 0, true));
     }
 
     public void setExp(double exp) {
@@ -85,7 +84,9 @@ public class Experience {
         int tmplvl = getLevel();
         this.exp = expEvent.getExp();
 
-        Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), tmplvl, true));
+        if (tmplvl != getLevel()) {
+            Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), tmplvl, true));
+        }
     }
 
     public double getExp() {

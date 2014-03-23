@@ -63,7 +63,6 @@ public class LevelUpListener implements Listener {
                 lvl = skillTree.getLastLevelWithSkills();
             }
             for (int i = lastLvl + 1; i <= lvl; i++) {
-
                 if (skillTree.hasLevel(lvl)) {
                     SkillTreeLevel level = skillTree.getLevel(lvl);
                     if (!event.isQuiet()) {
