@@ -171,6 +171,10 @@ public class MyPetList {
     // All ----------------------------------------------------------------------
 
     public static MyPet setMyPetActive(InactiveMyPet inactiveMyPet) {
+        if (!inactiveMyPet.getOwner().isOnline()) {
+            return null;
+        }
+
         if (inactiveMyPet.getOwner().hasMyPet()) {
             setMyPetInactive(inactiveMyPet.getOwner());
         }
