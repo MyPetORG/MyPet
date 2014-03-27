@@ -80,7 +80,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
             if (jump == null) {
                 try {
-                    jump = EntityLiving.class.getDeclaredField("bd");
+                    jump = EntityLiving.class.getDeclaredField("bc");
                     jump.setAccessible(true);
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
