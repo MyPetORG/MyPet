@@ -68,7 +68,7 @@ public class BehaviorAggressiveTarget extends AIGoal {
         for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
             EntityLiving entityLiving = (EntityLiving) entityObj;
 
-            if (entityLiving != petEntity && entityLiving.isAlive() && petEntity.e(entityLiving) <= 91) {
+            if (entityLiving != petEntity && entityLiving.isAlive() && petEntity.f(entityLiving) <= 91) {
                 if (entityLiving instanceof EntityPlayer) {
                     Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                     if (myPet.getOwner().equals(targetPlayer)) {
@@ -117,9 +117,9 @@ public class BehaviorAggressiveTarget extends AIGoal {
             return true;
         } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        } else if (petEntity.e(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.f(petEntity.getGoalTarget()) > 400) {
             return true;
-        } else if (petEntity.e(petEntity.getOwner().getEntityPlayer()) > 600) {
+        } else if (petEntity.f(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;

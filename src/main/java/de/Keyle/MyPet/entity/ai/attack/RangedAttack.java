@@ -39,7 +39,7 @@ public class RangedAttack extends AIGoal {
     private int shootTimer;
     private float walkSpeedModifier;
     private int lastSeenTimer;
-    private float rangeSquared;
+    private float range;
     private Ranged rangedSkill;
 
     public RangedAttack(EntityMyPet entityMyPet, float walkSpeedModifier, float range) {
@@ -48,7 +48,7 @@ public class RangedAttack extends AIGoal {
         this.shootTimer = -1;
         this.lastSeenTimer = 0;
         this.walkSpeedModifier = walkSpeedModifier;
-        this.rangeSquared = (range * range);
+        this.range = range;
         rangedSkill = entityMyPet.getMyPet().getSkills().getSkill(Ranged.class);
     }
 
@@ -62,8 +62,7 @@ public class RangedAttack extends AIGoal {
         if (goalTarget == null || !goalTarget.isAlive() || !entityMyPet.canMove()) {
             return false;
         }
-        double space = this.entityMyPet.e(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ);
-        if (myPet.getDamage() > 0 && space < 16) {
+        if (myPet.getDamage() > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ) < 20) {
             return false;
         }
         this.target = goalTarget;
@@ -75,7 +74,7 @@ public class RangedAttack extends AIGoal {
         if (entityMyPet.getGoalTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
             return true;
         }
-        if (myPet.getDamage() > 0 && this.entityMyPet.e(target.locX, target.boundingBox.b, target.locZ) < 16) {
+        if (myPet.getDamage() > 0 && this.entityMyPet.f(target.locX, target.boundingBox.b, target.locZ) < 20) {
             return true;
         }
         return false;
@@ -92,7 +91,7 @@ public class RangedAttack extends AIGoal {
 
     @Override
     public void tick() {
-        double distanceToTarget = this.entityMyPet.e(this.target.locX, this.target.boundingBox.b, this.target.locZ);
+        double distanceToTarget = this.entityMyPet.f(this.target.locX, this.target.boundingBox.b, this.target.locZ);
         boolean canSee = this.entityMyPet.getEntitySenses().canSee(this.target);
 
         if (canSee) {
@@ -101,7 +100,7 @@ public class RangedAttack extends AIGoal {
             this.lastSeenTimer = 0;
         }
 
-        if ((distanceToTarget <= this.rangeSquared) && (this.lastSeenTimer >= 20)) {
+        if ((distanceToTarget <= this.range) && (this.lastSeenTimer >= 20)) {
             this.entityMyPet.petNavigation.getParameters().removeSpeedModifier("RangedAttack");
             this.entityMyPet.petNavigation.stop();
         } else {
@@ -112,7 +111,7 @@ public class RangedAttack extends AIGoal {
         this.entityMyPet.getControllerLook().a(this.target, 30.0F, 30.0F);
 
         if (--this.shootTimer <= 0) {
-            if (distanceToTarget < this.rangeSquared && canSee) {
+            if (distanceToTarget < this.range && canSee) {
                 shootProjectile(this.target, (float) myPet.getRangedDamage(), getProjectile());
                 this.shootTimer = this.rangedSkill.getRateOfFire();
             }

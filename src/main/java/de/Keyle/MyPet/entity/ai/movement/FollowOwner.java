@@ -62,7 +62,7 @@ public class FollowOwner extends AIGoal {
             return false;
         } else if (this.petEntity.getOwner() == null) {
             return false;
-        } else if (this.petEntity.e(owner) < this.startDistance) {
+        } else if (this.petEntity.f(owner) < this.startDistance) {
             return false;
         } else if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
             return false;
@@ -76,7 +76,7 @@ public class FollowOwner extends AIGoal {
             return true;
         } else if (this.petEntity.getOwner() == null) {
             return true;
-        } else if (this.petEntity.e(owner) < this.stopDistance) {
+        } else if (this.petEntity.f(owner) < this.stopDistance) {
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;
@@ -113,7 +113,7 @@ public class FollowOwner extends AIGoal {
                 this.setPathTimer = 10;
 
                 if (!this.nav.navigateTo(owner)) {
-                    if (owner.onGround && this.petEntity.e(owner) > this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && BukkitUtil.canSpawn(ownerLocation, this.petEntity)) {
+                    if (owner.onGround && this.petEntity.f(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && BukkitUtil.canSpawn(ownerLocation, this.petEntity)) {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.navigateTo(owner);
                     }

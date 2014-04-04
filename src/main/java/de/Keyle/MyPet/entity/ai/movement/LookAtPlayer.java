@@ -63,7 +63,7 @@ public class LookAtPlayer extends AIGoal {
         if (!this.targetPlayer.isAlive()) {
             return true;
         }
-        if (this.petEntity.e(this.targetPlayer) > this.range * this.range) {
+        if (this.petEntity.f(this.targetPlayer) > this.range) {
             return true;
         }
         if (this.petEntity.passenger != null) {

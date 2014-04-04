@@ -60,7 +60,7 @@ public class Sprint extends AIGoal {
         if (lastTarget == targetEntity) {
             return false;
         }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.e(targetEntity) >= 16) {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.f(targetEntity) >= 16) {
             return false;
         }
         this.lastTarget = targetEntity;
@@ -71,7 +71,7 @@ public class Sprint extends AIGoal {
     public boolean shouldFinish() {
         if (this.petEntity.getOwner() == null) {
             return true;
-        } else if (this.petEntity.e(this.lastTarget) < 4) {
+        } else if (this.petEntity.f(this.lastTarget) < 16) {
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;
