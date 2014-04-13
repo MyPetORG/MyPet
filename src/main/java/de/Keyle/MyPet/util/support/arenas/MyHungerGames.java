@@ -22,9 +22,9 @@ package de.Keyle.MyPet.util.support.arenas;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
 import me.kitskub.hungergames.HungerGames;
 import me.kitskub.hungergames.api.GameManager;

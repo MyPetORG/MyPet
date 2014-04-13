@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.util.support;
 
-import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 

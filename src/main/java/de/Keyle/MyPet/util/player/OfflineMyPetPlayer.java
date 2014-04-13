@@ -18,36 +18,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.api.event;
+package de.Keyle.MyPet.util.player;
 
-import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import de.Keyle.MyPet.util.Util;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-public class MyPetLeashEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+import java.util.HashMap;
+import java.util.Map;
 
-    private final MyPet myPet;
+public class OfflineMyPetPlayer extends MyPetPlayer {
+    protected static Map<String, OfflineMyPetPlayer> playerList = new HashMap<String, OfflineMyPetPlayer>();
 
-    public MyPetLeashEvent(MyPet myPet) {
-        this.myPet = myPet;
+    protected OfflineMyPetPlayer(String playerName) {
+        this.lastKnownPlayerName = playerName;
+        offlineUUID = Util.getOfflinePlayerUUID(getName());
     }
 
-    public MyPetPlayer getLeasher() {
-        return myPet.getOwner();
+    public boolean isOnline() {
+        return onlinePlayerNamesList.contains(getName());
     }
 
-    public MyPet getPet() {
-        return myPet;
+    public Player getPlayer() {
+        return Bukkit.getServer().getPlayerExact(getName());
     }
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
+    @Override
+    public String toString() {
+        return "Offline" + super.toString();
     }
 }

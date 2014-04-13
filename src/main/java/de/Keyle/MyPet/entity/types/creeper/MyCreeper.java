@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.creeper;
 import de.Keyle.MyPet.entity.MyPetInfo;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
-import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;

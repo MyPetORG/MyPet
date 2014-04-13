@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.api.event;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

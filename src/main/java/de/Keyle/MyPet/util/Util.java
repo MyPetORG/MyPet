@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import com.google.common.base.Charsets;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
@@ -32,6 +33,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Util {
     public static Field getField(Class<?> clazz, String field) {
@@ -220,5 +222,9 @@ public class Util {
 
     public static boolean isBetween(int intMin, int intMax, int intValue) {
         return intValue > intMin && intValue < intMax;
+    }
+
+    public static UUID getOfflinePlayerUUID(String name) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
     }
 }

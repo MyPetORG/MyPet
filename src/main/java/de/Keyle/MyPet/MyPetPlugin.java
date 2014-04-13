@@ -70,6 +70,9 @@ import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
+import de.Keyle.MyPet.util.player.UUIDFetcher;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
@@ -111,7 +114,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             MyPetList.clearList();
         }
         Timer.reset();
-        MyPetPlayer.onlinePlayerList.clear();
+        MyPetPlayer.onlinePlayerNamesList.clear();
+        MyPetPlayer.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -139,6 +143,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("----------- loading MyPet ... -----------");
         DebugLogger.info("MyPet " + MyPetVersion.getVersion() + " build: " + MyPetVersion.getBuild());
         DebugLogger.info("Bukkit " + getServer().getVersion());
+        DebugLogger.info("OnlineMode: " + getServer().getOnlineMode());
         DebugLogger.info("Java: " + System.getProperty("java.version") + " (VM: " + System.getProperty("java.vm.version") + ") by " + System.getProperty("java.vendor"));
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
@@ -336,7 +341,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers()) {
-            MyPetPlayer.onlinePlayerList.add(player.getName());
+            if (Bukkit.getOnlineMode()) {
+                MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
+            } else {
+                MyPetPlayer.onlinePlayerNamesList.add(player.getName());
+            }
             if (MyPetPlayer.isMyPetPlayer(player)) {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
                 WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
@@ -477,8 +486,25 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("loading Pets: -----------------------------");
         for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
             TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
-            String petOwner = myPetNBT.getAs("Owner", TagString.class).getStringData();
-            InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(petOwner));
+            MyPetPlayer petPlayer;
+            if (Bukkit.getOnlineMode()) {
+                if (myPetNBT.getCompoundData().containsKey("Mojang-Owner-UUID")) {
+                    UUID playerUUID = UUID.fromString(myPetNBT.getAs("Mojang-Owner-UUID", TagString.class).getStringData());
+                    petPlayer = MyPetPlayer.getMyPetPlayer(playerUUID);
+                } else {
+                    String playerName = myPetNBT.getAs("Owner", TagString.class).getStringData();
+                    Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
+                    if (!fetchedUUIDs.containsKey(playerName)) {
+                        MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pet not loaded for this player!");
+                        continue;
+                    } else {
+                        petPlayer = MyPetPlayer.getMyPetPlayer(fetchedUUIDs.get(playerName));
+                    }
+                }
+            } else {
+                petPlayer = MyPetPlayer.getMyPetPlayer(myPetNBT.getAs("Owner", TagString.class).getStringData());
+            }
+            InactiveMyPet inactiveMyPet = new InactiveMyPet(petPlayer);
             inactiveMyPet.load(myPetNBT);
 
             MyPetList.addInactiveMyPet(inactiveMyPet);
@@ -518,6 +544,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
         nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(Bukkit.getOnlineMode()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
         nbtConfiguration.save();
@@ -543,9 +570,42 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         int playerCount = 0;
         TagList playerList = nbtConfiguration.getNBTCompound().getAs("Players", TagList.class);
 
+        List<String> unknownPlayers = new ArrayList<String>();
         for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
             TagCompound myplayerNBT = playerList.getTagAs(i, TagCompound.class);
-            MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getAs("Name", TagString.class).getStringData());
+            if (Bukkit.getOnlineMode()) {
+                if (!myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
+                    String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
+                    unknownPlayers.add(playerName);
+                }
+            }
+        }
+        UUIDFetcher.call(unknownPlayers);
+
+        for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
+            TagCompound myplayerNBT = playerList.getTagAs(i, TagCompound.class);
+            MyPetPlayer petPlayer;
+            if (Bukkit.getOnlineMode()) {
+                if (myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
+                    UUID playerUUID = UUID.fromString(myplayerNBT.getAs("Mojang-UUID", TagString.class).getStringData());
+                    petPlayer = MyPetPlayer.getMyPetPlayer(playerUUID);
+                    if (petPlayer instanceof OnlineMyPetPlayer && myplayerNBT.getCompoundData().containsKey("Name")) {
+                        String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
+                        ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
+                    }
+                } else {
+                    String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
+                    Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
+                    if (!fetchedUUIDs.containsKey(playerName)) {
+                        MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
+                        continue;
+                    } else {
+                        petPlayer = MyPetPlayer.getMyPetPlayer(fetchedUUIDs.get(playerName));
+                    }
+                }
+            } else {
+                petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getAs("Name", TagString.class).getStringData());
+            }
             petPlayer.load(myplayerNBT);
 
             playerCount++;

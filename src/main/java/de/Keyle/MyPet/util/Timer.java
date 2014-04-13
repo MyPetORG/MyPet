@@ -25,6 +25,7 @@ import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

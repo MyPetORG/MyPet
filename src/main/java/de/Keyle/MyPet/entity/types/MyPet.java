@@ -37,6 +37,7 @@ import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.arenas.*;
@@ -430,7 +431,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
 
     public void sendMessageToOwner(String text) {
         if (petOwner.isOnline()) {
-            getOwner().getPlayer().sendMessage(text);
+            petOwner.getPlayer().sendMessage(text);
         }
     }
 
@@ -478,7 +479,6 @@ public abstract class MyPet implements IMyPet, NBTStorage {
 
         petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
         petNBT.getCompoundData().put("Type", new TagString(this.getPetType().getTypeName()));
-        petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
         petNBT.getCompoundData().put("Hunger", new TagInt(this.hunger));
@@ -487,8 +487,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getExtendedInfo());
+        if (this.petOwner.getName() != null) {
+            petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
+        }
         if (this.petOwner.getMojangUUID() != null) {
-            petNBT.getCompoundData().put("Owner-UUID", new TagString(this.petOwner.getMojangUUID().toString()));
+            petNBT.getCompoundData().put("Mojang-Owner-UUID", new TagString(this.petOwner.getMojangUUID().toString()));
         }
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));

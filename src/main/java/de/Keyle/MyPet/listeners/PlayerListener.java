@@ -35,12 +35,14 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -125,7 +127,17 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onMyPetPlayerJoin(final PlayerJoinEvent event) {
-        MyPetPlayer.onlinePlayerList.add(event.getPlayer().getName());
+        if (Bukkit.getOnlineMode()) {
+            MyPetPlayer.onlinePlayerUUIDList.add(event.getPlayer().getUniqueId());
+            if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+                MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer().getUniqueId());
+                if (petPlayer instanceof OnlineMyPetPlayer) {
+                    ((OnlineMyPetPlayer) petPlayer).setLastKnownName(event.getPlayer().getName());
+                }
+            }
+        } else {
+            MyPetPlayer.onlinePlayerNamesList.add(event.getPlayer().getName());
+        }
         if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer joinedPlayer = MyPetPlayer.getMyPetPlayer(event.getPlayer());
             WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
@@ -211,7 +223,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event) {
-        MyPetPlayer.onlinePlayerList.remove(event.getPlayer().getName());
+        if (Bukkit.getOnlineMode()) {
+            MyPetPlayer.onlinePlayerUUIDList.remove(event.getPlayer().getUniqueId());
+        } else {
+            MyPetPlayer.onlinePlayerNamesList.remove(event.getPlayer().getName());
+        }
         if (MyPetList.hasMyPet(event.getPlayer())) {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.getSkills().isSkillActive(Behavior.class)) {

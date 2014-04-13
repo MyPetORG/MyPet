@@ -25,7 +25,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.skill.skilltree.SkillTree;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeMobType;
-import de.Keyle.MyPet.util.MyPetPlayer;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.*;
 
 import java.util.Collection;
@@ -225,7 +225,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
 
         petNBT.getCompoundData().put("UUID", new TagString(getUUID().toString()));
         petNBT.getCompoundData().put("Type", new TagString(this.petType.getTypeName()));
-        petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
         petNBT.getCompoundData().put("Health", new TagDouble(this.health));
         petNBT.getCompoundData().put("Respawntime", new TagInt(this.respawnTime));
         petNBT.getCompoundData().put("Hunger", new TagInt(this.hunger));
@@ -234,6 +233,12 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("Exp", new TagDouble(this.exp));
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getInfo());
+        if (this.petOwner.getName() != null) {
+            petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
+        }
+        if (this.petOwner.getMojangUUID() != null) {
+            petNBT.getCompoundData().put("Mojang-Owner-UUID", new TagString(this.petOwner.getMojangUUID().toString()));
+        }
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }

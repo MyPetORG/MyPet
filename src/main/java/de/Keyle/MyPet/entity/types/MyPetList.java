@@ -29,8 +29,8 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
 
@@ -42,7 +42,7 @@ import static org.bukkit.Bukkit.getServer;
 public class MyPetList {
     private static final BiMap<MyPetPlayer, MyPet> mActivePlayerPets = HashBiMap.create();
     private static final BiMap<MyPet, MyPetPlayer> mActivePetsPlayer = mActivePlayerPets.inverse();
-    private static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> mInctivePets = ArrayListMultimap.create();
+    public static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> mInctivePets = ArrayListMultimap.create();
 
     // Active -------------------------------------------------------------------
 
@@ -93,6 +93,10 @@ public class MyPetList {
         mActivePetsPlayer.remove(myPet);
     }
 
+    public static MyPet getMyPet(MyPetPlayer owner) {
+        return mActivePlayerPets.get(owner);
+    }
+
     public static MyPet getMyPet(Player owner) {
         return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
     }
@@ -108,6 +112,10 @@ public class MyPetList {
             allActiveMyPets[i++] = myPet;
         }
         return allActiveMyPets;
+    }
+
+    public static boolean hasMyPet(MyPetPlayer player) {
+        return mActivePlayerPets.containsKey(player);
     }
 
     public static boolean hasMyPet(Player player) {

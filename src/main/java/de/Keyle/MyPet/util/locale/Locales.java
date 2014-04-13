@@ -23,9 +23,9 @@ package de.Keyle.MyPet.util.locale;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Colorizer;
-import de.Keyle.MyPet.util.MyPetPlayer;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.entity.Player;
 
