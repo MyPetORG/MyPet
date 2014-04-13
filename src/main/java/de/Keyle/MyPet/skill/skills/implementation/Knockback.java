@@ -28,8 +28,8 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_7_R2.MathHelper;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
+import net.minecraft.server.v1_7_R3.MathHelper;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;

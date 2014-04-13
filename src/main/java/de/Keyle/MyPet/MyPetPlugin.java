@@ -78,7 +78,7 @@ import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.Keyle.MyPet.util.support.arenas.*;
 import de.keyle.knbt.*;
-import net.minecraft.server.v1_7_R2.EntityTypes;
+import net.minecraft.server.v1_7_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

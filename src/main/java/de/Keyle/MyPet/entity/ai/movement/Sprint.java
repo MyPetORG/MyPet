@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R2.EntityLiving;
+import net.minecraft.server.v1_7_R3.EntityLiving;
 
 public class Sprint extends AIGoal {
     private MyPet myPet;

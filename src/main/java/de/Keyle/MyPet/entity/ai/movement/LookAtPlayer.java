@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R2.Entity;
+import net.minecraft.server.v1_7_R3.Entity;
 
 public class LookAtPlayer extends AIGoal {
     private EntityMyPet petEntity;
