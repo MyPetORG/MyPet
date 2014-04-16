@@ -149,6 +149,10 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Locales.getString("Name.HP", damager) + ": " + msg);
                         infoShown = true;
                     }
+                    if (myPet.getStatus() == PetState.Dead && CommandInfo.canSee(PetInfoDisplay.RespawnTime.adminOnly, damager, myPet)) {
+                        damager.sendMessage("   " + Locales.getString("Name.Respawntime", damager) + ": " + myPet.getRespawnTime());
+                        infoShown = true;
+                    }
                     if (!myPet.isPassiv() && CommandInfo.canSee(PetInfoDisplay.Damage.adminOnly, damager, myPet)) {
                         double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
                         damager.sendMessage("   " + Locales.getString("Name.Damage", damager) + ": " + String.format("%1.2f", damage));
@@ -157,6 +161,11 @@ public class EntityListener implements Listener {
                     if (myPet.getRangedDamage() > 0 && CommandInfo.canSee(PetInfoDisplay.RangedDamage.adminOnly, damager, myPet)) {
                         double damage = myPet.getRangedDamage();
                         damager.sendMessage("   " + Locales.getString("Name.RangedDamage", damager) + ": " + String.format("%1.2f", damage));
+                        infoShown = true;
+                    }
+                    if (myPet.getSkills().hasSkill(Behavior.class) && CommandInfo.canSee(PetInfoDisplay.Behavior.adminOnly, damager, myPet)) {
+                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
+                        damager.sendMessage("   Behavior: " + Locales.getString("Name." + behavior.getBehavior().name(), damager));
                         infoShown = true;
                     }
                     if (Configuration.USE_HUNGER_SYSTEM && CommandInfo.canSee(PetInfoDisplay.Hunger.adminOnly, damager, myPet)) {

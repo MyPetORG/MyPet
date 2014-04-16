@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
@@ -42,7 +43,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
     public enum PetInfoDisplay {
-        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false);
+        Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);
 
         public boolean adminOnly = false;
 
@@ -104,6 +105,12 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Locales.getString("Name.HP", player) + ": " + msg);
                     infoShown = true;
                 }
+                if (canSee(PetInfoDisplay.RespawnTime.adminOnly, player, myPet)) {
+                    if (myPet.getStatus() == PetState.Dead) {
+                        player.sendMessage("   " + Locales.getString("Name.Respawntime", player) + ": " + myPet.getRespawnTime());
+                        infoShown = true;
+                    }
+                }
                 if (!myPet.isPassiv() && canSee(PetInfoDisplay.Damage.adminOnly, player, myPet)) {
                     double damage = (myPet.getSkills().isSkillActive(Damage.class) ? myPet.getSkills().getSkill(Damage.class).getDamage() : 0);
                     player.sendMessage("   " + Locales.getString("Name.Damage", player) + ": " + String.format("%1.2f", damage));
@@ -117,6 +124,13 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 if (Configuration.USE_HUNGER_SYSTEM && canSee(PetInfoDisplay.Hunger.adminOnly, player, myPet)) {
                     player.sendMessage("   " + Locales.getString("Name.Hunger", player) + ": " + myPet.getHungerValue());
                     infoShown = true;
+                }
+                if (canSee(PetInfoDisplay.Behavior.adminOnly, player, myPet)) {
+                    if (myPet.getSkills().hasSkill(Behavior.class)) {
+                        Behavior behavior = myPet.getSkills().getSkill(Behavior.class);
+                        player.sendMessage("   Behavior: " + Locales.getString("Name." + behavior.getBehavior().name(), player));
+                        infoShown = true;
+                    }
                 }
                 if (canSee(PetInfoDisplay.Skilltree.adminOnly, player, myPet) && myPet.getSkillTree() != null) {
                     player.sendMessage("   " + Locales.getString("Name.Skilltree", player) + ": " + myPet.getSkillTree().getName());
