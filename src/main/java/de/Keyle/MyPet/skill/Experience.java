@@ -73,8 +73,8 @@ public class Experience {
     }
 
     public void setExp(double exp) {
-        exp = exp < 0 ? 0 : exp;
-        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.getExp(), exp);
+        exp = Math.max(0, exp);
+        MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp);
         if (Configuration.ENABLE_EVENTS) {
             Bukkit.getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled()) {

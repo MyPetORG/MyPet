@@ -63,8 +63,8 @@ public class LevelUpListener implements Listener {
                 lvl = skillTree.getLastLevelWithSkills();
             }
             for (int i = lastLvl + 1; i <= lvl; i++) {
-                if (skillTree.hasLevel(lvl)) {
-                    SkillTreeLevel level = skillTree.getLevel(lvl);
+                if (skillTree.hasLevel(i)) {
+                    SkillTreeLevel level = skillTree.getLevel(i);
                     if (!event.isQuiet()) {
                         if (level.hasLevelupMessage()) {
                             myPet.sendMessageToOwner(Colorizer.setColors(level.getLevelupMessage()));
