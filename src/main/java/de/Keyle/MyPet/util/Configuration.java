@@ -82,7 +82,6 @@ public class Configuration {
     public static boolean DISABLE_PET_VS_PLAYER = false;
     public static boolean USE_HUNGER_SYSTEM = true;
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
-    public static boolean ENABLE_EVENTS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean PET_INFO_OVERHEAD_NAME = true;
     public static boolean STORE_PETS_ON_PLAYER_QUIT = true;
@@ -96,7 +95,6 @@ public class Configuration {
         config.addDefault("MyPet.Leash.ShowAlwaysForOwner", ALWAYS_SHOW_LEASH_FOR_OWNER);
         config.addDefault("MyPet.OwnerCanAttackPet", OWNER_CAN_ATTACK_PET);
         config.addDefault("MyPet.DisablePetVersusPlayer", DISABLE_PET_VS_PLAYER);
-        config.addDefault("MyPet.EnableEvents", ENABLE_EVENTS);
         config.addDefault("MyPet.RemovePetsAfterRelease", REMOVE_PETS_AFTER_RELEASE);
         config.addDefault("MyPet.FollowStartDistance", MYPET_FOLLOW_START_DISTANCE);
         config.addDefault("MyPet.ReleasePetsOnDeath", RELEASE_PETS_ON_DEATH);
@@ -274,7 +272,6 @@ public class Configuration {
         HUNGER_SYSTEM_TIME = config.getInt("MyPet.HungerSystem.Time", 60);
         MAX_PET_NAME_LENGTH = config.getInt("MyPet.MaxPetNameLength", 64);
         HUNGER_SYSTEM_POINTS_PER_FEED = config.getInt("MyPet.HungerSystem.HungerPointsPerFeed", 6);
-        ENABLE_EVENTS = config.getBoolean("MyPet.EnableEvents", false);
         RELEASE_PETS_ON_DEATH = config.getBoolean("MyPet.ReleasePetsOnDeath", false);
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         ADD_ZOMBIE_TARGET_GOAL = config.getBoolean("MyPet.ZombieVsMyPet", false);

@@ -460,9 +460,7 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        if (Configuration.ENABLE_EVENTS) {
-                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                        }
+                        getPluginManager().callEvent(new MyPetLeashEvent(myPet));
                         DebugLogger.info("New Pet leashed:");
                         DebugLogger.info("   " + myPet.toString());
                         if (Configuration.STORE_PETS_ON_PET_LEASH) {

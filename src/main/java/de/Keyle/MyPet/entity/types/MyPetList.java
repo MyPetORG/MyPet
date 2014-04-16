@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
@@ -184,14 +183,10 @@ public class MyPetList {
             setMyPetInactive(inactiveMyPet.getOwner());
         }
 
-        boolean isCancelled = false;
-        if (Configuration.ENABLE_EVENTS) {
-            MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
-            getServer().getPluginManager().callEvent(event);
-            isCancelled = event.isCancelled();
-        }
+        MyPetSelectEvent event = new MyPetSelectEvent(inactiveMyPet, NewStatus.Active);
+        getServer().getPluginManager().callEvent(event);
 
-        if (!isCancelled) {
+        if (!event.isCancelled()) {
             MyPet activeMyPet = getMyPetFromInactiveMyPet(inactiveMyPet);
             addMyPet(activeMyPet);
             removeInactiveMyPet(inactiveMyPet);
@@ -208,14 +203,10 @@ public class MyPetList {
         if (mActivePlayerPets.containsKey(owner)) {
             MyPet activeMyPet = owner.getMyPet();
 
-            boolean isCancelled = false;
-            if (Configuration.ENABLE_EVENTS) {
-                MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
-                getServer().getPluginManager().callEvent(event);
-                isCancelled = event.isCancelled();
-            }
+            MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
+            getServer().getPluginManager().callEvent(event);
 
-            if (isCancelled) {
+            if (event.isCancelled()) {
                 return null;
             }
             activeMyPet.removePet();

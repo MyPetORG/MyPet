@@ -26,7 +26,6 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
-import de.Keyle.MyPet.util.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -75,11 +74,9 @@ public class Experience {
     public void setExp(double exp) {
         exp = Math.max(0, exp);
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp);
-        if (Configuration.ENABLE_EVENTS) {
-            Bukkit.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled()) {
-                return;
-            }
+        Bukkit.getServer().getPluginManager().callEvent(expEvent);
+        if (expEvent.isCancelled()) {
+            return;
         }
         int tmplvl = getLevel();
         this.exp = expEvent.getExp();
@@ -95,11 +92,9 @@ public class Experience {
 
     public double addExp(double exp) {
         MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
-        if (Configuration.ENABLE_EVENTS) {
-            Bukkit.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                return 0;
-            }
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return 0;
         }
         int tmpLvl = getLevel();
         this.exp = event.getExp();
@@ -114,11 +109,9 @@ public class Experience {
     public double addExp(EntityType type) {
         if (MonsterExperience.hasMonsterExperience(type)) {
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, MonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp);
-            if (Configuration.ENABLE_EVENTS) {
-                Bukkit.getServer().getPluginManager().callEvent(expEvent);
-                if (expEvent.isCancelled()) {
-                    return 0;
-                }
+            Bukkit.getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled()) {
+                return 0;
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
@@ -136,11 +129,9 @@ public class Experience {
         if (MonsterExperience.hasMonsterExperience(type)) {
             double exp = MonsterExperience.getMonsterExperience(type).getRandomExp() / 100. * percent;
             MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
-            if (Configuration.ENABLE_EVENTS) {
-                Bukkit.getServer().getPluginManager().callEvent(expEvent);
-                if (expEvent.isCancelled()) {
-                    return 0;
-                }
+            Bukkit.getServer().getPluginManager().callEvent(expEvent);
+            if (expEvent.isCancelled()) {
+                return 0;
             }
             int tmpLvl = getLevel();
             this.exp = expEvent.getExp();
@@ -159,11 +150,9 @@ public class Experience {
             exp = getCurrentExp();
         }
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        if (Configuration.ENABLE_EVENTS) {
-            Bukkit.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled()) {
-                return;
-            }
+        Bukkit.getServer().getPluginManager().callEvent(expEvent);
+        if (expEvent.isCancelled()) {
+            return;
         }
         this.exp = expEvent.getExp();
     }
@@ -171,11 +160,9 @@ public class Experience {
     public void removeExp(double exp) {
         exp = this.exp - exp < 0 ? this.exp : exp;
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, this.exp - exp);
-        if (Configuration.ENABLE_EVENTS) {
-            Bukkit.getServer().getPluginManager().callEvent(expEvent);
-            if (expEvent.isCancelled()) {
-                return;
-            }
+        Bukkit.getServer().getPluginManager().callEvent(expEvent);
+        if (expEvent.isCancelled()) {
+            return;
         }
         this.exp = expEvent.getExp();
     }
