@@ -59,7 +59,7 @@ public class PvPArena implements Listener {
     @EventHandler
     public void onJoinPvPArena(PAJoinEvent event) {
         if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));

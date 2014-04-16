@@ -25,16 +25,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class OnlineMyPetPlayer extends MyPetPlayer {
+    protected OnlineMyPetPlayer(UUID playerUUID, UUID mojangUUID) {
+        super(playerUUID);
+        this.mojangUUID = mojangUUID;
+        uuidToInternalUUID.put(mojangUUID, internalUUID);
+    }
 
-    protected static Map<UUID, OnlineMyPetPlayer> playerList = new HashMap<UUID, OnlineMyPetPlayer>();
-
-    protected OnlineMyPetPlayer(UUID playerUUID) {
-        this.mojangUUID = playerUUID;
+    protected OnlineMyPetPlayer(UUID mojangUUID) {
+        this(UUID.randomUUID(), mojangUUID);
     }
 
     public boolean isOnline() {

@@ -60,11 +60,11 @@ public class CommandSendAway implements CommandExecutor {
             return true;
         }
         MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(playerName);
-        if (!petOwner.isOnline()) {
+        if (petOwner != null && !petOwner.isOnline()) {
             sender.sendMessage(Locales.getString("Message.No.PlayerOnline", lang));
             return true;
         }
-        if (petOwner.hasMyPet()) {
+        if (petOwner != null && petOwner.hasMyPet()) {
             MyPet myPet = petOwner.getMyPet();
             if (myPet.getStatus() == PetState.Here) {
                 myPet.removePet(false);

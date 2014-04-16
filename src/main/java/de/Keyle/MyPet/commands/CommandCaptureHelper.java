@@ -40,7 +40,7 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
+            MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer(player);
 
             if (Permissions.has(player, "MyPet.user.command.capturehelper")) {
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());

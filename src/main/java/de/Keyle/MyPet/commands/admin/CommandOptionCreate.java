@@ -147,7 +147,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 return true;
             }
 
-            MyPetPlayer newOwner = MyPetPlayer.getMyPetPlayer(owner);
+            MyPetPlayer newOwner = MyPetPlayer.getOrCreateMyPetPlayer(owner);
             if (newOwner.hasMyPet() && forceOffset == 1) {
                 MyPetList.setMyPetInactive(newOwner);
             }

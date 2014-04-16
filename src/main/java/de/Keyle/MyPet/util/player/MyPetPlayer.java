@@ -33,31 +33,32 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.arenas.*;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R3.EntityHuman;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     public final static Set<UUID> onlinePlayerUUIDList = new HashSet<UUID>();
-    public final static Set<String> onlinePlayerNamesList = new HashSet<String>();
+    protected final static Map<UUID, MyPetPlayer> uuidToOwner = new HashMap<UUID, MyPetPlayer>();
+    protected final static Map<UUID, UUID> uuidToInternalUUID = new HashMap<UUID, UUID>();
 
     protected String lastKnownPlayerName;
     protected String lastLanguage = "en_US";
     protected UUID mojangUUID = null;
     protected UUID offlineUUID = null;
+    protected final UUID internalUUID;
 
     protected boolean captureHelperMode = false;
     protected boolean autoRespawn = false;
@@ -66,6 +67,15 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     protected TagCompound extendedInfo = new TagCompound();
+
+    protected MyPetPlayer() {
+        this(UUID.randomUUID());
+    }
+
+    protected MyPetPlayer(UUID internalUUID) {
+        this.internalUUID = internalUUID;
+        uuidToOwner.put(internalUUID, this);
+    }
 
     public String getName() {
         return lastKnownPlayerName;
@@ -191,6 +201,10 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         }
     }
 
+    public UUID getInternalUUID() {
+        return internalUUID;
+    }
+
     public UUID getOfflineUUID() {
         return offlineUUID;
     }
@@ -245,71 +259,152 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         return null;
     }
 
-    public static MyPetPlayer getMyPetPlayer(UUID uuid) {
-        if (OnlineMyPetPlayer.playerList.containsKey(uuid)) {
-            return OnlineMyPetPlayer.playerList.get(uuid);
+    public static UUID getInternalUUID(Player player) {
+        return uuidToInternalUUID.get(player.getUniqueId());
+    }
+
+    public static UUID getInternalUUID(UUID playerUUID) {
+        return uuidToInternalUUID.get(playerUUID);
+    }
+
+    public static MyPetPlayer getMyPetPlayer(UUID internalUUID) { //ToDo just for internal use
+        return uuidToOwner.get(internalUUID);
+    }
+
+    public static MyPetPlayer getOrCreateMyPetPlayer(Player player) {
+        UUID internalUUID = getInternalUUID(player);
+        MyPetPlayer petPlayer;
+        if (internalUUID == null) {
+            if (Bukkit.getOnlineMode()) {
+                petPlayer = new OnlineMyPetPlayer(player.getUniqueId());
+            } else {
+                petPlayer = new OfflineMyPetPlayer(player.getName());
+            }
         } else {
-            OnlineMyPetPlayer myPetPlayer = new OnlineMyPetPlayer(uuid);
-            OnlineMyPetPlayer.playerList.put(uuid, myPetPlayer);
-            return myPetPlayer;
+            petPlayer = MyPetPlayer.getMyPetPlayer(internalUUID);
         }
+        return petPlayer;
     }
 
     public static MyPetPlayer getMyPetPlayer(String name) {
-        if (OfflineMyPetPlayer.playerList.containsKey(name)) {
-            return OfflineMyPetPlayer.playerList.get(name);
+        UUID playerUUID;
+        if (Bukkit.getOnlineMode()) {
+            Player p = Bukkit.getPlayer(name);
+            if (p != null) {
+                playerUUID = p.getUniqueId();
+            } else {
+                playerUUID = Util.getOfflinePlayerUUID(name);
+            }
         } else {
-            OfflineMyPetPlayer myPetPlayer = new OfflineMyPetPlayer(name);
-            OfflineMyPetPlayer.playerList.put(name, myPetPlayer);
-            return myPetPlayer;
+            playerUUID = Util.getOfflinePlayerUUID(name);
         }
+        UUID internalUUID = getInternalUUID(playerUUID);
+        if (internalUUID == null) {
+            return null;
+        }
+        return uuidToOwner.get(internalUUID);
     }
 
-    public static MyPetPlayer getMyPetPlayer(Player player) {
+    public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
+        MyPetPlayer petPlayer = null;
         if (Bukkit.getOnlineMode()) {
-            return MyPetPlayer.getMyPetPlayer(player.getUniqueId());
+            UUID mojangUUID = null;
+            UUID internalUUID = null;
+            if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+                TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+                if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
+                    internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+                }
+                if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
+                    mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+                }
+            } else if (playerTag.getCompoundData().containsKey("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(playerTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            }
+            if (internalUUID == null) {
+                internalUUID = UUID.randomUUID();
+            }
+            if (mojangUUID != null) {
+                petPlayer = new OnlineMyPetPlayer(internalUUID, mojangUUID);
+                if (playerTag.containsKeyAs("Name", TagString.class)) {
+                    String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                    ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
+                }
+            } else if (playerTag.containsKeyAs("Name", TagString.class)) {
+                String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
+                if (!fetchedUUIDs.containsKey(playerName)) {
+                    MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
+                    return null;
+                } else {
+                    petPlayer = new OnlineMyPetPlayer(fetchedUUIDs.get(playerName));
+                    ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
+                }
+            }
         } else {
-            return MyPetPlayer.getMyPetPlayer(player.getName());
+            UUID internalUUID = null;
+            String playerName = null;
+            if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+                TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+                if (uuidTag.getCompoundData().containsKey("Internal-UUID")) {
+                    internalUUID = UUID.fromString(uuidTag.getAs("Internal-UUID", TagString.class).getStringData());
+                }
+            }
+            if (playerTag.containsKeyAs("Name", TagString.class)) {
+                playerName = playerTag.getAs("Name", TagString.class).getStringData();
+            }
+            if (playerName == null) {
+                return null;
+            }
+            if (internalUUID == null) {
+                internalUUID = UUID.randomUUID();
+            }
+            petPlayer = new OfflineMyPetPlayer(internalUUID, playerName);
         }
+        if (petPlayer != null) {
+            petPlayer.load(playerTag);
+            DebugLogger.info("   " + petPlayer);
+        }
+        return petPlayer;
     }
 
     public static boolean isMyPetPlayer(String name) {
-        return OfflineMyPetPlayer.playerList.containsKey(name);
+        UUID playerUUID;
+        if (Bukkit.getOnlineMode()) {
+            Player p = Bukkit.getPlayer(name);
+            if (p != null) {
+                playerUUID = p.getUniqueId();
+            } else {
+                playerUUID = Util.getOfflinePlayerUUID(name);
+            }
+        } else {
+            playerUUID = Util.getOfflinePlayerUUID(name);
+        }
+        return getInternalUUID(playerUUID) != null;
     }
 
     public static boolean isMyPetPlayer(Player player) {
-        if (Bukkit.getOnlineMode()) {
-            return OnlineMyPetPlayer.playerList.containsKey(player.getUniqueId());
-        } else {
-            return OfflineMyPetPlayer.playerList.containsKey(player.getName());
-        }
+        return getInternalUUID(player.getUniqueId()) != null;
     }
 
     public static MyPetPlayer[] getMyPetPlayers() {
         MyPetPlayer[] playerArray;
         int playerCounter = 0;
-        if (Bukkit.getOnlineMode()) {
-            playerArray = new MyPetPlayer[OnlineMyPetPlayer.playerList.size()];
-            for (MyPetPlayer player : OnlineMyPetPlayer.playerList.values()) {
-                playerArray[playerCounter++] = player;
-            }
-        } else {
-            playerArray = new MyPetPlayer[OfflineMyPetPlayer.playerList.size()];
-            for (MyPetPlayer player : OfflineMyPetPlayer.playerList.values()) {
-                playerArray[playerCounter++] = player;
-            }
+        playerArray = new MyPetPlayer[uuidToOwner.size()];
+        for (MyPetPlayer player : uuidToOwner.values()) {
+            playerArray[playerCounter++] = player;
         }
-
         return playerArray;
     }
 
     public static boolean checkRemovePlayer(MyPetPlayer myPetPlayer) {
         if (!myPetPlayer.isOnline() && !myPetPlayer.hasCustomData() && myPetPlayer.getMyPet() == null && myPetPlayer.getInactiveMyPets().size() == 0) {
             if (Bukkit.getOnlineMode()) {
-                OnlineMyPetPlayer.playerList.remove(myPetPlayer.getPlayerUUID());
+                uuidToInternalUUID.remove(myPetPlayer.getMojangUUID());
             } else {
-                OfflineMyPetPlayer.playerList.remove(myPetPlayer.getName());
+                uuidToInternalUUID.remove(myPetPlayer.getOfflineUUID());
             }
+            uuidToOwner.remove(myPetPlayer.getPlayerUUID());
             return true;
         }
         return false;
@@ -322,16 +417,19 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         playerNBT.getCompoundData().put("Name", new TagString(getName()));
         playerNBT.getCompoundData().put("AutoRespawn", new TagByte(hasAutoRespawnEnabled()));
         playerNBT.getCompoundData().put("AutoRespawnMin", new TagInt(getAutoRespawnMin()));
-        playerNBT.getCompoundData().put("AutoRespawnMin2", new TagInt(getAutoRespawnMin()));
         playerNBT.getCompoundData().put("ExtendedInfo", getExtendedInfo());
         playerNBT.getCompoundData().put("CaptureMode", new TagByte(isCaptureHelperActive()));
 
-        if (offlineUUID != null) {
-            playerNBT.getCompoundData().put("Offline-UUID", new TagString(offlineUUID.toString()));
-        }
+        TagCompound playerUUIDTag = new TagCompound();
         if (mojangUUID != null) {
-            playerNBT.getCompoundData().put("Mojang-UUID", new TagString(mojangUUID.toString()));
+            playerUUIDTag.getCompoundData().put("Mojang-UUID", new TagString(mojangUUID.toString()));
         }
+        if (offlineUUID != null) {
+            playerUUIDTag.getCompoundData().put("Offline-UUID", new TagString(offlineUUID.toString()));
+        }
+        playerUUIDTag.getCompoundData().put("Internal-UUID", new TagString(internalUUID.toString()));
+        playerNBT.getCompoundData().put("UUID", playerUUIDTag);
+
         TagCompound multiWorldCompound = new TagCompound();
         for (String worldGroupName : petWorldUUID.keySet()) {
             multiWorldCompound.getCompoundData().put(worldGroupName, new TagString(petWorldUUID.get(worldGroupName).toString()));
@@ -343,14 +441,23 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     @Override
     public void load(TagCompound myplayerNBT) {
-        if (myplayerNBT.getCompoundData().containsKey("UUID")) {
-            offlineUUID = UUID.fromString(myplayerNBT.getAs("UUID", TagString.class).getStringData());
-        }
+        // ToDo remove --------------------------
         if (myplayerNBT.getCompoundData().containsKey("Offline-UUID")) {
             offlineUUID = UUID.fromString(myplayerNBT.getAs("Offline-UUID", TagString.class).getStringData());
         }
         if (myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
             mojangUUID = UUID.fromString(myplayerNBT.getAs("Mojang-UUID", TagString.class).getStringData());
+        }
+        // --------------------------------------
+        if (myplayerNBT.containsKeyAs("UUID", TagCompound.class)) {
+            TagCompound uuidTag = myplayerNBT.getAs("UUID", TagCompound.class);
+
+            if (uuidTag.getCompoundData().containsKey("Offline-UUID")) {
+                offlineUUID = UUID.fromString(uuidTag.getAs("Offline-UUID", TagString.class).getStringData());
+            }
+            if (uuidTag.getCompoundData().containsKey("Mojang-UUID")) {
+                mojangUUID = UUID.fromString(uuidTag.getAs("Mojang-UUID", TagString.class).getStringData());
+            }
         }
         if (myplayerNBT.getCompoundData().containsKey("AutoRespawn")) {
             setAutoRespawnEnabled(myplayerNBT.getAs("AutoRespawn", TagByte.class).getBooleanData());
@@ -437,6 +544,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     @Override
     public String toString() {
-        return "MyPetPlayer{name=" + getName() + ", mojang-uuid=" + mojangUUID + ", offline-uuid=" + offlineUUID + "}";
+        return "MyPetPlayer{name=" + getName() + ", internal-uuid=" + internalUUID + ", mojang-uuid=" + mojangUUID + ", offline-uuid=" + offlineUUID + "}";
     }
 }

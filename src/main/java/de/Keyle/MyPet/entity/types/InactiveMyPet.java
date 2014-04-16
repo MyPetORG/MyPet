@@ -233,12 +233,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("Exp", new TagDouble(this.exp));
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getInfo());
-        if (this.petOwner.getName() != null) {
-            petNBT.getCompoundData().put("Owner", new TagString(this.petOwner.getName()));
-        }
-        if (this.petOwner.getMojangUUID() != null) {
-            petNBT.getCompoundData().put("Mojang-Owner-UUID", new TagString(this.petOwner.getMojangUUID().toString()));
-        }
+        petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }

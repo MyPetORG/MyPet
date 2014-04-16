@@ -24,19 +24,22 @@ import de.Keyle.MyPet.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.UUID;
 
 public class OfflineMyPetPlayer extends MyPetPlayer {
-    protected static Map<String, OfflineMyPetPlayer> playerList = new HashMap<String, OfflineMyPetPlayer>();
-
-    protected OfflineMyPetPlayer(String playerName) {
+    protected OfflineMyPetPlayer(UUID internalUUID, String playerName) {
+        super(internalUUID);
         this.lastKnownPlayerName = playerName;
         offlineUUID = Util.getOfflinePlayerUUID(getName());
+        uuidToInternalUUID.put(offlineUUID, internalUUID);
+    }
+
+    protected OfflineMyPetPlayer(String playerName) {
+        this(UUID.randomUUID(), playerName);
     }
 
     public boolean isOnline() {
-        return onlinePlayerNamesList.contains(getName());
+        return onlinePlayerUUIDList.contains(offlineUUID);
     }
 
     public Player getPlayer() {

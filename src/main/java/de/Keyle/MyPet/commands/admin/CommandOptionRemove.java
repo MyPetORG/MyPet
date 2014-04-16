@@ -47,7 +47,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                 return true;
             }
             if (MyPetPlayer.isMyPetPlayer(player)) {
-                MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(player);
+                MyPetPlayer petOwner = MyPetPlayer.getOrCreateMyPetPlayer(player);
                 if (petOwner.hasMyPet()) {
                     MyPet myPet = petOwner.getMyPet();
 

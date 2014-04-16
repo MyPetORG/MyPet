@@ -59,7 +59,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
 
             if (args.length == 0) {
                 if (MyPetPlayer.isMyPetPlayer(player)) {
-                    petOwner = MyPetPlayer.getMyPetPlayer(player);
+                    petOwner = MyPetPlayer.getOrCreateMyPetPlayer(player);
                 } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                     return true;

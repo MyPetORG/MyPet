@@ -98,11 +98,7 @@ public class MyPetList {
     }
 
     public static MyPet getMyPet(Player owner) {
-        return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
-    }
-
-    public static MyPet getMyPet(String owner) {
-        return mActivePlayerPets.get(MyPetPlayer.getMyPetPlayer(owner));
+        return mActivePlayerPets.get(MyPetPlayer.getOrCreateMyPetPlayer(owner));
     }
 
     public static MyPet[] getAllActiveMyPets() {
@@ -119,11 +115,12 @@ public class MyPetList {
     }
 
     public static boolean hasMyPet(Player player) {
-        return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(player));
+        return MyPetPlayer.isMyPetPlayer(player) && mActivePlayerPets.containsKey(MyPetPlayer.getOrCreateMyPetPlayer(player));
     }
 
     public static boolean hasMyPet(String name) {
-        return mActivePlayerPets.containsKey(MyPetPlayer.getMyPetPlayer(name));
+        MyPetPlayer petPlayer = MyPetPlayer.getMyPetPlayer(name);
+        return petPlayer != null && mActivePlayerPets.containsKey(petPlayer);
     }
 
     // Inactive -----------------------------------------------------------------
@@ -133,7 +130,7 @@ public class MyPetList {
     }
 
     public static boolean hasInactiveMyPets(Player player) {
-        return mInctivePets.containsKey(MyPetPlayer.getMyPetPlayer(player));
+        return MyPetPlayer.isMyPetPlayer(player) && mInctivePets.containsKey(MyPetPlayer.getOrCreateMyPetPlayer(player));
     }
 
     public static boolean hasInactiveMyPets(MyPetPlayer myPetPlayer) {
@@ -163,7 +160,7 @@ public class MyPetList {
     }
 
     public static List<InactiveMyPet> getInactiveMyPets(Player owner) {
-        return mInctivePets.get(MyPetPlayer.getMyPetPlayer(owner));
+        return mInctivePets.get(MyPetPlayer.getOrCreateMyPetPlayer(owner));
     }
 
     public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet) {

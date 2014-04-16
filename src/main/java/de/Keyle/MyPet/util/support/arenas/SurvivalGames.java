@@ -59,7 +59,7 @@ public class SurvivalGames implements Listener {
     @EventHandler
     public void onJoinPvPArena(PlayerJoinArenaEvent event) {
         if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));

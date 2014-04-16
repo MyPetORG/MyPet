@@ -58,8 +58,8 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
             return true;
         }
 
-        MyPetPlayer oldPetOwner = MyPetPlayer.getMyPetPlayer(oldOwner);
-        MyPetPlayer newPetOwner = MyPetPlayer.getMyPetPlayer(newOwner);
+        MyPetPlayer oldPetOwner = MyPetPlayer.getOrCreateMyPetPlayer(oldOwner);
+        MyPetPlayer newPetOwner = MyPetPlayer.getOrCreateMyPetPlayer(newOwner);
 
         if (!oldPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), oldOwner.getName()));

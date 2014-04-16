@@ -71,7 +71,6 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import de.Keyle.MyPet.util.player.UUIDFetcher;
 import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
@@ -114,7 +113,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             MyPetList.clearList();
         }
         Timer.reset();
-        MyPetPlayer.onlinePlayerNamesList.clear();
         MyPetPlayer.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
@@ -341,13 +339,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
 
         for (Player player : getServer().getOnlinePlayers()) {
-            if (Bukkit.getOnlineMode()) {
-                MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
-            } else {
-                MyPetPlayer.onlinePlayerNamesList.add(player.getName());
-            }
+            MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
             if (MyPetPlayer.isMyPetPlayer(player)) {
-                MyPetPlayer myPetPlayer = MyPetPlayer.getMyPetPlayer(player);
+                MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer(player);
                 WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                 if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
@@ -487,22 +481,27 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
             TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
             MyPetPlayer petPlayer;
-            if (Bukkit.getOnlineMode()) {
-                if (myPetNBT.getCompoundData().containsKey("Mojang-Owner-UUID")) {
-                    UUID playerUUID = UUID.fromString(myPetNBT.getAs("Mojang-Owner-UUID", TagString.class).getStringData());
-                    petPlayer = MyPetPlayer.getMyPetPlayer(playerUUID);
-                } else {
-                    String playerName = myPetNBT.getAs("Owner", TagString.class).getStringData();
-                    Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
-                    if (!fetchedUUIDs.containsKey(playerName)) {
-                        MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pet not loaded for this player!");
-                        continue;
-                    } else {
-                        petPlayer = MyPetPlayer.getMyPetPlayer(fetchedUUIDs.get(playerName));
-                    }
-                }
+            if (myPetNBT.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
+                UUID ownerUUID = UUID.fromString(myPetNBT.getAs("Internal-Owner-UUID", TagString.class).getStringData());
+                petPlayer = MyPetPlayer.getMyPetPlayer(ownerUUID);
             } else {
-                petPlayer = MyPetPlayer.getMyPetPlayer(myPetNBT.getAs("Owner", TagString.class).getStringData());
+                if (Bukkit.getOnlineMode()) {
+                    if (myPetNBT.getCompoundData().containsKey("Mojang-Owner-UUID")) {
+                        UUID playerUUID = UUID.fromString(myPetNBT.getAs("Mojang-Owner-UUID", TagString.class).getStringData());
+                        petPlayer = MyPetPlayer.getMyPetPlayer(MyPetPlayer.getInternalUUID(playerUUID));
+                    } else {
+                        String playerName = myPetNBT.getAs("Owner", TagString.class).getStringData();
+                        Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
+                        if (!fetchedUUIDs.containsKey(playerName)) {
+                            MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pet not loaded for this player!");
+                            continue;
+                        } else {
+                            petPlayer = MyPetPlayer.getMyPetPlayer(MyPetPlayer.getInternalUUID(fetchedUUIDs.get(playerName)));
+                        }
+                    }
+                } else {
+                    petPlayer = MyPetPlayer.getMyPetPlayer(myPetNBT.getAs("Owner", TagString.class).getStringData());
+                }
             }
             InactiveMyPet inactiveMyPet = new InactiveMyPet(petPlayer);
             inactiveMyPet.load(myPetNBT);
@@ -555,7 +554,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
     private TagList savePlayers() {
         List<TagCompound> playerList = new ArrayList<TagCompound>();
         for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers()) {
-            if (myPetPlayer.hasCustomData()) {
+            if (myPetPlayer.hasMyPet() || myPetPlayer.hasInactiveMyPets() || myPetPlayer.hasCustomData()) {
                 try {
                     playerList.add(myPetPlayer.save());
                 } catch (Exception e) {
@@ -570,46 +569,30 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         int playerCount = 0;
         TagList playerList = nbtConfiguration.getNBTCompound().getAs("Players", TagList.class);
 
-        List<String> unknownPlayers = new ArrayList<String>();
-        for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
-            TagCompound myplayerNBT = playerList.getTagAs(i, TagCompound.class);
-            if (Bukkit.getOnlineMode()) {
-                if (!myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
-                    String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
-                    unknownPlayers.add(playerName);
+        if (Bukkit.getOnlineMode()) {
+            List<String> unknownPlayers = new ArrayList<String>();
+            for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
+                TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
+                if (playerTag.containsKeyAs("Name", TagString.class)) {
+                    if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
+                        TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
+                        if (!uuidTag.containsKeyAs("Mojang-UUID", TagString.class)) {
+                            String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                            unknownPlayers.add(playerName);
+                        }
+                    } else if (!playerTag.getCompoundData().containsKey("Mojang-UUID")) {
+                        String playerName = playerTag.getAs("Name", TagString.class).getStringData();
+                        unknownPlayers.add(playerName);
+                    }
                 }
             }
+            UUIDFetcher.call(unknownPlayers);
         }
-        UUIDFetcher.call(unknownPlayers);
 
         for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
-            TagCompound myplayerNBT = playerList.getTagAs(i, TagCompound.class);
-            MyPetPlayer petPlayer;
-            if (Bukkit.getOnlineMode()) {
-                if (myplayerNBT.getCompoundData().containsKey("Mojang-UUID")) {
-                    UUID playerUUID = UUID.fromString(myplayerNBT.getAs("Mojang-UUID", TagString.class).getStringData());
-                    petPlayer = MyPetPlayer.getMyPetPlayer(playerUUID);
-                    if (petPlayer instanceof OnlineMyPetPlayer && myplayerNBT.getCompoundData().containsKey("Name")) {
-                        String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
-                        ((OnlineMyPetPlayer) petPlayer).setLastKnownName(playerName);
-                    }
-                } else {
-                    String playerName = myplayerNBT.getAs("Name", TagString.class).getStringData();
-                    Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
-                    if (!fetchedUUIDs.containsKey(playerName)) {
-                        MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pets may not be loaded for this player!");
-                        continue;
-                    } else {
-                        petPlayer = MyPetPlayer.getMyPetPlayer(fetchedUUIDs.get(playerName));
-                    }
-                }
-            } else {
-                petPlayer = MyPetPlayer.getMyPetPlayer(myplayerNBT.getAs("Name", TagString.class).getStringData());
-            }
-            petPlayer.load(myplayerNBT);
-
+            TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
+            MyPetPlayer.createMyPetPlayer(playerTag);
             playerCount++;
-            DebugLogger.info("   " + petPlayer);
         }
         return playerCount;
     }

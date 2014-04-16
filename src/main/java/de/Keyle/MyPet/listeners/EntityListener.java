@@ -265,7 +265,7 @@ public class EntityListener implements Listener {
                     if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getMyPetPlayer(damager).isCaptureHelperActive()) {
+                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getOrCreateMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
                     if (PluginSupportManager.isPluginUsable("Citizens")) {
@@ -346,7 +346,7 @@ public class EntityListener implements Listener {
 
                     if (willBeLeashed) {
                         event.setCancelled(true);
-                        InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getMyPetPlayer(damager.getName()));
+                        InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getOrCreateMyPetPlayer(damager));
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                         inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
 

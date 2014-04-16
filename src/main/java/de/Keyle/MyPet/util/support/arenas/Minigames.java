@@ -65,7 +65,7 @@ public class Minigames implements Listener {
     @EventHandler
     public void onJoinMinigame(JoinMinigameEvent event) {
         if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
@@ -76,7 +76,7 @@ public class Minigames implements Listener {
     @EventHandler
     public void onSpectateMinigame(SpectateMinigameEvent event) {
         if (active && DISABLE_PETS_IN_MINIGAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
-            MyPetPlayer player = MyPetPlayer.getMyPetPlayer(event.getPlayer());
+            MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);
                 player.getPlayer().sendMessage(Locales.getString("Message.No.AllowedHere", player.getPlayer()));
