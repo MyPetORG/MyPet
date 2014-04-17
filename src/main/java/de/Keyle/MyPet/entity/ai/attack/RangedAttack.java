@@ -62,8 +62,11 @@ public class RangedAttack extends AIGoal {
         if (goalTarget == null || !goalTarget.isAlive() || !entityMyPet.canMove()) {
             return false;
         }
-        if (myPet.getDamage() > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ) < 20) {
-            return false;
+        double meleeDamage = myPet.getDamage();
+        if (meleeDamage > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ) < 4) {
+            if (meleeDamage > rangedSkill.getDamage()) {
+                return false;
+            }
         }
         this.target = goalTarget;
         return true;
@@ -74,8 +77,11 @@ public class RangedAttack extends AIGoal {
         if (entityMyPet.getGoalTarget() == null || !target.isAlive() || myPet.getRangedDamage() <= 0 || !entityMyPet.canMove()) {
             return true;
         }
-        if (myPet.getDamage() > 0 && this.entityMyPet.f(target.locX, target.boundingBox.b, target.locZ) < 20) {
-            return true;
+        double meleeDamage = myPet.getDamage();
+        if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.boundingBox.b, target.locZ) < 4) {
+            if (meleeDamage > rangedSkill.getDamage()) {
+                return true;
+            }
         }
         return false;
     }
