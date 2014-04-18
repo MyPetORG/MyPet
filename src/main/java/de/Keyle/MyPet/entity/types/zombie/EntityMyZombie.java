@@ -27,6 +27,8 @@ import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.MyPetVersion;
+import de.Keyle.MyPet.util.Util;
 import net.minecraft.server.v1_7_R3.*;
 import org.bukkit.Bukkit;
 
@@ -169,5 +171,15 @@ public class EntityMyZombie extends EntityMyPet {
 
     public void setPetEquipment(int slot, ItemStack itemStack) {
         ((WorldServer) this.world).getTracker().a(this, new PacketPlayOutEntityEquipment(getId(), slot, itemStack));
+    }
+
+    public ItemStack getEquipment(int i) {
+        if (Util.findClassInStackTrace(Thread.currentThread().getStackTrace(), "net.minecraft.server." + MyPetVersion.getBukkitPacket() + ".EntityTrackerEntry", 2)) {
+            EquipmentSlot slot = EquipmentSlot.getSlotById(i);
+            if (getMyPet().getEquipment(slot) != null) {
+                return getMyPet().getEquipment(slot);
+            }
+        }
+        return super.getEquipment(i);
     }
 }
