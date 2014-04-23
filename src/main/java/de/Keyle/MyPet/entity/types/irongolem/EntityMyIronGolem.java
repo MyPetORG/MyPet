@@ -24,11 +24,14 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R3.Entity;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_7_R3.*;
+import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
 
 @EntitySize(width = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet {
+    int flowerCounter = 0;
+    boolean flower = false;
+
     public EntityMyIronGolem(World world, MyPet myPet) {
         super(world, myPet);
     }
@@ -68,8 +71,70 @@ public class EntityMyIronGolem extends EntityMyPet {
         this.datawatcher.a(16, new Byte((byte) 0)); // flower???
     }
 
+    public boolean handlePlayerInteraction(EntityHuman entityhuman) {
+        if (super.handlePlayerInteraction(entityhuman)) {
+            return true;
+        }
+
+        ItemStack itemStack = entityhuman.inventory.getItemInHand();
+
+        if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
+            if (itemStack.getItem() == Item.getItemOf(Blocks.RED_ROSE) && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+                getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    if (--itemStack.count <= 0) {
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                    }
+                }
+                return true;
+            } else if (itemStack.getItem() == Items.SHEARS && getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+                EntityItem entityitem = this.a(CraftItemStack.asNMSCopy(getMyPet().getFlower()), 1.0F);
+                entityitem.motY += (double) (this.random.nextFloat() * 0.05F);
+                entityitem.motX += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+                entityitem.motZ += (double) ((this.random.nextFloat() - this.random.nextFloat()) * 0.1F);
+
+                makeSound("mob.sheep.shear", 1.0F, 1.0F);
+                getMyPet().setFlower(null);
+                if (!entityhuman.abilities.canInstantlyBuild) {
+                    itemStack.damage(1, entityhuman);
+                }
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setMyPet(MyPet myPet) {
+        if (myPet != null) {
+            super.setMyPet(myPet);
+
+            this.setFlower(getMyPet().hasFlower());
+            if (flower) {
+                flowerCounter = 40;
+            }
+        }
+    }
+
+    public MyIronGolem getMyPet() {
+        return (MyIronGolem) myPet;
+    }
+
     @Override
     public void playStepSound() {
         makeSound("mob.irongolem.walk", 1.0F, 1.0F);
+    }
+
+    public void setFlower(boolean flag) {
+        this.flower = flag;
+        flowerCounter = 0;
+    }
+
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (this.flower && this.flowerCounter-- <= 0) {
+            this.world.broadcastEntityEffect(this, (byte) 11);
+            flowerCounter = 300;
+        }
     }
 }
