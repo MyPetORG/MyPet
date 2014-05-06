@@ -485,7 +485,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 UUID ownerUUID = UUID.fromString(myPetNBT.getAs("Internal-Owner-UUID", TagString.class).getStringData());
                 petPlayer = MyPetPlayer.getMyPetPlayer(ownerUUID);
             } else {
-                if (Bukkit.getOnlineMode()) {
+                if (BukkitUtil.isInOnlineMode()) {
                     if (myPetNBT.getCompoundData().containsKey("Mojang-Owner-UUID")) {
                         UUID playerUUID = UUID.fromString(myPetNBT.getAs("Mojang-Owner-UUID", TagString.class).getStringData());
                         petPlayer = MyPetPlayer.getMyPetPlayer(MyPetPlayer.getInternalUUID(playerUUID));
@@ -543,7 +543,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
         nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(Bukkit.getOnlineMode()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
         nbtConfiguration.save();
@@ -569,7 +569,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         int playerCount = 0;
         TagList playerList = nbtConfiguration.getNBTCompound().getAs("Players", TagList.class);
 
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             List<String> unknownPlayers = new ArrayList<String>();
             for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
                 TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);

@@ -34,6 +34,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Ride;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
@@ -42,7 +43,6 @@ import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -126,9 +126,9 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onMyPetPlayerJoin(final PlayerJoinEvent event) {
+    public void onPlayerJoin(final PlayerJoinEvent event) {
         MyPetPlayer.onlinePlayerUUIDList.add(event.getPlayer().getUniqueId());
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             if (MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
                 MyPetPlayer petPlayer = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
                 if (petPlayer instanceof OnlineMyPetPlayer) {

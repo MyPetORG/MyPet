@@ -32,7 +32,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.7.8</minecraft.version>
+        <minecraft.version>1.7.9</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
         <bukkit.packet>v1_7_R3</bukkit.packet>
 
@@ -56,6 +56,7 @@
         <griefprevention.version>7.8</griefprevention.version>
         <pvpmanager.version>1.7.4</pvpmanager.version>
         <heroes.version>1.5.5.1</heroes.version>
+        <spigot.version>1.7.9-R0.1-SNAPSHOT</spigot.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
 
         <metrics.version>R7</metrics.version>
@@ -83,12 +84,6 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
-        <!--
-        <repository>
-            <id>mcmmo-repo</id>
-            <url>http://repo.mcmmo.info/</url>
-        </repository>
-        -->
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
@@ -104,16 +99,16 @@
             </snapshots>
         </repository>
         <repository>
-            <id>metrics-repo</id>
+            <id>spigot-repo</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+        <id>metrics-repo</id>
             <url>http://repo.mcstats.org/content/repositories/releases/</url>
         </repository>
         <repository>
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.co/</url>
-        </repository>
-        <repository>
-            <id>battlearena-repo</id>
-            <url>http://server.battleplugins.com/maven/repository/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
@@ -334,7 +329,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.intellij</groupId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+        <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
             <version>${forms_rt.version}</version>
             <scope>compile</scope>

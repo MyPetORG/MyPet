@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util;
 
 import net.minecraft.server.v1_7_R3.*;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -30,6 +31,7 @@ import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
+import org.spigotmc.SpigotConfig;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -163,5 +165,18 @@ public class BukkitUtil {
             return false;
         }
         return true;
+    }
+
+    private static Boolean bungee = null;
+
+    public static boolean isInOnlineMode() {
+        if (bungee == null) {
+            try {
+                bungee = SpigotConfig.bungee;
+            } catch (NoClassDefFoundError ignored) {
+                bungee = false;
+            }
+        }
+        return bungee || Bukkit.getOnlineMode();
     }
 }

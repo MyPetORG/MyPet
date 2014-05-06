@@ -194,7 +194,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     }
 
     public UUID getPlayerUUID() {
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             return mojangUUID;
         } else {
             return offlineUUID;
@@ -275,7 +275,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         UUID internalUUID = getInternalUUID(player);
         MyPetPlayer petPlayer;
         if (internalUUID == null) {
-            if (Bukkit.getOnlineMode()) {
+            if (BukkitUtil.isInOnlineMode()) {
                 petPlayer = new OnlineMyPetPlayer(player.getUniqueId());
             } else {
                 petPlayer = new OfflineMyPetPlayer(player.getName());
@@ -288,7 +288,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public static MyPetPlayer getMyPetPlayer(String name) {
         UUID playerUUID;
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             Player p = Bukkit.getPlayer(name);
             if (p != null) {
                 playerUUID = p.getUniqueId();
@@ -307,7 +307,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public static MyPetPlayer createMyPetPlayer(TagCompound playerTag) {
         MyPetPlayer petPlayer = null;
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             UUID mojangUUID = null;
             UUID internalUUID = null;
             if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
@@ -370,7 +370,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public static boolean isMyPetPlayer(String name) {
         UUID playerUUID;
-        if (Bukkit.getOnlineMode()) {
+        if (BukkitUtil.isInOnlineMode()) {
             Player p = Bukkit.getPlayer(name);
             if (p != null) {
                 playerUUID = p.getUniqueId();
@@ -399,7 +399,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public static boolean checkRemovePlayer(MyPetPlayer myPetPlayer) {
         if (!myPetPlayer.isOnline() && !myPetPlayer.hasCustomData() && myPetPlayer.getMyPet() == null && myPetPlayer.getInactiveMyPets().size() == 0) {
-            if (Bukkit.getOnlineMode()) {
+            if (BukkitUtil.isInOnlineMode()) {
                 uuidToInternalUUID.remove(myPetPlayer.getMojangUUID());
             } else {
                 uuidToInternalUUID.remove(myPetPlayer.getOfflineUUID());
@@ -514,21 +514,21 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
             return false;
         } else if (obj instanceof Player) {
             Player player = (Player) obj;
-            if (Bukkit.getOnlineMode()) {
+            if (BukkitUtil.isInOnlineMode()) {
                 return getPlayerUUID().equals(player.getUniqueId());
             } else {
                 return getName().equals(player.getName());
             }
         } else if (obj instanceof OfflinePlayer) {
             OfflinePlayer offlinePlayer = (OfflinePlayer) obj;
-            if (Bukkit.getOnlineMode()) {
+            if (BukkitUtil.isInOnlineMode()) {
                 return getPlayerUUID().equals(offlinePlayer.getUniqueId());
             } else {
                 return offlinePlayer.getName().equals(getName());
             }
         } else if (obj instanceof EntityHuman) {
             EntityHuman entityHuman = (EntityHuman) obj;
-            if (Bukkit.getOnlineMode()) {
+            if (BukkitUtil.isInOnlineMode()) {
                 return getPlayerUUID().equals(entityHuman.getUniqueID());
             } else {
                 return entityHuman.getName().equals(getName());
