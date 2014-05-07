@@ -206,6 +206,9 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     }
 
     public UUID getOfflineUUID() {
+        if (offlineUUID == null && lastKnownPlayerName != null) {
+            return Util.getOfflinePlayerUUID(lastKnownPlayerName);
+        }
         return offlineUUID;
     }
 

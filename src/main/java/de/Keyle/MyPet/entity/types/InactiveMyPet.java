@@ -46,7 +46,10 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
     private TagCompound NBTSkills;
     private TagCompound NBTextendetInfo;
 
-    public InactiveMyPet(MyPetPlayer petOwner) {
+    public InactiveMyPet(MyPetPlayer petOwner) throws IllegalArgumentException {
+        if (petOwner == null) {
+            throw new IllegalArgumentException("Owner must not be null.");
+        }
         this.petOwner = petOwner;
     }
 

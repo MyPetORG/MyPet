@@ -23,13 +23,12 @@ package de.Keyle.MyPet.util.player;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -38,49 +37,29 @@ import java.util.*;
  * Original Author: evilmidget38
  */
 public class UUIDFetcher {
-    private static final int MAX_SEARCH = 100;
-    private static final String PROFILE_URL = "https://api.mojang.com/profiles/page/";
-    private static final String AGENT = "minecraft";
+    private static final double PROFILES_PER_REQUEST = 100;
+    private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
     private static final JSONParser jsonParser = new JSONParser();
+    private static boolean rateLimiting = true;
 
     private static final HashMap<String, UUID> fetchedUUIDs = new HashMap<String, UUID>();
     private static final Map<String, UUID> readonlyFetchedUUIDs = Collections.unmodifiableMap(fetchedUUIDs);
 
-    public static Map<String, UUID> call(String playerName) {
-        if (fetchedUUIDs.containsKey(playerName)) {
-            return readonlyFetchedUUIDs;
-        }
-        MyPetLogger.write("get UUID for " + playerName);
-        String body = buildBody(playerName);
-        try {
-            for (int i = 1; i < MAX_SEARCH; i++) {
-                HttpURLConnection connection = createConnection(i);
-                writeBody(connection, body);
-                JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-                JSONArray array = (JSONArray) jsonObject.get("profiles");
-                Number count = (Number) jsonObject.get("size");
-                if (count.intValue() == 0) {
-                    break;
-                }
-                for (Object profile : array) {
-                    JSONObject jsonProfile = (JSONObject) profile;
-                    String id = (String) jsonProfile.get("id");
-                    String name = (String) jsonProfile.get("name");
-                    UUID uuid = UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
-                    fetchedUUIDs.put(name, uuid);
-                }
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return readonlyFetchedUUIDs;
+    private UUIDFetcher() {
+    }
+
+    public static void limitRate(boolean flag) {
+        rateLimiting = flag;
+    }
+
+    public static Map<String, UUID> call(String name) {
+        ArrayList<String> single = new ArrayList<String>();
+        single.add(name);
+        return call(single);
     }
 
     public static Map<String, UUID> call(List<String> names) {
+        names = new ArrayList<String>(names);
         Iterator<String> iterator = names.iterator();
         while (iterator.hasNext()) {
             String playerName = iterator.next();
@@ -91,26 +70,27 @@ public class UUIDFetcher {
         if (names.size() == 0) {
             return readonlyFetchedUUIDs;
         }
-        MyPetLogger.write("get UUIDs for " + names);
-        String body = buildBody(names);
+        int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
         try {
-            for (int i = 1; i < MAX_SEARCH; i++) {
-                HttpURLConnection connection = createConnection(i);
+            for (int i = 0; i < requests; i++) {
+                HttpURLConnection connection = createConnection();
+                String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
                 writeBody(connection, body);
-                JSONObject jsonObject = (JSONObject) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-                JSONArray array = (JSONArray) jsonObject.get("profiles");
-                Number count = (Number) jsonObject.get("size");
-                if (count.intValue() == 0) {
-                    break;
-                }
+                JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
                 for (Object profile : array) {
                     JSONObject jsonProfile = (JSONObject) profile;
                     String id = (String) jsonProfile.get("id");
                     String name = (String) jsonProfile.get("name");
-                    UUID uuid = UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
+                    UUID uuid = UUIDFetcher.getUUID(id);
                     fetchedUUIDs.put(name, uuid);
+                    MyPetLogger.write(name + ": " + uuid);
+                }
+                if (rateLimiting && i != requests - 1) {
+                    Thread.sleep(100L);
                 }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -118,18 +98,19 @@ public class UUIDFetcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        MyPetLogger.write("length: " + readonlyFetchedUUIDs.size());
         return readonlyFetchedUUIDs;
     }
 
     private static void writeBody(HttpURLConnection connection, String body) throws Exception {
-        DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-        writer.write(body.getBytes());
-        writer.flush();
-        writer.close();
+        OutputStream stream = connection.getOutputStream();
+        stream.write(body.getBytes());
+        stream.flush();
+        stream.close();
     }
 
-    private static HttpURLConnection createConnection(int page) throws Exception {
-        URL url = new URL(PROFILE_URL + page);
+    private static HttpURLConnection createConnection() throws Exception {
+        URL url = new URL(PROFILE_URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -139,25 +120,10 @@ public class UUIDFetcher {
         return connection;
     }
 
-    @SuppressWarnings("unchecked")
-    private static String buildBody(String name) {
-        List<JSONObject> lookups = new ArrayList<JSONObject>();
-        JSONObject obj = new JSONObject();
-        obj.put("name", name);
-        obj.put("agent", AGENT);
-        lookups.add(obj);
-        return JSONValue.toJSONString(lookups);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static String buildBody(List<String> names) {
-        List<JSONObject> lookups = new ArrayList<JSONObject>();
-        for (String name : names) {
-            JSONObject obj = new JSONObject();
-            obj.put("name", name);
-            obj.put("agent", AGENT);
-            lookups.add(obj);
+    private static UUID getUUID(String id) {
+        if (id.contains("-")) {
+            return UUID.fromString(id);
         }
-        return JSONValue.toJSONString(lookups);
+        return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
     }
 }

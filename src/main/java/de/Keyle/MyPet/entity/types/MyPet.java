@@ -97,12 +97,15 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         Dead, Despawned, Here
     }
 
-    protected MyPet(MyPetPlayer Owner) {
-        this.petOwner = Owner;
+    protected MyPet(MyPetPlayer petOwner) {
+        if (petOwner == null) {
+            throw new IllegalArgumentException("Owner must not be null.");
+        }
+        this.petOwner = petOwner;
         skills = new Skills(this);
         experience = new Experience(this);
         hungerTime = Configuration.HUNGER_SYSTEM_TIME;
-        petName = Locales.getString("Name." + getPetType().getTypeName(), petOwner);
+        petName = Locales.getString("Name." + getPetType().getTypeName(), this.petOwner);
     }
 
     public CraftMyPet getCraftPet() {
