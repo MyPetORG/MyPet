@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.util.player;
 
-import de.Keyle.MyPet.util.logger.MyPetLogger;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -70,6 +70,8 @@ public class UUIDFetcher {
         if (names.size() == 0) {
             return readonlyFetchedUUIDs;
         }
+
+        DebugLogger.info("get UUIDs for " + names.size() + " player(s)");
         int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
         try {
             for (int i = 0; i < requests; i++) {
@@ -83,7 +85,6 @@ public class UUIDFetcher {
                     String name = (String) jsonProfile.get("name");
                     UUID uuid = UUIDFetcher.getUUID(id);
                     fetchedUUIDs.put(name, uuid);
-                    MyPetLogger.write(name + ": " + uuid);
                 }
                 if (rateLimiting && i != requests - 1) {
                     Thread.sleep(100L);
@@ -98,7 +99,6 @@ public class UUIDFetcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        MyPetLogger.write("length: " + readonlyFetchedUUIDs.size());
         return readonlyFetchedUUIDs;
     }
 
