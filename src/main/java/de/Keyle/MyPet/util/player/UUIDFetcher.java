@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util.player;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -71,6 +72,8 @@ public class UUIDFetcher {
             return readonlyFetchedUUIDs;
         }
 
+        int count = names.size();
+
         DebugLogger.info("get UUIDs for " + names.size() + " player(s)");
         int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
         try {
@@ -79,6 +82,7 @@ public class UUIDFetcher {
                 String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
                 writeBody(connection, body);
                 JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+                count -= array.size();
                 for (Object profile : array) {
                     JSONObject jsonProfile = (JSONObject) profile;
                     String id = (String) jsonProfile.get("id");
@@ -98,6 +102,9 @@ public class UUIDFetcher {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (count > 0) {
+            MyPetLogger.write("Can not get UUIDs for " + count + " players. Pets of these player may be lost.");
         }
         return readonlyFetchedUUIDs;
     }

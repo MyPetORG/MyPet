@@ -503,6 +503,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                     petPlayer = MyPetPlayer.getMyPetPlayer(myPetNBT.getAs("Owner", TagString.class).getStringData());
                 }
             }
+            if (petPlayer == null) {
+                MyPetLogger.write("Owner for a pet (" + myPetNBT.getAs("Name", TagString.class) + " not found, pet loading skipped.");
+                continue;
+            }
             InactiveMyPet inactiveMyPet = new InactiveMyPet(petPlayer);
             inactiveMyPet.load(myPetNBT);
 
