@@ -76,7 +76,6 @@ import de.Keyle.MyPet.util.support.Economy;
 import de.Keyle.MyPet.util.support.PluginSupportManager;
 import de.Keyle.MyPet.util.support.PvPChecker;
 import de.Keyle.MyPet.util.support.arenas.*;
-import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -143,6 +142,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("Bukkit " + getServer().getVersion());
         DebugLogger.info("OnlineMode: " + getServer().getOnlineMode());
         DebugLogger.info("Java: " + System.getProperty("java.version") + " (VM: " + System.getProperty("java.vm.version") + ") by " + System.getProperty("java.vendor"));
+        DebugLogger.info("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
         DebugLogger.info("Plugins: " + Arrays.toString(getServer().getPluginManager().getPlugins()));
 
         PlayerListener playerListener = new PlayerListener();
