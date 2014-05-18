@@ -105,6 +105,7 @@ public class IconMenu implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
         if (inventoryList.contains(event.getInventory())) {
+            event.setCursor(null);
             event.setCancelled(true);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && inventory.getMinecraftInventory().items[slot] != null) {
