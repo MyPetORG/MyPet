@@ -37,6 +37,7 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R3.EntityHuman;
 import net.minecraft.server.v1_7_R3.MobEffect;
+import net.minecraft.server.v1_7_R3.MobEffectList;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +54,7 @@ import static org.bukkit.Material.*;
 public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 100;
     private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
+    private static Map<Integer, MobEffectList> buffEffectLists = new HashMap<Integer, MobEffectList>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
     private static BiMap<Integer, Integer> buffPositionItems = buffItemPositions.inverse();
 
@@ -82,6 +84,19 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffItemPositions.put(16, 8);
         buffItemPositions.put(21, 17);
         buffItemPositions.put(22, 26);
+
+        buffEffectLists.put(1, MobEffectList.FASTER_MOVEMENT);
+        buffEffectLists.put(3, MobEffectList.FASTER_DIG);
+        buffEffectLists.put(5, MobEffectList.INCREASE_DAMAGE);
+        buffEffectLists.put(8, MobEffectList.JUMP);
+        buffEffectLists.put(10, MobEffectList.REGENERATION);
+        buffEffectLists.put(11, MobEffectList.RESISTANCE);
+        buffEffectLists.put(12, MobEffectList.FIRE_RESISTANCE);
+        buffEffectLists.put(13, MobEffectList.WATER_BREATHING);
+        buffEffectLists.put(14, MobEffectList.INVISIBILITY);
+        buffEffectLists.put(16, MobEffectList.NIGHT_VISION);
+        buffEffectLists.put(21, MobEffectList.HEALTH_BOOST);
+        buffEffectLists.put(22, MobEffectList.ABSORPTION);
     }
 
     public enum BeaconReciever {
@@ -481,7 +496,6 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
 
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
-            List<Integer> effectList = new ArrayList<Integer>();
 
             targetLoop:
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range))) {
@@ -490,38 +504,36 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName()))) {
                     continue;
                 }
-                effectList.clear();
-                effectList.addAll(selectedBuffs);
-                for (int buff : selectedBuffs) {
-                    if (entityHuman.hasEffect(buff)) {
-                        MobEffect effect = (MobEffect) entityHuman.effects.get(buff);
-                        int amplification = buffLevel.get(buff) - 1;
-                        if (amplification == -1 || effect.getAmplifier() > amplification || effect.getDuration() > duration * 20) {
-                            effectList.remove(effectList.indexOf(buff));
-                        }
-                    }
-                    if (effectList.size() == 0) {
-                        continue targetLoop;
-                    }
-                }
                 switch (reciever) {
                     case Owner:
                         if (!myPet.getOwner().equals(entityHuman)) {
                             continue targetLoop;
                         } else {
                             int amplification;
-                            for (int buff : effectList) {
+                            for (int buff : selectedBuffs) {
                                 amplification = buffLevel.get(buff) - 1;
-                                entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                if (entityHuman.hasEffect(buff)) {
+                                    MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
+                                    effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                    entityHuman.updateEffects = true;
+                                } else {
+                                    entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                }
                             }
                             BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
                         int amplification;
-                        for (int buff : effectList) {
+                        for (int buff : selectedBuffs) {
                             amplification = buffLevel.get(buff) - 1;
-                            entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                            if (entityHuman.hasEffect(buff)) {
+                                MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
+                                effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                entityHuman.updateEffects = true;
+                            } else {
+                                entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                            }
                         }
                         BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
