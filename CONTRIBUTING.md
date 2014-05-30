@@ -10,7 +10,7 @@ Guidelines for bug reports:
 
 2. **Check if the issue has been fixed**
 
-3. **Include everything that helps to determine the problem** &mdash; ideally ZIP the complete MyPet folder + serverlog and provide a link to these files.
+3. **Include everything that helps to determine the problem** &mdash; See example below.
 
 
 A good bug report shouldn't leave others needing to chase you up for more
@@ -21,17 +21,18 @@ would you expect to be the outcome? All these details will help people to fix
 any potential bugs.
 
 Example:
-
 > Short and descriptive example bug report title
 >
-> A summary of the issue and the server version/OS in which it occurs. If
-> suitable, include the steps required to reproduce the bug.
+> Bukkit/Spigot Build: #  
+> MyPet Build: #  
 >
 > 1. This is the first step
 > 2. This is the second step
 > 3. Further steps, etc.
 >
-> `<url>` - a link to the reduced test case
+> `<pastebin URL>` &mdash; to MyPet.log file uploaded on http://pastebin.com/ etc.  
+> `<pastebin URL>` &mdash; to other important log files uploaded on http://pastebin.com/ etc.  
+> `<URL>` &mdash; to important (ideally ZIPed) uploaded files
 >
 > Any other information you want to share that is relevant to the issue being
 > reported. This might include the lines of code that you have identified as
