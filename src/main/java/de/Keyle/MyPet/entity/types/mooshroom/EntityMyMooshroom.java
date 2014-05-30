@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.util.logger.MyPetLogger;
 import net.minecraft.server.v1_7_R3.EntityHuman;
 import net.minecraft.server.v1_7_R3.ItemStack;
 import net.minecraft.server.v1_7_R3.Items;
@@ -68,7 +67,6 @@ public class EntityMyMooshroom extends EntityMyPet {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable() {
                         @Override
                         public void run() {
-                            MyPetLogger.write("I: " + entityhuman.inventory.getItem(itemInHandIndex).getItem().getName());
                             entityhuman.inventory.setItem(itemInHandIndex, oldIs);
                         }
                     }, 2L);

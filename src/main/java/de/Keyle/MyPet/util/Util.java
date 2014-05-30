@@ -244,7 +244,6 @@ public class Util {
             DebugLogger.info("=====================================================================================================================================");
         }
         for (int i = from; i <= to; i++) {
-            DebugLogger.info("  " + i + ": " + stackTrace[i].getClassName());
             if (stackTrace[i].getClassName().equals(className)) {
                 if (debug) {
                     DebugLogger.info("=====================================================================================================================================");
