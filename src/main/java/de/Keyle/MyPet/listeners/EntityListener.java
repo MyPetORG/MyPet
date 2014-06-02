@@ -404,7 +404,7 @@ public class EntityListener implements Listener {
                         if (leashTarget instanceof Ageable) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(!((Ageable) leashTarget).isAdult()));
                         }
-                        if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
+                        if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && Configuration.RETAIN_EQUIPMENT_ON_TAME && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
                             Random random = ((CraftLivingEntity) leashTarget).getHandle().aH();
                             List<TagCompound> equipmentList = new ArrayList<TagCompound>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
