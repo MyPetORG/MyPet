@@ -33,29 +33,29 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <minecraft.version>1.7.9</minecraft.version>
-        <bukkit.version>R0.1</bukkit.version>
+        <bukkit.version>R0.2</bukkit.version>
         <bukkit.packet>v1_7_R3</bukkit.packet>
 
-        <citizensapi.version>2.0.9-SNAPSHOT</citizensapi.version>
-        <mcmmo.version>1.4.07</mcmmo.version>
-        <vault.version>1.2.30</vault.version>
-        <minigames.version>1.6.0</minigames.version>
-        <worldguard.version>5.8</worldguard.version>
-        <worldedit.version>5.5.8</worldedit.version>
+        <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
+        <mcmmo.version>1.5.00</mcmmo.version>
+        <vaultapi.version>1.4</vaultapi.version>
+        <minigames.version>1.6.3</minigames.version>
+        <worldguard.version>5.9</worldguard.version>
+        <worldedit.version>5.6.2</worldedit.version>
         <ancientrpg.version>1.0</ancientrpg.version>
         <factions.version>1.8.2</factions.version>
-        <factions2.version>2.3.0</factions2.version>
-        <mobarena.version>0.96.2</mobarena.version>
-        <battlearena.version>3.9.5.7</battlearena.version>
-        <pvparena.version>1.1.0.317</pvparena.version>
+        <factions2.version>2.4.0</factions2.version>
+        <mobarena.version>0.96.6</mobarena.version>
+        <battlearena.version>3.9.7.8</battlearena.version>
+        <pvparena.version>1.2.2.425</pvparena.version>
         <survivalgames.version>0.5.8.54</survivalgames.version>
         <myhungergames.version>1.1</myhungergames.version>
         <regiosapi.version>5.9.9</regiosapi.version>
         <residence.version>2.6.6.6</residence.version>
-        <towny.version>0.84.0.8</towny.version>
+        <towny.version>0.87.0.0</towny.version>
         <griefprevention.version>7.8</griefprevention.version>
         <pvpmanager.version>1.7.4</pvpmanager.version>
-        <heroes.version>1.5.5.1</heroes.version>
+        <heroes.version>1.5.5.3</heroes.version>
         <spigot.version>1.7.9-R0.1-SNAPSHOT</spigot.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
 
@@ -179,8 +179,8 @@
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
-            <version>${vault.version}</version>
+            <artifactId>VaultAPI</artifactId>
+            <version>${vaultapi.version}</version>
             <type>jar</type>
             <scope>provided</scope>
             <optional>true</optional>
