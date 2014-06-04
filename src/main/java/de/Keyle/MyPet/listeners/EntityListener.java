@@ -449,9 +449,6 @@ public class EntityListener implements Listener {
 
                         event.getEntity().remove();
 
-                        MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
-                        myPet.createPet();
-
                         if (Configuration.CONSUME_LEASH_ITEM && damager.getGameMode() != GameMode.CREATIVE && damager.getItemInHand() != null) {
                             if (damager.getItemInHand().getAmount() > 1) {
                                 damager.getItemInHand().setAmount(damager.getItemInHand().getAmount() - 1);
@@ -460,17 +457,22 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                        DebugLogger.info("New Pet leashed:");
-                        DebugLogger.info("   " + myPet.toString());
-                        if (Configuration.STORE_PETS_ON_PET_LEASH) {
-                            DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
-                        }
-                        damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
+                        MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                        if (myPet != null) {
+                            myPet.createPet();
 
-                        if (myPet.getOwner().isCaptureHelperActive()) {
-                            myPet.getOwner().setCaptureHelperActive(false);
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
+                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                            DebugLogger.info("New Pet leashed:");
+                            DebugLogger.info("   " + myPet.toString());
+                            if (Configuration.STORE_PETS_ON_PET_LEASH) {
+                                DebugLogger.info(MyPetPlugin.getPlugin().savePets(false) + " pet(s) saved.");
+                            }
+                            damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
+
+                            if (myPet.getOwner().isCaptureHelperActive()) {
+                                myPet.getOwner().setCaptureHelperActive(false);
+                                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
+                            }
                         }
                     }
                 }
