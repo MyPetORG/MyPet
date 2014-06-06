@@ -107,11 +107,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
     public void onDisable() {
         if (isReady) {
-            int petCount = savePets(true);
-            MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) saved");
             for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                 myPet.removePet(myPet.wantToRespawn());
             }
+            saveData(true);
             MyPetList.clearList();
         }
         Timer.reset();
@@ -284,7 +283,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             backupManager = new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
         loadGroups(groupsFile);
-        loadPets(NBTPetFile);
+        loadData(NBTPetFile);
 
         Timer.startTimer();
 
@@ -371,7 +370,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             }
         }
         this.isReady = true;
-        savePets(false);
+        saveData(false);
         Timer.addTask(this);
         DebugLogger.info("----------- MyPet ready -----------");
     }
@@ -420,16 +419,10 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillsInfo.registerSkill(StompInfo.class);
     }
 
-    int loadPets(File f) {
-        if (!f.exists()) {
-            MyPetLogger.write(ChatColor.YELLOW + "0" + ChatColor.RESET + " pet(s) loaded");
-            return 0;
-        }
-        int petCount = 0;
-
+    private void loadData(File f) {
         ConfigurationNBT nbtConfiguration = new ConfigurationNBT(f);
         if (!nbtConfiguration.load()) {
-            return 0;
+            return;
         }
 
         if (nbtConfiguration.getNBTCompound().containsKeyAs("CleanShutdown", TagByte.class)) {
@@ -455,8 +448,28 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
         DebugLogger.info("-----------------------------------------");
 
-        DebugLogger.info("loading Pets: -----------------------------");
-        TagList petList = nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class);
+        DebugLogger.info("Loading Pets: -----------------------------");
+        int petCount = loadPets(nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class));
+        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
+        DebugLogger.info("-----------------------------------------");
+    }
+
+    public void saveData(boolean shutdown) {
+        autoSaveTimer = Configuration.AUTOSAVE_TIME;
+        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
+
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", savePets());
+        nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
+        nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", pluginStorage.save());
+        nbtConfiguration.save();
+    }
+
+    private int loadPets(TagList petList) {
+        int petCount = 0;
         for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
             TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
             MyPetPlayer petPlayer;
@@ -495,21 +508,16 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
             petCount++;
         }
-        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
         return petCount;
     }
 
-    public int savePets(boolean shutdown) {
-        autoSaveTimer = Configuration.AUTOSAVE_TIME;
-        int petCount = 0;
-        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
+    private TagList savePets() {
         List<TagCompound> petList = new ArrayList<TagCompound>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
             try {
                 TagCompound petNBT = myPet.save();
                 petList.add(petNBT);
-                petCount++;
             } catch (Exception e) {
                 DebugLogger.printThrowable(e);
             }
@@ -518,21 +526,11 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             try {
                 TagCompound petNBT = inactiveMyPet.save();
                 petList.add(petNBT);
-                petCount++;
             } catch (Exception e) {
                 DebugLogger.printThrowable(e);
             }
         }
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
-        nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", pluginStorage.save());
-        nbtConfiguration.save();
-
-        return petCount;
+        return new TagList(petList);
     }
 
     private TagList savePlayers() {
@@ -652,7 +650,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
     @Override
     public void schedule() {
         if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
-            MyPetPlugin.getPlugin().savePets(false);
+            MyPetPlugin.getPlugin().saveData(false);
             autoSaveTimer = Configuration.AUTOSAVE_TIME;
         }
     }
