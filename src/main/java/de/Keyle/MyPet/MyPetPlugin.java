@@ -98,6 +98,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
     private boolean isReady = false;
     private int autoSaveTimer = 0;
     private Backup backupManager;
+    private PluginStorage pluginStorage;
 
     public static MyPetPlugin getPlugin() {
         return plugin;
@@ -467,18 +468,32 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         if (!nbtConfiguration.load()) {
             return 0;
         }
-        TagList petList = nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class);
-        if (nbtConfiguration.getNBTCompound().getCompoundData().containsKey("CleanShutdown")) {
+
+        if (nbtConfiguration.getNBTCompound().containsKeyAs("CleanShutdown", TagByte.class)) {
             DebugLogger.info("Clean shutdown: " + nbtConfiguration.getNBTCompound().getAs("CleanShutdown", TagByte.class).getBooleanData());
         }
 
+        DebugLogger.info("Loading plugin storage ------------------" + nbtConfiguration.getNBTCompound().containsKeyAs("PluginStorage", TagCompound.class));
+        if (nbtConfiguration.getNBTCompound().containsKeyAs("PluginStorage", TagCompound.class)) {
+            TagCompound storageTag = nbtConfiguration.getNBTCompound().getAs("PluginStorage", TagCompound.class);
+            for (String plugin : storageTag.getCompoundData().keySet()) {
+                DebugLogger.info("  " + plugin);
+            }
+            DebugLogger.info(" Storage for " + storageTag.getCompoundData().keySet().size() + " MyPet-plugin(s) loaded");
+            pluginStorage = new PluginStorage(storageTag);
+        } else {
+            pluginStorage = new PluginStorage(new TagCompound());
+        }
+        DebugLogger.info("-----------------------------------------");
+
         DebugLogger.info("Loading players -------------------------");
-        if (nbtConfiguration.getNBTCompound().getCompoundData().containsKey("Players")) {
-            DebugLogger.info(loadPlayers(nbtConfiguration) + " PetPlayer(s) loaded");
+        if (nbtConfiguration.getNBTCompound().containsKeyAs("Players", TagList.class)) {
+            DebugLogger.info(loadPlayers(nbtConfiguration.getNBTCompound().getAs("Players", TagList.class)) + " PetPlayer(s) loaded");
         }
         DebugLogger.info("-----------------------------------------");
 
         DebugLogger.info("loading Pets: -----------------------------");
+        TagList petList = nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class);
         for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
             TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
             MyPetPlayer petPlayer;
@@ -551,6 +566,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", new TagList(petList));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
+        nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", pluginStorage.save());
         nbtConfiguration.save();
 
         return petCount;
@@ -570,10 +586,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         return new TagList(playerList);
     }
 
-    private int loadPlayers(ConfigurationNBT nbtConfiguration) {
+    private int loadPlayers(TagList playerList) {
         int playerCount = 0;
-        TagList playerList = nbtConfiguration.getNBTCompound().getAs("Players", TagList.class);
-
         if (BukkitUtil.isInOnlineMode()) {
             List<String> unknownPlayers = new ArrayList<String>();
             for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
@@ -686,5 +700,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
     public File getFile() {
         return super.getFile();
+    }
+
+    public PluginStorage getPluginStorage() {
+        return pluginStorage;
     }
 }
