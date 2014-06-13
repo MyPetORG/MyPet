@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Ride")
+@SkillName(value = "Ride", translationNode = "Name.Skill.Ride")
 @SkillProperties(
         parameterNames = {"speed_percent", "addset_speed", "jump_height", "addset_jump_height"},
         parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String},

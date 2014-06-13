@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Pickup")
+@SkillName(value = "Pickup", translationNode = "Name.Skill.Pickup")
 @SkillProperties(
         parameterNames = {"range", "addset_range", "exp_pickup"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.Boolean},

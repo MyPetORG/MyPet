@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Poison")
+@SkillName(value = "Poison", translationNode = "Name.Skill.Poison")
 @SkillProperties(
         parameterNames = {"chance", "duration", "addset_chance", "addset_duration"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.String},

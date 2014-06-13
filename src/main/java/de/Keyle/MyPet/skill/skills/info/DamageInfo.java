@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Damage")
+@SkillName(value = "Damage", translationNode = "Name.Skill.Damage")
 @SkillProperties(
         parameterNames = {"damage_double", "addset_damage"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},

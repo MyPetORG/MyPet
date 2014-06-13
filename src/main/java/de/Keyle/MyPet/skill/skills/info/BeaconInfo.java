@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Beacon")
+@SkillName(value = "Beacon", translationNode = "Name.Skill.Beacon")
 @SkillProperties(
         parameterNames = {"selection_count", "addset_selection_count"},
         parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String},

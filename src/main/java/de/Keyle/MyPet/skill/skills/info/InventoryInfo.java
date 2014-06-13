@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Inventory")
+@SkillName(value = "Inventory", translationNode = "Name.Skill.Inventory")
 @SkillProperties(parameterNames = {"add", "drop"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.Boolean},
         parameterDefaultValues = {"1", "false"})

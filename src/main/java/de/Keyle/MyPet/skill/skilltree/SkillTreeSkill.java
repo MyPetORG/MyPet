@@ -23,6 +23,7 @@ package de.Keyle.MyPet.skill.skilltree;
 import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
+import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.*;
 
 public abstract class SkillTreeSkill {
@@ -37,6 +38,23 @@ public abstract class SkillTreeSkill {
         SkillName sn = this.getClass().getAnnotation(SkillName.class);
         if (sn != null) {
             return sn.value();
+        }
+        return null;
+    }
+
+    public String getName(String locale) {
+        SkillName sn = this.getClass().getAnnotation(SkillName.class);
+        if (sn != null) {
+            if (sn.translationNode().equalsIgnoreCase("")) {
+                return sn.value();
+            } else {
+                String translatedName = Locales.getString(sn.translationNode(), locale);
+                if (translatedName.equals(sn.translationNode())) {
+                    return sn.value();
+                } else {
+                    return translatedName;
+                }
+            }
         }
         return null;
     }

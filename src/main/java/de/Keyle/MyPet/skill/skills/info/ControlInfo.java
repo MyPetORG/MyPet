@@ -24,7 +24,7 @@ import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Control")
+@SkillName(value = "Control", translationNode = "Name.Skill.Control")
 public class ControlInfo extends SkillTreeSkill implements ISkillInfo {
     public ControlInfo(boolean addedByInheritance) {
         super(addedByInheritance);

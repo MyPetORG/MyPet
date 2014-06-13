@@ -101,7 +101,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", myPet.getOwner()), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));
                 for (ISkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
-                        myPet.sendMessageToOwner("  " + ChatColor.GREEN + skill.getName() + ChatColor.RESET + " " + skill.getFormattedValue());
+                        myPet.sendMessageToOwner("  " + ChatColor.GREEN + skill.getName(myPet.getOwner().getLanguage()) + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
             }

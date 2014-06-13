@@ -30,7 +30,7 @@ import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 import java.util.HashMap;
 import java.util.Map;
 
-@SkillName("Behavior")
+@SkillName(value = "Behavior", translationNode = "Name.Skill.Behavior")
 @SkillProperties(
         parameterNames = {"friend", "aggro", "farm", "raid", "duel"},
         parameterTypes = {NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean, NBTdatatypes.Boolean},

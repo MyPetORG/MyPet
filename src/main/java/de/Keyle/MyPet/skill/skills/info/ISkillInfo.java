@@ -39,4 +39,6 @@ public interface ISkillInfo {
     public ISkillInfo cloneSkill();
 
     public String getName();
+
+    public String getName(String locale);
 }

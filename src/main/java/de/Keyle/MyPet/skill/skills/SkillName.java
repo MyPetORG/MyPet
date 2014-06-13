@@ -27,4 +27,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface SkillName {
     String value();
+
+    String translationNode() default "";
 }

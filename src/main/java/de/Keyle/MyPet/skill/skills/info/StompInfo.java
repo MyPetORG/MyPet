@@ -26,7 +26,7 @@ import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Stomp")
+@SkillName(value = "Stomp", translationNode = "Name.Skill.Stomp")
 @SkillProperties(
         parameterNames = {"chance", "addset_chance", "damage", "addset_damage"},
         parameterTypes = {SkillProperties.NBTdatatypes.Int, SkillProperties.NBTdatatypes.String, SkillProperties.NBTdatatypes.Double, SkillProperties.NBTdatatypes.String},

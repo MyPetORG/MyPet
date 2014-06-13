@@ -38,5 +38,7 @@ public interface ISkillInstance extends ISkillInfo {
 
     public String getName();
 
+    public String getName(String locale);
+
     public ISkillInstance cloneSkill();
 }

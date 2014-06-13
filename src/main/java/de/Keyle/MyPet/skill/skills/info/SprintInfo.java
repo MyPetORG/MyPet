@@ -24,7 +24,7 @@ import de.Keyle.MyPet.gui.skilltreecreator.skills.SkillPropertiesPanel;
 import de.Keyle.MyPet.skill.skills.SkillName;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Sprint")
+@SkillName(value = "Sprint", translationNode = "Name.Skill.Sprint")
 public class SprintInfo extends SkillTreeSkill implements ISkillInfo {
     public SprintInfo(boolean addedByInheritance) {
         super(addedByInheritance);

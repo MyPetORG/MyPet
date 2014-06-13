@@ -23,6 +23,7 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.Permissions;
@@ -62,7 +63,7 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
 
                 for (ISkillInstance skill : myPet.getSkills().getSkills()) {
                     if (skill.isActive()) {
-                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName() + ChatColor.RESET + " " + skill.getFormattedValue());
+                        sender.sendMessage("  " + ChatColor.GREEN + skill.getName(BukkitUtil.getPlayerLanguage(petOwner)) + ChatColor.RESET + " " + skill.getFormattedValue());
                     }
                 }
                 return true;

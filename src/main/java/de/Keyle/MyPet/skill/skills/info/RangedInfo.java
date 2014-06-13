@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Ranged")
+@SkillName(value = "Ranged", translationNode = "Name.Skill.Ranged")
 @SkillProperties(
         parameterNames = {"damage_double", "addset_damage", "projectile", "rateoffire", "addset_rateoffire"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},

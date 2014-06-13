@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("HP")
+@SkillName(value = "HP", translationNode = "Name.Skill.Hitpoints")
 @SkillProperties(
         parameterNames = {"hp_double", "addset_hp"},
         parameterTypes = {NBTdatatypes.Double, NBTdatatypes.String},

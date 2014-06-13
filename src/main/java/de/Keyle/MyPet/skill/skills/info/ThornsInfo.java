@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Thorns")
+@SkillName(value = "Thorns", translationNode = "Name.Skill.Thorns")
 @SkillProperties(
         parameterNames = {"chance", "addset_chance", "reflection", "addset_reflection"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String, NBTdatatypes.Int, NBTdatatypes.String},

@@ -27,7 +27,7 @@ import de.Keyle.MyPet.skill.skills.SkillProperties;
 import de.Keyle.MyPet.skill.skills.SkillProperties.NBTdatatypes;
 import de.Keyle.MyPet.skill.skilltree.SkillTreeSkill;
 
-@SkillName("Knockback")
+@SkillName(value = "Knockback", translationNode = "Name.Skill.Knockback")
 @SkillProperties(
         parameterNames = {"chance", "addset_chance"},
         parameterTypes = {NBTdatatypes.Int, NBTdatatypes.String},
