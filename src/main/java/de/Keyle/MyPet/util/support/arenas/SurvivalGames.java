@@ -38,7 +38,7 @@ public class SurvivalGames implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("SurvivalGames")) {
+        if (PluginSupportManager.isPluginUsable("SurvivalGames", "org.mcsg.survivalgames.SurvivalGames")) {
             Bukkit.getPluginManager().registerEvents(new SurvivalGames(), MyPetPlugin.getPlugin());
             active = true;
         }

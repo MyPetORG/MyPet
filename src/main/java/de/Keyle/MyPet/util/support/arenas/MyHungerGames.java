@@ -40,7 +40,7 @@ public class MyHungerGames implements Listener {
     private static GameManager gameManager;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("MyHungerGames")) {
+        if (PluginSupportManager.isPluginUsable("MyHungerGames", "me.kitskub.hungergames.HungerGames")) {
             Bukkit.getPluginManager().registerEvents(new MyHungerGames(), MyPetPlugin.getPlugin());
             gameManager = HungerGames.getInstance().getGameManager();
             active = true;

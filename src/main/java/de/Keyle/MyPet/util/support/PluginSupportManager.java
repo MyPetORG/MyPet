@@ -92,6 +92,26 @@ public class PluginSupportManager implements Listener {
         }
     }
 
+    public static boolean isPluginUsable(String pluginName, String className) {
+        if (pluginManager == null) {
+            pluginManager = Bukkit.getServer().getPluginManager();
+        }
+        if (pluginFound.containsKey(pluginName)) {
+            return pluginFound.get(pluginName);
+        }
+        if (!pluginNames.containsKey(pluginName)) {
+            JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
+            if (plugin != null && plugin.getClass().getName().equals(className)) {
+                return getPluginInstance(plugin.getClass()) != null;
+            } else {
+                pluginFound.put(pluginName, false);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public static void reset() {
         pluginFound.clear();
         pluginInstances.clear();

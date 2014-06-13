@@ -44,7 +44,7 @@ public class MobArena implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("MobArena")) {
+        if (PluginSupportManager.isPluginUsable("MobArena", "com.garbagemule.MobArena.MobArena")) {
             Bukkit.getPluginManager().registerEvents(new MobArena(), MyPetPlugin.getPlugin());
             arenaHandler = new MobArenaHandler();
             active = true;

@@ -40,7 +40,7 @@ public class Minigames implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("Minigames")) {
+        if (PluginSupportManager.isPluginUsable("Minigames", "com.pauldavdesign.mineauz.minigames.Minigames")) {
             plugin = PluginSupportManager.getPluginInstance(com.pauldavdesign.mineauz.minigames.Minigames.class);
             Bukkit.getPluginManager().registerEvents(new Minigames(), MyPetPlugin.getPlugin());
             active = true;
