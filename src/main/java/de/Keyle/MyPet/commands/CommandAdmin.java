@@ -87,7 +87,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!Permissions.has((Player) commandSender, "MyPet.admin", false)) {
+        if (commandSender instanceof Player && !Permissions.has((Player) commandSender, "MyPet.admin", false)) {
             return emptyList;
         }
         if (strings.length == 1) {
