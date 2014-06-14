@@ -62,6 +62,7 @@
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.1</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
+        <fanciful-chat.version>0.0.2</fanciful-chat.version>
 
         <junit.version>4.8.2</junit.version>
 
@@ -350,7 +351,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.mcstats.bukkit</groupId>
+            <groupId>de.keyle</groupId>
+            <artifactId>fanciful-chat</artifactId>
+            <version>${fanciful-chat.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+        <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
             <version>${metrics.version}</version>
             <scope>compile</scope>
@@ -505,6 +512,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>de.keyle:knbt:jar:*</include>
+                                    <include>de.keyle:fanciful-chat:*</include>
                                     <include>org.mcstats.bukkit:metrics:*</include>
                                     <include>com.intellij:forms_rt:*</include>
                                 </includes>
@@ -521,6 +529,10 @@
                                 <relocation>
                                     <pattern>com.intellij.uiDesigner.core</pattern>
                                     <shadedPattern>de.Keyle.MyPet.gui.uiDesigner</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.keyle.fanciful</pattern>
+                                    <shadedPattern>de.Keyle.MyPet.util.chat.fanciful</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>

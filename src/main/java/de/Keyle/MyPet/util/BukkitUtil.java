@@ -221,4 +221,10 @@ public class BukkitUtil {
             return false;
         }
     }
+
+    public static void sendMessageRaw(Player player, String message) {
+        if (player instanceof CraftPlayer) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
+        }
+    }
 }
