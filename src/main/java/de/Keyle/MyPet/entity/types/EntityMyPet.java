@@ -234,21 +234,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         return myPet.getOwner();
     }
 
-    public boolean damageEntity(DamageSource damagesource, int i) {
-        boolean damageEntity = false;
-        try {
-            Entity entity = damagesource.getEntity();
-
-            if (entity != null && !(entity instanceof EntityHuman) && !(entity instanceof EntityArrow)) {
-                i = (i + 1) / 2;
-            }
-            damageEntity = super.damageEntity(damagesource, i);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return damageEntity;
-    }
-
     /**
      * Is called when a MyPet attemps to do damge to another entity
      */
