@@ -398,8 +398,9 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             health = craftMyPet.getHealth();
             status = PetState.Despawned;
             this.wantToRespawn = wantToRespawn;
-            craftMyPet.remove();
+            craftMyPet.getHandle().dead = true;
             craftMyPet = null;
+            sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getOwner().getLanguage()), petName));
         }
     }
 
