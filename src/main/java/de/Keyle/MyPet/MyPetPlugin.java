@@ -284,6 +284,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
         loadGroups(groupsFile);
         loadData(NBTPetFile);
+        if (pluginStorage == null) {
+            pluginStorage = new PluginStorage(new TagCompound());
+        }
 
         Timer.startTimer();
 
