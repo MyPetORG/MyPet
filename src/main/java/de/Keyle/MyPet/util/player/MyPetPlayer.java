@@ -31,7 +31,6 @@ import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
-import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.support.Permissions;
@@ -505,7 +504,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
             if (myPet.getStatus() == PetState.Here) {
                 if (myPet.getLocation().getWorld() != this.getPlayer().getLocation().getWorld() || myPet.getLocation().distance(this.getPlayer().getLocation()) > 40) {
                     myPet.removePet(true);
-                    myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Despawn", getLanguage()), myPet.getPetName()));
                 }
             }
         }
