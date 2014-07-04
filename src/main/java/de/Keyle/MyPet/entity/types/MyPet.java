@@ -70,7 +70,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     protected UUID uuid = null;
     protected String worldGroup = "";
     protected PetState status = PetState.Despawned;
-    protected boolean wantToRespawn = false;
+    protected boolean wantsToRespawn = false;
     protected SkillTree skillTree = null;
     protected Skills skills;
     protected Experience experience;
@@ -378,6 +378,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 }
 
                 autoAssignSkilltree();
+                wantsToRespawn = true;
 
                 return SpawnFlags.Success;
             }
@@ -397,7 +398,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         if (status == PetState.Here) {
             health = craftMyPet.getHealth();
             status = PetState.Despawned;
-            this.wantToRespawn = wantToRespawn;
+            this.wantsToRespawn = wantToRespawn;
             craftMyPet.getHandle().dead = true;
             craftMyPet = null;
             if (wantToRespawn) {
@@ -442,7 +443,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public boolean wantToRespawn() {
-        return wantToRespawn;
+        return wantsToRespawn;
     }
 
     public void scheduleTask() {
@@ -494,6 +495,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getExtendedInfo());
         petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
+        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }

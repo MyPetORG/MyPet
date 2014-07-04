@@ -54,6 +54,7 @@ public class MyPetList {
             activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
             activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
             activeMyPet.lastUsed = inactiveMyPet.lastUsed;
+            activeMyPet.wantsToRespawn = inactiveMyPet.wantsToRespawn;
 
             if (activeMyPet.respawnTime > 0) {
                 activeMyPet.status = PetState.Dead;
@@ -150,6 +151,7 @@ public class MyPetList {
         inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());
         inactiveMyPet.setWorldGroup(activeMyPet.getWorldGroup());
         inactiveMyPet.lastUsed = activeMyPet.lastUsed;
+        inactiveMyPet.wantsToRespawn = activeMyPet.wantsToRespawn;
 
         return inactiveMyPet;
     }

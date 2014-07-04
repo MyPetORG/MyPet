@@ -45,6 +45,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
     private SkillTree skillTree = null;
     private TagCompound NBTSkills;
     private TagCompound NBTextendetInfo;
+    protected boolean wantsToRespawn = false;
 
     public InactiveMyPet(MyPetPlayer petOwner) throws IllegalArgumentException {
         if (petOwner == null) {
@@ -218,6 +219,10 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
             worldGroup = myPetNBT.getAs("WorldGroup", TagString.class).getStringData();
         }
 
+        if (myPetNBT.getCompoundData().containsKey("Wants-To-Respawn")) {
+            wantsToRespawn = myPetNBT.getAs("Wants-To-Respawn", TagByte.class).getBooleanData();
+        }
+
         setSkills(myPetNBT.getAs("Skills", TagCompound.class));
         setInfo(myPetNBT.getAs("Info", TagCompound.class));
     }
@@ -237,6 +242,7 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
         petNBT.getCompoundData().put("Info", getInfo());
         petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
+        petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
         if (this.skillTree != null) {
             petNBT.getCompoundData().put("Skilltree", new TagString(skillTree.getName()));
         }
