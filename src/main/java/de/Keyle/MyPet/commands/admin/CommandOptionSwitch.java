@@ -137,7 +137,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                             sender.sendMessage(Util.formatText(Locales.getString("Message.Call.Dead", owner), myPet.getPetName(), myPet.getRespawnTime()));
                             break;
                         case Flying:
-                            sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Flying", owner)));
+                            sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Flying", owner), myPet.getPetName()));
                             break;
                     }
                 }
