@@ -31,6 +31,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R3.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
 import org.spigotmc.SpigotConfig;
@@ -113,11 +114,10 @@ public class BukkitUtil {
 
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
-                if (world.isChunkLoaded(x, z)) {
+                if (world.isChunkLoaded(x >> 4, z >> 4)) {
                     for (int y = minY - 1; y < maxY; y++) {
-                        Block block = Block.e(world.getBlockAt(x, y, z).getTypeId());
-
-                        if (block != null) {
+                        Block block = CraftMagicNumbers.getBlock(world.getBlockAt(x, y, z));
+                        if (block != null && block.getMaterial().isSolid()) {
                             block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
                         }
                     }
