@@ -365,6 +365,10 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                     status = PetState.Despawned;
                     return SpawnFlags.NotAllowed;
                 }
+                if (SurvivalGames.DISABLE_PETS_IN_SURVIVAL_GAMES && UltimateSurvivalGames.isInSurvivalGames(getOwner())) {
+                    status = PetState.Despawned;
+                    return SpawnFlags.NotAllowed;
+                }
 
                 if (!mcWorld.addEntity(petEntity, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
                     status = PetState.Despawned;

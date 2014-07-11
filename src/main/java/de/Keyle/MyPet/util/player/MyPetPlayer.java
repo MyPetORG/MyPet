@@ -186,6 +186,7 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
                 BattleArena.isInBattleArena(this) ||
                 PvPArena.isInPvPArena(this) ||
                 MyHungerGames.isInHungerGames(this) ||
+                UltimateSurvivalGames.isInSurvivalGames(this) ||
                 SurvivalGames.isInSurvivalGames(this)) {
             return true;
         }
