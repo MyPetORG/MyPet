@@ -23,12 +23,12 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
-import net.minecraft.server.v1_7_R3.Block;
-import net.minecraft.server.v1_7_R3.Blocks;
-import net.minecraft.server.v1_7_R3.MathHelper;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_7_R4.Block;
+import net.minecraft.server.v1_7_R4.Blocks;
+import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R3.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_7_R4.event.CraftEventFactory;
 
 public class EatGrass extends AIGoal {
     private EntityMySheep entityMySheep;
@@ -87,13 +87,13 @@ public class EatGrass extends AIGoal {
 
             if (this.world.getType(blockLocX, blockLocY, blockLocZ) == Blocks.LONG_GRASS) {
                 if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY, blockLocZ), Material.AIR).isCancelled()) {
-                    this.world.triggerEffect(2001, blockLocX, blockLocY, blockLocZ, Block.b(Blocks.LONG_GRASS) + 4096);
+                    this.world.triggerEffect(2001, blockLocX, blockLocY, blockLocZ, Block.getId(Blocks.LONG_GRASS) + 4096);
                     this.world.setAir(blockLocX, blockLocY, blockLocZ);
                     this.entityMySheep.setSheared(false);
                 }
             } else if (this.world.getType(blockLocX, blockLocY - 1, blockLocZ) == Blocks.GRASS) {
                 if (!CraftEventFactory.callEntityChangeBlockEvent(this.entityMySheep.getBukkitEntity(), this.entityMySheep.world.getWorld().getBlockAt(blockLocX, blockLocY - 1, blockLocZ), Material.DIRT).isCancelled()) {
-                    this.world.triggerEffect(2001, blockLocX, blockLocY - 1, blockLocZ, Block.b(Blocks.GRASS));
+                    this.world.triggerEffect(2001, blockLocX, blockLocY - 1, blockLocZ, Block.getId(Blocks.GRASS));
                     this.world.setTypeAndData(blockLocX, blockLocY - 1, blockLocZ, Blocks.DIRT, 0, 2);
                     this.entityMySheep.setSheared(false);
                 }

@@ -22,23 +22,24 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R3.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 import org.bukkit.entity.Player;
 import org.spigotmc.SpigotConfig;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class BukkitUtil {
     /**
@@ -95,7 +96,7 @@ public class BukkitUtil {
     }
 
     public static Boolean canSpawn(Location loc, float width, float height, float length) {
-        net.minecraft.server.v1_7_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_7_R4.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 
@@ -225,17 +226,5 @@ public class BukkitUtil {
         if (player instanceof CraftPlayer) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
         }
-    }
-
-    public static List<Player> getOnlinePlayers() {
-        List<Player> onlinePlayers = new ArrayList<Player>();
-        try {
-            onlinePlayers.addAll(Bukkit.getServer().getOnlinePlayers());
-        } catch (NoSuchMethodError e) {
-            CraftServer server = (CraftServer) Bukkit.getServer();
-            Player[] onlinePlayersArray = server.getOnlinePlayers();
-            onlinePlayers.addAll(Arrays.asList(onlinePlayersArray));
-        }
-        return onlinePlayers;
     }
 }

@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -85,7 +85,6 @@ public class ItemStackComparator {
                 //MyPetLogger.write("displayname: " + m1.getDisplayName() + "<->" + m2.getDisplayName());
                 return false;
             }
-
 
             if (m1.hasLore() != m2.hasLore()) {
                 //MyPetLogger.write("has lore: " + m1.hasLore() + "<->" + m2.hasLore());

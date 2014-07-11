@@ -344,7 +344,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
 
-        for (Player player : BukkitUtil.getOnlinePlayers()) {
+        for (Player player : getServer().getOnlinePlayers()) {
             MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
             if (MyPetPlayer.isMyPetPlayer(player)) {
                 MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer(player);

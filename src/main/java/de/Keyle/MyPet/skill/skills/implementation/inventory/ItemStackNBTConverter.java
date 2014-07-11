@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.keyle.knbt.*;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ItemStackNBTConverter {
     public static TagCompound itemStackToCompund(ItemStack itemStack) {
         TagCompound compound = new TagCompound();
 
-        compound.getCompoundData().put("id", new TagShort((short) Item.b(itemStack.getItem())));
+        compound.getCompoundData().put("id", new TagShort((short) Item.getId(itemStack.getItem())));
         compound.getCompoundData().put("Count", new TagByte((byte) itemStack.count));
         compound.getCompoundData().put("Damage", new TagShort((short) itemStack.getData()));
 
@@ -46,7 +46,7 @@ public class ItemStackNBTConverter {
         int count = compound.getAs("Count", TagByte.class).getByteData();
         int damage = compound.getAs("Damage", TagShort.class).getShortData();
 
-        ItemStack itemstack = new ItemStack(Item.d(id), count, damage);
+        ItemStack itemstack = new ItemStack(Item.getById(id), count, damage);
         if (compound.containsKeyAs("tag", TagCompound.class)) {
             TagCompound compoundToConvert = compound.get("tag");
             itemstack.tag = (NBTTagCompound) compoundToVanillaCompound(compoundToConvert);

@@ -32,9 +32,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.7.9</minecraft.version>
-        <bukkit.version>R0.3-SNAPSHOT</bukkit.version>
-        <bukkit.packet>v1_7_R3</bukkit.packet>
+        <minecraft.version>1.7.10</minecraft.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
+        <bukkit.packet>v1_7_R4</bukkit.packet>
 
         <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.5.00</mcmmo.version>
@@ -57,8 +57,8 @@
         <griefprevention.version>7.8</griefprevention.version>
         <pvpmanager.version>1.7.4</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
-        <spigot.version>1.7.9-R0.1-SNAPSHOT</spigot.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
+        <spigot.version>1.7.10-R0.1-SNAPSHOT</spigot.version>
 
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.1</knbt.version>
@@ -105,7 +105,7 @@
             <url>http://repo.md-5.net/content/repositories/snapshots/</url>
         </repository>
         <repository>
-        <id>metrics-repo</id>
+            <id>metrics-repo</id>
             <url>http://repo.mcstats.org/content/repositories/releases/</url>
         </repository>
         <repository>
@@ -343,9 +343,15 @@
             <version>${spigot.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>sneaky-throw</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-        <groupId>com.intellij</groupId>
+            <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
             <version>${forms_rt.version}</version>
             <scope>compile</scope>
@@ -365,7 +371,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-        <groupId>org.mcstats.bukkit</groupId>
+            <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
             <version>${metrics.version}</version>
             <scope>compile</scope>

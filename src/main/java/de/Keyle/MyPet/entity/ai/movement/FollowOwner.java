@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.BukkitUtil;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 public class FollowOwner extends AIGoal {
     private EntityMyPet petEntity;
@@ -104,7 +104,7 @@ public class FollowOwner extends AIGoal {
             return;
         }
 
-        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bv());
+        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.x());
 
         if (this.petEntity.canMove()) {
             if (--this.setPathTimer <= 0) {
@@ -128,12 +128,12 @@ public class FollowOwner extends AIGoal {
             walkSpeed += owner.abilities.flySpeed;
         } else if (owner.isSprinting()) {
             // make the pet faster when the player is sprinting
-            if (owner.bb().a(GenericAttributes.b) != null) {
-                walkSpeed += owner.bb().a(GenericAttributes.b).getValue();
+            if (owner.getAttributeMap().a(GenericAttributes.b) != null) {
+                walkSpeed += owner.getAttributeMap().a(GenericAttributes.b).getValue();
             }
         } else if (owner.vehicle != null && owner.vehicle instanceof EntityLiving) {
             // adjust the speed to the pet can catch up with the vehicle the player is in
-            AttributeInstance vehicleSpeedAttribute = ((EntityLiving) owner.vehicle).bb().a(GenericAttributes.d);
+            AttributeInstance vehicleSpeedAttribute = ((EntityLiving) owner.vehicle).getAttributeMap().a(GenericAttributes.d);
             if (vehicleSpeedAttribute != null) {
                 walkSpeed = (float) vehicleSpeedAttribute.getValue();
             }

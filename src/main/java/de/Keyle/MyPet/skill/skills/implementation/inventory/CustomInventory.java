@@ -24,11 +24,11 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -243,6 +243,9 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
+    public void closeContainer() {
+    }
+
     public List<HumanEntity> getViewers() {
         return this.transaction;
     }
@@ -278,8 +281,5 @@ public class CustomInventory implements IInventory, Listener {
 
     public boolean k_() {
         return true;
-    }
-
-    public void l_() {
     }
 }

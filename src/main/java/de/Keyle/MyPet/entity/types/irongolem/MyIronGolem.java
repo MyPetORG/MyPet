@@ -28,7 +28,7 @@ import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static de.Keyle.MyPet.entity.types.MyPet.LeashFlag.UserCreated;
