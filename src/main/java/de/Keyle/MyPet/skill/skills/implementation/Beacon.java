@@ -34,6 +34,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.iconmenu.IconMenu;
 import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
+import de.Keyle.MyPet.util.support.PartyManager;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R3.EntityHuman;
 import net.minecraft.server.v1_7_R3.MobEffect;
@@ -53,6 +54,7 @@ import static org.bukkit.Material.*;
 
 public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 100;
+    public static boolean PARTY_SUPPORT = true;
     private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
     private static Map<Integer, MobEffectList> buffEffectLists = new HashMap<Integer, MobEffectList>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
@@ -181,7 +183,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                     case 21:
                         if (reciever != BeaconReciever.Owner) {
                             menu.getOption(21).setGlowing(true);
-                            //menu.getOption(22).setGlowing(false);
+                            if (menu.getOption(22) != null) {
+                                menu.getOption(22).setGlowing(false);
+                            }
                             menu.getOption(23).setGlowing(false);
                             reciever = BeaconReciever.Owner;
                             menu.update();
@@ -199,7 +203,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                     case 23:
                         if (reciever != BeaconReciever.Everyone) {
                             menu.getOption(21).setGlowing(false);
-                            //menu.getOption(22).setGlowing(false);
+                            if (menu.getOption(22) != null) {
+                                menu.getOption(22).setGlowing(false);
+                            }
                             menu.getOption(23).setGlowing(true);
                             reciever = BeaconReciever.Everyone;
                             menu.update();
@@ -253,8 +259,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         menu.setOption(5, new IconMenuItem().setMaterial(STAINED_GLASS_PANE).setData(14).setTitle(RED + Locales.getString("Name.Cancel", myPet.getOwner().getLanguage())));
 
         menu.setOption(21, new IconMenuItem().setMaterial(SKULL_ITEM).setData(3).setTitle(GOLD + Locales.getString("Name.Owner", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Owner));
-        // Will be implemented later
-        // menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Locales.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
+        if (PARTY_SUPPORT && PartyManager.isInParty(getMyPet().getOwner().getPlayer())) {
+            menu.setOption(22, new IconMenuItem().setMaterial(SKULL_ITEM).setData(1).setTitle(GOLD + Locales.getString("Name.Party", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Party));
+        }
         menu.setOption(23, new IconMenuItem().setMaterial(SKULL_ITEM).setData(2).setTitle(GOLD + Locales.getString("Name.Everyone", myPet.getOwner().getLanguage())).setGlowing(reciever == BeaconReciever.Everyone));
 
         if (buffLevel.get(1) > 0) {
@@ -494,8 +501,16 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 }
             }
 
+            if (selectedBuffs.size() == 0) {
+                return;
+            }
+
             BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
+            List<Player> members = null;
+            if (PARTY_SUPPORT && reciever == BeaconReciever.Party) {
+                members = PartyManager.getPartyMembers(getMyPet().getOwner().getPlayer());
+            }
 
             targetLoop:
             for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range))) {
@@ -504,12 +519,12 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName()))) {
                     continue;
                 }
+                int amplification;
                 switch (reciever) {
                     case Owner:
                         if (!myPet.getOwner().equals(entityHuman)) {
                             continue targetLoop;
                         } else {
-                            int amplification;
                             for (int buff : selectedBuffs) {
                                 amplification = buffLevel.get(buff) - 1;
                                 if (entityHuman.hasEffect(buff)) {
@@ -524,7 +539,6 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                             break targetLoop;
                         }
                     case Everyone:
-                        int amplification;
                         for (int buff : selectedBuffs) {
                             amplification = buffLevel.get(buff) - 1;
                             if (entityHuman.hasEffect(buff)) {
@@ -537,6 +551,26 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                         }
                         BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
+                    case Party:
+                        if (PARTY_SUPPORT && members != null) {
+                            if (entityHuman.getBukkitEntity() instanceof Player && members.contains(entityHuman.getBukkitEntity())) {
+                                for (int buff : selectedBuffs) {
+                                    amplification = buffLevel.get(buff) - 1;
+                                    if (entityHuman.hasEffect(buff)) {
+                                        MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
+                                        effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                        entityHuman.updateEffects = true;
+                                    } else {
+                                        entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                    }
+                                }
+                                BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            }
+                            break;
+                        } else {
+                            reciever = BeaconReciever.Owner;
+                            break targetLoop;
+                        }
                 }
             }
 
