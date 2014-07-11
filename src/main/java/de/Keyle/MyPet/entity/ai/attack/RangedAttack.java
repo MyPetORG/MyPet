@@ -27,10 +27,10 @@ import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.*;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo.Projectiles;
-import net.minecraft.server.v1_7_R3.EntityArrow;
-import net.minecraft.server.v1_7_R3.EntityLiving;
-import net.minecraft.server.v1_7_R3.MathHelper;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_7_R4.EntityArrow;
+import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.World;
 
 public class RangedAttack extends AIGoal {
     private MyPet myPet;

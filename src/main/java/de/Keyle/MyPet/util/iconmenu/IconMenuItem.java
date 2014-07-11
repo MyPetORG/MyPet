@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.util.iconmenu;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R3.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +95,7 @@ public class IconMenuItem {
 
         if (applyToItemMethhod == null) {
             try {
-                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_7_R3.inventory.CraftMetaItem");
+                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_7_R4.inventory.CraftMetaItem");
                 applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
                 applyToItemMethhod.setAccessible(true);
             } catch (ClassNotFoundException e) {
@@ -270,7 +270,7 @@ public class IconMenuItem {
     public static IconMenuItem fromNmsItemStack(ItemStack is) {
         IconMenuItem icon = new IconMenuItem();
 
-        icon.setMaterial(Material.getMaterial(Item.b(is.getItem())));
+        icon.setMaterial(Material.getMaterial(Item.getId(is.getItem())));
         icon.setData(is.getData());
         icon.setAmount(is.count);
 
@@ -291,7 +291,7 @@ public class IconMenuItem {
                     NBTTagList lore = display.getList("Lore", 0);
 
                     for (int i = 0; i < lore.size(); i++) {
-                        icon.addLoreLine(lore.f(i));
+                        icon.addLoreLine(lore.getString(i));
                     }
                 }
 

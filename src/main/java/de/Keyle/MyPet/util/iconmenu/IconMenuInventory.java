@@ -20,12 +20,12 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
-import net.minecraft.server.v1_7_R3.EntityHuman;
-import net.minecraft.server.v1_7_R3.IInventory;
-import net.minecraft.server.v1_7_R3.ItemStack;
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.IInventory;
+import net.minecraft.server.v1_7_R4.ItemStack;
 import org.apache.commons.lang.Validate;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -135,7 +135,7 @@ public class IconMenuInventory {
             return this.viewers;
         }
 
-        public void l_() {
+        public void closeContainer() {
         }
 
         public InventoryHolder getOwner() {

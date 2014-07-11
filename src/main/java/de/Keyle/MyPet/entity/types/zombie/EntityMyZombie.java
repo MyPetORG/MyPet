@@ -29,7 +29,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Util;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.6F, height = 1.9F)

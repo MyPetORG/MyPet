@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -156,7 +156,7 @@ public class EntityMyWolf extends EntityMyPet {
             this.shakeCounter = 0.0F;
         } else if ((this.isWet || this.shaking) && this.shaking) {
             if (this.shakeCounter == 0.0F) {
-                makeSound("mob.wolf.shake", be(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", bf(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.shakeCounter += 0.05F;
@@ -169,8 +169,7 @@ public class EntityMyWolf extends EntityMyPet {
             if (this.shakeCounter > 0.4F) {
                 float locY = (float) this.boundingBox.b;
                 int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
-
-                for (int j = 0; j < i; j++) {
+                for (; i >= 0; i--) {
                     float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
                     float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
 

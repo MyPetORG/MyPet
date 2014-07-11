@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R3.EntityLiving;
+import net.minecraft.server.v1_7_R4.EntityLiving;
 
 public class MeleeAttack extends AIGoal {
     MyPet myPet;
@@ -102,7 +102,7 @@ public class MeleeAttack extends AIGoal {
             this.ticksUntilNextHitLeft = ticksUntilNextHit;
             if (this.petEntity instanceof IMyPetEquipment) {
                 if (((IMyPetEquipment) this.petEntity).getEquipment(EquipmentSlot.Weapon) != null) {
-                    this.petEntity.aZ(); // -> swingItem()
+                    this.petEntity.ba(); // -> swingItem()
                 }
             }
             this.petEntity.attack(targetEntity);

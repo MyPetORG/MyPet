@@ -24,9 +24,8 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Util;
-import net.minecraft.server.v1_7_R3.*;
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
-
+import net.minecraft.server.v1_7_R4.*;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
 @EntitySize(width = 0.6F, height = 2.9F)
 public class EntityMyEnderman extends EntityMyPet {
@@ -78,7 +77,7 @@ public class EntityMyEnderman extends EntityMyPet {
                 }
 
                 return true;
-            } else if (getMyPet().getBlock() == null && Util.isBetween(0, 256, Item.b(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
+            } else if (getMyPet().getBlock() == null && Util.isBetween(0, 256, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {

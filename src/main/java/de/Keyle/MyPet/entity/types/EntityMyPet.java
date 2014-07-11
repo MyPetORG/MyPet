@@ -39,10 +39,10 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.support.Permissions;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
@@ -110,7 +110,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.myPet = myPet;
             isMyPet = true;
 
-            this.getAttributeInstance(GenericAttributes.a).setValue(myPet.getMaxHealth());
+            this.getAttributeInstance(GenericAttributes.maxHealth).setValue(myPet.getMaxHealth());
             this.setHealth((float) myPet.getHealth());
             this.setCustomName("");
 
@@ -464,7 +464,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected String aS() {
+    protected String aT() {
         try {
             return getHurtSound();
         } catch (Exception e) {
@@ -478,7 +478,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected String aT() {
+    protected String aU() {
         try {
             return getDeathSound();
         } catch (Exception e) {
@@ -491,20 +491,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     /**
      * Returns the speed of played sounds
      */
-    protected float bf() {
+    protected float bg() {
         try {
             return getSoundSpeed();
         } catch (Exception e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
-        return super.bf();
+        return super.bg();
     }
 
     /**
      * Set whether the "new" AI is used
      */
-    public boolean bj() {
+    public boolean bk() {
         return true;
     }
 
@@ -513,7 +513,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * -> updateAITasks()
      */
     @Override
-    protected void bm() {
+    protected void bn() {
         try {
             aU += 1; // entityAge
 
@@ -525,7 +525,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 petNavigation.tick(); // navigation
             }
 
-            bo(); // "mob tick"
+            bp(); // "mob tick"
 
             // controls
             getControllerMove().c(); // move
@@ -601,7 +601,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             DebugLogger.printThrowable(e);
         }
     }
-
 
     /**
      * Returns the default sound of the MyPet

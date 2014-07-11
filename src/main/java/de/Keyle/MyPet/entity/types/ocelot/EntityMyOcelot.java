@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R3.EntityHuman;
-import net.minecraft.server.v1_7_R3.Item;
-import net.minecraft.server.v1_7_R3.ItemStack;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.Item;
+import net.minecraft.server.v1_7_R4.ItemStack;
+import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.entity.Ocelot.Type;
 
 @EntitySize(width = 0.6F, height = 0.8F)
@@ -76,7 +76,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem() && getOwner().getPlayer().isSneaking()) {
-                if (Item.b(itemStack.getItem()) == 351) {
+                if (Item.getId(itemStack.getItem()) == 351) {
                     boolean colorChanged = false;
                     if (itemStack.getData() == 11 && getMyPet().getCatType() != Type.WILD_OCELOT) {
                         getMyPet().setCatType(Type.WILD_OCELOT);

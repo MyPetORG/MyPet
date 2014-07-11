@@ -22,7 +22,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R3.Entity;
+import net.minecraft.server.v1_7_R4.Entity;
 
 public class LookAtPlayer extends AIGoal {
     private EntityMyPet petEntity;
@@ -84,7 +84,7 @@ public class LookAtPlayer extends AIGoal {
 
     @Override
     public void tick() {
-        this.petEntity.getControllerLook().a(this.targetPlayer.locX, this.targetPlayer.locY + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ, 10.0F, this.petEntity.bv());
+        this.petEntity.getControllerLook().a(this.targetPlayer.locX, this.targetPlayer.locY + this.targetPlayer.getHeadHeight(), this.targetPlayer.locZ, 10.0F, this.petEntity.x());
         this.ticksUntilStopLooking -= 1;
     }
 }
