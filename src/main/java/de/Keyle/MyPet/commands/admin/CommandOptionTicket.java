@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOption;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.io.*;
@@ -32,7 +33,8 @@ public class CommandOptionTicket implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
         try {
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(new File(MyPetPlugin.getPlugin().getDataFolder(), "ticket.zip")));
+            File ticketFile = new File(MyPetPlugin.getPlugin().getDataFolder(), "ticket.zip");
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(ticketFile));
 
             addFileToZip(new File(MyPetPlugin.getPlugin().getDataFolder(), "config.yml"), out, "");
             addFileToZip(new File(MyPetPlugin.getPlugin().getDataFolder(), "My.Pets"), out, "");
@@ -42,6 +44,11 @@ public class CommandOptionTicket implements CommandOption {
             addFileToZip(new File(MyPetPlugin.getPlugin().getDataFolder().getParentFile().getParentFile(), "logs" + File.separator + "latest.log"), out, "");
 
             out.close();
+
+            sender.sendMessage(ChatColor.RED + "------------------------------------------------");
+            sender.sendMessage("Ticket file created. Please upload this file somewhere and add the link to your ticket.");
+            sender.sendMessage("  " + ticketFile.getAbsoluteFile());
+            sender.sendMessage(ChatColor.RED + "------------------------------------------------");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
