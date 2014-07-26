@@ -35,20 +35,22 @@ import java.io.File;
 public class WorldListener implements Listener {
     @EventHandler
     public void onWorldInit(final WorldInitEvent event) {
-        WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
-        if (defaultGroup == null) {
-            defaultGroup = new WorldGroup("default");
-            defaultGroup.registerGroup();
-        }
-        if (defaultGroup.addWorld(event.getWorld().getName())) {
-            File groupsFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
-            ConfigurationYAML yamlConfiguration = new ConfigurationYAML(groupsFile);
-            FileConfiguration config = yamlConfiguration.getConfig();
-            config.set("Groups.default", defaultGroup.getWorlds());
-            yamlConfiguration.saveConfig();
-            MyPetLogger.write("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
-        } else {
-            MyPetLogger.write("An error occured while adding " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group. Please restart the server.");
+        if (WorldGroup.getGroupByWorld(event.getWorld().getName()) == null) {
+            WorldGroup defaultGroup = WorldGroup.getGroupByName("default");
+            if (defaultGroup == null) {
+                defaultGroup = new WorldGroup("default");
+                defaultGroup.registerGroup();
+            }
+            if (defaultGroup.addWorld(event.getWorld().getName())) {
+                File groupsFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
+                ConfigurationYAML yamlConfiguration = new ConfigurationYAML(groupsFile);
+                FileConfiguration config = yamlConfiguration.getConfig();
+                config.set("Groups.default", defaultGroup.getWorlds());
+                yamlConfiguration.saveConfig();
+                MyPetLogger.write("added " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group.");
+            } else {
+                MyPetLogger.write("An error occured while adding " + ChatColor.YELLOW + event.getWorld().getName() + ChatColor.RESET + " to '" + ChatColor.YELLOW + "default" + ChatColor.RESET + "' group. Please restart the server.");
+            }
         }
     }
 }
