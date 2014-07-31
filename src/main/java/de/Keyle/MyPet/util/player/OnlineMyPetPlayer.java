@@ -23,7 +23,6 @@ package de.Keyle.MyPet.util.player;
 import de.Keyle.MyPet.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -40,10 +39,6 @@ public class OnlineMyPetPlayer extends MyPetPlayer {
 
     public boolean isOnline() {
         return onlinePlayerUUIDList.contains(mojangUUID);
-    }
-
-    public Player getPlayer() {
-        return Bukkit.getPlayer(mojangUUID);
     }
 
     public void setLastKnownName(String name) {

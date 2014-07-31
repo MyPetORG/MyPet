@@ -21,8 +21,6 @@
 package de.Keyle.MyPet.util.player;
 
 import de.Keyle.MyPet.util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -40,10 +38,6 @@ public class OfflineMyPetPlayer extends MyPetPlayer {
 
     public boolean isOnline() {
         return onlinePlayerUUIDList.contains(offlineUUID);
-    }
-
-    public Player getPlayer() {
-        return Bukkit.getServer().getPlayerExact(getName());
     }
 
     @Override

@@ -252,7 +252,9 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         return MyPetList.getInactiveMyPets(this);
     }
 
-    public abstract Player getPlayer();
+    public Player getPlayer() {
+        return Bukkit.getPlayer(getPlayerUUID());
+    }
 
     public EntityPlayer getEntityPlayer() {
         Player p = getPlayer();
