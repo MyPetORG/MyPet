@@ -881,7 +881,6 @@ public class EntityListener implements Listener {
     }
 
     private void sendDeathMessage(final EntityDeathEvent event) {
-
         if (event.getEntity() instanceof CraftMyPet) {
             MyPet myPet = ((CraftMyPet) event.getEntity()).getMyPet();
             String killer;
