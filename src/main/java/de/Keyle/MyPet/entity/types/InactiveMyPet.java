@@ -268,6 +268,6 @@ public class InactiveMyPet implements IMyPet, NBTStorage {
 
     @Override
     public String toString() {
-        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", worldgroup=" + worldGroup + "}";
+        return "InactiveMyPet{type=" + getPetType().getTypeName() + ", owner=" + getOwner().getName() + ", name=" + petName + ", exp=" + getExp() + ", health=" + getHealth() + ", worldgroup=" + worldGroup + (skillTree != null ? ", skilltree=" + skillTree.getName() : "") + "}";
     }
 }
