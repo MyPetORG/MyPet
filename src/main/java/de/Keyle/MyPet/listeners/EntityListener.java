@@ -298,7 +298,7 @@ public class EntityListener implements Listener {
                                 }
                                 break;
                             case LowHp:
-                                willBeLeashed = leashTarget.getHealth() - event.getDamage() <= 2;
+                                willBeLeashed = ((leashTarget.getHealth() - event.getDamage()) * 100) / leashTarget.getMaxHealth() <= 10;
                                 break;
                             case UserCreated:
                                 if (leashTarget instanceof IronGolem) {

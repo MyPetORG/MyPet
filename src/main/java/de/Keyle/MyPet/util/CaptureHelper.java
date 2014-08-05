@@ -56,10 +56,10 @@ public class CaptureHelper {
                     }
                     break;
                 case LowHp:
-                    if (newHealth > 2) {
+                    if ((newHealth * 100) / leashTarget.getMaxHealth() > 10) {
                         tameNow = false;
                     }
-                    if (newHealth <= leashTarget.getMaxHealth() && newHealth > 2) {
+                    if (newHealth <= leashTarget.getMaxHealth() && (newHealth * 100) / leashTarget.getMaxHealth() > 10) {
                         attacker.sendMessage(String.format("%1.2f", newHealth) + "/" + String.format("%1.2f", leashTarget.getMaxHealth()) + " " + Locales.getString("Name.HP", attacker));
                     }
                     break;
