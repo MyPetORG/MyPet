@@ -45,6 +45,8 @@ import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -56,6 +58,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     protected double walkSpeed = 0.3F;
     protected boolean hasRider = false;
     protected boolean isMyPet = false;
+    protected boolean isInvisible = false;
     protected MyPet myPet;
     protected int idleSoundTimer = 0;
     public AbstractNavigation petNavigation;
@@ -369,6 +372,15 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 } else {
                     this.passenger.setPassengerOf(null); // just the owner can ride a pet
                 }
+            }
+        }
+        if (Configuration.INVISIBLE_LIKE_OWNER) {
+            if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                isInvisible = true;
+                myPet.craftMyPet.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
+            } else if (isInvisible && !getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                myPet.craftMyPet.removePotionEffect(PotionEffectType.INVISIBILITY);
+                isInvisible = false;
             }
         }
     }

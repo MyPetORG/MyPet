@@ -90,6 +90,7 @@ public class Configuration {
     public static boolean RELEASE_PETS_ON_DEATH = false;
     public static boolean ADD_ZOMBIE_TARGET_GOAL = true;
     public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
+    public static boolean INVISIBLE_LIKE_OWNER = true;
 
     public static void setDefault() {
         config.addDefault("MyPet.Leash.Consume", CONSUME_LEASH_ITEM);
@@ -102,6 +103,7 @@ public class Configuration {
         config.addDefault("MyPet.ZombieVsMyPet", ADD_ZOMBIE_TARGET_GOAL);
         config.addDefault("MyPet.MaxPetNameLength", MAX_PET_NAME_LENGTH);
         config.addDefault("MyPet.RetainEquipmentOnTame", RETAIN_EQUIPMENT_ON_TAME);
+        config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", INVISIBLE_LIKE_OWNER);
 
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
@@ -280,6 +282,7 @@ public class Configuration {
         REMOVE_PETS_AFTER_RELEASE = config.getBoolean("MyPet.RemovePetsAfterRelease", false);
         ADD_ZOMBIE_TARGET_GOAL = config.getBoolean("MyPet.ZombieVsMyPet", false);
         RETAIN_EQUIPMENT_ON_TAME = config.getBoolean("MyPet.RetainEquipmentOnTame", true);
+        INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         LEVELUP_FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
 
