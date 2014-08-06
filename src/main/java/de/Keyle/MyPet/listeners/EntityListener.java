@@ -115,6 +115,15 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
+    public void onMyPetEntityInteract(EntityInteractEvent event) {
+        if (event.getEntity() instanceof CraftMyPet) {
+            if (event.getBlock().getType() == Material.SOIL) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onMyPetEntityDamageByEntity(final EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof CraftMyPet) {
             CraftMyPet craftMyPet = (CraftMyPet) event.getEntity();
