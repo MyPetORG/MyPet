@@ -24,13 +24,12 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.BukkitUtil;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
+import net.minecraft.server.v1_7_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 
 public class FollowOwner extends AIGoal {
     private EntityMyPet petEntity;
-    private float walkSpeedModifier;
     private AbstractNavigation nav;
     private int setPathTimer = 0;
     private float stopDistance;
@@ -39,9 +38,8 @@ public class FollowOwner extends AIGoal {
     private Control controlPathfinderGoal;
     private EntityPlayer owner;
 
-    public FollowOwner(EntityMyPet entityMyPet, float walkSpeedModifier, double startDistance, float stopDistance, float teleportDistance) {
+    public FollowOwner(EntityMyPet entityMyPet, double startDistance, float stopDistance, float teleportDistance) {
         this.petEntity = entityMyPet;
-        this.walkSpeedModifier = walkSpeedModifier;
         this.nav = entityMyPet.petNavigation;
         this.startDistance = startDistance * startDistance;
         this.stopDistance = stopDistance * stopDistance;
@@ -88,7 +86,7 @@ public class FollowOwner extends AIGoal {
 
     @Override
     public void start() {
-        nav.getParameters().addSpeedModifier("FollowOwner", walkSpeedModifier);
+        applyWalkSpeed();
         this.setPathTimer = 0;
     }
 
@@ -111,14 +109,41 @@ public class FollowOwner extends AIGoal {
         if (this.petEntity.canMove()) {
             if (--this.setPathTimer <= 0) {
                 this.setPathTimer = 10;
-
                 if (!this.nav.navigateTo(owner)) {
                     if (owner.onGround && this.petEntity.f(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && BukkitUtil.canSpawn(ownerLocation, this.petEntity)) {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.navigateTo(owner);
                     }
+                } else {
+                    applyWalkSpeed();
                 }
             }
         }
+    }
+
+    private void applyWalkSpeed() {
+        float walkSpeed = owner.abilities.walkSpeed;
+        if (owner.abilities.isFlying) {
+            // make the pet faster when the player is flying
+            walkSpeed += owner.abilities.flySpeed;
+        } else if (owner.isSprinting()) {
+            // make the pet faster when the player is sprinting
+            if (owner.bb().a(GenericAttributes.b) != null) {
+                walkSpeed += owner.bb().a(GenericAttributes.b).getValue();
+            }
+        } else if (owner.vehicle != null && owner.vehicle instanceof EntityLiving) {
+            // adjust the speed to the pet can catch up with the vehicle the player is in
+            AttributeInstance vehicleSpeedAttribute = ((EntityLiving) owner.vehicle).bb().a(GenericAttributes.d);
+            if (vehicleSpeedAttribute != null) {
+                walkSpeed = (float) vehicleSpeedAttribute.getValue();
+            }
+        } else if (owner.hasEffect(MobEffectList.FASTER_MOVEMENT)) {
+            // make the pet faster when the player is has the SPEED effect
+            walkSpeed += owner.getEffect(MobEffectList.FASTER_MOVEMENT).getAmplifier() * 0.2 * walkSpeed;
+        }
+        // make the pet a little bit faster than the player so it can catch up
+        walkSpeed += 0.07f;
+
+        nav.getParameters().addSpeedModifier("FollowOwner", walkSpeed);
     }
 }
