@@ -76,6 +76,7 @@ public class LevelCreator {
     JTextField requiredLevelTextField;
     JCheckBox requiredLevelCheckBox;
     JFrame levelCreatorFrame;
+    JPopupMenu levelListRightclickMenu;
 
     DefaultTreeModel skillTreeTreeModel;
     DefaultComboBoxModel inheritanceComboBoxModel;
@@ -676,8 +677,37 @@ public class LevelCreator {
         skillTreeTree = new JTree(skillTreeTreeModel);
         skillTreeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
+        createRightclickMenus();
+
         inheritanceComboBoxModel = new DefaultComboBoxModel();
         inheritanceComboBox = new JComboBox(inheritanceComboBoxModel);
+    }
+
+    public void createRightclickMenus() {
+        levelListRightclickMenu = new JPopupMenu();
+
+        JMenuItem expandMenuItem = new JMenuItem("Expand all");
+        levelListRightclickMenu.add(expandMenuItem);
+        expandMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < skillTreeTree.getRowCount(); i++) {
+                    skillTreeTree.expandRow(i);
+                }
+            }
+        });
+
+        JMenuItem collapseMenuItem = new JMenuItem("Collapse all");
+        levelListRightclickMenu.add(collapseMenuItem);
+        collapseMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 1; i < skillTreeTree.getRowCount(); i++) {
+                    skillTreeTree.collapseRow(i);
+                }
+            }
+        });
+
+        MouseListener popupListener = new SkilltreeCreator.PopupListener(levelListRightclickMenu);
+        skillTreeTree.addMouseListener(popupListener);
     }
 
     private class SkillTreeSkillNode extends DefaultMutableTreeNode {

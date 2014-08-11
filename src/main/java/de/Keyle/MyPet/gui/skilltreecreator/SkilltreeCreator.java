@@ -355,7 +355,7 @@ public class SkilltreeCreator {
         }
     }
 
-    class PopupListener extends MouseAdapter {
+    public static class PopupListener extends MouseAdapter {
         JPopupMenu popup;
 
         PopupListener(JPopupMenu popupMenu) {
