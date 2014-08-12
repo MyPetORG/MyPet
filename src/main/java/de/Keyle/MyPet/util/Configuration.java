@@ -57,7 +57,6 @@ public class Configuration {
 
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
-    public static int PASSIVE_PERCENT_PER_MONSTER = 25;
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
@@ -164,7 +163,8 @@ public class Configuration {
         config.addDefault("MyPet.Support.Vault.Economy", true);
 
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
-        config.addDefault("MyPet.Exp.Passive.PercentPerMonster", PASSIVE_PERCENT_PER_MONSTER);
+        config.addDefault("MyPet.Exp.Passive.Always-Grant-Passive-XP", Experience.ALWAYS_GRANT_PASSIVE_XP);
+        config.addDefault("MyPet.Exp.Passive.PercentPerMonster", Experience.PASSIVE_PERCENT_PER_MONSTER);
         config.addDefault("MyPet.Exp.Loss.Percent", Experience.LOSS_PERCENT);
         config.addDefault("MyPet.Exp.Loss.Fixed", Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
@@ -262,7 +262,6 @@ public class Configuration {
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
         SKILLTREE_SWITCH_PENALTY_ADMIN = config.getBoolean("MyPet.Skilltree.SwitchPenaltyAdmin", false);
         INHERIT_ALREADY_INHERITED_SKILLS = config.getBoolean("MyPet.Skilltree.InheritAlreadyInheritedSkills", false);
-        PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
         RESPAWN_TIME_FACTOR = config.getInt("MyPet.Respawn.Time.Default.Factor", 5);
         RESPAWN_TIME_PLAYER_FACTOR = config.getInt("MyPet.Respawn.Time.Player.Factor", 5);
         RESPAWN_TIME_FIXED = config.getInt("MyPet.Respawn.Time.Default.Fixed", 0);
@@ -332,6 +331,8 @@ public class Configuration {
         Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);
+        Experience.PASSIVE_PERCENT_PER_MONSTER = config.getInt("MyPet.Exp.Passive.PercentPerMonster", 25);
+        Experience.ALWAYS_GRANT_PASSIVE_XP = config.getBoolean("MyPet.Exp.Passive.Always-Grant-Passive-XP", true);
         Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS = config.getBoolean("MyPet.Exp.Gain.MonsterSpawner", true);
         Experience.CALCULATION_MODE = config.getString("MyPet.LevelSystem.CalculationMode", "Default");
         Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = config.getBoolean("MyPet.Exp.DamageWeightedExperienceDistribution", true);

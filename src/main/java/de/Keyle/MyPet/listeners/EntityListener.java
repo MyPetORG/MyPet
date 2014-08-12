@@ -805,11 +805,10 @@ public class EntityListener implements Listener {
                                 continue;
                             }
                         }
-                        if (myPet.isPassiv()) {
+                        if (myPet.isPassiv() || Experience.ALWAYS_GRANT_PASSIVE_XP) {
                             if (myPet.getStatus() == PetState.Here) {
                                 if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                    double randomExp = MonsterExperience.getMonsterExperience(deadEntity.getType()).getRandomExp();
-                                    myPet.getExperience().addExp(damagePercentMap.get(entity) * randomExp);
+                                    myPet.getExperience().addExp(deadEntity.getType(), Experience.PASSIVE_PERCENT_PER_MONSTER);
                                 }
                             }
                         }
@@ -840,10 +839,10 @@ public class EntityListener implements Listener {
                             return;
                         }
                     }
-                    if (myPet.isPassiv()) {
+                    if (myPet.isPassiv() || Experience.ALWAYS_GRANT_PASSIVE_XP) {
                         if (myPet.getStatus() == PetState.Here) {
                             if (myPet.getSkillTree() == null || myPet.getSkillTree().getMaxLevel() <= 1 || myPet.getExperience().getLevel() < myPet.getSkillTree().getMaxLevel()) {
-                                myPet.getExperience().addExp(deadEntity.getType(), Configuration.PASSIVE_PERCENT_PER_MONSTER);
+                                myPet.getExperience().addExp(deadEntity.getType(), Experience.PASSIVE_PERCENT_PER_MONSTER);
                             }
                         }
                     }

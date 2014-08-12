@@ -44,6 +44,8 @@ public class Experience {
     public static String CALCULATION_MODE = "Default";
     public static boolean DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION = false;
     public static boolean FIREWORK_ON_LEVELUP = true;
+    public static boolean ALWAYS_GRANT_PASSIVE_XP = true;
+    public static int PASSIVE_PERCENT_PER_MONSTER = 25;
 
     private final MyPet myPet;
 
