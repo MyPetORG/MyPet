@@ -29,6 +29,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R3.util.CraftMagicNumbers;
@@ -37,9 +38,7 @@ import org.bukkit.entity.Player;
 import org.spigotmc.SpigotConfig;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BukkitUtil {
     /**
@@ -226,5 +225,17 @@ public class BukkitUtil {
         if (player instanceof CraftPlayer) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
         }
+    }
+
+    public static List<Player> getOnlinePlayers() {
+        List<Player> onlinePlayers = new ArrayList<Player>();
+        try {
+            onlinePlayers.addAll(Bukkit.getServer().getOnlinePlayers());
+        } catch (NoSuchMethodError e) {
+            CraftServer server = (CraftServer) Bukkit.getServer();
+            Player[] onlinePlayersArray = server.getOnlinePlayers();
+            onlinePlayers.addAll(Arrays.asList(onlinePlayersArray));
+        }
+        return onlinePlayers;
     }
 }
