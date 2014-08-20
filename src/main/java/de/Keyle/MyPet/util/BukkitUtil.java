@@ -60,8 +60,10 @@ public class BukkitUtil {
         PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
 
         for (Player player : location.getWorld().getPlayers()) {
-            if ((int) player.getLocation().distance(location) <= radius) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            if (player.getLocation().getWorld() == location.getWorld()) {
+                if ((int) player.getLocation().distance(location) <= radius) {
+                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                }
             }
         }
     }
