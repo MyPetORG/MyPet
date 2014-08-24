@@ -364,13 +364,17 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 getOwner().getPlayer().teleport(petLoc);
             }
         } else {
-            if (this.passenger != null && this.passenger instanceof EntityPlayer) {
-                if (getOwner().equals(this.passenger)) {
-                    hasRider = true;
-                    setSize(1F);
-                    this.W = 1.0F; // climb height -> 1 block
+            if (this.passenger != null) {
+                if (this.passenger instanceof EntityPlayer) {
+                    if (getOwner().equals(this.passenger)) {
+                        hasRider = true;
+                        setSize(1F);
+                        this.W = 1.0F; // climb height -> 1 block
+                    } else {
+                        this.passenger.setPassengerOf(null); // just the owner can ride a pet
+                    }
                 } else {
-                    this.passenger.setPassengerOf(null); // just the owner can ride a pet
+                    this.passenger.setPassengerOf(null);
                 }
             }
         }
