@@ -105,10 +105,6 @@
             <url>http://repo.md-5.net/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>metrics-repo</id>
-            <url>http://repo.mcstats.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
             <id>citizens-repo</id>
             <url>http://repo.citizensnpcs.co/</url>
         </repository>
