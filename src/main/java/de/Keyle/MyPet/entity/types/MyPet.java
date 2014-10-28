@@ -472,9 +472,21 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 }
             }
             if (status == PetState.Here) {
-                if (Configuration.USE_HUNGER_SYSTEM && hunger > 1 && --hungerTime <= 0) {
-                    hunger--;
-                    hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+                if (Configuration.USE_HUNGER_SYSTEM) {
+                    if (hunger > 1 && --hungerTime <= 0) {
+                        hunger--;
+                        hungerTime = Configuration.HUNGER_SYSTEM_TIME;
+                        if (hunger == 66) {
+                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Rumbling", getOwner()), getPetName()));
+                        } else if (hunger == 33) {
+                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Hungry", getOwner()), getPetName()));
+                        } else if (hunger == 1) {
+                            sendMessageToOwner(Util.formatText(Locales.getString("Message.Hunger.Starving", getOwner()), getPetName()));
+                        }
+                    }
+                    if (hunger == 1 && getHealth() >= 2) {
+                        getCraftPet().damage(1.);
+                    }
                 }
             }
         }
