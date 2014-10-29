@@ -585,7 +585,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         if (motionForward <= 0.0F) {
             motionForward *= 0.25F;
         }
-        // sideways is slower too
+        // sideways is slower too but not as slow as backwards
         motionSideways *= 0.85F;
 
         float speed = 0.22222F;

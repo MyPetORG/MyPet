@@ -52,4 +52,15 @@ public class EntityMyWither extends EntityMyPet {
         this.datawatcher.a(19, new Integer(0));  // N/A
         this.datawatcher.a(20, new Integer(0));  // blue (1/0)
     }
+
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (!this.onGround && this.motY < 0.0D) {
+            this.motY *= 0.6D;
+        }
+    }
+
+    protected void b(float f) {
+    }
 }

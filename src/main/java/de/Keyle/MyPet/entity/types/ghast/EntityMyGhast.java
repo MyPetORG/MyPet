@@ -51,4 +51,15 @@ public class EntityMyGhast extends EntityMyPet {
         super.setPathfinder();
         petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 5.5, 20));
     }
+
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (!this.onGround && this.motY < 0.0D) {
+            this.motY *= 0.6D;
+        }
+    }
+
+    protected void b(float f) {
+    }
 }

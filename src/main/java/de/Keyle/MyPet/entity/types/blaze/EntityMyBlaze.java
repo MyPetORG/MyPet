@@ -90,6 +90,14 @@ public class EntityMyBlaze extends EntityMyPet {
         this.datawatcher.watch(16, (byte) (flag ? 1 : 0));
     }
 
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (!this.onGround && this.motY < 0.0D) {
+            this.motY *= 0.6D;
+        }
+    }
+
     public void setMyPet(MyPet myPet) {
         if (myPet != null) {
             super.setMyPet(myPet);
@@ -99,5 +107,8 @@ public class EntityMyBlaze extends EntityMyPet {
 
     public MyBlaze getMyPet() {
         return (MyBlaze) myPet;
+    }
+
+    protected void b(float f) {
     }
 }
