@@ -61,7 +61,7 @@
         <spigot.version>1.7.10-R0.1</spigot.version>
 
         <metrics.version>R7</metrics.version>
-        <knbt.version>0.0.1</knbt.version>
+        <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.2</fanciful-chat.version>
 

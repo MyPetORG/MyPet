@@ -23,11 +23,14 @@ package de.Keyle.MyPet.skill.skills.implementation.inventory;
 import de.keyle.knbt.*;
 import net.minecraft.server.v1_7_R4.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class ItemStackNBTConverter {
+    private static Field TAG_LIST_LIST = null;
+
     public static TagCompound itemStackToCompund(ItemStack itemStack) {
         TagCompound compound = new TagCompound();
 
@@ -98,8 +101,6 @@ public class ItemStackNBTConverter {
     @SuppressWarnings("unchecked")
     public static TagBase vanillaCompoundToCompound(NBTBase vanillaTag) {
         switch (vanillaTag.getTypeId()) {
-            case 0:
-                return new TagEnd();
             case 1:
                 return new TagByte(((NBTTagByte) vanillaTag).f());
             case 2:
@@ -117,11 +118,26 @@ public class ItemStackNBTConverter {
             case 8:
                 return new TagString(((NBTTagString) vanillaTag).a_());
             case 9:
+                if (TAG_LIST_LIST == null) {
+                    try {
+                        TAG_LIST_LIST = NBTTagList.class.getDeclaredField("list");
+                        TAG_LIST_LIST.setAccessible(true);
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 NBTTagList tagList = (NBTTagList) vanillaTag;
                 List compoundList = new ArrayList();
-                for (int i = 0; i < tagList.size(); i++) {
-                    compoundList.add(vanillaCompoundToCompound(tagList.get(i)));
+                try {
+                    ArrayList list = (ArrayList) TAG_LIST_LIST.get(tagList);
+                    for (Object aList : list) {
+                        compoundList.add(vanillaCompoundToCompound((NBTBase) aList));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
+
                 return new TagList(compoundList);
             case 10:
                 TagCompound compound = new TagCompound();
