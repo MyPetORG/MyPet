@@ -22,17 +22,17 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 import org.bukkit.entity.Player;
 import org.spigotmc.SpigotConfig;
 
@@ -44,7 +44,7 @@ import java.util.Map;
 public class BukkitUtil {
     /**
      * @param location   the {@link Location} around which players must be to see the effect
-     * @param effectName list of effects: https://gist.github.com/riking/5759002
+     * @param effect list of effects: https://gist.github.com/riking/5759002
      * @param offsetX    the amount to be randomly offset by in the X axis
      * @param offsetY    the amount to be randomly offset by in the Y axis
      * @param offsetZ    the amount to be randomly offset by in the Z axis
@@ -52,12 +52,12 @@ public class BukkitUtil {
      * @param count      the number of particles
      * @param radius     the radius around the location
      */
-    public static void playParticleEffect(Location location, String effectName, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
+    public static void playParticleEffect(Location location, EnumParticle effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
         Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(effectName, "Effect cannot be null");
+        Validate.notNull(effect, "Effect cannot be null");
         Validate.notNull(location.getWorld(), "World cannot be null");
 
-        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effectName, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
+        PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(effect, false, (float) location.getX(), (float) location.getY(), (float) location.getZ(), offsetX, offsetY, offsetZ, speed, count);
 
         for (Player player : location.getWorld().getPlayers()) {
             if (player.getLocation().getWorld() == location.getWorld()) {
@@ -94,11 +94,11 @@ public class BukkitUtil {
     }
 
     public static Boolean canSpawn(Location loc, Entity entity) {
-        return canSpawn(loc, entity.width, entity.height, entity.length);
+        return canSpawn(loc, entity.width, entity.getHeadHeight(), entity.length);
     }
 
     public static Boolean canSpawn(Location loc, float width, float height, float length) {
-        net.minecraft.server.v1_7_R4.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         float halfEntityWidth = width / 2;
         AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
 
@@ -120,7 +120,7 @@ public class BukkitUtil {
                     for (int y = minY - 1; y < maxY; y++) {
                         Block block = CraftMagicNumbers.getBlock(world.getBlockAt(x, y, z));
                         if (block != null && block.getMaterial().isSolid()) {
-                            block.a(((CraftWorld) world).getHandle(), x, y, z, axisalignedbb, unsafeList, null);
+                            block.a(((CraftWorld) world).getHandle(), new BlockPosition(x, y, z), block.getBlockData(), axisalignedbb, unsafeList, null);
                         }
                     }
                 }
@@ -153,7 +153,7 @@ public class BukkitUtil {
     }
 
     public static boolean isEquipment(ItemStack itemstack) {
-        int slot = EntityInsentient.b(itemstack);
+        int slot = EntityInsentient.c(itemstack);
         if (slot == 0) {
             if (itemstack.getItem() instanceof ItemSword) {
                 return true;

@@ -26,7 +26,7 @@
     <artifactId>mypet</artifactId>
     <version>1.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>MyPet</name>
+    <name>MyPet-1.8</name>
     <url>http://dev.bukkit.org/bukkit-plugins/mypet/</url>
 
     <properties>
@@ -34,7 +34,7 @@
 
         <minecraft.version>1.7.10</minecraft.version>
         <bukkit.version>R0.1</bukkit.version>
-        <bukkit.packet>v1_7_R4</bukkit.packet>
+        <bukkit.packet>v1_8_R1</bukkit.packet>
 
         <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.5.00</mcmmo.version>
@@ -64,8 +64,6 @@
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
         <forms_rt.version>7.0.3</forms_rt.version>
         <fanciful-chat.version>0.0.2</fanciful-chat.version>
-
-        <junit.version>4.8.2</junit.version>
 
         <download.translations>prepare-package</download.translations>
     </properties>
@@ -157,7 +155,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>${minecraft.version}-${bukkit.version}</version>
+            <version>1.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -371,13 +369,6 @@
             <artifactId>metrics</artifactId>
             <version>${metrics.version}</version>
             <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>

@@ -22,12 +22,12 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackComparator;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_7_R4.Item;
-import net.minecraft.server.v1_7_R4.MojangsonParser;
-import net.minecraft.server.v1_7_R4.NBTBase;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.Item;
+import net.minecraft.server.v1_8_R1.MojangsonParser;
+import net.minecraft.server.v1_8_R1.NBTBase;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ConfigItem {
@@ -82,7 +82,7 @@ public class ConfigItem {
         return true;
     }
 
-    public boolean compare(net.minecraft.server.v1_7_R4.ItemStack compareItem) {
+    public boolean compare(net.minecraft.server.v1_8_R1.ItemStack compareItem) {
         if (item == null || item.getTypeId() == 0) {
             if (compareItem == null || Item.getId(compareItem.getItem()) == 0) {
                 return true;
@@ -114,7 +114,7 @@ public class ConfigItem {
                 break;
         }
         if (item.hasItemMeta()) {
-            return CraftItemStack.asNMSCopy(item).tag.equals(compareItem.tag);
+            return CraftItemStack.asNMSCopy(item).getTag().equals(compareItem.getTag());
         }
         return true;
     }
@@ -174,7 +174,7 @@ public class ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_7_R4.ItemStack is = new net.minecraft.server.v1_7_R4.ItemStack(Item.getById(itemId), 1, itemDamage);
+            net.minecraft.server.v1_8_R1.ItemStack is = new net.minecraft.server.v1_8_R1.ItemStack(Item.getById(itemId), 1, itemDamage);
             if (nbtBase != null && nbtBase instanceof NBTTagCompound) {
                 is.setTag((NBTTagCompound) nbtBase);
             }

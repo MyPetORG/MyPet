@@ -29,10 +29,10 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.Util;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Bukkit;
 
-@EntitySize(width = 0.6F, height = 1.9F)
+@EntitySize(width = 0.6F, length = 1.9F, height = 1.9F)
 public class EntityMySkeleton extends EntityMyPet {
     public EntityMySkeleton(World world, MyPet myPet) {
         super(world, myPet);
@@ -78,7 +78,7 @@ public class EntityMySkeleton extends EntityMyPet {
                 }
                 return true;
             } else if (BukkitUtil.isEquipment(itemStack) && getOwner().getPlayer().isSneaking() && canEquip()) {
-                EquipmentSlot slot = EquipmentSlot.getSlotById(b(itemStack));
+                EquipmentSlot slot = EquipmentSlot.getSlotById(c(itemStack));
                 ItemStack itemInSlot = getMyPet().getEquipment(slot);
                 if (itemInSlot != null && !entityhuman.abilities.canInstantlyBuild) {
                     EntityItem entityitem = this.a(itemInSlot.cloneItemStack(), 1.0F);
@@ -150,5 +150,9 @@ public class EntityMySkeleton extends EntityMyPet {
             }
         }
         return super.getEquipment(i);
+    }
+
+    public float getHeadHeight() {
+        return this.datawatcher.getByte(13) == 1 ? super.getHeadHeight() : 1.74F;
     }
 }

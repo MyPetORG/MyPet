@@ -31,7 +31,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_7_R4.ItemStack;
+import net.minecraft.server.v1_8_R1.ItemStack;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;

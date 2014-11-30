@@ -1,4 +1,4 @@
-name: ${project.name}
+name: MyPet
 main: de.Keyle.MyPet.MyPetPlugin
 version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
 author: Keyle

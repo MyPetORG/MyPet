@@ -24,9 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.BukkitUtil;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EnumParticle;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.95F, height = 0.95F)
+@EntitySize(width = 0.95F, length = 0.95F, height = 0.475f)
 public class EntityMySquid extends EntityMyPet {
     public EntityMySquid(World world, MyPet myPet) {
         super(world, myPet);
@@ -50,7 +51,7 @@ public class EntityMySquid extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.random.nextBoolean()) {
-            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 0.7, 0), "splash", 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
+            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 0.7, 0), EnumParticle.WATER_SPLASH, 0.2F, 0.2F, 0.2F, 0.5F, 10, 20);
         }
     }
 }

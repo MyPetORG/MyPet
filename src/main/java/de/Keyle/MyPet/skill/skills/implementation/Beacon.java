@@ -36,9 +36,10 @@ import de.Keyle.MyPet.util.iconmenu.IconMenuItem;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.support.PartyManager;
 import de.keyle.knbt.*;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.MobEffect;
-import net.minecraft.server.v1_7_R4.MobEffectList;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EnumParticle;
+import net.minecraft.server.v1_8_R1.MobEffect;
+import net.minecraft.server.v1_8_R1.MobEffectList;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -98,7 +99,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         buffEffectLists.put(14, MobEffectList.INVISIBILITY);
         buffEffectLists.put(16, MobEffectList.NIGHT_VISION);
         buffEffectLists.put(21, MobEffectList.HEALTH_BOOST);
-        buffEffectLists.put(22, MobEffectList.ABSORPTION);
+        buffEffectLists.put(22, MobEffectList.ABSORBTION);
     }
 
     public enum BeaconReciever {
@@ -505,7 +506,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                 return;
             }
 
-            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "witchMagic", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), EnumParticle.SPELL_WITCH, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
 
             List<Player> members = null;
             if (PARTY_SUPPORT && reciever == BeaconReciever.Party) {
@@ -513,7 +514,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
             }
 
             targetLoop:
-            for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().boundingBox.grow(range, range, range))) {
+            for (Object entityObj : this.myPet.getCraftPet().getHandle().world.a(EntityHuman.class, myPet.getCraftPet().getHandle().getBoundingBox().grow(range, range, range))) {
                 EntityHuman entityHuman = (EntityHuman) entityObj;
 
                 if (!entityHuman.getBukkitEntity().equals(Bukkit.getPlayer(entityHuman.getName()))) {
@@ -529,13 +530,13 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                                 amplification = buffLevel.get(buff) - 1;
                                 if (entityHuman.hasEffect(buff)) {
                                     MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
-                                    effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                    effect.a(new MobEffect(buff, duration * 20, amplification, true, false));
                                     entityHuman.updateEffects = true;
                                 } else {
-                                    entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                    entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true, false));
                                 }
                             }
-                            BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                            BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.SPELL_INSTANT, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             break targetLoop;
                         }
                     case Everyone:
@@ -543,13 +544,13 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                             amplification = buffLevel.get(buff) - 1;
                             if (entityHuman.hasEffect(buff)) {
                                 MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
-                                effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                effect.a(new MobEffect(buff, duration * 20, amplification, true, false));
                                 entityHuman.updateEffects = true;
                             } else {
-                                entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true, false));
                             }
                         }
-                        BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                        BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.SPELL_INSTANT, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                         break;
                     case Party:
                         if (PARTY_SUPPORT && members != null) {
@@ -558,13 +559,13 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
                                     amplification = buffLevel.get(buff) - 1;
                                     if (entityHuman.hasEffect(buff)) {
                                         MobEffect effect = entityHuman.getEffect(buffEffectLists.get(buff));
-                                        effect.a(new MobEffect(buff, duration * 20, amplification, true));
+                                        effect.a(new MobEffect(buff, duration * 20, amplification, true, false));
                                         entityHuman.updateEffects = true;
                                     } else {
-                                        entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true));
+                                        entityHuman.addEffect(new MobEffect(buff, duration * 20, amplification, true, false));
                                     }
                                 }
-                                BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), "instantSpell", 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
+                                BukkitUtil.playParticleEffect(entityHuman.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.SPELL_INSTANT, 0.2F, 0.2F, 0.2F, 0.1F, 5, 20);
                             }
                             break;
                         } else {

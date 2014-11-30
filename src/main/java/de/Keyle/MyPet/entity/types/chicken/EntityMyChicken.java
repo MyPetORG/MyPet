@@ -23,12 +23,12 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.3F, height = 0.7F)
+@EntitySize(width = 0.4F, length = 0.7F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
     private int nextEggTimer;
 

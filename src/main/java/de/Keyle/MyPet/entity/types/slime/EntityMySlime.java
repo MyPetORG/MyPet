@@ -24,13 +24,11 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.PathEntity;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.6F, height = 0.6F)
+@EntitySize(width = 0.5100001F, length = 0.5100001F, height = 0.5100001F)
 public class EntityMySlime extends EntityMyPet {
     int jumpDelay;
-    PathEntity lastPathEntity = null;
 
     public EntityMySlime(World world, MyPet myPet) {
         super(world, myPet);
@@ -57,11 +55,15 @@ public class EntityMySlime extends EntityMyPet {
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
         if (es != null) {
-            this.a(es.height() * value, es.width() * value);
+            this.a(es.width() * value, es.length() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.6), 20));
         }
+    }
+
+    public float getHeadHeight() {
+        return length;
     }
 
     protected void initDatawatcher() {
@@ -72,10 +74,12 @@ public class EntityMySlime extends EntityMyPet {
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (this.onGround && jumpDelay-- <= 0 && lastPathEntity != getNavigation().e()) {
+        if (this.onGround && jumpDelay-- <= 0) {
             getControllerJump().a();
             jumpDelay = (this.random.nextInt(20) + 10);
-            lastPathEntity = getNavigation().e();
+            if (getGoalTarget() != null) {
+                jumpDelay /= 3;
+            }
             makeSound(getDeathSound(), bf(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }

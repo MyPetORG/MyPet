@@ -30,7 +30,7 @@ import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagShort;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.Material.SOUL_SAND;

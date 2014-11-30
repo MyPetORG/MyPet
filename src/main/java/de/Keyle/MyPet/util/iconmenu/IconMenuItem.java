@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.util.iconmenu;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R1.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +95,7 @@ public class IconMenuItem {
 
         if (applyToItemMethhod == null) {
             try {
-                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_7_R4.inventory.CraftMetaItem");
+                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_8_R1.inventory.CraftMetaItem");
                 applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
                 applyToItemMethhod.setAccessible(true);
             } catch (ClassNotFoundException e) {
@@ -220,27 +220,27 @@ public class IconMenuItem {
         }
 
         NBTTagList emptyList = new NBTTagList();
-        if (is.tag == null) {
-            is.tag = new NBTTagCompound();
+        if (is.getTag() == null) {
+            is.setTag(new NBTTagCompound());
         }
 
         // remove item attributes like attack damage
-        is.tag.set("AttributeModifiers", emptyList);
+        is.getTag().set("AttributeModifiers", emptyList);
 
         //add enchantment glowing
         if (glowing) {
-            is.tag.set("ench", emptyList);
+            is.getTag().set("ench", emptyList);
         } else {
-            is.tag.remove("ench");
+            is.getTag().remove("ench");
         }
 
         // Prepare display tag
         NBTTagCompound display;
-        if (is.tag.hasKey("display")) {
-            display = is.tag.getCompound("display");
+        if (is.getTag().hasKey("display")) {
+            display = is.getTag().getCompound("display");
         } else {
             display = new NBTTagCompound();
-            is.tag.set("display", display);
+            is.getTag().set("display", display);
         }
 
         // set Title
@@ -274,14 +274,14 @@ public class IconMenuItem {
         icon.setData(is.getData());
         icon.setAmount(is.count);
 
-        if (is.tag != null) {
+        if (is.getTag() != null) {
 
-            if (is.tag.hasKey("ench")) {
+            if (is.getTag().hasKey("ench")) {
                 icon.setGlowing(true);
             }
 
-            if (is.tag.hasKey("display")) {
-                NBTTagCompound display = is.tag.getCompound("display");
+            if (is.getTag().hasKey("display")) {
+                NBTTagCompound display = is.getTag().getCompound("display");
 
                 if (display.hasKey("Name")) {
                     icon.setTitle(display.getString("Name"));

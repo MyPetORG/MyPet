@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.entity.ai.navigation;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.GenericAttributes;
-import net.minecraft.server.v1_7_R4.Navigation;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.Navigation;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class VanillaNavigation extends AbstractNavigation {
@@ -32,17 +32,17 @@ public class VanillaNavigation extends AbstractNavigation {
 
     public VanillaNavigation(EntityMyPet entityMyPet) {
         super(entityMyPet);
-        nav = entityMyPet.getNavigation();
+        nav = (Navigation) entityMyPet.getNavigation();
     }
 
     public VanillaNavigation(EntityMyPet entityMyPet, NavigationParameters parameters) {
         super(entityMyPet, parameters);
-        nav = entityMyPet.getNavigation();
+        nav = (Navigation) entityMyPet.getNavigation();
     }
 
     @Override
     public void stop() {
-        nav.h();
+        nav.n();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class VanillaNavigation extends AbstractNavigation {
 
     @Override
     public void tick() {
-        nav.f();
+        nav.k();
     }
 
     public void applyNavigationParameters() {

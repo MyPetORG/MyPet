@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.Util;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 0.6F, height = 2.9F)
+@EntitySize(width = 0.6F, length = 0.6F, height = 2.55F)
 public class EntityMyEnderman extends EntityMyPet {
     public EntityMyEnderman(World world, MyPet myPet) {
         super(world, myPet);

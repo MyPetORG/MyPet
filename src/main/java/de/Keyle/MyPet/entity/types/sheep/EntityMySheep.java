@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.EatGrass;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.DyeColor;
 
-@EntitySize(width = 0.9F, height = 1.3F)
+@EntitySize(width = 0.9F, length = 1.3F, height = 1.2349999f)
 public class EntityMySheep extends EntityMyPet {
     public EntityMySheep(World world, MyPet myPet) {
         super(world, myPet);
@@ -59,7 +59,7 @@ public class EntityMySheep extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() <= 15 && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
+            if (itemStack.getItem() == Items.DYE && itemStack.getData() <= 15 && itemStack.getData() != getMyPet().getColor().getDyeData() && !getMyPet().isSheared()) {
                 getMyPet().setColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {

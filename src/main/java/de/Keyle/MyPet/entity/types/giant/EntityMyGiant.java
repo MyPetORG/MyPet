@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 5.5f, height = 5.5F)
+@EntitySize(width = 6.0f, length = 6.0f, height = 10.440001F)
 public class EntityMyGiant extends EntityMyPet {
     public EntityMyGiant(World world, MyPet myPet) {
         super(world, myPet);
@@ -48,15 +48,6 @@ public class EntityMyGiant extends EntityMyPet {
 
     public void playStepSound() {
         makeSound("mob.zombie.step", 0.15F, 1.0F);
-    }
-
-    public void setMyPet(MyPet myPet) {
-
-        if (myPet != null) {
-            super.setMyPet(myPet);
-
-            this.height *= 6.0F;
-        }
     }
 
     public void setPathfinder() {

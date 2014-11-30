@@ -22,8 +22,8 @@ package de.Keyle.MyPet.entity.ai.movement;
 
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 
 public class Float extends AIGoal {
     private EntityMyPet entityMyPet;
@@ -34,13 +34,13 @@ public class Float extends AIGoal {
 
     public Float(EntityMyPet entityMyPet) {
         this.entityMyPet = entityMyPet;
-        entityMyPet.getNavigation().e(true);
+        //entityMyPet.getNavigation().e(true);  //ToDo
         this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
     }
 
     @Override
     public boolean shouldStart() {
-        return entityMyPet.world.containsLiquid(entityMyPet.boundingBox);
+        return entityMyPet.world.containsLiquid(entityMyPet.getBoundingBox());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Float extends AIGoal {
                 lavaCounter = 10;
             }
         }
-        if (!inLava && entityMyPet.world.e(entityMyPet.boundingBox)) // e -> is in Fire/Lava
+        if (!inLava && entityMyPet.world.e(entityMyPet.getBoundingBox())) // e -> is in Fire/Lava
         {
             inLava = true;
         }

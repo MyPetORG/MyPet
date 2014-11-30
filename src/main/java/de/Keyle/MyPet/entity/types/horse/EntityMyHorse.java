@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 1.4F, height = 1.6F)
+@EntitySize(width = 1.4F, length = 1.6F, height = 1.6F)
 public class EntityMyHorse extends EntityMyPet {
     int soundCounter = 0;
     int rearCounter = -1;
@@ -211,7 +211,7 @@ public class EntityMyHorse extends EntityMyPet {
                     itemStack.getItem() == Items.WHEAT ||
                     itemStack.getItem() == Items.GOLDEN_APPLE ||
                     itemStack.getItem() == Item.getItemOf(Blocks.HAY_BLOCK) ||
-                    itemStack.getItem() == Items.CARROT_GOLDEN ||
+                    itemStack.getItem() == Items.GOLDEN_CARROT ||
                     itemStack.getItem() == Items.APPLE ||
                     itemStack.getItem() == Items.SUGAR) {
                 ageCounter = 5;
@@ -226,7 +226,7 @@ public class EntityMyHorse extends EntityMyPet {
         }
         Item item = itemstack.getItem();
 
-        return item == Items.HORSE_ARMOR_DIAMOND ? 3 : item == Items.HORSE_ARMOR_GOLD ? 2 : item == Items.HORSE_ARMOR_IRON ? 1 : 0;
+        return item == Items.DIAMOND_HORSE_ARMOR ? 3 : item == Items.GOLDEN_HORSE_ARMOR ? 2 : item == Items.IRON_HORSE_ARMOR ? 1 : 0;
     }
 
     protected void initDatawatcher() {
@@ -261,9 +261,9 @@ public class EntityMyHorse extends EntityMyPet {
     }
 
     @Override
-    public void playStepSound(int i, int j, int k, Block block) {
+    public void playStepSound(BlockPosition pos, Block block) {
         StepSound localStepSound = block.stepSound;
-        if (this.world.getType(i, j + 1, k) == Blocks.SNOW) {
+        if (this.world.getType(pos) == Blocks.SNOW) {
             localStepSound = Blocks.SNOW.stepSound;
         }
         if (!block.getMaterial().isLiquid()) {

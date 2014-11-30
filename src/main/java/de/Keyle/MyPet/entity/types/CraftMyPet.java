@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import net.minecraft.server.v1_7_R4.EntityCreature;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import net.minecraft.server.v1_8_R1.EntityCreature;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -126,7 +126,7 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity {
     public void setTarget(LivingEntity target) {
         EntityCreature entity = getHandle();
         if (target == null) {
-            entity.target = null;
+            entity.setGoalTarget(null);
         } else if (target instanceof CraftLivingEntity) {
             if (!getHandle().isMyPet) {
                 return;

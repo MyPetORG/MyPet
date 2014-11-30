@@ -30,5 +30,7 @@ import java.lang.annotation.Target;
 public @interface EntitySize {
     public float width();
 
-    public float height();
+    public float height() default Float.NaN;
+
+    public float length();
 }

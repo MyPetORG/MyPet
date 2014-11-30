@@ -24,13 +24,13 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.Bukkit;
 
-@EntitySize(width = 0.9F, height = 1.3F)
+@EntitySize(width = 0.9F, length = 0.9F, height = 1.3F)
 public class EntityMyMooshroom extends EntityMyPet {
     public EntityMyMooshroom(World world, MyPet myPet) {
         super(world, myPet);
@@ -61,7 +61,7 @@ public class EntityMyMooshroom extends EntityMyPet {
             if (itemStack.getItem().equals(Items.BOWL)) {
                 if (!getOwner().equals(entityhuman) || !canUseItem() || !MyMooshroom.CAN_GIVE_SOUP) {
                     final int itemInHandIndex = entityhuman.inventory.itemInHandIndex;
-                    ItemStack is = new ItemStack(Items.MUSHROOM_SOUP);
+                    ItemStack is = new ItemStack(Items.MUSHROOM_STEW);
                     final ItemStack oldIs = entityhuman.inventory.getItem(itemInHandIndex);
                     entityhuman.inventory.setItem(itemInHandIndex, is);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(MyPetPlugin.getPlugin(), new Runnable() {
@@ -73,9 +73,9 @@ public class EntityMyMooshroom extends EntityMyPet {
 
                 } else {
                     if (--itemStack.count <= 0) {
-                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.MUSHROOM_SOUP));
+                        entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, new ItemStack(Items.MUSHROOM_STEW));
                     } else {
-                        if (!entityhuman.inventory.pickup(new ItemStack(Items.MUSHROOM_SOUP))) {
+                        if (!entityhuman.inventory.pickup(new ItemStack(Items.MUSHROOM_STEW))) {
                             entityhuman.drop(new ItemStack(Items.GLASS_BOTTLE), true);
                         }
                     }

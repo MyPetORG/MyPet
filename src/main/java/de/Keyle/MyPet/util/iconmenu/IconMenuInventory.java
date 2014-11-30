@@ -20,12 +20,10 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.IInventory;
-import net.minecraft.server.v1_7_R4.ItemStack;
+import net.minecraft.server.v1_8_R1.*;
 import org.apache.commons.lang.Validate;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -96,7 +94,7 @@ public class IconMenuInventory {
         public void setItem(int i, ItemStack itemstack) {
         }
 
-        public String getInventoryName() {
+        public String getName() {
             return this.title;
         }
 
@@ -135,22 +133,47 @@ public class IconMenuInventory {
             return this.viewers;
         }
 
-        public void closeContainer() {
+        public void closeContainer(EntityHuman paramEntityHuman) {
         }
 
         public InventoryHolder getOwner() {
             return null;
         }
 
-        public void startOpen() {
-        }
-
-        public boolean k_() {
-            return false;
+        public void startOpen(EntityHuman paramEntityHuman) {
         }
 
         public boolean b(int i, ItemStack itemstack) {
             return true;
+        }
+
+        @Override
+        public int getProperty(int i) {
+            return 0;
+        }
+
+        @Override
+        public void b(int i, int i1) {
+
+        }
+
+        @Override
+        public int g() {
+            return 0;
+        }
+
+        @Override
+        public void l() {
+        }
+
+        @Override
+        public boolean hasCustomName() {
+            return this.title != null;
+        }
+
+        @Override
+        public IChatBaseComponent getScoreboardDisplayName() {
+            return new ChatComponentText(this.title);
         }
     }
 }
