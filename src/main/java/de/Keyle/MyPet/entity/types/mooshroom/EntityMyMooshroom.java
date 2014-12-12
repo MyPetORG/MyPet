@@ -99,14 +99,14 @@ public class EntityMyMooshroom extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(12, new Byte((byte) 0)); // age
     }
 
     public void setBaby(boolean flag) {
         if (flag) {
             this.datawatcher.watch(12, new Integer(Integer.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

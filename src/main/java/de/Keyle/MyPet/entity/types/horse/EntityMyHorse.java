@@ -243,7 +243,7 @@ public class EntityMyHorse extends EntityMyPet {
         if (flag) {
             this.datawatcher.watch(12, Integer.valueOf(-24000));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 
