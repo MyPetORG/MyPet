@@ -31,6 +31,7 @@ import net.minecraft.server.v1_8_R1.EntityPlayer;
 import net.minecraft.server.v1_8_R1.EntityTameableAnimal;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class BehaviorAggressiveTarget extends AIGoal {
     private MyPet myPet;
@@ -127,12 +128,12 @@ public class BehaviorAggressiveTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.RANDOM_TARGET, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
         target = null;
     }
 }

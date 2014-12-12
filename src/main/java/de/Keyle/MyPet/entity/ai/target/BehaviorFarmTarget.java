@@ -30,6 +30,7 @@ import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityMonster;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class BehaviorFarmTarget extends AIGoal {
     private MyPet myPet;
@@ -104,12 +105,12 @@ public class BehaviorFarmTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.RANDOM_TARGET, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
         target = null;
     }
 }

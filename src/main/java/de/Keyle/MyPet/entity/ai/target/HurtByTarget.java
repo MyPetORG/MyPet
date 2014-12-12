@@ -28,6 +28,7 @@ import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
 import net.minecraft.server.v1_8_R1.EntityTameableAnimal;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class HurtByTarget extends AIGoal {
     EntityMyPet petEntity;
@@ -104,11 +105,11 @@ public class HurtByTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
     }
 }

@@ -168,7 +168,7 @@ public class IconMenuInventory {
 
         @Override
         public boolean hasCustomName() {
-            return this.title != null;
+            return true;
         }
 
         @Override

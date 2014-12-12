@@ -94,14 +94,11 @@ public class BukkitUtil {
     }
 
     public static Boolean canSpawn(Location loc, Entity entity) {
-        return canSpawn(loc, entity.width, entity.getHeadHeight(), entity.length);
+        return canSpawn(loc, entity.getBoundingBox());
     }
 
-    public static Boolean canSpawn(Location loc, float width, float height, float length) {
+    public static Boolean canSpawn(Location loc, AxisAlignedBB bb) {
         net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-        float halfEntityWidth = width / 2;
-        AxisAlignedBB bb = AxisAlignedBB.a(loc.getX() - halfEntityWidth, loc.getY() - height, loc.getZ() - halfEntityWidth, loc.getX() + halfEntityWidth, loc.getY() - height + length, loc.getZ() + halfEntityWidth);
-
         return getBlockBBsInBB(loc.getWorld(), bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 

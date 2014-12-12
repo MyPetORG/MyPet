@@ -88,7 +88,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
             if (jump == null) {
                 try {
-                    jump = EntityLiving.class.getDeclaredField("bc");
+                    jump = EntityLiving.class.getDeclaredField("aW");
                     jump.setAccessible(true);
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
@@ -145,10 +145,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public void setSize() {
-        setSize(0F);
-    }
-
-    public void setSize(float extra) {
         EntitySize es = this.getClass().getAnnotation(EntitySize.class);
         if (es != null) {
             this.a(es.width(), es.length());
@@ -156,15 +152,21 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public float getHeadHeight() {
+        float height;
         EntitySize es = this.getClass().getAnnotation(EntitySize.class);
         if (es != null) {
             if (es.height() != java.lang.Float.NaN) {
-                return es.height();
+                height = es.height();
             } else {
-                return es.length() * 0.85F;
+                height = es.length() * 0.85F;
             }
+        } else {
+            height = length * 0.85F;
         }
-        return length * 0.85F;
+        if (hasRider()) {
+            height += 1;
+        }
+        return height;
     }
 
     public boolean hasRider() {
@@ -211,7 +213,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
     @Override
     public void setCustomNameVisible(boolean ignored) {
-        this.datawatcher.watch(11, Byte.valueOf((byte) (Configuration.PET_INFO_OVERHEAD_NAME ? 1 : 0)));
+        super.setCustomNameVisible(Configuration.PET_INFO_OVERHEAD_NAME);
     }
 
     public boolean canMove() {
@@ -370,7 +372,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
                 hasRider = false;
                 applyLeash();
-                setSize();
                 this.S = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
@@ -383,7 +384,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 if (this.passenger instanceof EntityPlayer) {
                     if (getOwner().equals(this.passenger)) {
                         hasRider = true;
-                        setSize(1F);
                         this.S = 1.0F; // climb height -> 1 block
                     } else {
                         this.passenger.setPassengerOf(null); // just the owner can ride a pet
@@ -502,7 +502,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -516,7 +516,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -539,7 +539,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     @Override
     protected void doTick() {
         try {
-            aC += 1; // entityAge
+            ++this.aO; // entityAge
 
             if (isAlive()) {
                 getEntitySenses().a(); // sensing
@@ -575,7 +575,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
 
     public void g(float motionSideways, float motionForward) {
         if (!hasRider || this.passenger == null) {
-            super.e(motionSideways, motionForward);
+            super.g(motionSideways, motionForward);
             return;
         }
 

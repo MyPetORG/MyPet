@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class BehaviorDuelTarget extends AIGoal {
     private MyPet myPet;
@@ -112,7 +113,7 @@ public class BehaviorDuelTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.CUSTOM, false);
         setDuelOpponent(this.target);
         if (target.petTargetSelector.hasGoal("DuelTarget")) {
             BehaviorDuelTarget duelGoal = (BehaviorDuelTarget) target.petTargetSelector.getGoal("DuelTarget");
@@ -122,7 +123,7 @@ public class BehaviorDuelTarget extends AIGoal {
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
         duelOpponent = null;
         target = null;
     }
