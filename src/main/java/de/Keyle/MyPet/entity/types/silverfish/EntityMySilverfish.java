@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.types.silverfish;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.3F, height = 0.7F)
+@EntitySize(width = 0.4F, length = 0.3F, height = 0.1F)
 public class EntityMySilverfish extends EntityMyPet {
     public EntityMySilverfish(World world, MyPet myPet) {
         super(world, myPet);

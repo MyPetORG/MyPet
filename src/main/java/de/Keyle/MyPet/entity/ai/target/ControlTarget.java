@@ -27,10 +27,11 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.EntityTameableAnimal;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.EntityTameableAnimal;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class ControlTarget extends AIGoal {
     private MyPet myPet;
@@ -66,7 +67,7 @@ public class ControlTarget extends AIGoal {
                     return false;
                 }
             }
-            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.boundingBox.grow((double) this.range, 4.0D, (double) this.range))) {
+            for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
                 EntityLiving entityLiving = (EntityLiving) entityObj;
 
                 if (entityLiving != petEntity) {
@@ -128,9 +129,9 @@ public class ControlTarget extends AIGoal {
             return true;
         } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        } else if (petEntity.f(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.h(petEntity.getGoalTarget()) > 400) {
             return true;
-        } else if (petEntity.f(petEntity.getOwner().getEntityPlayer()) > 600) {
+        } else if (petEntity.h(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
@@ -138,11 +139,11 @@ public class ControlTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.CUSTOM, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
     }
 }

@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.DyeColor;
 
-@EntitySize(width = 0.6F, height = 0.8F)
+@EntitySize(width = 0.6F, length = 0.8F, height = 0.64f)
 public class EntityMyWolf extends EntityMyPet {
     protected boolean shaking;
     protected boolean isWet;
@@ -77,7 +77,7 @@ public class EntityMyWolf extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem()) {
-                if (itemStack.getItem() == Items.INK_SACK && itemStack.getData() != getMyPet().getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() == Items.DYE && itemStack.getData() != getMyPet().getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
                     if (itemStack.getData() <= 15) {
                         getMyPet().setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
                         if (!entityhuman.abilities.canInstantlyBuild) {
@@ -105,7 +105,7 @@ public class EntityMyWolf extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));         // age
+        this.datawatcher.a(12, new Byte((byte) 0));         // age
         this.datawatcher.a(16, new Byte((byte) 0));     // tamed/angry/sitting
         this.datawatcher.a(17, "");                     // wolf owner name
         this.datawatcher.a(18, new Float(getHealth())); // tail height
@@ -124,9 +124,9 @@ public class EntityMyWolf extends EntityMyPet {
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 
@@ -142,14 +142,14 @@ public class EntityMyWolf extends EntityMyPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.isWet && !this.shaking && !bS() && this.onGround) // bS() -> has pathentity
+        if (this.isWet && !this.shaking && this.onGround)
         {
             this.shaking = true;
             this.shakeCounter = 0.0F;
             this.world.broadcastEntityEffect(this, (byte) 8);
         }
 
-        if (L()) // -> is in water
+        if (U()) // -> is in water
         {
             this.isWet = true;
             this.shaking = false;
@@ -167,13 +167,13 @@ public class EntityMyWolf extends EntityMyPet {
             }
 
             if (this.shakeCounter > 0.4F) {
-                float locY = (float) this.boundingBox.b;
+                float locY = (float) this.getBoundingBox().b;
                 int i = (int) (MathHelper.sin((this.shakeCounter - 0.4F) * 3.141593F) * 7.0F);
                 for (; i >= 0; i--) {
                     float offsetX = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
                     float offsetZ = (this.random.nextFloat() * 2.0F - 1.0F) * this.width * 0.5F;
 
-                    this.world.addParticle("splash", this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
+                    this.world.addParticle(EnumParticle.WATER_SPLASH, this.locX + offsetX, locY + 0.8F, this.locZ + offsetZ, this.motX, this.motY, this.motZ);
                 }
             }
         }

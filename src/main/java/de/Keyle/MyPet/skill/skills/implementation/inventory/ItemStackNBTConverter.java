@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.keyle.knbt.*;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class ItemStackNBTConverter {
         compound.getCompoundData().put("Count", new TagByte((byte) itemStack.count));
         compound.getCompoundData().put("Damage", new TagShort((short) itemStack.getData()));
 
-        if (itemStack.tag != null) {
-            compound.getCompoundData().put("tag", vanillaCompoundToCompound(itemStack.tag));
+        if (itemStack.getTag() != null) {
+            compound.getCompoundData().put("tag", vanillaCompoundToCompound(itemStack.getTag()));
         }
         return compound;
     }
@@ -52,7 +52,7 @@ public class ItemStackNBTConverter {
         ItemStack itemstack = new ItemStack(Item.getById(id), count, damage);
         if (compound.containsKeyAs("tag", TagCompound.class)) {
             TagCompound compoundToConvert = compound.get("tag");
-            itemstack.tag = (NBTTagCompound) compoundToVanillaCompound(compoundToConvert);
+            itemstack.setTag((NBTTagCompound) compoundToVanillaCompound(compoundToConvert));
         }
         return itemstack;
     }

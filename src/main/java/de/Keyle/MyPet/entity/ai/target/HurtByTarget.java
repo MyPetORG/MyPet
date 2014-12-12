@@ -24,10 +24,11 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.EntityTameableAnimal;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.EntityTameableAnimal;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class HurtByTarget extends AIGoal {
     EntityMyPet petEntity;
@@ -94,9 +95,9 @@ public class HurtByTarget extends AIGoal {
             return true;
         } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        } else if (petEntity.f(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.h(petEntity.getGoalTarget()) > 400) {
             return true;
-        } else if (petEntity.f(petEntity.getOwner().getEntityPlayer()) > 600) {
+        } else if (petEntity.h(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
@@ -104,11 +105,11 @@ public class HurtByTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
     }
 }

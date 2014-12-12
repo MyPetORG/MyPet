@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 0.9F, height = 0.9F)
+@EntitySize(width = 0.9F, length = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {
     public EntityMyPig(World world, MyPet myPet) {
         super(world, myPet);
@@ -90,15 +90,15 @@ public class EntityMyPig extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(12, new Byte((byte) 0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // saddle
     }
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

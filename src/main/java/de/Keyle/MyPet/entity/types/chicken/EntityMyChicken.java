@@ -23,12 +23,12 @@ package de.Keyle.MyPet.entity.types.chicken;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.3F, height = 0.7F)
+@EntitySize(width = 0.4F, length = 0.7F, height = 0.7F)
 public class EntityMyChicken extends EntityMyPet {
     private int nextEggTimer;
 
@@ -74,14 +74,14 @@ public class EntityMyChicken extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(12, new Byte((byte) 0)); // age
     }
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

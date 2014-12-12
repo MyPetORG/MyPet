@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -112,7 +112,7 @@ public class ItemStackComparator {
 
     public static boolean compareTagData(ItemStack i1, ItemStack i2) {
         if (i1.hasItemMeta() == i2.hasItemMeta()) {
-            return CraftItemStack.asNMSCopy(i1).tag.equals(CraftItemStack.asNMSCopy(i2).tag);
+            return CraftItemStack.asNMSCopy(i1).getTag().equals(CraftItemStack.asNMSCopy(i2).getTag());
         }
         return false;
     }

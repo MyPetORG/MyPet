@@ -24,10 +24,10 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 
-@EntitySize(width = 1.4F, height = 2.9F)
+@EntitySize(width = 1.4F, length = 1.4F, height = 2.9F)
 public class EntityMyIronGolem extends EntityMyPet {
     int flowerCounter = 0;
     boolean flower = false;
@@ -79,7 +79,7 @@ public class EntityMyIronGolem extends EntityMyPet {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
 
         if (getOwner().equals(entityhuman) && itemStack != null && canUseItem()) {
-            if (itemStack.getItem() == Item.getItemOf(Blocks.RED_ROSE) && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
+            if (itemStack.getItem() == Item.getItemOf(Blocks.RED_FLOWER) && !getMyPet().hasFlower() && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setFlower(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {

@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftWitherSkull;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWitherSkull;
 
 public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjectile {
     protected float damage = 0;

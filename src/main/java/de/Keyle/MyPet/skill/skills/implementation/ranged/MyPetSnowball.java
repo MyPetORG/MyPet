@@ -21,9 +21,9 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R4.*;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSnowball;
+import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftSnowball;
 
 public class MyPetSnowball extends EntitySnowball implements MyPetProjectile {
     protected float damage = 0;
@@ -63,7 +63,7 @@ public class MyPetSnowball extends EntitySnowball implements MyPetProjectile {
             paramMovingObjectPosition.entity.damageEntity(DamageSource.projectile(this, getShooter()), damage);
         }
         for (int i = 0; i < 8; i++) {
-            this.world.addParticle("snowballpoof", this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(EnumParticle.SNOWBALL, this.locX, this.locY, this.locZ, 0.0D, 0.0D, 0.0D);
         }
         die();
     }

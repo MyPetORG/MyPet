@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.types.creeper;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.6F, height = 1.9F)
+@EntitySize(width = 0.6F, length = 0.6F, height = 1.9F)
 public class EntityMyCreeper extends EntityMyPet {
     public EntityMyCreeper(World world, MyPet myPet) {
         super(world, myPet);

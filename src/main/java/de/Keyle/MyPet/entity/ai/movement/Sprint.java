@@ -25,7 +25,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityLiving;
 
 public class Sprint extends AIGoal {
     private MyPet myPet;
@@ -60,7 +60,7 @@ public class Sprint extends AIGoal {
         if (lastTarget == targetEntity) {
             return false;
         }
-        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.f(targetEntity) >= 16) {
+        if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.h(targetEntity) >= 16) {
             return false;
         }
         this.lastTarget = targetEntity;
@@ -71,7 +71,7 @@ public class Sprint extends AIGoal {
     public boolean shouldFinish() {
         if (this.petEntity.getOwner() == null) {
             return true;
-        } else if (this.petEntity.f(this.lastTarget) < 16) {
+        } else if (this.petEntity.h(this.lastTarget) < 16) {
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;

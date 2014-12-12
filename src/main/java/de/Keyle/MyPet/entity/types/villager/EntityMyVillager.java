@@ -23,11 +23,11 @@ package de.Keyle.MyPet.entity.types.villager;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.6F, height = 1.9F)
+@EntitySize(width = 0.6F, length = 0.6F, height = 1.9F)
 public class EntityMyVillager extends EntityMyPet {
     public EntityMyVillager(World world, MyPet myPet) {
         super(world, myPet);
@@ -72,15 +72,15 @@ public class EntityMyVillager extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(12, new Byte((byte) 0)); // age
         this.datawatcher.a(16, new Integer(0)); // profession
     }
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

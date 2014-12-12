@@ -27,10 +27,10 @@ import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.*;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo.Projectiles;
-import net.minecraft.server.v1_7_R4.EntityArrow;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.MathHelper;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityArrow;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R1.World;
 
 public class RangedAttack extends AIGoal {
     private MyPet myPet;
@@ -63,7 +63,7 @@ public class RangedAttack extends AIGoal {
             return false;
         }
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.boundingBox.b, goalTarget.locZ) < 4) {
+        if (meleeDamage > 0 && this.entityMyPet.f(goalTarget.locX, goalTarget.getBoundingBox().b, goalTarget.locZ) < 4) {
             if (meleeDamage > rangedSkill.getDamage()) {
                 return false;
             }
@@ -78,7 +78,7 @@ public class RangedAttack extends AIGoal {
             return true;
         }
         double meleeDamage = myPet.getDamage();
-        if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.boundingBox.b, target.locZ) < 4) {
+        if (meleeDamage > 0 && this.entityMyPet.f(target.locX, target.getBoundingBox().b, target.locZ) < 4) {
             if (meleeDamage > rangedSkill.getDamage()) {
                 return true;
             }
@@ -97,8 +97,8 @@ public class RangedAttack extends AIGoal {
 
     @Override
     public void tick() {
-        double distanceToTarget = this.entityMyPet.f(this.target.locX, this.target.boundingBox.b, this.target.locZ);
-        boolean canSee = this.entityMyPet.getEntitySenses().canSee(this.target);
+        double distanceToTarget = this.entityMyPet.f(this.target.locX, this.target.getBoundingBox().b, this.target.locZ);
+        boolean canSee = this.entityMyPet.getEntitySenses().a(this.target); // a -> canSee
 
         if (canSee) {
             this.lastSeenTimer++;
@@ -153,7 +153,7 @@ public class RangedAttack extends AIGoal {
             world.addEntity(snowball);
         } else if (projectile == Projectiles.LargeFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = this.target.boundingBox.b + this.target.length / 2.0F - (entityMyPet.locY + entityMyPet.length / 2.0F);
+            double distanceY = this.target.getBoundingBox().b + this.target.length / 2.0F - (entityMyPet.locY + entityMyPet.length / 2.0F);
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetLargeFireball largeFireball = new MyPetLargeFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             largeFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -162,7 +162,7 @@ public class RangedAttack extends AIGoal {
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.SmallFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = this.target.boundingBox.b + this.target.length / 2.5F - (entityMyPet.locY + entityMyPet.length / 2.5F);
+            double distanceY = this.target.getBoundingBox().b + this.target.length / 2.5F - (entityMyPet.locY + entityMyPet.length / 2.5F);
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetSmallFireball smallFireball = new MyPetSmallFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             smallFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -171,7 +171,7 @@ public class RangedAttack extends AIGoal {
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.WitherSkull) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = this.target.boundingBox.b + this.target.length / 2.5F - (entityMyPet.locY + entityMyPet.length / 2.5F);
+            double distanceY = this.target.getBoundingBox().b + this.target.length / 2.5F - (entityMyPet.locY + entityMyPet.length / 2.5F);
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetWitherSkull witherSkull = new MyPetWitherSkull(world, entityMyPet, distanceX, distanceY, distanceZ);
             witherSkull.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);

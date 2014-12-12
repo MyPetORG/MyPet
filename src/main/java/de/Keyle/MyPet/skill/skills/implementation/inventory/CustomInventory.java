@@ -24,11 +24,11 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagList;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -62,7 +62,7 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
-    public String getInventoryName() {
+    public String getName() {
         return inventroyName;
     }
 
@@ -204,7 +204,7 @@ public class CustomInventory implements IInventory, Listener {
         return true;
     }
 
-    public void startOpen() {
+    public void startOpen(EntityHuman paramEntityHuman) {
     }
 
     public void onOpen(CraftHumanEntity who) {
@@ -243,7 +243,7 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
-    public void closeContainer() {
+    public void closeContainer(EntityHuman paramEntityHuman) {
     }
 
     public List<HumanEntity> getViewers() {
@@ -279,7 +279,33 @@ public class CustomInventory implements IInventory, Listener {
         return true;
     }
 
-    public boolean k_() {
-        return true;
+    @Override
+    public int getProperty(int i) {
+        return 0;
+    }
+
+    @Override
+    public void b(int i, int i1) {
+
+    }
+
+    @Override
+    public int g() {
+        return 0;
+    }
+
+    @Override
+    public void l() {
+
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return this.inventroyName != null;
+    }
+
+    @Override
+    public IChatBaseComponent getScoreboardDisplayName() {
+        return new ChatComponentText(this.inventroyName);
     }
 }

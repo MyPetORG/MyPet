@@ -23,12 +23,12 @@ package de.Keyle.MyPet.entity.types.cow;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.World;
 
-@EntitySize(width = 0.9F, height = 1.3F)
+@EntitySize(width = 0.9F, length = 1.3F, height = 1.3F)
 public class EntityMyCow extends EntityMyPet {
     public EntityMyCow(World world, MyPet myPet) {
         super(world, myPet);
@@ -76,14 +76,14 @@ public class EntityMyCow extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0)); // age
+        this.datawatcher.a(12, new Byte((byte) 0)); // age
     }
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

@@ -34,6 +34,7 @@ import de.Keyle.MyPet.util.support.Permissions;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import org.bukkit.ChatColor;
 
 import java.util.Random;
@@ -242,7 +243,7 @@ public class Behavior extends BehaviorInfo implements ISkillInstance, IScheduler
 
     public void schedule() {
         if (behavior == BehaviorState.Aggressive && random.nextBoolean()) {
-            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, height, 0), "angryVillager", 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
+            BukkitUtil.playParticleEffect(myPet.getLocation().add(0, height, 0), EnumParticle.VILLAGER_ANGRY, 0.2F, 0.2F, 0.2F, 0.5F, 1, 20);
         }
         if (myPet instanceof MyEnderman) {
             MyEnderman myEnderman = (MyEnderman) myPet;

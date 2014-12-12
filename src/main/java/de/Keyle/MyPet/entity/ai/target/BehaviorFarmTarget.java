@@ -26,10 +26,11 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.support.PvPChecker;
-import net.minecraft.server.v1_7_R4.EntityLiving;
-import net.minecraft.server.v1_7_R4.EntityMonster;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityMonster;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.event.entity.EntityTargetEvent;
 
 public class BehaviorFarmTarget extends AIGoal {
     private MyPet myPet;
@@ -64,9 +65,9 @@ public class BehaviorFarmTarget extends AIGoal {
             return false;
         }
 
-        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.boundingBox.grow((double) range, (double) range, (double) range))) {
+        for (Object entityObj : this.petEntity.world.a(EntityMonster.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             EntityMonster entityMonster = (EntityMonster) entityObj;
-            if (!entityMonster.isAlive() || petEntity.f(entityMonster) > 91) {
+            if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
                 continue;
             }
             if (!PvPChecker.canHurtCitizens(entityMonster.getBukkitEntity())) {
@@ -94,9 +95,9 @@ public class BehaviorFarmTarget extends AIGoal {
             return true;
         } else if (petEntity.getGoalTarget().world != petEntity.world) {
             return true;
-        } else if (petEntity.f(petEntity.getGoalTarget()) > 400) {
+        } else if (petEntity.h(petEntity.getGoalTarget()) > 400) {
             return true;
-        } else if (petEntity.f(petEntity.getOwner().getEntityPlayer()) > 600) {
+        } else if (petEntity.h(petEntity.getOwner().getEntityPlayer()) > 600) {
             return true;
         }
         return false;
@@ -104,12 +105,12 @@ public class BehaviorFarmTarget extends AIGoal {
 
     @Override
     public void start() {
-        petEntity.setGoalTarget(this.target);
+        petEntity.setGoalTarget(this.target, EntityTargetEvent.TargetReason.RANDOM_TARGET, false);
     }
 
     @Override
     public void finish() {
-        petEntity.setGoalTarget(null);
+        petEntity.setGoalTarget(null, EntityTargetEvent.TargetReason.FORGOT_TARGET, false);
         target = null;
     }
 }

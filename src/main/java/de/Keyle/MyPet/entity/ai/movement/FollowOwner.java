@@ -24,9 +24,9 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.BukkitUtil;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 
 public class FollowOwner extends AIGoal {
     private EntityMyPet petEntity;
@@ -60,7 +60,7 @@ public class FollowOwner extends AIGoal {
             return false;
         } else if (this.petEntity.getOwner() == null) {
             return false;
-        } else if (this.petEntity.f(owner) < this.startDistance) {
+        } else if (this.petEntity.h(owner) < this.startDistance) {
             return false;
         } else if (controlPathfinderGoal != null && controlPathfinderGoal.moveTo != null) {
             return false;
@@ -74,7 +74,7 @@ public class FollowOwner extends AIGoal {
             return true;
         } else if (this.petEntity.getOwner() == null) {
             return true;
-        } else if (this.petEntity.f(owner) < this.stopDistance) {
+        } else if (this.petEntity.h(owner) < this.stopDistance) {
             return true;
         } else if (!this.petEntity.canMove()) {
             return true;
@@ -104,13 +104,13 @@ public class FollowOwner extends AIGoal {
             return;
         }
 
-        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.x());
+        this.petEntity.getControllerLook().a(owner, 10.0F, (float) this.petEntity.bP());
 
         if (this.petEntity.canMove()) {
             if (--this.setPathTimer <= 0) {
                 this.setPathTimer = 10;
                 if (!this.nav.navigateTo(owner)) {
-                    if (owner.onGround && this.petEntity.f(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && BukkitUtil.canSpawn(ownerLocation, this.petEntity)) {
+                    if (owner.onGround && this.petEntity.h(owner) >= this.teleportDistance && controlPathfinderGoal.moveTo == null && petEntity.goalTarget == null && BukkitUtil.canSpawn(ownerLocation, this.petEntity)) {
                         this.petEntity.setPositionRotation(ownerLocation.getX(), ownerLocation.getY(), ownerLocation.getZ(), this.petEntity.yaw, this.petEntity.pitch);
                         this.nav.navigateTo(owner);
                     }

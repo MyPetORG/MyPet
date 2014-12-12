@@ -24,13 +24,13 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.Item;
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.World;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.Item;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.entity.Ocelot.Type;
 
-@EntitySize(width = 0.6F, height = 0.8F)
+@EntitySize(width = 0.6F, length = 0.6F, height = 0.8F)
 public class EntityMyOcelot extends EntityMyPet {
     private Sit sitPathfinder;
 
@@ -117,7 +117,7 @@ public class EntityMyOcelot extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Integer(0));     // age
+        this.datawatcher.a(12, new Byte((byte) 0));     // age
         this.datawatcher.a(16, new Byte((byte) 0)); // tamed/sitting
         this.datawatcher.a(17, "");                 // ownername
         this.datawatcher.a(18, new Byte((byte) 0)); // cat type
@@ -126,9 +126,9 @@ public class EntityMyOcelot extends EntityMyPet {
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, Integer.valueOf(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
-            this.datawatcher.watch(12, new Integer(0));
+            this.datawatcher.watch(12, new Byte((byte) 0));
         }
     }
 

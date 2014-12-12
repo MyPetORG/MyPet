@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.entity.ai.navigation;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityLiving;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 

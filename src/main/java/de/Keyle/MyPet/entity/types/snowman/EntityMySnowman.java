@@ -23,15 +23,15 @@ package de.Keyle.MyPet.entity.types.snowman;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@EntitySize(width = 0.4F, height = 1.8F)
+@EntitySize(width = 0.7F, length = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
     Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
 
@@ -53,7 +53,7 @@ public class EntityMySnowman extends EntityMyPet {
             for (int z = minZ; z < maxZ; z++) {
                 if (bukkitWorld.isChunkLoaded(x, z)) {
                     for (int y = minY - 1; y < maxY; y++) {
-                        Block block = world.getType(x, y, z);
+                        Block block = world.getType(new BlockPosition(x, y, z)).getBlock();
 
                         if (block == Blocks.AIR) {
                             snowMap.put(new Location(bukkitWorld, x, y, z), 10);
@@ -83,7 +83,7 @@ public class EntityMySnowman extends EntityMyPet {
 
         if (MySnowman.FIX_SNOW_TRACK) {
             if (this.motX != 0D || this.motZ != 0D) {
-                addAirBlocksInBB(this.world.getWorld(), this.boundingBox);
+                addAirBlocksInBB(this.world.getWorld(), this.getBoundingBox());
             }
             if (snowMap.size() > 0) {
                 Iterator<Map.Entry<Location, Integer>> iter = snowMap.entrySet().iterator();

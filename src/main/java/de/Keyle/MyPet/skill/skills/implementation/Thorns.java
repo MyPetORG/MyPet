@@ -29,6 +29,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;
@@ -95,8 +96,8 @@ public class Thorns extends ThornsInfo implements ISkillInstance, ISkillActive {
     public void reflectDamage(LivingEntity damager, double damage) {
         damager.damage(getReflectedDamage(damage), myPet.getCraftPet());
         myPet.getCraftPet().getHandle().makeSound("damage.thorns", 0.5F, 1.0F);
-        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "magicCrit", 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
-        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), "crit", 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
+        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), EnumParticle.CRIT_MAGIC, 0.5F, 0.5F, 0.5F, 0.1F, 20, 20);
+        BukkitUtil.playParticleEffect(myPet.getLocation().add(0, 1, 0), EnumParticle.CRIT, 0.5F, 0.5F, 0.5F, 0.1F, 10, 20);
     }
 
     @Override

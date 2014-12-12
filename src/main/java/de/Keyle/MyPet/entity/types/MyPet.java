@@ -44,7 +44,7 @@ import de.Keyle.MyPet.util.support.arenas.*;
 import de.keyle.knbt.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -331,7 +331,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             }
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
-                net.minecraft.server.v1_7_R4.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+                net.minecraft.server.v1_8_R1.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 if (getYSpawnOffset() > 0) {
@@ -339,11 +339,12 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 }
                 loc.setPitch(0);
                 loc.setYaw(0);
+                petEntity.setLocation(loc);
+
                 if (!BukkitUtil.canSpawn(loc, petEntity)) {
                     status = PetState.Despawned;
                     return SpawnFlags.NoSpace;
                 }
-                petEntity.setLocation(loc);
 
                 if (Minigames.DISABLE_PETS_IN_MINIGAMES && Minigames.isInMinigame(getOwner())) {
                     status = PetState.Despawned;
