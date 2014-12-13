@@ -34,7 +34,7 @@ import java.util.*;
 public class IconMenuItem {
     protected Material material = Material.NAME_TAG;
     protected int data = 0;
-    protected int amount = 0;
+    protected int amount = 1;
     protected String title = "";
     protected List<String> lore = new ArrayList<String>();
     protected boolean glowing = false;
