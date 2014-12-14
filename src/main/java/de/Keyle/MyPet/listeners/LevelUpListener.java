@@ -94,7 +94,7 @@ public class LevelUpListener implements Listener {
                     fwm.addEffect(fwe);
                     fwm.setPower(0);
                     fw.setFireworkMeta(fwm);
-                    fw.detonate();
+                    //fw.detonate(); // the rocket just disappears when used
                 }
             }
         }
