@@ -33,10 +33,10 @@ import com.herocraftonline.heroes.characters.party.HeroParty;
 import com.massivecraft.factions.listeners.FactionsListenerMain;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.util.Configuration;
 import me.NoChance.PvPManager.Config.Variables;
@@ -138,11 +138,16 @@ public class PvPChecker {
         if (USE_WorldGuard && PluginSupportManager.isPluginUsable("WorldGuard")) {
             try {
                 WorldGuardPlugin wgp = PluginSupportManager.getPluginInstance(WorldGuardPlugin.class);
-                RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
-                Vector pt = new Vector(location.getX(), location.getY(), location.getZ());
-                ApplicableRegionSet set = mgr.getApplicableRegions(pt);
-
-                return set.allows(DefaultFlag.PVP);
+                if (wgp.getDescription().getVersion().startsWith("6")) {
+                    RegionManager mgr = wgp.getRegionManager(location.getWorld());
+                    ApplicableRegionSet set = mgr.getApplicableRegions(location);
+                    StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
+                    return s == null || s == StateFlag.State.ALLOW;
+                } else {
+                    RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
+                    ApplicableRegionSet set = mgr.getApplicableRegions(location);
+                    return set.allows(DefaultFlag.PVP);
+                }
             } catch (Error e) {
                 USE_WorldGuard = false;
             } catch (Exception ignored) {
