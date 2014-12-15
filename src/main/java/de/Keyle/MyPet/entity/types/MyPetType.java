@@ -34,10 +34,14 @@ import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.endermite.EntityMyEndermite;
+import de.Keyle.MyPet.entity.types.endermite.MyEndermite;
 import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
 import de.Keyle.MyPet.entity.types.ghast.MyGhast;
 import de.Keyle.MyPet.entity.types.giant.EntityMyGiant;
 import de.Keyle.MyPet.entity.types.giant.MyGiant;
+import de.Keyle.MyPet.entity.types.guardian.EntityMyGuardian;
+import de.Keyle.MyPet.entity.types.guardian.MyGuardian;
 import de.Keyle.MyPet.entity.types.horse.EntityMyHorse;
 import de.Keyle.MyPet.entity.types.horse.MyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
@@ -52,6 +56,8 @@ import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
 import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
+import de.Keyle.MyPet.entity.types.rabbit.EntityMyRabbit;
+import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
@@ -94,8 +100,10 @@ public enum MyPetType {
     Cow(EntityType.COW, "Cow", EntityMyCow.class, MyCow.class),
     Creeper(EntityType.CREEPER, "Creeper", EntityMyCreeper.class, MyCreeper.class),
     Enderman(EntityType.ENDERMAN, "Enderman", EntityMyEnderman.class, MyEnderman.class),
+    Endermite(EntityType.ENDERMITE, "Endermite", EntityMyEndermite.class, MyEndermite.class),
     Ghast(EntityType.GHAST, "Ghast", EntityMyGhast.class, MyGhast.class),
     Giant(EntityType.GIANT, "Giant", EntityMyGiant.class, MyGiant.class),
+    Guardian(EntityType.GUARDIAN, "Guardian", EntityMyGuardian.class, MyGuardian.class),
     Horse(EntityType.HORSE, "Horse", EntityMyHorse.class, MyHorse.class),
     IronGolem(EntityType.IRON_GOLEM, "IronGolem", EntityMyIronGolem.class, MyIronGolem.class),
     MagmaCube(EntityType.MAGMA_CUBE, "MagmaCube", EntityMyMagmaCube.class, MyMagmaCube.class),
@@ -103,6 +111,7 @@ public enum MyPetType {
     Ocelot(EntityType.OCELOT, "Ocelot", EntityMyOcelot.class, MyOcelot.class),
     Pig(EntityType.PIG, "Pig", EntityMyPig.class, MyPig.class),
     PigZombie(EntityType.PIG_ZOMBIE, "PigZombie", EntityMyPigZombie.class, MyPigZombie.class),
+    Rabbit(EntityType.RABBIT, "Rabbit", EntityMyRabbit.class, MyRabbit.class),
     Sheep(EntityType.SHEEP, "Sheep", EntityMySheep.class, MySheep.class),
     Silverfish(EntityType.SILVERFISH, "Silverfish", EntityMySilverfish.class, MySilverfish.class),
     Skeleton(EntityType.SKELETON, "Skeleton", EntityMySkeleton.class, MySkeleton.class),

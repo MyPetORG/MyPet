@@ -200,6 +200,7 @@ public class Configuration {
         config.addDefault("MyPet.Pets.Wolf.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.Zombie.GrowUpItem", Material.POTION.getId());
         config.addDefault("MyPet.Pets.PigZombie.GrowUpItem", Material.POTION.getId());
+        config.addDefault("MyPet.Pets.Rabbit.GrowUpItem", Material.POTION.getId());
 
         config.addDefault("MyPet.Info.AdminOnly.PetName", PetInfoDisplay.Name.adminOnly);
         config.addDefault("MyPet.Info.AdminOnly.PetOwner", PetInfoDisplay.Owner.adminOnly);

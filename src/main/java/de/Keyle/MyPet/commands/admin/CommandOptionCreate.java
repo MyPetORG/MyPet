@@ -121,6 +121,15 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("horse", petTypeOptionList);
 
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("baby");
+        petTypeOptionList.add("variant:");
+        petTypeOptionMap.put("rabbit", petTypeOptionList);
+
+        petTypeOptionList = new ArrayList<String>();
+        petTypeOptionList.add("elder");
+        petTypeOptionMap.put("guardian", petTypeOptionList);
+
         for (MyPetType petType : MyPetType.values()) {
             petTypeList.add(petType.getTypeName());
         }
@@ -180,6 +189,8 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             TagCompound.getCompoundData().put("Villager", new TagByte(true));
                         } else if (args[i].equalsIgnoreCase("chest")) {
                             TagCompound.getCompoundData().put("Chest", new TagByte(true));
+                        } else if (args[i].equalsIgnoreCase("elder")) {
+                            TagCompound.getCompoundData().put("Elder", new TagByte(true));
                         } else if (args[i].startsWith("size:")) {
                             String size = args[i].replace("size:", "");
                             if (Util.isInt(size)) {
@@ -196,7 +207,13 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                             String variantString = args[i].replace("variant:", "");
                             if (Util.isInt(variantString)) {
                                 int variant = Integer.parseInt(variantString);
-                                variant = Math.min(Math.max(0, variant), 1030);
+                                if (myPetType == MyPetType.Horse) {
+                                    variant = Math.min(Math.max(0, variant), 1030);
+                                } else if (myPetType == MyPetType.Rabbit) {
+                                    if (variant != 99 && (variant > 5 || variant < 0)) {
+                                        variant = 0;
+                                    }
+                                }
                                 TagCompound.getCompoundData().put("Variant", new TagInt(variant));
                             }
                         } else if (args[i].startsWith("cat:")) {

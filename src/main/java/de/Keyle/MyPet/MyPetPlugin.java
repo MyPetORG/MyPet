@@ -34,8 +34,10 @@ import de.Keyle.MyPet.entity.types.chicken.EntityMyChicken;
 import de.Keyle.MyPet.entity.types.cow.EntityMyCow;
 import de.Keyle.MyPet.entity.types.creeper.EntityMyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
+import de.Keyle.MyPet.entity.types.endermite.EntityMyEndermite;
 import de.Keyle.MyPet.entity.types.ghast.EntityMyGhast;
 import de.Keyle.MyPet.entity.types.giant.EntityMyGiant;
+import de.Keyle.MyPet.entity.types.guardian.EntityMyGuardian;
 import de.Keyle.MyPet.entity.types.horse.EntityMyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.EntityMyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.EntityMyMagmaCube;
@@ -43,6 +45,7 @@ import de.Keyle.MyPet.entity.types.mooshroom.EntityMyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.EntityMyOcelot;
 import de.Keyle.MyPet.entity.types.pig.EntityMyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.EntityMyPigZombie;
+import de.Keyle.MyPet.entity.types.rabbit.EntityMyRabbit;
 import de.Keyle.MyPet.entity.types.sheep.EntityMySheep;
 import de.Keyle.MyPet.entity.types.silverfish.EntityMySilverfish;
 import de.Keyle.MyPet.entity.types.skeleton.EntityMySkeleton;
@@ -253,6 +256,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         BukkitUtil.registerMyPetEntity(EntityMyWither.class, "WitherBoss", 64);
         BukkitUtil.registerMyPetEntity(EntityMyBat.class, "Bat", 65);
         BukkitUtil.registerMyPetEntity(EntityMyWitch.class, "Witch", 66);
+        BukkitUtil.registerMyPetEntity(EntityMyEndermite.class, "Endermite", 67);
+        BukkitUtil.registerMyPetEntity(EntityMyGuardian.class, "Guardian", 68);
         BukkitUtil.registerMyPetEntity(EntityMyPig.class, "Pig", 90);
         BukkitUtil.registerMyPetEntity(EntityMySheep.class, "Sheep", 91);
         BukkitUtil.registerMyPetEntity(EntityMyCow.class, "Cow", 92);
@@ -264,6 +269,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         BukkitUtil.registerMyPetEntity(EntityMyOcelot.class, "Ozelot", 98);
         BukkitUtil.registerMyPetEntity(EntityMyIronGolem.class, "VillagerGolem", 99);
         BukkitUtil.registerMyPetEntity(EntityMyHorse.class, "EntityHorse", 100);
+        BukkitUtil.registerMyPetEntity(EntityMyRabbit.class, "Rabbit", 101);
         BukkitUtil.registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
         DebugLogger.info("Pet type: ----------");

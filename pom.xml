@@ -32,7 +32,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.7.10</minecraft.version>
+        <minecraft.version>1.8</minecraft.version>
         <bukkit.version>R0.1</bukkit.version>
         <bukkit.packet>v1_8_R1</bukkit.packet>
 

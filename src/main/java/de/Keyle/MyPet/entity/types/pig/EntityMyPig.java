@@ -90,7 +90,7 @@ public class EntityMyPig extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(12, new Byte((byte) 0));     // age
+        this.datawatcher.a(12, new Byte((byte) 0)); // age
         this.datawatcher.a(16, new Byte((byte) 0)); // saddle
     }
 
