@@ -92,9 +92,9 @@ public class EntityMyEnderman extends EntityMyPet {
 
     protected void initDatawatcher() {
         super.initDatawatcher();
-        this.datawatcher.a(16, new Byte((byte) 0));  // blockID
-        this.datawatcher.a(17, new Byte((byte) 0));  // blockData
-        this.datawatcher.a(18, new Byte((byte) 0));  // face(angry)
+        this.datawatcher.a(16, new Short((short) 0));  // blockID
+        this.datawatcher.a(17, new Byte((byte) 0));    // blockData
+        this.datawatcher.a(18, new Byte((byte) 0));    // face(angry)
     }
 
     public boolean isScreaming() {
@@ -106,7 +106,7 @@ public class EntityMyEnderman extends EntityMyPet {
     }
 
     public void setBlock(int blockID, int blockData) {
-        this.datawatcher.watch(16, (byte) (blockID & 0xFF));
+        this.datawatcher.watch(16, (short) (blockID & 0xFF));
 
         this.datawatcher.watch(17, (byte) (blockData & 0xFF));
     }
