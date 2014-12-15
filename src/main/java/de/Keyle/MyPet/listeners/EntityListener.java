@@ -245,7 +245,11 @@ public class EntityListener implements Listener {
         if (PvPChecker.USE_PlayerDamageEntityEvent) {
             Entity damager = event.getDamager();
             if (damager instanceof Projectile) {
-                damager = (Entity) ((Projectile) damager).getShooter();
+                if (((Projectile) damager).getShooter() instanceof Entity) {
+                    damager = (Entity) ((Projectile) damager).getShooter();
+                } else {
+                    return;
+                }
             }
             if (damager instanceof CraftMyPet && event.getEntity() instanceof LivingEntity) {
                 MyPet myPet = ((CraftMyPet) damager).getMyPet();
