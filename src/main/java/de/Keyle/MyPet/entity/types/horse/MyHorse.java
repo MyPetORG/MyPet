@@ -154,6 +154,9 @@ public class MyHorse extends MyPet implements IMyPetBaby {
         if (info.getCompoundData().containsKey("Type")) {
             setHorseType(info.getAs("Type", TagByte.class).getByteData());
         }
+        if (info.getCompoundData().containsKey("Baby")) {
+            setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
+        }
         if (info.getCompoundData().containsKey("Variant")) {
             setVariant(info.getAs("Variant", TagInt.class).getIntData());
         }
