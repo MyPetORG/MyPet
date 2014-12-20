@@ -120,6 +120,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         MyPetPlayer.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
+        BukkitUtil.unregisterMyPetEntities();
         DebugLogger.info("MyPet disabled!");
     }
 

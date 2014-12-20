@@ -221,6 +221,42 @@ public class BukkitUtil {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static boolean unregisterMyPetEntities() {
+        DebugLogger.info("Unregister MyPet entities");
+        try {
+            Field EntityTypes_d = EntityTypes.class.getDeclaredField("d");
+            Field EntityTypes_f = EntityTypes.class.getDeclaredField("f");
+            EntityTypes_d.setAccessible(true);
+            EntityTypes_f.setAccessible(true);
+
+            Map<Class, String> d = (Map) EntityTypes_d.get(EntityTypes_d);
+            Map<Class, Integer> f = (Map) EntityTypes_f.get(EntityTypes_f);
+
+            Iterator dIterator = d.keySet().iterator();
+            while (dIterator.hasNext()) {
+                Class clazz = (Class) dIterator.next();
+                if (clazz.getCanonicalName().startsWith("de.Keyle.MyPet")) {
+                    dIterator.remove();
+                }
+            }
+
+            Iterator fIterator = f.keySet().iterator();
+            while (fIterator.hasNext()) {
+                Class clazz = (Class) fIterator.next();
+                if (clazz.getCanonicalName().startsWith("de.Keyle.MyPet")) {
+                    fIterator.remove();
+                }
+            }
+
+            return true;
+        } catch (Exception e) {
+            DebugLogger.severe("error while unregistering MyPet entities");
+            DebugLogger.severe(e.getMessage());
+            return false;
+        }
+    }
+
     public static void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(ChatSerializer.a(message)));
