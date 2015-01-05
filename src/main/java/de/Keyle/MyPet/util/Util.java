@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -117,7 +116,10 @@ public class Util {
     }
 
     public static String formatText(String text, Object... values) {
-        return MessageFormat.format(text, values);
+        for (int i = 0; i < values.length; i++) {
+            text.replace("{" + i + "}", values[i].toString());
+        }
+        return text;
     }
 
     public static String capitalizeName(String name) {
