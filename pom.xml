@@ -41,7 +41,7 @@
         <vaultapi.version>1.4</vaultapi.version>
         <minigames.version>1.6.3</minigames.version>
         <worldguard.version>6.0.0-beta-01</worldguard.version>
-        <ancientrpg.version>1.0</ancientrpg.version>
+        <ancientrpg.version>0.9.9-40</ancientrpg.version>
         <factions.version>1.8.2</factions.version>
         <factions2.version>2.4.0</factions2.version>
         <mobarena.version>0.96.6</mobarena.version>
@@ -214,7 +214,7 @@
         </dependency>
         <dependency>
             <groupId>com.ancientshores</groupId>
-            <artifactId>AncientRPG</artifactId>
+            <artifactId>ancient-rpg</artifactId>
             <version>${ancientrpg.version}</version>
             <scope>provided</scope>
             <optional>true</optional>

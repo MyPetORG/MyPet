@@ -314,16 +314,16 @@ public class PvPChecker {
     public static boolean canHurtAncientRPG(Player attacker, Player defender) {
         if (USE_AncientRPG && PluginSupportManager.isPluginUsable("SurvivalGames")) {
             try {
-                AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker);
+                AncientRPGParty party = ApiManager.getApiManager().getPlayerParty(attacker.getUniqueId());
                 if (party != null) {
-                    if (!party.friendlyFire && party.containsName(defender.getName())) {
+                    if (!party.isFriendlyFireEnabled() && party.containsUUID(defender.getUniqueId())) {
                         return false;
                     }
                 }
 
-                AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getName());
+                AncientRPGGuild guild = ApiManager.getApiManager().getPlayerGuild(attacker.getUniqueId());
                 if (guild != null) {
-                    if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getName())) {
+                    if (!guild.friendlyFire && guild == ApiManager.getApiManager().getPlayerGuild(defender.getUniqueId())) {
                         return false;
                     }
                 }

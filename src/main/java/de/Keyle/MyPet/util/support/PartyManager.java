@@ -25,10 +25,12 @@ import com.ancientshores.AncientRPG.Party.AncientRPGParty;
 import com.gmail.nossr50.api.PartyAPI;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PartyManager {
 
@@ -73,7 +75,8 @@ public class PartyManager {
                 AncientRPGParty party = api.getPlayerParty(player);
                 if (party != null) {
                     List<Player> members = new ArrayList<Player>();
-                    for (Player member : party.Member) {
+                    for (UUID memberUUID : party.getMembers()) {
+                        Player member = Bukkit.getPlayer(memberUUID);
                         if (member.isOnline()) {
                             members.add(member);
                         }
