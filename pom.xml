@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <minecraft.version>1.8</minecraft.version>
-        <bukkit.version>R0.1</bukkit.version>
+        <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
         <bukkit.packet>v1_8_R1</bukkit.packet>
 
         <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
@@ -57,7 +57,7 @@
         <pvpmanager.version>1.7.4</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
-        <spigot.version>1.7.10-R0.1</spigot.version>
+        <spigot.version>1.8-R0.1-SNAPSHOT</spigot.version>
 
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
@@ -99,7 +99,7 @@
         </repository>
         <repository>
             <id>spigot-repo</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>citizens-repo</id>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>${minecraft.version}-${bukkit.version}-SNAPSHOT</version>
+            <version>${minecraft.version}-${bukkit.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

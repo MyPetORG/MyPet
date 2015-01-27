@@ -308,7 +308,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             if (Ride.RIDE_ITEM.compare(itemStack)) {
                 if (myPet.getSkills().isSkillActive(Ride.class) && canMove()) {
                     if (Permissions.hasExtended(owner, "MyPet.user.extended.Ride")) {
-                        ((CraftPlayer) owner).getHandle().setPassengerOf(this);
+                        ((CraftPlayer) owner).getHandle().mount(this);
                         return true;
                     } else {
                         getMyPet().sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
@@ -386,10 +386,10 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                         hasRider = true;
                         this.S = 1.0F; // climb height -> 1 block
                     } else {
-                        this.passenger.setPassengerOf(null); // just the owner can ride a pet
+                        this.passenger.mount(null); // just the owner can ride a pet
                     }
                 } else {
-                    this.passenger.setPassengerOf(null);
+                    this.passenger.mount(null);
                 }
             }
         }
