@@ -22,6 +22,7 @@ package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.entity.types.MyPetList;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,7 +31,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 public class VehicleListener implements Listener {
     @EventHandler
     public void onVehicleEnter(final VehicleEnterEvent event) {
-        if (event.getEntered() instanceof Player) {
+        if (event.getEntered() instanceof Player && !(event.getVehicle() instanceof Horse)) {
             Player player = (Player) event.getEntered();
             if (MyPetList.hasMyPet(player)) {
                 MyPetList.getMyPet(player).removePet(true);
