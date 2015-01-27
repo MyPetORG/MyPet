@@ -23,6 +23,7 @@ package de.Keyle.MyPet.entity.ai.movement;
 import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.Navigation;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 
 public class Float extends AIGoal {
@@ -36,6 +37,7 @@ public class Float extends AIGoal {
         this.entityMyPet = entityMyPet;
         //entityMyPet.getNavigation().e(true);  //ToDo
         this.owner = ((CraftPlayer) entityMyPet.getOwner().getPlayer()).getHandle();
+        ((Navigation) entityMyPet.getNavigation()).d(true);
     }
 
     @Override
