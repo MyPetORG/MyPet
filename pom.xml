@@ -43,6 +43,7 @@
         <worldguard.version>6.0.0-beta-01</worldguard.version>
         <ancientrpg.version>0.9.9-40</ancientrpg.version>
         <factions.version>2.7.5</factions.version>
+        <massivecore.version>2.7.5</massivecore.version>
         <mobarena.version>0.96.6</mobarena.version>
         <battlearena.version>3.9.7.8</battlearena.version>
         <pvparena.version>1.2.2.425</pvparena.version>
@@ -222,6 +223,13 @@
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
             <version>${factions.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>MassiveCore</artifactId>
+            <version>${massivecore.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
