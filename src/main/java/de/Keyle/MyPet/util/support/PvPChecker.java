@@ -30,7 +30,7 @@ import com.gmail.nossr50.api.PartyAPI;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.party.HeroParty;
-import com.massivecraft.factions.listeners.FactionsListenerMain;
+import com.massivecraft.factions.engine.EngineMain;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.utils.CombatUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -160,7 +160,7 @@ public class PvPChecker {
         if (USE_Factions && PluginSupportManager.isPluginUsable("Factions")) {
             try {
                 EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
-                return FactionsListenerMain.get().canCombatDamageHappen(sub, false);
+                return EngineMain.get().canCombatDamageHappen(sub, false);
             } catch (Error e) {
                 USE_Factions = false;
             } catch (Exception ignored) {
