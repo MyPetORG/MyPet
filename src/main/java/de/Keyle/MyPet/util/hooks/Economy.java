@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util.hooks;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class Economy {
@@ -48,7 +49,7 @@ public class Economy {
             setupEconomy();
         }
         if (economy != null && economy.isEnabled()) {
-            return economy.has(petOwner.getName(), costs);
+            return economy.has(Bukkit.getOfflinePlayer(petOwner.getPlayerUUID()), costs);
         }
         return true;
     }
@@ -61,8 +62,9 @@ public class Economy {
             setupEconomy();
         }
         if (economy != null && economy.isEnabled()) {
-            if (economy.has(petOwner.getName(), costs)) {
-                return economy.withdrawPlayer(petOwner.getName(), costs).transactionSuccess();
+            OfflinePlayer player = Bukkit.getOfflinePlayer(petOwner.getPlayerUUID());
+            if (economy.has(player, costs)) {
+                return economy.withdrawPlayer(player, costs).transactionSuccess();
             } else {
                 return false;
             }
