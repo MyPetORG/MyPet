@@ -48,8 +48,8 @@ public class MyPig extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         if (hasSaddle()) {
             info.getCompoundData().put("Saddle", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getSaddle())));
         }
@@ -58,7 +58,7 @@ public class MyPig extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Saddle", TagByte.class)) {
             boolean saddle = info.getAs("Saddle", TagByte.class).getBooleanData();
             if (saddle) {

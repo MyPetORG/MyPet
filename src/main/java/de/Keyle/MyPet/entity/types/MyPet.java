@@ -157,11 +157,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         return experience;
     }
 
-    public TagCompound getExtendedInfo() {
+    public TagCompound writeExtendedInfo() {
         return new TagCompound();
     }
 
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
     }
 
     public double getMaxHealth() {
@@ -511,7 +511,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         petNBT.getCompoundData().put("WorldGroup", new TagString(this.worldGroup));
         petNBT.getCompoundData().put("Exp", new TagDouble(this.getExp()));
         petNBT.getCompoundData().put("LastUsed", new TagLong(this.lastUsed));
-        petNBT.getCompoundData().put("Info", getExtendedInfo());
+        petNBT.getCompoundData().put("Info", writeExtendedInfo());
         petNBT.getCompoundData().put("Internal-Owner-UUID", new TagString(this.petOwner.getInternalUUID().toString()));
         petNBT.getCompoundData().put("Wants-To-Respawn", new TagByte(wantsToRespawn));
         if (this.skillTree != null) {

@@ -52,7 +52,7 @@ public class MyPetList {
             activeMyPet.petName = inactiveMyPet.getPetName();
             activeMyPet.setRespawnTime(inactiveMyPet.getRespawnTime());
             activeMyPet.setWorldGroup(inactiveMyPet.getWorldGroup());
-            activeMyPet.setExtendedInfo(inactiveMyPet.getInfo());
+            activeMyPet.readExtendedInfo(inactiveMyPet.getInfo());
             activeMyPet.lastUsed = inactiveMyPet.lastUsed;
             activeMyPet.wantsToRespawn = inactiveMyPet.wantsToRespawn;
 
@@ -146,7 +146,7 @@ public class MyPetList {
         inactiveMyPet.setHungerValue(activeMyPet.getHungerValue());
         inactiveMyPet.setRespawnTime(activeMyPet.respawnTime);
         inactiveMyPet.setSkills(activeMyPet.getSkills().getSkills());
-        inactiveMyPet.setInfo(activeMyPet.getExtendedInfo());
+        inactiveMyPet.setInfo(activeMyPet.writeExtendedInfo());
         inactiveMyPet.setPetType(activeMyPet.getPetType());
         inactiveMyPet.setSkillTree(activeMyPet.getSkillTree());
         inactiveMyPet.setWorldGroup(activeMyPet.getWorldGroup());

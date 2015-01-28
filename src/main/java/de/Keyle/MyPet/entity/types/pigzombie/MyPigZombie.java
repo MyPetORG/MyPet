@@ -67,8 +67,8 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
 
         List<TagCompound> itemList = new ArrayList<TagCompound>();
@@ -84,7 +84,7 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
         }

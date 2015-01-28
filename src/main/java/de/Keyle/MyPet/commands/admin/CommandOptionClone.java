@@ -77,7 +77,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         newPet.setHealth(oldPet.getHealth());
         newPet.setHungerValue(oldPet.getHungerValue());
         newPet.setRespawnTime(oldPet.getRespawnTime());
-        newPet.setInfo(oldPet.getExtendedInfo());
+        newPet.setInfo(oldPet.writeExtendedInfo());
         newPet.setPetType(oldPet.getPetType());
         newPet.setSkillTree(oldPet.getSkillTree());
         newPet.setWorldGroup(oldPet.getWorldGroup());

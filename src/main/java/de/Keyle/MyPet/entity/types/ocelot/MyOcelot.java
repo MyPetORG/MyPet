@@ -58,15 +58,15 @@ public class MyOcelot extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("CatType", new TagInt(getCatType().getId()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("CatType")) {
             setCatType(Type.getType(info.getAs("CatType", TagInt.class).getIntData()));
         }

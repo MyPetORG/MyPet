@@ -44,14 +44,14 @@ public class MyGuardian extends MyPet {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Elder", new TagByte(isElder));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Elder")) {
             setElder(info.getAs("Elder", TagByte.class).getBooleanData());
         }

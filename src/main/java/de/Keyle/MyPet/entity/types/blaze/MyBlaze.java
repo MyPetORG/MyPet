@@ -39,14 +39,14 @@ public class MyBlaze extends MyPet {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Fire", new TagByte(isOnFire()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Fire")) {
             setOnFire(info.getAs("Fire", TagByte.class).getBooleanData());
         }

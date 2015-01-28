@@ -132,8 +132,8 @@ public class MyHorse extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Type", new TagByte(getHorseType()));
         info.getCompoundData().put("Variant", new TagInt(getVariant()));
         if (hasArmor()) {
@@ -150,7 +150,7 @@ public class MyHorse extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Type")) {
             setHorseType(info.getAs("Type", TagByte.class).getByteData());
         }

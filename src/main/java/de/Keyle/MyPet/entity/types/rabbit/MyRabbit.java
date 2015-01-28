@@ -97,15 +97,15 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Variant", new TagByte(variant.getId()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Variant", TagInt.class)) {
             setVariant(RabbitType.getTypeByID(info.getAs("Variant", TagByte.class).getByteData()));
         }

@@ -50,8 +50,8 @@ public class MyEnderman extends MyPet {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         if (block != null) {
             info.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(block)));
         }
@@ -60,7 +60,7 @@ public class MyEnderman extends MyPet {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("BlockID")) {
             int id;
             int data = 0;

@@ -44,8 +44,8 @@ public class MyIronGolem extends MyPet {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         if (hasFlower()) {
             info.getCompoundData().put("Flower", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(getFlower())));
         }
@@ -53,7 +53,7 @@ public class MyIronGolem extends MyPet {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Flower", TagCompound.class)) {
             TagCompound itemTag = info.get("Flower");
             ItemStack item = CraftItemStack.asBukkitCopy(ItemStackNBTConverter.compundToItemStack(itemTag));

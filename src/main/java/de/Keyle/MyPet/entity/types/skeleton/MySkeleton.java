@@ -63,8 +63,8 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
     }
 
     @Override
-    public TagCompound getExtendedInfo() {
-        TagCompound info = super.getExtendedInfo();
+    public TagCompound writeExtendedInfo() {
+        TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Wither", new TagByte(isWither()));
 
         List<TagCompound> itemList = new ArrayList<TagCompound>();
@@ -80,7 +80,7 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
     }
 
     @Override
-    public void setExtendedInfo(TagCompound info) {
+    public void readExtendedInfo(TagCompound info) {
         if (info.getCompoundData().containsKey("Wither")) {
             setWither(info.getAs("Wither", TagByte.class).getBooleanData());
         }
