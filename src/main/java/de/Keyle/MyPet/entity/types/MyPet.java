@@ -469,6 +469,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                     }
                 }
                 if (respawnTime <= 0) {
+                    status = PetState.Despawned;
                     respawnPet();
                 }
             }
