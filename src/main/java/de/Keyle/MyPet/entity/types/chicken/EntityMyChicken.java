@@ -115,6 +115,9 @@ public class EntityMyChicken extends EntityMyPet {
         return (MyChicken) myPet;
     }
 
-    protected void b(float f) {
+    /**
+     * -> disable falldamage
+     */
+    public void e(float f, float f1) {
     }
 }

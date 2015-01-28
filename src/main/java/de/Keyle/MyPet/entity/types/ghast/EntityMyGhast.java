@@ -59,6 +59,9 @@ public class EntityMyGhast extends EntityMyPet {
         }
     }
 
-    protected void b(float f) {
+    /**
+     * -> disable falldamage
+     */
+    public void e(float f, float f1) {
     }
 }
