@@ -57,18 +57,13 @@ import net.slipcor.pvparena.api.PVPArenaAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.mcsg.survivalgames.Game;
 import org.mcsg.survivalgames.GameManager;
 
-import static org.bukkit.Bukkit.getPluginManager;
-
 public class PvPChecker {
-    public static boolean USE_PlayerDamageEntityEvent = false;
     public static boolean USE_Towny = true;
     public static boolean USE_Factions = true;
     public static boolean USE_WorldGuard = true;
@@ -91,7 +86,7 @@ public class PvPChecker {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker, defender) && canHurtEvent(attacker, defender) && canHurt(defender);
+            return canHurtMcMMO(attacker, defender) && canHurtFactions(attacker, defender) && canHurtTowny(attacker, defender) && canHurtHeroes(attacker, defender) && canHurtAncientRPG(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurtPvPArena(attacker, defender) && canHurtPvPManager(attacker, defender) && canHurt(defender);
         }
         return false;
     }
@@ -104,15 +99,6 @@ public class PvPChecker {
             return canHurtMobArena(defender) && canHurtResidence(defender.getLocation()) && canHurtRegios(defender) && canHurtCitizens(defender) && canHurtWorldGuard(defender.getLocation()) && canHurtSurvivalGame(defender) && defender.getGameMode() != GameMode.CREATIVE && defender.getLocation().getWorld().getPVP();
         }
         return false;
-    }
-
-    public static boolean canHurtEvent(Player attacker, LivingEntity defender) {
-        if (USE_PlayerDamageEntityEvent) {
-            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker, defender, DamageCause.ENTITY_ATTACK, 0.1D);
-            getPluginManager().callEvent(event);
-            return !event.isCancelled();
-        }
-        return true;
     }
 
     public static boolean canHurtCitizens(Entity defender) {
