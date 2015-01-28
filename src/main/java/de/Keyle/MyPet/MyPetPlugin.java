@@ -73,15 +73,15 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
+import de.Keyle.MyPet.util.hooks.Economy;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.PvPChecker;
+import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.Keyle.MyPet.util.player.UUIDFetcher;
-import de.Keyle.MyPet.util.support.Economy;
-import de.Keyle.MyPet.util.support.PluginSupportManager;
-import de.Keyle.MyPet.util.support.PvPChecker;
-import de.Keyle.MyPet.util.support.arenas.*;
 import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -166,7 +166,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         WorldListener worldListener = new WorldListener();
         getServer().getPluginManager().registerEvents(worldListener, this);
 
-        PluginSupportManager pluginSupportListener = new PluginSupportManager();
+        PluginHookManager pluginSupportListener = new PluginHookManager();
         getServer().getPluginManager().registerEvents(pluginSupportListener, this);
 
         getCommand("petname").setExecutor(new CommandName());

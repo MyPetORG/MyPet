@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.hooks;
 
 import com.ancientshores.AncientRPG.API.ApiManager;
 import com.ancientshores.AncientRPG.Party.AncientRPGParty;
@@ -40,9 +40,9 @@ public class PartyManager {
 
     public static List<Player> getPartyMembers(Player player) {
 
-        if (PluginSupportManager.isPluginUsable("Heroes")) {
+        if (PluginHookManager.isPluginUsable("Heroes")) {
             try {
-                Heroes heroes = PluginSupportManager.getPluginInstance(Heroes.class);
+                Heroes heroes = PluginHookManager.getPluginInstance(Heroes.class);
                 Hero heroPlayer = heroes.getCharacterManager().getHero(player);
                 if (heroPlayer.getParty() != null) {
                     List<Player> members = new ArrayList<Player>();
@@ -56,7 +56,7 @@ public class PartyManager {
             } catch (Exception ignored) {
             }
         }
-        if (PluginSupportManager.isPluginUsable("mcMMO")) {
+        if (PluginHookManager.isPluginUsable("mcMMO")) {
             try {
                 if (PartyAPI.inParty(player)) {
                     List<Player> members = new ArrayList<Player>();
@@ -69,7 +69,7 @@ public class PartyManager {
             } catch (Exception ignored) {
             }
         }
-        if (PluginSupportManager.isPluginUsable("AncientRPG")) {
+        if (PluginHookManager.isPluginUsable("AncientRPG")) {
             try {
                 ApiManager api = ApiManager.getApiManager();
                 AncientRPGParty party = api.getPlayerParty(player);

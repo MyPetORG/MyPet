@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
@@ -81,16 +81,16 @@ public class Economy {
     }
 
     public static void setupEconomy() {
-        if (PluginSupportManager.isPluginUsable("Vault")) {
+        if (PluginHookManager.isPluginUsable("Vault")) {
             RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
                 searchedVaultEconomy = true;
-                DebugLogger.info("Economy support enabled.");
+                DebugLogger.info("Economy hook enabled.");
                 return;
             }
         }
-        DebugLogger.info("No Economy plugin found. Economy support not enabled.");
+        DebugLogger.info("No Economy plugin found. Economy hook not enabled.");
         searchedVaultEconomy = true;
     }
 }

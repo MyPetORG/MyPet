@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support.arenas;
+package de.Keyle.MyPet.util.hooks.arenas;
 
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.garbagemule.MobArena.events.ArenaPlayerJoinEvent;
@@ -26,10 +26,10 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.support.PluginSupportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -44,12 +44,12 @@ public class MobArena implements Listener {
     private static boolean active = false;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("MobArena", "com.garbagemule.MobArena.MobArena")) {
+        if (PluginHookManager.isPluginUsable("MobArena", "com.garbagemule.MobArena.MobArena")) {
             Bukkit.getPluginManager().registerEvents(new MobArena(), MyPetPlugin.getPlugin());
             arenaHandler = new MobArenaHandler();
             active = true;
         }
-        DebugLogger.info("MobArena support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("MobArena hook " + (active ? "" : "not ") + "activated.");
     }
 
     public static boolean isInMobArena(MyPetPlayer owner) {

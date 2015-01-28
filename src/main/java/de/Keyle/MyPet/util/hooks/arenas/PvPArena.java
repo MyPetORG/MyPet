@@ -18,40 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support.arenas;
+package de.Keyle.MyPet.util.hooks.arenas;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.support.PluginSupportManager;
-import me.kitskub.hungergames.HungerGames;
-import me.kitskub.hungergames.api.GameManager;
-import me.kitskub.hungergames.api.event.PlayerJoinGameEvent;
+import net.slipcor.pvparena.api.PVPArenaAPI;
+import net.slipcor.pvparena.events.PAJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class MyHungerGames implements Listener {
-    public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
+public class PvPArena implements Listener {
+    public static boolean DISABLE_PETS_IN_ARENA = true;
 
     private static boolean active = false;
-    private static GameManager gameManager;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("MyHungerGames", "me.kitskub.hungergames.HungerGames")) {
-            Bukkit.getPluginManager().registerEvents(new MyHungerGames(), MyPetPlugin.getPlugin());
-            gameManager = HungerGames.getInstance().getGameManager();
+        if (PluginHookManager.isPluginUsable("pvparena")) {
+            Bukkit.getPluginManager().registerEvents(new PvPArena(), MyPetPlugin.getPlugin());
             active = true;
         }
-        DebugLogger.info("MyHungerGames support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("PvPArena hook " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInHungerGames(MyPetPlayer owner) {
+    public static boolean isInPvPArena(MyPetPlayer owner) {
         if (active) {
             try {
-                return gameManager.getSpectating(owner.getPlayer()) != null || HungerGames.getInstance().getGameManager().getRawPlayingSession(owner.getPlayer()) != null;
+                return !PVPArenaAPI.getArenaName(owner.getPlayer()).equals("");
             } catch (Exception e) {
                 active = false;
             }
@@ -60,8 +57,8 @@ public class MyHungerGames implements Listener {
     }
 
     @EventHandler
-    public void onJoinPvPArena(PlayerJoinGameEvent event) {
-        if (active && DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+    public void onJoinPvPArena(PAJoinEvent event) {
+        if (active && DISABLE_PETS_IN_ARENA && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

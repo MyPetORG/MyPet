@@ -18,37 +18,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support.arenas;
+package de.Keyle.MyPet.util.hooks.arenas;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.support.PluginSupportManager;
+import me.kitskub.hungergames.HungerGames;
+import me.kitskub.hungergames.api.GameManager;
+import me.kitskub.hungergames.api.event.PlayerJoinGameEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.mcsg.survivalgames.GameManager;
-import org.mcsg.survivalgames.api.PlayerJoinArenaEvent;
 
-public class SurvivalGames implements Listener {
-    public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
+public class MyHungerGames implements Listener {
+    public static boolean DISABLE_PETS_IN_HUNGER_GAMES = true;
 
     private static boolean active = false;
+    private static GameManager gameManager;
 
     public static void findPlugin() {
-        if (PluginSupportManager.isPluginUsable("SurvivalGames", "org.mcsg.survivalgames.SurvivalGames")) {
-            Bukkit.getPluginManager().registerEvents(new SurvivalGames(), MyPetPlugin.getPlugin());
+        if (PluginHookManager.isPluginUsable("MyHungerGames", "me.kitskub.hungergames.HungerGames")) {
+            Bukkit.getPluginManager().registerEvents(new MyHungerGames(), MyPetPlugin.getPlugin());
+            gameManager = HungerGames.getInstance().getGameManager();
             active = true;
         }
-        DebugLogger.info("SurvivalGames support " + (active ? "" : "not ") + "activated.");
+        DebugLogger.info("MyHungerGames hook " + (active ? "" : "not ") + "activated.");
     }
 
-    public static boolean isInSurvivalGames(MyPetPlayer owner) {
+    public static boolean isInHungerGames(MyPetPlayer owner) {
         if (active) {
             try {
-                return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
+                return gameManager.getSpectating(owner.getPlayer()) != null || HungerGames.getInstance().getGameManager().getRawPlayingSession(owner.getPlayer()) != null;
             } catch (Exception e) {
                 active = false;
             }
@@ -57,8 +60,8 @@ public class SurvivalGames implements Listener {
     }
 
     @EventHandler
-    public void onJoinPvPArena(PlayerJoinArenaEvent event) {
-        if (active && DISABLE_PETS_IN_SURVIVAL_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
+    public void onJoinPvPArena(PlayerJoinGameEvent event) {
+        if (active && DISABLE_PETS_IN_HUNGER_GAMES && MyPetPlayer.isMyPetPlayer(event.getPlayer())) {
             MyPetPlayer player = MyPetPlayer.getOrCreateMyPetPlayer(event.getPlayer());
             if (player.hasMyPet() && player.getMyPet().getStatus() == PetState.Here) {
                 player.getMyPet().removePet(true);

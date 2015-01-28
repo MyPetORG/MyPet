@@ -40,13 +40,13 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackNBTConverte
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.*;
+import de.Keyle.MyPet.util.hooks.Economy;
+import de.Keyle.MyPet.util.hooks.Permissions;
+import de.Keyle.MyPet.util.hooks.PluginHookManager;
+import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.support.Economy;
-import de.Keyle.MyPet.util.support.Permissions;
-import de.Keyle.MyPet.util.support.PluginSupportManager;
-import de.Keyle.MyPet.util.support.PvPChecker;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
@@ -257,7 +257,7 @@ public class EntityListener implements Listener {
                     if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getOrCreateMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
-                    if (PluginSupportManager.isPluginUsable("Citizens")) {
+                    if (PluginHookManager.isPluginUsable("Citizens")) {
                         try {
                             if (CitizensAPI.getNPCRegistry().isNPC(leashTarget)) {
                                 return;

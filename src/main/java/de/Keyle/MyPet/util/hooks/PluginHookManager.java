@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.util.support;
+package de.Keyle.MyPet.util.hooks;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
@@ -32,7 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PluginSupportManager implements Listener {
+public class PluginHookManager implements Listener {
 
     private static PluginManager pluginManager = null;
     private static Map<String, Plugin> pluginInstances = new HashMap<String, Plugin>();
