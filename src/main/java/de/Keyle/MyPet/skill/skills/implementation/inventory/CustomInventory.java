@@ -238,8 +238,10 @@ public class CustomInventory implements IInventory, Listener {
     }
 
     public void close() {
-        for (HumanEntity humanEntity : transaction) {
-            humanEntity.closeInventory();
+        if (transaction.size() > 0) {
+            for (HumanEntity humanEntity : new ArrayList<HumanEntity>(transaction)) {
+                humanEntity.closeInventory();
+            }
         }
     }
 
