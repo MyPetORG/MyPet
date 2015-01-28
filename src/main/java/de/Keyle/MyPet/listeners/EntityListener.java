@@ -30,6 +30,7 @@ import de.Keyle.MyPet.entity.types.*;
 import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
+import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -413,6 +414,10 @@ public class EntityListener implements Listener {
                             }
                         } else if (leashTarget instanceof Skeleton) {
                             extendedInfo.getCompoundData().put("Wither", new TagByte(((CraftSkeleton) leashTarget).getSkeletonType() == SkeletonType.WITHER));
+                        } else if (leashTarget instanceof Guardian) {
+                            extendedInfo.getCompoundData().put("Elder", new TagByte(((Guardian) leashTarget).isElder()));
+                        } else if (leashTarget instanceof Rabbit) {
+                            extendedInfo.getCompoundData().put("Variant", new TagByte(MyRabbit.RabbitType.getTypeByBukkitEnum(((Rabbit) leashTarget).getRabbitType()).getId()));
                         }
                         if (leashTarget instanceof Ageable) {
                             extendedInfo.getCompoundData().put("Baby", new TagByte(!((Ageable) leashTarget).isAdult()));

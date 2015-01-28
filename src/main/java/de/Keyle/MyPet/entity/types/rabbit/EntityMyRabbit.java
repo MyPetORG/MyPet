@@ -113,7 +113,7 @@ public class EntityMyRabbit extends EntityMyPet {
         if (myPet != null) {
             super.setMyPet(myPet);
 
-            this.setVariant(getMyPet().getVariant());
+            this.setVariant(getMyPet().getVariant().getId());
             this.setBaby(getMyPet().isBaby());
         }
     }

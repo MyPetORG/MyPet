@@ -31,6 +31,7 @@ import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Rabbit;
 
 import static org.bukkit.Material.CARROT;
 import static org.bukkit.Material.RED_ROSE;
@@ -40,7 +41,51 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
 
     protected boolean isBaby = false;
-    protected byte variant = 0;
+    protected RabbitType variant = RabbitType.BROWN;
+
+    public static enum RabbitType {
+        BROWN(Rabbit.Type.BROWN, (byte) 0),
+        WHITE(Rabbit.Type.WHITE, (byte) 1),
+        BLACK(Rabbit.Type.BLACK, (byte) 2),
+        BLACK_AND_WHITE(Rabbit.Type.BLACK_AND_WHITE, (byte) 3),
+        GOLD(Rabbit.Type.GOLD, (byte) 4),
+        SALT_AND_PEPPER(Rabbit.Type.SALT_AND_PEPPER, (byte) 5),
+        THE_KILLER_BUNNY(Rabbit.Type.THE_KILLER_BUNNY, (byte) 99);
+
+        Rabbit.Type type;
+        byte id;
+
+        RabbitType(Rabbit.Type type, byte id) {
+            this.type = type;
+            this.id = id;
+        }
+
+        public static RabbitType getTypeByID(byte id) {
+            for (RabbitType type : values()) {
+                if (type.id == id) {
+                    return type;
+                }
+            }
+            return BROWN;
+        }
+
+        public static RabbitType getTypeByBukkitEnum(Rabbit.Type bukkitType) {
+            for (RabbitType type : values()) {
+                if (type.type == bukkitType) {
+                    return type;
+                }
+            }
+            return BROWN;
+        }
+
+        public Rabbit.Type getBukkitType() {
+            return type;
+        }
+
+        public byte getId() {
+            return id;
+        }
+    }
 
     public MyRabbit(MyPetPlayer petOwner) {
         super(petOwner);
@@ -54,7 +99,7 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
     @Override
     public TagCompound getExtendedInfo() {
         TagCompound info = super.getExtendedInfo();
-        info.getCompoundData().put("Variation", new TagByte(variant));
+        info.getCompoundData().put("Variant", new TagByte(variant.getId()));
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         return info;
     }
@@ -62,7 +107,7 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
     @Override
     public void setExtendedInfo(TagCompound info) {
         if (info.containsKeyAs("Variant", TagInt.class)) {
-            setVariant((byte) info.getAs("Variant", TagInt.class).getIntData());
+            setVariant(RabbitType.getTypeByID(info.getAs("Variant", TagByte.class).getByteData()));
         }
         if (info.getCompoundData().containsKey("Baby")) {
             setBaby(info.getAs("Baby", TagByte.class).getBooleanData());
@@ -80,15 +125,15 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
         this.isBaby = flag;
     }
 
-    public byte getVariant() {
+    public RabbitType getVariant() {
         return variant;
     }
 
-    public void setVariant(byte variant) {
+    public void setVariant(RabbitType variant) {
         this.variant = variant;
 
         if (status == PetState.Here) {
-            ((EntityMyRabbit) getCraftPet().getHandle()).setVariant(variant);
+            ((EntityMyRabbit) getCraftPet().getHandle()).setVariant(variant.getId());
         }
     }
 

@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
 import de.Keyle.MyPet.entity.types.enderman.MyEnderman;
+import de.Keyle.MyPet.entity.types.guardian.MyGuardian;
 import de.Keyle.MyPet.entity.types.horse.MyHorse;
 import de.Keyle.MyPet.entity.types.irongolem.MyIronGolem;
 import de.Keyle.MyPet.entity.types.magmacube.MyMagmaCube;
@@ -36,6 +37,7 @@ import de.Keyle.MyPet.entity.types.mooshroom.MyMooshroom;
 import de.Keyle.MyPet.entity.types.ocelot.MyOcelot;
 import de.Keyle.MyPet.entity.types.pig.MyPig;
 import de.Keyle.MyPet.entity.types.pigzombie.MyPigZombie;
+import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
 import de.Keyle.MyPet.entity.types.sheep.MySheep;
 import de.Keyle.MyPet.entity.types.skeleton.MySkeleton;
 import de.Keyle.MyPet.entity.types.slime.MySlime;
@@ -215,6 +217,15 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                             if (((MyHorse) myPet).hasArmor()) {
                                 ((Horse) normalEntity).getInventory().setArmor(((MyHorse) myPet).getArmor().clone());
                             }
+                        } else if (myPet instanceof MyRabbit) {
+                            if (((MyRabbit) myPet).isBaby()) {
+                                ((Rabbit) normalEntity).setBaby();
+                            } else {
+                                ((Rabbit) normalEntity).setAdult();
+                            }
+                            ((Rabbit) normalEntity).setRabbitType(((MyRabbit) myPet).getVariant().getBukkitType());
+                        } else if (myPet instanceof MyGuardian) {
+                            ((Guardian) normalEntity).setElder(((MyGuardian) myPet).isElder());
                         }
                     }
                     myPet.removePet();
