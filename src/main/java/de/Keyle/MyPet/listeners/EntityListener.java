@@ -198,6 +198,10 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Locales.getString("Name.Exp", damager) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                         infoShown = true;
                     }
+                    if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
+                        infoShown = true;
+                        damager.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
+                    }
 
                     if (!infoShown) {
                         damager.sendMessage(Locales.getString("Message.No.NothingToSeeHere", myPet.getOwner().getLanguage()));

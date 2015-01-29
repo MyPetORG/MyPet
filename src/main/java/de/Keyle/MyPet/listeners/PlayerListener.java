@@ -195,6 +195,9 @@ public class PlayerListener implements Listener {
                     myPet.setStatus(PetState.Despawned);
                 }
             }
+            //donate-delete-start
+            joinedPlayer.checkForDonation();
+            //donate-delete-end
         }
     }
 

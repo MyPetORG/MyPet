@@ -22,6 +22,7 @@ package de.Keyle.MyPet.util.player;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.api.util.NBTStorage;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -29,6 +30,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.util.BukkitUtil;
+import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -66,6 +68,9 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     protected BiMap<String, UUID> petWorldUUID = HashBiMap.create();
     protected BiMap<UUID, String> petUUIDWorld = petWorldUUID.inverse();
     protected TagCompound extendedInfo = new TagCompound();
+
+    private volatile DonateCheck.DonationRank rank = DonateCheck.DonationRank.None;
+    private boolean donationChecked = false;
 
     protected MyPetPlayer() {
         this(UUID.randomUUID());
@@ -414,6 +419,23 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         }
         return false;
     }
+
+    public DonateCheck.DonationRank getDonationRank() {
+        return rank;
+    }
+
+    //donate-delete-start
+    public void checkForDonation() {
+        if (!donationChecked) {
+            donationChecked = true;
+            Bukkit.getScheduler().runTaskLaterAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    rank = DonateCheck.getDonationRank(MyPetPlayer.this);
+                }
+            }, 60L);
+        }
+    }
+    //donate-delete-end
 
     @Override
     public TagCompound save() {

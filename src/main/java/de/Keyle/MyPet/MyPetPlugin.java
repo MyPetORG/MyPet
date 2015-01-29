@@ -378,6 +378,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                         myPet.setStatus(PetState.Despawned);
                     }
                 }
+                //donate-delete-start
+                myPetPlayer.checkForDonation();
+                //donate-delete-end
             }
         }
         this.isReady = true;

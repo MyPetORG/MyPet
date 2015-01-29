@@ -65,6 +65,7 @@
         <fanciful-chat.version>0.0.2</fanciful-chat.version>
 
         <download.translations>prepare-package</download.translations>
+        <remove.donator>none</remove.donator>
     </properties>
 
     <repositories>
@@ -533,6 +534,63 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.1</version>
+                <executions>
+                    <execution>
+                        <id>disable donation perk</id>
+                        <!-- process-sources -->
+                        <phase>${remove.donator}</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>src/main/java/de/Keyle/MyPet/**/*.java</include>
+                            </includes>
+
+                            <replacements>
+                                <replacement>
+                                    <token>//donate-delete-start</token>
+                                    <value>/*donate-delete-start</value>
+                                </replacement>
+                                <replacement>
+                                    <token>//donate-delete-end</token>
+                                    <value>donate-delete-end*/</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>revert donation perk changes</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>src/main/java/de/Keyle/MyPet/**/*.java</include>
+                            </includes>
+                            <replacements>
+                                <replacement>
+                                    <token>/*donate-delete-start</token>
+                                    <value>//donate-delete-start</value>
+                                </replacement>
+                                <replacement>
+                                    <token>donate-delete-end*/</token>
+                                    <value>//donate-delete-end</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <basedir>${project.basedir}/</basedir>
+                    <regex>false</regex>
+                </configuration>
             </plugin>
         </plugins>
     </build>

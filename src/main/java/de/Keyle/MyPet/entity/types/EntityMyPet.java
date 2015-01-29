@@ -30,10 +30,7 @@ import de.Keyle.MyPet.entity.ai.navigation.AbstractNavigation;
 import de.Keyle.MyPet.entity.ai.navigation.VanillaNavigation;
 import de.Keyle.MyPet.entity.ai.target.*;
 import de.Keyle.MyPet.skill.skills.implementation.Ride;
-import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.ConfigItem;
-import de.Keyle.MyPet.util.Configuration;
-import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -64,6 +61,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     protected int idleSoundTimer = 0;
     public AbstractNavigation petNavigation;
     Ride rideSkill = null;
+
+    int donatorParticleCounter = 0;
 
     private static Field jump = null;
 
@@ -402,6 +401,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 isInvisible = false;
             }
         }
+
+        // donate delete start
+        if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
+            donatorParticleCounter = 20 + getRandom().nextInt(10);
+            BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.VILLAGER_HAPPY, 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+        }
+        // donate delete end
     }
 
     protected void initDatawatcher() {

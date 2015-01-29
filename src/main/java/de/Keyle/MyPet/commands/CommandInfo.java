@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -147,6 +148,10 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     double reqEXP = myPet.getExperience().getRequiredExp();
                     player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
                     infoShown = true;
+                }
+                if (myPet.getOwner().getDonationRank() != DonateCheck.DonationRank.None) {
+                    infoShown = true;
+                    sender.sendMessage("   " + myPet.getOwner().getDonationRank().getDisplayText());
                 }
                 if (!infoShown) {
                     sender.sendMessage(Locales.getString("Message.CantViewPetInfo", player));
