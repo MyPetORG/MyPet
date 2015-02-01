@@ -273,15 +273,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         BukkitUtil.registerMyPetEntity(EntityMyRabbit.class, "Rabbit", 101);
         BukkitUtil.registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
-        DebugLogger.info("Pet type: ----------");
-        for (MyPetType myPetType : MyPetType.values()) {
-            DebugLogger.info("  " + myPetType.getTypeName() + " { " +
-                    "startHP:" + MyPet.getStartHP(myPetType.getMyPetClass()) + ", " +
-                    "speed:" + MyPet.getStartSpeed(myPetType.getMyPetClass()) + ", " +
-                    "food:" + MyPet.getFood(myPetType.getMyPetClass()) + ", " +
-                    "leashFlags:" + MyPet.getLeashFlags(myPetType.getMyPetClass()) + " }");
-        }
-
         new Locales();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
