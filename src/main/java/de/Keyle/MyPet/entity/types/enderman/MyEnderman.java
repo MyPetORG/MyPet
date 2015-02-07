@@ -33,6 +33,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
+import static org.bukkit.Material.AIR;
 import static org.bukkit.Material.SOUL_SAND;
 
 @MyPetInfo(food = {SOUL_SAND})
@@ -52,7 +53,7 @@ public class MyEnderman extends MyPet {
     @Override
     public TagCompound writeExtendedInfo() {
         TagCompound info = super.writeExtendedInfo();
-        if (block != null) {
+        if (block != null && block.getType() != AIR) {
             info.getCompoundData().put("Block", ItemStackNBTConverter.itemStackToCompund(CraftItemStack.asNMSCopy(block)));
         }
         //info.getValue().put("Screaming", new TagByte("Screaming", isScreaming()));

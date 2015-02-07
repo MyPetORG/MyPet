@@ -77,7 +77,7 @@ public class EntityMyEnderman extends EntityMyPet {
                 }
 
                 return true;
-            } else if (getMyPet().getBlock() == null && Util.isBetween(0, 256, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
+            } else if (getMyPet().getBlock() == null && Util.isBetween(1, 256, Item.getId(itemStack.getItem())) && getOwner().getPlayer().isSneaking()) {
                 getMyPet().setBlock(CraftItemStack.asBukkitCopy(itemStack));
                 if (!entityhuman.abilities.canInstantlyBuild) {
                     if (--itemStack.count <= 0) {
