@@ -54,7 +54,7 @@ public class MyWolf extends MyPet implements IMyPetBaby {
 
     public void setCollarColor(DyeColor value) {
         if (status == PetState.Here) {
-            ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getDyeData());
+            ((EntityMyWolf) getCraftPet().getHandle()).setCollarColor(value.getWoolData());
         }
         this.collarColor = value;
     }

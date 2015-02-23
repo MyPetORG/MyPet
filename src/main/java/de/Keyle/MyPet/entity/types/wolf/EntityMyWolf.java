@@ -77,15 +77,21 @@ public class EntityMyWolf extends EntityMyPet {
 
         if (getOwner().equals(entityhuman)) {
             if (itemStack != null && canUseItem()) {
-                if (itemStack.getItem() == Items.DYE && itemStack.getData() != getMyPet().getCollarColor().getDyeData() && getOwner().getPlayer().isSneaking()) {
+                if (itemStack.getItem() == Items.DYE && itemStack.getData() != getMyPet().getCollarColor().getWoolData()) {
                     if (itemStack.getData() <= 15) {
-                        getMyPet().setCollarColor(DyeColor.getByDyeData((byte) itemStack.getData()));
-                        if (!entityhuman.abilities.canInstantlyBuild) {
-                            if (--itemStack.count <= 0) {
-                                entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        if (getOwner().getPlayer().isSneaking()) {
+                            getMyPet().setCollarColor(DyeColor.getByWoolData((byte) itemStack.getData()));
+                            if (!entityhuman.abilities.canInstantlyBuild) {
+                                if (--itemStack.count <= 0) {
+                                    entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                                }
                             }
+                            return true;
+                        } else {
+                            this.setCollarColor((byte) 0);
+                            this.setCollarColor(getMyPet().getCollarColor().getWoolData());
+                            return false;
                         }
-                        return true;
                     }
                 } else if (MyWolf.GROW_UP_ITEM.compare(itemStack) && getMyPet().isBaby() && getOwner().getPlayer().isSneaking()) {
                     if (!entityhuman.abilities.canInstantlyBuild) {
@@ -142,8 +148,7 @@ public class EntityMyWolf extends EntityMyPet {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.isWet && !this.shaking && this.onGround)
-        {
+        if (this.isWet && !this.shaking && this.onGround) {
             this.shaking = true;
             this.shakeCounter = 0.0F;
             this.world.broadcastEntityEffect(this, (byte) 8);
