@@ -104,7 +104,7 @@ public class EntityMyMooshroom extends EntityMyPet {
 
     public void setBaby(boolean flag) {
         if (flag) {
-            this.datawatcher.watch(12, new Integer(Integer.MIN_VALUE));
+            this.datawatcher.watch(12, Byte.valueOf(Byte.MIN_VALUE));
         } else {
             this.datawatcher.watch(12, new Byte((byte) 0));
         }
