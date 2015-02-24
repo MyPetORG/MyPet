@@ -57,6 +57,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
@@ -85,7 +86,7 @@ public class PlayerListener implements Listener {
                         myPet.sendMessageToOwner(Locales.getString("Message.No.CanUse", myPet.getOwner().getLanguage()));
                         return;
                     }
-                    Block block = event.getPlayer().getTargetBlock(null, 100);
+                    Block block = event.getPlayer().getTargetBlock((Set) null, 100);
                     if (block != null && block.getType() != Material.AIR) {
                         for (int i : ControllIgnoreBlocks) {
                             if (block.getTypeId() == i) {
