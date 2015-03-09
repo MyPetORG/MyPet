@@ -55,7 +55,7 @@ public class EntityMySlime extends EntityMyPet {
         this.datawatcher.watch(16, new Byte((byte) value));
         EntitySize es = EntityMySlime.class.getAnnotation(EntitySize.class);
         if (es != null) {
-            this.a(es.width() * value, es.length() * value);
+            this.setSize(es.width() * value, es.length() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
             petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.6), 20));
