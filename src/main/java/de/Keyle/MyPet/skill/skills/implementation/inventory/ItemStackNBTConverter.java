@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.skill.skills.implementation.inventory;
 
 import de.keyle.knbt.*;
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R2.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

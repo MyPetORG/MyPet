@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.movement.Sit;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R2.*;
 import org.bukkit.DyeColor;
 
 @EntitySize(width = 0.6F, length = 0.8F, height = 0.64f)
@@ -161,7 +161,7 @@ public class EntityMyWolf extends EntityMyPet {
             this.shakeCounter = 0.0F;
         } else if ((this.isWet || this.shaking) && this.shaking) {
             if (this.shakeCounter == 0.0F) {
-                makeSound("mob.wolf.shake", bf(), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                makeSound("mob.wolf.shake", 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             }
 
             this.shakeCounter += 0.05F;

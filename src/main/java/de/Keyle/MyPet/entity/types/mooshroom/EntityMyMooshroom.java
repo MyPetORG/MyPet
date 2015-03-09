@@ -24,10 +24,10 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_8_R1.EntityHuman;
-import net.minecraft.server.v1_8_R1.ItemStack;
-import net.minecraft.server.v1_8_R1.Items;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.EntityHuman;
+import net.minecraft.server.v1_8_R2.ItemStack;
+import net.minecraft.server.v1_8_R2.Items;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.Bukkit;
 
 @EntitySize(width = 0.9F, length = 0.9F, height = 1.3F)

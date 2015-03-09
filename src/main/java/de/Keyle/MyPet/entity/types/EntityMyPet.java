@@ -37,10 +37,10 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R2.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.potion.PotionEffect;
@@ -98,11 +98,13 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         }
     }
 
+    /*
     public void applyLeash() {
         if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
             ((EntityPlayer) this.bI()).playerConnection.sendPacket(new PacketPlayOutAttachEntity(1, this, this.bI()));
         }
     }
+    */
 
     public boolean isMyPet() {
         return isMyPet;
@@ -301,7 +303,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         ItemStack itemStack = entityhuman.inventory.getItemInHand();
         Player owner = this.getOwner().getPlayer();
 
-        applyLeash();
+        //applyLeash();
 
         if (isMyPet() && myPet.getOwner().equals(entityhuman)) {
             if (Ride.RIDE_ITEM.compare(itemStack)) {
@@ -370,7 +372,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         if (hasRider) {
             if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
                 hasRider = false;
-                applyLeash();
+                //applyLeash();
                 this.S = 0.5F; // climb height -> halfslab
                 Location playerLoc = getOwner().getPlayer().getLocation();
                 Location petLoc = getBukkitEntity().getLocation();
@@ -538,14 +540,82 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         return super.bg();
     }
 
+
+    private int bn;
+
+    public void m() {
+        if (this.bn > 0) {
+            --this.bn;
+        }
+
+        if (this.bc > 0) {
+            double d0 = this.locX + (this.bd - this.locX) / (double) this.bc;
+            double d1 = this.locY + (this.be - this.locY) / (double) this.bc;
+            double d2 = this.locZ + (this.bf - this.locZ) / (double) this.bc;
+            double d3 = MathHelper.g(this.bg - (double) this.yaw);
+            this.yaw = (float) ((double) this.yaw + d3 / (double) this.bc);
+            this.pitch = (float) ((double) this.pitch + (this.bh - (double) this.pitch) / (double) this.bc);
+            --this.bc;
+            this.setPosition(d0, d1, d2);
+            this.setYawPitch(this.yaw, this.pitch);
+        } else if (!this.bM()) {
+            this.motX *= 0.98D;
+            this.motY *= 0.98D;
+            this.motZ *= 0.98D;
+        }
+
+        if (Math.abs(this.motX) < 0.005D) {
+            this.motX = 0.0D;
+        }
+
+        if (Math.abs(this.motY) < 0.005D) {
+            this.motY = 0.0D;
+        }
+
+        if (Math.abs(this.motZ) < 0.005D) {
+            this.motZ = 0.0D;
+        }
+
+        this.world.methodProfiler.a("ai");
+        this.doMyPetTick();
+
+        this.world.methodProfiler.b();
+        this.world.methodProfiler.a("jump");
+        if (this.aY) {
+            if (this.V()) {
+                this.bG();
+            } else if (this.ab()) {
+                this.bH();
+            } else if (this.onGround && this.bn == 0) {
+                this.bF();
+                this.bn = 10;
+            }
+        } else {
+            this.bn = 0;
+        }
+
+        this.world.methodProfiler.b();
+        this.world.methodProfiler.a("travel");
+        this.aZ *= 0.98F;
+        this.ba *= 0.98F;
+        this.bb *= 0.9F;
+        this.g(this.aZ, this.ba);
+        this.world.methodProfiler.b();
+        this.world.methodProfiler.a("push");
+        if (!this.world.isClientSide) {
+            this.bL();
+        }
+
+        this.world.methodProfiler.b();
+    }
+
     /**
      * Entity AI tick method
      * -> updateAITasks()
      */
-    @Override
-    protected void doTick() {
+    protected void doMyPetTick() {
         try {
-            ++this.aO; // entityAge
+            ++this.ticksFarFromPlayer;
 
             if (isAlive()) {
                 getEntitySenses().a(); // sensing
@@ -567,12 +637,14 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         }
     }
 
+    /*
     public Entity bI() {
         if (Configuration.ALWAYS_SHOW_LEASH_FOR_OWNER) {
             return ((CraftPlayer) getOwner().getPlayer()).getHandle();
         }
         return null;
     }
+    */
 
     @Override
     public boolean d(NBTTagCompound nbttagcompound) {
@@ -592,8 +664,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         this.aI = (this.aG = this.yaw);
 
         // get motion from passenger (player)
-        motionSideways = ((EntityLiving) this.passenger).aX * 0.5F;
-        motionForward = ((EntityLiving) this.passenger).aY;
+        motionSideways = ((EntityLiving) this.passenger).aZ * 0.5F;
+        motionForward = ((EntityLiving) this.passenger).ba;
 
         // backwards is slower
         if (motionForward <= 0.0F) {
@@ -608,7 +680,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             speed *= 1F + (rideSkill.getSpeedPercent() / 100F);
             jumpHeight = rideSkill.getJumpHeight() * 0.18D;
         }
-        j(speed); // set ride speed
+        k(speed); // set ride speed
         super.g(motionSideways, motionForward); // apply motion
 
         // jump when the player jumps
@@ -622,8 +694,8 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
         }
     }
 
-    public void s_() {
-        super.s_();
+    public void t_() {
+        super.t_();
         try {
             onLivingUpdate();
         } catch (Exception e) {

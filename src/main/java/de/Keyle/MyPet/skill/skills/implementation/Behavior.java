@@ -34,7 +34,7 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_8_R1.EnumParticle;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.ChatColor;
 
 import java.util.Random;

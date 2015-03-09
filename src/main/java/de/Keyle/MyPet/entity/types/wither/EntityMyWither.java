@@ -23,7 +23,7 @@ package de.Keyle.MyPet.entity.types.wither;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.World;
 
 @EntitySize(width = 1.9F, length = 1.9F, height = 3.5F)
 public class EntityMyWither extends EntityMyPet {

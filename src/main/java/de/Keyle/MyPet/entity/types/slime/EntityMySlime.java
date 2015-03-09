@@ -24,7 +24,7 @@ import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.World;
 
 @EntitySize(width = 0.5100001F, length = 0.5100001F, height = 0.5100001F)
 public class EntityMySlime extends EntityMyPet {
@@ -80,7 +80,7 @@ public class EntityMySlime extends EntityMyPet {
             if (getGoalTarget() != null) {
                 jumpDelay /= 3;
             }
-            makeSound(getDeathSound(), bf(), ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+            makeSound(getDeathSound(), 1.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) / 0.8F);
         }
     }
 

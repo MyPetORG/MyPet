@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.util.iconmenu;
 
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R2.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R1.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +95,7 @@ public class IconMenuItem {
 
         if (applyToItemMethhod == null) {
             try {
-                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_8_R1.inventory.CraftMetaItem");
+                Class craftMetaItemClass = Class.forName("org.bukkit.craftbukkit.v1_8_R2.inventory.CraftMetaItem");
                 applyToItemMethhod = craftMetaItemClass.getDeclaredMethod("applyToItem", NBTTagCompound.class);
                 applyToItemMethhod.setAccessible(true);
             } catch (ClassNotFoundException e) {
