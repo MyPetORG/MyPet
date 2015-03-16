@@ -247,7 +247,7 @@ public class JavaScript extends Experience {
         }
     }
 
-    interface IExperience {
+    public interface IExperience {
         public abstract int getLevel(double exp, MyPetScriptInfo mypet) throws InvocationTargetException;
 
         public abstract double getRequiredExp(double exp, MyPetScriptInfo mypet) throws InvocationTargetException;
