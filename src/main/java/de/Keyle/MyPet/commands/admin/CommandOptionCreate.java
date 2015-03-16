@@ -209,12 +209,13 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                                 int variant = Integer.parseInt(variantString);
                                 if (myPetType == MyPetType.Horse) {
                                     variant = Math.min(Math.max(0, variant), 1030);
+                                    TagCompound.getCompoundData().put("Variant", new TagInt(variant));
                                 } else if (myPetType == MyPetType.Rabbit) {
                                     if (variant != 99 && (variant > 5 || variant < 0)) {
                                         variant = 0;
                                     }
+                                    TagCompound.getCompoundData().put("Variant", new TagByte(variant));
                                 }
-                                TagCompound.getCompoundData().put("Variant", new TagInt(variant));
                             }
                         } else if (args[i].startsWith("cat:")) {
                             String catTypeString = args[i].replace("cat:", "");
