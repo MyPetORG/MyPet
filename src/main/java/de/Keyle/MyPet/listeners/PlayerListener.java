@@ -21,8 +21,6 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.api.entity.MyPetEntity;
-import de.Keyle.MyPet.entity.types.CraftMyPet;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
@@ -54,8 +52,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -96,31 +92,6 @@ public class PlayerListener implements Listener {
                         }
                         myPet.getSkills().getSkill(Control.class).setMoveTo(block.getLocation());
                     }
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
-        if (event.getRightClicked() instanceof MyPetEntity) {
-            CraftMyPet craftMyPet = (CraftMyPet) event.getRightClicked();
-            MyPet myPet = craftMyPet.getMyPet();
-            ItemStack heldItem = event.getPlayer().getItemInHand();
-
-            if (heldItem != null) {
-                if (heldItem.getType() == Material.NAME_TAG) {
-                    if (craftMyPet.getOwner().equals(event.getPlayer())) {
-                        ItemMeta meta = heldItem.getItemMeta();
-                        if (meta.hasDisplayName()) {
-                            craftMyPet.getMyPet().setPetName(meta.getDisplayName());
-                            myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Name.New", myPet.getOwner()), meta.getDisplayName()));
-                        }
-                    } else {
-                        event.setCancelled(true);
-                    }
-                } else if (heldItem.getType() == Material.LEASH) {
-                    //craftMyPet.getHandle().applyLeash();
                 }
             }
         }

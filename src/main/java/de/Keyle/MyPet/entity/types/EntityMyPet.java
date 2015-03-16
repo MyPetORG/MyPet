@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.entity.types;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.ai.AIGoalSelector;
 import de.Keyle.MyPet.entity.ai.attack.MeleeAttack;
@@ -323,6 +324,26 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 }
             }
             if (itemStack != null) {
+                if (itemStack.getItem() == Items.NAME_TAG) {
+                    if (itemStack.hasName()) {
+                        final String name = itemStack.getName();
+                        getMyPet().setPetName(name);
+                        EntityMyPet.super.setCustomName("-");
+                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Name.New", myPet.getOwner()), name));
+                        if (!entityhuman.abilities.canInstantlyBuild) {
+                            --itemStack.count;
+                        }
+                        if (itemStack.count <= 0) {
+                            entityhuman.inventory.setItem(entityhuman.inventory.itemInHandIndex, null);
+                        }
+                        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                            public void run() {
+                                setCustomName("");
+                            }
+                        }, 1L);
+                        return true;
+                    }
+                }
                 if (canEat(itemStack) && canUseItem()) {
                     if (owner != null && !Permissions.hasExtended(owner, "MyPet.user.extended.CanFeed")) {
                         return false;
@@ -359,6 +380,20 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                     }
                     if (addHunger < Configuration.HUNGER_SYSTEM_POINTS_PER_FEED) {
                         return true;
+                    }
+                }
+            }
+        } else {
+            if (itemStack != null) {
+                if (itemStack.getItem() == Items.NAME_TAG) {
+                    if (itemStack.hasName()) {
+                        EntityMyPet.super.setCustomName("-");
+                        MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
+                            public void run() {
+                                setCustomName("");
+                            }
+                        }, 1L);
+                        return false;
                     }
                 }
             }
