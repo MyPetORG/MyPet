@@ -270,6 +270,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
                 if (myPet != null) {
                     myPet.createPet();
+                    sender.sendMessage(Locales.getString("Message.Command.Success", sender));
                 } else {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] Can't create MyPet for " + newOwner.getName() + ". Is this player online?");
                 }

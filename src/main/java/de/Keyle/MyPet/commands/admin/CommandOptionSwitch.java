@@ -118,6 +118,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     MyPetList.setMyPetInactive(owner);
                 }
                 MyPet myPet = MyPetList.setMyPetActive(newPet);
+                sender.sendMessage(Locales.getString("Message.Command.Success", sender));
                 if (myPet != null) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", owner), myPet.getPetName()));
                     switch (myPet.createPet()) {

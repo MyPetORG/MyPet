@@ -27,6 +27,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.apache.commons.lang.LocaleUtils;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -59,6 +60,17 @@ public class Locales {
         }
 
         return getString(key, BukkitUtil.getPlayerLanguage(player));
+    }
+
+    public static String getString(String key, CommandSender sender) {
+        if (sender == null) {
+            return key;
+        }
+        if (sender instanceof Player) {
+            return getString(key, (Player) sender);
+        }
+
+        return getString(key, "en");
     }
 
     public static String getString(String key, MyPetPlayer player) {
