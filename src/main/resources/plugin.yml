@@ -70,6 +70,11 @@ commands:
     description: Toogles CaptureHelper on/off
     usage: '/<command>'
     permission: MyPet.user.command.capturehelper
+  petoptions:
+    aliases: [po, peto, petoption]
+    description: MyPet player options
+    usage: '/<command>'
+    permission: MyPet.user.command.options
 
 permissions:
   MyPet.user.leash.*:
@@ -121,6 +126,7 @@ permissions:
       MyPet.user.command.capturehelper: true
       MyPet.user.command.name: true
       MyPet.user.command.name.color: true
+      MyPet.user.command.options: true
   MyPet.user.command.release:
     default: true
     description: Allows usage of /petrelease
@@ -136,3 +142,6 @@ permissions:
   MyPet.user.command.name.color:
     default: true
     description: Allows to use colors in petnames
+  MyPet.user.command.options:
+    default: true
+    description: Allows to use the MyPet options command

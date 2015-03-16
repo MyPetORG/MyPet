@@ -43,14 +43,14 @@ import java.util.Map;
 
 public class BukkitUtil {
     /**
-     * @param location   the {@link Location} around which players must be to see the effect
-     * @param effect list of effects: https://gist.github.com/riking/5759002
-     * @param offsetX    the amount to be randomly offset by in the X axis
-     * @param offsetY    the amount to be randomly offset by in the Y axis
-     * @param offsetZ    the amount to be randomly offset by in the Z axis
-     * @param speed      the speed of the particles
-     * @param count      the number of particles
-     * @param radius     the radius around the location
+     * @param location the {@link Location} around which players must be to see the effect
+     * @param effect   list of effects: https://gist.github.com/riking/5759002
+     * @param offsetX  the amount to be randomly offset by in the X axis
+     * @param offsetY  the amount to be randomly offset by in the Y axis
+     * @param offsetZ  the amount to be randomly offset by in the Z axis
+     * @param speed    the speed of the particles
+     * @param count    the number of particles
+     * @param radius   the radius around the location
      */
     public static void playParticleEffect(Location location, EnumParticle effect, float offsetX, float offsetY, float offsetZ, float speed, int count, int radius) {
         Validate.notNull(location, "Location cannot be null");
@@ -260,6 +260,13 @@ public class BukkitUtil {
     public static void sendMessageRaw(Player player, String message) {
         if (player instanceof CraftPlayer) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(message)));
+        }
+    }
+
+    public static void sendMessageActionBar(Player player, String message) {
+        if (player instanceof CraftPlayer) {
+            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, (byte) 2));
         }
     }
 }

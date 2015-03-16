@@ -38,6 +38,7 @@ import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import net.minecraft.server.v1_8_R2.*;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
@@ -410,6 +411,36 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.VILLAGER_HAPPY, 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
         }
         // donate delete end
+    }
+
+    public void setHealth(float f) {
+        float deltaHealth = getHealth();
+        super.setHealth(f);
+        deltaHealth = getHealth() - deltaHealth;
+
+        String msg = myPet.getPetName() + ChatColor.RESET + ": ";
+        if (getHealth() > myPet.getMaxHealth() / 3 * 2) {
+            msg += org.bukkit.ChatColor.GREEN;
+        } else if (getHealth() > myPet.getMaxHealth() / 3) {
+            msg += org.bukkit.ChatColor.YELLOW;
+        } else {
+            msg += org.bukkit.ChatColor.RED;
+        }
+        if (getHealth() > 0) {
+            msg += String.format("%1.2f", getHealth()) + org.bukkit.ChatColor.WHITE + "/" + String.format("%1.2f", myPet.getMaxHealth());
+
+            if (!myPet.getOwner().isHealthBarActive()) {
+                if (deltaHealth > 0) {
+                    msg += " (" + ChatColor.GREEN + "+" + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                } else {
+                    msg += " (" + ChatColor.RED + String.format("%1.2f", deltaHealth) + ChatColor.RESET + ")";
+                }
+            }
+        } else {
+            msg += Locales.getString("Name.Dead", getOwner());
+        }
+
+        BukkitUtil.sendMessageActionBar(getOwner().getPlayer(), msg);
     }
 
     protected void initDatawatcher() {
