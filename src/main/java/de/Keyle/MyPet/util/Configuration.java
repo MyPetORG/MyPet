@@ -46,6 +46,7 @@ import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
 import de.Keyle.MyPet.util.hooks.arenas.*;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -103,6 +104,9 @@ public class Configuration {
         config.addDefault("MyPet.MaxPetNameLength", MAX_PET_NAME_LENGTH);
         config.addDefault("MyPet.RetainEquipmentOnTame", RETAIN_EQUIPMENT_ON_TAME);
         config.addDefault("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", INVISIBLE_LIKE_OWNER);
+        config.addDefault("MyPet.Log.INFO", DebugLogger.INFO);
+        config.addDefault("MyPet.Log.ERROR", DebugLogger.ERROR);
+        config.addDefault("MyPet.Log.WARNING", DebugLogger.WARNING);
 
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
@@ -284,6 +288,10 @@ public class Configuration {
         INVISIBLE_LIKE_OWNER = config.getBoolean("MyPet.Make-Pet-Invisible-When-Owner-Is-Invisible", true);
         MYPET_FOLLOW_START_DISTANCE = config.getDouble("MyPet.FollowStartDistance", 7.0D);
         LEVELUP_FIREWORK_COLOR = Integer.decode(config.getString("MyPet.LevelSystem.Firework.Color", "#00FF00"));
+
+        DebugLogger.INFO = config.getBoolean("MyPet.Log.INFO", DebugLogger.INFO);
+        DebugLogger.ERROR = config.getBoolean("MyPet.Log.ERROR", DebugLogger.ERROR);
+        DebugLogger.WARNING = config.getBoolean("MyPet.Log.WARNING", DebugLogger.WARNING);
 
         AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
         STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);

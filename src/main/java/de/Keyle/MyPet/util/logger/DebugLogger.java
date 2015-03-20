@@ -32,15 +32,26 @@ import java.util.logging.Logger;
 public class DebugLogger {
     private static final Logger debugLogger = Logger.getLogger("MyPet");
     private static boolean isEnabled = false;
+    public static boolean INFO = true;
+    public static boolean ERROR = true;
+    public static boolean WARNING = true;
 
     public static boolean setup() {
+
         if (debugLogger.getHandlers().length > 0) {
             for (Handler h : debugLogger.getHandlers()) {
                 if (h.toString().equals("MyPet-Debug-Logger-FileHandler")) {
+                    if (!INFO && !ERROR && !WARNING) {
+                        debugLogger.removeHandler(h);
+                        return false;
+                    }
                     isEnabled = true;
                     return true;
                 }
             }
+        }
+        if (!INFO && !ERROR && !WARNING) {
+            return false;
         }
         try {
             String path = DebugLogger.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
@@ -70,38 +81,38 @@ public class DebugLogger {
     }
 
     public static void info(String text) {
-        if (isEnabled) {
+        if (isEnabled && INFO) {
             debugLogger.info("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
     public static void warning(String text) {
-        if (isEnabled) {
+        if (isEnabled && WARNING) {
             debugLogger.warning("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
     public static void severe(String text) {
-        if (isEnabled) {
+        if (isEnabled && ERROR) {
             debugLogger.severe("[MyPet] " + ChatColor.stripColor(text));
         }
     }
 
 
     public static void info(String text, String source) {
-        if (isEnabled) {
+        if (isEnabled && INFO) {
             debugLogger.info("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
     public static void warning(String text, String source) {
-        if (isEnabled) {
+        if (isEnabled && WARNING) {
             debugLogger.warning("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
 
     public static void severe(String text, String source) {
-        if (isEnabled) {
+        if (isEnabled && ERROR) {
             debugLogger.severe("[" + source + "] " + ChatColor.stripColor(text));
         }
     }
