@@ -34,7 +34,6 @@ import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
 import org.bukkit.entity.Player;
-import org.spigotmc.SpigotConfig;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -170,9 +169,10 @@ public class BukkitUtil {
         return true;
     }
 
-    private static Boolean bungee = null;
+    //private static Boolean bungee = null;
 
     public static boolean isInOnlineMode() {
+        /*
         if (bungee == null) {
             try {
                 bungee = SpigotConfig.bungee;
@@ -180,7 +180,8 @@ public class BukkitUtil {
                 bungee = false;
             }
         }
-        return bungee || Bukkit.getOnlineMode();
+        */
+        return /* bungee || */ Bukkit.getOnlineMode();
     }
 
     @SuppressWarnings("unchecked")
