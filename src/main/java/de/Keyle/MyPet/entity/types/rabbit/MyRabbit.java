@@ -29,7 +29,6 @@ import de.Keyle.MyPet.util.ConfigItem;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
-import de.keyle.knbt.TagInt;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Rabbit;
 
@@ -106,7 +105,7 @@ public class MyRabbit extends MyPet implements IMyPetBaby {
 
     @Override
     public void readExtendedInfo(TagCompound info) {
-        if (info.containsKeyAs("Variant", TagInt.class)) {
+        if (info.containsKeyAs("Variant", TagByte.class)) {
             setVariant(RabbitType.getTypeByID(info.getAs("Variant", TagByte.class).getByteData()));
         }
         if (info.getCompoundData().containsKey("Baby")) {
