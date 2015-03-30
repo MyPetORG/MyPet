@@ -24,6 +24,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
 import net.minecraft.server.v1_8_R2.EntityTameableAnimal;
@@ -53,6 +54,9 @@ public class HurtByTarget extends AIGoal {
             target = petEntity.getLastDamager();
         }
         if (target == petEntity) {
+            return false;
+        }
+        if (target instanceof EntityArmorStand) {
             return false;
         }
         if (target instanceof EntityPlayer) {

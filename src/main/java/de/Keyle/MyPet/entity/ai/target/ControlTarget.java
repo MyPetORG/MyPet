@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
 import net.minecraft.server.v1_8_R2.EntityTameableAnimal;
@@ -70,7 +71,7 @@ public class ControlTarget extends AIGoal {
             for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petEntity.getBoundingBox().grow((double) this.range, 4.0D, (double) this.range))) {
                 EntityLiving entityLiving = (EntityLiving) entityObj;
 
-                if (entityLiving != petEntity) {
+                if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand)) {
                     if (entityLiving instanceof EntityPlayer) {
                         Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                         if (myPet.getOwner().equals(targetPlayer)) {

@@ -25,6 +25,7 @@ import de.Keyle.MyPet.entity.ai.AIGoal;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 
 public class MeleeAttack extends AIGoal {
@@ -55,6 +56,9 @@ public class MeleeAttack extends AIGoal {
             return false;
         }
         if (!targetEntity.isAlive()) {
+            return false;
+        }
+        if (targetEntity instanceof EntityArmorStand) {
             return false;
         }
         if (petEntity.getMyPet().getRangedDamage() > 0 && this.petEntity.f(targetEntity.locX, targetEntity.getBoundingBox().b, targetEntity.locZ) >= 20) {

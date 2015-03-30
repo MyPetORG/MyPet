@@ -27,6 +27,7 @@ import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.implementation.Ranged;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.*;
 import de.Keyle.MyPet.skill.skills.info.RangedInfo.Projectiles;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityArrow;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.MathHelper;
@@ -60,6 +61,9 @@ public class RangedAttack extends AIGoal {
         EntityLiving goalTarget = this.entityMyPet.getGoalTarget();
 
         if (goalTarget == null || !goalTarget.isAlive() || !entityMyPet.canMove()) {
+            return false;
+        }
+        if (goalTarget instanceof EntityArmorStand) {
             return false;
         }
         double meleeDamage = myPet.getDamage();
