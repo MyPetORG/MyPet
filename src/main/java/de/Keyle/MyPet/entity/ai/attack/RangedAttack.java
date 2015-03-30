@@ -153,7 +153,7 @@ public class RangedAttack extends AIGoal {
             world.addEntity(snowball);
         } else if (projectile == Projectiles.LargeFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = target.getHeadHeight() - 1.100000023841858D;
+            double distanceY = this.target.getBoundingBox().b + (double)(this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double)(entityMyPet.length / 2.0F));
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetLargeFireball largeFireball = new MyPetLargeFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             largeFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -162,7 +162,7 @@ public class RangedAttack extends AIGoal {
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.SmallFireball) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = target.getHeadHeight() - 1.100000023841858D;
+            double distanceY = this.target.getBoundingBox().b + (this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (entityMyPet.length / 2.0F));
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetSmallFireball smallFireball = new MyPetSmallFireball(world, entityMyPet, distanceX, distanceY, distanceZ);
             smallFireball.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
@@ -171,7 +171,7 @@ public class RangedAttack extends AIGoal {
             world.makeSound(entityMyPet.locX + 0.5D, entityMyPet.locY + 0.5D, entityMyPet.locZ + 0.5D, "mob.ghast.fireball", 1.0F + entityMyPet.getRandom().nextFloat(), entityMyPet.getRandom().nextFloat() * 0.7F + 0.3F);
         } else if (projectile == Projectiles.WitherSkull) {
             double distanceX = this.target.locX - entityMyPet.locX;
-            double distanceY = target.getHeadHeight() - 1.100000023841858D;
+            double distanceY = this.target.getBoundingBox().b + (double)(this.target.length / 2.0F) - (0.5D + entityMyPet.locY + (double)(entityMyPet.length / 2.0F));
             double distanceZ = this.target.locZ - entityMyPet.locZ;
             MyPetWitherSkull witherSkull = new MyPetWitherSkull(world, entityMyPet, distanceX, distanceY, distanceZ);
             witherSkull.locY = (entityMyPet.locY + entityMyPet.length / 2.0F + 0.5D);
