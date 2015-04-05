@@ -26,6 +26,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
 import net.minecraft.server.v1_8_R2.EntityTameableAnimal;
@@ -69,7 +70,7 @@ public class BehaviorAggressiveTarget extends AIGoal {
         for (Object entityObj : this.petEntity.world.a(EntityLiving.class, this.petOwnerEntity.getBoundingBox().grow((double) range, (double) range, (double) range))) {
             EntityLiving entityLiving = (EntityLiving) entityObj;
 
-            if (entityLiving != petEntity && entityLiving.isAlive() && petEntity.h(entityLiving) <= 91) {
+            if (entityLiving != petEntity && !(entityLiving instanceof EntityArmorStand) && entityLiving.isAlive() && petEntity.h(entityLiving) <= 91) {
                 if (entityLiving instanceof EntityPlayer) {
                     Player targetPlayer = (Player) entityLiving.getBukkitEntity();
                     if (myPet.getOwner().equals(targetPlayer)) {
