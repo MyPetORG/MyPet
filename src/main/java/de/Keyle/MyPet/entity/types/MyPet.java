@@ -22,6 +22,7 @@ package de.Keyle.MyPet.entity.types;
 
 import com.google.common.collect.ArrayListMultimap;
 import de.Keyle.MyPet.MyPetPlugin;
+import de.Keyle.MyPet.api.event.MyPetCallEvent;
 import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.api.util.NBTStorage;
@@ -42,6 +43,7 @@ import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
@@ -340,6 +342,12 @@ public abstract class MyPet implements IMyPet, NBTStorage {
                 loc.setPitch(0);
                 loc.setYaw(0);
                 petEntity.setLocation(loc);
+
+                MyPetCallEvent event = new MyPetCallEvent(this);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    return SpawnFlags.Canceled;
+                }
 
                 if (!BukkitUtil.canSpawn(loc, petEntity)) {
                     status = PetState.Despawned;
