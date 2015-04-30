@@ -130,7 +130,7 @@ public enum MyPetType {
     private Class<? extends EntityMyPet> entityClass;
     private Class<? extends MyPet> myPetClass;
 
-    private MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass) {
+    MyPetType(EntityType bukkitType, String typeName, Class<? extends EntityMyPet> entityClass, Class<? extends MyPet> myPetClass) {
         this.bukkitType = bukkitType;
         this.name = typeName;
         this.entityClass = entityClass;

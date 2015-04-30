@@ -80,7 +80,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.petPathfinderSelector = new AIGoalSelector();
             this.petTargetSelector = new AIGoalSelector();
 
-            this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(this.getClass()).getMyPetClass());
+            this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(getClass()));
             getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
 
             petNavigation = new VanillaNavigation(this);

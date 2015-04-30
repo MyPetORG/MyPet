@@ -637,6 +637,13 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         leashItem.put(myPetClass, configItem);
     }
 
+    public static double getStartSpeed(MyPetType myPetType) {
+        if (myPetType != null) {
+            return getStartSpeed(myPetType.getMyPetClass());
+        }
+        return 0.3F;
+    }
+
     public static double getStartSpeed(Class<? extends MyPet> myPetClass) {
         if (startSpeed.containsKey(myPetClass)) {
             return startSpeed.get(myPetClass);
