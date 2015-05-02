@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_8_R2.*;
 import org.apache.commons.lang.Validate;
@@ -169,19 +170,8 @@ public class BukkitUtil {
         return true;
     }
 
-    //private static Boolean bungee = null;
-
     public static boolean isInOnlineMode() {
-        /*
-        if (bungee == null) {
-            try {
-                bungee = SpigotConfig.bungee;
-            } catch (NoClassDefFoundError ignored) {
-                bungee = false;
-            }
-        }
-        */
-        return /* bungee || */ Bukkit.getOnlineMode();
+        return (Bungee.isEnabled() && Bungee.isOnlineModeEnabled()) || Bukkit.getOnlineMode();
     }
 
     @SuppressWarnings("unchecked")

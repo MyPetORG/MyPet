@@ -42,6 +42,7 @@ import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
+import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
@@ -143,6 +144,7 @@ public class Configuration {
         config.addDefault("MyPet.Skilltree.SwitchPenaltyPercent", SKILLTREE_SWITCH_PENALTY_PERCENT);
         config.addDefault("MyPet.Skilltree.SwitchPenaltyAdmin", SKILLTREE_SWITCH_PENALTY_ADMIN);
 
+        config.addDefault("MyPet.Hooks.BungeeCord.UUID-Mode", Bungee.BUNGEE_MODE);
         config.addDefault("MyPet.Hooks.Towny", true);
         config.addDefault("MyPet.Hooks.Heroes", true);
         config.addDefault("MyPet.Hooks.Factions", true);
@@ -314,6 +316,7 @@ public class Configuration {
         Permissions.USE_EXTENDET_PERMISSIONS = config.getBoolean("MyPet.Permissions.UseExtendedPermissions", false);
         Permissions.ENABLED = config.getBoolean("MyPet.Permissions.Enabled", true);
 
+        Bungee.BUNGEE_MODE = config.getString("MyPet.Hooks.BungeeCord.UUID-Mode", "online");
         Economy.USE_ECONOMY = config.getBoolean("MyPet.Hooks.Vault.Economy", true);
         Minigames.DISABLE_PETS_IN_MINIGAMES = config.getBoolean("MyPet.Hooks.Minigames.DisablePetsInGames", true);
         PvPArena.DISABLE_PETS_IN_ARENA = config.getBoolean("MyPet.Hooks.PvPArena.DisablePetsInArena", true);

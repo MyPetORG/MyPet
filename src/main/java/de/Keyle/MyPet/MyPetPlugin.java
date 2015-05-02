@@ -73,6 +73,7 @@ import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
+import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Economy;
 import de.Keyle.MyPet.util.hooks.PluginHookManager;
 import de.Keyle.MyPet.util.hooks.PvPChecker;
@@ -275,6 +276,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         BukkitUtil.registerMyPetEntity(EntityMyVillager.class, "Villager", 120);
 
         new Locales();
+        Bungee.reset();
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
