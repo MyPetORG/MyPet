@@ -46,7 +46,7 @@ import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -333,7 +333,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
             }
             if (respawnTime <= 0) {
                 Location loc = petOwner.getPlayer().getLocation();
-                net.minecraft.server.v1_8_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+                net.minecraft.server.v1_8_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
                 EntityMyPet petEntity = getPetType().getNewEntityInstance(mcWorld, this);
                 craftMyPet = (CraftMyPet) petEntity.getBukkitEntity();
                 if (getYSpawnOffset() > 0) {

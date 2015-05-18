@@ -23,17 +23,17 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import net.minecraft.server.v1_8_R2.*;
+import net.minecraft.server.v1_8_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -98,7 +98,7 @@ public class BukkitUtil {
     }
 
     public static Boolean canSpawn(Location loc, AxisAlignedBB bb) {
-        net.minecraft.server.v1_8_R2.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        net.minecraft.server.v1_8_R3.World mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
         return getBlockBBsInBB(loc.getWorld(), bb).isEmpty() && !mcWorld.containsLiquid(bb);
     }
 

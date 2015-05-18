@@ -29,7 +29,7 @@ import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.Random;

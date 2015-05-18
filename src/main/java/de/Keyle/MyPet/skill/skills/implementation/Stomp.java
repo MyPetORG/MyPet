@@ -31,12 +31,12 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.keyle.knbt.TagDouble;
 import de.keyle.knbt.TagInt;
 import de.keyle.knbt.TagString;
-import net.minecraft.server.v1_8_R2.*;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 

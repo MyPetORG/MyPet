@@ -38,11 +38,11 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import net.minecraft.server.v1_8_R2.*;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.potion.PotionEffect;
@@ -81,7 +81,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             this.petTargetSelector = new AIGoalSelector();
 
             this.walkSpeed = MyPet.getStartSpeed(MyPetType.getMyPetTypeByEntityClass(getClass()));
-            getAttributeInstance(GenericAttributes.d).setValue(walkSpeed);
+            getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(walkSpeed);
 
             petNavigation = new VanillaNavigation(this);
 

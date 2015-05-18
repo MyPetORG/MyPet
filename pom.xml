@@ -32,9 +32,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.8.3</minecraft.version>
+        <minecraft.version>1.8.4</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
-        <bukkit.packet>v1_8_R2</bukkit.packet>
+        <bukkit.packet>v1_8_R3</bukkit.packet>
 
         <citizensapi.version>2.0.12-SNAPSHOT</citizensapi.version>
         <mcmmo.version>1.5.00</mcmmo.version>
@@ -57,7 +57,7 @@
         <pvpmanager.version>1.7.4</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
-        <spigot.version>1.8.3-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.8.4-R0.1-SNAPSHOT</spigot.version>
 
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
@@ -155,7 +155,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>${minecraft.version}-${bukkit.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>

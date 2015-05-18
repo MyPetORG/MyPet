@@ -21,10 +21,10 @@
 package de.Keyle.MyPet.entity.ai.navigation;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.Navigation;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.Navigation;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 public class VanillaNavigation extends AbstractNavigation {
@@ -76,6 +76,6 @@ public class VanillaNavigation extends AbstractNavigation {
 
     public void applyNavigationParameters() {
         this.nav.a(parameters.avoidWater());
-        this.entityMyPet.getAttributeInstance(GenericAttributes.d).setValue(parameters.speed() + parameters.speedModifier());
+        this.entityMyPet.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(parameters.speed() + parameters.speedModifier());
     }
 }

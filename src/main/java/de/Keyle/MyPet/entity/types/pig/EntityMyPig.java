@@ -23,8 +23,8 @@ package de.Keyle.MyPet.entity.types.pig;
 import de.Keyle.MyPet.entity.EntitySize;
 import de.Keyle.MyPet.entity.types.EntityMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import net.minecraft.server.v1_8_R2.*;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 
 @EntitySize(width = 0.9F, length = 0.9F, height = 0.9F)
 public class EntityMyPig extends EntityMyPet {

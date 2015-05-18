@@ -22,12 +22,12 @@ package de.Keyle.MyPet.util;
 
 import de.Keyle.MyPet.skill.skills.implementation.inventory.ItemStackComparator;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
-import net.minecraft.server.v1_8_R2.Item;
-import net.minecraft.server.v1_8_R2.MojangsonParser;
-import net.minecraft.server.v1_8_R2.NBTBase;
-import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.Item;
+import net.minecraft.server.v1_8_R3.MojangsonParser;
+import net.minecraft.server.v1_8_R3.NBTBase;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class ConfigItem {
@@ -82,7 +82,7 @@ public class ConfigItem {
         return true;
     }
 
-    public boolean compare(net.minecraft.server.v1_8_R2.ItemStack compareItem) {
+    public boolean compare(net.minecraft.server.v1_8_R3.ItemStack compareItem) {
         if (item == null || item.getTypeId() == 0) {
             if (compareItem == null || Item.getId(compareItem.getItem()) == 0) {
                 return true;
@@ -174,7 +174,7 @@ public class ConfigItem {
                 }
             }
 
-            net.minecraft.server.v1_8_R2.ItemStack is = new net.minecraft.server.v1_8_R2.ItemStack(Item.getById(itemId), 1, itemDamage);
+            net.minecraft.server.v1_8_R3.ItemStack is = new net.minecraft.server.v1_8_R3.ItemStack(Item.getById(itemId), 1, itemDamage);
             if (nbtBase != null && nbtBase instanceof NBTTagCompound) {
                 is.setTag((NBTTagCompound) nbtBase);
             }

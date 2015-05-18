@@ -23,10 +23,10 @@ package de.Keyle.MyPet.entity.types;
 import de.Keyle.MyPet.api.entity.MyPetEntity;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import net.minecraft.server.v1_8_R2.EntityCreature;
-import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import net.minecraft.server.v1_8_R3.EntityCreature;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -41,41 +41,49 @@ public class CraftMyPet extends CraftCreature implements MyPetEntity {
     }
 
     @Override
+    @Deprecated
     public void _INVALID_damage(int amount) {
         damage((double) amount);
     }
 
     @Override
+    @Deprecated
     public void _INVALID_damage(int amount, Entity source) {
         damage((double) amount, source);
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getHealth() {
         return (int) getHealth();
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getLastDamage() {
         return (int) getLastDamage();
     }
 
     @Override
+    @Deprecated
     public int _INVALID_getMaxHealth() {
         return (int) getMaxHealth();
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setHealth(int health) {
         setHealth((double) health);
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setLastDamage(int damage) {
         setLastDamage((double) damage);
     }
 
     @Override
+    @Deprecated
     public void _INVALID_setMaxHealth(int health) {
     }
 
