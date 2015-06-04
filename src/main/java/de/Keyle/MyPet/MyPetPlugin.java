@@ -116,12 +116,12 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             }
             saveData(true);
             MyPetList.clearList();
+            BukkitUtil.unregisterMyPetEntities();
         }
         Timer.reset();
         MyPetPlayer.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
-        BukkitUtil.unregisterMyPetEntities();
         DebugLogger.info("MyPet disabled!");
     }
 
@@ -136,6 +136,13 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
+
+        if (!Bukkit.getServer().getClass().getName().contains(MyPetVersion.getBukkitPacket())) {
+            MyPetLogger.write(ChatColor.RED + "This version of MyPet is only compatible with Craftbukkit/Spigot " + MyPetVersion.getMinecraftVersion() + " (" + MyPetVersion.getBukkitPacket() + ") !!!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         PvPChecker.reset();
         Economy.reset();
         JavaScript.reset();
@@ -344,6 +351,8 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
 
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
+        this.isReady = true;
+        Timer.addTask(this);
 
         for (Player player : getServer().getOnlinePlayers()) {
             MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
@@ -377,9 +386,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 //donate-delete-end
             }
         }
-        this.isReady = true;
         saveData(false);
-        Timer.addTask(this);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
