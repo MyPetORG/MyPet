@@ -39,11 +39,7 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.util.Configuration;
-import me.NoChance.PvPManager.Config.Variables;
-import me.NoChance.PvPManager.Managers.PlayerHandler;
-import me.NoChance.PvPManager.Managers.WorldTimerManager;
 import me.NoChance.PvPManager.PvPManager;
-import me.NoChance.PvPManager.PvPlayer;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -377,29 +373,9 @@ public class PvPChecker {
         if (USE_PvPManager && PluginHookManager.isPluginUsable("PvPManager")) {
             try {
                 PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class);
-                PlayerHandler playerHandler = plugin.getPlayerHandler();
-                WorldTimerManager worldTimerManager = plugin.getWtm();
-
-                PvPlayer pvPlayerAttacker = playerHandler.get(attacker);
-                PvPlayer pvPlayerDefender = playerHandler.get(defender);
-
-                if (pvPlayerAttacker.isNewbie() || pvPlayerDefender.isNewbie()) {
-                    return false;
-                }
-                if (!pvPlayerAttacker.hasPvPEnabled()) {
-                    return false;
-                } else if (!pvPlayerAttacker.hasPvPEnabled() && !pvPlayerAttacker.overrideAll()) {
-                    return false;
-                }
-                if (Variables.pvpTimerEnabled) {
-                    if (worldTimerManager.isPvpTimerWorld(pvPlayerAttacker.getWorldName())) {
-                        if (!worldTimerManager.isTimeForPvp(pvPlayerAttacker.getWorldName())) {
-                            return false;
-                        }
-                    }
-                }
+                return plugin.getPlayerHandler().canAttack(attacker, defender);
             } catch (Error e) {
-                USE_GriefPrevention = false;
+                USE_PvPManager = false;
             } catch (Exception ignored) {
             }
         }
