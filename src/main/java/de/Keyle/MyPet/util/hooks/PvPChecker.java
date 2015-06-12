@@ -39,6 +39,7 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import me.NoChance.PvPManager.PvPManager;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.DataStore;
@@ -375,6 +376,7 @@ public class PvPChecker {
                 PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class);
                 return plugin.getPlayerHandler().canAttack(attacker, defender);
             } catch (Error e) {
+                MyPetLogger.write("Please use PvPManager build 113+");
                 USE_PvPManager = false;
             } catch (Exception ignored) {
             }

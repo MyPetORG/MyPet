@@ -54,7 +54,7 @@
         <residence.version>2.6.6.6</residence.version>
         <towny.version>0.89.2.0</towny.version>
         <griefprevention.version>11.5</griefprevention.version>
-        <pvpmanager.version>1.7.4</pvpmanager.version>
+        <pvpmanager.version>3.0</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
         <spigot.version>1.8.4-R0.1-SNAPSHOT</spigot.version>
