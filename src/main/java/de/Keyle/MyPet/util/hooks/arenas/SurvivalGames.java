@@ -49,7 +49,7 @@ public class SurvivalGames implements Listener {
         if (active) {
             try {
                 return GameManager.getInstance().getPlayerGameId(owner.getPlayer()) != -1 && GameManager.getInstance().isPlayerActive(owner.getPlayer());
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 active = false;
             }
         }

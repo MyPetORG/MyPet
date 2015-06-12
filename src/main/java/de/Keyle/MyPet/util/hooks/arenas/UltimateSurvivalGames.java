@@ -48,7 +48,7 @@ public class UltimateSurvivalGames implements Listener {
         if (active) {
             try {
                 return me.maker56.survivalgames.SurvivalGames.getUserManager().isPlaying(owner.getPlayer().getName()) && me.maker56.survivalgames.SurvivalGames.getUserManager().isSpectator(owner.getPlayer().getName());
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 active = false;
             }
         }

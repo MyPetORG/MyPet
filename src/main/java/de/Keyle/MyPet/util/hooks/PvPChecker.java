@@ -108,9 +108,8 @@ public class PvPChecker {
                     }
                     return !npc.data().get("protected", true);
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Citizens = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -130,9 +129,8 @@ public class PvPChecker {
                     ApplicableRegionSet set = mgr.getApplicableRegions(location);
                     return set.allows(DefaultFlag.PVP);
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_WorldGuard = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -143,9 +141,8 @@ public class PvPChecker {
             try {
                 EntityDamageByEntityEvent sub = new EntityDamageByEntityEvent(attacker, defender, EntityDamageEvent.DamageCause.CUSTOM, 0.);
                 return EngineMain.get().canCombatDamageHappen(sub, false);
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Factions = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -157,9 +154,8 @@ public class PvPChecker {
                 if (CombatUtil.preventDamageCall(PluginHookManager.getPluginInstance(Towny.class), attacker, defender)) {
                     return false;
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Towny = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -184,9 +180,8 @@ public class PvPChecker {
                 if ((party != null) && (party.isNoPvp()) && party.isPartyMember(heroAttacker)) {
                     return false;
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Heroes = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -202,9 +197,8 @@ public class PvPChecker {
                     }
                 }
                 return pluginRegios.getRegion(defender).isPvp();
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Regios = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -215,9 +209,8 @@ public class PvPChecker {
             try {
                 FlagPermissions flagPermissions = Residence.getPermsByLoc(location);
                 return flagPermissions.has("pvp", true);
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_Residence = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -232,9 +225,8 @@ public class PvPChecker {
                 if (pluginMobArena.isPlayerInArena(defender)) {
                     return pluginMobArena.getArenaWithPlayer(defender).getSettings().getBoolean("pvp-enabled", true);
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_MobArena = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -257,9 +249,8 @@ public class PvPChecker {
                 if (game.isProtectionOn()) {
                     return false;
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_SurvivalGame = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -273,9 +264,8 @@ public class PvPChecker {
                         return PVPArenaAPI.getArenaTeam(attacker) != PVPArenaAPI.getArenaTeam(defender);
                     }
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_PvPArena = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -285,9 +275,8 @@ public class PvPChecker {
         if (USE_McMMO && PluginHookManager.isPluginUsable("mcMMO")) {
             try {
                 return !PartyAPI.inSameParty(attacker, defender);
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_McMMO = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -309,9 +298,8 @@ public class PvPChecker {
                         return false;
                     }
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_AncientRPG = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -362,9 +350,8 @@ public class PvPChecker {
                         }
                     }
                 }
-            } catch (Error e) {
+            } catch (Throwable e) {
                 USE_GriefPrevention = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
@@ -375,10 +362,9 @@ public class PvPChecker {
             try {
                 PvPManager plugin = PluginHookManager.getPluginInstance(PvPManager.class);
                 return plugin.getPlayerHandler().canAttack(attacker, defender);
-            } catch (Error e) {
+            } catch (Throwable e) {
                 MyPetLogger.write("Please use PvPManager build 113+");
                 USE_PvPManager = false;
-            } catch (Exception ignored) {
             }
         }
         return true;
