@@ -81,7 +81,7 @@ public class PluginHookManager implements Listener {
         }
         if (!pluginNames.containsKey(pluginName)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
-            if (plugin != null) {
+            if (plugin != null && plugin.isEnabled()) {
                 return getPluginInstance(plugin.getClass()) != null;
             } else {
                 pluginFound.put(pluginName, false);
@@ -101,7 +101,7 @@ public class PluginHookManager implements Listener {
         }
         if (!pluginNames.containsKey(pluginName)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
-            if (plugin != null && plugin.getClass().getName().equals(className)) {
+            if (plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className)) {
                 return getPluginInstance(plugin.getClass()) != null;
             } else {
                 pluginFound.put(pluginName, false);
