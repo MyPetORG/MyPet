@@ -35,6 +35,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -256,7 +257,7 @@ public class BukkitUtil {
 
     public static void sendMessageActionBar(Player player, String message) {
         if (player instanceof CraftPlayer) {
-            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
+            IChatBaseComponent cbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + JSONObject.escape(message) + "\"}");
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(cbc, (byte) 2));
         }
     }
