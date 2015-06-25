@@ -119,16 +119,10 @@ public class PvPChecker {
         if (USE_WorldGuard && PluginHookManager.isPluginUsable("WorldGuard")) {
             try {
                 WorldGuardPlugin wgp = PluginHookManager.getPluginInstance(WorldGuardPlugin.class);
-                if (wgp.getDescription().getVersion().startsWith("6")) {
-                    RegionManager mgr = wgp.getRegionManager(location.getWorld());
-                    ApplicableRegionSet set = mgr.getApplicableRegions(location);
-                    StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
-                    return s == null || s == StateFlag.State.ALLOW;
-                } else {
-                    RegionManager mgr = wgp.getGlobalRegionManager().get(location.getWorld());
-                    ApplicableRegionSet set = mgr.getApplicableRegions(location);
-                    return set.allows(DefaultFlag.PVP);
-                }
+                RegionManager mgr = wgp.getRegionManager(location.getWorld());
+                ApplicableRegionSet set = mgr.getApplicableRegions(location);
+                StateFlag.State s = set.queryState(null, DefaultFlag.PVP);
+                return s == null || s == StateFlag.State.ALLOW;
             } catch (Throwable e) {
                 USE_WorldGuard = false;
             }
