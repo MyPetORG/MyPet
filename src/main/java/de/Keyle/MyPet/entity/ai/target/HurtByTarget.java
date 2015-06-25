@@ -64,12 +64,12 @@ public class HurtByTarget extends AIGoal {
 
             if (targetPlayer == myPet.getOwner().getPlayer()) {
                 return false;
-            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
+            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 return false;
             }
         } else if (target instanceof EntityMyPet) {
             MyPet targetMyPet = ((EntityMyPet) target).getMyPet();
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }
         } else if (target instanceof EntityTameableAnimal) {

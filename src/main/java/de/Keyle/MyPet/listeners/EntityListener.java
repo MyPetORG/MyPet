@@ -210,14 +210,14 @@ public class EntityListener implements Listener {
                     event.setCancelled(true);
                 } else if (myPet.getOwner().equals(damager) && (!Configuration.OWNER_CAN_ATTACK_PET || !PvPChecker.canHurt(myPet.getOwner().getPlayer()))) {
                     event.setCancelled(true);
-                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer())) {
+                } else if (!myPet.getOwner().equals(damager) && !PvPChecker.canHurt(damager, myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }
             if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
                 LivingEntity damager = (LivingEntity) event.getDamager();
                 if (damager instanceof Player) {
-                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager)) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
                         return;
                     }
                 }
@@ -236,7 +236,7 @@ public class EntityListener implements Listener {
                 if (myPet == projectile.getShooter().getMyPet()) {
                     event.setCancelled(true);
                 }
-                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer())) {
+                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
                 }
             }

@@ -266,7 +266,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
             double damage = isMyPet() ? myPet.getDamage() : 0;
             if (entity instanceof EntityPlayer) {
                 Player victim = (Player) entity.getBukkitEntity();
-                if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), victim)) {
+                if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), victim, true)) {
                     if (myPet.hasTarget()) {
                         myPet.getCraftPet().getHandle().setGoalTarget(null);
                     }

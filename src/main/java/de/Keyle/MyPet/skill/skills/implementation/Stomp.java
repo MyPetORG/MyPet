@@ -119,7 +119,7 @@ public class Stomp extends StompInfo implements ISkillInstance, ISkillActive {
                         Player targetPlayer = (Player) livingEntity.getBukkitEntity();
                         if (myPet.getOwner().equals(targetPlayer)) {
                             continue;
-                        } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
+                        } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                             continue;
                         }
                     } else if (livingEntity instanceof EntityTameableAnimal) {
@@ -128,13 +128,13 @@ public class Stomp extends StompInfo implements ISkillInstance, ISkillActive {
                             Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                             if (myPet.getOwner().equals(tameableOwner)) {
                                 continue;
-                            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner)) {
+                            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                                 continue;
                             }
                         }
                     } else if (livingEntity instanceof EntityMyPet) {
                         MyPet targetMyPet = ((EntityMyPet) livingEntity).getMyPet();
-                        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
+                        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                             continue;
                         }
                     }

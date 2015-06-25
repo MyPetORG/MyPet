@@ -78,6 +78,13 @@ public class PvPChecker {
 
     private static MobArenaHandler pluginMobArena = null;
 
+    public static boolean canHurt(Player attacker, Player defender, boolean bothWays) {
+        if (!canHurt(attacker, defender) || (bothWays && !canHurt(defender, attacker))) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean canHurt(Player attacker, Player defender) {
         if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;

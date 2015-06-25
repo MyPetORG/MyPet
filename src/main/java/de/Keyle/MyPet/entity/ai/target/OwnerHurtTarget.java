@@ -89,7 +89,7 @@ public class OwnerHurtTarget extends AIGoal {
             if (myPet.getOwner().equals(targetPlayer)) {
                 this.petEntity.goalTarget = null;
                 return false;
-            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
+            } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 this.petEntity.goalTarget = null;
                 return false;
             }
@@ -100,7 +100,7 @@ public class OwnerHurtTarget extends AIGoal {
                 if (myPet.getOwner().equals(tameableOwner)) {
                     this.petEntity.goalTarget = null;
                     return false;
-                } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner)) {
+                } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                     this.petEntity.goalTarget = null;
                     return false;
                 }
@@ -111,7 +111,7 @@ public class OwnerHurtTarget extends AIGoal {
                 this.petEntity.goalTarget = null;
                 return false;
             }
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 this.petEntity.goalTarget = null;
                 return false;
             }

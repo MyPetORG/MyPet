@@ -76,12 +76,12 @@ public class BehaviorAggressiveTarget extends AIGoal {
                     if (myPet.getOwner().equals(targetPlayer)) {
                         continue;
                     }
-                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                         continue;
                     }
                 } else if (entityLiving instanceof EntityMyPet) {
                     MyPet targetMyPet = ((EntityMyPet) entityLiving).getMyPet();
-                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                         continue;
                     }
                 } else if (entityLiving instanceof EntityTameableAnimal) {
@@ -90,7 +90,7 @@ public class BehaviorAggressiveTarget extends AIGoal {
                         Player tameableOwner = (Player) tameable.getOwner().getBukkitEntity();
                         if (myPet.getOwner().equals(tameableOwner)) {
                             continue;
-                        } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner)) {
+                        } else if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), tameableOwner, true)) {
                             continue;
                         }
                     }

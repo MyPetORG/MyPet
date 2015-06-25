@@ -76,12 +76,12 @@ public class OwnerHurtByTarget extends AIGoal {
 
             Player targetPlayer = (Player) lastDamager.getBukkitEntity();
 
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer)) {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetPlayer, true)) {
                 return false;
             }
         } else if (lastDamager instanceof EntityMyPet) {
             MyPet targetMyPet = ((EntityMyPet) lastDamager).getMyPet();
-            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer())) {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), targetMyPet.getOwner().getPlayer(), true)) {
                 return false;
             }
         } else if (lastDamager instanceof EntityTameableAnimal) {

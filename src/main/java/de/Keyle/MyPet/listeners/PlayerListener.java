@@ -187,7 +187,7 @@ public class PlayerListener implements Listener {
                         }
                     }
                 }
-                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), victim)) {
+                if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), victim, true)) {
                     event.setCancelled(true);
                 }
             }
