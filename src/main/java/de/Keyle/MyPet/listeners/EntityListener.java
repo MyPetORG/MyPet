@@ -214,22 +214,6 @@ public class EntityListener implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
-                LivingEntity damager = (LivingEntity) event.getDamager();
-                if (damager instanceof Player) {
-                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
-                        return;
-                    }
-                }
-                if (myPet.getSkills().isSkillActive(Thorns.class)) {
-                    Thorns thornsSkill = myPet.getSkills().getSkill(Thorns.class);
-                    if (thornsSkill.activate()) {
-                        isSkillActive = true;
-                        thornsSkill.reflectDamage(damager, event.getDamage());
-                        isSkillActive = false;
-                    }
-                }
-            }
             if (((CraftEntity) event.getDamager()).getHandle() instanceof MyPetProjectile) {
                 MyPetProjectile projectile = (MyPetProjectile) ((CraftEntity) event.getDamager()).getHandle();
 
@@ -238,6 +222,26 @@ public class EntityListener implements Listener {
                 }
                 if (!PvPChecker.canHurt(projectile.getShooter().getOwner().getPlayer(), myPet.getOwner().getPlayer(), true)) {
                     event.setCancelled(true);
+                }
+            }
+            if (!event.isCancelled() && event.getDamager() instanceof LivingEntity) {
+                LivingEntity damager = (LivingEntity) event.getDamager();
+                if (damager instanceof Player) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), (Player) damager, true)) {
+                        return;
+                    }
+                }
+
+                if (myPet.getSkills().isSkillActive(Thorns.class)) {
+                    if (damager instanceof Creeper) {
+                        return;
+                    }
+                    Thorns thornsSkill = myPet.getSkills().getSkill(Thorns.class);
+                    if (thornsSkill.activate()) {
+                        isSkillActive = true;
+                        thornsSkill.reflectDamage(damager, event.getDamage());
+                        isSkillActive = false;
+                    }
                 }
             }
         }
