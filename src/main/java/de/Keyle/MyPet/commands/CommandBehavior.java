@@ -59,6 +59,10 @@ public class CommandBehavior implements CommandExecutor, TabCompleter {
                 if (myPet.getStatus() == PetState.Despawned) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Call.First", petOwner), myPet.getPetName()));
                     return true;
+                }
+                if (myPet.getStatus() == PetState.Dead) {
+                    sender.sendMessage(Util.formatText(Locales.getString("Message.No.CanUse", petOwner), myPet.getPetName()));
+                    return true;
                 } else if (myPet.getSkills().hasSkill(Behavior.class)) {
                     Behavior behaviorSkill = myPet.getSkills().getSkill(Behavior.class);
                     if (args.length == 1) {
