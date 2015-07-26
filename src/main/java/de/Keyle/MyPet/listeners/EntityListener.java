@@ -247,7 +247,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onEntityDamageByPlayer(final EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof CraftMyPet) && event.getDamager() instanceof Player) {
             if (MyPetType.isLeashableEntityType(event.getEntity().getType())) {
