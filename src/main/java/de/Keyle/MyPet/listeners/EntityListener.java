@@ -811,7 +811,7 @@ public class EntityListener implements Listener {
             EntityDamageByEntityEvent edbee = (EntityDamageByEntityEvent) deadEntity.getLastDamageCause();
 
             Entity damager = edbee.getDamager();
-            if (damager instanceof Projectile) {
+            if (damager instanceof Projectile && ((Projectile) damager).getShooter() instanceof Entity) {
                 damager = (Entity) ((Projectile) damager).getShooter();
             }
             if (damager instanceof CraftMyPet) {
