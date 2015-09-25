@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util.iconmenu;
 
+import de.Keyle.MyPet.util.Util;
 import net.minecraft.server.v1_8_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
@@ -35,7 +36,7 @@ public class IconMenuInventory {
     CraftBukkitInventory cbi;
 
     public IconMenuInventory(int size, String title) {
-        mi = new MinecraftInventory(size, title);
+        mi = new MinecraftInventory(size, Util.cutString(title, 32));
         cbi = new CraftBukkitInventory();
     }
 
