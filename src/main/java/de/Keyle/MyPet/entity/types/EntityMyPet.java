@@ -402,9 +402,6 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
     }
 
     public void onLivingUpdate() {
-        if (getOwner().getPlayer().isSneaking() != isSneaking()) {
-            this.setSneaking(!isSneaking());
-        }
         if (hasRider) {
             if (this.passenger == null || !(this.passenger instanceof EntityPlayer)) {
                 hasRider = false;
@@ -430,22 +427,26 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
                 }
             }
         }
-        if (Configuration.INVISIBLE_LIKE_OWNER) {
-            if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                isInvisible = true;
-                myPet.craftMyPet.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
-            } else if (isInvisible && !getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-                myPet.craftMyPet.removePotionEffect(PotionEffectType.INVISIBILITY);
-                isInvisible = false;
+        if (!myPet.getOwner().getPlayer().isDead()) {
+            if (getOwner().getPlayer().isSneaking() != isSneaking()) {
+                this.setSneaking(!isSneaking());
             }
+            if (Configuration.INVISIBLE_LIKE_OWNER) {
+                if (!isInvisible && getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                    isInvisible = true;
+                    myPet.craftMyPet.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
+                } else if (isInvisible && !getOwner().getPlayer().hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                    myPet.craftMyPet.removePotionEffect(PotionEffectType.INVISIBILITY);
+                    isInvisible = false;
+                }
+            }
+            // donate delete start
+            if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
+                donatorParticleCounter = 20 + getRandom().nextInt(10);
+                BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.VILLAGER_HAPPY, 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
+            }
+            // donate delete end
         }
-
-        // donate delete start
-        if (!this.isInvisible() && getOwner().getDonationRank() != DonateCheck.DonationRank.None && donatorParticleCounter-- <= 0) {
-            donatorParticleCounter = 20 + getRandom().nextInt(10);
-            BukkitUtil.playParticleEffect(this.getBukkitEntity().getLocation().add(0, 1, 0), EnumParticle.VILLAGER_HAPPY, 0.4F, 0.4F, 0.4F, 0.4F, 5, 10);
-        }
-        // donate delete end
     }
 
     public void setHealth(float f) {
