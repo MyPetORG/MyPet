@@ -149,19 +149,28 @@ public class CustomInventory implements IInventory, Listener {
         }
     }
 
-    public ItemStack splitStack(int i, int j) {
-        if (i <= size && items.get(i) != null) {
-            ItemStack itemStack;
-            if (items.get(i).count <= j) {
-                itemStack = items.get(i);
-                items.set(i, null);
+    public ItemStack splitStack(int slot, int subtract) {
+        if (slot <= size && items.get(slot) != null) {
+            if (items.get(slot).count <= subtract) {
+                ItemStack itemStack = items.get(slot);
+                items.set(slot, null);
                 return itemStack;
             } else {
-                itemStack = items.get(i).a(j);
-                if (items.get(i).count == 0) {
-                    items.set(i, null);
+                ItemStack itemStack = items.get(slot);
+
+                // --------------------------------------------------------------------------------------------
+                // ToDo: replace with cloneAndSubtract(int i) on next Bukkit revision
+                ItemStack splittedStack = new ItemStack(itemStack.getItem(), subtract, itemStack.getData());
+                if (itemStack.getTag() != null) {
+                    splittedStack.setTag(((NBTTagCompound) itemStack.getTag().clone()));
                 }
-                return itemStack;
+                itemStack.count -= slot;
+                // --------------------------------------------------------------------------------------------
+
+                if (items.get(slot).count == 0) {
+                    items.set(slot, null);
+                }
+                return splittedStack;
             }
         }
         return null;

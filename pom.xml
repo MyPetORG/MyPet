@@ -32,7 +32,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <minecraft.version>1.8.6</minecraft.version>
+        <minecraft.version>1.8.8</minecraft.version>
         <bukkit.version>R0.1-SNAPSHOT</bukkit.version>
         <bukkit.packet>v1_8_R3</bukkit.packet>
 
@@ -57,7 +57,7 @@
         <pvpmanager.version>3.0</pvpmanager.version>
         <heroes.version>1.5.5.3</heroes.version>
         <!-- http://spoutcraft.org/resources/heroes.2/updates -->
-        <spigot.version>1.8.4-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.8.8-R0.1-SNAPSHOT</spigot.version>
 
         <metrics.version>R7</metrics.version>
         <knbt.version>0.0.3-SNAPSHOT</knbt.version>
