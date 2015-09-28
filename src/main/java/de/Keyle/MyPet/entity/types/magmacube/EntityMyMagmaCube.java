@@ -56,7 +56,7 @@ public class EntityMyMagmaCube extends EntityMyPet {
             this.setSize(es.width() * value, es.length() * value);
         }
         if (petPathfinderSelector != null && petPathfinderSelector.hasGoal("MeleeAttack")) {
-            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getMyPet().getSize(), 20));
+            petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
         }
     }
 
@@ -96,6 +96,6 @@ public class EntityMyMagmaCube extends EntityMyPet {
 
     public void setPathfinder() {
         super.setPathfinder();
-        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 2 + getMyPet().getSize(), 20));
+        petPathfinderSelector.replaceGoal("MeleeAttack", new MeleeAttack(this, 0.1F, 3 + (getMyPet().getSize() * 0.51), 20));
     }
 }
