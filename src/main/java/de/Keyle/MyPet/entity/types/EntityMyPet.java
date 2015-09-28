@@ -569,7 +569,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet get hurt
      * -> getHurtSound()
      */
-    protected String bn() {
+    protected String bo() {
         try {
             return getHurtSound();
         } catch (Exception e) {
@@ -583,7 +583,7 @@ public abstract class EntityMyPet extends EntityCreature implements IMonster {
      * Returns the sound that is played when the MyPet dies
      * -> getDeathSound()
      */
-    protected String bo() {
+    protected String bp() {
         try {
             return getDeathSound();
         } catch (Exception e) {
