@@ -38,12 +38,14 @@ public class MonsterExperience {
         mobExp.put(EntityType.GHAST, new MonsterExperience(5., EntityType.GHAST));
         mobExp.put(EntityType.PIG_ZOMBIE, new MonsterExperience(5., EntityType.PIG_ZOMBIE));
         mobExp.put(EntityType.ENDERMAN, new MonsterExperience(5., EntityType.ENDERMAN));
+        mobExp.put(EntityType.ENDERMITE, new MonsterExperience(3., EntityType.ENDERMITE));
         mobExp.put(EntityType.CAVE_SPIDER, new MonsterExperience(5., EntityType.CAVE_SPIDER));
         mobExp.put(EntityType.MAGMA_CUBE, new MonsterExperience(1., 4., EntityType.MAGMA_CUBE));
         mobExp.put(EntityType.SLIME, new MonsterExperience(1., 4., EntityType.SLIME));
         mobExp.put(EntityType.SILVERFISH, new MonsterExperience(5., EntityType.SILVERFISH));
         mobExp.put(EntityType.BLAZE, new MonsterExperience(10., EntityType.BLAZE));
         mobExp.put(EntityType.GIANT, new MonsterExperience(25., EntityType.GIANT));
+        mobExp.put(EntityType.GUARDIAN, new MonsterExperience(10., EntityType.GUARDIAN));
         mobExp.put(EntityType.COW, new MonsterExperience(1., 3., EntityType.COW));
         mobExp.put(EntityType.PIG, new MonsterExperience(1., 3., EntityType.PIG));
         mobExp.put(EntityType.CHICKEN, new MonsterExperience(1., 3., EntityType.CHICKEN));
@@ -59,6 +61,7 @@ public class MonsterExperience {
         mobExp.put(EntityType.BAT, new MonsterExperience(1., EntityType.BAT));
         mobExp.put(EntityType.ENDER_CRYSTAL, new MonsterExperience(10., EntityType.ENDER_CRYSTAL));
         mobExp.put(EntityType.WITHER, new MonsterExperience(100., EntityType.WITHER));
+        mobExp.put(EntityType.RABBIT, new MonsterExperience(1., EntityType.RABBIT));
     }
 
     private double min;
