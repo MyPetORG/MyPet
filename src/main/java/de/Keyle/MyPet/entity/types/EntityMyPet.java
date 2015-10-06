@@ -52,7 +52,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
-public abstract class EntityMyPet extends EntityCreature implements IMonster {
+public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     public AIGoalSelector petPathfinderSelector, petTargetSelector;
     public EntityLiving goalTarget = null;
     protected double walkSpeed = 0.3F;
