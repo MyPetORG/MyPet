@@ -257,10 +257,11 @@ public class PlayerListener implements Listener {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
                     for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
                         if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                            MyPetList.setMyPetActive(inactiveMyPet);
-                            MyPet activeMyPet = myPetPlayer.getMyPet();
-                            activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
-                            break;
+                            MyPet activeMyPet = MyPetList.setMyPetActive(inactiveMyPet);
+                            if (activeMyPet != null) {
+                                activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
+                                break;
+                            }
                         }
                     }
                     if (!myPetPlayer.hasMyPet()) {
