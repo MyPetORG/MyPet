@@ -46,6 +46,7 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
+import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
@@ -53,12 +54,15 @@ import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.keyle.fanciful.FancyMessage;
+import de.keyle.fanciful.ItemTooltip;
 import net.minecraft.server.v1_8_R3.EntityItem;
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Items;
 import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,6 +78,9 @@ import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RESET;
 
 public class CommandRelease implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
@@ -94,15 +101,15 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", petOwner), myPet.getPetName(), myPet.getRespawnTime()));
                     return true;
                 }
-                if (args.length < 1) {
-                    return false;
-                }
+
                 String name = "";
-                for (String arg : args) {
-                    if (!name.equals("")) {
-                        name += " ";
+                if (args.length > 0) {
+                    for (String arg : args) {
+                        if (!name.equals("")) {
+                            name += " ";
+                        }
+                        name += arg;
                     }
-                    name += arg;
                 }
                 if (ChatColor.stripColor(myPet.getPetName()).equalsIgnoreCase(name)) {
                     if (myPet.getSkills().isSkillActive(Inventory.class)) {
@@ -239,7 +246,24 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     }
                     return true;
                 } else {
-                    sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.ShowPetName", petOwner), myPet.getPetName()));
+                    FancyMessage message = new FancyMessage(Locales.getString("Message.Command.Release.Confirm", petOwner) + " ");
+
+                    List<String> lore = new ArrayList<String>();
+                    lore.add(RESET + Locales.getString("Name.Hunger", petOwner) + ": " + GOLD + myPet.getHungerValue());
+                    if (myPet.getRespawnTime() > 0) {
+                        lore.add(RESET + Locales.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
+                    } else {
+                        lore.add(RESET + Locales.getString("Name.HP", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getHealth()));
+                    }
+                    lore.add(RESET + Locales.getString("Name.Exp", petOwner) + ": " + GOLD + String.format("%1.2f", myPet.getExp()));
+                    lore.add(RESET + Locales.getString("Name.Type", petOwner) + ": " + GOLD + myPet.getPetType().getTypeName());
+                    lore.add(RESET + Locales.getString("Name.Skilltree", petOwner) + ": " + GOLD + (myPet.getSkillTree() != null ? myPet.getSkillTree().getDisplayName() : "-"));
+
+                    message.then(myPet.getPetName())
+                            .color(ChatColor.AQUA)
+                            .command("/petrelease " + ChatColor.stripColor(myPet.getPetName()))
+                            .itemTooltip(new ItemTooltip().setMaterial(Material.MONSTER_EGG).addLore(lore).setTitle(myPet.getPetName()));
+                    BukkitUtil.sendMessageRaw((Player) sender, message.toJSONString());
                     return true;
                 }
             } else {
