@@ -677,6 +677,14 @@ public abstract class EntityMyPet extends EntityCreature implements IAnimal {
     }
 
     /**
+     * Allows handlePlayerInteraction() to
+     * be fired when a lead is used
+     */
+    public boolean cb() {
+        return false;
+    }
+
+    /**
      * Entity AI tick method
      * -> updateAITasks()
      */
