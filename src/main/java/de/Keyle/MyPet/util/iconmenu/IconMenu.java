@@ -30,6 +30,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -75,7 +76,11 @@ public class IconMenu implements Listener {
     }
 
     public void open(Player player) {
-        Inventory openInv = player.openInventory(inventory.getCraftBukkitInventory()).getTopInventory();
+        InventoryView openInvView = player.openInventory(inventory.getCraftBukkitInventory());
+        if (openInvView == null) {
+            return;
+        }
+        Inventory openInv = openInvView.getTopInventory();
         if (openInv == null) {
             return;
         }
