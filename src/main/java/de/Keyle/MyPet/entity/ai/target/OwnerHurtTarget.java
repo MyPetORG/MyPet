@@ -116,7 +116,7 @@ public class OwnerHurtTarget extends AIGoal {
                 return false;
             }
         }
-        if (!PvPChecker.canHurtCitizens(this.petEntity.goalTarget.getBukkitEntity())) {
+        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), this.petEntity.goalTarget.getBukkitEntity())) {
             return false;
         }
         this.target = this.petEntity.goalTarget;

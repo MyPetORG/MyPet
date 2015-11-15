@@ -95,7 +95,7 @@ public class BehaviorAggressiveTarget extends AIGoal {
                         }
                     }
                 }
-                if (!PvPChecker.canHurtCitizens(entityLiving.getBukkitEntity())) {
+                if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                     continue;
                 }
                 this.target = entityLiving;

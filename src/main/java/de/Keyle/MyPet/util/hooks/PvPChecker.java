@@ -95,6 +95,26 @@ public class PvPChecker {
         return false;
     }
 
+    public static boolean canHurt(Player attacker, Entity defender) {
+        if (Configuration.DISABLE_PET_VS_PLAYER) {
+            return false;
+        }
+        if (attacker != null && defender != null && attacker != defender) {
+            return canHurtTowny(attacker, defender) && canHurt(defender);
+        }
+        return false;
+    }
+
+    public static boolean canHurt(Entity defender) {
+        if (Configuration.DISABLE_PET_VS_PLAYER) {
+            return false;
+        }
+        if (defender != null) {
+            return canHurtCitizens(defender);
+        }
+        return false;
+    }
+
     public static boolean canHurt(Player defender) {
         if (Configuration.DISABLE_PET_VS_PLAYER) {
             return false;
@@ -149,7 +169,7 @@ public class PvPChecker {
         return true;
     }
 
-    public static boolean canHurtTowny(Player attacker, Player defender) {
+    public static boolean canHurtTowny(Player attacker, Entity defender) {
         if (USE_Towny && PluginHookManager.isPluginUsable("Towny")) {
             try {
                 if (CombatUtil.preventDamageCall(PluginHookManager.getPluginInstance(Towny.class), attacker, defender)) {

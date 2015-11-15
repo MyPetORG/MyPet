@@ -95,7 +95,7 @@ public class ControlTarget extends AIGoal {
                             continue;
                         }
                     }
-                    if (!PvPChecker.canHurtCitizens(entityLiving.getBukkitEntity())) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), entityLiving.getBukkitEntity())) {
                         continue;
                     }
                     if (behaviorSkill != null) {

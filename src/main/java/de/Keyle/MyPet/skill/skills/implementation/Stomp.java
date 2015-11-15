@@ -138,7 +138,7 @@ public class Stomp extends StompInfo implements ISkillInstance, ISkillActive {
                             continue;
                         }
                     }
-                    if (!PvPChecker.canHurtCitizens(livingEntity.getBukkitEntity())) {
+                    if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), livingEntity.getBukkitEntity())) {
                         continue;
                     }
                 } else {

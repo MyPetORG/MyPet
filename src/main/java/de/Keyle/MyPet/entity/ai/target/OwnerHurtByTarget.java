@@ -93,7 +93,7 @@ public class OwnerHurtByTarget extends AIGoal {
                 }
             }
         }
-        if (!PvPChecker.canHurtCitizens(lastDamager.getBukkitEntity())) {
+        if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), lastDamager.getBukkitEntity())) {
             return false;
         }
         if (behaviorSkill != null && behaviorSkill.isActive()) {

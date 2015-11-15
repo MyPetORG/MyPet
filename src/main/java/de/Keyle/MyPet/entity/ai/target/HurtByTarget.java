@@ -81,10 +81,7 @@ public class HurtByTarget extends AIGoal {
                 }
             }
         }
-        if (!PvPChecker.canHurtCitizens(target.getBukkitEntity())) {
-            return false;
-        }
-        return true;
+        return PvPChecker.canHurt(myPet.getOwner().getPlayer(), target.getBukkitEntity());
     }
 
     @Override

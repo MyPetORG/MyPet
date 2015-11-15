@@ -70,7 +70,7 @@ public class BehaviorFarmTarget extends AIGoal {
             if (!entityMonster.isAlive() || petEntity.h(entityMonster) > 91) {
                 continue;
             }
-            if (!PvPChecker.canHurtCitizens(entityMonster.getBukkitEntity())) {
+            if (!PvPChecker.canHurt(myPet.getOwner().getPlayer(), entityMonster.getBukkitEntity())) {
                 continue;
             }
             this.target = entityMonster;
