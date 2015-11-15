@@ -55,9 +55,9 @@ public class MyPetArrow extends EntityArrow implements MyPetProjectile {
     public void b(NBTTagCompound nbtTagCompound) {
     }
 
-    public void h() {
+    public void t_() {
         try {
-            super.h();
+            super.t_();
             if (this.isInGround()) {
                 die();
             }

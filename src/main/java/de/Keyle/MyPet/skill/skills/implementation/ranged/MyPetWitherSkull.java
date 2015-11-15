@@ -21,12 +21,14 @@
 package de.Keyle.MyPet.skill.skills.implementation.ranged;
 
 import de.Keyle.MyPet.entity.types.EntityMyPet;
+import de.Keyle.MyPet.util.logger.DebugLogger;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWitherSkull;
 
 public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjectile {
     protected float damage = 0;
+    protected int deathCounter = 100;
 
     public MyPetWitherSkull(World world, EntityMyPet entityliving, double d0, double d1, double d2) {
         super(world, entityliving, d0, d1, d2);
@@ -74,5 +76,17 @@ public class MyPetWitherSkull extends EntityWitherSkull implements MyPetProjecti
             movingobjectposition.entity.damageEntity(DamageSource.fireball(this, getShooter()), damage);
         }
         die();
+    }
+
+    public void t_() {
+        try {
+            super.t_();
+            if (deathCounter-- <= 0) {
+                die();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            DebugLogger.printThrowable(e);
+        }
     }
 }
