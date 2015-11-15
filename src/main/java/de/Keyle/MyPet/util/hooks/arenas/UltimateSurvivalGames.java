@@ -47,7 +47,7 @@ public class UltimateSurvivalGames implements Listener {
     public static boolean isInSurvivalGames(MyPetPlayer owner) {
         if (active) {
             try {
-                return me.maker56.survivalgames.SurvivalGames.getUserManager().isPlaying(owner.getPlayer().getName()) && me.maker56.survivalgames.SurvivalGames.getUserManager().isSpectator(owner.getPlayer().getName());
+                return me.maker56.survivalgames.SurvivalGames.getUserManager().isPlaying(owner.getPlayer().getName()) || me.maker56.survivalgames.SurvivalGames.getUserManager().isSpectator(owner.getPlayer().getName());
             } catch (Throwable e) {
                 active = false;
             }
