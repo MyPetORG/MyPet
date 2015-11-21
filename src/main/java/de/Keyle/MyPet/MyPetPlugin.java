@@ -144,6 +144,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         }
 
         PvPChecker.reset();
+        PluginHookManager.reset();
         Economy.reset();
         JavaScript.reset();
         Configuration.config = this.getConfig();

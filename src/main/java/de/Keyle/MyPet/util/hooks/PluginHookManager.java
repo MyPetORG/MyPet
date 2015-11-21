@@ -42,7 +42,7 @@ public class PluginHookManager implements Listener {
 
     public static <T extends JavaPlugin> T getPluginInstance(Class<T> clazz) {
         if (pluginManager == null) {
-            pluginManager = Bukkit.getServer().getPluginManager();
+            pluginManager = Bukkit.getPluginManager();
         }
         if (pluginInstances.containsKey(clazz.getName())) {
             return clazz.cast(pluginInstances.get(clazz.getName()));
@@ -74,7 +74,7 @@ public class PluginHookManager implements Listener {
 
     public static boolean isPluginUsable(String pluginName) {
         if (pluginManager == null) {
-            pluginManager = Bukkit.getServer().getPluginManager();
+            pluginManager = Bukkit.getPluginManager();
         }
         if (pluginFound.containsKey(pluginName)) {
             return pluginFound.get(pluginName);
@@ -94,17 +94,17 @@ public class PluginHookManager implements Listener {
 
     public static boolean isPluginUsable(String pluginName, String className) {
         if (pluginManager == null) {
-            pluginManager = Bukkit.getServer().getPluginManager();
+            pluginManager = Bukkit.getPluginManager();
         }
-        if (pluginFound.containsKey(pluginName)) {
-            return pluginFound.get(pluginName);
+        if (pluginFound.containsKey(className)) {
+            return pluginFound.get(className);
         }
         if (!pluginNames.containsKey(pluginName)) {
             JavaPlugin plugin = (JavaPlugin) pluginManager.getPlugin(pluginName);
             if (plugin != null && plugin.isEnabled() && plugin.getClass().getName().equals(className)) {
                 return getPluginInstance(plugin.getClass()) != null;
             } else {
-                pluginFound.put(pluginName, false);
+                pluginFound.put(className, false);
             }
             return false;
         } else {

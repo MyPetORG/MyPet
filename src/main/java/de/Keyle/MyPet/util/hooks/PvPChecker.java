@@ -393,7 +393,5 @@ public class PvPChecker {
 
     public static void reset() {
         pluginMobArena = null;
-
-        PluginHookManager.reset();
     }
 }

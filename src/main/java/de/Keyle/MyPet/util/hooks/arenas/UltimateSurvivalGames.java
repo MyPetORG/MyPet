@@ -31,6 +31,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import static me.maker56.survivalgames.SurvivalGames.getUserManager;
+
 public class UltimateSurvivalGames implements Listener {
     public static boolean DISABLE_PETS_IN_SURVIVAL_GAMES = true;
 
@@ -47,7 +49,7 @@ public class UltimateSurvivalGames implements Listener {
     public static boolean isInSurvivalGames(MyPetPlayer owner) {
         if (active) {
             try {
-                return me.maker56.survivalgames.SurvivalGames.getUserManager().isPlaying(owner.getPlayer().getName()) || me.maker56.survivalgames.SurvivalGames.getUserManager().isSpectator(owner.getPlayer().getName());
+                return getUserManager().isPlaying(owner.getPlayer().getName()) || getUserManager().isSpectator(owner.getPlayer().getName());
             } catch (Throwable e) {
                 active = false;
             }
