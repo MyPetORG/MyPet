@@ -164,7 +164,7 @@ public class CustomInventory implements IInventory, Listener {
                 if (itemStack.getTag() != null) {
                     splittedStack.setTag(((NBTTagCompound) itemStack.getTag().clone()));
                 }
-                itemStack.count -= slot;
+                itemStack.count -= subtract;
                 // --------------------------------------------------------------------------------------------
 
                 if (items.get(slot).count == 0) {
