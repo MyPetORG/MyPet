@@ -259,7 +259,9 @@ public class PlayerListener implements Listener {
                         if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
                             MyPet activeMyPet = MyPetList.setMyPetActive(inactiveMyPet);
                             if (activeMyPet != null) {
-                                activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
+                                if (myPetPlayer.getInactiveMyPets().size() > 0) {
+                                    activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
+                                }
                                 break;
                             }
                         }
