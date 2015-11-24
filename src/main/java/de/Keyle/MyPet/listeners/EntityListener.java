@@ -274,6 +274,9 @@ public class EntityListener implements Listener {
                         } catch (Exception ignored) {
                         }
                     }
+                    if (PvPChecker.canHurt(damager, leashTarget)) {
+                        return;
+                    }
 
                     boolean willBeLeashed = true;
 
