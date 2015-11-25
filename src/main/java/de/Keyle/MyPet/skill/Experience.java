@@ -35,6 +35,7 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class Experience {
     public static int LOSS_PERCENT = 0;
@@ -229,7 +230,7 @@ public class Experience {
                 }
             }
         } else {
-            damageMap = new HashMap<Entity, Double>();
+            damageMap = new WeakHashMap<Entity, Double>();
             damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
             victim.setMetadata("DamageCount", new FixedMetadataValue(MyPetPlugin.getPlugin(), damageMap));
         }
