@@ -24,6 +24,7 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -74,22 +75,23 @@ public class CommandOptionExp implements CommandOptionTabCompleter {
         if (args.length == 2 || (args.length >= 3 && args[2].equalsIgnoreCase("set"))) {
             if (level) {
                 if (Util.isInt(value)) {
-                    exp = myPet.getExperience().getExpByLevel(Integer.parseInt(value));
+                    exp = myPet.getExperience().getExpByLevel(Math.min(Integer.parseInt(value), Experience.LEVEL_CAP));
                 }
             } else {
                 if (Util.isDouble(value)) {
-                    exp = Double.parseDouble(value);
+                    exp = Math.min(Double.parseDouble(value), myPet.getExperience().getMaxExp());
                 }
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("add")) {
             if (level) {
                 if (Util.isInt(value)) {
-                    int oldLevel = myPet.getExperience().getLevel();
-                    exp = myPet.getExperience().getExpByLevel(oldLevel + Integer.parseInt(value));
+                    int newLevel = Math.min(myPet.getExperience().getLevel() + Integer.parseInt(value), Experience.LEVEL_CAP);
+
+                    exp = myPet.getExperience().getExpByLevel(newLevel);
                 }
             } else {
                 if (Util.isDouble(value)) {
-                    exp += Double.parseDouble(value);
+                    exp = Math.min(Double.parseDouble(value) + exp, myPet.getExperience().getMaxExp());
                 }
             }
         } else if (args.length >= 3 && args[2].equalsIgnoreCase("remove")) {

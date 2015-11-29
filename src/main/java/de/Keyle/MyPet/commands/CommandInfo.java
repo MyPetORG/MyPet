@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
@@ -142,8 +143,8 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
                     infoShown = true;
                 }
-                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : 0;
-                if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && (maxLevel == 0 || myPet.getExperience().getLevel() < maxLevel)) {
+                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Experience.LEVEL_CAP;
+                if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                     double exp = myPet.getExperience().getCurrentExp();
                     double reqEXP = myPet.getExperience().getRequiredExp();
                     player.sendMessage("   " + Locales.getString("Name.Exp", player) + ": " + String.format("%1.2f", exp) + "/" + String.format("%1.2f", reqEXP));
@@ -158,7 +159,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                 }
                 return true;
             } else {
-                if (args != null && args.length > 0) {
+                if (args.length > 0) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
                 } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));

@@ -174,6 +174,7 @@ public class Configuration {
         config.addDefault("MyPet.Exp.Loss.Fixed", Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
         config.addDefault("MyPet.Exp.Gain.MonsterSpawner", Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS);
+        config.addDefault("MyPet.Exp.LevelCap", Experience.LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
@@ -338,6 +339,7 @@ public class Configuration {
         PvPChecker.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
         PvPChecker.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
 
+        Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", Experience.LEVEL_CAP);
         Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);

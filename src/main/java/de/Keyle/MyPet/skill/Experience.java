@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class Experience {
+    public static int LEVEL_CAP = 100;
     public static int LOSS_PERCENT = 0;
     public static double LOSS_FIXED = 0;
     public static boolean DROP_LOST_EXP = true;
@@ -51,6 +52,7 @@ public class Experience {
     private final MyPet myPet;
 
     private double exp = 0;
+    private double levelCapExp = 0;
     de.Keyle.MyPet.skill.experience.Experience expMode;
 
     public Experience(MyPet pet) {
@@ -70,12 +72,14 @@ public class Experience {
     }
 
     public void reset() {
+        levelCapExp = getExpByLevel(LEVEL_CAP);
         exp = 0;
         Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), 0, true));
     }
 
     public void setExp(double exp) {
         exp = Math.max(0, exp);
+        exp = Math.min(levelCapExp, exp);
         MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp);
         Bukkit.getServer().getPluginManager().callEvent(expEvent);
         if (expEvent.isCancelled()) {
@@ -89,12 +93,16 @@ public class Experience {
         }
     }
 
+    public double getMaxExp() {
+        return levelCapExp;
+    }
+
     public double getExp() {
         return this.exp;
     }
 
     public double addExp(double exp) {
-        MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, this.exp + exp);
+        MyPetExpEvent event = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, this.exp + exp));
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return 0;
@@ -111,7 +119,7 @@ public class Experience {
 
     public double addExp(EntityType type) {
         if (MonsterExperience.hasMonsterExperience(type)) {
-            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, MonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp);
+            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, MonsterExperience.getMonsterExperience(type).getRandomExp() + this.exp));
             Bukkit.getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled()) {
                 return 0;
@@ -131,7 +139,7 @@ public class Experience {
     public double addExp(EntityType type, int percent) {
         if (MonsterExperience.hasMonsterExperience(type)) {
             double exp = MonsterExperience.getMonsterExperience(type).getRandomExp() / 100. * percent;
-            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, exp + this.exp);
+            MyPetExpEvent expEvent = new MyPetExpEvent(myPet, this.exp, Math.min(levelCapExp, this.exp + exp));
             Bukkit.getServer().getPluginManager().callEvent(expEvent);
             if (expEvent.isCancelled()) {
                 return 0;

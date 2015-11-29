@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.skill.skilltree;
 
+import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.keyle.knbt.TagByte;
@@ -125,7 +126,7 @@ public class SkillTree {
     }
 
     public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel < 0 ? 0 : maxLevel;
+        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Experience.LEVEL_CAP);
     }
 
     public int getRequiredLevel() {
