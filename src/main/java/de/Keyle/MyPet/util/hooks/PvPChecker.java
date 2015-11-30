@@ -53,12 +53,14 @@ import net.jzx7.regiosapi.regions.Region;
 import net.slipcor.pvparena.api.PVPArenaAPI;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.mcsg.survivalgames.Game;
 import org.mcsg.survivalgames.GameManager;
+
+import java.util.UUID;
 
 public class PvPChecker {
     public static boolean USE_Towny = true;
@@ -100,7 +102,7 @@ public class PvPChecker {
             return false;
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtTowny(attacker, defender) && canHurt(defender);
+            return canHurtTowny(attacker, defender) && canHurt(defender) && canHurtGriefPrevention(attacker, defender);
         }
         return false;
     }
@@ -329,45 +331,109 @@ public class PvPChecker {
     public static boolean canHurtGriefPrevention(Player attacker, Player defender) {
         if (USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
             try {
-                if (!GriefPrevention.instance.config_pvp_enabledWorlds.contains(attacker.getWorld())) {
-                    return true;
-                }
+                if (GriefPrevention.instance.pvpRulesApply(attacker.getWorld())) {
+                    if (attacker != defender) {
+                        DataStore dataStore = GriefPrevention.instance.dataStore;
 
-                GriefPrevention pluginGriefPrevention = GriefPrevention.instance;
-
-                DataStore ds = pluginGriefPrevention.dataStore;
-
-                PlayerData defenderData = ds.getPlayerData(defender.getUniqueId());
-                PlayerData attackerData = ds.getPlayerData(attacker.getUniqueId());
-
-                if (attacker.hasPermission("griefprevention.nopvpimmunity")) {
-                    return true;
-                }
-
-                if (defenderData.pvpImmune || attackerData.pvpImmune) {
-                    return false;
-                }
-
-                if (GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims || GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims) {
-                    Claim attackerClaim = ds.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
-                    if (attackerClaim != null) {
-                        if (attackerClaim.isAdminClaim()) {
-                            if (attackerClaim.parent == null && (GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims || GriefPrevention.instance.config_pvp_noCombatInAdminSubdivisions)) {
+                        PlayerData defenderData = dataStore.getPlayerData(defender.getUniqueId());
+                        PlayerData attackerData = dataStore.getPlayerData(attacker.getUniqueId());
+                        if (GriefPrevention.instance.config_pvp_protectFreshSpawns) {
+                            if (defenderData.pvpImmune || attackerData.pvpImmune) {
                                 return false;
                             }
-                        } else if (GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims) {
+                        }
+                        if ((GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims) || (GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims)) {
+                            Claim attackerClaim = dataStore.getClaimAt(attacker.getLocation(), false, attackerData.lastClaim);
+                            if (!attackerData.ignoreClaims) {
+                                if ((attackerClaim != null) && (!attackerData.inPvpCombat())) {
+                                    if (attackerClaim.isAdminClaim() && attackerClaim.parent == null && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims) {
+                                        return false;
+                                    }
+                                    if (attackerClaim.isAdminClaim() && attackerClaim.parent != null && GriefPrevention.instance.config_pvp_noCombatInAdminSubdivisions) {
+                                        return false;
+                                    }
+                                    if (!attackerClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims) {
+                                        return false;
+                                    }
+                                }
+                                Claim defenderClaim = dataStore.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
+                                if (defenderClaim != null && !defenderData.inPvpCombat()) {
+                                    if (defenderClaim.isAdminClaim() && defenderClaim.parent == null && GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims) {
+                                        return false;
+                                    }
+                                    if (defenderClaim.isAdminClaim() && defenderClaim.parent != null && GriefPrevention.instance.config_pvp_noCombatInAdminSubdivisions) {
+                                        return false;
+                                    }
+                                    if (!defenderClaim.isAdminClaim() && GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Throwable e) {
+                USE_GriefPrevention = false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean canHurtGriefPrevention(Player attacker, Entity defender) {
+        if (defender instanceof Player) {
+            return canHurtGriefPrevention(attacker, (Player) defender);
+        }
+        if (USE_GriefPrevention && PluginHookManager.isPluginUsable("GriefPrevention")) {
+            try {
+                if (!GriefPrevention.instance.claimsEnabledForWorld(defender.getWorld())) {
+                    return true;
+                }
+                DataStore dataStore = GriefPrevention.instance.dataStore;
+                if (defender.getType() == EntityType.VILLAGER) {
+                    if (!GriefPrevention.instance.config_claims_protectCreatures) {
+                        return true;
+                    }
+                    PlayerData playerData = dataStore.getPlayerData(attacker.getUniqueId());
+                    Claim claim = dataStore.getClaimAt(defender.getLocation(), false, playerData.lastClaim);
+                    if (claim != null) {
+                        String failureReason = claim.allowBuild(attacker, Material.AIR);
+                        if (failureReason != null) {
                             return false;
                         }
                     }
+                }
+                if ((defender instanceof Creature || defender instanceof WaterMob) && GriefPrevention.instance.config_claims_protectCreatures) {
+                    if (defender instanceof Tameable) {
+                        Tameable tameable = (Tameable) defender;
+                        if (tameable.isTamed() && tameable.getOwner() != null) {
+                            if (attacker != null) {
+                                UUID ownerID = tameable.getOwner().getUniqueId();
+                                if (attacker.getUniqueId().equals(ownerID)) {
+                                    return true;
+                                }
+                                PlayerData attackerData = dataStore.getPlayerData(attacker.getUniqueId());
+                                if (attackerData.ignoreClaims) {
+                                    return true;
+                                }
+                                if (!GriefPrevention.instance.pvpRulesApply(defender.getLocation().getWorld())) {
+                                    return false;
+                                }
+                                if (attackerData.pvpImmune) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
 
-                    Claim defenderClaim = ds.getClaimAt(defender.getLocation(), false, defenderData.lastClaim);
-                    if (defenderClaim != null) {
-                        if (defenderClaim.isAdminClaim()) {
-                            if (defenderClaim.parent == null && (GriefPrevention.instance.config_pvp_noCombatInAdminLandClaims || GriefPrevention.instance.config_pvp_noCombatInAdminSubdivisions)) {
+                    PlayerData playerData = dataStore.getPlayerData(attacker.getUniqueId());
+                    Claim cachedClaim = playerData.lastClaim;
+
+                    Claim claim = dataStore.getClaimAt(defender.getLocation(), false, cachedClaim);
+                    if (claim != null) {
+                        if (!defender.getWorld().getPVP() || defender.getType() != EntityType.WOLF) {
+                            if (claim.allowContainers(attacker) != null) {
                                 return false;
                             }
-                        } else if (GriefPrevention.instance.config_pvp_noCombatInPlayerLandClaims) {
-                            return false;
                         }
                     }
                 }
