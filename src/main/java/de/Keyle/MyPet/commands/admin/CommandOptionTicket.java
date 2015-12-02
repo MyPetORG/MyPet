@@ -74,7 +74,7 @@ public class CommandOptionTicket implements CommandOption {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File dirFile : files) {
-                    addFileToZip(dirFile, zip, folder += file.getName() + File.separator);
+                    addFileToZip(dirFile, zip, folder + file.getName() + File.separator);
                 }
             }
         }
