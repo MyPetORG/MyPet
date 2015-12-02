@@ -98,18 +98,18 @@ public class PvPChecker {
     }
 
     public static boolean canHurt(Player attacker, Entity defender) {
-        if (Configuration.DISABLE_PET_VS_PLAYER) {
-            return false;
+        if (defender instanceof Player) {
+            return canHurt(attacker, (Player) defender);
         }
         if (attacker != null && defender != null && attacker != defender) {
-            return canHurtTowny(attacker, defender) && canHurt(defender) && canHurtGriefPrevention(attacker, defender);
+            return canHurtTowny(attacker, defender) && canHurtGriefPrevention(attacker, defender) && canHurt(defender);
         }
         return false;
     }
 
     public static boolean canHurt(Entity defender) {
-        if (Configuration.DISABLE_PET_VS_PLAYER) {
-            return false;
+        if (defender instanceof Player) {
+            return canHurt((Player) defender);
         }
         if (defender != null) {
             return canHurtCitizens(defender);
