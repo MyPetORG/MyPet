@@ -28,7 +28,6 @@ import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
-import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
 import org.bukkit.entity.Player;
@@ -193,8 +192,8 @@ public class MyPetList {
             addMyPet(activeMyPet);
             removeInactiveMyPet(inactiveMyPet);
 
-            DebugLogger.info("   A: " + activeMyPet);
-            DebugLogger.info("   I: " + inactiveMyPet);
+            //DebugLogger.info("   A: " + activeMyPet);
+            //DebugLogger.info("   I: " + inactiveMyPet);
 
             return activeMyPet;
         }
@@ -217,8 +216,8 @@ public class MyPetList {
             removeMyPet(activeMyPet);
             addInactiveMyPet(inactiveMyPet);
 
-            DebugLogger.info("   I: " + inactiveMyPet);
-            DebugLogger.info("   A: " + activeMyPet);
+            //DebugLogger.info("   I: " + inactiveMyPet);
+            //DebugLogger.info("   A: " + activeMyPet);
 
             return inactiveMyPet;
         }
