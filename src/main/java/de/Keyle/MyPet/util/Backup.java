@@ -23,6 +23,7 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -48,18 +49,26 @@ public class Backup {
                 long difference = System.currentTimeMillis() - this.lastBackup;
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(difference);
                 if (minutes >= SAVE_INTERVAL) {
-                    createBackup();
+                    createAsyncBackup();
                 }
             }
         } catch (IOException e) {
             DebugLogger.info("Creating first My.Pets backup.");
-            createBackup();
+            createAsyncBackup();
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
             public void run() {
                 createBackup();
             }
         }, 20L * 60L * (SAVE_INTERVAL - TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - this.lastBackup)), 20L * 60L * SAVE_INTERVAL);
+    }
+
+    public BukkitTask createAsyncBackup() {
+        return Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+            public void run() {
+                createBackup();
+            }
+        });
     }
 
     public String createBackup() {

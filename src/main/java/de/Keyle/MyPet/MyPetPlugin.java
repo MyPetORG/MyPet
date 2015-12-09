@@ -114,7 +114,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                 myPet.removePet(myPet.wantToRespawn());
             }
-            saveData(true);
+            saveData(true, false);
             MyPetList.clearList();
             BukkitUtil.unregisterMyPetEntities();
         }
@@ -387,7 +387,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 //donate-delete-end
             }
         }
-        saveData(false);
+        saveData(false, false);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
@@ -470,9 +470,9 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         DebugLogger.info("-----------------------------------------");
     }
 
-    public void saveData(boolean shutdown) {
+    public void saveData(boolean shutdown, boolean async) {
         autoSaveTimer = Configuration.AUTOSAVE_TIME;
-        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
+        final ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
 
         nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
         nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
@@ -481,7 +481,15 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", savePets());
         nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
         nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", pluginStorage.save());
-        nbtConfiguration.save();
+        if (async) {
+            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    nbtConfiguration.save();
+                }
+            });
+        } else {
+            nbtConfiguration.save();
+        }
     }
 
     private int loadPets(TagList petList) {
@@ -666,7 +674,7 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
     @Override
     public void schedule() {
         if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
-            MyPetPlugin.getPlugin().saveData(false);
+            MyPetPlugin.getPlugin().saveData(false, true);
             autoSaveTimer = Configuration.AUTOSAVE_TIME;
         }
     }

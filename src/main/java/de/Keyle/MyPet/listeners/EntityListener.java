@@ -469,7 +469,7 @@ public class EntityListener implements Listener {
                             DebugLogger.info("New Pet leashed:");
                             DebugLogger.info("   " + myPet.toString());
                             if (Configuration.STORE_PETS_ON_PET_LEASH) {
-                                MyPetPlugin.getPlugin().saveData(false);
+                                MyPetPlugin.getPlugin().saveData(false, true);
                             }
                             damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
 
@@ -686,7 +686,7 @@ public class EntityListener implements Listener {
                 MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                 DebugLogger.info(myPet.getOwner().getName() + " released pet (dead).");
                 if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                    MyPetPlugin.getPlugin().saveData(false);
+                    MyPetPlugin.getPlugin().saveData(false, true);
                 }
                 return;
             }

@@ -242,7 +242,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
                     DebugLogger.info(sender.getName() + " released pet.");
                     if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                        MyPetPlugin.getPlugin().saveData(false);
+                        MyPetPlugin.getPlugin().saveData(false, true);
                     }
                     return true;
                 } else {
