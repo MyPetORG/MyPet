@@ -24,7 +24,8 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -55,8 +56,8 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         if (parameter.length == 0) {
             if (sender instanceof Player) {
                 Player petOwner = (Player) sender;
-                if (MyPetPlayer.isMyPetPlayer(petOwner)) {
-                    owner = MyPetPlayer.getOrCreateMyPetPlayer(petOwner);
+                if (PlayerList.isMyPetPlayer(petOwner)) {
+                    owner = PlayerList.getMyPetPlayer(petOwner);
                 }
             } else {
                 sender.sendMessage("You can't use this command from server console!");
@@ -68,8 +69,8 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
-            if (MyPetPlayer.isMyPetPlayer(player)) {
-                owner = MyPetPlayer.getOrCreateMyPetPlayer(player);
+            if (PlayerList.isMyPetPlayer(player)) {
+                owner = PlayerList.getMyPetPlayer(player);
             }
             if (owner == null) {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), owner.getName()));
@@ -77,7 +78,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
         } else if (parameter.length == 2) {
             show = false;
             try {
-                owner = MyPetPlayer.getMyPetPlayer(UUID.fromString(parameter[0]));
+                owner = PlayerList.getMyPetPlayer(UUID.fromString(parameter[0]));
                 petUUID = UUID.fromString(parameter[1]);
             } catch (IllegalArgumentException ignored) {
             }
@@ -115,9 +116,9 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
             InactiveMyPet newPet = owner.getInactiveMyPet(petUUID);
             if (newPet != null) {
                 if (owner.hasMyPet()) {
-                    MyPetList.setMyPetInactive(owner);
+                    MyPetList.deactivateMyPet(owner);
                 }
-                MyPet myPet = MyPetList.setMyPetActive(newPet);
+                MyPet myPet = MyPetList.activateMyPet(newPet);
                 sender.sendMessage(Locales.getString("Message.Command.Success", sender));
                 if (myPet != null) {
                     myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", owner), myPet.getPetName()));

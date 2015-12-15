@@ -20,24 +20,24 @@
 
 package de.Keyle.MyPet.util.player;
 
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Util;
 
 import java.util.UUID;
 
 public class OfflineMyPetPlayer extends MyPetPlayer {
-    protected OfflineMyPetPlayer(UUID internalUUID, String playerName) {
+    public OfflineMyPetPlayer(UUID internalUUID, String playerName) {
         super(internalUUID);
         this.lastKnownPlayerName = playerName;
         offlineUUID = Util.getOfflinePlayerUUID(getName());
-        uuidToInternalUUID.put(offlineUUID, internalUUID);
     }
 
-    protected OfflineMyPetPlayer(String playerName) {
+    public OfflineMyPetPlayer(String playerName) {
         this(UUID.randomUUID(), playerName);
     }
 
     public boolean isOnline() {
-        return onlinePlayerUUIDList.contains(offlineUUID);
+        return PlayerList.onlinePlayerUUIDList.contains(offlineUUID);
     }
 
     @Override

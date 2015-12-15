@@ -31,6 +31,8 @@ import de.Keyle.MyPet.entity.types.MyPet.LeashFlag;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.enderman.EntityMyEnderman;
 import de.Keyle.MyPet.entity.types.rabbit.MyRabbit;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -262,7 +264,7 @@ public class EntityListener implements Listener {
                     if (!leashItem.compare(damager.getItemInHand()) || !Permissions.has(damager, "MyPet.user.leash." + MyPetType.getMyPetTypeByEntityType(leashTarget.getType()).getTypeName())) {
                         return;
                     }
-                    if (Permissions.has(damager, "MyPet.user.capturehelper") && MyPetPlayer.isMyPetPlayer(damager) && MyPetPlayer.getOrCreateMyPetPlayer(damager).isCaptureHelperActive()) {
+                    if (Permissions.has(damager, "MyPet.user.capturehelper") && PlayerList.isMyPetPlayer(damager) && PlayerList.getMyPetPlayer(damager).isCaptureHelperActive()) {
                         CaptureHelper.checkTamable(leashTarget, event.getDamage(), damager);
                     }
                     if (PluginHookManager.isPluginUsable("Citizens")) {
@@ -346,7 +348,10 @@ public class EntityListener implements Listener {
 
                     if (willBeLeashed) {
                         event.setCancelled(true);
-                        InactiveMyPet inactiveMyPet = new InactiveMyPet(MyPetPlayer.getOrCreateMyPetPlayer(damager));
+
+                        MyPetPlayer owner = PlayerList.registerMyPetPlayer(damager);
+
+                        InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));
                         inactiveMyPet.setPetName(Locales.getString("Name." + inactiveMyPet.getPetType().getTypeName(), inactiveMyPet.getOwner().getLanguage()));
 
@@ -461,7 +466,7 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                        MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
                         if (myPet != null) {
                             myPet.createPet();
 
@@ -469,7 +474,7 @@ public class EntityListener implements Listener {
                             DebugLogger.info("New Pet leashed:");
                             DebugLogger.info("   " + myPet.toString());
                             if (Configuration.STORE_PETS_ON_PET_LEASH) {
-                                MyPetPlugin.getPlugin().saveData(false, true);
+                                MyPetPlugin.getPlugin().getRepository().save();
                             }
                             damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
 
@@ -683,10 +688,13 @@ public class EntityListener implements Listener {
                 myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(myPet.getOwner().getPlayer().getWorld().getName()).getName(), null);
 
                 myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Release.Dead", myPet.getOwner()), myPet.getPetName()));
-                MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
+
+                MyPetList.deactivateMyPet(myPet.getOwner());
+                MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID());
+
                 DebugLogger.info(myPet.getOwner().getName() + " released pet (dead).");
                 if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                    MyPetPlugin.getPlugin().saveData(false, true);
+                    MyPetPlugin.getPlugin().getRepository().save();
                 }
                 return;
             }

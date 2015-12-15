@@ -20,10 +20,12 @@
 
 package de.Keyle.MyPet.commands.admin;
 
+import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -46,15 +48,16 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
                 sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
                 return true;
             }
-            if (MyPetPlayer.isMyPetPlayer(player)) {
-                MyPetPlayer petOwner = MyPetPlayer.getOrCreateMyPetPlayer(player);
+            if (PlayerList.isMyPetPlayer(player)) {
+                MyPetPlayer petOwner = PlayerList.getMyPetPlayer(player);
                 if (petOwner.hasMyPet()) {
                     MyPet myPet = petOwner.getMyPet();
 
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] You removed the MyPet of: " + ChatColor.YELLOW + petOwner.getName());
 
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName(), null);
-                    MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
+                    MyPetList.deactivateMyPet(myPet.getOwner());
+                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID());
                 }
             }
         }

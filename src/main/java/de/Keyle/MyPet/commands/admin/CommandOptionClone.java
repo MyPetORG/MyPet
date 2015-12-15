@@ -24,7 +24,8 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -58,13 +59,25 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
             return true;
         }
 
-        MyPetPlayer oldPetOwner = MyPetPlayer.getOrCreateMyPetPlayer(oldOwner);
-        MyPetPlayer newPetOwner = MyPetPlayer.getOrCreateMyPetPlayer(newOwner);
+        if (!PlayerList.isMyPetPlayer(oldOwner)) {
+            sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
+            return true;
+        }
+
+        MyPetPlayer oldPetOwner = PlayerList.getMyPetPlayer(oldOwner);
 
         if (!oldPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), oldOwner.getName()));
             return true;
         }
+
+        MyPetPlayer newPetOwner;
+        if (PlayerList.isMyPetPlayer(newOwner)) {
+            newPetOwner = PlayerList.getMyPetPlayer(newOwner);
+        } else {
+            newPetOwner = PlayerList.registerMyPetPlayer(newOwner);
+        }
+
         if (newPetOwner.hasMyPet()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + newOwner.getName() + " has already an active MyPet!");
             return true;
@@ -93,7 +106,7 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         }
 
         MyPetList.addInactiveMyPet(newPet);
-        MyPetList.setMyPetActive(newPet);
+        MyPetList.activateMyPet(newPet);
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newOwner.getName() + " successfully cloned!");
 

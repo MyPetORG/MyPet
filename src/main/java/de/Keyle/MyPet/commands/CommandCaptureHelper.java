@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Locales;
@@ -40,9 +41,16 @@ public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer(player);
+
 
             if (Permissions.has(player, "MyPet.user.command.capturehelper")) {
+                MyPetPlayer myPetPlayer;
+                if (PlayerList.isMyPetPlayer(player)) {
+                    myPetPlayer = PlayerList.getMyPetPlayer(player);
+                } else {
+                    myPetPlayer = PlayerList.registerMyPetPlayer(player);
+                }
+
                 myPetPlayer.setCaptureHelperActive(!myPetPlayer.isCaptureHelperActive());
                 String mode = myPetPlayer.isCaptureHelperActive() ? Locales.getString("Name.Enabled", player) : Locales.getString("Name.Disabled", player);
                 player.sendMessage(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", player), mode));

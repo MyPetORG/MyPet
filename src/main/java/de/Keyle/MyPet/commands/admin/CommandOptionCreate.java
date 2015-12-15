@@ -24,8 +24,9 @@ import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
@@ -156,9 +157,15 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 return true;
             }
 
-            MyPetPlayer newOwner = MyPetPlayer.getOrCreateMyPetPlayer(owner);
-            if (newOwner.hasMyPet() && forceOffset == 1) {
-                MyPetList.setMyPetInactive(newOwner);
+            MyPetPlayer newOwner;
+            if (PlayerList.isMyPetPlayer(owner)) {
+                newOwner = PlayerList.getMyPetPlayer(owner);
+
+                if (newOwner.hasMyPet() && forceOffset == 1) {
+                    MyPetList.deactivateMyPet(newOwner);
+                }
+            } else {
+                newOwner = PlayerList.registerMyPetPlayer(owner);
             }
 
             if (!newOwner.hasMyPet()) {
@@ -268,7 +275,7 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
                 inactiveMyPet.getOwner().setMyPetForWorldGroup(wg.getName(), inactiveMyPet.getUUID());
 
                 MyPetList.addInactiveMyPet(inactiveMyPet);
-                MyPet myPet = MyPetList.setMyPetActive(inactiveMyPet);
+                MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
                 if (myPet != null) {
                     myPet.createPet();
                     sender.sendMessage(Locales.getString("Message.Command.Success", sender));

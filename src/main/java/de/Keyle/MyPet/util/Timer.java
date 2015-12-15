@@ -23,7 +23,8 @@ package de.Keyle.MyPet.util;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.Bukkit;
@@ -68,7 +69,7 @@ public class Timer {
         }, 5L, 20L));
         timerIDs.add(Bukkit.getScheduler().scheduleSyncRepeatingTask(MyPetPlugin.getPlugin(), new Runnable() {
             public void run() {
-                for (MyPetPlayer player : MyPetPlayer.getMyPetPlayers()) {
+                for (MyPetPlayer player : PlayerList.getMyPetPlayers()) {
                     player.schedule();
                 }
             }

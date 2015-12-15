@@ -20,15 +20,16 @@
 
 package de.Keyle.MyPet.util;
 
+import com.google.common.collect.Maps;
 import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagCompound;
 
 import java.util.Map;
 
 public class PluginStorage {
-    private final Map<String, TagBase> data;
+    private Map<String, TagBase> data = Maps.newHashMap();
 
-    public PluginStorage(TagCompound rootTag) {
+    public void init(TagCompound rootTag) {
         this.data = rootTag.getCompoundData();
     }
 

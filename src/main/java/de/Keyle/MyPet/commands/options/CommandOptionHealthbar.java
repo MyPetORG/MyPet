@@ -21,6 +21,7 @@
 package de.Keyle.MyPet.commands.options;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.command.CommandSender;
@@ -29,8 +30,8 @@ import org.bukkit.entity.Player;
 public class CommandOptionHealthbar implements CommandOption {
     @Override
     public boolean onCommandOption(CommandSender sender, String[] args) {
-        if (sender instanceof Player && MyPetPlayer.isMyPetPlayer((Player) sender)) {
-            MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer((Player) sender);
+        if (sender instanceof Player && PlayerList.isMyPetPlayer((Player) sender)) {
+            MyPetPlayer myPetPlayer = PlayerList.getMyPetPlayer((Player) sender);
             myPetPlayer.setHealthBarActive(!myPetPlayer.isHealthBarActive());
             sender.sendMessage(Locales.getString("Message.Command.Success", sender));
             return true;

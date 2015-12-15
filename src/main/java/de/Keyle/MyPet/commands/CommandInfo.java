@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
@@ -60,15 +61,15 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
             MyPetPlayer petOwner;
 
             if (args.length == 0) {
-                if (MyPetPlayer.isMyPetPlayer(player)) {
-                    petOwner = MyPetPlayer.getOrCreateMyPetPlayer(player);
+                if (PlayerList.isMyPetPlayer(player)) {
+                    petOwner = PlayerList.getMyPetPlayer(player);
                 } else {
                     sender.sendMessage(Locales.getString("Message.No.HasPet", player));
                     return true;
                 }
             } else if (Permissions.has(player, "MyPet.admin", false)) {
-                if (MyPetPlayer.isMyPetPlayer(args[0])) {
-                    petOwner = MyPetPlayer.getMyPetPlayer(args[0]);
+                if (PlayerList.isMyPetPlayer(args[0])) {
+                    petOwner = PlayerList.getMyPetPlayer(args[0]);
                 } else {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", player), args[0]));
                     return true;
