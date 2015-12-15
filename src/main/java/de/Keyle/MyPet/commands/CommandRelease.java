@@ -24,7 +24,6 @@ import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.IMyPetEquipment;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.chicken.MyChicken;
 import de.Keyle.MyPet.entity.types.cow.MyCow;
 import de.Keyle.MyPet.entity.types.creeper.MyCreeper;
@@ -44,6 +43,8 @@ import de.Keyle.MyPet.entity.types.slime.MySlime;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -53,7 +54,6 @@ import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
-import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.fanciful.FancyMessage;
 import de.keyle.fanciful.ItemTooltip;
 import net.minecraft.server.v1_8_R3.EntityItem;
@@ -239,10 +239,11 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(petOwner.getWorld().getName()).getName(), null);
 
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
-                    MyPetList.removeInactiveMyPet(MyPetList.setMyPetInactive(myPet.getOwner()));
+                    MyPetList.deactivateMyPet(myPet.getOwner());
+                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID());
                     DebugLogger.info(sender.getName() + " released pet.");
                     if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                        MyPetPlugin.getPlugin().saveData(false, true);
+                        MyPetPlugin.getPlugin().getRepository().save();
                     }
                     return true;
                 } else {
@@ -279,7 +280,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
         if (MyPetList.hasMyPet((Player) commandSender)) {
             List<String> petnameList = new ArrayList<String>();
-            petnameList.add(MyPetPlayer.getOrCreateMyPetPlayer((Player) commandSender).getMyPet().getPetName());
+            petnameList.add(PlayerList.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
             return petnameList;
         }
         return emptyList;

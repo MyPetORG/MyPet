@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.listeners;
 
 import de.Keyle.MyPet.api.entity.MyPetEntity;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

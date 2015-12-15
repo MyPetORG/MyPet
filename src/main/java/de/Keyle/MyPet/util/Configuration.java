@@ -111,6 +111,8 @@ public class Configuration {
         config.addDefault("MyPet.Log.ERROR", DebugLogger.ERROR);
         config.addDefault("MyPet.Log.WARNING", DebugLogger.WARNING);
 
+        config.addDefault("MyPet.InstanceName", MyPetPlugin.INSTANCE_NAME);
+
         config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
         config.addDefault("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
@@ -264,6 +266,8 @@ public class Configuration {
         Behavior.BehaviorState.Friendly.setActive(config.getBoolean("MyPet.Skill.Behavior.Friendly", true));
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
         Behavior.BehaviorState.Duel.setActive(config.getBoolean("MyPet.Skill.Behavior.Duel", true));
+
+        MyPetPlugin.INSTANCE_NAME = config.getString("MyPet.InstanceName", MyPetPlugin.INSTANCE_NAME);
 
         Backup.MAKE_BACKUPS = config.getBoolean("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
         Backup.SAVE_INTERVAL = config.getInt("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);

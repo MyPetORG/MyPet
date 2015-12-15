@@ -20,7 +20,7 @@
 
 package de.Keyle.MyPet.commands;
 
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.Pickup;

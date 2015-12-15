@@ -230,6 +230,10 @@ public abstract class MyPet implements IMyPet, NBTStorage {
 
     public void setRespawnTime(int time) {
         respawnTime = time > 0 ? time : 0;
+
+        if (respawnTime > 0) {
+            status = PetState.Dead;
+        }
     }
 
     public boolean autoAssignSkilltree() {
@@ -299,6 +303,10 @@ public abstract class MyPet implements IMyPet, NBTStorage {
 
     public void setUUID(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public void setLastUsed(long date) {
+        this.lastUsed = date;
     }
 
     @Override
@@ -453,6 +461,10 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         if (petOwner.isOnline()) {
             petOwner.getPlayer().sendMessage(text);
         }
+    }
+
+    public void setWantsToRespawn(boolean wantsToRespawn) {
+        this.wantsToRespawn = wantsToRespawn;
     }
 
     public boolean wantToRespawn() {

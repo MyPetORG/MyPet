@@ -21,7 +21,7 @@
 package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.Colorizer;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;

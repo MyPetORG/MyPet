@@ -22,7 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
+import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.locale.Locales;
 import org.bukkit.command.Command;

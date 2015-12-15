@@ -25,7 +25,6 @@ import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.blaze.EntityMyBlaze;
@@ -59,6 +58,10 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
+import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.Repository;
+import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.SkillsInfo;
@@ -71,7 +74,6 @@ import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderNBT;
 import de.Keyle.MyPet.skill.skilltreeloader.SkillTreeLoaderYAML;
 import de.Keyle.MyPet.util.*;
 import de.Keyle.MyPet.util.Timer;
-import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.configuration.ConfigurationYAML;
 import de.Keyle.MyPet.util.hooks.Bungee;
 import de.Keyle.MyPet.util.hooks.Economy;
@@ -82,8 +84,6 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
-import de.Keyle.MyPet.util.player.UUIDFetcher;
-import de.keyle.knbt.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -97,13 +97,12 @@ import org.mcstats.Metrics.Plotter;
 import java.io.*;
 import java.util.*;
 
-public class MyPetPlugin extends JavaPlugin implements IScheduler {
+public class MyPetPlugin extends JavaPlugin {
     private static MyPetPlugin plugin;
-    private File NBTPetFile;
     private boolean isReady = false;
-    private int autoSaveTimer = 0;
-    private Backup backupManager;
     private PluginStorage pluginStorage;
+    private Repository repo;
+    public static String INSTANCE_NAME = "MyPet-01";
 
     public static MyPetPlugin getPlugin() {
         return plugin;
@@ -114,12 +113,12 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
             for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                 myPet.removePet(myPet.wantToRespawn());
             }
-            saveData(true, false);
+            repo.save();
             MyPetList.clearList();
             BukkitUtil.unregisterMyPetEntities();
         }
         Timer.reset();
-        MyPetPlayer.onlinePlayerUUIDList.clear();
+        PlayerList.onlinePlayerUUIDList.clear();
         MyPetLogger.setConsole(null);
         Bukkit.getServer().getScheduler().cancelTasks(getPlugin());
         DebugLogger.info("MyPet disabled!");
@@ -132,7 +131,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
-        NBTPetFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         MyPetVersion.reset();
         MyPetLogger.setConsole(getServer().getConsoleSender());
@@ -288,15 +286,14 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
-        if (Backup.MAKE_BACKUPS) {
-            backupManager = new Backup(NBTPetFile, new File(getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
-        }
-        loadGroups(groupsFile);
-        loadData(NBTPetFile);
-        if (pluginStorage == null) {
-            pluginStorage = new PluginStorage(new TagCompound());
+        pluginStorage = new PluginStorage();
+        repo = new NbtRepository();
+        repo.init();
+        if (repo instanceof IScheduler) {
+            Timer.addTask((IScheduler) repo);
         }
 
+        loadGroups(groupsFile);
         Timer.startTimer();
 
         MobArena.findPlugin();
@@ -353,18 +350,18 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
 
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
-        Timer.addTask(this);
 
         for (Player player : getServer().getOnlinePlayers()) {
-            MyPetPlayer.onlinePlayerUUIDList.add(player.getUniqueId());
-            if (MyPetPlayer.isMyPetPlayer(player)) {
-                MyPetPlayer myPetPlayer = MyPetPlayer.getOrCreateMyPetPlayer(player);
+            PlayerList.onlinePlayerUUIDList.add(player.getUniqueId());
+            if (repo.isMyPetPlayer(player)) {
+                MyPetPlayer myPetPlayer = repo.getMyPetPlayer(player);
+                PlayerList.setOnline(myPetPlayer);
                 WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
                 if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                     UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
                     for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
                         if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                            MyPetList.setMyPetActive(inactiveMyPet);
+                            MyPetList.activateMyPet(inactiveMyPet);
                             break;
                         }
                     }
@@ -387,7 +384,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
                 //donate-delete-end
             }
         }
-        saveData(false, false);
         DebugLogger.info("----------- MyPet ready -----------");
     }
 
@@ -433,172 +429,6 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         SkillsInfo.registerSkill(RangedInfo.class);
         SkillsInfo.registerSkill(SprintInfo.class);
         SkillsInfo.registerSkill(StompInfo.class);
-    }
-
-    private void loadData(File f) {
-        ConfigurationNBT nbtConfiguration = new ConfigurationNBT(f);
-        if (!nbtConfiguration.load()) {
-            return;
-        }
-
-        if (nbtConfiguration.getNBTCompound().containsKeyAs("CleanShutdown", TagByte.class)) {
-            DebugLogger.info("Clean shutdown: " + nbtConfiguration.getNBTCompound().getAs("CleanShutdown", TagByte.class).getBooleanData());
-        }
-
-        DebugLogger.info("Loading plugin storage ------------------" + nbtConfiguration.getNBTCompound().containsKeyAs("PluginStorage", TagCompound.class));
-        if (nbtConfiguration.getNBTCompound().containsKeyAs("PluginStorage", TagCompound.class)) {
-            TagCompound storageTag = nbtConfiguration.getNBTCompound().getAs("PluginStorage", TagCompound.class);
-            for (String plugin : storageTag.getCompoundData().keySet()) {
-                DebugLogger.info("  " + plugin);
-            }
-            DebugLogger.info(" Storage for " + storageTag.getCompoundData().keySet().size() + " MyPet-plugin(s) loaded");
-            pluginStorage = new PluginStorage(storageTag);
-        } else {
-            pluginStorage = new PluginStorage(new TagCompound());
-        }
-        DebugLogger.info("-----------------------------------------");
-
-        DebugLogger.info("Loading players -------------------------");
-        if (nbtConfiguration.getNBTCompound().containsKeyAs("Players", TagList.class)) {
-            DebugLogger.info(loadPlayers(nbtConfiguration.getNBTCompound().getAs("Players", TagList.class)) + " PetPlayer(s) loaded");
-        }
-        DebugLogger.info("-----------------------------------------");
-
-        DebugLogger.info("Loading Pets: -----------------------------");
-        int petCount = loadPets(nbtConfiguration.getNBTCompound().getAs("Pets", TagList.class));
-        MyPetLogger.write("" + ChatColor.YELLOW + petCount + ChatColor.RESET + " pet(s) loaded");
-        DebugLogger.info("-----------------------------------------");
-    }
-
-    public void saveData(boolean shutdown, boolean async) {
-        autoSaveTimer = Configuration.AUTOSAVE_TIME;
-        final ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
-
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Build", new TagInt(Integer.parseInt(MyPetVersion.getBuild())));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("CleanShutdown", new TagByte(shutdown));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("OnlineMode", new TagByte(BukkitUtil.isInOnlineMode()));
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Pets", savePets());
-        nbtConfiguration.getNBTCompound().getCompoundData().put("Players", savePlayers());
-        nbtConfiguration.getNBTCompound().getCompoundData().put("PluginStorage", pluginStorage.save());
-        if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(MyPetPlugin.getPlugin(), new Runnable() {
-                public void run() {
-                    nbtConfiguration.save();
-                }
-            });
-        } else {
-            nbtConfiguration.save();
-        }
-    }
-
-    private int loadPets(TagList petList) {
-        int petCount = 0;
-        for (int i = 0; i < petList.getReadOnlyList().size(); i++) {
-            TagCompound myPetNBT = petList.getTagAs(i, TagCompound.class);
-            MyPetPlayer petPlayer;
-            if (myPetNBT.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
-                UUID ownerUUID = UUID.fromString(myPetNBT.getAs("Internal-Owner-UUID", TagString.class).getStringData());
-                petPlayer = MyPetPlayer.getMyPetPlayer(ownerUUID);
-            } else {
-                if (BukkitUtil.isInOnlineMode()) {
-                    if (myPetNBT.getCompoundData().containsKey("Mojang-Owner-UUID")) {
-                        UUID playerUUID = UUID.fromString(myPetNBT.getAs("Mojang-Owner-UUID", TagString.class).getStringData());
-                        petPlayer = MyPetPlayer.getMyPetPlayer(MyPetPlayer.getInternalUUID(playerUUID));
-                    } else {
-                        String playerName = myPetNBT.getAs("Owner", TagString.class).getStringData();
-                        Map<String, UUID> fetchedUUIDs = UUIDFetcher.call(playerName);
-                        if (!fetchedUUIDs.containsKey(playerName)) {
-                            MyPetLogger.write(ChatColor.RED + "Can't get UUID for \"" + playerName + "\"! Pet not loaded for this player!");
-                            continue;
-                        } else {
-                            petPlayer = MyPetPlayer.getMyPetPlayer(MyPetPlayer.getInternalUUID(fetchedUUIDs.get(playerName)));
-                        }
-                    }
-                } else {
-                    petPlayer = MyPetPlayer.getMyPetPlayer(myPetNBT.getAs("Owner", TagString.class).getStringData());
-                }
-            }
-            if (petPlayer == null) {
-                MyPetLogger.write("Owner for a pet (" + myPetNBT.getAs("Name", TagString.class) + " not found, pet loading skipped.");
-                continue;
-            }
-            InactiveMyPet inactiveMyPet = new InactiveMyPet(petPlayer);
-            inactiveMyPet.load(myPetNBT);
-
-            MyPetList.addInactiveMyPet(inactiveMyPet);
-
-            DebugLogger.info("   " + inactiveMyPet.toString());
-
-            petCount++;
-        }
-        return petCount;
-    }
-
-    private TagList savePets() {
-        List<TagCompound> petList = new ArrayList<TagCompound>();
-
-        for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-            try {
-                TagCompound petNBT = myPet.save();
-                petList.add(petNBT);
-            } catch (Exception e) {
-                DebugLogger.printThrowable(e);
-            }
-        }
-        for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
-            try {
-                TagCompound petNBT = inactiveMyPet.save();
-                petList.add(petNBT);
-            } catch (Exception e) {
-                DebugLogger.printThrowable(e);
-            }
-        }
-        return new TagList(petList);
-    }
-
-    private TagList savePlayers() {
-        List<TagCompound> playerList = new ArrayList<TagCompound>();
-        for (MyPetPlayer myPetPlayer : MyPetPlayer.getMyPetPlayers()) {
-            if (myPetPlayer.hasMyPet() || myPetPlayer.hasInactiveMyPets() || myPetPlayer.hasCustomData()) {
-                try {
-                    playerList.add(myPetPlayer.save());
-                } catch (Exception e) {
-                    DebugLogger.printThrowable(e);
-                }
-            }
-        }
-        return new TagList(playerList);
-    }
-
-    private int loadPlayers(TagList playerList) {
-        int playerCount = 0;
-        if (BukkitUtil.isInOnlineMode()) {
-            List<String> unknownPlayers = new ArrayList<String>();
-            for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
-                TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
-                if (playerTag.containsKeyAs("Name", TagString.class)) {
-                    if (playerTag.containsKeyAs("UUID", TagCompound.class)) {
-                        TagCompound uuidTag = playerTag.getAs("UUID", TagCompound.class);
-                        if (!uuidTag.containsKeyAs("Mojang-UUID", TagString.class)) {
-                            String playerName = playerTag.getAs("Name", TagString.class).getStringData();
-                            unknownPlayers.add(playerName);
-                        }
-                    } else if (!playerTag.getCompoundData().containsKey("Mojang-UUID")) {
-                        String playerName = playerTag.getAs("Name", TagString.class).getStringData();
-                        unknownPlayers.add(playerName);
-                    }
-                }
-            }
-            UUIDFetcher.call(unknownPlayers);
-        }
-
-        for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
-            TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
-            MyPetPlayer.createMyPetPlayer(playerTag);
-            playerCount++;
-        }
-        return playerCount;
     }
 
     private int loadGroups(File f) {
@@ -671,23 +501,15 @@ public class MyPetPlugin extends JavaPlugin implements IScheduler {
         return 0;
     }
 
-    @Override
-    public void schedule() {
-        if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
-            MyPetPlugin.getPlugin().saveData(false, true);
-            autoSaveTimer = Configuration.AUTOSAVE_TIME;
-        }
-    }
-
-    public Backup getBackupManager() {
-        return backupManager;
-    }
-
     public File getFile() {
         return super.getFile();
     }
 
     public PluginStorage getPluginStorage() {
         return pluginStorage;
+    }
+
+    public Repository getRepository() {
+        return repo;
     }
 }

@@ -22,6 +22,7 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
+import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -51,7 +52,7 @@ public class CommandSendAway implements CommandExecutor {
                 playerName = args[0];
             }
         }
-        if (!MyPetPlayer.isMyPetPlayer(playerName)) {
+        if (!PlayerList.isMyPetPlayer(playerName)) {
             if (args.length == 0) {
                 sender.sendMessage(Locales.getString("Message.No.HasPet", (Player) sender));
             } else {
@@ -59,7 +60,7 @@ public class CommandSendAway implements CommandExecutor {
             }
             return true;
         }
-        MyPetPlayer petOwner = MyPetPlayer.getMyPetPlayer(playerName);
+        MyPetPlayer petOwner = PlayerList.getMyPetPlayer(playerName);
         if (petOwner != null && !petOwner.isOnline()) {
             sender.sendMessage(Locales.getString("Message.No.PlayerOnline", lang));
             return true;
