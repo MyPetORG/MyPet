@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands;
 
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
@@ -143,7 +142,7 @@ public class CommandInfo implements CommandExecutor, TabCompleter {
                     player.sendMessage("   " + Locales.getString("Name.Level", player) + ": " + lvl);
                     infoShown = true;
                 }
-                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Experience.LEVEL_CAP;
+                int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LEVEL_CAP;
                 if (canSee(PetInfoDisplay.Exp.adminOnly, player, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                     double exp = myPet.getExperience().getCurrentExp();
                     double reqEXP = myPet.getExperience().getRequiredExp();
