@@ -37,35 +37,35 @@ public interface Repository {
 
     void init();
 
-    int countMyPets();
+    void countMyPets(final RepositoryCallback<Integer> callback);
 
-    int countMyPets(MyPetType type);
+    void countMyPets(MyPetType type, final RepositoryCallback<Integer> callback);
 
-    Collection<InactiveMyPet> getAllMyPets();
+    void getAllMyPets(final RepositoryCallback<Collection<InactiveMyPet>> callback);
 
-    boolean hasMyPets(MyPetPlayer myPetPlayer);
+    void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback);
 
-    List<InactiveMyPet> getMyPets(MyPetPlayer owner);
+    void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<InactiveMyPet>> callback);
 
-    InactiveMyPet getMyPet(UUID uuid);
+    void getMyPet(final UUID uuid, final RepositoryCallback<InactiveMyPet> callback);
 
-    void removeMyPet(UUID inactiveMyPet);
+    void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback);
 
-    void removeMyPet(InactiveMyPet inactiveMyPet);
+    void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback);
 
-    void addMyPet(InactiveMyPet inactiveMyPet);
+    void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback);
 
-    boolean updateMyPet(MyPet myPet);
+    void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback);
 
-    boolean isMyPetPlayer(Player player);
+    void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback);
 
-    MyPetPlayer getMyPetPlayer(UUID uuid);
+    void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback);
 
-    MyPetPlayer getMyPetPlayer(Player player);
+    void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback);
 
-    void updatePlayer(MyPetPlayer player);
+    void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
 
-    void addMyPetPlayer(MyPetPlayer player);
+    void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
 
-    void removeMyPetPlayer(MyPetPlayer player);
+    void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback);
 }

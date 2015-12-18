@@ -31,6 +31,7 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.repository.Repository;
+import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Configuration;
@@ -79,19 +80,21 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     @Override
-    public int countMyPets() {
-        return myPets.values().size();
+    public void countMyPets(final RepositoryCallback<Integer> callback) {
+        callback.setValue(myPets.values().size());
+        callback.run();
     }
 
     @Override
-    public int countMyPets(MyPetType type) {
+    public void countMyPets(MyPetType type, final RepositoryCallback<Integer> callback) {
         int counter = 0;
-        for (InactiveMyPet inactiveMyPet : getAllMyPets()) {
+        for (InactiveMyPet inactiveMyPet : myPets.values()) {
             if (inactiveMyPet.getPetType() == type) {
                 counter++;
             }
         }
-        return counter;
+        callback.setValue(counter);
+        callback.run();
     }
 
     public void saveData(boolean async) {
@@ -163,62 +166,99 @@ public class NbtRepository implements Repository, IScheduler {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Collection<InactiveMyPet> getAllMyPets() {
-        return myPets.values();
+    public void getAllMyPets(final RepositoryCallback<Collection<InactiveMyPet>> callback) {
+        if (callback != null) {
+            callback.setValue(myPets.values());
+            callback.run();
+        }
     }
 
     @Override
-    public boolean hasMyPets(MyPetPlayer myPetPlayer) {
-        return myPets.containsKey(myPetPlayer);
+    public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {
+        if (callback != null) {
+            callback.setValue(myPets.containsKey(myPetPlayer));
+            callback.run();
+        }
     }
 
     @Override
-    public List<InactiveMyPet> getMyPets(MyPetPlayer owner) {
-        return myPets.get(owner);
+    public void getMyPets(final MyPetPlayer owner, final RepositoryCallback<List<InactiveMyPet>> callback) {
+        if (callback != null) {
+            callback.setValue(myPets.get(owner));
+            callback.run();
+        }
     }
 
     @Override
-    public InactiveMyPet getMyPet(UUID uuid) {
-        for (InactiveMyPet pet : myPets.values()) {
-            if (uuid.equals(pet.getUUID())) {
-                return pet;
+    public void getMyPet(final UUID uuid, final RepositoryCallback<InactiveMyPet> callback) {
+        if (callback != null) {
+            for (InactiveMyPet pet : myPets.values()) {
+                if (uuid.equals(pet.getUUID())) {
+                    callback.setValue(pet);
+                    callback.run();
+                    return;
+                }
             }
         }
-        return null;
     }
 
     @Override
-    public void removeMyPet(UUID uuid) {
+    public void removeMyPet(final UUID uuid, final RepositoryCallback<Boolean> callback) {
         for (InactiveMyPet pet : myPets.values()) {
             if (uuid.equals(pet.getUUID())) {
                 myPets.remove(pet.getOwner(), pet);
+                if (callback != null) {
+                    callback.setValue(true);
+                    callback.run();
+                }
+                return;
             }
         }
     }
 
     @Override
-    public void removeMyPet(InactiveMyPet inactiveMyPet) {
-        myPets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
-    }
-
-    @Override
-    public void addMyPet(InactiveMyPet inactiveMyPet) {
-        if (!myPets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet)) {
-            myPets.put(inactiveMyPet.getOwner(), inactiveMyPet);
+    public void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
+        boolean result = myPets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
+        if (callback != null) {
+            callback.setValue(result);
+            callback.run();
         }
     }
 
     @Override
-    public boolean updateMyPet(MyPet myPet) {
-        List<InactiveMyPet> pets = getMyPets(myPet.getOwner());
+    public void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
+        if (!myPets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet)) {
+            myPets.put(inactiveMyPet.getOwner(), inactiveMyPet);
+            if (callback != null) {
+                callback.setValue(true);
+                callback.run();
+            }
+            return;
+        }
+        if (callback != null) {
+            callback.setValue(false);
+            callback.run();
+        }
+    }
+
+    @Override
+    public void updateMyPet(final MyPet myPet, final RepositoryCallback<Boolean> callback) {
+        List<InactiveMyPet> pets = myPets.get(myPet.getOwner());
         for (InactiveMyPet pet : pets) {
             if (myPet.getUUID().equals(pet.getUUID())) {
                 myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
                 myPets.remove(myPet.getOwner(), pet);
-                return true;
+                if (callback != null) {
+                    callback.setValue(true);
+                    callback.run();
+                }
+                return;
             }
         }
-        return false;
+        if (callback != null) {
+            callback.setValue(false);
+            callback.run();
+        }
     }
 
     private int loadPets(TagList petList) {
@@ -229,7 +269,7 @@ public class NbtRepository implements Repository, IScheduler {
             MyPetPlayer petPlayer;
             if (myPetNBT.containsKeyAs("Internal-Owner-UUID", TagString.class)) {
                 UUID ownerUUID = UUID.fromString(myPetNBT.getAs("Internal-Owner-UUID", TagString.class).getStringData());
-                petPlayer = getMyPetPlayer(ownerUUID);
+                petPlayer = players.get(ownerUUID);
             } else {
                 oldPets = true;
                 continue;
@@ -254,12 +294,12 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     private TagList savePets() {
-        List<TagCompound> petList = new ArrayList<TagCompound>();
+        List<TagCompound> petList = new ArrayList<>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-            updateMyPet(myPet);
+            updateMyPet(myPet, null);
         }
-        for (InactiveMyPet inactiveMyPet : MyPetList.getAllInactiveMyPets()) {
+        for (InactiveMyPet inactiveMyPet : myPets.values()) {
             try {
                 TagCompound petNBT = inactiveMyPet.save();
                 petList.add(petNBT);
@@ -274,48 +314,74 @@ public class NbtRepository implements Repository, IScheduler {
     // Players ---------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean isMyPetPlayer(Player player) {
-        for (MyPetPlayer p : players.values()) {
-            if (p.getPlayerUUID().equals(player.getUniqueId())) {
-                return true;
+    public void isMyPetPlayer(final Player player, final RepositoryCallback<Boolean> callback) {
+        if (callback != null) {
+            for (MyPetPlayer p : players.values()) {
+                if (p.getPlayerUUID().equals(player.getUniqueId())) {
+                    callback.setValue(true);
+                    callback.run();
+                    return;
+                }
             }
+            callback.setValue(false);
+            callback.run();
         }
-        return false;
     }
 
-    public MyPetPlayer getMyPetPlayer(UUID uuid) {
-        return players.get(uuid);
+    public void getMyPetPlayer(final UUID uuid, final RepositoryCallback<MyPetPlayer> callback) {
+        if (callback != null) {
+            callback.setValue(players.get(uuid));
+            callback.run();
+        }
     }
 
     @Override
-    public MyPetPlayer getMyPetPlayer(Player player) {
-        for (MyPetPlayer p : players.values()) {
-            if (p.getPlayerUUID().equals(player.getUniqueId())) {
-                return p;
+    public void getMyPetPlayer(final Player player, final RepositoryCallback<MyPetPlayer> callback) {
+        if (callback != null) {
+            for (MyPetPlayer p : players.values()) {
+                if (p.getPlayerUUID().equals(player.getUniqueId())) {
+                    callback.setValue(p);
+                    callback.run();
+                    return;
+                }
             }
         }
-        return null;
     }
 
     @Override
-    public void updatePlayer(MyPetPlayer player) {
+    public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         // we work with live data so no update required
     }
 
     @Override
-    public void addMyPetPlayer(MyPetPlayer player) {
-        players.put(player.getInternalUUID(), player);
+    public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+        if (players.containsKey(player.getInternalUUID())) {
+            players.put(player.getInternalUUID(), player);
+            if (callback != null) {
+                callback.setValue(true);
+                callback.run();
+            }
+            return;
+        }
+        if (callback != null) {
+            callback.setValue(false);
+            callback.run();
+        }
     }
 
     @Override
-    public void removeMyPetPlayer(MyPetPlayer player) {
-        players.remove(player.getInternalUUID());
+    public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
+        boolean result = players.remove(player.getInternalUUID()) != null;
+        if (callback != null) {
+            callback.setValue(result);
+            callback.run();
+        }
     }
 
     private TagList savePlayers() {
         List<TagCompound> playerList = Lists.newArrayList();
         for (MyPetPlayer myPetPlayer : players.values()) {
-            if (myPetPlayer.hasMyPet() || myPetPlayer.hasInactiveMyPets() || myPetPlayer.hasCustomData()) {
+            if (myPets.get(myPetPlayer).size() > 0 || myPetPlayer.hasCustomData()) {
                 try {
                     playerList.add(myPetPlayer.save());
                 } catch (Exception e) {
@@ -329,7 +395,7 @@ public class NbtRepository implements Repository, IScheduler {
     private int loadPlayers(TagList playerList) {
         int playerCount = 0;
         if (BukkitUtil.isInOnlineMode()) {
-            List<String> unknownPlayers = new ArrayList<String>();
+            List<String> unknownPlayers = new ArrayList<>();
             for (int i = 0; i < playerList.getReadOnlyList().size(); i++) {
                 TagCompound playerTag = playerList.getTagAs(i, TagCompound.class);
                 if (playerTag.containsKeyAs("Name", TagString.class)) {

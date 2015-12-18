@@ -27,7 +27,6 @@ import de.Keyle.MyPet.api.event.MyPetSelectEvent;
 import de.Keyle.MyPet.api.event.MyPetSelectEvent.NewStatus;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
@@ -62,38 +61,34 @@ public class MyPetList {
         return allActiveMyPets;
     }
 
-    public static boolean hasMyPet(MyPetPlayer player) {
+    public static boolean hasActiveMyPet(MyPetPlayer player) {
         return mActivePlayerPets.containsKey(player);
     }
 
-    public static boolean hasMyPet(Player player) {
+    public static boolean hasActiveMyPet(Player player) {
         if (PlayerList.isMyPetPlayer(player)) {
             MyPetPlayer petPlayer = PlayerList.getMyPetPlayer(player);
-            return hasMyPet(petPlayer);
+            return hasActiveMyPet(petPlayer);
         }
         return false;
     }
 
-    public static boolean hasMyPet(String name) {
+    public static boolean hasActiveMyPet(String name) {
         if (PlayerList.isMyPetPlayer(name)) {
             MyPetPlayer petPlayer = PlayerList.getMyPetPlayer(name);
-            return hasMyPet(petPlayer);
+            return hasActiveMyPet(petPlayer);
         }
         return false;
     }
 
     // Inactive -----------------------------------------------------------------
 
-    public static Collection<InactiveMyPet> getAllInactiveMyPets() {
-        return MyPetPlugin.getPlugin().getRepository().getAllMyPets();
+    public static void getAllInactiveMyPets(RepositoryCallback<Collection<InactiveMyPet>> callback) {
+        MyPetPlugin.getPlugin().getRepository().getAllMyPets(callback);
     }
 
-    public static boolean hasInactiveMyPets(Player player) {
-        return PlayerList.isMyPetPlayer(player) && hasMyPet(PlayerList.getMyPetPlayer(player));
-    }
-
-    public static boolean hasInactiveMyPets(MyPetPlayer myPetPlayer) {
-        return MyPetPlugin.getPlugin().getRepository().hasMyPets(myPetPlayer);
+    public static void hasInactiveMyPets(MyPetPlayer myPetPlayer, RepositoryCallback<Boolean> callback) {
+        MyPetPlugin.getPlugin().getRepository().hasMyPets(myPetPlayer, callback);
     }
 
     public static InactiveMyPet getInactiveMyPetFromMyPet(MyPet activeMyPet) {
@@ -115,16 +110,16 @@ public class MyPetList {
         return inactiveMyPet;
     }
 
-    public static List<InactiveMyPet> getInactiveMyPets(MyPetPlayer owner) {
-        return MyPetPlugin.getPlugin().getRepository().getMyPets(owner);
+    public static void getInactiveMyPets(MyPetPlayer owner, RepositoryCallback<List<InactiveMyPet>> callback) {
+        MyPetPlugin.getPlugin().getRepository().getMyPets(owner, callback);
     }
 
     public static void removeInactiveMyPet(InactiveMyPet inactiveMyPet) {
-        MyPetPlugin.getPlugin().getRepository().removeMyPet(inactiveMyPet);
+        MyPetPlugin.getPlugin().getRepository().removeMyPet(inactiveMyPet, null);
     }
 
     public static void addInactiveMyPet(InactiveMyPet inactiveMyPet) {
-        MyPetPlugin.getPlugin().getRepository().addMyPet(inactiveMyPet);
+        MyPetPlugin.getPlugin().getRepository().addMyPet(inactiveMyPet, null);
     }
 
     // All ----------------------------------------------------------------------
@@ -177,7 +172,7 @@ public class MyPetList {
 
     public static boolean deactivateMyPet(MyPetPlayer owner) {
         if (mActivePlayerPets.containsKey(owner)) {
-            MyPet activeMyPet = owner.getMyPet();
+            final MyPet activeMyPet = owner.getMyPet();
 
             MyPetSelectEvent event = new MyPetSelectEvent(activeMyPet, NewStatus.Inactive);
             getServer().getPluginManager().callEvent(event);
@@ -186,7 +181,7 @@ public class MyPetList {
             }
 
             activeMyPet.removePet();
-            MyPetPlugin.getPlugin().getRepository().updateMyPet(activeMyPet);
+            MyPetPlugin.getPlugin().getRepository().updateMyPet(activeMyPet, null);
             mActivePetsPlayer.remove(activeMyPet);
             return true;
         }
@@ -198,15 +193,7 @@ public class MyPetList {
         MyPetPlugin.getPlugin().getRepository().disable();
     }
 
-    public static int countMyPets() {
-        return MyPetPlugin.getPlugin().getRepository().countMyPets();
-    }
-
     public static int countActiveMyPets() {
         return mActivePetsPlayer.size();
-    }
-
-    public static int countMyPets(MyPetType myPetType) {
-        return MyPetPlugin.getPlugin().getRepository().countMyPets(myPetType);
     }
 }

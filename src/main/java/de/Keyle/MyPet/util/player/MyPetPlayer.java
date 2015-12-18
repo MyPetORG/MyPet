@@ -29,6 +29,7 @@ import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.MyPetList;
+import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
@@ -157,15 +158,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         return petWorldUUID.containsKey(worldGroup);
     }
 
-    public boolean hasInactiveMyPetInWorldGroup(String worldGroup) {
-        for (InactiveMyPet inactiveMyPet : getInactiveMyPets()) {
-            if (inactiveMyPet.getWorldGroup().equals(worldGroup)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void setExtendedInfo(TagCompound compound) {
         if (extendedInfo.getCompoundData().size() == 0) {
             extendedInfo = compound;
@@ -239,28 +231,23 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
     }
 
     public boolean hasMyPet() {
-        return MyPetList.hasMyPet(this);
+        return MyPetList.hasActiveMyPet(this);
     }
 
     public MyPet getMyPet() {
         return MyPetList.getMyPet(this);
     }
 
-    public boolean hasInactiveMyPets() {
-        return MyPetList.hasInactiveMyPets(this);
+    public void hasInactiveMyPets(RepositoryCallback<Boolean> callback) {
+        MyPetList.hasInactiveMyPets(this, callback);
     }
 
-    public InactiveMyPet getInactiveMyPet(UUID petUUID) {
-        for (InactiveMyPet inactiveMyPet : MyPetList.getInactiveMyPets(this)) {
-            if (inactiveMyPet.getUUID().equals(petUUID)) {
-                return inactiveMyPet;
-            }
-        }
-        return null;
+    public void getInactiveMyPet(UUID petUUID, RepositoryCallback<InactiveMyPet> callback) {
+        MyPetPlugin.getPlugin().getRepository().getMyPet(petUUID, callback);
     }
 
-    public List<InactiveMyPet> getInactiveMyPets() {
-        return MyPetList.getInactiveMyPets(this);
+    public void getInactiveMyPets(RepositoryCallback<List<InactiveMyPet>> callback) {
+        MyPetList.getInactiveMyPets(this, callback);
     }
 
     public Player getPlayer() {

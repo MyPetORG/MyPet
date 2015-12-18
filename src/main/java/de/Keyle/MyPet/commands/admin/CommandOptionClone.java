@@ -30,6 +30,7 @@ import de.Keyle.MyPet.skill.skills.ISkillStorage;
 import de.Keyle.MyPet.skill.skills.implementation.ISkillInstance;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Util;
+import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import de.keyle.knbt.TagCompound;
@@ -106,7 +107,14 @@ public class CommandOptionClone implements CommandOptionTabCompleter {
         }
 
         MyPetList.addInactiveMyPet(newPet);
-        MyPetList.activateMyPet(newPet);
+        MyPet myPet = MyPetList.activateMyPet(newPet);
+
+        if (myPet != null) {
+            WorldGroup worldGroup = WorldGroup.getGroupByWorld(newPet.getOwner().getPlayer().getWorld().getName());
+            newPet.setWorldGroup(worldGroup.getName());
+            newPet.getOwner().setMyPetForWorldGroup(worldGroup.getName(), newPet.getUUID());
+        }
+
 
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] MyPet owned by " + newOwner.getName() + " successfully cloned!");
 

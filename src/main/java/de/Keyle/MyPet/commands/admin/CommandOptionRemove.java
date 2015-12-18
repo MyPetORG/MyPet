@@ -57,7 +57,7 @@ public class CommandOptionRemove implements CommandOptionTabCompleter {
 
                     myPet.getOwner().setMyPetForWorldGroup(WorldGroup.getGroupByWorld(player.getWorld().getName()).getName(), null);
                     MyPetList.deactivateMyPet(myPet.getOwner());
-                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID());
+                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), null);
                 }
             }
         }

@@ -45,7 +45,7 @@ public class CommandHelp implements CommandExecutor {
             if (Permissions.has(player, "MyPet.admin", false)) {
                 player.sendMessage(ChatColor.GOLD + "/petadmin" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Admin", player));
             }
-            if (MyPetList.hasMyPet(player)) {
+            if (MyPetList.hasActiveMyPet(player)) {
                 if (Permissions.has(player, "MyPet.user.command.name")) {
                     player.sendMessage(ChatColor.GOLD + "/petname" + ChatColor.RESET + ": " + Locales.getString("Message.Command.Help.Name", player));
                 }

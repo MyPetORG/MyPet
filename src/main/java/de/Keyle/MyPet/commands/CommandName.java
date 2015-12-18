@@ -40,7 +40,7 @@ public class CommandName implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner)) {
+            if (MyPetList.hasActiveMyPet(petOwner)) {
                 if (args.length < 1) {
                     return false;
                 }

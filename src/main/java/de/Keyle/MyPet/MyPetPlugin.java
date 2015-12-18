@@ -24,7 +24,6 @@ import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.commands.*;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.entity.types.bat.EntityMyBat;
 import de.Keyle.MyPet.entity.types.blaze.EntityMyBlaze;
@@ -61,6 +60,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
 import de.Keyle.MyPet.repository.Repository;
+import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Skills;
@@ -84,6 +84,7 @@ import de.Keyle.MyPet.util.locale.Locales;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
+import de.Keyle.MyPet.util.player.OnlineMyPetPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -309,31 +310,9 @@ public class MyPetPlugin extends JavaPlugin {
             boolean metricsActive = false;
             if (!metrics.isOptOut()) {
 
-                Graph graphPercent = metrics.createGraph("Percentage of every MyPet type");
-                Graph graphCount = metrics.createGraph("Counted MyPets per type");
-                Graph graphTotalCount = metrics.createGraph("Total MyPets");
+                Graph graphTotalCount = metrics.createGraph("MyPets");
 
-                for (final MyPetType petType : MyPetType.values()) {
-                    Plotter plotter = new Metrics.Plotter(petType.getTypeName()) {
-                        final MyPetType type = petType;
-
-                        @Override
-                        public int getValue() {
-                            return MyPetList.countMyPets(type);
-                        }
-                    };
-                    graphPercent.addPlotter(plotter);
-                    graphCount.addPlotter(plotter);
-                }
-
-                Plotter plotter = new Metrics.Plotter("Total MyPets") {
-                    @Override
-                    public int getValue() {
-                        return MyPetList.countMyPets();
-                    }
-                };
-                graphTotalCount.addPlotter(plotter);
-                plotter = new Metrics.Plotter("Active MyPets") {
+                Plotter plotter = new Metrics.Plotter("Active MyPets") {
                     @Override
                     public int getValue() {
                         return MyPetList.countActiveMyPets();
@@ -351,38 +330,88 @@ public class MyPetPlugin extends JavaPlugin {
         MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
-        for (Player player : getServer().getOnlinePlayers()) {
+        for (final Player player : getServer().getOnlinePlayers()) {
             PlayerList.onlinePlayerUUIDList.add(player.getUniqueId());
-            if (repo.isMyPetPlayer(player)) {
-                MyPetPlayer myPetPlayer = repo.getMyPetPlayer(player);
-                PlayerList.setOnline(myPetPlayer);
-                WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
-                if (joinGroup != null && !myPetPlayer.hasMyPet() && myPetPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                    UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
-                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                            MyPetList.activateMyPet(inactiveMyPet);
-                            break;
+
+            MyPetPlugin.getPlugin().getRepository().getMyPetPlayer(player, new RepositoryCallback<MyPetPlayer>() {
+                @Override
+                public void callback(final MyPetPlayer joinedPlayer) {
+                    if (joinedPlayer != null) {
+                        PlayerList.setOnline(joinedPlayer);
+
+                        if (BukkitUtil.isInOnlineMode()) {
+                            if (joinedPlayer instanceof OnlineMyPetPlayer) {
+                                ((OnlineMyPetPlayer) joinedPlayer).setLastKnownName(player.getName());
+                            }
                         }
-                    }
-                    if (!myPetPlayer.hasMyPet()) {
-                        myPetPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
+
+                        final WorldGroup joinGroup = WorldGroup.getGroupByWorld(player.getWorld().getName());
+                        if (joinedPlayer.hasMyPet()) {
+                            MyPet myPet = joinedPlayer.getMyPet();
+                            if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
+                                MyPetList.deactivateMyPet(joinedPlayer);
+                            }
+                        }
+
+                        if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                            final UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
+
+                            joinedPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {
+                                @Override
+                                public void callback(List<InactiveMyPet> value) {
+                                    for (InactiveMyPet inactiveMyPet : value) {
+                                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
+                                            MyPetList.activateMyPet(inactiveMyPet);
+                                            MyPet activeMyPet = joinedPlayer.getMyPet();
+                                            activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
+                                            break;
+                                        }
+                                    }
+                                    if (!joinedPlayer.hasMyPet() && value.size() > 0) {
+                                        joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
+                                        joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
+                                    }
+                                }
+                            });
+
+                        }
+                        if (joinedPlayer.hasMyPet()) {
+                            final MyPet myPet = joinedPlayer.getMyPet();
+                            final MyPetPlayer myPetPlayer = myPet.getOwner();
+                            if (myPet.wantToRespawn()) {
+                                if (myPetPlayer.hasMyPet()) {
+                                    MyPet runMyPet = myPetPlayer.getMyPet();
+                                    switch (runMyPet.createPet()) {
+                                        case Canceled:
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                            break;
+                                        case NoSpace:
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                            break;
+                                        case NotAllowed:
+                                            runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                            break;
+                                        case Dead:
+                                            runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                            break;
+                                        case Flying:
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                            break;
+                                        case Success:
+                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                            break;
+                                    }
+                                }
+                            } else {
+                                myPet.setStatus(MyPet.PetState.Despawned);
+                            }
+                        }
+                        //donate-delete-start
+                        joinedPlayer.checkForDonation();
+                        //donate-delete-end
                     }
                 }
-                if (myPetPlayer.hasMyPet()) {
-                    MyPet myPet = MyPetList.getMyPet(player);
-                    if (myPet.getStatus() == PetState.Dead) {
-                        player.sendMessage(Util.formatText(Locales.getString("Message.Spawn.Respawn.In", BukkitUtil.getPlayerLanguage(player)), myPet.getPetName(), myPet.getRespawnTime()));
-                    } else if (myPet.wantToRespawn()) {
-                        myPet.createPet();
-                    } else {
-                        myPet.setStatus(PetState.Despawned);
-                    }
-                }
-                //donate-delete-start
-                myPetPlayer.checkForDonation();
-                //donate-delete-end
-            }
+            });
         }
         DebugLogger.info("----------- MyPet ready -----------");
     }

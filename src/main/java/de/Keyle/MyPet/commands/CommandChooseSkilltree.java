@@ -55,7 +55,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
-        if (MyPetList.hasMyPet(player)) {
+        if (MyPetList.hasActiveMyPet(player)) {
             final MyPet myPet = MyPetList.getMyPet(player);
             final MyPetPlayer myPetOwner = myPet.getOwner();
             if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
@@ -191,7 +191,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         Player player = (Player) commandSender;
-        if (MyPetList.hasMyPet(player)) {
+        if (MyPetList.hasActiveMyPet(player)) {
             MyPet myPet = MyPetList.getMyPet(player);
             if (Configuration.AUTOMATIC_SKILLTREE_ASSIGNMENT && !myPet.getOwner().isMyPetAdmin()) {
                 return emptyList;
