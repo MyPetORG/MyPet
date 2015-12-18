@@ -22,7 +22,6 @@ package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.repository.MyPetList;
@@ -105,24 +104,6 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
                     }
                 }
             }
-        }
-        for (InactiveMyPet myPet : MyPetList.getAllInactiveMyPets()) {
-            SkillTree skillTree = myPet.getSkillTree();
-            if (skillTree != null) {
-                String skilltreeName = skillTree.getName();
-                if (SkillTreeMobType.getMobTypeByPetType(myPet.getPetType()) != null) {
-                    SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByPetType(myPet.getPetType());
-
-                    if (mobType.hasSkillTree(skilltreeName)) {
-                        skillTree = mobType.getSkillTree(skilltreeName);
-                    } else {
-                        skillTree = null;
-                    }
-                } else {
-                    skillTree = null;
-                }
-            }
-            myPet.setSkillTree(skillTree);
         }
         sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] skilltrees reloaded!");
         DebugLogger.info("Skilltrees reloaded.");

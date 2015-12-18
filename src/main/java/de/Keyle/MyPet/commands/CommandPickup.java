@@ -36,7 +36,7 @@ public class CommandPickup implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player owner = (Player) sender;
-            if (MyPetList.hasMyPet(owner)) {
+            if (MyPetList.hasActiveMyPet(owner)) {
                 MyPet myPet = MyPetList.getMyPet(owner);
 
                 if (!Permissions.hasExtended(myPet.getOwner().getPlayer(), "MyPet.user.extended.Pickup")) {

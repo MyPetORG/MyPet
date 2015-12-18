@@ -45,6 +45,7 @@ import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
 import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -85,10 +86,10 @@ import static org.bukkit.ChatColor.RESET;
 public class CommandRelease implements CommandExecutor, TabCompleter {
     private static List<String> emptyList = new ArrayList<String>();
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player petOwner = (Player) sender;
-            if (MyPetList.hasMyPet(petOwner)) {
+            if (MyPetList.hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
 
                 if (!Permissions.has(petOwner, "MyPet.user.command.release")) {
@@ -240,11 +241,16 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
 
                     sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Release.Success", petOwner), myPet.getPetName()));
                     MyPetList.deactivateMyPet(myPet.getOwner());
-                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID());
-                    DebugLogger.info(sender.getName() + " released pet.");
-                    if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                        MyPetPlugin.getPlugin().getRepository().save();
-                    }
+                    MyPetPlugin.getPlugin().getRepository().removeMyPet(myPet.getUUID(), new RepositoryCallback<Boolean>() {
+                        @Override
+                        public void callback(Boolean value) {
+                            DebugLogger.info(sender.getName() + " released pet.");
+                            if (Configuration.STORE_PETS_ON_PET_RELEASE) {
+                                MyPetPlugin.getPlugin().getRepository().save();
+                            }
+                        }
+                    });
+
                     return true;
                 } else {
                     FancyMessage message = new FancyMessage(Locales.getString("Message.Command.Release.Confirm", petOwner) + " ");
@@ -278,7 +284,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
-        if (MyPetList.hasMyPet((Player) commandSender)) {
+        if (MyPetList.hasActiveMyPet((Player) commandSender)) {
             List<String> petnameList = new ArrayList<String>();
             petnameList.add(PlayerList.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
             return petnameList;

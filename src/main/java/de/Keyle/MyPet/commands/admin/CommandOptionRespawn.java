@@ -56,7 +56,7 @@ public class CommandOptionRespawn implements CommandOptionTabCompleter {
         if (petOwner == null || !petOwner.isOnline()) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Locales.getString("Message.No.PlayerOnline", lang));
             return true;
-        } else if (!MyPetList.hasMyPet(petOwner)) {
+        } else if (!MyPetList.hasActiveMyPet(petOwner)) {
             sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] " + Util.formatText(Locales.getString("Message.No.UserHavePet", lang), petOwner.getName()));
             return true;
         }

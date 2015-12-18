@@ -50,13 +50,13 @@ public class CommandSkill implements CommandExecutor, TabCompleter {
                 if (petOwner == null || !petOwner.isOnline()) {
                     sender.sendMessage(Locales.getString("Message.No.PlayerOnline", petOwner));
                     return true;
-                } else if (!MyPetList.hasMyPet(petOwner)) {
+                } else if (!MyPetList.hasActiveMyPet(petOwner)) {
                     sender.sendMessage(Util.formatText(Locales.getString("Message.No.UserHavePet", petOwner), petOwner.getName()));
                     return true;
                 }
             }
 
-            if (MyPetList.hasMyPet(petOwner)) {
+            if (MyPetList.hasActiveMyPet(petOwner)) {
                 MyPet myPet = MyPetList.getMyPet(petOwner);
                 myPet.autoAssignSkilltree();
                 sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skills.Show", petOwner), myPet.getPetName(), (myPet.getSkillTree() == null ? "-" : myPet.getSkillTree().getDisplayName())));

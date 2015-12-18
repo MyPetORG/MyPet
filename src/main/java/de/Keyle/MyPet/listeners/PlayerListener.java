@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.MyPetList;
 import de.Keyle.MyPet.repository.PlayerList;
+import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Control;
 import de.Keyle.MyPet.skill.skills.implementation.Inventory;
@@ -57,6 +58,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerListener implements Listener {
@@ -64,7 +66,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
-        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasMyPet(event.getPlayer())) {
+        if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && Control.CONTROL_ITEM.compare(event.getPlayer().getItemInHand()) && MyPetList.hasActiveMyPet(event.getPlayer())) {
             MyPet myPet = MyPetList.getMyPet(event.getPlayer());
             if (myPet.getStatus() == PetState.Here && myPet.getCraftPet().canMove()) {
                 if (myPet.getSkills().isSkillActive(Control.class)) {
@@ -104,79 +106,81 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent event) {
         PlayerList.onlinePlayerUUIDList.add(event.getPlayer().getUniqueId());
 
-        MyPetPlayer joinedPlayer = MyPetPlugin.getPlugin().getRepository().getMyPetPlayer(event.getPlayer());
+        MyPetPlugin.getPlugin().getRepository().getMyPetPlayer(event.getPlayer(), new RepositoryCallback<MyPetPlayer>() {
+            @Override
+            public void callback(final MyPetPlayer joinedPlayer) {
+                PlayerList.setOnline(joinedPlayer);
 
-        if (joinedPlayer != null) {
-            PlayerList.setOnline(joinedPlayer);
-
-            if (BukkitUtil.isInOnlineMode()) {
-                if (joinedPlayer instanceof OnlineMyPetPlayer) {
-                    ((OnlineMyPetPlayer) joinedPlayer).setLastKnownName(event.getPlayer().getName());
-                }
-            }
-
-            WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
-            if (joinedPlayer.hasMyPet()) {
-                MyPet myPet = joinedPlayer.getMyPet();
-                if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
-                    MyPetList.deactivateMyPet(joinedPlayer);
-                }
-            }
-
-            if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
-                UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
-                for (InactiveMyPet inactiveMyPet : joinedPlayer.getInactiveMyPets()) {
-                    if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                        MyPetList.activateMyPet(inactiveMyPet);
-                        MyPet activeMyPet = joinedPlayer.getMyPet();
-                        activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
-                        break;
+                if (BukkitUtil.isInOnlineMode()) {
+                    if (joinedPlayer instanceof OnlineMyPetPlayer) {
+                        ((OnlineMyPetPlayer) joinedPlayer).setLastKnownName(event.getPlayer().getName());
                     }
                 }
-                if (!joinedPlayer.hasMyPet() && joinedPlayer.getInactiveMyPets().size() > 0) {
-                    joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
-                    joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
+
+                final WorldGroup joinGroup = WorldGroup.getGroupByWorld(event.getPlayer().getWorld().getName());
+                if (joinedPlayer.hasMyPet()) {
+                    MyPet myPet = joinedPlayer.getMyPet();
+                    if (!myPet.getWorldGroup().equals(joinGroup.getName())) {
+                        MyPetList.deactivateMyPet(joinedPlayer);
+                    }
                 }
-            }
-            if (joinedPlayer.hasMyPet()) {
-                final MyPet myPet = joinedPlayer.getMyPet();
-                final MyPetPlayer myPetPlayer = myPet.getOwner();
-                if (myPet.wantToRespawn()) {
-                    MyPetPlugin.getPlugin().getServer().getScheduler().runTaskLater(MyPetPlugin.getPlugin(), new Runnable() {
-                        public void run() {
-                            if (myPetPlayer.hasMyPet()) {
-                                MyPet runMyPet = myPetPlayer.getMyPet();
-                                switch (runMyPet.createPet()) {
-                                    case Canceled:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
-                                        break;
-                                    case NoSpace:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
-                                        break;
-                                    case NotAllowed:
-                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
-                                        break;
-                                    case Dead:
-                                        runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
-                                        break;
-                                    case Flying:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
-                                        break;
-                                    case Success:
-                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
-                                        break;
+
+                if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
+                    final UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
+                    joinedPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {
+                        @Override
+                        public void callback(List<InactiveMyPet> value) {
+                            for (InactiveMyPet inactiveMyPet : value) {
+                                if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
+                                    MyPetList.activateMyPet(inactiveMyPet);
+                                    MyPet activeMyPet = joinedPlayer.getMyPet();
+                                    activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
+                                    break;
                                 }
                             }
+                            if (!joinedPlayer.hasMyPet() && value.size() > 0) {
+                                joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
+                                joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
+                            }
                         }
-                    }, 10L);
-                } else {
-                    myPet.setStatus(PetState.Despawned);
+                    });
                 }
+                if (joinedPlayer.hasMyPet()) {
+                    final MyPet myPet = joinedPlayer.getMyPet();
+                    final MyPetPlayer myPetPlayer = myPet.getOwner();
+                    if (myPet.wantToRespawn()) {
+                        if (myPetPlayer.hasMyPet()) {
+                            MyPet runMyPet = myPetPlayer.getMyPet();
+                            switch (runMyPet.createPet()) {
+                                case Canceled:
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                    break;
+                                case NoSpace:
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                    break;
+                                case NotAllowed:
+                                    runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                    break;
+                                case Dead:
+                                    runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                    break;
+                                case Flying:
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                    break;
+                                case Success:
+                                    runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                    break;
+                            }
+                        }
+                    } else {
+                        myPet.setStatus(PetState.Despawned);
+                    }
+                }
+                //donate-delete-start
+                joinedPlayer.checkForDonation();
+                //donate-delete-end
             }
-            //donate-delete-start
-            joinedPlayer.checkForDonation();
-            //donate-delete-end
-        }
+        });
     }
 
     @EventHandler
@@ -249,18 +253,18 @@ public class PlayerListener implements Listener {
                     MyPetList.deactivateMyPet(myPetPlayer);
                 }
                 if (myPetPlayer.hasMyPetInWorldGroup(toGroup.getName())) {
-                    UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
-                    for (InactiveMyPet inactiveMyPet : myPetPlayer.getInactiveMyPets()) {
-                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                            MyPet activeMyPet = MyPetList.activateMyPet(inactiveMyPet);
-                            if (activeMyPet != null) {
-                                if (myPetPlayer.getInactiveMyPets().size() > 0) {
-                                    activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", myPetPlayer), activeMyPet.getPetName()));
+                    final UUID groupMyPetUUID = myPetPlayer.getMyPetForWorldGroup(toGroup.getName());
+                    myPetPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {
+                        @Override
+                        public void callback(List<InactiveMyPet> inactiveMyPets) {
+                            for (InactiveMyPet inactiveMyPet : inactiveMyPets) {
+                                if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
+                                    MyPetList.activateMyPet(inactiveMyPet);
+                                    break;
                                 }
-                                break;
                             }
                         }
-                    }
+                    });
                     if (!myPetPlayer.hasMyPet()) {
                         myPetPlayer.setMyPetForWorldGroup(toGroup.getName(), null);
                     }
