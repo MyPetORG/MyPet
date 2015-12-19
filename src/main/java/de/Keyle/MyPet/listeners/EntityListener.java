@@ -467,22 +467,25 @@ public class EntityListener implements Listener {
                             }
                         }
 
-                        MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
+                        final MyPet myPet = MyPetList.activateMyPet(inactiveMyPet);
                         if (myPet != null) {
-                            myPet.createPet();
+                            MyPetPlugin.getPlugin().getRepository().addMyPet(inactiveMyPet, new RepositoryCallback<Boolean>() {
+                                @Override
+                                public void callback(Boolean value) {
+                                    myPet.createPet();
 
-                            getPluginManager().callEvent(new MyPetLeashEvent(myPet));
-                            DebugLogger.info("New Pet leashed:");
-                            DebugLogger.info("   " + myPet.toString());
-                            if (Configuration.STORE_PETS_ON_PET_LEASH) {
-                                MyPetPlugin.getPlugin().getRepository().save();
-                            }
-                            damager.sendMessage(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
+                                    getPluginManager().callEvent(new MyPetLeashEvent(myPet));
+                                    DebugLogger.info("New Pet leashed:");
+                                    DebugLogger.info("   " + myPet.toString());
 
-                            if (myPet.getOwner().isCaptureHelperActive()) {
-                                myPet.getOwner().setCaptureHelperActive(false);
-                                myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
-                            }
+                                    myPet.sendMessageToOwner(Locales.getString("Message.Leash.Add", myPet.getOwner().getLanguage()));
+
+                                    if (myPet.getOwner().isCaptureHelperActive()) {
+                                        myPet.getOwner().setCaptureHelperActive(false);
+                                        myPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.CaptureHelper.Mode", myPet.getOwner()), Locales.getString("Name.Disabled", myPet.getOwner())));
+                                    }
+                                }
+                            });
                         }
                     }
                 }
@@ -697,9 +700,6 @@ public class EntityListener implements Listener {
                     @Override
                     public void callback(Boolean value) {
                         DebugLogger.info(owner.getName() + " released pet (dead).");
-                        if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                            MyPetPlugin.getPlugin().getRepository().save();
-                        }
                     }
                 });
 

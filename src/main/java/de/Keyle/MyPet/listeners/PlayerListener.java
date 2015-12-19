@@ -36,7 +36,6 @@ import de.Keyle.MyPet.skill.skills.implementation.inventory.CustomInventory;
 import de.Keyle.MyPet.skill.skills.implementation.ranged.MyPetProjectile;
 import de.Keyle.MyPet.skill.skills.info.BehaviorInfo.BehaviorState;
 import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
@@ -219,10 +218,6 @@ public class PlayerListener implements Listener {
                 }
                 myPet.removePet(true);
                 MyPetList.deactivateMyPet(player);
-
-                if (Configuration.STORE_PETS_ON_PLAYER_QUIT) {
-                    MyPetPlugin.getPlugin().getRepository().save();
-                }
             }
 
             PlayerList.setOffline(player);

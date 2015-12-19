@@ -114,7 +114,6 @@ public class MyPetPlugin extends JavaPlugin {
             for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
                 myPet.removePet(myPet.wantToRespawn());
             }
-            repo.save();
             MyPetList.clearList();
             BukkitUtil.unregisterMyPetEntities();
         }
