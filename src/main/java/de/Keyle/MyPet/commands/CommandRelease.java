@@ -245,9 +245,6 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                         @Override
                         public void callback(Boolean value) {
                             DebugLogger.info(sender.getName() + " released pet.");
-                            if (Configuration.STORE_PETS_ON_PET_RELEASE) {
-                                MyPetPlugin.getPlugin().getRepository().save();
-                            }
                         }
                     });
 

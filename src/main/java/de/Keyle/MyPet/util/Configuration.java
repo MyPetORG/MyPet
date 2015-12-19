@@ -40,6 +40,7 @@ import de.Keyle.MyPet.entity.types.snowman.MySnowman;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -65,7 +66,6 @@ public class Configuration {
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
     public static int RESPAWN_TIME_PLAYER_FIXED = 0;
-    public static int AUTOSAVE_TIME = 60;
     public static int HUNGER_SYSTEM_TIME = 60;
     public static int HUNGER_SYSTEM_POINTS_PER_FEED = 6;
     public static int SKILLTREE_SWITCH_PENALTY_PERCENT = 5;
@@ -87,9 +87,6 @@ public class Configuration {
     public static boolean INHERIT_ALREADY_INHERITED_SKILLS = false;
     public static boolean REMOVE_PETS_AFTER_RELEASE = false;
     public static boolean PET_INFO_OVERHEAD_NAME = true;
-    public static boolean STORE_PETS_ON_PLAYER_QUIT = true;
-    public static boolean STORE_PETS_ON_PET_LEASH = true;
-    public static boolean STORE_PETS_ON_PET_RELEASE = true;
     public static boolean RELEASE_PETS_ON_DEATH = false;
     public static boolean ADD_ZOMBIE_TARGET_GOAL = true;
     public static boolean RETAIN_EQUIPMENT_ON_TAME = true;
@@ -117,10 +114,13 @@ public class Configuration {
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
         config.addDefault("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
 
-        config.addDefault("MyPet.PetStorage.AutoSaveTime", AUTOSAVE_TIME);
-        config.addDefault("MyPet.PetStorage.OnPlayerQuit", STORE_PETS_ON_PLAYER_QUIT);
-        config.addDefault("MyPet.PetStorage.OnPetLeash", STORE_PETS_ON_PET_LEASH);
-        config.addDefault("MyPet.PetStorage.OnPetRelease", STORE_PETS_ON_PET_RELEASE);
+        config.addDefault("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
+        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
+        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
+        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
+        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
+        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
+        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
@@ -309,10 +309,13 @@ public class Configuration {
             NameFilter.NAME_FILTER.add(o.toString());
         }
 
-        AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
-        STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);
-        STORE_PETS_ON_PET_LEASH = config.getBoolean("MyPet.PetStorage.OnPetLeash", true);
-        STORE_PETS_ON_PET_RELEASE = config.getBoolean("MyPet.PetStorage.OnPetRelease", true);
+        NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
+        NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
+        NbtRepository.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
+        NbtRepository.SAVE_ON_PET_ADD = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
+        NbtRepository.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
+        NbtRepository.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
+        NbtRepository.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);

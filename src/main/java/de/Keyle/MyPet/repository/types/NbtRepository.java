@@ -34,7 +34,6 @@ import de.Keyle.MyPet.repository.Repository;
 import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.BukkitUtil;
-import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.MyPetVersion;
 import de.Keyle.MyPet.util.configuration.ConfigurationNBT;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -57,14 +56,23 @@ public class NbtRepository implements Repository, IScheduler {
     private int autoSaveTimer = 0;
     private Backup backupManager;
 
+    public static boolean SAVE_ON_PET_ADD = true;
+    public static boolean SAVE_ON_PET_REMOVE = true;
+    public static boolean SAVE_ON_PET_UPDATE = true;
+    public static boolean SAVE_ON_PLAYER_ADD = true;
+    public static boolean SAVE_ON_PLAYER_REMOVE = true;
+    public static boolean SAVE_ON_PLAYER_UPDATE = true;
+    public static int AUTOSAVE_TIME = 60;
+
     @Override
     public void disable() {
+        saveData(false);
         myPets.clear();
     }
 
     @Override
     public void save() {
-        saveData(false);
+        saveData(true);
     }
 
     @Override
@@ -98,7 +106,7 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     public void saveData(boolean async) {
-        autoSaveTimer = Configuration.AUTOSAVE_TIME;
+        autoSaveTimer = AUTOSAVE_TIME;
         final ConfigurationNBT nbtConfiguration = new ConfigurationNBT(NBTPetFile);
 
         nbtConfiguration.getNBTCompound().getCompoundData().put("Version", new TagString(MyPetVersion.getVersion()));
@@ -157,9 +165,9 @@ public class NbtRepository implements Repository, IScheduler {
 
     @Override
     public void schedule() {
-        if (Configuration.AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
+        if (AUTOSAVE_TIME > 0 && autoSaveTimer-- <= 0) {
             saveData(true);
-            autoSaveTimer = Configuration.AUTOSAVE_TIME;
+            autoSaveTimer = AUTOSAVE_TIME;
         }
     }
 
@@ -207,6 +215,9 @@ public class NbtRepository implements Repository, IScheduler {
         for (InactiveMyPet pet : myPets.values()) {
             if (uuid.equals(pet.getUUID())) {
                 myPets.remove(pet.getOwner(), pet);
+                if (SAVE_ON_PET_REMOVE) {
+                    saveData(true);
+                }
                 if (callback != null) {
                     callback.setValue(true);
                     callback.run();
@@ -219,6 +230,9 @@ public class NbtRepository implements Repository, IScheduler {
     @Override
     public void removeMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
         boolean result = myPets.remove(inactiveMyPet.getOwner(), inactiveMyPet);
+        if (SAVE_ON_PET_REMOVE) {
+            saveData(true);
+        }
         if (callback != null) {
             callback.setValue(result);
             callback.run();
@@ -229,6 +243,9 @@ public class NbtRepository implements Repository, IScheduler {
     public void addMyPet(final InactiveMyPet inactiveMyPet, final RepositoryCallback<Boolean> callback) {
         if (!myPets.containsEntry(inactiveMyPet.getOwner(), inactiveMyPet)) {
             myPets.put(inactiveMyPet.getOwner(), inactiveMyPet);
+            if (SAVE_ON_PET_ADD) {
+                saveData(true);
+            }
             if (callback != null) {
                 callback.setValue(true);
                 callback.run();
@@ -248,6 +265,11 @@ public class NbtRepository implements Repository, IScheduler {
             if (myPet.getUUID().equals(pet.getUUID())) {
                 myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
                 myPets.remove(myPet.getOwner(), pet);
+
+                if (SAVE_ON_PET_UPDATE) {
+                    saveData(true);
+                }
+
                 if (callback != null) {
                     callback.setValue(true);
                     callback.run();
@@ -281,7 +303,7 @@ public class NbtRepository implements Repository, IScheduler {
             InactiveMyPet inactiveMyPet = new InactiveMyPet(petPlayer);
             inactiveMyPet.load(myPetNBT);
 
-            MyPetList.addInactiveMyPet(inactiveMyPet);
+            myPets.put(inactiveMyPet.getOwner(), inactiveMyPet);
 
             DebugLogger.info("   " + inactiveMyPet.toString());
 
@@ -297,7 +319,14 @@ public class NbtRepository implements Repository, IScheduler {
         List<TagCompound> petList = new ArrayList<>();
 
         for (MyPet myPet : MyPetList.getAllActiveMyPets()) {
-            updateMyPet(myPet, null);
+            List<InactiveMyPet> pets = myPets.get(myPet.getOwner());
+            for (InactiveMyPet pet : pets) {
+                if (myPet.getUUID().equals(pet.getUUID())) {
+                    myPets.put(myPet.getOwner(), MyPetList.getInactiveMyPetFromMyPet(myPet));
+                    myPets.remove(myPet.getOwner(), pet);
+                    break;
+                }
+            }
         }
         for (InactiveMyPet inactiveMyPet : myPets.values()) {
             try {
@@ -351,12 +380,18 @@ public class NbtRepository implements Repository, IScheduler {
     @Override
     public void updatePlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         // we work with live data so no update required
+        if (SAVE_ON_PLAYER_UPDATE) {
+            saveData(true);
+        }
     }
 
     @Override
     public void addMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         if (players.containsKey(player.getInternalUUID())) {
             players.put(player.getInternalUUID(), player);
+            if (SAVE_ON_PLAYER_ADD) {
+                saveData(true);
+            }
             if (callback != null) {
                 callback.setValue(true);
                 callback.run();
@@ -372,6 +407,11 @@ public class NbtRepository implements Repository, IScheduler {
     @Override
     public void removeMyPetPlayer(final MyPetPlayer player, final RepositoryCallback<Boolean> callback) {
         boolean result = players.remove(player.getInternalUUID()) != null;
+
+        if (SAVE_ON_PLAYER_REMOVE) {
+            saveData(true);
+        }
+
         if (callback != null) {
             callback.setValue(result);
             callback.run();
