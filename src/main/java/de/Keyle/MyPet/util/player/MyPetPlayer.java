@@ -33,7 +33,6 @@ import de.Keyle.MyPet.repository.RepositoryCallback;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.DonateCheck;
 import de.Keyle.MyPet.util.Util;
-import de.Keyle.MyPet.util.WorldGroup;
 import de.Keyle.MyPet.util.hooks.Permissions;
 import de.Keyle.MyPet.util.hooks.arenas.*;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -43,7 +42,6 @@ import net.minecraft.server.v1_8_R3.EntityPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Player;
@@ -148,6 +146,10 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
 
     public UUID getMyPetForWorldGroup(String worldGroup) {
         return petWorldUUID.get(worldGroup);
+    }
+
+    public BiMap<String, UUID> getMyPetsForWorldGroups() {
+        return petWorldUUID;
     }
 
     public String getWorldGroupForMyPet(UUID petUUID) {
@@ -344,15 +346,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         }
         if (myplayerNBT.getCompoundData().containsKey("HealthBar")) {
             setHealthBarActive(myplayerNBT.getAs("HealthBar", TagByte.class).getBooleanData());
-        }
-        if (myplayerNBT.getCompoundData().containsKey("LastActiveMyPetUUID")) {
-            String lastActive = myplayerNBT.getAs("LastActiveMyPetUUID", TagString.class).getStringData();
-            if (!lastActive.equalsIgnoreCase("")) {
-                UUID lastActiveUUID = UUID.fromString(lastActive);
-                World newWorld = Bukkit.getServer().getWorlds().get(0);
-                WorldGroup lastActiveGroup = WorldGroup.getGroupByWorld(newWorld.getName());
-                this.setMyPetForWorldGroup(lastActiveGroup.getName(), lastActiveUUID);
-            }
         }
         if (myplayerNBT.getCompoundData().containsKey("ExtendedInfo")) {
             setExtendedInfo(myplayerNBT.getAs("ExtendedInfo", TagCompound.class));

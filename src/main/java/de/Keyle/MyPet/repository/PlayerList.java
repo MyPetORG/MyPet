@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.repository;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.BukkitUtil;
@@ -39,11 +38,12 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerList {
     public final static Set<UUID> onlinePlayerUUIDList = Sets.newHashSet();
-    protected final static Map<UUID, UUID> uuidToInternalUUID = Maps.newHashMap();
-    protected final static Map<UUID, MyPetPlayer> onlinePlayers = Maps.newHashMap();
+    protected final static Map<UUID, UUID> uuidToInternalUUID = new ConcurrentHashMap<>();
+    protected final static Map<UUID, MyPetPlayer> onlinePlayers = new ConcurrentHashMap<>();
 
     public static UUID getInternalUUID(Player player) {
         return uuidToInternalUUID.get(player.getUniqueId());
@@ -54,11 +54,17 @@ public class PlayerList {
     }
 
     public static MyPetPlayer getMyPetPlayer(UUID internalUUID) {
-        return onlinePlayers.get(internalUUID);
+        if (internalUUID != null) {
+            return onlinePlayers.get(internalUUID);
+        }
+        return null;
     }
 
     public static MyPetPlayer getMyPetPlayer(Player player) {
         UUID internalUUID = getInternalUUID(player);
+        if (internalUUID == null) {
+            return null;
+        }
         return getMyPetPlayer(internalUUID);
     }
 

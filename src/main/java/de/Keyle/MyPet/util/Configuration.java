@@ -39,6 +39,7 @@ import de.Keyle.MyPet.entity.types.snowman.MySnowman;
 import de.Keyle.MyPet.entity.types.villager.MyVillager;
 import de.Keyle.MyPet.entity.types.wolf.MyWolf;
 import de.Keyle.MyPet.entity.types.zombie.MyZombie;
+import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.MonsterExperience;
@@ -112,6 +113,8 @@ public class Configuration {
         config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
         config.addDefault("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
 
+        config.addDefault("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
+
         config.addDefault("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
         config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
@@ -119,6 +122,12 @@ public class Configuration {
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+
+        config.addDefault("MyPet.PetStorage.MySQL.Database", MySqlRepository.DATABASE);
+        config.addDefault("MyPet.PetStorage.MySQL.Host", MySqlRepository.HOST);
+        config.addDefault("MyPet.PetStorage.MySQL.Password", MySqlRepository.PASSWORD);
+        config.addDefault("MyPet.PetStorage.MySQL.User", MySqlRepository.USER);
+        config.addDefault("MyPet.PetStorage.MySQL.Port", MySqlRepository.PORT);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
@@ -300,6 +309,8 @@ public class Configuration {
         DebugLogger.ERROR = config.getBoolean("MyPet.Log.ERROR", DebugLogger.ERROR);
         DebugLogger.WARNING = config.getBoolean("MyPet.Log.WARNING", DebugLogger.WARNING);
 
+        MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
+
         NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
         NbtRepository.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
@@ -307,6 +318,12 @@ public class Configuration {
         NbtRepository.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
         NbtRepository.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
         NbtRepository.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+
+        MySqlRepository.DATABASE = config.getString("MyPet.PetStorage.MySQL.Database", MySqlRepository.DATABASE);
+        MySqlRepository.HOST = config.getString("MyPet.PetStorage.MySQL.Host", MySqlRepository.HOST);
+        MySqlRepository.PASSWORD = config.getString("MyPet.PetStorage.MySQL.Password", MySqlRepository.PASSWORD);
+        MySqlRepository.USER = config.getString("MyPet.PetStorage.MySQL.User", MySqlRepository.USER);
+        MySqlRepository.PORT = config.getInt("MyPet.PetStorage.MySQL.Database", MySqlRepository.PORT);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);

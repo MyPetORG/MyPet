@@ -350,7 +350,12 @@ public class EntityListener implements Listener {
                     if (willBeLeashed) {
                         event.setCancelled(true);
 
-                        MyPetPlayer owner = PlayerList.registerMyPetPlayer(damager);
+                        MyPetPlayer owner;
+                        if (PlayerList.isMyPetPlayer(damager)) {
+                            owner = PlayerList.getMyPetPlayer(damager);
+                        } else {
+                            owner = PlayerList.registerMyPetPlayer(damager);
+                        }
 
                         InactiveMyPet inactiveMyPet = new InactiveMyPet(owner);
                         inactiveMyPet.setPetType(MyPetType.getMyPetTypeByEntityType(leashTarget.getType()));

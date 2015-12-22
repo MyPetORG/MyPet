@@ -21,18 +21,8 @@
 package de.Keyle.MyPet.commands.admin;
 
 import de.Keyle.MyPet.api.commands.CommandOption;
-import de.Keyle.MyPet.entity.types.InactiveMyPet;
-import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.repository.RepositoryCallback;
-import de.Keyle.MyPet.util.Backup;
 import de.Keyle.MyPet.util.Util;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class CommandOptionCleanup implements CommandOption {
     @Override
@@ -44,7 +34,7 @@ public class CommandOptionCleanup implements CommandOption {
         if (Util.isInt(args[0])) {
             final int days = Integer.parseInt(args[0]);
 
-
+            /*
             MyPetList.getAllInactiveMyPets(new RepositoryCallback<Collection<InactiveMyPet>>() {
                 @Override
                 public void callback(Collection<InactiveMyPet> value) {
@@ -73,6 +63,7 @@ public class CommandOptionCleanup implements CommandOption {
                     sender.sendMessage("[" + ChatColor.AQUA + "MyPet" + ChatColor.RESET + "] removed " + deletedPetCount + " MyPets.");
                 }
             });
+            */
 
         }
         return true;

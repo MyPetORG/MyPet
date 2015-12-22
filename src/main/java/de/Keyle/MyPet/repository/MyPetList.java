@@ -83,10 +83,6 @@ public class MyPetList {
 
     // Inactive -----------------------------------------------------------------
 
-    public static void getAllInactiveMyPets(RepositoryCallback<Collection<InactiveMyPet>> callback) {
-        MyPetPlugin.getPlugin().getRepository().getAllMyPets(callback);
-    }
-
     public static void hasInactiveMyPets(MyPetPlayer myPetPlayer, RepositoryCallback<Boolean> callback) {
         MyPetPlugin.getPlugin().getRepository().hasMyPets(myPetPlayer, callback);
     }
@@ -189,8 +185,8 @@ public class MyPetList {
     }
 
     public static void clearList() {
-        mActivePlayerPets.clear();
         MyPetPlugin.getPlugin().getRepository().disable();
+        mActivePlayerPets.clear();
     }
 
     public static int countActiveMyPets() {
