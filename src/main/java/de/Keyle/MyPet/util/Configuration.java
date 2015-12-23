@@ -20,6 +20,7 @@
 
 package de.Keyle.MyPet.util;
 
+import com.google.common.collect.Lists;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.commands.CommandInfo.PetInfoDisplay;
 import de.Keyle.MyPet.entity.MyPetInfo;
@@ -61,6 +62,7 @@ public class Configuration {
 
     public static String PET_INFO_OVERHEAD_PREFIX = "<aqua>";
     public static String PET_INFO_OVERHEAD_SUFFIX = "";
+    public static int LEVEL_CAP = 100;
     public static int RESPAWN_TIME_FACTOR = 5;
     public static int RESPAWN_TIME_PLAYER_FACTOR = 5;
     public static int RESPAWN_TIME_FIXED = 0;
@@ -178,6 +180,8 @@ public class Configuration {
         config.addDefault("MyPet.Hooks.BattleArena.DisablePetsInArena", true);
         config.addDefault("MyPet.Hooks.Vault.Economy", true);
 
+        config.addDefault("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"));
+
         config.addDefault("MyPet.Exp.DamageWeightedExperienceDistribution", Experience.DAMAGE_WEIGHTED_EXPERIENCE_DISTRIBUTION);
         config.addDefault("MyPet.Exp.Passive.Always-Grant-Passive-XP", Experience.ALWAYS_GRANT_PASSIVE_XP);
         config.addDefault("MyPet.Exp.Passive.PercentPerMonster", Experience.PASSIVE_PERCENT_PER_MONSTER);
@@ -185,7 +189,7 @@ public class Configuration {
         config.addDefault("MyPet.Exp.Loss.Fixed", Experience.LOSS_FIXED);
         config.addDefault("MyPet.Exp.Loss.Drop", Experience.DROP_LOST_EXP);
         config.addDefault("MyPet.Exp.Gain.MonsterSpawner", Experience.GAIN_EXP_FROM_MONSTER_SPAWNER_MOBS);
-        config.addDefault("MyPet.Exp.LevelCap", Experience.LEVEL_CAP);
+        config.addDefault("MyPet.Exp.LevelCap", LEVEL_CAP);
 
         config.addDefault("MyPet.Skill.Control.Item", Material.LEASH.getId());
         config.addDefault("MyPet.Skill.Ride.Item", Material.LEASH.getId());
@@ -309,6 +313,15 @@ public class Configuration {
         DebugLogger.ERROR = config.getBoolean("MyPet.Log.ERROR", DebugLogger.ERROR);
         DebugLogger.WARNING = config.getBoolean("MyPet.Log.WARNING", DebugLogger.WARNING);
 
+        NameFilter.NAME_FILTER = Lists.newArrayList();
+        for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
+            NameFilter.NAME_FILTER.add(o.toString());
+        }
+
+        AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
+        STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);
+        STORE_PETS_ON_PET_LEASH = config.getBoolean("MyPet.PetStorage.OnPetLeash", true);
+        STORE_PETS_ON_PET_RELEASE = config.getBoolean("MyPet.PetStorage.OnPetRelease", true);
         MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
 
         NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
@@ -363,7 +376,7 @@ public class Configuration {
         PvPChecker.USE_GriefPrevention = config.getBoolean("MyPet.Hooks.GriefPrevention", true);
         PvPChecker.USE_PvPManager = config.getBoolean("MyPet.Hooks.PvPManager", true);
 
-        Experience.LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", Experience.LEVEL_CAP);
+        LEVEL_CAP = config.getInt("MyPet.Exp.LevelCap", LEVEL_CAP);
         Experience.LOSS_PERCENT = config.getInt("MyPet.Exp.Loss.Percent", 0);
         Experience.LOSS_FIXED = config.getDouble("MyPet.Exp.Loss.Fixed", 0.0);
         Experience.DROP_LOST_EXP = config.getBoolean("MyPet.Exp.Loss.Drop", true);

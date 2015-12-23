@@ -26,6 +26,7 @@ import de.Keyle.MyPet.api.event.MyPetLevelUpEvent;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
+import de.Keyle.MyPet.util.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -38,7 +39,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class Experience {
-    public static int LEVEL_CAP = 100;
     public static int LOSS_PERCENT = 0;
     public static double LOSS_FIXED = 0;
     public static boolean DROP_LOST_EXP = true;
@@ -72,7 +72,7 @@ public class Experience {
     }
 
     public void reset() {
-        levelCapExp = getExpByLevel(LEVEL_CAP);
+        levelCapExp = getExpByLevel(Configuration.LEVEL_CAP);
         exp = 0;
         Bukkit.getServer().getPluginManager().callEvent(new MyPetLevelUpEvent(myPet, getLevel(), 0, true));
     }
@@ -238,7 +238,7 @@ public class Experience {
                 }
             }
         } else {
-            damageMap = new WeakHashMap<Entity, Double>();
+            damageMap = new WeakHashMap<>();
             damageMap.put(damager, victim.getHealth() < damage ? victim.getHealth() : damage);
             victim.setMetadata("DamageCount", new FixedMetadataValue(MyPetPlugin.getPlugin(), damageMap));
         }
@@ -281,7 +281,7 @@ public class Experience {
 
     @SuppressWarnings("unchecked")
     public static Map<Entity, Double> getDamageToEntityPercent(LivingEntity victim) {
-        Map<Entity, Double> damagePercentMap = new HashMap<Entity, Double>();
+        Map<Entity, Double> damagePercentMap = new HashMap<>();
         if (victim.hasMetadata("DamageCount")) {
             for (MetadataValue value : victim.getMetadata("DamageCount")) {
                 if (value.getOwningPlugin().getName().equals("MyPet")) {

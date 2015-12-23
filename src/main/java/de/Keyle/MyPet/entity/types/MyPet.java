@@ -78,7 +78,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     protected Experience experience;
     protected long lastUsed = -1;
 
-    public static enum LeashFlag {
+    public enum LeashFlag {
         Baby, Adult, LowHp, Tamed, UserCreated, Wild, CanBreed, Angry, None, Impossible;
 
         public static LeashFlag getLeashFlagByName(String name) {
@@ -91,11 +91,11 @@ public abstract class MyPet implements IMyPet, NBTStorage {
         }
     }
 
-    public static enum SpawnFlags {
+    public enum SpawnFlags {
         Success, NoSpace, AlreadyHere, Dead, Canceled, OwnerDead, Flying, NotAllowed
     }
 
-    public static enum PetState {
+    public enum PetState {
         Dead, Despawned, Here
     }
 
@@ -213,7 +213,7 @@ public abstract class MyPet implements IMyPet, NBTStorage {
     }
 
     public void setPetName(String newName) {
-        this.petName = newName;
+        this.petName = NameFilter.clean(newName);
         if (status == PetState.Here) {
             if (Configuration.PET_INFO_OVERHEAD_NAME) {
                 getCraftPet().getHandle().setCustomNameVisible(true);

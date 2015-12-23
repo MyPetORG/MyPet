@@ -20,8 +20,8 @@
 
 package de.Keyle.MyPet.skill.skilltree;
 
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.info.ISkillInfo;
+import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import de.keyle.knbt.TagByte;
 import de.keyle.knbt.TagCompound;
@@ -32,14 +32,14 @@ import java.util.*;
 
 public class SkillTree {
     private String skillTreeName;
-    private List<String> description = new ArrayList<String>();
+    private List<String> description = new ArrayList<>();
     private TagCompound iconItem = null;
     protected String inheritance = null;
     private String permission = null;
     private String displayName = null;
     private int maxLevel = 0;
     private int requiredLevel = 0;
-    private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<Integer, SkillTreeLevel>();
+    private SortedMap<Integer, SkillTreeLevel> skillsPerLevel = new TreeMap<>();
     private int lastLevelWithSkills = 1;
 
     public SkillTree(String name) {
@@ -126,7 +126,7 @@ public class SkillTree {
     }
 
     public void setMaxLevel(int maxLevel) {
-        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Experience.LEVEL_CAP);
+        this.maxLevel = maxLevel < 0 ? 0 : Math.min(maxLevel, Configuration.LEVEL_CAP);
     }
 
     public int getRequiredLevel() {
@@ -199,7 +199,7 @@ public class SkillTree {
     }
 
     public List<SkillTreeLevel> getLevelList() {
-        List<SkillTreeLevel> levelList = new ArrayList<SkillTreeLevel>();
+        List<SkillTreeLevel> levelList = new ArrayList<>();
         if (skillsPerLevel.size() > 0) {
             for (int level : skillsPerLevel.keySet()) {
                 levelList.add(skillsPerLevel.get(level));
@@ -261,7 +261,7 @@ public class SkillTree {
         newSkillTree.setRequiredLevel(requiredLevel);
         newSkillTree.setMaxLevel(maxLevel);
         newSkillTree.setPermission(permission);
-        newSkillTree.description = new ArrayList<String>(description);
+        newSkillTree.description = new ArrayList<>(description);
         newSkillTree.iconItem = getIconItem().clone();
 
         for (int level : skillsPerLevel.keySet()) {

@@ -194,7 +194,7 @@ public class EntityListener implements Listener {
                         damager.sendMessage("   " + Locales.getString("Name.Level", damager) + ": " + lvl);
                         infoShown = true;
                     }
-                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Experience.LEVEL_CAP;
+                    int maxLevel = myPet.getSkillTree() != null ? myPet.getSkillTree().getMaxLevel() : Configuration.LEVEL_CAP;
                     if (CommandInfo.canSee(PetInfoDisplay.Exp.adminOnly, damager, myPet) && myPet.getExperience().getLevel() < maxLevel) {
                         double exp = myPet.getExperience().getCurrentExp();
                         double reqEXP = myPet.getExperience().getRequiredExp();
