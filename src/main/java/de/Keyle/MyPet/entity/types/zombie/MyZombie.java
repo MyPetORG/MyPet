@@ -49,7 +49,7 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
 
     protected boolean isBaby = false;
     protected boolean isVillager = false;
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyZombie(MyPetPlayer petOwner) {
         super(petOwner);
@@ -73,7 +73,7 @@ public class MyZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
         info.getCompoundData().put("Villager", new TagByte(isVillager()));
 
-        List<TagCompound> itemList = new ArrayList<TagCompound>();
+        List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
                 TagCompound item = ItemStackNBTConverter.itemStackToCompund(getEquipment(slot));

@@ -41,7 +41,7 @@ public class IconMenu implements Listener {
     private int size;
     private OptionClickEventHandler handler;
     private Plugin plugin;
-    private List<Inventory> inventoryList = new ArrayList<Inventory>();
+    private List<Inventory> inventoryList = new ArrayList<>();
 
     public IconMenu(String name, int size, OptionClickEventHandler handler, Plugin plugin) {
         this.size = size;
@@ -100,7 +100,7 @@ public class IconMenu implements Listener {
     @EventHandler
     void onPluginDisable(PluginDisableEvent event) {
         if (event.getPlugin().equals(plugin) && inventory != null) {
-            List<HumanEntity> viewers = new ArrayList<HumanEntity>(inventory.getMinecraftInventory().getViewers());
+            List<HumanEntity> viewers = new ArrayList<>(inventory.getMinecraftInventory().getViewers());
             for (HumanEntity viewer : viewers) {
                 viewer.closeInventory();
             }

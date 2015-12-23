@@ -23,7 +23,7 @@ package de.Keyle.MyPet.util.locale;
 import java.util.*;
 
 public class ResourceBundle extends java.util.ResourceBundle {
-    private List<java.util.ResourceBundle> extensionBundles = new ArrayList<java.util.ResourceBundle>();
+    private List<java.util.ResourceBundle> extensionBundles = new ArrayList<>();
     private boolean noParent = false;
 
     public ResourceBundle(java.util.ResourceBundle parent) {

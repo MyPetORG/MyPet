@@ -65,7 +65,7 @@ public class IconMenuInventory {
             Validate.isTrue(title.length() <= 32, "Title cannot be longer than 32 characters");
             this.items = new IconMenuItem[size];
             this.title = title;
-            this.viewers = new ArrayList<HumanEntity>();
+            this.viewers = new ArrayList<>();
         }
 
         public int getSize() {

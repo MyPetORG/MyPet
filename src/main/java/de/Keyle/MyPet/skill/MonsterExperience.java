@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MonsterExperience {
-    public static final Map<EntityType, MonsterExperience> mobExp = new HashMap<EntityType, MonsterExperience>();
+    public static final Map<EntityType, MonsterExperience> mobExp = new HashMap<>();
     private static MonsterExperience unknown = new MonsterExperience(0., EntityType.UNKNOWN);
 
     static {

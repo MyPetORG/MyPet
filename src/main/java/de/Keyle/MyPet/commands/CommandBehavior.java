@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandBehavior implements CommandExecutor, TabCompleter {
-    private static List<String> behaviorList = new ArrayList<String>();
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> behaviorList = new ArrayList<>();
+    private static List<String> emptyList = new ArrayList<>();
 
     static {
         behaviorList.add("normal");

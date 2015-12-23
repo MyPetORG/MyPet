@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Timer {
-    private static List<Integer> timerIDs = new ArrayList<Integer>();
-    private static final List<IScheduler> tasksToSchedule = new ArrayList<IScheduler>();
+    private static List<Integer> timerIDs = new ArrayList<>();
+    private static final List<IScheduler> tasksToSchedule = new ArrayList<>();
 
     private Timer() {
     }

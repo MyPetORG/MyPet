@@ -84,7 +84,7 @@ import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.RESET;
 
 public class CommandRelease implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
@@ -252,7 +252,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
                 } else {
                     FancyMessage message = new FancyMessage(Locales.getString("Message.Command.Release.Confirm", petOwner) + " ");
 
-                    List<String> lore = new ArrayList<String>();
+                    List<String> lore = new ArrayList<>();
                     lore.add(RESET + Locales.getString("Name.Hunger", petOwner) + ": " + GOLD + myPet.getHungerValue());
                     if (myPet.getRespawnTime() > 0) {
                         lore.add(RESET + Locales.getString("Name.Respawntime", petOwner) + ": " + GOLD + myPet.getRespawnTime() + "sec");
@@ -282,7 +282,7 @@ public class CommandRelease implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(final CommandSender commandSender, Command command, String s, String[] strings) {
         if (MyPetList.hasActiveMyPet((Player) commandSender)) {
-            List<String> petnameList = new ArrayList<String>();
+            List<String> petnameList = new ArrayList<>();
             petnameList.add(PlayerList.getMyPetPlayer((Player) commandSender).getMyPet().getPetName());
             return petnameList;
         }

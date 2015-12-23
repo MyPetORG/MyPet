@@ -55,13 +55,13 @@ import java.util.*;
 import static org.bukkit.Bukkit.getServer;
 
 public abstract class MyPet implements IMyPet, NBTStorage {
-    private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<Class<? extends MyPet>, Double>();
-    private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<Class<? extends MyPet>, Double>();
+    private static Map<Class<? extends MyPet>, Double> startHP = new HashMap<>();
+    private static Map<Class<? extends MyPet>, Double> startSpeed = new HashMap<>();
     private static ArrayListMultimap<Class<? extends MyPet>, ConfigItem> food = ArrayListMultimap.create();
     private static ArrayListMultimap<Class<? extends MyPet>, LeashFlag> leashFlags = ArrayListMultimap.create();
-    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<Class<? extends MyPet>, Integer>();
-    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<Class<? extends MyPet>, Integer>();
-    private static Map<Class<? extends MyPet>, ConfigItem> leashItem = new HashMap<Class<? extends MyPet>, ConfigItem>();
+    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFactor = new HashMap<>();
+    private static Map<Class<? extends MyPet>, Integer> customRespawnTimeFixed = new HashMap<>();
+    private static Map<Class<? extends MyPet>, ConfigItem> leashItem = new HashMap<>();
     protected final MyPetPlayer petOwner;
     protected CraftMyPet craftMyPet;
     protected String petName = "Pet";

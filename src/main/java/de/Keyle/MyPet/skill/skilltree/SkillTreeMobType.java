@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SkillTreeMobType {
-    private Map<String, SkillTree> skillTrees = new HashMap<String, SkillTree>();
-    private List<String> skillTreeList = new ArrayList<String>();
+    private Map<String, SkillTree> skillTrees = new HashMap<>();
+    private List<String> skillTreeList = new ArrayList<>();
     private String mobTypeName;
 
-    private static Map<String, SkillTreeMobType> mobTypes = new HashMap<String, SkillTreeMobType>();
+    private static Map<String, SkillTreeMobType> mobTypes = new HashMap<>();
 
     private SkillTreeMobType(String mobTypeName) {
         this.mobTypeName = mobTypeName.toLowerCase();
@@ -115,7 +115,7 @@ public class SkillTreeMobType {
     }
 
     public List<String> getSkillTreeNames() {
-        List<String> skilltreeNames = new ArrayList<String>();
+        List<String> skilltreeNames = new ArrayList<>();
         for (String name : skillTreeList) {
             if (name != null) {
                 skilltreeNames.add(name);
@@ -126,7 +126,7 @@ public class SkillTreeMobType {
 
     public List<SkillTree> getSkillTrees() {
         cleanupPlaces();
-        List<SkillTree> skilltreeNames = new ArrayList<SkillTree>();
+        List<SkillTree> skilltreeNames = new ArrayList<>();
         for (String name : skillTreeList) {
             skilltreeNames.add(getSkillTree(name));
         }
@@ -177,7 +177,7 @@ public class SkillTreeMobType {
         if (mobTypes.containsKey(myPetTypeName.toLowerCase())) {
             skillTreeNames = getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTreeNames();
         } else {
-            skillTreeNames = new ArrayList<String>();
+            skillTreeNames = new ArrayList<>();
         }
         return skillTreeNames;
     }
@@ -190,7 +190,7 @@ public class SkillTreeMobType {
         if (mobTypes.containsKey(myPetTypeName.toLowerCase())) {
             return getMobTypeByName(myPetTypeName.toLowerCase()).getSkillTrees();
         } else {
-            return new ArrayList<SkillTree>();
+            return new ArrayList<>();
         }
     }
 

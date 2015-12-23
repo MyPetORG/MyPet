@@ -62,7 +62,7 @@ public class CommandOptionReloadSkilltrees implements CommandOption {
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
-        Set<String> skilltreeNames = new LinkedHashSet<String>();
+        Set<String> skilltreeNames = new LinkedHashSet<>();
         for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);

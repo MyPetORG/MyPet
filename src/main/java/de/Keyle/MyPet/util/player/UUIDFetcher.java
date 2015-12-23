@@ -43,7 +43,7 @@ public class UUIDFetcher {
     private static final JSONParser jsonParser = new JSONParser();
     private static boolean rateLimiting = true;
 
-    private static final HashMap<String, UUID> fetchedUUIDs = new HashMap<String, UUID>();
+    private static final HashMap<String, UUID> fetchedUUIDs = new HashMap<>();
     private static final Map<String, UUID> readonlyFetchedUUIDs = Collections.unmodifiableMap(fetchedUUIDs);
 
     private UUIDFetcher() {
@@ -54,13 +54,13 @@ public class UUIDFetcher {
     }
 
     public static Map<String, UUID> call(String name) {
-        ArrayList<String> single = new ArrayList<String>();
+        ArrayList<String> single = new ArrayList<>();
         single.add(name);
         return call(single);
     }
 
     public static Map<String, UUID> call(List<String> names) {
-        names = new ArrayList<String>(names);
+        names = new ArrayList<>(names);
         Iterator<String> iterator = names.iterator();
         while (iterator.hasNext()) {
             String playerName = iterator.next();

@@ -421,7 +421,7 @@ public class EntityListener implements Listener {
                         }
                         if (leashTarget.getWorld().getGameRuleValue("doMobLoot").equalsIgnoreCase("true") && Configuration.RETAIN_EQUIPMENT_ON_TAME && (leashTarget instanceof Zombie || leashTarget instanceof PigZombie || leashTarget instanceof Skeleton)) {
                             Random random = ((CraftLivingEntity) leashTarget).getHandle().bc();
-                            List<TagCompound> equipmentList = new ArrayList<TagCompound>();
+                            List<TagCompound> equipmentList = new ArrayList<>();
                             if (random.nextFloat() <= leashTarget.getEquipment().getChestplateDropChance()) {
                                 ItemStack itemStack = leashTarget.getEquipment().getChestplate();
                                 if (itemStack != null && itemStack.getType() != Material.AIR) {

@@ -26,7 +26,7 @@ import java.util.Map;
 public class NavigationParameters {
     private boolean avoidWater = false;
     private double speed;
-    private Map<String, Double> speedModifier = new HashMap<String, Double>();
+    private Map<String, Double> speedModifier = new HashMap<>();
 
     public NavigationParameters(double baseSpeed) {
         speed = baseSpeed;

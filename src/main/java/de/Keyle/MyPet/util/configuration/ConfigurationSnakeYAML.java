@@ -86,6 +86,6 @@ public class ConfigurationSnakeYAML {
     }
 
     public void clearConfig() {
-        config = new LinkedHashMap<String, Object>();
+        config = new LinkedHashMap<>();
     }
 }

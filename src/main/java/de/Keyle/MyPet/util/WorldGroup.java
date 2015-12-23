@@ -23,11 +23,11 @@ package de.Keyle.MyPet.util;
 import java.util.*;
 
 public class WorldGroup {
-    private static Map<String, WorldGroup> allGroups = new HashMap<String, WorldGroup>();
-    private static Map<String, WorldGroup> groupWorlds = new HashMap<String, WorldGroup>();
+    private static Map<String, WorldGroup> allGroups = new HashMap<>();
+    private static Map<String, WorldGroup> groupWorlds = new HashMap<>();
 
     private String name;
-    private List<String> worlds = new ArrayList<String>();
+    private List<String> worlds = new ArrayList<>();
 
 
     public WorldGroup(String groupName) {

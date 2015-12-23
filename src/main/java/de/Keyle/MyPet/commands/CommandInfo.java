@@ -23,7 +23,6 @@ package de.Keyle.MyPet.commands;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPet.PetState;
 import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.implementation.Behavior;
 import de.Keyle.MyPet.skill.skills.implementation.Damage;
 import de.Keyle.MyPet.util.Configuration;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandInfo implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);

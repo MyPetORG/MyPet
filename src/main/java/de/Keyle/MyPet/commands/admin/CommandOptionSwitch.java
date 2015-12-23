@@ -96,7 +96,7 @@ public class CommandOptionSwitch implements CommandOptionTabCompleter {
                     boolean doComma = false;
                     FancyMessage message = new FancyMessage("");
                     for (InactiveMyPet mypet : value) {
-                        List<String> lore = new ArrayList<String>();
+                        List<String> lore = new ArrayList<>();
                         lore.add(RESET + Locales.getString("Name.Hunger", lang) + ": " + GOLD + mypet.getHungerValue());
                         if (mypet.getRespawnTime() > 0) {
                             lore.add(RESET + Locales.getString("Name.Respawntime", lang) + ": " + GOLD + mypet.getRespawnTime() + "sec");

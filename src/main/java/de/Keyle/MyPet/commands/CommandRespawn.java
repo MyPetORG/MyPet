@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandRespawn implements CommandExecutor, TabCompleter {
-    private static List<String> optionsList = new ArrayList<String>();
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> optionsList = new ArrayList<>();
+    private static List<String> emptyList = new ArrayList<>();
 
     static {
         optionsList.add("show");

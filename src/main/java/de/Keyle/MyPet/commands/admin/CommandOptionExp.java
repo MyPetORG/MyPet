@@ -23,9 +23,7 @@ package de.Keyle.MyPet.commands.admin;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.MyPet;
-import de.Keyle.MyPet.entity.types.MyPetList;
 import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.Configuration;
 import de.Keyle.MyPet.util.Util;
@@ -39,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandOptionExp implements CommandOptionTabCompleter {
-    private static List<String> addSetRemoveList = new ArrayList<String>();
+    private static List<String> addSetRemoveList = new ArrayList<>();
 
     static {
         addSetRemoveList.add("add");

@@ -55,7 +55,7 @@ import static org.bukkit.Material.*;
 public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, ISkillStorage, ISkillActive {
     public static int HUNGER_DECREASE_TIME = 100;
     public static boolean PARTY_SUPPORT = true;
-    private static Map<Integer, String> buffNames = new HashMap<Integer, String>();
+    private static Map<Integer, String> buffNames = new HashMap<>();
     private static BiMap<Integer, Integer> buffItemPositions = HashBiMap.create();
     private static BiMap<Integer, Integer> buffPositionItems = buffItemPositions.inverse();
 
@@ -96,9 +96,9 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
     private boolean active = false;
     private int hungerDecreaseTimer;
     private BeaconReciever reciever = BeaconReciever.Owner;
-    private Map<Integer, Integer> buffLevel = new HashMap<Integer, Integer>();
+    private Map<Integer, Integer> buffLevel = new HashMap<>();
     private int beaconTimer = 0;
-    private List<Integer> selectedBuffs = new ArrayList<Integer>();
+    private List<Integer> selectedBuffs = new ArrayList<>();
 
     public Beacon(boolean addedByInheritance) {
         super(addedByInheritance);
@@ -133,7 +133,7 @@ public class Beacon extends BeaconInfo implements ISkillInstance, IScheduler, IS
         final Beacon beacon = this;
 
         IconMenu menu = new IconMenu(Util.cutString("Beacon - " + myPet.getPetName(), 32), 27, new IconMenu.OptionClickEventHandler() {
-            List<Integer> selectedBuffs = new ArrayList<Integer>(beacon.selectedBuffs);
+            List<Integer> selectedBuffs = new ArrayList<>(beacon.selectedBuffs);
             boolean active = beacon.active;
             private BeaconReciever reciever = beacon.reciever;
 

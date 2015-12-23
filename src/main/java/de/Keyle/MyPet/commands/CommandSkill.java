@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandSkill implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
