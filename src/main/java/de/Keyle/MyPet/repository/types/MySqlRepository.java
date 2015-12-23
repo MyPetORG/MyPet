@@ -58,7 +58,7 @@ public class MySqlRepository implements Repository {
     public static String HOST = "localhost";
     public static int PORT = 3306;
 
-    private int version = 1;
+    private int version = 2;
 
 
     @Override
@@ -107,7 +107,9 @@ public class MySqlRepository implements Repository {
                 DebugLogger.info("Updating database from version " + oldVersion + " to version " + version + ".");
 
                 switch (oldVersion) {
-                    //Add updates here (no breaks)
+                    case 1:
+                        updateToV2();
+                    case 2:
                 }
 
                 updateInfo();
@@ -138,25 +140,30 @@ public class MySqlRepository implements Repository {
                     "skilltree VARCHAR(255), " +
                     "skills BLOB, " +
                     "info BLOB, " +
-                    "PRIMARY KEY ( uuid ))");
+                    "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
+                    "PRIMARY KEY ( uuid )" +
+                    ")");
 
             create.executeUpdate("CREATE TABLE players (" +
                     "internal_uuid VARCHAR(36) NOT NULL UNIQUE, " +
                     "mojang_uuid VARCHAR(36) UNIQUE, " +
                     "offline_uuid VARCHAR(36) UNIQUE, " +
-                    "name VARCHAR(16) UNIQUE, " +
+                    "name VARCHAR(16), " +
                     "auto_respawn BOOLEAN, " +
                     "auto_respawn_min INTEGER , " +
                     "capture_mode BOOLEAN, " +
                     "health_bar INTEGER , " +
                     "extended_info BLOB, " +
                     "multi_world BLOB, " +
-                    "PRIMARY KEY ( internal_uuid ))");
+                    "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, " +
+                    "PRIMARY KEY ( internal_uuid )" +
+                    ")");
 
             create.executeUpdate("CREATE TABLE info (" +
                     "version INTEGER, " +
                     "mypet_version VARCHAR(20), " +
-                    "mypet_build VARCHAR(20) " +
+                    "mypet_build VARCHAR(20), " +
+                    "last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ")");
 
             PreparedStatement insert = connection.prepareStatement("INSERT INTO info (version, mypet_version, mypet_build) VALUES (?,?,?);");
@@ -164,6 +171,18 @@ public class MySqlRepository implements Repository {
             insert.setString(2, MyPetVersion.getVersion());
             insert.setString(3, MyPetVersion.getBuild());
             insert.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateToV2() {
+        try {
+            Statement update = connection.createStatement();
+
+            update.executeUpdate("ALTER TABLE pets ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+            update.executeUpdate("ALTER TABLE players ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+            update.executeUpdate("ALTER TABLE info ADD last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         } catch (SQLException e) {
             e.printStackTrace();
         }
