@@ -21,22 +21,17 @@
 package de.Keyle.MyPet.skill.experience;
 
 import de.Keyle.MyPet.MyPetPlugin;
-import de.Keyle.MyPet.util.Util;
 import de.Keyle.MyPet.util.logger.DebugLogger;
 import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.ChatColor;
+import org.mozilla.javascript.*;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
 
 public class JavaScript extends Experience {
-    private static IExperience expInv = null;
+    private static JavaScriptExperience jsExp = null;
     private static boolean isUsable = false;
 
     private double lastExpLevel = Double.NaN;
@@ -46,25 +41,14 @@ public class JavaScript extends Experience {
     private double lastCurrentExp = 0.0;
     private double lastRequiredExp = 0.0;
 
-    private final MyPetScriptInfo scriptInfo;
+    private MyPetScriptInfo scriptInfo;
 
     public JavaScript(de.Keyle.MyPet.entity.types.MyPet myPet) {
         super(myPet);
+
         scriptInfo = new MyPetScriptInfo();
 
-        try {
-            initScriptEngine();
-        } catch (ScriptException e) {
-            MyPetLogger.write(ChatColor.RED + "Error in EXP-Script!");
-            DebugLogger.warning("Error in EXP-Script!");
-            isUsable = false;
-            return;
-        }
-
-        getLevel(0);
-        getRequiredExp(0);
-        getCurrentExp(0);
-        getExpByLevel(2);
+        initScriptEngine();
     }
 
     public boolean isUsable() {
@@ -79,22 +63,12 @@ public class JavaScript extends Experience {
             return lastLevel;
         }
         lastExpLevel = exp;
-        if (expInv != null) {
+        if (jsExp != null) {
             try {
-                return lastLevel = expInv.getLevel(exp, scriptInfo);
-            } catch (UndeclaredThrowableException e) {
-                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                try {
-                    MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
-                } catch (Exception ignored) {
-                }
-                DebugLogger.printThrowable(e);
-                isUsable = false;
-                return 0;
+                return lastLevel = jsExp.getLevel(exp, scriptInfo);
             } catch (Exception e) {
-                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                e.printStackTrace();
-                DebugLogger.printThrowable(e);
+                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error:");
+                MyPetLogger.write("   " + e.getLocalizedMessage());
                 isUsable = false;
                 return 0;
             }
@@ -107,21 +81,12 @@ public class JavaScript extends Experience {
             return lastRequiredExp;
         }
         lastExpRequiredExp = exp;
-        if (expInv != null) {
+        if (jsExp != null) {
             try {
-                return lastRequiredExp = expInv.getRequiredExp(exp, scriptInfo);
-            } catch (UndeclaredThrowableException e) {
-                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                try {
-                    MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
-                } catch (Exception ignored) {
-                }
-                DebugLogger.printThrowable(e);
-                isUsable = false;
-                return 0;
+                return lastRequiredExp = jsExp.getRequiredExp(exp, scriptInfo);
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                e.printStackTrace();
+                MyPetLogger.write("   " + e.getLocalizedMessage());
                 DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
@@ -136,20 +101,12 @@ public class JavaScript extends Experience {
         }
         lastExpCurrentExp = exp;
 
-        if (expInv != null) {
+        if (jsExp != null) {
             try {
-                return lastCurrentExp = expInv.getCurrentExp(exp, scriptInfo);
-            } catch (UndeclaredThrowableException e) {
-                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                try {
-                    MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
-                } catch (Exception ignored) {
-                }
-                isUsable = false;
-                return 0;
+                return lastCurrentExp = jsExp.getCurrentExp(exp, scriptInfo);
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                e.printStackTrace();
+                MyPetLogger.write("   " + e.getLocalizedMessage());
                 DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
@@ -163,21 +120,12 @@ public class JavaScript extends Experience {
         if (level <= 1) {
             return 0;
         }
-        if (expInv != null) {
+        if (jsExp != null) {
             try {
-                return expInv.getExpByLevel(level, scriptInfo);
-            } catch (UndeclaredThrowableException e) {
-                MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                try {
-                    MyPetLogger.write(ChatColor.RED + e.getUndeclaredThrowable().getCause().getLocalizedMessage());
-                } catch (Exception ignored) {
-                }
-                DebugLogger.printThrowable(e);
-                isUsable = false;
-                return 0;
+                return jsExp.getExpByLevel(level, scriptInfo);
             } catch (Exception e) {
                 MyPetLogger.write(ChatColor.RED + "This error appeared because your Levelscript (exp.js) caused an error.");
-                e.printStackTrace();
+                MyPetLogger.write("   " + e.getLocalizedMessage());
                 DebugLogger.printThrowable(e);
                 isUsable = false;
                 return 0;
@@ -187,41 +135,91 @@ public class JavaScript extends Experience {
     }
 
     public static void reset() {
-        expInv = null;
+        if (isUsable) {
+            Context.exit();
+        }
+        jsExp = null;
         isUsable = false;
     }
 
-    private static void initScriptEngine() throws ScriptException {
-        if (expInv == null) {
-            ScriptEngineManager manager = new ScriptEngineManager();
-            ScriptEngine scriptEngine = manager.getEngineByName("js");
-            if (scriptEngine != null) {
-                try {
-                    String expScript;
-                    try {
-                        expScript = Util.readFileAsString(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "exp.js");
-                        DebugLogger.info("Custom EXP-Script (exp.js) loaded!");
-                    } catch (IOException e) {
-                        DebugLogger.info("No custom EXP-Script found (exp.js).");
-                        isUsable = false;
-                        return;
-                    }
-                    scriptEngine.eval(expScript);
-                    if (scriptEngine instanceof Invocable) {
-                        Invocable inv = (Invocable) scriptEngine;
-                        expInv = inv.getInterface(IExperience.class);
-                        isUsable = true;
-                    } else {
-                        isUsable = false;
-                    }
-                } catch (ScriptException e) {
-                    e.printStackTrace();
-                    DebugLogger.printThrowable(e);
-                    isUsable = false;
+    private static void initScriptEngine() {
+        if (jsExp == null) {
+            Context cx = Context.enter();
+            try {
+                File jsFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath(), "exp.js");
+                ScriptableObject scriptable = new ImporterTopLevel(cx);
+                Scriptable scope = cx.initStandardObjects(scriptable);
+                cx.evaluateReader(scope, new FileReader(jsFile), "exp.js", 0, null);
+
+                jsExp = new JavaScriptExperience(cx, scope);
+                isUsable = jsExp.init();
+                if (!isUsable) {
+                    Context.exit();
                 }
-            } else {
-                isUsable = false;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    static class JavaScriptExperience {
+        Context cx;
+        Scriptable scope;
+
+        private Function getRequiredExp = null;
+        private Function getLevel = null;
+        private Function getCurrentExp = null;
+        private Function getExpByLevel = null;
+
+        public JavaScriptExperience(Context cx, Scriptable scope) {
+            this.cx = cx;
+            this.scope = scope;
+        }
+
+        public boolean init() {
+            boolean usable = true;
+            if (!scope.has("getRequiredExp", scope)) {
+                MyPetLogger.write(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getRequiredExp(exp, mypet)\" function:");
+                usable = false;
+            }
+            if (!scope.has("getLevel", scope)) {
+                MyPetLogger.write(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getLevel(exp, mypet)\" function:");
+                usable = false;
+            }
+            if (!scope.has("getCurrentExp", scope)) {
+                MyPetLogger.write(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getCurrentExp(exp, mypet)\" function:");
+                usable = false;
+            }
+            if (!scope.has("getExpByLevel", scope)) {
+                MyPetLogger.write(ChatColor.RED + "Your levelscript (exp.js) lacks the \"getExpByLevel(level, mypet)\" function:");
+                usable = false;
+            }
+            if (!usable) {
+                return false;
+            }
+
+            this.getRequiredExp = (Function) scope.get("getRequiredExp", scope);
+            this.getLevel = (Function) scope.get("getLevel", scope);
+            this.getCurrentExp = (Function) scope.get("getCurrentExp", scope);
+            this.getExpByLevel = (Function) scope.get("getExpByLevel", scope);
+
+            return true;
+        }
+
+        public int getLevel(double exp, MyPetScriptInfo mypet) {
+            return ((Double) getLevel.call(cx, scope, scope, new Object[]{exp, mypet})).intValue();
+        }
+
+        public double getRequiredExp(double exp, MyPetScriptInfo mypet) {
+            return (Double) getRequiredExp.call(cx, scope, scope, new Object[]{exp, mypet});
+        }
+
+        public double getCurrentExp(double exp, MyPetScriptInfo mypet) {
+            return (Double) getCurrentExp.call(cx, scope, scope, new Object[]{exp, mypet});
+        }
+
+        public double getExpByLevel(int level, MyPetScriptInfo mypet) {
+            return (Double) getExpByLevel.call(cx, scope, scope, new Object[]{level, mypet});
         }
     }
 
@@ -245,15 +243,5 @@ public class JavaScript extends Experience {
         public String getWorldGroup() {
             return getMyPet().getWorldGroup();
         }
-    }
-
-    public interface IExperience {
-        public abstract int getLevel(double exp, MyPetScriptInfo mypet) throws InvocationTargetException;
-
-        public abstract double getRequiredExp(double exp, MyPetScriptInfo mypet) throws InvocationTargetException;
-
-        public abstract double getCurrentExp(double exp, MyPetScriptInfo mypet) throws InvocationTargetException;
-
-        public abstract double getExpByLevel(int level, MyPetScriptInfo mypet) throws InvocationTargetException;
     }
 }

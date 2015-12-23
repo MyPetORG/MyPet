@@ -447,12 +447,12 @@
                     <jarName>${project.name}-${project.version}</jarName>
                     <archive>
                         <manifestEntries>
+                            <Class-Path>MyPet/rhino.jar</Class-Path>
                             <Main-Class>de.Keyle.MyPet.gui.GuiMain</Main-Class>
                             <Project-Author>Keyle</Project-Author>
                             <Project-Name>${project.name}</Project-Name>
                             <Project-Version>${project.version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
-                            <Premium>false</Premium>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
                             <Project-Bukkit-Packet>${bukkit.packet}</Project-Bukkit-Packet>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>

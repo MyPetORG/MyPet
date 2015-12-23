@@ -27,6 +27,7 @@ import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.skill.experience.Default;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.util.Configuration;
+import de.Keyle.MyPet.util.logger.MyPetLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -34,6 +35,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -49,26 +51,37 @@ public class Experience {
     public static boolean ALWAYS_GRANT_PASSIVE_XP = true;
     public static int PASSIVE_PERCENT_PER_MONSTER = 25;
 
-    private final MyPet myPet;
+    private static de.Keyle.MyPet.skill.experience.Experience expMode = null;
 
+    private final MyPet myPet;
     private double exp = 0;
     private double levelCapExp = 0;
-    de.Keyle.MyPet.skill.experience.Experience expMode;
 
     public Experience(MyPet pet) {
         this.myPet = pet;
 
-        if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
-            expMode = new JavaScript(myPet);
-        } else {
-            expMode = new Default(myPet);
-        }
-        if (!expMode.isUsable()) {
-            expMode = new Default(myPet);
-            CALCULATION_MODE = "Default";
+        if (expMode == null) {
+            if (CALCULATION_MODE.equalsIgnoreCase("JS") || CALCULATION_MODE.equalsIgnoreCase("JavaScript")) {
+                if (!new File(MyPetPlugin.getPlugin().getDataFolder(), "rhino.jar").exists()) {
+                    MyPetLogger.write("rhino.jar is missing. Please download it here (https://github.com/mozilla/rhino/releases) and put it into the MyPet folder.");
+                } else {
+                    expMode = new JavaScript(myPet);
+                }
+            }
+            if (expMode == null || !expMode.isUsable()) {
+                expMode = new Default(myPet);
+                CALCULATION_MODE = "Default";
+            }
         }
 
         reset();
+    }
+
+    public static void resetMode() {
+        if (expMode instanceof JavaScript) {
+            JavaScript.reset();
+        }
+        expMode = null;
     }
 
     public void reset() {
