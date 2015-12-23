@@ -60,7 +60,7 @@ import de.Keyle.MyPet.listeners.*;
 import de.Keyle.MyPet.repository.*;
 import de.Keyle.MyPet.repository.types.MySqlRepository;
 import de.Keyle.MyPet.repository.types.NbtRepository;
-import de.Keyle.MyPet.skill.experience.JavaScript;
+import de.Keyle.MyPet.skill.Experience;
 import de.Keyle.MyPet.skill.skills.Skills;
 import de.Keyle.MyPet.skill.skills.SkillsInfo;
 import de.Keyle.MyPet.skill.skills.implementation.*;
@@ -141,7 +141,7 @@ public class MyPetPlugin extends JavaPlugin {
         PvPChecker.reset();
         PluginHookManager.reset();
         Economy.reset();
-        JavaScript.reset();
+        Experience.resetMode();
         Configuration.config = this.getConfig();
         Configuration.setDefault();
         Configuration.loadConfiguration();
