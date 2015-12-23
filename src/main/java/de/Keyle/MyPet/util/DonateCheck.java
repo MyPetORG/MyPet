@@ -32,6 +32,7 @@ public class DonateCheck {
         Translator(ChatColor.GOLD + "✈ " + ChatColor.UNDERLINE + "Translator" + ChatColor.RESET + ChatColor.GOLD + " ✈" + ChatColor.RESET),
         Developer(ChatColor.GOLD + "✪ " + ChatColor.UNDERLINE + "Developer" + ChatColor.RESET + ChatColor.GOLD + " ✪" + ChatColor.RESET),
         Helper(ChatColor.GOLD + "☘ " + ChatColor.UNDERLINE + "Helper" + ChatColor.RESET + ChatColor.GOLD + " ☘" + ChatColor.RESET),
+        Premium(ChatColor.GOLD + "$ " + ChatColor.UNDERLINE + "Premium" + ChatColor.RESET + ChatColor.GOLD + " $" + ChatColor.RESET),
         None("");
 
         String displayText;
@@ -56,6 +57,7 @@ public class DonateCheck {
             //   3 for translator
             //   4 for helper
             //   5 for creator
+            //   6 for premium
             // no data will be saved on the server
             String mode;
             if (Bukkit.getOnlineMode()) {
@@ -64,16 +66,19 @@ public class DonateCheck {
                 mode = "username=" + player.getName();
             }
             String donation = Util.readUrlContent("http://donation.keyle.de/donated.php?" + mode);
-            if (donation.equals("1")) {
-                return DonationRank.Donator;
-            } else if (donation.equals("2")) {
-                return DonationRank.Developer;
-            } else if (donation.equals("3")) {
-                return DonationRank.Translator;
-            } else if (donation.equals("4")) {
-                return DonationRank.Helper;
-            } else if (donation.equals("5")) {
-                return DonationRank.Creator;
+            switch (donation) {
+                case "1":
+                    return DonationRank.Donator;
+                case "2":
+                    return DonationRank.Developer;
+                case "3":
+                    return DonationRank.Translator;
+                case "4":
+                    return DonationRank.Helper;
+                case "5":
+                    return DonationRank.Creator;
+                case "6":
+                    return DonationRank.Premium;
             }
         } catch (Exception e) {
             DebugLogger.info("Can not connect to donation server.");
