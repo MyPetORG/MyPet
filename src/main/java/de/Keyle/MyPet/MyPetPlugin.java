@@ -100,7 +100,6 @@ public class MyPetPlugin extends JavaPlugin {
     private boolean isReady = false;
     private PluginStorage pluginStorage;
     private Repository repo;
-    public static String INSTANCE_NAME = "MyPet-01";
     public static String REPOSITORY_TYPE = "NBT";
 
     public static MyPetPlugin getPlugin() {
@@ -126,7 +125,6 @@ public class MyPetPlugin extends JavaPlugin {
         plugin = this;
         this.isReady = false;
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "skilltrees" + File.separator).mkdirs();
-        new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "locale" + File.separator).mkdirs();
         new File(getPlugin().getDataFolder().getAbsolutePath() + File.separator + "logs" + File.separator).mkdirs();
 

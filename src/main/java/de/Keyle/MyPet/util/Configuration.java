@@ -108,12 +108,6 @@ public class Configuration {
         config.addDefault("MyPet.Log.ERROR", DebugLogger.ERROR);
         config.addDefault("MyPet.Log.WARNING", DebugLogger.WARNING);
 
-        config.addDefault("MyPet.InstanceName", MyPetPlugin.INSTANCE_NAME);
-
-        config.addDefault("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
-        config.addDefault("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
-        config.addDefault("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
-
         config.addDefault("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
         config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
@@ -121,6 +115,9 @@ public class Configuration {
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
         config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+        config.addDefault("MyPet.PetStorage.NBT.Backup.Active", Backup.MAKE_BACKUPS);
+        config.addDefault("MyPet.PetStorage.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
+        config.addDefault("MyPet.PetStorage.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
@@ -267,11 +264,9 @@ public class Configuration {
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
         Behavior.BehaviorState.Duel.setActive(config.getBoolean("MyPet.Skill.Behavior.Duel", true));
 
-        MyPetPlugin.INSTANCE_NAME = config.getString("MyPet.InstanceName", MyPetPlugin.INSTANCE_NAME);
-
-        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.Backup.Active", Backup.MAKE_BACKUPS);
-        Backup.SAVE_INTERVAL = config.getInt("MyPet.Backup.SaveInterval", Backup.SAVE_INTERVAL);
-        Backup.DATE_FORMAT = config.getString("MyPet.Backup.DateFormat", Backup.DATE_FORMAT);
+        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.PetStorage.NBT.Backup.Active", Backup.MAKE_BACKUPS);
+        Backup.SAVE_INTERVAL = config.getInt("MyPet.PetStorage.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
+        Backup.DATE_FORMAT = config.getString("MyPet.PetStorage.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
         SKILLTREE_SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
