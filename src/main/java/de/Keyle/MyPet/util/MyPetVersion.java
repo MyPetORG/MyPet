@@ -36,6 +36,7 @@ public class MyPetVersion {
     private static String build = "0";
     private static String minecraftVersion = "0.0.0";
     private static String bukkitPacket = "v0_0_R0";
+    private static boolean premium = false;
 
     private static void getManifestVersion() {
         try {
@@ -54,10 +55,10 @@ public class MyPetVersion {
             if (attr.getValue("Project-Bukkit-Packet") != null) {
                 bukkitPacket = attr.getValue("Project-Bukkit-Packet");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            DebugLogger.printThrowable(e);
-        } catch (URISyntaxException e) {
+            if (attr.getValue("Premium") != null) {
+                premium = true;
+            }
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             DebugLogger.printThrowable(e);
         }
@@ -101,6 +102,14 @@ public class MyPetVersion {
             updated = true;
         }
         return bukkitPacket;
+    }
+
+    public static boolean isPremium() {
+        if (!updated) {
+            getManifestVersion();
+            updated = true;
+        }
+        return premium;
     }
 
     public static void reset() {

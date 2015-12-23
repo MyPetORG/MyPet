@@ -149,7 +149,7 @@ public class MyPetPlugin extends JavaPlugin {
         DebugLogger.setup();
 
         DebugLogger.info("----------- loading MyPet ... -----------");
-        DebugLogger.info("MyPet " + MyPetVersion.getVersion() + " build: " + MyPetVersion.getBuild());
+        DebugLogger.info("MyPet " + MyPetVersion.getVersion() + " build: " + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : ""));
         DebugLogger.info("Bukkit " + getServer().getVersion());
         DebugLogger.info("OnlineMode: " + getServer().getOnlineMode());
         DebugLogger.info("Java: " + System.getProperty("java.version") + " (VM: " + System.getProperty("java.vm.version") + ") by " + System.getProperty("java.vendor"));
@@ -329,7 +329,10 @@ public class MyPetPlugin extends JavaPlugin {
             MyPetLogger.write(e.getMessage());
         }
 
-        MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + ChatColor.GREEN + " ENABLED");
+        if (MyPetVersion.isPremium()) {
+            MyPetLogger.write("Thank you for buying MyPet-" + ChatColor.YELLOW + "Premium" + ChatColor.RESET + "!");
+        }
+        MyPetLogger.write("version " + MyPetVersion.getVersion() + "-b" + MyPetVersion.getBuild() + (MyPetVersion.isPremium() ? "P" : "") + ChatColor.GREEN + " ENABLED");
         this.isReady = true;
 
         for (final Player player : getServer().getOnlinePlayers()) {

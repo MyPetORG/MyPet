@@ -452,6 +452,7 @@
                             <Project-Name>${project.name}</Project-Name>
                             <Project-Version>${project.version}</Project-Version>
                             <Project-Build>${BUILD_NUMBER}</Project-Build>
+                            <Premium>true</Premium>
                             <Project-Minecraft-Version>${minecraft.version}</Project-Minecraft-Version>
                             <Project-Bukkit-Packet>${bukkit.packet}</Project-Bukkit-Packet>
                             <Git-Commit>${GIT_COMMIT}</Git-Commit>
