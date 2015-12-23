@@ -108,16 +108,16 @@ public class Configuration {
         config.addDefault("MyPet.Log.ERROR", DebugLogger.ERROR);
         config.addDefault("MyPet.Log.WARNING", DebugLogger.WARNING);
 
-        config.addDefault("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
-        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
-        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
-        config.addDefault("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
-        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
-        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
-        config.addDefault("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
-        config.addDefault("MyPet.PetStorage.NBT.Backup.Active", Backup.MAKE_BACKUPS);
-        config.addDefault("MyPet.PetStorage.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
-        config.addDefault("MyPet.PetStorage.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
+        config.addDefault("MyPet.Repository.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
+        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
+        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
+        config.addDefault("MyPet.Repository.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
+        config.addDefault("MyPet.Repository.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
+        config.addDefault("MyPet.Repository.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
+        config.addDefault("MyPet.Repository.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+        config.addDefault("MyPet.Repository.NBT.Backup.Active", Backup.MAKE_BACKUPS);
+        config.addDefault("MyPet.Repository.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
+        config.addDefault("MyPet.Repository.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
         config.addDefault("MyPet.Respawn.Time.Default.Factor", RESPAWN_TIME_FACTOR);
         config.addDefault("MyPet.Respawn.Time.Player.Factor", RESPAWN_TIME_PLAYER_FACTOR);
@@ -264,9 +264,9 @@ public class Configuration {
         Behavior.BehaviorState.Raid.setActive(config.getBoolean("MyPet.Skill.Behavior.Raid", true));
         Behavior.BehaviorState.Duel.setActive(config.getBoolean("MyPet.Skill.Behavior.Duel", true));
 
-        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.PetStorage.NBT.Backup.Active", Backup.MAKE_BACKUPS);
-        Backup.SAVE_INTERVAL = config.getInt("MyPet.PetStorage.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
-        Backup.DATE_FORMAT = config.getString("MyPet.PetStorage.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
+        Backup.MAKE_BACKUPS = config.getBoolean("MyPet.Repository.NBT.Backup.Active", Backup.MAKE_BACKUPS);
+        Backup.SAVE_INTERVAL = config.getInt("MyPet.Repository.NBT.Backup.SaveInterval", Backup.SAVE_INTERVAL);
+        Backup.DATE_FORMAT = config.getString("MyPet.Repository.NBT.Backup.DateFormat", Backup.DATE_FORMAT);
 
         SKILLTREE_SWITCH_PENALTY_FIXED = config.getDouble("MyPet.Skilltree.SwitchPenaltyFixed", 0.0);
         SKILLTREE_SWITCH_PENALTY_PERCENT = config.getInt("MyPet.Skilltree.SwitchPenaltyPercent", 5);
@@ -304,15 +304,15 @@ public class Configuration {
             NameFilter.NAME_FILTER.add(o.toString());
         }
 
-        MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
+        MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.Repository.Type", MyPetPlugin.REPOSITORY_TYPE);
 
-        NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
-        NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
-        NbtRepository.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
-        NbtRepository.SAVE_ON_PET_ADD = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
-        NbtRepository.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
-        NbtRepository.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
-        NbtRepository.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
+        NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.Repository.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
+        NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
+        NbtRepository.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
+        NbtRepository.SAVE_ON_PET_ADD = config.getBoolean("MyPet.Repository.NBT.Pet.SaveOnAdd", NbtRepository.SAVE_ON_PET_ADD);
+        NbtRepository.SAVE_ON_PLAYER_ADD = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnAdd", NbtRepository.SAVE_ON_PLAYER_ADD);
+        NbtRepository.SAVE_ON_PLAYER_UPDATE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnUpdate", NbtRepository.SAVE_ON_PLAYER_UPDATE);
+        NbtRepository.SAVE_ON_PLAYER_REMOVE = config.getBoolean("MyPet.Repository.NBT.Player.SaveOnRemove", NbtRepository.SAVE_ON_PLAYER_REMOVE);
 
         PetInfoDisplay.Name.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetName", false);
         PetInfoDisplay.HP.adminOnly = config.getBoolean("MyPet.Info.AdminOnly.PetHP", false);
