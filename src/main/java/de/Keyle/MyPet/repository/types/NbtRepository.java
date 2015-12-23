@@ -78,6 +78,7 @@ public class NbtRepository implements Repository, IScheduler {
         NBTPetFile = new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "My.Pets");
 
         if (Backup.MAKE_BACKUPS) {
+            new File(MyPetPlugin.getPlugin().getDataFolder().getAbsolutePath() + File.separator + "backups" + File.separator).mkdirs();
             backupManager = new Backup(NBTPetFile, new File(MyPetPlugin.getPlugin().getDataFolder().getPath() + File.separator + "backups" + File.separator));
         }
 
