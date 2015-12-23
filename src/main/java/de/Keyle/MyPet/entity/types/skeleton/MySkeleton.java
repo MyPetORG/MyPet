@@ -44,7 +44,7 @@ import static org.bukkit.Material.BONE;
 @MyPetInfo(food = {BONE})
 public class MySkeleton extends MyPet implements IMyPetEquipment {
     protected boolean isWither = false;
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MySkeleton(MyPetPlayer petOwner) {
         super(petOwner);
@@ -67,7 +67,7 @@ public class MySkeleton extends MyPet implements IMyPetEquipment {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Wither", new TagByte(isWither()));
 
-        List<TagCompound> itemList = new ArrayList<TagCompound>();
+        List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
                 TagCompound item = ItemStackNBTConverter.itemStackToCompund(getEquipment(slot));

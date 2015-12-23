@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Colorizer {
-    private static Map<String, String> colorCodes = new HashMap<String, String>();
+    private static Map<String, String> colorCodes = new HashMap<>();
 
     public static String setColors(String text) {
         for (String color : colorCodes.keySet()) {

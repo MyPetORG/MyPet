@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandOptionExp implements CommandOptionTabCompleter {
-    private static List<String> addSetRemoveList = new ArrayList<String>();
+    private static List<String> addSetRemoveList = new ArrayList<>();
 
     static {
         addSetRemoveList.add("add");

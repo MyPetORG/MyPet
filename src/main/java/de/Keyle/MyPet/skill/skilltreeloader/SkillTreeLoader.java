@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class SkillTreeLoader {
-    protected static List<SkillTree> alreadyLoadedInheritance = new ArrayList<SkillTree>();
+    protected static List<SkillTree> alreadyLoadedInheritance = new ArrayList<>();
 
     public static void addDefault(SkillTreeMobType skillTreeMobType) {
         if (!SkillTreeMobType.hasMobType("default")) {
@@ -53,7 +53,7 @@ public abstract class SkillTreeLoader {
     }
 
     public static void manageInheritance(SkillTreeMobType skillTreeMobType) {
-        Map<SkillTree, SkillTree> skillTreeClones = new HashMap<SkillTree, SkillTree>();
+        Map<SkillTree, SkillTree> skillTreeClones = new HashMap<>();
         for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
             skillTreeClones.put(skillTree, skillTree.clone());
         }

@@ -616,7 +616,7 @@ public class LevelCreator {
         inheritanceCheckBox.setEnabled(false);
         if (skillTreeMobType.getSkillTreeNames().size() > 1 || (!skillTreeMobType.getMobTypeName().equals("default") && SkillTreeMobType.getMobTypeByName("default").getSkillTreeNames().size() > 0)) {
             inheritanceCheckBox.setEnabled(true);
-            ArrayList<String> skilltreeNames = new ArrayList<String>();
+            ArrayList<String> skilltreeNames = new ArrayList<>();
             for (String skillTreeName : skillTreeMobType.getSkillTreeNames()) {
                 if (!skillTreeName.equals(skillTree.getName()) && !skilltreeNames.contains(skillTreeName)) {
                     skilltreeNames.add(skillTreeName);

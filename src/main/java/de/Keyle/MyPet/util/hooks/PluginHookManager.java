@@ -35,9 +35,9 @@ import java.util.Map;
 public class PluginHookManager implements Listener {
 
     private static PluginManager pluginManager = null;
-    private static Map<String, Plugin> pluginInstances = new HashMap<String, Plugin>();
-    private static Map<String, String> pluginNames = new HashMap<String, String>();
-    private static Map<String, Boolean> pluginFound = new HashMap<String, Boolean>();
+    private static Map<String, Plugin> pluginInstances = new HashMap<>();
+    private static Map<String, String> pluginNames = new HashMap<>();
+    private static Map<String, Boolean> pluginFound = new HashMap<>();
 
 
     public static <T extends JavaPlugin> T getPluginInstance(Class<T> clazz) {

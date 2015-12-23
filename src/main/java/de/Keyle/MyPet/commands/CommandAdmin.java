@@ -36,9 +36,9 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class CommandAdmin implements CommandExecutor, TabCompleter {
-    private static List<String> optionsList = new ArrayList<String>();
+    private static List<String> optionsList = new ArrayList<>();
     public final static List<String> emptyList = Collections.unmodifiableList(new ArrayList<String>());
-    private static Map<String, CommandOption> commandOptions = new HashMap<String, CommandOption>();
+    private static Map<String, CommandOption> commandOptions = new HashMap<>();
 
     public CommandAdmin() {
         commandOptions.put("name", new CommandOptionName());
@@ -92,7 +92,7 @@ public class CommandAdmin implements CommandExecutor, TabCompleter {
         }
         if (strings.length == 1) {
             if (optionsList.size() != commandOptions.keySet().size()) {
-                optionsList = new ArrayList<String>(commandOptions.keySet());
+                optionsList = new ArrayList<>(commandOptions.keySet());
                 Collections.sort(optionsList);
             }
             return optionsList;

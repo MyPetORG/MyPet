@@ -38,7 +38,7 @@ import java.util.Map;
 public class BehaviorInfo extends SkillTreeSkill implements ISkillInfo {
     private SkillPropertiesPanel panel = null;
 
-    protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<BehaviorState, Boolean>();
+    protected Map<BehaviorState, Boolean> behaviorActive = new HashMap<>();
 
     public static enum BehaviorState {
         Normal(true), Friendly(true), Aggressive(true), Raid(true), Farm(true), Duel(true);

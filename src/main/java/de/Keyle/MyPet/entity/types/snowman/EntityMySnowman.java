@@ -33,7 +33,7 @@ import java.util.Map;
 
 @EntitySize(width = 0.7F, length = 0.7F, height = 1.7F)
 public class EntityMySnowman extends EntityMyPet {
-    Map<Location, Integer> snowMap = new HashMap<Location, Integer>();
+    Map<Location, Integer> snowMap = new HashMap<>();
 
     public EntityMySnowman(World world, MyPet myPet) {
         super(world, myPet);

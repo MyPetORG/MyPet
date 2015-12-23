@@ -23,9 +23,9 @@ package de.Keyle.MyPet.entity.ai;
 import java.util.*;
 
 public class AIGoalSelector {
-    private Map<String, AIGoal> AIGoalMap = new HashMap<String, AIGoal>();
-    private List<AIGoal> AIGoalList = new LinkedList<AIGoal>();
-    private List<AIGoal> activeAIGoalList = new LinkedList<AIGoal>();
+    private Map<String, AIGoal> AIGoalMap = new HashMap<>();
+    private List<AIGoal> AIGoalList = new LinkedList<>();
+    private List<AIGoal> activeAIGoalList = new LinkedList<>();
 
     public void addGoal(String name, AIGoal myPetAIgoal) {
         if (AIGoalMap.containsKey(name)) {

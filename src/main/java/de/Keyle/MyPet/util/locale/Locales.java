@@ -40,7 +40,7 @@ import java.util.jar.JarFile;
 public class Locales {
     private static Locales latestMyPetLocales = null;
 
-    private Map<String, ResourceBundle> locales = new HashMap<String, ResourceBundle>();
+    private Map<String, ResourceBundle> locales = new HashMap<>();
     private JarFile jarFile;
 
     public Locales() {

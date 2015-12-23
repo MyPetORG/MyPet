@@ -144,7 +144,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
     public List<String> saveSkillTrees(String configPath, String[] mobtypes) {
         ConfigurationNBT nbtConfig;
         File skillFile;
-        List<String> savedPetTypes = new ArrayList<String>();
+        List<String> savedPetTypes = new ArrayList<>();
 
         for (String petType : mobtypes) {
             skillFile = new File(configPath + File.separator + petType.toLowerCase() + ".st");
@@ -163,7 +163,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
             SkillTreeMobType mobType = SkillTreeMobType.getMobTypeByName(petTypeName);
             mobType.cleanupPlaces();
 
-            List<TagCompound> skilltreeList = new ArrayList<TagCompound>();
+            List<TagCompound> skilltreeList = new ArrayList<>();
             for (SkillTree skillTree : mobType.getSkillTrees()) {
                 TagCompound skilltreeCompound = new TagCompound();
                 skilltreeCompound.getCompoundData().put("Name", new TagString(skillTree.getName()));
@@ -184,7 +184,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                     skilltreeCompound.getCompoundData().put("RequiredLevel", new TagInt(skillTree.getRequiredLevel()));
                 }
                 if (skillTree.getDescription().size() > 0) {
-                    List<TagString> descriptionTagList = new ArrayList<TagString>();
+                    List<TagString> descriptionTagList = new ArrayList<>();
                     for (String line : skillTree.getDescription()) {
                         descriptionTagList.add(new TagString(line));
                     }
@@ -192,7 +192,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                 }
                 skilltreeCompound.getCompoundData().put("IconItem", skillTree.getIconItem());
 
-                List<TagCompound> levelList = new ArrayList<TagCompound>();
+                List<TagCompound> levelList = new ArrayList<>();
                 for (SkillTreeLevel level : skillTree.getLevelList()) {
                     TagCompound levelCompound = new TagCompound();
                     levelCompound.getCompoundData().put("Level", new TagInt(level.getLevel()));
@@ -200,7 +200,7 @@ public class SkillTreeLoaderNBT extends SkillTreeLoader {
                         levelCompound.getCompoundData().put("Message", new TagString(level.getLevelupMessage()));
                     }
 
-                    List<TagCompound> skillList = new ArrayList<TagCompound>();
+                    List<TagCompound> skillList = new ArrayList<>();
                     for (ISkillInfo skill : skillTree.getLevel(level.getLevel()).getSkills()) {
                         if (!skill.isAddedByInheritance()) {
                             TagCompound skillCompound = new TagCompound();

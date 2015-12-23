@@ -82,7 +82,7 @@ public class SkillPropertyEditor {
     }
 
     public Map<String, String> seperateParameter(String parameterString) {
-        Map<String, String> parameterMap = new HashMap<String, String>();
+        Map<String, String> parameterMap = new HashMap<>();
 
         String[] splittedParameters = parameterString.split("&");
 

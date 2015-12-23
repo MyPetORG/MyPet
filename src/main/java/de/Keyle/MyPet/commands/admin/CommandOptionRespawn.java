@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandOptionRespawn implements CommandOptionTabCompleter {
-    private static List<String> showList = new ArrayList<String>();
+    private static List<String> showList = new ArrayList<>();
 
     static {
         showList.add("show");

@@ -40,10 +40,10 @@ import java.util.List;
 
 public class CustomInventory implements IInventory, Listener {
     private String inventroyName;
-    private List<ItemStack> items = new ArrayList<ItemStack>();
+    private List<ItemStack> items = new ArrayList<>();
     private int size = 0;
     private int stackSize = 64;
-    private List<HumanEntity> transaction = new ArrayList<HumanEntity>();
+    private List<HumanEntity> transaction = new ArrayList<>();
 
     public CustomInventory(String inventroyName, int size) {
         setName(inventroyName);
@@ -185,7 +185,7 @@ public class CustomInventory implements IInventory, Listener {
     }
 
     public TagCompound save(TagCompound compound) {
-        List<TagCompound> itemList = new ArrayList<TagCompound>();
+        List<TagCompound> itemList = new ArrayList<>();
         for (int i = 0; i < this.items.size(); i++) {
             ItemStack itemStack = this.items.get(i);
             if (itemStack != null) {
@@ -248,7 +248,7 @@ public class CustomInventory implements IInventory, Listener {
 
     public void close() {
         if (transaction.size() > 0) {
-            for (HumanEntity humanEntity : new ArrayList<HumanEntity>(transaction)) {
+            for (HumanEntity humanEntity : new ArrayList<>(transaction)) {
                 humanEntity.closeInventory();
             }
         }

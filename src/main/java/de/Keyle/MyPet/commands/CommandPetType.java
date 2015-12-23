@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandPetType implements CommandExecutor, TabCompleter {
-    private static List<String> petTypeList = new ArrayList<String>();
+    private static List<String> petTypeList = new ArrayList<>();
 
     static {
         for (MyPetType petType : MyPetType.values()) {

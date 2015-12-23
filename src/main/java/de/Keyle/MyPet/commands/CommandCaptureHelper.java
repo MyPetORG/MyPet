@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandCaptureHelper implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {

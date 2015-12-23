@@ -32,8 +32,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class SkillsInfo {
-    private static Map<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = new HashMap<Class<? extends SkillTreeSkill>, String>();
-    private static Map<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = new HashMap<String, Class<? extends SkillTreeSkill>>();
+    private static Map<Class<? extends SkillTreeSkill>, String> registeredSkillsNames = new HashMap<>();
+    private static Map<String, Class<? extends SkillTreeSkill>> registeredNamesSkills = new HashMap<>();
 
     public static void registerSkill(Class<? extends SkillTreeSkill> clazz) {
         if (!ISkillInfo.class.isAssignableFrom(clazz)) {

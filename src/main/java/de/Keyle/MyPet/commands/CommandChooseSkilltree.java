@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -99,7 +99,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         sender.sendMessage(Util.formatText(Locales.getString("Message.Command.Skilltree.CantFindSkilltree", player), skilltreeName));
                     }
                 } else {
-                    List<SkillTree> availableSkilltrees = new ArrayList<SkillTree>();
+                    List<SkillTree> availableSkilltrees = new ArrayList<>();
                     for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
                         if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
                             availableSkilltrees.add(skillTree);
@@ -111,7 +111,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
-                    final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<Integer, SkillTree>();
+                    final Map<Integer, SkillTree> skilltreeSlotMap = new HashMap<>();
                     IconMenu menu = new IconMenu(Util.cutString(Util.formatText(Locales.getString("Message.Skilltree.Available", myPetOwner), myPet.getPetName()), 32), (int) (Math.ceil(availableSkilltrees.size() / 9.) * 9), new IconMenu.OptionClickEventHandler() {
                         @Override
                         public void onOptionClick(IconMenu.OptionClickEvent event) {
@@ -162,7 +162,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
                             selectable = myPet.getExperience().getLevel() >= addedSkilltree.getRequiredLevel();
                         }
 
-                        List<String> description = new ArrayList<String>();
+                        List<String> description = new ArrayList<>();
                         if (requiredLevel > 1) {
                             String reqLevelMessage = ChatColor.RESET + "▶▶▶  ";
                             if (selectable) {
@@ -200,7 +200,7 @@ public class CommandChooseSkilltree implements CommandExecutor, TabCompleter {
             } else if (SkillTreeMobType.hasMobType(myPet.getPetType().getTypeName())) {
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
 
-                List<String> skilltreeList = new ArrayList<String>();
+                List<String> skilltreeList = new ArrayList<>();
                 for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
                     if (Permissions.has(player, "MyPet.custom.skilltree." + skillTree.getPermission())) {
                         skilltreeList.add(skillTree.getName());

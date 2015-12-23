@@ -31,7 +31,7 @@ public class SkillTreeLevel {
     int level;
     String levelupMessage;
 
-    List<ISkillInfo> skillList = new ArrayList<ISkillInfo>();
+    List<ISkillInfo> skillList = new ArrayList<>();
 
     public SkillTreeLevel(int level) {
         this.level = level;

@@ -36,9 +36,9 @@ public class IconMenuItem {
     protected int data = 0;
     protected int amount = 1;
     protected String title = "";
-    protected List<String> lore = new ArrayList<String>();
+    protected List<String> lore = new ArrayList<>();
     protected boolean glowing = false;
-    protected Map<String, NBTBase> displayTags = new HashMap<String, NBTBase>();
+    protected Map<String, NBTBase> displayTags = new HashMap<>();
 
     protected ItemStack oldItemStack;
     protected boolean hasChanged = true;

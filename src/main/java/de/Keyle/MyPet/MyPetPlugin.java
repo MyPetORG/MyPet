@@ -234,7 +234,7 @@ public class MyPetPlugin extends JavaPlugin {
         SkillTreeLoaderYAML.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
         SkillTreeLoaderJSON.getSkilltreeLoader().loadSkillTrees(getPlugin().getDataFolder().getPath() + File.separator + "skilltrees", petTypes);
 
-        Set<String> skilltreeNames = new LinkedHashSet<String>();
+        Set<String> skilltreeNames = new LinkedHashSet<>();
         for (MyPetType mobType : MyPetType.values()) {
             SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(mobType.getTypeName());
             SkillTreeLoader.addDefault(skillTreeMobType);
@@ -473,13 +473,13 @@ public class MyPetPlugin extends JavaPlugin {
         try {
             nodes = config.getConfigurationSection("Groups").getKeys(false);
         } catch (NullPointerException e) {
-            nodes = new HashSet<String>();
+            nodes = new HashSet<>();
             MyPetLogger.write("No groups found. Everything will be in 'default' group.");
         }
 
         DebugLogger.info("--- Loading WorldGroups ---------------------------");
         if (nodes.size() == 0) {
-            List<String> worldNames = new ArrayList<String>();
+            List<String> worldNames = new ArrayList<>();
             WorldGroup defaultGroup = new WorldGroup("default");
             defaultGroup.registerGroup();
             for (org.bukkit.World world : this.getServer().getWorlds()) {

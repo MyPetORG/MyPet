@@ -48,7 +48,7 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
     public static ConfigItem GROW_UP_ITEM;
 
     protected boolean isBaby = false;
-    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<EquipmentSlot, ItemStack>();
+    protected Map<EquipmentSlot, ItemStack> equipment = new HashMap<>();
 
     public MyPigZombie(MyPetPlayer petOwner) {
         super(petOwner);
@@ -71,7 +71,7 @@ public class MyPigZombie extends MyPet implements IMyPetEquipment, IMyPetBaby {
         TagCompound info = super.writeExtendedInfo();
         info.getCompoundData().put("Baby", new TagByte(isBaby()));
 
-        List<TagCompound> itemList = new ArrayList<TagCompound>();
+        List<TagCompound> itemList = new ArrayList<>();
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (getEquipment(slot) != null) {
                 TagCompound item = ItemStackNBTConverter.itemStackToCompund(getEquipment(slot));

@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandInfo implements CommandExecutor, TabCompleter {
-    private static List<String> emptyList = new ArrayList<String>();
+    private static List<String> emptyList = new ArrayList<>();
 
     public enum PetInfoDisplay {
         Name(false), HP(false), Damage(false), Hunger(true), Exp(true), Level(true), Owner(false), Skilltree(true), RangedDamage(false), RespawnTime(true), Behavior(true);

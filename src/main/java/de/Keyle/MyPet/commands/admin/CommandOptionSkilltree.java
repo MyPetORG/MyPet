@@ -84,7 +84,7 @@ public class CommandOptionSkilltree implements CommandOptionTabCompleter {
                 MyPet myPet = MyPetList.getMyPet(player);
                 SkillTreeMobType skillTreeMobType = SkillTreeMobType.getMobTypeByName(myPet.getPetType().getTypeName());
 
-                List<String> skilltreeList = new ArrayList<String>();
+                List<String> skilltreeList = new ArrayList<>();
                 for (SkillTree skillTree : skillTreeMobType.getSkillTrees()) {
                     skilltreeList.add(skillTree.getName());
                 }
