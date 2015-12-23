@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.repository.types;
 
-import com.google.common.collect.Lists;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -48,10 +47,7 @@ import org.bukkit.entity.Player;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class MySqlRepository implements Repository {
     private Connection connection;
@@ -335,7 +331,7 @@ public class MySqlRepository implements Repository {
     // Pets ------------------------------------------------------------------------------------------------------------
 
     private List<InactiveMyPet> resultSetToMyPet(MyPetPlayer owner, ResultSet resultSet) {
-        List<InactiveMyPet> pets = Lists.newArrayList();
+        List<InactiveMyPet> pets = new ArrayList<>();
         try {
             while (resultSet.next()) {
                 InactiveMyPet pet = new InactiveMyPet(owner);

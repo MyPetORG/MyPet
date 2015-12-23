@@ -20,8 +20,6 @@
 
 package de.Keyle.MyPet.commands.admin;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import de.Keyle.MyPet.api.commands.CommandOptionTabCompleter;
 import de.Keyle.MyPet.commands.CommandAdmin;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -42,79 +40,81 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CommandOptionCreate implements CommandOptionTabCompleter {
-    private static List<String> petTypeList = Lists.newArrayList();
-    private static Map<String, List<String>> petTypeOptionMap = Maps.newHashMap();
+    private static List<String> petTypeList = new ArrayList<>();
+    private static Map<String, List<String>> petTypeOptionMap = new HashMap<>();
 
     static {
-        List<String> petTypeOptionList = Lists.newArrayList();
+        List<String> petTypeOptionList = new ArrayList<>();
 
         petTypeOptionList.add("fire");
         petTypeOptionMap.put("blaze", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionMap.put("chicken", petTypeOptionList);
         petTypeOptionMap.put("cow", petTypeOptionList);
         petTypeOptionMap.put("mooshroom", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("powered");
         petTypeOptionMap.put("creeper", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("block:");
         petTypeOptionMap.put("enderman", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("size:");
         petTypeOptionMap.put("magmacube", petTypeOptionList);
         petTypeOptionMap.put("slime", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("cat:");
         petTypeOptionMap.put("ocelot", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("saddle");
         petTypeOptionMap.put("pig", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("color:");
         petTypeOptionMap.put("sheep", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("wither");
         petTypeOptionMap.put("skeleton", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("profession:");
         petTypeOptionMap.put("villager", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("angry");
         petTypeOptionList.add("tamed");
         petTypeOptionList.add("collar:");
         petTypeOptionMap.put("wolf", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("villager");
         petTypeOptionMap.put("zombie", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionMap.put("pigzombie", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("chest");
         petTypeOptionList.add("saddle");
@@ -122,12 +122,12 @@ public class CommandOptionCreate implements CommandOptionTabCompleter {
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("horse", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("baby");
         petTypeOptionList.add("variant:");
         petTypeOptionMap.put("rabbit", petTypeOptionList);
 
-        petTypeOptionList = Lists.newArrayList();
+        petTypeOptionList = new ArrayList<>();
         petTypeOptionList.add("elder");
         petTypeOptionMap.put("guardian", petTypeOptionList);
 

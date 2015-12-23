@@ -21,8 +21,6 @@
 package de.Keyle.MyPet.repository.types;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.api.util.IScheduler;
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
@@ -46,14 +44,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class NbtRepository implements Repository, IScheduler {
     public static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> myPets = ArrayListMultimap.create();
-    protected final static Map<UUID, MyPetPlayer> players = Maps.newHashMap();
+    protected final static Map<UUID, MyPetPlayer> players = new HashMap<>();
 
     private File NBTPetFile;
     private int autoSaveTimer = 0;
@@ -414,7 +409,7 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     private TagList savePlayers() {
-        List<TagCompound> playerList = Lists.newArrayList();
+        List<TagCompound> playerList = new ArrayList<>();
         for (MyPetPlayer myPetPlayer : players.values()) {
             if (myPets.get(myPetPlayer).size() > 0 || myPetPlayer.hasCustomData()) {
                 try {

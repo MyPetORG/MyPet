@@ -20,12 +20,11 @@
 
 package de.Keyle.MyPet.util;
 
-import com.google.common.collect.Lists;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class NameFilter {
-    public static List<String> NAME_FILTER = Lists.newArrayList();
+    public static List<String> NAME_FILTER = new ArrayList<>();
 
     public static String clean(String text) {
         for (String pattern : NAME_FILTER) {

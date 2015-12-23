@@ -57,6 +57,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 
+import java.util.ArrayList;
+
 public class Configuration {
     public static FileConfiguration config;
 
@@ -313,15 +315,11 @@ public class Configuration {
         DebugLogger.ERROR = config.getBoolean("MyPet.Log.ERROR", DebugLogger.ERROR);
         DebugLogger.WARNING = config.getBoolean("MyPet.Log.WARNING", DebugLogger.WARNING);
 
-        NameFilter.NAME_FILTER = Lists.newArrayList();
+        NameFilter.NAME_FILTER = new ArrayList<>();
         for (Object o : config.getList("MyPet.Name.Filter", Lists.newArrayList("whore", "fuck"))) {
             NameFilter.NAME_FILTER.add(o.toString());
         }
 
-        AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.AutoSaveTime", 60);
-        STORE_PETS_ON_PLAYER_QUIT = config.getBoolean("MyPet.PetStorage.OnPlayerQuit", true);
-        STORE_PETS_ON_PET_LEASH = config.getBoolean("MyPet.PetStorage.OnPetLeash", true);
-        STORE_PETS_ON_PET_RELEASE = config.getBoolean("MyPet.PetStorage.OnPetRelease", true);
         MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
 
         NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);

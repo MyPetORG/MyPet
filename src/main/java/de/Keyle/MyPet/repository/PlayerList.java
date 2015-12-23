@@ -20,7 +20,6 @@
 
 package de.Keyle.MyPet.repository;
 
-import com.google.common.collect.Sets;
 import de.Keyle.MyPet.MyPetPlugin;
 import de.Keyle.MyPet.util.BukkitUtil;
 import de.Keyle.MyPet.util.logger.DebugLogger;
@@ -35,13 +34,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerList {
-    public final static Set<UUID> onlinePlayerUUIDList = Sets.newHashSet();
+    public final static Set<UUID> onlinePlayerUUIDList = new HashSet<>();
     protected final static Map<UUID, UUID> uuidToInternalUUID = new ConcurrentHashMap<>();
     protected final static Map<UUID, MyPetPlayer> onlinePlayers = new ConcurrentHashMap<>();
 
