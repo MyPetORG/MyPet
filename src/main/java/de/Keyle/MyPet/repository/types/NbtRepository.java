@@ -46,7 +46,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class NbtRepository implements Repository, IScheduler {
     public static final ArrayListMultimap<MyPetPlayer, InactiveMyPet> myPets = ArrayListMultimap.create();
@@ -172,14 +175,6 @@ public class NbtRepository implements Repository, IScheduler {
     }
 
     // Pets ------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void getAllMyPets(final RepositoryCallback<Collection<InactiveMyPet>> callback) {
-        if (callback != null) {
-            callback.setValue(myPets.values());
-            callback.run();
-        }
-    }
 
     @Override
     public void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback) {

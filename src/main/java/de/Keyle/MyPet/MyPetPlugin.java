@@ -57,10 +57,7 @@ import de.Keyle.MyPet.entity.types.wither.EntityMyWither;
 import de.Keyle.MyPet.entity.types.wolf.EntityMyWolf;
 import de.Keyle.MyPet.entity.types.zombie.EntityMyZombie;
 import de.Keyle.MyPet.listeners.*;
-import de.Keyle.MyPet.repository.MyPetList;
-import de.Keyle.MyPet.repository.PlayerList;
-import de.Keyle.MyPet.repository.Repository;
-import de.Keyle.MyPet.repository.RepositoryCallback;
+import de.Keyle.MyPet.repository.*;
 import de.Keyle.MyPet.repository.types.NbtRepository;
 import de.Keyle.MyPet.skill.experience.JavaScript;
 import de.Keyle.MyPet.skill.skills.Skills;
@@ -104,6 +101,7 @@ public class MyPetPlugin extends JavaPlugin {
     private PluginStorage pluginStorage;
     private Repository repo;
     public static String INSTANCE_NAME = "MyPet-01";
+    public static String REPOSITORY_TYPE = "NBT";
 
     public static MyPetPlugin getPlugin() {
         return plugin;
@@ -287,8 +285,13 @@ public class MyPetPlugin extends JavaPlugin {
         File groupsFile = new File(getPlugin().getDataFolder().getPath() + File.separator + "worldgroups.yml");
 
         pluginStorage = new PluginStorage();
-        repo = new NbtRepository();
-        repo.init();
+        if (repo == null) {
+            repo = new NbtRepository();
+            try {
+                repo.init();
+            } catch (RepositoryInitException ignored) {
+            }
+        }
         if (repo instanceof IScheduler) {
             Timer.addTask((IScheduler) repo);
         }
@@ -355,55 +358,44 @@ public class MyPetPlugin extends JavaPlugin {
                         if (joinGroup != null && !joinedPlayer.hasMyPet() && joinedPlayer.hasMyPetInWorldGroup(joinGroup.getName())) {
                             final UUID groupMyPetUUID = joinedPlayer.getMyPetForWorldGroup(joinGroup.getName());
 
-                            joinedPlayer.getInactiveMyPets(new RepositoryCallback<List<InactiveMyPet>>() {
+                            joinedPlayer.getInactiveMyPet(groupMyPetUUID, new RepositoryCallback<InactiveMyPet>() {
                                 @Override
-                                public void callback(List<InactiveMyPet> value) {
-                                    for (InactiveMyPet inactiveMyPet : value) {
-                                        if (inactiveMyPet.getUUID().equals(groupMyPetUUID)) {
-                                            MyPetList.activateMyPet(inactiveMyPet);
-                                            MyPet activeMyPet = joinedPlayer.getMyPet();
-                                            activeMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.MultiWorld.NowActivePet", joinedPlayer), activeMyPet.getPetName()));
-                                            break;
+                                public void callback(InactiveMyPet inactiveMyPet) {
+                                    MyPetList.activateMyPet(inactiveMyPet);
+
+                                    if (joinedPlayer.hasMyPet()) {
+                                        final MyPet myPet = joinedPlayer.getMyPet();
+                                        final MyPetPlayer myPetPlayer = myPet.getOwner();
+                                        if (myPet.wantToRespawn()) {
+                                            if (myPetPlayer.hasMyPet()) {
+                                                MyPet runMyPet = myPetPlayer.getMyPet();
+                                                switch (runMyPet.createPet()) {
+                                                    case Canceled:
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
+                                                        break;
+                                                    case NoSpace:
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
+                                                        break;
+                                                    case NotAllowed:
+                                                        runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
+                                                        break;
+                                                    case Dead:
+                                                        runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
+                                                        break;
+                                                    case Flying:
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
+                                                        break;
+                                                    case Success:
+                                                        runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
+                                                        break;
+                                                }
+                                            }
+                                        } else {
+                                            myPet.setStatus(MyPet.PetState.Despawned);
                                         }
-                                    }
-                                    if (!joinedPlayer.hasMyPet() && value.size() > 0) {
-                                        joinedPlayer.getPlayer().sendMessage(Locales.getString("Message.MultiWorld.NoActivePetInThisWorld", joinedPlayer));
-                                        joinedPlayer.setMyPetForWorldGroup(joinGroup.getName(), null);
                                     }
                                 }
                             });
-
-                        }
-                        if (joinedPlayer.hasMyPet()) {
-                            final MyPet myPet = joinedPlayer.getMyPet();
-                            final MyPetPlayer myPetPlayer = myPet.getOwner();
-                            if (myPet.wantToRespawn()) {
-                                if (myPetPlayer.hasMyPet()) {
-                                    MyPet runMyPet = myPetPlayer.getMyPet();
-                                    switch (runMyPet.createPet()) {
-                                        case Canceled:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Prevent", myPet.getOwner()), runMyPet.getPetName()));
-                                            break;
-                                        case NoSpace:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.NoSpace", myPet.getOwner()), runMyPet.getPetName()));
-                                            break;
-                                        case NotAllowed:
-                                            runMyPet.sendMessageToOwner(Locales.getString("Message.No.AllowedHere", myPet.getOwner()).replace("%petname%", myPet.getPetName()));
-                                            break;
-                                        case Dead:
-                                            runMyPet.sendMessageToOwner(Locales.getString("Message.Spawn.Respawn.In", myPet.getOwner()).replace("%petname%", myPet.getPetName()).replace("%time%", "" + myPet.getRespawnTime()));
-                                            break;
-                                        case Flying:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Spawn.Flying", myPet.getOwner()), myPet.getPetName()));
-                                            break;
-                                        case Success:
-                                            runMyPet.sendMessageToOwner(Util.formatText(Locales.getString("Message.Command.Call.Success", myPet.getOwner()), runMyPet.getPetName()));
-                                            break;
-                                    }
-                                }
-                            } else {
-                                myPet.setStatus(MyPet.PetState.Despawned);
-                            }
                         }
                         //donate-delete-start
                         joinedPlayer.checkForDonation();

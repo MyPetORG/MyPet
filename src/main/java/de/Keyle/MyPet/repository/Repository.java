@@ -26,7 +26,6 @@ import de.Keyle.MyPet.entity.types.MyPetType;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,13 +34,11 @@ public interface Repository {
 
     void save();
 
-    void init();
+    void init() throws RepositoryInitException;
 
     void countMyPets(final RepositoryCallback<Integer> callback);
 
-    void countMyPets(MyPetType type, final RepositoryCallback<Integer> callback);
-
-    void getAllMyPets(final RepositoryCallback<Collection<InactiveMyPet>> callback);
+    void countMyPets(final MyPetType type, final RepositoryCallback<Integer> callback);
 
     void hasMyPets(final MyPetPlayer myPetPlayer, final RepositoryCallback<Boolean> callback);
 

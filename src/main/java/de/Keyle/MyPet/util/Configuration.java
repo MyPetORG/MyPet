@@ -309,6 +309,8 @@ public class Configuration {
             NameFilter.NAME_FILTER.add(o.toString());
         }
 
+        MyPetPlugin.REPOSITORY_TYPE = config.getString("MyPet.PetStorage.Type", MyPetPlugin.REPOSITORY_TYPE);
+
         NbtRepository.AUTOSAVE_TIME = config.getInt("MyPet.PetStorage.NBT.AutoSaveTime", NbtRepository.AUTOSAVE_TIME);
         NbtRepository.SAVE_ON_PET_UPDATE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnUpdate", NbtRepository.SAVE_ON_PET_UPDATE);
         NbtRepository.SAVE_ON_PET_REMOVE = config.getBoolean("MyPet.PetStorage.NBT.Pet.SaveOnRemove", NbtRepository.SAVE_ON_PET_REMOVE);
