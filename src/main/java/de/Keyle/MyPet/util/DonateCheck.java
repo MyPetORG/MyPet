@@ -46,7 +46,6 @@ public class DonateCheck {
         }
     }
 
-    //donate-delete-start
     public static DonationRank getDonationRank(MyPetPlayer player) {
         try {
             // Check whether this player has donated or is a helper for the MyPet project
@@ -85,5 +84,4 @@ public class DonateCheck {
         }
         return DonationRank.None;
     }
-    //donate-delete-end
 }

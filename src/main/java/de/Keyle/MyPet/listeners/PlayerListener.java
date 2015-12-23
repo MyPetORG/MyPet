@@ -165,9 +165,7 @@ public class PlayerListener implements Listener {
                         }
                     });
                 }
-                //donate-delete-start
                 joinedPlayer.checkForDonation();
-                //donate-delete-end
             }
         });
     }

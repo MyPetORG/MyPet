@@ -409,12 +409,8 @@ public class MyPetPlugin extends JavaPlugin {
                                     }
                                 }
                             });
-
                         }
-
-                        //donate-delete-start
                         joinedPlayer.checkForDonation();
-                        //donate-delete-end
                     }
                 }
             });

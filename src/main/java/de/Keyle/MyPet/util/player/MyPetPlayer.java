@@ -268,7 +268,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
         return rank;
     }
 
-    //donate-delete-start
     public void checkForDonation() {
         if (!donationChecked) {
             donationChecked = true;
@@ -279,7 +278,6 @@ public abstract class MyPetPlayer implements IScheduler, NBTStorage {
             }, 60L);
         }
     }
-    //donate-delete-end
 
     @Override
     public TagCompound save() {
