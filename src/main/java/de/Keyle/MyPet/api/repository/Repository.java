@@ -18,15 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.Keyle.MyPet.repository;
+package de.Keyle.MyPet.api.repository;
 
 import de.Keyle.MyPet.entity.types.InactiveMyPet;
 import de.Keyle.MyPet.entity.types.MyPet;
 import de.Keyle.MyPet.entity.types.MyPetType;
+import de.Keyle.MyPet.repository.RepositoryCallback;
+import de.Keyle.MyPet.repository.RepositoryInitException;
 import de.Keyle.MyPet.util.player.MyPetPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface Repository {
@@ -35,6 +38,10 @@ public interface Repository {
     void save();
 
     void init() throws RepositoryInitException;
+
+    List<InactiveMyPet> getAllMyPets(Map<UUID, MyPetPlayer> owners);
+
+    List<MyPetPlayer> getAllMyPetPlayers();
 
     void countMyPets(final RepositoryCallback<Integer> callback);
 
